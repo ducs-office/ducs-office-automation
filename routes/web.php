@@ -14,3 +14,6 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/login', 'LoginController@showLoginForm')->middleware('guest');
+Route::post('/login', 'LoginController@login');
