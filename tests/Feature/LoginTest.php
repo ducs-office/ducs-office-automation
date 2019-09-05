@@ -10,7 +10,7 @@ class LoginTest extends TestCase
 {
 
     use RefreshDatabase;
-    
+
     /** @test */
     public function login_form_test()
     {
@@ -22,18 +22,19 @@ class LoginTest extends TestCase
     public function user_can_login_with_correct_credentials() {
 
         $user = factory(\App\User::class)->create([
+            // 'email' => 'test.ducs@gmail.com'
             'password' => bcrypt('secret')
         ]);
 
         $this->withoutExceptionHandling();
-        
+
         $this->post('/login', [
             'email' => $user->email,
             'password' => 'secret'
         ])->assertRedirect('/');
 
         $this->assertTrue(Auth::check(), 'User was expected to login but was not.');
-        
+
     }
 
     /** @test */
@@ -41,8 +42,8 @@ class LoginTest extends TestCase
 
         $user = factory(\App\User::class)->create();
         $this->be($user);
-        
+
         $this->get('/login')->assertRedirect('/');
-        
+
     }
 }

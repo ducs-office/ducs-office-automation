@@ -8,6 +8,13 @@
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
 </head>
 <body>
+    <?php if($_SERVER['REQUEST_URI'] != '/login' && $_SERVER['REQUEST_URI'] != '/logout'): ?>
+      <header>
+        <form class="" action="\logout" method="get">
+         <button type="submit" class="bg-black text-white px-3 py-2 font-bold rounded float-right m-5">LogOut</button>
+        </form>
+      </header>
+   <?php endif;?>
     <div id="app">
         @yield('body')
     </div>

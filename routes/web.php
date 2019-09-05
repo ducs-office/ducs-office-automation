@@ -1,7 +1,7 @@
 <?php
 
 /*
-|--------------------------------------------------------------------------
+|---4-----------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
 |
@@ -12,8 +12,12 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    $user = Auth::check() ? Auth::user()->name : 'Guest';
+    return view('welcome')->with('user',$user);
 });
 
-Route::get('/login', 'LoginController@showLoginForm')->middleware('guest');
+Route::get('/login', 'LoginController@showLoginForm');
 Route::post('/login', 'LoginController@login');
+Route::get('/logout', 'LogOutController@logout');
+// Route::get('/logout', 'Auth\LoginController@logout');
+// ->middleware('guest')
