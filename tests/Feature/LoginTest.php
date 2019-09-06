@@ -41,7 +41,9 @@ class LoginTest extends TestCase
         $this->be($user);
 
         $this->get('/login')->assertRedirect('/');
+        $this->post('/login')->assertRedirect('/');
     }
+
 
     /** @test */
     public function logged_in_user_can_logout()

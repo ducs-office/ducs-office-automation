@@ -16,8 +16,8 @@ Route::get('/', function () {
     return view('welcome')->with('user',$user);
 });
 
-Route::get('/login', 'LoginController@showLoginForm');
-Route::post('/login', 'LoginController@login');
-Route::get('/logout', 'LogOutController@logout');
+Route::get('/login', 'Auth\LoginController@showLoginForm')->middleware('guest');
+Route::post('/login', 'Auth\LoginController@login')->middleware('guest');
+Route::post('/logout', 'Auth\LoginController@logout')->middleware('auth');
 // Route::get('/logout', 'Auth\LoginController@logout');
 // ->middleware('guest')
