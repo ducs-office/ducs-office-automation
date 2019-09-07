@@ -11,6 +11,16 @@ class StoreOutgoingLetterLogTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
+    public function guest_cannot_store_letter_logs()
+    {
+        $this->withExceptionHandling()
+            ->post('/outgoing-letter-logs')
+            ->assertRedirect('/login');
+            
+        $this->assertEquals(0, OutgoingLetterLog::count());
+    }
+
+    /** @test */
     public function store_outgoing_letter_log_in_database()
     {
         $this->be(factory(\App\User::class)->create());
