@@ -164,4 +164,42 @@ class StoreOutgoingLetterLogTest extends TestCase
             $this->fail('Empty \'recipient\' field was not validated.');
         }
     }
+
+    /** @test */
+    public function request_validates_sender_id_field_is_not_null()
+    {
+        try {
+            $this->be(factory(\App\User::class)->create());
+            $letter = factory(OutgoingLetterLog::class)->make(['sender_id' => '']);
+        
+            $this->withoutExceptionHandling()
+                ->post('/outgoing-letter-logs', $letter->toArray());
+            
+            $this->fail('Empty \'sender_id\' field was not validated.');
+        } catch(ValidationException $e) {
+            $this->assertArrayHasKey('sender_id', $e->errors());
+            $this->assertEquals(0, OutgoingLetterLog::count());
+        } catch(\Exception $e) {
+            $this->fail('Empty \'sender_id\' field was not validated.');
+        }
+    }
+
+    /** @test */
+    public function request_validates_sender_id_field_must_be_a_existing_user()
+    {
+        try {
+            $this->be(factory(\App\User::class)->create());
+            $letter = factory(OutgoingLetterLog::class)->make(['sender_id' => 4]);
+        
+            $this->withoutExceptionHandling()
+                ->post('/outgoing-letter-logs', $letter->toArray());
+            
+            $this->fail('Failed to validate \'sender_id\' is a valid existing user id');
+        } catch(ValidationException $e) {
+            $this->assertArrayHasKey('sender_id', $e->errors());
+            $this->assertEquals(0, OutgoingLetterLog::count());
+        } catch(\Exception $e) {
+            $this->fail('Failed to validate \'sender_id\' is a valid existing user id');
+        }
+    }
 }
