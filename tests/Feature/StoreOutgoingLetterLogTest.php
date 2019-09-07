@@ -202,4 +202,18 @@ class StoreOutgoingLetterLogTest extends TestCase
             $this->fail('Failed to validate \'sender_id\' is a valid existing user id');
         }
     }
+
+    /** @test */
+    public function request_validates_description_field_can_be_null()
+    {
+        $this->be(factory(\App\User::class)->create());
+        $letter = factory(OutgoingLetterLog::class)->make(['description' => '']);
+    
+        $this->withoutExceptionHandling()
+            ->post('/outgoing-letter-logs', $letter->toArray())
+            ->assertRedirect('/outgoing-letter-logs');
+
+        $this->assertEquals(1, OutgoingLetterLog::count());
+    }
+
 }
