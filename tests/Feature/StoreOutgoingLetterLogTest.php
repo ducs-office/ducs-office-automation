@@ -216,4 +216,35 @@ class StoreOutgoingLetterLogTest extends TestCase
         $this->assertEquals(1, OutgoingLetterLog::count());
     }
 
+    /** @test */
+    public function request_validates_amount_field_can_be_null()
+    {
+        $this->be(factory(\App\User::class)->create());
+        $letter = factory(OutgoingLetterLog::class)->make(['amount' => '']);
+    
+        $this->withoutExceptionHandling()
+            ->post('/outgoing-letter-logs', $letter->toArray())
+            ->assertRedirect('/outgoing-letter-logs');
+
+        $this->assertEquals(1, OutgoingLetterLog::count());
+    }
+
+    /** @test */
+    public function request_validates_amount_field_can_be_a_string_value()
+    {
+        try {
+            $this->be(factory(\App\User::class)->create());
+            $letter = factory(OutgoingLetterLog::class)->make(['amount' => 'some string']);
+                
+            $this->withoutExceptionHandling()
+                        ->post('/outgoing-letter-logs', $letter->toArray());
+                    
+            $this->fail('Failed to validate \'amount\' cannot be a string value');
+        } catch (ValidationException $e) {
+            $this->assertArrayHasKey('amount', $e->errors());
+            $this->assertEquals(0, OutgoingLetterLog::count());
+        } catch (\Exception $e) {
+            $this->fail('Failed to validate \'sender_id\' cannot be a string value');
+        }
+    }
 }
