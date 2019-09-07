@@ -11,16 +11,19 @@ class OutgoingLetterLogsController extends Controller
     {
         return view('outgoing_letter_logs.create');
     }
-    protected function store(Request $request) {
-
-      $outgoingletterlog = new OutgoingLetterLog;
-      $outgoingletterlog->date = $request->date;
-      $outgoingletterlog->type = $request->type;
-      $outgoingletterlog->recipient = $request->recipient;
-      $outgoingletterlog->sender_id = $request->sender_id;
-      $outgoingletterlog->description = $request->description;
-      $outgoingletterlog->amount = $request->amount;
-      $outgoingletterlog->save();
+    
+    protected function store(Request $request) 
+    {
+        OutgoingLetterLog::create($request->only([
+            'date', 
+            'type', 
+            'recipient', 
+            'sender_id', 
+            'description', 
+            'amount'
+        ]));
+        
+        return redirect('/outgoing-letter-logs');
     }
     
 }

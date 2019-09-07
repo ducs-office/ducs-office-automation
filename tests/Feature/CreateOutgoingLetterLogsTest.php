@@ -36,11 +36,14 @@ class CreateOutgoingLetterLogsTest extends TestCase
     /** @test */
     public function store_outgoing_letter_log_in_database()
     {
-        $outgoing_letter_log = factory(OutgoingLetterLog::class)->make();
         $this->be(factory(\App\User::class)->create());
+        
+        $outgoing_letter_log = factory(OutgoingLetterLog::class)->make();
+
         $this->withoutExceptionHandling()
             ->post('/outgoing-letter-logs', $outgoing_letter_log->toArray())
-            ->assertSuccessful(201);
+            ->assertRedirect('/outgoing-letter-logs');
+            
         $this->assertEquals(1, OutgoingLetterLog::count());
     }
 }
