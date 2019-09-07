@@ -11,6 +11,8 @@
 |
 */
 
+
+
 Route::get('/', function () {
     $user = Auth::check() ? Auth::user()->name : 'Guest';
     return view('welcome')->with('user',$user);
@@ -22,3 +24,4 @@ Route::post('/logout', 'Auth\LoginController@logout')->middleware('auth');
 
 
 Route::get('/outgoing-letter-logs/create', 'OutgoingLetterLogsController@create')->middleware('auth');
+Route::post('/outgoing-letter-logs', 'OutgoingLetterLogsController@store')->middleware('auth');

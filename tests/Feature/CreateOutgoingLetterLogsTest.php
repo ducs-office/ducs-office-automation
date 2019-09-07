@@ -12,12 +12,12 @@ use Illuminate\Validation\UnauthorizedException;
 class CreateOutgoingLetterLogsTest extends TestCase
 {
     use RefreshDatabase;
-    
+
     /** @test */
     public function user_can_fill_outgoing_letter_logs_form()
     {
         $this->be(factory(\App\User::class)->create());
-        
+
         $this->withoutExceptionHandling()
             ->get('/outgoing-letter-logs/create')
             ->assertSuccessful()
@@ -28,7 +28,7 @@ class CreateOutgoingLetterLogsTest extends TestCase
     public function guest_cannot_fill_outgoing_letter_logs_form()
     {
         $this->expectException(AuthenticationException::class);
-        
+
         $this->withoutExceptionHandling()
             ->get('/outgoing-letter-logs/create');
     }
@@ -37,11 +37,10 @@ class CreateOutgoingLetterLogsTest extends TestCase
     public function store_outgoing_letter_log_in_database()
     {
         $outgoing_letter_log = factory(OutgoingLetterLog::class)->make();
-
+        $this->be(factory(\App\User::class)->create());
         $this->withoutExceptionHandling()
             ->post('/outgoing-letter-logs', $outgoing_letter_log->toArray())
-            ->assertStatus(201);
-
+            ->assertSuccessful(201);
         $this->assertEquals(1, OutgoingLetterLog::count());
     }
 }
