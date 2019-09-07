@@ -145,4 +145,23 @@ class StoreOutgoingLetterLogTest extends TestCase
             $this->fail('Empty \'type\' field was not validated.');
         }
     }
+
+    /** @test */
+    public function request_validates_recipient_field_is_not_null()
+    {
+        try {
+            $this->be(factory(\App\User::class)->create());
+            $letter = factory(OutgoingLetterLog::class)->make(['recipient' => '']);
+        
+            $this->withoutExceptionHandling()
+                ->post('/outgoing-letter-logs', $letter->toArray());
+            
+            $this->fail('Empty \'recipient\' field was not validated.');
+        } catch(ValidationException $e) {
+            $this->assertArrayHasKey('recipient', $e->errors());
+            $this->assertEquals(0, OutgoingLetterLog::count());
+        } catch(\Exception $e) {
+            $this->fail('Empty \'recipient\' field was not validated.');
+        }
+    }
 }
