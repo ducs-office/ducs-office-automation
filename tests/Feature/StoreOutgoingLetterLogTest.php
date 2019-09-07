@@ -126,4 +126,23 @@ class StoreOutgoingLetterLogTest extends TestCase
 
         $this->assertEquals(1, OutgoingLetterLog::count());
     }
+
+    /** @test */
+    public function request_validates_type_field_is_not_null()
+    {
+        try {
+            $this->be(factory(\App\User::class)->create());
+            $letter = factory(OutgoingLetterLog::class)->make(['type' => '']);
+        
+            $this->withoutExceptionHandling()
+                ->post('/outgoing-letter-logs', $letter->toArray());
+            
+            $this->fail('Empty \'type\' field was not validated.');
+        } catch(ValidationException $e) {
+            $this->assertArrayHasKey('type', $e->errors());
+            $this->assertEquals(0, OutgoingLetterLog::count());
+        } catch(\Exception $e) {
+            $this->fail('Empty \'type\' field was not validated.');
+        }
+    }
 }
