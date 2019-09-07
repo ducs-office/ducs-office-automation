@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\OutgoingLetterLog;
 use Illuminate\Auth\AuthenticationException;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -31,19 +30,5 @@ class CreateOutgoingLetterLogsTest extends TestCase
 
         $this->withoutExceptionHandling()
             ->get('/outgoing-letter-logs/create');
-    }
-
-    /** @test */
-    public function store_outgoing_letter_log_in_database()
-    {
-        $this->be(factory(\App\User::class)->create());
-        
-        $outgoing_letter_log = factory(OutgoingLetterLog::class)->make();
-
-        $this->withoutExceptionHandling()
-            ->post('/outgoing-letter-logs', $outgoing_letter_log->toArray())
-            ->assertRedirect('/outgoing-letter-logs');
-            
-        $this->assertEquals(1, OutgoingLetterLog::count());
     }
 }
