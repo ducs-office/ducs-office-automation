@@ -99,4 +99,31 @@ class StoreOutgoingLetterLogTest extends TestCase
             OutgoingLetterLog::truncate();
         }
     }
+
+    /** @test */
+    public function request_validates_date_field_cannot_be_a_future_date()
+    {
+        $this->be(factory(\App\User::class)->create());
+        $letter = factory(OutgoingLetterLog::class)->make();
+        try {
+            $letter->date = now()->addMonth(1)->format('Y-m-d');
+
+            $this->withoutExceptionHandling()
+                ->post('/outgoing-letter-logs', $letter->toArray());
+
+            $this->fail("Future date '{$letter->date}' was not validated");
+        } catch (ValidationException $e) {
+            $this->assertArrayHasKey('date', $e->errors());
+            $this->assertEquals(0, OutgoingLetterLog::count());
+        } catch (\Exception $e) {
+            $this->fail("Future date '{$letter->date}' was not validated");
+        }
+
+        $letter->date = now()->subMonth(1)->format('Y-m-d');
+        $this->withoutExceptionHandling()
+            ->post('/outgoing-letter-logs', $letter->toArray())
+            ->assertRedirect('/outgoing-letter-logs');
+
+        $this->assertEquals(1, OutgoingLetterLog::count());
+    }
 }
