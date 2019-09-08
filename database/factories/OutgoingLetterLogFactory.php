@@ -8,7 +8,7 @@ use Faker\Generator as Faker;
 
 $factory->define(OutgoingLetterLog::class, function (Faker $faker) {
     return [
-        'date' => $faker->dateTime(),
+        'date' => $faker->date('Y-m-d H:i:s'),
         'type' => $faker->realText(50),
         'recipient' => $faker->name,
         'sender_id' => function() {
