@@ -6,13 +6,25 @@ use Auth;
 use App\OutgoingLetterLog;
 use App\User;
 use Illuminate\Http\Request;
+use DB;
 
 class OutgoingLetterLogsController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $outgoing_letter_logs = OutgoingLetterLog::all();
-        return view('outgoing_letter_logs.index', compact('outgoing_letter_logs'));
+        $query = OutgoingLetterLog::query();
+        
+        if($request->has('before')) {
+            $query->where('date', '<', $request->before);
+        }
+
+        if ($request->has('after')) {
+            $query->where('date', '>', $request->after);
+        }
+
+        return view('outgoing_letter_logs.index', [
+            'outgoing_letter_logs' => $query->get()
+        ]);
     }
 
     public function create()

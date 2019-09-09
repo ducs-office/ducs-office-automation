@@ -6,6 +6,7 @@ use App\OutgoingLetterLog;
 use App\User;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 
 class ViewOutgoingLetterLogsTest extends TestCase
@@ -24,7 +25,7 @@ class ViewOutgoingLetterLogsTest extends TestCase
     {
         $this->be(factory(User::class)->create());
         factory(OutgoingLetterLog::class, 3)->create();
-        $this->be(factory(\App\User::class)->create());
+
         $viewLetterLogs = $this->withoutExceptionHandling()
             ->get('/outgoing-letter-logs')
             ->assertSuccessful()
@@ -44,11 +45,13 @@ class ViewOutgoingLetterLogsTest extends TestCase
         factory(OutgoingLetterLog::class)->create(['date' => '2017-10-12 13:34:24']);
 
         $beforeFilter = '2017-09-01 13:34:24';
-        
+
+        $this->be(factory(User::class)->create());
+
         $viewLetterLogs = $this->withoutExceptionHandling()
             ->get('/outgoing-letter-logs?before=' . $beforeFilter)
             ->assertSuccessful()
-            ->assertViewIs('outgoing-letter-logs.index')
+            ->assertViewIs('outgoing_letter_logs.index')
             ->assertViewHas('outgoing_letter_logs')
             ->viewData('outgoing_letter_logs');
 
@@ -56,7 +59,7 @@ class ViewOutgoingLetterLogsTest extends TestCase
         $this->assertCount(2, $viewLetterLogs, 'Only 2 logs were expected but :actual logs were returned');
 
         $logsAfterBeforeFilter = $viewLetterLogs->filter(function($log) use ($beforeFilter){
-            return \Carbon::parse($beforeFilter)->lessThan($log->date);
+            return Carbon::parse($beforeFilter)->lessThan($log->date);
         });
         
         $this->assertCount(0, $logsAfterBeforeFilter, 'filtered logs do not respect `before` filter');
@@ -71,10 +74,12 @@ class ViewOutgoingLetterLogsTest extends TestCase
 
         $afterFilter = '2017-09-01';
         
+        $this->be(factory(User::class)->create());
+        
         $viewLetterLogs = $this->withoutExceptionHandling()
             ->get('/outgoing-letter-logs?after=' . $afterFilter)
             ->assertSuccessful()
-            ->assertViewIs('outgoing-letter-logs.index')
+            ->assertViewIs('outgoing_letter_logs.index')
             ->assertViewHas('outgoing_letter_logs')
             ->viewData('outgoing_letter_logs');
 
@@ -82,7 +87,7 @@ class ViewOutgoingLetterLogsTest extends TestCase
         $this->assertCount(1, $viewLetterLogs, 'Only 1 log was expected but :actual logs were returned');
 
         $logsBeforeAfterFilter = $viewLetterLogs->filter(function($log) use ($afterFilter){
-            return \Carbon::parse($afterFilter)->greaterThan($log->date);
+            return Carbon::parse($afterFilter)->greaterThan($log->date);
         });
         
         $this->assertCount(0, $logsBeforeAfterFilter, 'filtered logs do not respect `after` filter');
@@ -97,12 +102,14 @@ class ViewOutgoingLetterLogsTest extends TestCase
         factory(OutgoingLetterLog::class)->create(['date' => '2017-10-12']);
 
         $afterFilter = '2017-08-01';
-        $beforeFilter = '2019-09-01';
+        $beforeFilter = '2017-09-01';
+        
+        $this->be(factory(User::class)->create());
         
         $viewLetterLogs = $this->withoutExceptionHandling()
             ->get('/outgoing-letter-logs?after=' . $afterFilter . '&before='. $beforeFilter)
             ->assertSuccessful()
-            ->assertViewIs('outgoing-letter-logs.index')
+            ->assertViewIs('outgoing_letter_logs.index')
             ->assertViewHas('outgoing_letter_logs')
             ->viewData('outgoing_letter_logs');
 
@@ -110,8 +117,8 @@ class ViewOutgoingLetterLogsTest extends TestCase
         $this->assertCount(2, $viewLetterLogs, 'Only 2 logs were expected but :actual logs were returned');
 
         $logsOutOfFilterRange = $viewLetterLogs->filter(function($log) use ($afterFilter, $beforeFilter){
-            return \Carbon::parse($beforeFilter)->lessThan($log->date)
-                && \Carbon::parse($afterFilter)->greaterThan($log->date);
+            return Carbon::parse($beforeFilter)->lessThan($log->date)
+                && Carbon::parse($afterFilter)->greaterThan($log->date);
         });
         
         $this->assertCount(0, $logsOutOfFilterRange, 'filtered logs do not respect `before` and `after` filter');
