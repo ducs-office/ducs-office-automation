@@ -19,7 +19,8 @@ class EditOutgoingLetterLogsTest extends TestCase
         $this->be(factory(User::class)->create());
         $letter = factory(OutgoingLetterLog::class)->create();
 
-        $this->get("/outgoing-letter-logs/$letter->id")
+        $this->withoutExceptionHandling()
+            ->get("/outgoing-letter-logs/$letter->id")
             ->assertSuccessful()
             ->assertViewIs('outgoing_letter_logs.edit')
             ->assertViewHas('outgoing_letter', $letter);

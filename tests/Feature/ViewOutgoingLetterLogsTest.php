@@ -22,11 +22,11 @@ class ViewOutgoingLetterLogsTest extends TestCase
     public function user_can_view_outgoing_letter_logs()
     {
         factory(OutgoingLetterLog::class, 3)->create();
-        
+        $this->be(factory(\App\User::class)->create());
         $viewLetterLogs = $this->withoutExceptionHandling()
             ->get('/outgoing-letter-logs')
             ->assertSuccessful()
-            ->assertViewIs('outgoing-letter-logs.index')
+            ->assertViewIs('outgoing_letter_logs.index')
             ->assertViewHas('outgoing_letter_logs')
             ->viewData('outgoing_letter_logs');
 
@@ -37,11 +37,11 @@ class ViewOutgoingLetterLogsTest extends TestCase
     /** @test */
     public function user_can_view_filtered_letter_logs_based_on_before_given_date()
     {
-        factory(OutgoingLetterLog::class)->create(['date' => '2017-08-09']);
-        factory(OutgoingLetterLog::class)->create(['date' => '2017-08-15']);
-        factory(OutgoingLetterLog::class)->create(['date' => '2017-10-12']);
+        factory(OutgoingLetterLog::class)->create(['date' => '2017-08-09 13:34:24']);
+        factory(OutgoingLetterLog::class)->create(['date' => '2017-08-15 13:34:24']);
+        factory(OutgoingLetterLog::class)->create(['date' => '2017-10-12 13:34:24']);
 
-        $beforeFilter = '2017-09-01';
+        $beforeFilter = '2017-09-01 13:34:24';
         
         $viewLetterLogs = $this->withoutExceptionHandling()
             ->get('/outgoing-letter-logs?before=' . $beforeFilter)

@@ -58,20 +58,20 @@ class StoreOutgoingLetterLogTest extends TestCase
     /** @test */
     public function request_validates_date_field_is_a_valid_date()
     {
-        $this->be(factory(\App\User::class)->create());
+        $this->be($user = factory(\App\User::class)->create());
         $letter = factory(\App\OutgoingLetterLog::class)->make();
 
         $invalidDates = [
             '2014-16-14 13:34:24', //16 is not a valid month
             '2017-02-29 13:34:24', //not a leap year
-            '2017-02-31 13:34:24', //31 date does not exist in 2nd month
+            '2017-04-31 13:34:24', //31 date does not exist in 4th month
         ];
 
         $validDates = [
             '2018-01-31 13:34:24',
             '2016-02-29 13:34:24',
             '2018-02-28 13:34:24',
-            '2018-03-30 13:34:24',
+            '2018-03-31 13:34:24',
         ];
 
         foreach ($invalidDates as $date) {
@@ -95,7 +95,6 @@ class StoreOutgoingLetterLogTest extends TestCase
             $this->withoutExceptionHandling()
                 ->post('/outgoing-letter-logs', $letter->toArray())
                 ->assertRedirect('/outgoing-letter-logs');
-
             $this->assertEquals(1, OutgoingLetterLog::count());
             OutgoingLetterLog::truncate();
         }
@@ -190,7 +189,7 @@ class StoreOutgoingLetterLogTest extends TestCase
     public function request_validates_sender_id_field_must_be_a_existing_user()
     {
         try {
-            $this->be(factory(\App\User::class)->create(['id' => 4]));
+            $this->be(factory(\App\User::class)->create());
             $letter = factory(OutgoingLetterLog::class)->make(['sender_id' => 4]);
             
             $this->withoutExceptionHandling()
@@ -202,7 +201,7 @@ class StoreOutgoingLetterLogTest extends TestCase
             $this->assertArrayHasKey('sender_id', $e->errors());
             $this->assertEquals(0, OutgoingLetterLog::count());
         } catch(\Exception $e) {
-            $this->fail('Failed to validate \'sender_id\' is a valid existing user id');
+            $this->fail($e->getMessage());
         }
     }
 
