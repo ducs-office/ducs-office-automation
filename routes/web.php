@@ -11,11 +11,10 @@
 |
 */
 
-use App\OutgoingLetterLog;
 
 Route::get('/', function () {
     $user = Auth::check() ? Auth::user()->name : 'Guest';
-    return view('welcome')->with('user',$user);
+    return view('welcome')->with('user', $user);
 });
 
 Route::get('/login', 'Auth\LoginController@showLoginForm')->middleware('guest')->name('login');
@@ -27,4 +26,4 @@ Route::get('/outgoing-letter-logs/create', 'OutgoingLetterLogsController@create'
 Route::post('/outgoing-letter-logs', 'OutgoingLetterLogsController@store')->middleware('auth');
 Route::get('/outgoing-letter-logs/{outgoing_letter}', 'OutgoingLetterLogsController@edit')->middleware('auth');
 Route::get('/outgoing-letter-logs', 'OutgoingLetterLogsController@index')->middleware('auth');
-Route::patch('/outgoing-letter-logs/{letter}', 'OutgoingLetterLogsController@update')->middleware('auth');
+Route::patch('/outgoing-letter-logs/{outgoing_letter}', 'OutgoingLetterLogsController@update')->middleware('auth');

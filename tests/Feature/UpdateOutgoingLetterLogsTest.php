@@ -17,7 +17,7 @@ class UpdateOutgoingLetterLogsTest extends TestCase
     {
         $letter = factory(OutgoingLetterLog::class)->create();
         $this->withExceptionHandling()
-            ->patch("/outgoing-letter-logs/{$letter->id}", ['date' => '2018-08-9 12:02:23'])
+            ->patch("/outgoing-letter-logs/{$letter->id}", ['date' => '2018-08-9'])
             ->assertRedirect('/login');
             
         $this->assertEquals($letter->date, $letter->fresh()->date);
@@ -48,16 +48,16 @@ class UpdateOutgoingLetterLogsTest extends TestCase
         $this->be(factory(\App\User::class)->create());
 
         $invalidDates = [
-            '2014-16-14 13:34:24', //16 is not a valid month
-            '2017-02-29 13:34:24', //not a leap year
-            '2017-04-31 13:34:24', //31 date does not exist in 3rd month
+            '2014-16-14', //16 is not a valid month
+            '2017-02-29', //not a leap year
+            '2017-04-31', //31 date does not exist in 3rd month
         ];
 
         $validDates = [
-            '2018-01-31 13:34:24',
-            '2016-02-29 13:34:24',
-            '2018-02-28 13:34:24',
-            '2018-03-30 13:34:24',
+            '2018-01-31',
+            '2016-02-29',
+            '2018-02-28',
+            '2018-03-30',
         ];
 
         foreach ($invalidDates as $date) {
@@ -93,7 +93,7 @@ class UpdateOutgoingLetterLogsTest extends TestCase
 
             $this->withoutExceptionHandling()
                 ->patch("/outgoing-letter-logs/{$letter->id}", [
-                    'date' => $date = now()->addMonth(1)->format('Y-m-d H:i:s')
+                    'date' => $date = now()->addMonth(1)->format('Y-m-d')
                 ]);
 
             $this->fail("Future date '{$date}' was not validated");
@@ -104,7 +104,7 @@ class UpdateOutgoingLetterLogsTest extends TestCase
             $this->fail("Future date '{$date}' was not validated");
         }
 
-        $date = now()->subMonth(1)->format('Y-m-d H:i:s');
+        $date = now()->subMonth(1)->format('Y-m-d');
         $this->withoutExceptionHandling()
             ->patch("/outgoing-letter-logs/{$letter->id}", compact('date'))
             ->assertRedirect('/outgoing-letter-logs');

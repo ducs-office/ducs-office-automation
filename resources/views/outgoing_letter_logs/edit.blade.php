@@ -1,0 +1,1 @@
+<h2>{{ $outgoing_letter }}

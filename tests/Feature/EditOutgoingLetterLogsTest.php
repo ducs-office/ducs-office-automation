@@ -23,7 +23,7 @@ class EditOutgoingLetterLogsTest extends TestCase
             ->get("/outgoing-letter-logs/$letter->id")
             ->assertSuccessful()
             ->assertViewIs('outgoing_letter_logs.edit')
-            ->assertViewHas('outgoing_letter', $letter);
+            ->assertViewHas('outgoing_letter');
     }
 
     /** @test */

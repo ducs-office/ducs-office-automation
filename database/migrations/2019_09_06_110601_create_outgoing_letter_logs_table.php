@@ -15,7 +15,7 @@ class CreateOutgoingLetterLogsTable extends Migration
     {
         Schema::create('outgoing_letter_logs', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->timestamp('date');
+            $table->date('date');
             $table->string('type', 50);
             $table->string('recipient', 50);
             $table->unsignedBigInteger('sender_id');

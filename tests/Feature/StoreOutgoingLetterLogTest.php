@@ -62,16 +62,16 @@ class StoreOutgoingLetterLogTest extends TestCase
         $letter = factory(\App\OutgoingLetterLog::class)->make();
 
         $invalidDates = [
-            '2014-16-14 13:34:24', //16 is not a valid month
-            '2017-02-29 13:34:24', //not a leap year
-            '2017-04-31 13:34:24', //31 date does not exist in 4th month
+            '2014-16-14', //16 is not a valid month
+            '2017-02-29', //not a leap year
+            '2017-04-31', //31 date does not exist in 4rd month
         ];
 
         $validDates = [
-            '2018-01-31 13:34:24',
-            '2016-02-29 13:34:24',
-            '2018-02-28 13:34:24',
-            '2018-03-31 13:34:24',
+            '2018-01-31',
+            '2016-02-29',
+            '2018-02-28',
+            '2018-03-31',
         ];
 
         foreach ($invalidDates as $date) {
@@ -106,7 +106,7 @@ class StoreOutgoingLetterLogTest extends TestCase
         $this->be(factory(\App\User::class)->create());
         $letter = factory(OutgoingLetterLog::class)->make();
         try {
-            $letter->date = now()->addMonth(1)->format('Y-m-d H:i:s');
+            $letter->date = now()->addMonth(1)->format('Y-m-d');
 
             $this->withoutExceptionHandling()
                 ->post('/outgoing-letter-logs', $letter->toArray());
@@ -119,7 +119,7 @@ class StoreOutgoingLetterLogTest extends TestCase
             $this->fail("Future date '{$letter->date}' was not validated");
         }
 
-        $letter->date = now()->subMonth(1)->format('Y-m-d H:i:s');
+        $letter->date = now()->subMonth(1)->format('Y-m-d');
         $this->withoutExceptionHandling()
             ->post('/outgoing-letter-logs', $letter->toArray())
             ->assertRedirect('/outgoing-letter-logs');
@@ -232,7 +232,7 @@ class StoreOutgoingLetterLogTest extends TestCase
     }
 
     /** @test */
-    public function request_validates_amount_field_can_not_be_a_string_value()
+    public function request_validates_amount_field_cannot_be_a_string_value()
     {
         try {
             $this->be(factory(\App\User::class)->create());

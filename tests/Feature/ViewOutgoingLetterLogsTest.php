@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\OutgoingLetterLog;
+use App\User;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Collection;
@@ -21,6 +22,7 @@ class ViewOutgoingLetterLogsTest extends TestCase
     /** @test */
     public function user_can_view_outgoing_letter_logs()
     {
+        $this->be(factory(User::class)->create());
         factory(OutgoingLetterLog::class, 3)->create();
         $this->be(factory(\App\User::class)->create());
         $viewLetterLogs = $this->withoutExceptionHandling()
