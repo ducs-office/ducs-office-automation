@@ -16,9 +16,10 @@ class OutgoingLetterLogsTest extends TestCase
     /** @test */
     public function date_attribute_is_casted_to_carbon_instance()
     {
-        $letter_log = factory(OutgoingLetterLog::class)->make();
+        $letter_log = factory(OutgoingLetterLog::class)->make(['date' => '2016-08-08']);
 
         $this->assertInstanceOf(Carbon::class, $letter_log->date);
+        $this->assertEquals('2016-08-08', $letter_log->date->format('Y-m-d'));
     }
 
     /** @test */
