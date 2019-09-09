@@ -20,8 +20,12 @@ Route::get('/', function () {
 
 Route::get('/login', 'Auth\LoginController@showLoginForm')->middleware('guest')->name('login');
 Route::post('/login', 'Auth\LoginController@login')->middleware('guest');
-Route::post('/logout', 'Auth\LoginController@logout')->middleware('auth');
+Route::post('/logout', 'Auth\LoginController@')->middleware('auth');
 
 
 Route::get('/outgoing-letter-logs/create', 'OutgoingLetterLogsController@create')->middleware('auth');
 Route::post('/outgoing-letter-logs', 'OutgoingLetterLogsController@store')->middleware('auth');
+
+Route::get('/outgoing-letter-logs/{letter}' , 'OutgoingLetterLogsController@edit')->middleware('auth');
+
+Route::get('/outgoing-letter-logs','OutgoingLetterLogsController@view')->middleware('auth');

@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\OutgoingLetterLog;
+use App\User;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Collection;
@@ -21,12 +22,13 @@ class ViewOutgoingLetterLogsTest extends TestCase
     /** @test */
     public function user_can_view_outgoing_letter_logs()
     {
+        $this->be(factory(User::class)->create());
         factory(OutgoingLetterLog::class, 3)->create();
         
         $viewLetterLogs = $this->withoutExceptionHandling()
             ->get('/outgoing-letter-logs')
             ->assertSuccessful()
-            ->assertViewIs('outgoing-letter-logs.index')
+            ->assertViewIs('outgoing_letter_logs.index')
             ->assertViewHas('outgoing_letter_logs')
             ->viewData('outgoing_letter_logs');
 

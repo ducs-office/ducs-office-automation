@@ -61,9 +61,9 @@ class StoreOutgoingLetterLogTest extends TestCase
         $letter = factory(OutgoingLetterLog::class)->make();
 
         $invalidDates = [
-            '2014-16-14', //16 is not a valid month
+            '2014-16-14',//16 is not a valid month
             '2017-02-29', //not a leap year
-            '2017-03-31', //31 date does not exist in 3rd month
+            '2017-04-31', //31 date does not exist in 3rd month
         ];
 
         $validDates = [
@@ -230,7 +230,7 @@ class StoreOutgoingLetterLogTest extends TestCase
     }
 
     /** @test */
-    public function request_validates_amount_field_can_be_a_string_value()
+    public function request_validates_amount_field_cannot_be_a_string_value()
     {
         try {
             $this->be(factory(\App\User::class)->create());
