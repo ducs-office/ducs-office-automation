@@ -10,4 +10,7 @@ class OutgoingLetterLog extends Model
 
     protected $dates = ['date'];
 
+    public function sender() {
+        return $this->belongsTo(User::class, 'sender_id');
+    }
 }
