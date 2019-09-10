@@ -13,9 +13,8 @@
 
 
 Route::get('/', function () {
-    $user = Auth::check() ? Auth::user()->name : 'Guest';
-    return view('welcome')->with('user', $user);
-});
+    return view('dashboard');
+})->middleware('auth');
 
 Route::get('/login', 'Auth\LoginController@showLoginForm')->middleware('guest')->name('login');
 Route::post('/login', 'Auth\LoginController@login')->middleware('guest');
