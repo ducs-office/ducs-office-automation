@@ -1,40 +1,58 @@
 @extends('layouts.master')
 @section('body')
-    <h1 class="mb-8">Outgoing Letter Logs</h1>
-    <div class="mb-8">
-        <a href="/outgoing-letter-logs/create" class="text-blue-500 hover:underline">Create</a>
-    </div>
-    <div class="mb-3">
-        <h4 class="mb-1">Filters:</h4>
-        <form method="GET">
-            <label class="font-bold" for="before">Before:</label>
-            <input type="date" name="before" placeholder="Before date" class="mr-4">
+    <div class="page-card">
+        <h1 class="page-header">Outgoing Letter Logs</h1>
+        
+        <div class="flex justify-between items-end mb-8 bg-gray-200 py-2 px-6">
+            <form method="GET" class="flex items-end">
+                <input type="text" name="after" 
+                    placeholder="After date"
+                    class="w-full form-input mr-4" 
+                    onfocus="this.type='date'"
+                    onblur="this.type='text'">
 
-            <label class="font-bold" for="after">After</label>
-            <input type="date" name="after" placeholder="Before date">
-
-            <button type="submit">Filter</button>
-        </form>
+                <input type="text" name="before" 
+                    placeholder="Before date"
+                    class="w-full form-input mr-4" 
+                    onfocus="this.type='date'"
+                    onblur="this.type='text'">
+                    
+                <button type="submit" class="btn btn-black">Filter</button>
+            </form>
+            <a href="/outgoing-letter-logs/create"
+                class="btn btn-blue text-lg">
+                Create
+            </a>
+        </div>
+        <table class="w-full border border-t-0 border-collapse text-left">
+            <thead>
+                <th class="bg-gray-200 pl-6 pr-3 py-2">Date</th>
+                <th class="bg-gray-200 px-3 py-2">Sender</th>
+                <th class="bg-gray-200 px-3 py-2">Recipient</th>
+                <th class="bg-gray-200 px-3 py-2">Type</th>
+                <th class="bg-gray-200 px-3 py-2">Description</th>
+                <th class="bg-gray-200 px-3 py-2 text-right">Amount</th>
+                <th class="bg-gray-200 pl-3 pr-6 py-2 text-right">Options</th>
+            </thead>
+            <tbody>
+                @foreach($outgoing_letter_logs as $letter)
+                <tr class="hover:bg-gray-100">
+                    <td class="pl-6 pr-3 py-1 border-b table-fit">{{ $letter->date->format('Y-m-d') }}</td>
+                    <td class="px-3 py-1 border-b table-fit">{{ $letter->sender->name }}</td>
+                    <td class="px-3 py-1 border-b table-fit">{{ $letter->recipient }}</td>
+                    <td class="px-3 py-1 border-b table-fit">{{ $letter->type }}</td>
+                    <td class="px-3 py-1 border-b max-w-2xs truncate" title="{{ $letter->description }}">{{ $letter->description }}</td>
+                    <td class="px-3 py-1 border-b table-fit text-right">{{ number_format($letter->amount, 2) }}</td>
+                    <td class="pl-3 pr-6 py-1 border-b text-right">
+                        <a href="/outgoing-letter-logs/{{$letter->id}}" 
+                            class="p-1 btn btn-blue"
+                            title="Edit">
+                            <feather-icon name="edit-3" class="h-current">Edit</feather-icon>
+                        </a>
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
     </div>
-    <table>
-        <thead>
-            <th>Date</th>
-            <th>Sender</th>
-            <th>Type</th>
-            <th>Description</th>
-            <th>Amount</th>
-        </thead>
-        <tbody>
-            @foreach($outgoing_letter_logs as $letter)
-            <tr>
-                <td>{{ $letter->date->format('Y-m-d') }}</td>
-                <td>{{ $letter->sender->name }}</td>
-                <td>{{ $letter->type }}</td>
-                <td>{{ $letter->description }}</td>
-                <td>{{ $letter->amount ?? 'NA' }}</td>
-                <td><a href = "/outgoing-letter-logs/{{$letter->id}}" class="text-blue-500 hover:underline">Edit</a></td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
 @endsection

@@ -2,6 +2,56 @@
 
 @tailwind base;
 
+input[type='text'],
+input[type='date'],
+input[type='number'],
+textarea,
+select {
+    min-width: 15em;
+}
+
 @tailwind components;
 
+.page-card {
+    @apply bg-white py-6 rounded-lg shadow;
+}
+.page-header {
+    @apply px-6 text-2xl font-bold mb-6;
+}
+
+.form-label {
+    @apply text-xs font-bold uppercase text-gray-700 tracking-wider;
+}
+.form-input {
+    @apply bg-gray-100 px-2 py-1 border rounded;
+    &:hover, &:focus {
+        @apply bg-white border-gray-900;
+    }
+}
+
+.btn {
+    @apply inline-block px-3 py-1 bg-gray-100 text-black border border-gray-100 font-bold rounded;
+    &:hover {
+        @apply bg-gray-300 border-gray-300;
+    }
+    &.btn-black {
+        @apply bg-gray-900 text-white border-gray-900;
+        &:hover {
+            @apply bg-gray-700 border-gray-700;
+        }   
+    }
+    &.btn-blue {
+        @apply bg-blue-500 text-white border-blue-500;
+        &:hover {
+            @apply bg-blue-700 border-blue-700;
+        }   
+    }
+}
+
+
 @tailwind utilities;
+
+.table-fit {
+    width: 1%;
+    @apply whitespace-no-wrap;
+}

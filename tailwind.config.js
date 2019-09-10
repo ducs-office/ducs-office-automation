@@ -31,6 +31,9 @@ module.exports = {
           '90': 'rgba(0, 0, 0, .9)'
         }
       },
+      maxWidth: {
+        '2xs': '16rem',
+      },
       minWidth: {
         '32': '8rem',
         '48': '12rem',

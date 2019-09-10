@@ -14,7 +14,7 @@
             @auth
             @include('partials.sidebar')
             @endauth
-            <main class="p-4 flex-1">
+            <main class="p-4 pr-0 flex-1">
                 @yield('body')
             </main>
         </div>

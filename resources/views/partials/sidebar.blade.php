@@ -1,4 +1,4 @@
-<aside class="bg-white text-gray-900 py-3 min-w-48 max-w-sm shadow">
+<aside class="bg-white text-gray-900 py-3 min-w-48 max-w-sm shadow flex-shrink-0">
     <ul class="text-xs tracking-wider uppercase font-semibold mt-4">
         <li class="hover:bg-black-10 hover:border-black border-l-4 border-transparent mb-">
             <a href="/" class="flex items-center py-2 px-4">
