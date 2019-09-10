@@ -14,7 +14,7 @@ class OutgoingLetterLogsController extends Controller
     {
         $query = OutgoingLetterLog::query();
         
-        if($request->has('before')) {
+        if ($request->has('before')) {
             $query->where('date', '<', $request->before);
         }
 
@@ -35,7 +35,7 @@ class OutgoingLetterLogsController extends Controller
     protected function store(Request $request)
     {
         $validData = $request->validate([
-            'date' => 'required|date|date_format:Y-m-d|before_or_equal:today',
+            'date' => 'required|date|before_or_equal:today',
             'type' => 'required',
             'recipient' => 'required',
             'sender_id' => 'required|exists:users,id',
@@ -56,7 +56,7 @@ class OutgoingLetterLogsController extends Controller
     public function update(OutgoingLetterLog $outgoing_letter, Request $request)
     {
         $validData = $request->validate([
-            'date' => 'nullable|date|date_format:Y-m-d|before_or_equal:today',
+            'date' => 'nullable|date|before_or_equal:today',
             'type' => 'nullable',
             'recipient' =>  'nullable|',
             'description' => 'nullable|string|max:400',
