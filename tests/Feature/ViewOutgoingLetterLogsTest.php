@@ -40,11 +40,11 @@ class ViewOutgoingLetterLogsTest extends TestCase
     /** @test */
     public function user_can_view_filtered_letter_logs_based_on_before_given_date()
     {
-        factory(OutgoingLetterLog::class)->create(['date' => '2017-08-09 13:34:24']);
-        factory(OutgoingLetterLog::class)->create(['date' => '2017-08-15 13:34:24']);
-        factory(OutgoingLetterLog::class)->create(['date' => '2017-10-12 13:34:24']);
+        factory(OutgoingLetterLog::class)->create(['date' => '2017-08-09']);
+        factory(OutgoingLetterLog::class)->create(['date' => '2017-08-15']);
+        factory(OutgoingLetterLog::class)->create(['date' => '2017-10-12']);
 
-        $beforeFilter = '2017-09-01 13:34:24';
+        $beforeFilter = '2017-09-01';
 
         $this->be(factory(User::class)->create());
 

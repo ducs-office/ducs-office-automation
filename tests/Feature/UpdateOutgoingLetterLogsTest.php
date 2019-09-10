@@ -33,7 +33,7 @@ class UpdateOutgoingLetterLogsTest extends TestCase
 
         $this->withoutExceptionHandling()
             ->patch(
-                "/outgoing-letter-logs/{$letter->id}", 
+                "/outgoing-letter-logs/{$letter->id}",
                 $new_letter_log->toArray()
             )->assertRedirect('/outgoing-letter-logs');
             
@@ -74,12 +74,12 @@ class UpdateOutgoingLetterLogsTest extends TestCase
             }
         }
 
-        foreach( $validDates as $date) {
+        foreach ($validDates as $date) {
             $this->withoutExceptionHandling()
                 ->patch("/outgoing-letter-logs/{$letter->id}", compact('date'))
                 ->assertRedirect('/outgoing-letter-logs');
 
-            $this->assertEquals($date, $letter->fresh()->date);
+            $this->assertEquals($date, $letter->fresh()->date->format('Y-m-d'));
         }
     }
 
@@ -90,7 +90,6 @@ class UpdateOutgoingLetterLogsTest extends TestCase
         $this->be(factory(\App\User::class)->create());
 
         try {
-
             $this->withoutExceptionHandling()
                 ->patch("/outgoing-letter-logs/{$letter->id}", [
                     'date' => $date = now()->addMonth(1)->format('Y-m-d')
@@ -109,7 +108,7 @@ class UpdateOutgoingLetterLogsTest extends TestCase
             ->patch("/outgoing-letter-logs/{$letter->id}", compact('date'))
             ->assertRedirect('/outgoing-letter-logs');
 
-        $this->assertEquals($date, $letter->fresh()->date);
+        $this->assertEquals($date, $letter->fresh()->date->format('Y-m-d'));
     }
 
     
@@ -124,7 +123,7 @@ class UpdateOutgoingLetterLogsTest extends TestCase
                 ->patch("/outgoing-letter-logs/{$letter->id}", ['sender_id' => 4]);
             
             $this->fail('Failed to validate \'sender_id\' is a valid existing user id');
-        } catch(ValidationException $e) {
+        } catch (ValidationException $e) {
             $this->assertArrayHasKey('sender_id', $e->errors());
             $this->assertEquals($letter->sender_id, $letter->fresh()->sender_id);
         }

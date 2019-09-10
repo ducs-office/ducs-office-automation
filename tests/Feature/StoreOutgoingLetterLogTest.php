@@ -41,17 +41,16 @@ class StoreOutgoingLetterLogTest extends TestCase
     {
         try {
             $this->be(factory(User::class)->create());
-            $letter = factory(OutgoingLetterLog::class)->make(['date' => '']);
-        
+            $letter = factory(OutgoingLetterLog::class)->make()->toArray();
+            unset($letter['date']);
+
             $this->withoutExceptionHandling()
-                ->post('/outgoing-letter-logs', $letter->toArray());
+                ->post('/outgoing-letter-logs', $letter);
             
             $this->fail('Empty date field was not validated.');
-        } catch(ValidationException $e) {
+        } catch (ValidationException $e) {
             $this->assertArrayHasKey('date', $e->errors());
             $this->assertEquals(0, OutgoingLetterLog::count());
-        } catch(\Exception $e) {
-            $this->fail($e->getMessage());
         }
     }
 
@@ -59,7 +58,7 @@ class StoreOutgoingLetterLogTest extends TestCase
     public function request_validates_date_field_is_a_valid_date()
     {
         $this->be($user = factory(\App\User::class)->create());
-        $letter = factory(\App\OutgoingLetterLog::class)->make();
+        $letter = factory(\App\OutgoingLetterLog::class)->make()->toArray();
 
         $invalidDates = [
             '2014-16-14', //16 is not a valid month
@@ -76,24 +75,22 @@ class StoreOutgoingLetterLogTest extends TestCase
 
         foreach ($invalidDates as $date) {
             try {
-                $letter->date = $date;
-                    
+                $letter['date'] = $date;
                 $this->withoutExceptionHandling()
-                    ->post('/outgoing-letter-logs', $letter->toArray());
-                        
-                $this->fail("Invalid date '{$letter->date}' was not validated");
+                    ->post('/outgoing-letter-logs', $letter);
+                $this->fail("Invalid date '{$date}' was not validated");
             } catch (ValidationException $e) {
                 $this->assertArrayHasKey('date', $e->errors());
                 $this->assertEquals(0, OutgoingLetterLog::count());
             } catch (\Exception $e) {
-                $this->fail("Invalid date '{$letter->date}' was not validated");
+                $this->fail("Invalid date '{$date}' was not validated");
             }
         }
 
-        foreach( $validDates as $date) {
-            $letter->date = $date;
+        foreach ($validDates as $date) {
+            $letter['date'] = $date;
             $this->withoutExceptionHandling()
-                ->post('/outgoing-letter-logs', $letter->toArray())
+                ->post('/outgoing-letter-logs', $letter)
                 ->assertRedirect('/outgoing-letter-logs');
             $this->assertEquals(1, OutgoingLetterLog::count());
             OutgoingLetterLog::truncate();
@@ -138,10 +135,10 @@ class StoreOutgoingLetterLogTest extends TestCase
                 ->post('/outgoing-letter-logs', $letter->toArray());
             
             $this->fail('Empty \'type\' field was not validated.');
-        } catch(ValidationException $e) {
+        } catch (ValidationException $e) {
             $this->assertArrayHasKey('type', $e->errors());
             $this->assertEquals(0, OutgoingLetterLog::count());
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             // $this->fail('Empty \'type\' field was not validated.');
             $this->fail($e->getMessage());
         }
@@ -158,10 +155,10 @@ class StoreOutgoingLetterLogTest extends TestCase
                 ->post('/outgoing-letter-logs', $letter->toArray());
             
             $this->fail('Empty \'recipient\' field was not validated.');
-        } catch(ValidationException $e) {
+        } catch (ValidationException $e) {
             $this->assertArrayHasKey('recipient', $e->errors());
             $this->assertEquals(0, OutgoingLetterLog::count());
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->fail('Empty \'recipient\' field was not validated.');
         }
     }
@@ -177,10 +174,10 @@ class StoreOutgoingLetterLogTest extends TestCase
                 ->post('/outgoing-letter-logs', $letter->toArray());
             
             $this->fail('Empty \'sender_id\' field was not validated.');
-        } catch(ValidationException $e) {
+        } catch (ValidationException $e) {
             $this->assertArrayHasKey('sender_id', $e->errors());
             $this->assertEquals(0, OutgoingLetterLog::count());
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->fail('Empty \'sender_id\' field was not validated.');
         }
     }
@@ -196,11 +193,10 @@ class StoreOutgoingLetterLogTest extends TestCase
                 ->post('/outgoing-letter-logs', $letter->toArray());
             
             $this->fail('Failed to validate \'sender_id\' is a valid existing user id');
-            
-        } catch(ValidationException $e) {
+        } catch (ValidationException $e) {
             $this->assertArrayHasKey('sender_id', $e->errors());
             $this->assertEquals(0, OutgoingLetterLog::count());
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->fail($e->getMessage());
         }
     }
