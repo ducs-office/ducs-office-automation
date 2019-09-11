@@ -7,6 +7,7 @@ use App\OutgoingLetterLog;
 use App\User;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Str;
 
 class UpdateOutgoingLetterLogsTest extends TestCase
 {
@@ -40,7 +41,21 @@ class UpdateOutgoingLetterLogsTest extends TestCase
         $this->assertArraySubset($new_letter_log->toArray(), $letter->fresh()->toArray());
     }
 
-    
+    /** @test */
+    public function request_validates_date_field_cannot_be_null()
+    {
+        try{
+            $letter = factory(OutgoingLetterLog::class)->create();
+            $this->be(factory(\App\User::class)->create());
+            $this->withoutExceptionHandling()
+                ->patch("/outgoing-letter-logs/{$letter->id}", ['date'=>'']);
+        }catch(ValidationException $e){
+            $this->assertArrayHasKey('date', $e->errors());
+        }
+        
+        $this->assertEquals($letter->date,$letter->fresh()->date);
+    }
+
     /** @test */
     public function request_validates_date_field_is_a_valid_date()
     {
@@ -50,7 +65,8 @@ class UpdateOutgoingLetterLogsTest extends TestCase
         $invalidDates = [
             '2014-16-14', //16 is not a valid month
             '2017-02-29', //not a leap year
-            '2017-04-31', //31 date does not exist in 3rd month
+            '2017-04-31', //31 date does not exist in 4th month
+            '04-2017-12', // wrong format
         ];
 
         $validDates = [
@@ -58,12 +74,13 @@ class UpdateOutgoingLetterLogsTest extends TestCase
             '2016-02-29',
             '2018-02-28',
             '2018-03-30',
+            
         ];
 
         foreach ($invalidDates as $date) {
             try {
                 $this->withoutExceptionHandling()
-                    ->patch("/outgoing-letter-logs/{$letter->id}", compact('date'));
+                    ->patch("/outgoing-letter-logs/{$letter->id}", ['date'=>$date]);
                         
                 $this->fail("Invalid date '{$date}' was not validated");
             } catch (ValidationException $e) {
@@ -76,7 +93,7 @@ class UpdateOutgoingLetterLogsTest extends TestCase
 
         foreach ($validDates as $date) {
             $this->withoutExceptionHandling()
-                ->patch("/outgoing-letter-logs/{$letter->id}", compact('date'))
+                ->patch("/outgoing-letter-logs/{$letter->id}", ['date'=>$date,])
                 ->assertRedirect('/outgoing-letter-logs');
 
             $this->assertEquals($date, $letter->fresh()->date->format('Y-m-d'));
@@ -91,9 +108,7 @@ class UpdateOutgoingLetterLogsTest extends TestCase
 
         try {
             $this->withoutExceptionHandling()
-                ->patch("/outgoing-letter-logs/{$letter->id}", [
-                    'date' => $date = now()->addMonth(1)->format('Y-m-d')
-                ]);
+                ->patch("/outgoing-letter-logs/{$letter->id}", ['date' => $date = now()->addMonth(1)->format('Y-m-d')]);
 
             $this->fail("Future date '{$date}' was not validated");
         } catch (ValidationException $e) {
@@ -105,13 +120,27 @@ class UpdateOutgoingLetterLogsTest extends TestCase
 
         $date = now()->subMonth(1)->format('Y-m-d');
         $this->withoutExceptionHandling()
-            ->patch("/outgoing-letter-logs/{$letter->id}", compact('date'))
-            ->assertRedirect('/outgoing-letter-logs');
+            ->patch("/outgoing-letter-logs/{$letter->id}", ['date'=>$date])
+                ->assertRedirect('/outgoing-letter-logs');
 
         $this->assertEquals($date, $letter->fresh()->date->format('Y-m-d'));
     }
 
-    
+    /** @test */
+    public function request_validates_sender_id_field_cannot_be_null()
+    {
+        try{
+            $letter = factory(OutgoingLetterLog::class)->create();
+            $this->be(factory(\App\User::class)->create());
+            $this->withoutExceptionHandling()
+                ->patch("/outgoing-letter-logs/{$letter->id}", ['sender_id'=>'']);
+        }catch(ValidationException $e){
+            $this->assertArrayHasKey('sender_id', $e->errors());
+        }
+        
+        $this->assertEquals($letter->sender_id,$letter->fresh()->sender_id);
+    }
+
     /** @test */
     public function request_validates_sender_id_field_must_be_a_existing_user()
     {
@@ -125,8 +154,8 @@ class UpdateOutgoingLetterLogsTest extends TestCase
             $this->fail('Failed to validate \'sender_id\' is a valid existing user id');
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('sender_id', $e->errors());
-            $this->assertEquals($letter->sender_id, $letter->fresh()->sender_id);
         }
+        $this->assertEquals($letter->sender_id, $letter->fresh()->sender_id);
     }
 
     /** @test */
@@ -142,16 +171,31 @@ class UpdateOutgoingLetterLogsTest extends TestCase
         $this->assertNull($letter->fresh()->description);
     }
 
+     /** @test */
+     public function request_validates_description_field_maxlimit_400()
+     {
+         $letter = factory(OutgoingLetterLog::class)->create();
+         $this->be(factory(\App\User::class)->create());
+        
+         try{
+            $this->withoutExceptionHandling()
+                ->patch("/outgoing-letter-logs/{$letter->id}", ['description' => Str::random(401)])
+                ->assertRedirect('/outgoing-letter-logs');
+         }catch(ValidationException $e){
+             $this->assertArrayHasKey('description',$e->errors());
+         }
+ 
+         $this->assertEquals($letter->description,$letter->fresh()->description);
+     }
+
     /** @test */
     public function request_validates_amount_field_can_be_null()
     {
         $letter = factory(OutgoingLetterLog::class)->create();
         $this->be(factory(\App\User::class)->create());
-    
         $this->withoutExceptionHandling()
-            ->patch("/outgoing-letter-logs/{$letter->id}", ['amount' => ''])
-            ->assertRedirect('/outgoing-letter-logs');
-
+             ->patch("/outgoing-letter-logs/{$letter->id}", ['amount'=>''])
+             ->assertRedirect('/outgoing-letter-logs');
         $this->assertNull($letter->fresh()->amount);
     }
 
@@ -171,4 +215,35 @@ class UpdateOutgoingLetterLogsTest extends TestCase
             $this->assertEquals($letter->amount, $letter->fresh()->amount);
         }
     }
+
+    /** @test */
+    public function request_validates_type_field_cannot_be_null()
+    {
+        try{
+            $letter = factory(OutgoingLetterLog::class)->create();
+            $this->be(factory(\App\User::class)->create());
+            $this->withoutExceptionHandling()
+                ->patch("/outgoing-letter-logs/{$letter->id}", ['type'=>'']);
+        }catch(ValidationException $e){
+            $this->assertArrayHasKey('type', $e->errors());
+        }
+        
+        $this->assertEquals($letter->type,$letter->fresh()->type);
+    }
+
+    /** @test */
+    public function request_validates_recipient_field_cannot_be_null()
+    {
+        try{
+            $letter = factory(OutgoingLetterLog::class)->create();
+            $this->be(factory(\App\User::class)->create());
+            $this->withoutExceptionHandling()
+                ->patch("/outgoing-letter-logs/{$letter->id}", ['recipient'=>'']);
+        }catch(ValidationException $e){
+            $this->assertArrayHasKey('recipient', $e->errors());
+        }
+        
+        $this->assertEquals($letter->recipient,$letter->fresh()->recipient);
+    }
+
 }

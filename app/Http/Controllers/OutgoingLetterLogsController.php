@@ -56,12 +56,12 @@ class OutgoingLetterLogsController extends Controller
     public function update(OutgoingLetterLog $outgoing_letter, Request $request)
     {
         $validData = $request->validate([
-            'date' => 'nullable|date|before_or_equal:today',
-            'type' => 'nullable',
-            'recipient' =>  'nullable|',
+            'date' => 'sometimes|required|date|before_or_equal:today',
+            'type' => 'sometimes|required',
+            'recipient' =>  'sometimes|required|',
             'description' => 'nullable|string|max:400',
             'amount' => 'nullable|numeric',
-            'sender_id' => 'nullable|exists:users,id'
+            'sender_id' => 'sometimes|required|exists:users,id'
         ]);
 
         $outgoing_letter->update($validData);
