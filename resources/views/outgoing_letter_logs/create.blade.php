@@ -1,4 +1,4 @@
-@extends('layouts.master')
+g@extends('layouts.master')
 @section('body')
 <div class="page-card max-w-lg mx-auto">
     <h1 class="page-header">New Outgoing Letter Log</h1>
