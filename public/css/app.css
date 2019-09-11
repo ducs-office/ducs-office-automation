@@ -12850,6 +12850,11 @@ select {
   white-space: nowrap;
 }
 
+.absolute-y-center {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
 @media (min-width: 640px) {
   .sm\:sr-only {
     position: absolute;

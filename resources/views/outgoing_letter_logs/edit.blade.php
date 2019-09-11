@@ -24,8 +24,13 @@
         <div class="flex -mx-2 mb-2">
             <div class="mx-2">
                 <label for="sender" class="w-full form-label">Sender</label>
-                <input type="text" name="sender_id" value="{{ old('sender_id') ?? $outgoing_letter->sender_id }}" class="w-full form-input"
-                    placeholder="Sender's ID">
+                <vue-typeahead name="sender_id" 
+                    source="/api/users" 
+                    find-source="/api/users/{value}" 
+                    limit="5"
+                    value="{{ old('sender_id') ?? $outgoing_letter->sender_id }}"
+                    placeholder="Sender">
+                </vue-typeahead>
                 @if($errors->has('sender_id'))
                 <p class="text-red-500">{{ $errors->first('sender_id') }}</p>
                 @endif
@@ -42,14 +47,14 @@
         <div class="mb-2">
             <label for="description" class="w-full form-label">Description</label>
             <textarea name="description" id="description" placeholder="What this letter is about?"
-                class="w-full form-input" rows="3">{{ $outgoing_letter->description }}</textarea>
+                class="w-full form-input" rows="3">{{ old('description') ?? $outgoing_letter->description }}</textarea>
             @if($errors->has('description'))
             <p class="text-red-500">{{ $errors->first('description') }}</p>
             @endif
         </div>
         <div class="mb-4">
             <label for="amount" class="w-full form-label">Amount</label>
-            <input type="number" name="amount" step="0.01" value="{{ $outgoing_letter->amount }}" class=" w-full form-input"
+            <input type="number" name="amount" step="0.01" value="{{ old('amount') ?? $outgoing_letter->amount }}" class=" w-full form-input"
                 placeholder="Amount (INR)">
             @if($errors->has('amount'))
             <p class="text-red-500">{{ $errors->first('amount') }}</p>

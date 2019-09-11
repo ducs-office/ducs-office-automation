@@ -1,4 +1,4 @@
-g@extends('layouts.master')
+@extends('layouts.master')
 @section('body')
 <div class="page-card max-w-lg mx-auto">
     <h1 class="page-header">New Outgoing Letter Log</h1>
@@ -21,7 +21,14 @@ g@extends('layouts.master')
         <div class="flex -mx-2 mb-2">
             <div class="mx-2">
                 <label for="sender" class="w-full form-label">Sender</label>
-                <input type="text" name="sender_id" value="{{ old('sender_id') }}" class="w-full form-input" placeholder="Sender's ID">
+                <vue-typeahead 
+                    name="sender_id" 
+                    source="/api/users"
+                    find-source="/api/users/{value}"
+                    limit="5"
+                    value="{{ old('sender_id') }}" 
+                    placeholder="Sender">
+                </vue-typeahead>
                 @if($errors->has('sender_id'))
                     <p class="text-red-500">{{ $errors->first('sender_id') }}</p>
                 @endif

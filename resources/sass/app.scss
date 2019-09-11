@@ -55,3 +55,8 @@ select {
     width: 1%;
     @apply whitespace-no-wrap;
 }
+
+.absolute-y-center {
+    top: 50%;
+    transform: translateY(-50%);
+}
