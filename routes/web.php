@@ -27,4 +27,4 @@ Route::post('/outgoing-letter-logs', 'OutgoingLetterLogsController@store')->midd
 Route::get('/outgoing-letter-logs/{outgoing_letter}', 'OutgoingLetterLogsController@edit')->middleware('auth');
 Route::get('/outgoing-letter-logs', 'OutgoingLetterLogsController@index')->middleware('auth');
 Route::patch('/outgoing-letter-logs/{outgoing_letter}', 'OutgoingLetterLogsController@update')->middleware('auth');
-Route::delete('/outgoing-letter-logs','OutgoingLetterLogsController@destroy')->middleware('auth');
+Route::delete('/outgoing-letter-logs/{outgoing_letter}','OutgoingLetterLogsController@destroy')->middleware('auth');

@@ -69,16 +69,11 @@ class OutgoingLetterLogsController extends Controller
         return redirect('/outgoing-letter-logs');
     }
 
-    public function destroy(Request $request) 
+    public function destroy(OutgoingLetterLog $outgoing_letter) 
     {
-        $letter_id = $request->letter_id;
+       
+        $outgoing_letter->delete();
 
-        $query = OutgoingLetterLog::query();
-
-        $query->where('id','=',$letter_id)->delete();
-
-        return view('outgoing_letter_logs.index',[
-                'outgoing_letter_logs' => OutgoingLetterLog::all()
-        ]);
+        return redirect('/outgoing-letter-logs');
     }
 }

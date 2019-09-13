@@ -51,10 +51,10 @@
                             title="Edit">
                             <feather-icon name="edit-3" class="h-current">Edit</feather-icon>
                         </a>
-                        <form method = "POST" >
+                        <form method = "POST" action="/outgoing-letter-logs/{{$letter->id}}" >
                             @csrf
                             @method('DELETE')
-                            <button name = "letter_id" value = {{$letter->id}} 
+                            <button 
                                 type = "submit"
                                 class="p-1 border-2 bg-red-700 text-white border rounded">
                                 <feather-icon name="trash-2" class="h-current">Delete</feather-icon>    

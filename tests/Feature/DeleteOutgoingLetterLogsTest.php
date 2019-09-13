@@ -15,7 +15,8 @@ class DeleteOutgoingLetterLogsTest extends TestCase
     /** @test */
     public function guest_cannot_delete_letter_logs()
     {
-        $this -> delete('/outgoing-letter-logs?letterid = 1')
+        $letter = factory(OutgoingLetterLog::class)->create();
+        $this -> delete("/outgoing-letter-logs/$letter->id")
               -> assertRedirect('/login');  
     }
 
@@ -26,8 +27,8 @@ class DeleteOutgoingLetterLogsTest extends TestCase
         $letter = factory(OutgoingLetterLog::class)->create();
 
         $this -> withoutExceptionHandling()
-              -> delete('/outgoing-letter-logs?letter_id='.$letter['id'])  
-              -> assertViewIs('outgoing_letter_logs.index');
+              -> delete("/outgoing-letter-logs/$letter->id")  
+              -> assertRedirect('/outgoing-letter-logs');
 
         $this -> assertEquals(0,OutgoingLetterLog::count());
     }
