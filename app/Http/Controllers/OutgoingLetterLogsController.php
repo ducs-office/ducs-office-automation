@@ -71,9 +71,8 @@ class OutgoingLetterLogsController extends Controller
 
     public function destroy(OutgoingLetterLog $outgoing_letter) 
     {
-       
         $outgoing_letter->delete();
-
+        
         return redirect('/outgoing-letter-logs');
     }
 }
