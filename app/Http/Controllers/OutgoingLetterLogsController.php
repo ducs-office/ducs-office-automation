@@ -78,7 +78,7 @@ class OutgoingLetterLogsController extends Controller
         $query->where('id','=',$letter_id)->delete();
 
         return view('outgoing_letter_logs.index',[
-                'outgoing_letter_logs' => $query->get()
+                'outgoing_letter_logs' => OutgoingLetterLog::all()
         ]);
     }
 }
