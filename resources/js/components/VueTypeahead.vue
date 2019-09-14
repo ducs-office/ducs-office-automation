@@ -20,7 +20,7 @@
                   @click="selectItem(index)"
                   @mouseover="highlightItem(index)"
                   class="px-3 py-1"
-                  :class="{'bg-gray-200': selectedItemIndex == index, 'bg-gray-900 text-white': highlightedItemIndex == index}">
+                  :class="{'bg-gray-200': selectedItemIndex == index, 'bg-magenta-800 text-white': highlightedItemIndex == index}">
                     <slot :option="option">
                       <p v-text="option.name"></p>
                     </slot>

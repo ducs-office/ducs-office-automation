@@ -6409,7 +6409,7 @@ var render = function() {
                             staticClass: "px-3 py-1",
                             class: {
                               "bg-gray-200": _vm.selectedItemIndex == index,
-                              "bg-gray-900 text-white":
+                              "bg-magenta-800 text-white":
                                 _vm.highlightedItemIndex == index
                             },
                             on: {

@@ -29,10 +29,28 @@ module.exports = {
           '70': 'rgba(0, 0, 0, .7)',
           '80': 'rgba(0, 0, 0, .8)',
           '90': 'rgba(0, 0, 0, .9)'
+        },
+        magenta: {
+          900: '#3f0f3f',
+          800: '#4e004e',
+          700: '#760076',
+          600: '#b100b1',
+          500: '#eb00eb',
+          400: '#ff27ff',
+          300: '#ff76ff',
+          200: '#ffc4ff',
+          100: '#ffebff',
         }
       },
+      width: {
+        '72': '18rem',
+        '80': '20rem',
+        '96': '24rem',
+      },
       maxWidth: {
-        '2xs': '16rem',
+        '16': '4rem',
+        '32': '8rem',
+        '64': '16rem',
       },
       minWidth: {
         '32': '8rem',
@@ -44,6 +62,8 @@ module.exports = {
       }
     }
   },
-  variants: {},
+  variants: {
+    textColor: ['responsive', 'focus', 'hover', 'group-hover']
+  },
   plugins: []
 }

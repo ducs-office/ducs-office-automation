@@ -8,12 +8,14 @@
     <title>{{ config('app.name') }}</title>
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
 </head>
-
-<body class="font-sans leading-tight bg-gray-200 text-sm">
-    <div id="app" class="min-h-screen flex flex-col justify-center px-4">
-        <header class="w-full max-w-md mx-auto text-center mb-8">
-            <h2 class="text-xl font-semibold">Department of Computer Science</h2>
-            <h4 class="text-sm tracking-wider uppercase">university of Delhi</h4>
+<body class="font-sans leading-tight bg-magenta-800 text-sm">
+    <div id="app" class="min-h-screen px-4">
+        <header class="flex items-center w-full max-w-lg mx-auto my-8 px-4">
+            <img src="{{ asset('images/university-logo.png') }}" alt="University of Delhi - Logo" class="w-16 flex-shrink mr-3" style="min-width: 100px;">
+            <div class="flex-grow text-white leading-none">
+                <h2 class="text-2xl mb-2">Department of Computer Science</h2>
+                <h4 class="text-lg font-bold">University of Delhi</h4>
+            </div>
         </header>
         <main>
             @yield('body')
