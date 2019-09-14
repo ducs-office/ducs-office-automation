@@ -2,38 +2,38 @@
 
 namespace Tests\Feature;
 
-use App\OutgoingLetterLog;
+use App\OutgoingLetter;
 use App\User;
 use Illuminate\Auth\AuthenticationException;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class EditOutgoingLetterLogsTest extends TestCase
+class EditOutgoingLettersTest extends TestCase
 {
     use RefreshDatabase;
     
     /** @test */
-    public function user_can_edit_letter_logs()
+    public function user_can_edit_outgoing_letters()
     {
         $this->be(factory(User::class)->create());
-        $letter = factory(OutgoingLetterLog::class)->create();
+        $letter = factory(OutgoingLetter::class)->create();
 
         $this->withoutExceptionHandling()
-            ->get("/outgoing-letter-logs/$letter->id")
+            ->get("/outgoing-letters/$letter->id/edit")
             ->assertSuccessful()
-            ->assertViewIs('outgoing_letter_logs.edit')
+            ->assertViewIs('outgoing_letters.edit')
             ->assertViewHas('outgoing_letter');
     }
 
     /** @test */
-    public function guest_cannot_edit_any_letter_log()
+    public function guest_cannot_edit_any_outgoing_letter()
     {
         $this->expectException(AuthenticationException::class);
         
-        $letter = factory(OutgoingLetterLog::class)->create();
+        $letter = factory(OutgoingLetter::class)->create();
         
         $this->withoutExceptionHandling()
-            ->get("/outgoing-letter-logs/$letter->id");
+            ->get("/outgoing-letters/$letter->id/edit");
     }
 }

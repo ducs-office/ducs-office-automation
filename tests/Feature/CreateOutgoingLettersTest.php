@@ -8,27 +8,27 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Validation\UnauthorizedException;
 
-class CreateOutgoingLetterLogsTest extends TestCase
+class CreateOutgoingLettersTest extends TestCase
 {
     use RefreshDatabase;
 
     /** @test */
-    public function user_can_fill_outgoing_letter_logs_form()
+    public function user_can_fill_outgoing_letters_form()
     {
         $this->be(factory(\App\User::class)->create());
 
         $this->withoutExceptionHandling()
-            ->get('/outgoing-letter-logs/create')
+            ->get('/outgoing-letters/create')
             ->assertSuccessful()
-            ->assertViewIs('outgoing_letter_logs.create');
+            ->assertViewIs('outgoing_letters.create');
     }
 
     /** @test */
-    public function guest_cannot_fill_outgoing_letter_logs_form()
+    public function guest_cannot_fill_outgoing_letters_form()
     {
         $this->expectException(AuthenticationException::class);
 
         $this->withoutExceptionHandling()
-            ->get('/outgoing-letter-logs/create');
+            ->get('/outgoing-letters/create');
     }
 }

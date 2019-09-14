@@ -14,9 +14,9 @@
                 </a>
             </li>
             <li>
-                <a href="/outgoing-letter-logs" class="flex items-center py-2 px-4 hover:bg-magenta-700 hover:pl-6">
-                    <feather-icon name="file-text" class="h-4 mr-2">Outgoing Letter Logs</feather-icon>
-                    Outgoing Letter Logs
+                <a href="/outgoing-letters" class="flex items-center py-2 px-4 hover:bg-magenta-700 hover:pl-6">
+                    <feather-icon name="file-text" class="h-4 mr-2">Outgoing Letters</feather-icon>
+                    Outgoing Letters
                 </a>
             </li>
         </ul>

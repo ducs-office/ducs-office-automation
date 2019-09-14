@@ -2,11 +2,11 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\OutgoingLetterLog;
+use App\OutgoingLetter;
 use App\User;
 use Faker\Generator as Faker;
 
-$factory->define(OutgoingLetterLog::class, function (Faker $faker) {
+$factory->define(OutgoingLetter::class, function (Faker $faker) {
     return [
         'date' => $faker->date('Y-m-d'),
         'type' => $faker->words(3, true),
