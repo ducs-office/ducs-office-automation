@@ -1,8 +1,8 @@
 @extends('layouts.master')
 @section('body')
 <div class="page-card max-w-lg mt-4 mx-auto">
-    <h1 class="page-header px-6">New Outgoing Letter Log</h1>
-    <form action="/outgoing-letter-logs" method="POST" class="px-6">
+    <h1 class="page-header px-6">New Outgoing Letter</h1>
+    <form action="/outgoing-letters" method="POST" class="px-6">
         @csrf
         <div class="mb-2">
             <label for="date" class="w-full form-label mb-1">Sent Date</label>

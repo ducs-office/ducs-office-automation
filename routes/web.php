@@ -11,7 +11,7 @@
 |
 */
 
-use App\Http\Controllers\OutgoingLetterLogsController;
+use App\Http\Controllers\OutgoingLettersController;
 
 Route::get('/', function () {
     return view('dashboard');
@@ -22,9 +22,9 @@ Route::post('/login', 'Auth\LoginController@login')->middleware('guest');
 Route::post('/logout', 'Auth\LoginController@logout')->middleware('auth');
 
 
-Route::get('/outgoing-letter-logs/create', 'OutgoingLetterLogsController@create')->middleware('auth');
-Route::post('/outgoing-letter-logs', 'OutgoingLetterLogsController@store')->middleware('auth');
-Route::get('/outgoing-letter-logs/{outgoing_letter}/edit', 'OutgoingLetterLogsController@edit')->middleware('auth');
-Route::get('/outgoing-letter-logs', 'OutgoingLetterLogsController@index')->middleware('auth');
-Route::patch('/outgoing-letter-logs/{outgoing_letter}', 'OutgoingLetterLogsController@update')->middleware('auth');
-Route::delete('/outgoing-letter-logs/{outgoing_letter}','OutgoingLetterLogsController@destroy')->middleware('auth');
+Route::get('/outgoing-letters/create', 'OutgoingLettersController@create')->middleware('auth');
+Route::post('/outgoing-letters', 'OutgoingLettersController@store')->middleware('auth');
+Route::get('/outgoing-letters/{outgoing_letter}/edit', 'OutgoingLettersController@edit')->middleware('auth');
+Route::get('/outgoing-letters', 'OutgoingLettersController@index')->middleware('auth');
+Route::patch('/outgoing-letters/{outgoing_letter}', 'OutgoingLettersController@update')->middleware('auth');
+Route::delete('/outgoing-letters/{outgoing_letter}','OutgoingLettersController@destroy')->middleware('auth');

@@ -1,8 +1,8 @@
 @extends('layouts.master')
 @section('body')
 <div class="page-card max-w-lg mx-auto mt-4">
-    <h1 class="page-header">Update Outgoing Letter Log</h1>
-    <form action="/outgoing-letter-logs/{{ $outgoing_letter->id }}" method="POST" class="px-6">
+    <h1 class="page-header">Update Outgoing Letter</h1>
+    <form action="/outgoing-letters/{{ $outgoing_letter->id }}" method="POST" class="px-6">
         @csrf
         @method('PATCH')
         <div class="mb-2">

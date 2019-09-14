@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateOutgoingLetterLogsTable extends Migration
+class CreateOutgoingLettersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateOutgoingLetterLogsTable extends Migration
      */
     public function up()
     {
-        Schema::create('outgoing_letter_logs', function (Blueprint $table) {
+        Schema::create('outgoing_letters', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->date('date');
             $table->string('type', 50);
@@ -34,6 +34,6 @@ class CreateOutgoingLetterLogsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('outgoing_letter_logs');
+        Schema::dropIfExists('outgoing_letters');
     }
 }
