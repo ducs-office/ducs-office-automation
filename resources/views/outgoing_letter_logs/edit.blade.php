@@ -1,12 +1,12 @@
 @extends('layouts.master')
 @section('body')
-<div class="page-card max-w-lg mx-auto">
+<div class="page-card max-w-lg mx-auto mt-4">
     <h1 class="page-header">Update Outgoing Letter Log</h1>
     <form action="/outgoing-letter-logs/{{ $outgoing_letter->id }}" method="POST" class="px-6">
         @csrf
         @method('PATCH')
         <div class="mb-2">
-            <label for="date" class="w-full form-label">Sent Date</label>
+            <label for="date" class="w-full form-label mb-1">Sent Date</label>
             <input type="text" name="date" value="{{ old('date') ?? $outgoing_letter->date->format('Y-m-d') }}" class="w-full form-input" placeholder="YYYY-MM-DD"
                 onfocus="this.type='date'" onblur="this.type='text'">
             @if($errors->has('date'))
@@ -14,7 +14,7 @@
             @endif
         </div>
         <div class="mb-2">
-            <label for="type" class="w-full form-label">Letter Type</label>
+            <label for="type" class="w-full form-label mb-1">Letter Type</label>
             <input type="text" name="type" value="{{ old('type') ?? $outgoing_letter->type }}" class="w-full form-input"
                 placeholder="e.g. Bill, Invitation Letter, Progress Report">
             @if($errors->has('type'))
@@ -23,7 +23,7 @@
         </div>
         <div class="flex -mx-2 mb-2">
             <div class="mx-2">
-                <label for="sender" class="w-full form-label">Sender</label>
+                <label for="sender" class="w-full form-label mb-1">Sender</label>
                 <vue-typeahead name="sender_id" 
                     source="/api/users" 
                     find-source="/api/users/{value}" 
@@ -36,7 +36,7 @@
                 @endif
             </div>
             <div class="mx-2">
-                <label for="recipient" class="w-full form-label">Recipient</label>
+                <label for="recipient" class="w-full form-label mb-1">Recipient</label>
                 <input type="text" name="recipient" value="{{ old('recipient') ?? $outgoing_letter->recipient }}" class="w-full form-input"
                     placeholder="Recipient (Sent to)">
                 @if($errors->has('recipient'))
@@ -45,15 +45,15 @@
             </div>
         </div>
         <div class="mb-2">
-            <label for="description" class="w-full form-label">Description</label>
+            <label for="description" class="w-full form-label mb-1">Description</label>
             <textarea name="description" id="description" placeholder="What this letter is about?"
                 class="w-full form-input" rows="3">{{ old('description') ?? $outgoing_letter->description }}</textarea>
             @if($errors->has('description'))
             <p class="text-red-500">{{ $errors->first('description') }}</p>
             @endif
         </div>
-        <div class="mb-4">
-            <label for="amount" class="w-full form-label">Amount</label>
+        <div class="mb-6">
+            <label for="amount" class="w-full form-label mb-1">Amount</label>
             <input type="number" name="amount" step="0.01" value="{{ old('amount') ?? $outgoing_letter->amount }}" class=" w-full form-input"
                 placeholder="Amount (INR)">
             @if($errors->has('amount'))
@@ -61,7 +61,7 @@
             @endif
         </div>
         <div class="mb-3">
-            <button type="submit" class="btn btn-black">Submit</button>
+            <button type="submit" class="w-full btn btn-magenta">Update</button>
         </div>
     </form>
 </div>
