@@ -45,12 +45,21 @@
                     <td class="px-3 py-1 border-b table-fit text-right">
                         {{ $letter->amount ? number_format($letter->amount, 2) : 'NA' }}
                     </td>
-                    <td class="pl-3 pr-6 py-1 border-b text-right">
+                    <td class="pl-3 pr-6 py-1 border-b text-right flex justify-between">
                         <a href="/outgoing-letter-logs/{{$letter->id}}" 
                             class="p-1 btn btn-blue"
                             title="Edit">
                             <feather-icon name="edit-3" class="h-current">Edit</feather-icon>
                         </a>
+                        <form method = "POST" action="/outgoing-letter-logs/{{$letter->id}}" >
+                            @csrf
+                            @method('DELETE')
+                            <button 
+                                type = "submit"
+                                class="p-1 border-2 bg-red-700 text-white border rounded">
+                                <feather-icon name="trash-2" class="h-current">Delete</feather-icon>    
+                            </button>
+                        </form>
                     </td>
                 </tr>
                 @endforeach
