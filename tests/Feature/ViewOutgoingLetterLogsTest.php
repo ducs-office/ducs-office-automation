@@ -123,4 +123,56 @@ class ViewOutgoingLetterLogsTest extends TestCase
         
         $this->assertCount(0, $logsOutOfFilterRange, 'filtered logs do not respect `before` and `after` filter');
     }
+
+    /** @test */
+    public function user_can_view_filtered_letter_logs_even_if_after_date_not_given()
+    {
+        factory(OutgoingLetterLog::class)->create(['date' => '1997-07-15']);
+        $this -> be(factory(User::class)->create());
+        $after_date = '';
+
+        $viewLetterLogs = $this -> withoutExceptionHandling()
+            ->get('/outgoing-letter-logs?after='.$after_date)
+            ->assertSuccessful()
+            ->assertViewIs('outgoing_letter_logs.index')
+            ->assertViewHas('outgoing_letter_logs')
+            ->viewData('outgoing_letter_logs');
+
+        $this -> assertCount(1,$viewLetterLogs);
+    }
+
+    /** @test */
+    public function user_can_view_filtered_letter_logs_even_if_before_date_not_given()
+    {
+        factory(OutgoingLetterLog::class)->create(['date' => '1997-07-15']);
+        $this -> be(factory(User::class)->create());
+        $before_date = '';
+
+        $viewLetterLogs = $this -> withoutExceptionHandling()
+            ->get('/outgoing-letter-logs?before='.$before_date)
+            ->assertSuccessful()
+            ->assertViewIs('outgoing_letter_logs.index')
+            ->assertViewHas('outgoing_letter_logs')
+            ->viewData('outgoing_letter_logs');
+
+        $this -> assertCount(1,$viewLetterLogs);
+    }
+
+    /** @test */
+    public function user_can_view_filtered_letter_logs_even_if_before_and_after_date_not_given()
+    {
+        factory(OutgoingLetterLog::class)->create(['date' => '1997-07-15']);
+        $this -> be(factory(User::class)->create());
+        $after_date = '';
+        $before_date = '';
+
+        $viewLetterLogs = $this -> withoutExceptionHandling()
+            ->get('/outgoing-letter-logs?after='.$after_date.'&before='.$before_date)
+            ->assertSuccessful()
+            ->assertViewIs('outgoing_letter_logs.index')
+            ->assertViewHas('outgoing_letter_logs')
+            ->viewData('outgoing_letter_logs');
+
+        $this -> assertCount(1,$viewLetterLogs);
+    }
 }

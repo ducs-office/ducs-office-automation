@@ -12,15 +12,11 @@ class OutgoingLetterLogsController extends Controller
 {
     public function index(Request $request)
     {
-        $after_date = $request->input('after') ?? OutgoingLetterLog::min('date');
-        $before_date = $request->input('before') ?? OutgoingLetterLog::max('date');
-        $query = OutgoingLetterLog::query();
-        
-        $query->whereBetween('date',[$after_date,$before_date]);
+        $after_date = $request->after ?? OutgoingLetterLog::min('date');
+        $before_date = $request->before ?? OutgoingLetterLog::max('date');
+        $outgoing_letter_logs = OutgoingLetterLog::whereBetween('date',[$after_date,$before_date])->get();
 
-        return view('outgoing_letter_logs.index', [
-            'outgoing_letter_logs' => $query->get()
-        ]);
+        return view('outgoing_letter_logs.index', compact('outgoing_letter_logs'));
     }
 
     public function create()
