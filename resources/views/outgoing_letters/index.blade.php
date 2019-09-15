@@ -43,11 +43,7 @@
                     <td class="px-3 py-1 border-b">{{ $letter->recipient }}</td>
                     <td class="px-3 py-1 border-b table-fit">{{ $letter->type }}</td>
                     <td class="pl-3 pr-6 py-1 border-b table-fit text-right">
-<<<<<<< HEAD:resources/views/outgoing_letter_logs/index.blade.php
-                        <a href="/outgoing-letter-logs/{{$letter->id}}/edit" 
-=======
                         <a href="/outgoing-letters/{{$letter->id}}/edit" 
->>>>>>> 82907b0... refactors outgoing letter logs to outgoing letters:resources/views/outgoing_letters/index.blade.php
                             class="p-1 btn btn-blue"
                             title="Edit">
                             <feather-icon name="edit-3" class="h-current">Edit</feather-icon>
