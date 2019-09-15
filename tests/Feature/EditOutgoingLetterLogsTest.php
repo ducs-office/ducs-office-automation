@@ -20,7 +20,7 @@ class EditOutgoingLetterLogsTest extends TestCase
         $letter = factory(OutgoingLetterLog::class)->create();
 
         $this->withoutExceptionHandling()
-            ->get("/outgoing-letter-logs/$letter->id")
+            ->get("/outgoing-letter-logs/$letter->id/edit")
             ->assertSuccessful()
             ->assertViewIs('outgoing_letter_logs.edit')
             ->assertViewHas('outgoing_letter');
@@ -34,6 +34,6 @@ class EditOutgoingLetterLogsTest extends TestCase
         $letter = factory(OutgoingLetterLog::class)->create();
         
         $this->withoutExceptionHandling()
-            ->get("/outgoing-letter-logs/$letter->id");
+            ->get("/outgoing-letter-logs/$letter->id/edit");
     }
 }

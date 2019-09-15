@@ -12,19 +12,11 @@ class OutgoingLetterLogsController extends Controller
 {
     public function index(Request $request)
     {
-        $query = OutgoingLetterLog::query();
-        
-        if ($request->has('before')) {
-            $query->where('date', '<', $request->before);
-        }
+        $after_date = $request->after ?? OutgoingLetterLog::min('date');
+        $before_date = $request->before ?? OutgoingLetterLog::max('date');
+        $outgoing_letter_logs = OutgoingLetterLog::whereBetween('date',[$after_date,$before_date])->get();
 
-        if ($request->has('after')) {
-            $query->where('date', '>', $request->after);
-        }
-
-        return view('outgoing_letter_logs.index', [
-            'outgoing_letter_logs' => $query->get()
-        ]);
+        return view('outgoing_letter_logs.index', compact('outgoing_letter_logs'));
     }
 
     public function create()

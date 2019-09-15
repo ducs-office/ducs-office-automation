@@ -43,7 +43,7 @@
                     <td class="px-3 py-1 border-b">{{ $letter->recipient }}</td>
                     <td class="px-3 py-1 border-b table-fit">{{ $letter->type }}</td>
                     <td class="pl-3 pr-6 py-1 border-b table-fit text-right">
-                        <a href="/outgoing-letter-logs/{{$letter->id}}" 
+                        <a href="/outgoing-letter-logs/{{$letter->id}}/edit" 
                             class="p-1 btn btn-blue"
                             title="Edit">
                             <feather-icon name="edit-3" class="h-current">Edit</feather-icon>
