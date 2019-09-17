@@ -10,6 +10,7 @@ $factory->define(OutgoingLetter::class, function (Faker $faker) {
     return [
         'date' => $faker->date('Y-m-d'),
         'type' => $faker->words(3, true),
+        'subject' => $faker->sentence,
         'recipient' => $faker->name,
         'sender_id' => function() {
             return factory(User::class)->create()->id;

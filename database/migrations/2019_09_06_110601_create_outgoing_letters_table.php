@@ -17,6 +17,7 @@ class CreateOutgoingLettersTable extends Migration
             $table->bigIncrements('id');
             $table->date('date');
             $table->string('type', 50);
+            $table->string('subject',80);
             $table->string('recipient', 50);
             $table->unsignedBigInteger('sender_id');
             $table->text('description', 400)->nullable();

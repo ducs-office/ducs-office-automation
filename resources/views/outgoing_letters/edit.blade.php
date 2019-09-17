@@ -45,6 +45,13 @@
             </div>
         </div>
         <div class="mb-2">
+            <label for="subject" class="w-full form-label mb-1">Subject</label>
+            <input subject="text" name="subject" value="{{ old('subject') ?? $outgoing_letter->subject }}" class="w-full form-input">
+            @if($errors->has('subject'))
+                <p class="text-red-500">{{ $errors->first('subject') }}</p>
+            @endif
+        </div>
+        <div class="mb-2">
             <label for="description" class="w-full form-label mb-1">Description</label>
             <textarea name="description" id="description" placeholder="What this letter is about?"
                 class="w-full form-input" rows="3">{{ old('description') ?? $outgoing_letter->description }}</textarea>
