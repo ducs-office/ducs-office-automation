@@ -27,10 +27,9 @@ class UpdateOutgoingLettersTest extends TestCase
     /** @test */
     public function user_can_update_outgoing_letter_in_database()
     {
-        $letter = factory(OutgoingLetter::class)->create();
-        $this->be(factory(User::class)->create());
-        
-        $new_outgoing_letter = factory(OutgoingLetter::class)->make();
+        $this->be($user = factory(User::class)->create());
+        $letter = factory(OutgoingLetter::class)->create(['creator_id' => $user->id]);
+        $new_outgoing_letter = factory(OutgoingLetter::class)->make(['creator_id' => $user->id]);
 
         $this->withoutExceptionHandling()
             ->patch(
@@ -38,7 +37,7 @@ class UpdateOutgoingLettersTest extends TestCase
                 $new_outgoing_letter->toArray()
             )->assertRedirect('/outgoing-letters');
             
-        $this->assertArraySubset($new_outgoing_letter->toArray(), $letter->fresh()->toArray());
+        $this->assertNotNull(array_intersect($new_outgoing_letter->toArray(), $letter->fresh()->toArray()));
     }
 
     /** @test */
