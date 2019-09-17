@@ -7,6 +7,7 @@ use Tests\TestCase;
 use App\OutgoingLetter;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\str;
 
 class StoreOutgoingLettersTest extends TestCase
 {
@@ -142,6 +143,41 @@ class StoreOutgoingLettersTest extends TestCase
             // $this->fail('Empty \'type\' field was not validated.');
             $this->fail($e->getMessage());
         }
+    }
+
+    /** @test */
+    public function request_validates_subject_field_is_not_null()
+    {
+        try {
+            $this -> be(factory(\App\User::class)->create());
+            $letter = factory(OutgoingLetter::class)->make(['subject' => '']);
+
+            $this->withoutExceptionHandling()
+                ->post('/outgoing-letters',$letter->toArray());
+
+            $this->fail('Empty \'subject\' field was not validated.');
+        }catch(ValidationException $e) {
+            $this->assertArrayHasKey('subject',$e->errors());
+        }
+
+        $this->assertEquals(0,OutgoingLetter::count());
+    }
+
+    /** @test */
+    public function request_validates_subject_field_maxlimit_80()
+    {
+        try
+        {
+            $this -> be(factory(\App\User::class)->create());
+            $letter = factory(OutgoingLetter::class)->make(['subject' => Str::random(81)]);
+
+            $this -> withoutExceptionHandling()
+                -> post('/outgoing-letters',$letter -> toArray());
+        }catch(ValidationException $e){
+            $this -> assertArrayHasKey('subject',$e->errors());
+        }
+
+        $this -> assertEquals(0,OutgoingLetter::count());
     }
 
     /** @test */

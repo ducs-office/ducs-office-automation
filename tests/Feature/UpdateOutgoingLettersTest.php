@@ -159,6 +159,41 @@ class UpdateOutgoingLettersTest extends TestCase
     }
 
     /** @test */
+    public function request_validates_subject_field_is_not_null()
+    {
+        try {
+            $this -> be(factory(\App\User::class)->create());
+            $letter = factory(OutgoingLetter::class)->create();
+
+            $this->withoutExceptionHandling()
+                ->patch("/outgoing-letters/{$letter->id}",['subject' => '']);
+
+            $this->fail('Empty \'subject\' field cannot be empty.');
+        }catch(ValidationException $e) {
+            $this->assertArrayHasKey('subject',$e->errors());
+        }
+
+        $this -> assertEquals($letter->subject,$letter->fresh()->subject);
+    }
+
+    /** @test */
+    public function request_validates_subject_field_maxlimit_80()
+    {
+        try
+        {
+            $this -> be(factory(\App\User::class)->create());
+            $letter = factory(OutgoingLetter::class)->create();
+
+            $this -> withoutExceptionHandling()
+                -> patch("/outgoing-letters/{$letter->id}",['subject' => Str::random(81)]);
+        }catch(ValidationException $e){
+            $this -> assertArrayHasKey('subject',$e->errors());
+        }
+
+        $this -> assertEquals($letter->subject,$letter->fresh()->subject);
+    }
+
+    /** @test */
     public function request_validates_description_field_can_be_null()
     {
         $letter = factory(OutgoingLetter::class)->create();

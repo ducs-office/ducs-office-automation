@@ -31,6 +31,7 @@ class OutgoingLettersController extends Controller
             'type' => 'required',
             'recipient' => 'required',
             'sender_id' => 'required|exists:users,id',
+            'subject' => 'required|string|max:80',
             'description' => 'nullable|string|max:400',
             'amount' => 'nullable|numeric',
         ]);
@@ -51,6 +52,7 @@ class OutgoingLettersController extends Controller
             'date' => 'sometimes|required|date|before_or_equal:today',
             'type' => 'sometimes|required',
             'recipient' =>  'sometimes|required|',
+            'subject' => 'sometimes|required|string|max:80',
             'description' => 'nullable|string|max:400',
             'amount' => 'nullable|numeric',
             'sender_id' => 'sometimes|required|exists:users,id'
