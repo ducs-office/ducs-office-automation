@@ -14,4 +14,9 @@ class OutgoingLetter extends Model
     {
         return $this->belongsTo(User::class, 'sender_id');
     }
+
+    public function creator()
+    {
+        return $this->belongsTo(User::class,'creator_id');
+    }
 }
