@@ -28,8 +28,38 @@ class UpdateOutgoingLettersTest extends TestCase
     public function user_can_update_outgoing_letter_in_database()
     {
         $this->be($user = factory(User::class)->create());
-        $letter = factory(OutgoingLetter::class)->create(['creator_id' => $user->id]);
-        $new_outgoing_letter = factory(OutgoingLetter::class)->make(['creator_id' => $user->id]);
+        $sender = factory(User::class)->create();
+        $letter = factory(OutgoingLetter::class)->create();
+        $new_outgoing_letter = [
+            'date' =>  "1987-02-08",
+            'type' =>  "et facilis deserunt",
+            'recipient' =>  "Raleigh Wunsch",
+            'sender_id' =>  $sender->id,
+            'description' =>  "Voluptatem est odit voluptas eius deserunt. Nihil nostrum cum sunt a dolores voluptatibus assumenda. Magni inventore quae sed sequi magni voluptatem voluptate. Illo tenetur magnam laboriosam nihil.",
+            'amount' =>  11243.56
+        ];
+
+        $this->withoutExceptionHandling()
+            ->patch(
+                "/outgoing-letters/{$letter->id}",
+                $new_outgoing_letter
+            )->assertRedirect('/outgoing-letters');
+       
+        $letter = $letter->fresh();
+        $this->assertEquals($new_outgoing_letter['type'], $letter->type);
+        $this->assertEquals($new_outgoing_letter['description'], $letter->description);
+        $this->assertEquals($new_outgoing_letter['sender_id'], $letter->sender_id);
+        $this->assertEquals($new_outgoing_letter['amount'], $letter->amount);
+        $this->assertEquals($new_outgoing_letter['recipient'], $letter->recipient);
+        $this->assertEquals($new_outgoing_letter['date'], $letter->date->format('Y-m-d'));
+    }
+
+    /** @test */
+    public function user_can_not_update_creator_id_of_an_outgoing_letter_in_database()
+    {
+        $this->be($user = factory(User::class)->create());
+        $letter = factory(OutgoingLetter::class)->create();
+        $new_outgoing_letter = factory(OutgoingLetter::class)->make();
 
         $this->withoutExceptionHandling()
             ->patch(
@@ -37,7 +67,8 @@ class UpdateOutgoingLettersTest extends TestCase
                 $new_outgoing_letter->toArray()
             )->assertRedirect('/outgoing-letters');
             
-        $this->assertNotNull(array_intersect($new_outgoing_letter->toArray(), $letter->fresh()->toArray()));
+        $this->assertEquals($letter->creator_id, $letter->fresh()->creator_id);
+        
     }
 
     /** @test */
