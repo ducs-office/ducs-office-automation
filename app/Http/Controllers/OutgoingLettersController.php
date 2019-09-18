@@ -12,12 +12,23 @@ class OutgoingLettersController extends Controller
     public function index(Request $request)
     {
         $filters = $request->query('filters');
+        
         $outgoing_letters = OutgoingLetter::whereBetween('date',[
             $filters['after'] ?? OutgoingLetter::min('date'),
             $filters['before'] ?? OutgoingLetter::max('date')
-        ])->get();
+        ]);
+        
+        if(array_key_exists('type', $filters) && $filters['type'] != '') {
+            $outgoing_letters->where('type', $filters['type']);
+        }
 
-        return view('outgoing_letters.index', compact('outgoing_letters'));
+        if(array_key_exists('recipient', $filters) && $filters['recipient'] != '') {
+            $outgoing_letters->where('recipient', $filters['recipient']);
+        }
+
+        return view('outgoing_letters.index', [
+            'outgoing_letters' => $outgoing_letters->get()
+        ]);
     }
 
     public function create()

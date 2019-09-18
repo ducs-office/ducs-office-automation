@@ -152,4 +152,45 @@ class FilterOutgoingLettersTest extends TestCase
 
         $this -> assertCount(1,$viewLetters);
     }
+
+    /** @test */
+    public function user_can_filter_letters_based_on_its_type()
+    {
+        $bills = factory(OutgoingLetter::class, 2)->create(['type' => 'Bill']);
+        factory(OutgoingLetter::class)->create(['type' => 'Invitation Letter']);
+        factory(OutgoingLetter::class)->create(['type' => 'Fellowship']);
+        $this -> be(factory(User::class)->create());
+
+        $viewLetters = $this -> withoutExceptionHandling()
+            ->get('/outgoing-letters?filters[type]=Bill')
+            ->assertSuccessful()
+            ->assertViewIs('outgoing_letters.index')
+            ->assertViewHas('outgoing_letters')
+            ->viewData('outgoing_letters');
+
+        $this->assertCount(2,$viewLetters);
+        $this->assertEquals($bills[0]->id, $viewLetters[0]->id);
+        $this->assertEquals($bills[1]->id, $viewLetters[1]->id);
+    }
+
+    /** @test */
+    public function user_can_filter_letters_based_on_recipient()
+    {
+        $sentToDUCC = factory(OutgoingLetter::class, 2)->create(['recipient' => 'DUCC']);
+        factory(OutgoingLetter::class)->create(['recipient' => 'Director, DU']);
+        factory(OutgoingLetter::class)->create(['recipient' => 'Examination Center']);
+
+        $this->be(factory(User::class)->create());
+
+        $viewLetters = $this -> withoutExceptionHandling()
+            ->get('/outgoing-letters?filters[recipient]=DUCC')
+            ->assertSuccessful()
+            ->assertViewIs('outgoing_letters.index')
+            ->assertViewHas('outgoing_letters')
+            ->viewData('outgoing_letters');
+
+        $this->assertCount(2,$viewLetters);
+        $this->assertEquals($sentToDUCC[0]->id, $viewLetters[0]->id);
+        $this->assertEquals($sentToDUCC[1]->id, $viewLetters[1]->id);
+    }
 }
