@@ -11,9 +11,10 @@ class OutgoingLettersController extends Controller
 {
     public function index(Request $request)
     {
+        $filters = $request->query('filters');
         $outgoing_letters = OutgoingLetter::whereBetween('date',[
-            $request->after ?? OutgoingLetter::min('date'),
-            $request->before ?? OutgoingLetter::max('date')
+            $filters['after'] ?? OutgoingLetter::min('date'),
+            $filters['before'] ?? OutgoingLetter::max('date')
         ])->get();
 
         return view('outgoing_letters.index', compact('outgoing_letters'));
