@@ -36,7 +36,7 @@ class OutgoingLettersController extends Controller
             'amount' => 'nullable|numeric',
         ]);
         
-        OutgoingLetter::create($validData);
+        OutgoingLetter::create($validData + ['creator_id'=> Auth::id()]);
         
         return redirect('/outgoing-letters');
     }

@@ -15,6 +15,7 @@ class CreateOutgoingLettersTable extends Migration
     {
         Schema::create('outgoing_letters', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->unsignedBigInteger('creator_id');
             $table->date('date');
             $table->string('type', 50);
             $table->string('subject',80);
@@ -25,6 +26,7 @@ class CreateOutgoingLettersTable extends Migration
             $table->timestamps();
 
             $table->foreign('sender_id')->references('id')->on('users');
+            $table->foreign('creator_id')->references('id')->on('users');
         });
     }
 
