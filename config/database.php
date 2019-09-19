@@ -144,4 +144,13 @@ return [
 
     ],
 
+    'operators' => [
+        'greater_than' => '>',
+        'less_than' => '<',
+        'equals' => '=',
+        'like' => 'like',
+        'not_equals' => '<>'
+    ],
+
+
 ];

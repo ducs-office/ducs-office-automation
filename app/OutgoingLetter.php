@@ -2,13 +2,19 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Model;
 
 class OutgoingLetter extends Model
-{
+{   
     protected $guarded = [];
 
     protected $dates = ['date'];
+
+    protected $allowedFilters = [
+        'date' => 'less_than', 
+        'type' => 'equals', 
+        'recipient' => 'equals'
+    ];
 
     public function sender()
     {
