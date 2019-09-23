@@ -169,8 +169,8 @@ class FilterOutgoingLettersTest extends TestCase
             ->viewData('outgoing_letters');
 
         $this->assertCount(2,$viewLetters);
-        $this->assertEquals($bills[0]->id, $viewLetters[0]->id);
-        $this->assertEquals($bills[1]->id, $viewLetters[1]->id);
+        $this->assertTrue($viewLetters->pluck('id')->contains($bills[0]->id));
+        $this->assertTrue($viewLetters->pluck('id')->contains($bills[1]->id));
     }
 
     /** @test */
@@ -190,7 +190,49 @@ class FilterOutgoingLettersTest extends TestCase
             ->viewData('outgoing_letters');
 
         $this->assertCount(2,$viewLetters);
-        $this->assertEquals($sentToDUCC[0]->id, $viewLetters[0]->id);
-        $this->assertEquals($sentToDUCC[1]->id, $viewLetters[1]->id);
+        $this->assertTrue($viewLetters->pluck('id')->contains($sentToDUCC[0]->id));
+        $this->assertTrue($viewLetters->pluck('id')->contains($sentToDUCC[1]->id));
+    }
+
+    /** @test */
+    public function user_can_filter_letters_based_on_creator()
+    {
+        $createdBy1 = factory(OutgoingLetter::class, 2)->create(['creator_id' => 1]);
+        factory(OutgoingLetter::class)->create(['creator_id' => 2]);
+        factory(OutgoingLetter::class)->create(['creator_id' => 3]);
+
+        $this->be(factory(User::class)->create());
+
+        $viewLetters = $this -> withoutExceptionHandling()
+            ->get('/outgoing-letters?filters[creator_id][equals]=1')
+            ->assertSuccessful()
+            ->assertViewIs('outgoing_letters.index')
+            ->assertViewHas('outgoing_letters')
+            ->viewData('outgoing_letters');
+
+        $this->assertCount(2,$viewLetters);
+        $this->assertTrue($viewLetters->pluck('id')->contains($createdBy1[0]->id));
+        $this->assertTrue($viewLetters->pluck('id')->contains($createdBy1[1]->id));
+    }
+
+    /** @test */
+    public function user_can_filter_letters_based_on_sender()
+    {
+        $sentBy1 = factory(OutgoingLetter::class, 2)->create(['sender_id' => 1]);
+        factory(OutgoingLetter::class)->create(['sender_id' => 2]);
+        factory(OutgoingLetter::class)->create(['sender_id' => 3]);
+
+        $this->be(factory(User::class)->create());
+
+        $viewLetters = $this -> withoutExceptionHandling()
+            ->get('/outgoing-letters?filters[sender_id][equals]=1')
+            ->assertSuccessful()
+            ->assertViewIs('outgoing_letters.index')
+            ->assertViewHas('outgoing_letters')
+            ->viewData('outgoing_letters');
+
+        $this->assertCount(2,$viewLetters);
+        $this->assertTrue($viewLetters->pluck('id')->contains($sentBy1[0]->id));
+        $this->assertTrue($viewLetters->pluck('id')->contains($sentBy1[1]->id));
     }
 }
