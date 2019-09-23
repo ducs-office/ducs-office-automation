@@ -13,8 +13,7 @@ class OutgoingLettersController extends Controller
     {
         $filters = $request->query('filters');
         
-        $outgoing_letters = OutgoingLetter::applyFilter($filters)->get();
-        
+        $outgoing_letters = OutgoingLetter::applyFilter($filters)->orderBy('date','DESC')->get();
 
         return view('outgoing_letters.index', compact('outgoing_letters'));
     }
