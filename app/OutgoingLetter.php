@@ -13,7 +13,8 @@ class OutgoingLetter extends Model
     protected $allowedFilters = [
         'date' => 'less_than', 
         'type' => 'equals', 
-        'recipient' => 'equals'
+        'recipient' => 'equals',
+        'subject' => 'like'
     ];
 
     public function sender()

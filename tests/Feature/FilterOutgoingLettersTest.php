@@ -193,4 +193,25 @@ class FilterOutgoingLettersTest extends TestCase
         $this->assertEquals($sentToDUCC[0]->id, $viewLetters[0]->id);
         $this->assertEquals($sentToDUCC[1]->id, $viewLetters[1]->id);
     }
+
+    /** @test */
+    public function user_can_filter_letters_based_on_subject()
+    {
+        $subject1 = factory(OutgoingLetter::class)->create(['subject' => 'Invitation for workshop']);
+        $subject2 = factory(OutgoingLetter::class)->create(['subject' => 'Invitation for event']);
+        $subject3 = factory(OutgoingLetter::class)->create(['subject' => 'Request for extending deadline']);
+
+        $this->be(factory(User::class)->create());
+
+        $viewLetters = $this -> withoutExceptionHandling()
+            ->get('/outgoing-letters?filters[subject][like]=%invitation%')
+            ->assertSuccessful()
+            ->assertViewIs('outgoing_letters.index')
+            ->assertViewHas('outgoing_letters')
+            ->viewData('outgoing_letters');
+
+        $this->assertCount(2,$viewLetters);
+        $this->assertEquals($subject1->id, $viewLetters[0]->id);
+        $this->assertEquals($subject2->id, $viewLetters[1]->id);
+    }
 }
