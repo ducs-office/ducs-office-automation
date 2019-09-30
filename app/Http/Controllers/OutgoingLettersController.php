@@ -14,7 +14,12 @@ class OutgoingLettersController extends Controller
     {
         $filters = $request->query('filters');
         
-        $outgoing_letters = OutgoingLetter::applyFilter($filters)->orderBy('date','DESC')->get();
+        if($request->has('search') && request('search')!= '') {
+            $outgoing_letters = OutgoingLetter::applyFilter($filters)->where('subject','like','%'.request('search').'%')->orWhere('description','like','%'.request('search').'%')->orderBy('date','DESC')->get();
+         }else{
+            $outgoing_letters = OutgoingLetter::applyFilter($filters)->orderBy('date','DESC')->get();
+         }
+
         $recipients = OutgoingLetter::selectRaw('DISTINCT(recipient)')->get()->pluck('recipient')->toArray();
         $types = OutgoingLetter::selectRaw('DISTINCT(type)')->get()->pluck('type')->toArray();
         $senders = User::select('id', 'name')->whereIn('id', OutgoingLetter::selectRaw('DISTINCT(sender_id)'))->get()->toArray();

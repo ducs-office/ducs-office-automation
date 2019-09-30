@@ -235,4 +235,25 @@ class FilterOutgoingLettersTest extends TestCase
         $this->assertTrue($viewLetters->pluck('id')->contains($sentBy1[0]->id));
         $this->assertTrue($viewLetters->pluck('id')->contains($sentBy1[1]->id));
     }
+
+    /** @test */
+    public function user_can_search_letters_based_on_subject_and_description () 
+    {
+        $sender1 = factory(OutgoingLetter::class)->create(['subject' => 'abc def ghi' , 'description' => 'abc jkl ghi']);
+        $sender2 = factory(OutgoingLetter::class)->create(['subject'=>'jkl abc ghi' , 'description'=>'ghi def jkl']);
+        factory(OutgoingLetter::class)->create(['subject'=>'abc ghi jkl' , 'description'=>'ghi abc jkl xyz']);
+
+        $this->be(factory(User::class)->create());
+
+        $viewLetters = $this->withoutExceptionHandling()
+                            ->get('/outgoing-letters?search=def')
+                            ->assertSuccessful()
+                            ->assertViewIs('outgoing_letters.index')
+                            ->assertViewHas('outgoing_letters')
+                            ->viewData('outgoing_letters');
+
+        $this->assertCount(2,$viewLetters);
+        $this->assertTrue($viewLetters->pluck('id')->contains($sender1->id));
+        $this->assertTrue($viewLetters->pluck('id')->contains($sender2->id));
+    }
 }
