@@ -661,6 +661,12 @@ select::placeholder {
   opacity: 0.75;
 }
 
+select {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+}
+
 .container {
   width: 100%;
   margin-right: auto;

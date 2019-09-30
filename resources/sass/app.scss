@@ -17,6 +17,10 @@ select {
     }
 }
 
+select {
+    appearance: none;
+}
+
 @tailwind components;
 
 .link {
