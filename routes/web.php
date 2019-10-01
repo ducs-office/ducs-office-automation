@@ -28,3 +28,7 @@ Route::get('/outgoing-letters/{outgoing_letter}/edit', 'OutgoingLettersControlle
 Route::get('/outgoing-letters', 'OutgoingLettersController@index')->middleware('auth');
 Route::patch('/outgoing-letters/{outgoing_letter}', 'OutgoingLettersController@update')->middleware('auth');
 Route::delete('/outgoing-letters/{outgoing_letter}','OutgoingLettersController@destroy')->middleware('auth');
+
+
+Route::get('/courses', 'CoursesController@index')->middleware('auth');
+
