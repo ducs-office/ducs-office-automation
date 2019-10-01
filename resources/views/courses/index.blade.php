@@ -26,13 +26,19 @@
             </form>
         </div>
     </modal>
+    <course-update-modal name="course-update-modal">@csrf @method('patch')</course-update-modal>
     @foreach ($courses as $course)
-        <div class="px-6 py-2 hover:bg-gray-100 border-b">
+        <div class="px-6 py-2 hover:bg-gray-100 border-b flex justify-between">
             <div class="flex items-baseline">
                 <h4 class="text-sm font-semibold text-gray-600 mr-2 w-24">{{ $course->code }}</h4>
                 <h3 class="text-lg font-bold mr-2">
                     {{ ucwords($course->name) }}
                 </h3>
+            </div>
+            <div>
+                <button class="btn btn-gray" @click.prevent="$modal.show('course-update-modal', {course: {{ $course->toJson() }}})">
+                    <feather-icon class="h-current" name="edit">Edit</feather-icon>
+                </button>
             </div>
         </div>
     @endforeach

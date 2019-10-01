@@ -32,4 +32,5 @@ Route::delete('/outgoing-letters/{outgoing_letter}','OutgoingLettersController@d
 
 Route::get('/courses', 'CoursesController@index')->middleware('auth');
 Route::post('/courses', 'CoursesController@store')->middleware('auth');
+Route::patch('/courses/{course}', 'CoursesController@update')->middleware('auth');
 
