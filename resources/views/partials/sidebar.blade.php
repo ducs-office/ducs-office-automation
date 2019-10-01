@@ -15,14 +15,20 @@
             </li>
             <li>
                 <a href="/outgoing-letters" class="flex items-center py-2 px-4 hover:bg-magenta-700 hover:pl-6">
-                    <feather-icon name="file-text" class="h-4 mr-2">Outgoing Letters</feather-icon>
+                    <feather-icon name="mail" class="h-4 mr-2">Outgoing Letters</feather-icon>
                     Outgoing Letters
                 </a>
             </li>
             <li>
                 <a href="/courses" class="flex items-center py-2 px-4 hover:bg-magenta-700 hover:pl-6">
-                    <feather-icon name="book" class="h-4 mr-2">Courses</feather-icon>
-                    Courses
+                    <feather-icon name="book" class="h-4 mr-2">Academic Courses</feather-icon>
+                    Academic Courses
+                </a>
+            </li>
+            <li>
+                <a href="/papers" class="flex items-center py-2 px-4 hover:bg-magenta-700 hover:pl-6">
+                    <feather-icon name="file-text" class="h-4 mr-2">Course Papers</feather-icon>
+                    Course Papers
                 </a>
             </li>
         </ul>

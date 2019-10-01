@@ -35,3 +35,9 @@ Route::post('/courses', 'CoursesController@store')->middleware('auth');
 Route::patch('/courses/{course}', 'CoursesController@update')->middleware('auth');
 Route::delete('/courses/{course}', 'CoursesController@destroy')->middleware('auth');
 
+Route::get('/papers', 'PaperController@index')->middleware('auth');
+Route::post('/papers', 'PaperController@store')->middleware('auth');
+Route::patch('/papers/{paper}', 'PaperController@update')->middleware('auth');
+Route::delete('/papers/{paper}', 'PaperController@destroy')->middleware('auth');
+
+

@@ -1945,6 +1945,68 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/PaperUpdateModal.vue?vue&type=script&lang=js&":
+/*!***************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/PaperUpdateModal.vue?vue&type=script&lang=js& ***!
+  \***************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      paper: {
+        id: '',
+        code: '',
+        name: '',
+        course_id: null
+      },
+      courses: []
+    };
+  },
+  methods: {
+    beforeOpen: function beforeOpen(event) {
+      if (!event.params.paper || !event.params.paper.id) {
+        return false;
+      }
+
+      this.paper = event.params.paper;
+      this.courses = event.params.courses;
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/VueTypeahead.vue?vue&type=script&lang=js&":
 /*!***********************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/VueTypeahead.vue?vue&type=script&lang=js& ***!
@@ -6458,6 +6520,179 @@ var render = function() {
       _c("title", [_vm._t("default")], 2),
       _vm._v(" "),
       _c("g", { domProps: { innerHTML: _vm._s(_vm.icon) } })
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/PaperUpdateModal.vue?vue&type=template&id=590004a3&":
+/*!*******************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/PaperUpdateModal.vue?vue&type=template&id=590004a3& ***!
+  \*******************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "modal",
+    {
+      attrs: { name: "paper-update-modal", height: "auto" },
+      on: { "before-open": _vm.beforeOpen }
+    },
+    [
+      _c("div", { staticClass: "p-6" }, [
+        _c("h2", { staticClass: "text-lg font-bold mb-8" }, [
+          _vm._v("Update Paper")
+        ]),
+        _vm._v(" "),
+        _c(
+          "form",
+          { attrs: { action: "/papers/" + _vm.paper.id, method: "POST" } },
+          [
+            _vm._t("default"),
+            _vm._v(" "),
+            _c("div", { staticClass: "mb-2" }, [
+              _c(
+                "label",
+                {
+                  staticClass: "w-full form-label mb-1",
+                  attrs: { for: "paper_code" }
+                },
+                [_vm._v("Unique Paper Code")]
+              ),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.paper.code,
+                    expression: "paper.code"
+                  }
+                ],
+                staticClass: "w-full form-input",
+                attrs: { id: "paper_code", type: "text", name: "code" },
+                domProps: { value: _vm.paper.code },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.paper, "code", $event.target.value)
+                  }
+                }
+              })
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "mb-2" }, [
+              _c(
+                "label",
+                {
+                  staticClass: "w-full form-label mb-1",
+                  attrs: { for: "paper_name" }
+                },
+                [_vm._v("Paper Name")]
+              ),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.paper.name,
+                    expression: "paper.name"
+                  }
+                ],
+                staticClass: "w-full form-input",
+                attrs: { id: "paper_name", type: "text", name: "name" },
+                domProps: { value: _vm.paper.name },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.paper, "name", $event.target.value)
+                  }
+                }
+              })
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "mb-5" }, [
+              _c(
+                "label",
+                {
+                  staticClass: "w-full form-label mb-1",
+                  attrs: { for: "paper_course" }
+                },
+                [_vm._v("Course")]
+              ),
+              _vm._v(" "),
+              _c(
+                "select",
+                {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.paper.course_id,
+                      expression: "paper.course_id"
+                    }
+                  ],
+                  staticClass: "w-full form-input",
+                  attrs: { id: "paper_course", name: "course_id" },
+                  on: {
+                    change: function($event) {
+                      var $$selectedVal = Array.prototype.filter
+                        .call($event.target.options, function(o) {
+                          return o.selected
+                        })
+                        .map(function(o) {
+                          var val = "_value" in o ? o._value : o.value
+                          return val
+                        })
+                      _vm.$set(
+                        _vm.paper,
+                        "course_id",
+                        $event.target.multiple
+                          ? $$selectedVal
+                          : $$selectedVal[0]
+                      )
+                    }
+                  }
+                },
+                _vm._l(_vm.courses, function(course, id) {
+                  return _c("option", {
+                    key: id,
+                    domProps: { value: id, textContent: _vm._s(course) }
+                  })
+                }),
+                0
+              )
+            ]),
+            _vm._v(" "),
+            _c("div", [
+              _c(
+                "button",
+                { staticClass: "btn btn-magenta", attrs: { type: "submit" } },
+                [_vm._v("Update")]
+              )
+            ])
+          ],
+          2
+        )
+      ])
     ]
   )
 }
@@ -18763,7 +18998,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_FeatherIcon_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/FeatherIcon.vue */ "./resources/js/components/FeatherIcon.vue");
 /* harmony import */ var _components_VueTypeahead_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/VueTypeahead.vue */ "./resources/js/components/VueTypeahead.vue");
 /* harmony import */ var _components_CourseUpdateModal_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/CourseUpdateModal.vue */ "./resources/js/components/CourseUpdateModal.vue");
+/* harmony import */ var _components_PaperUpdateModal_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/PaperUpdateModal.vue */ "./resources/js/components/PaperUpdateModal.vue");
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
+
 
 
 
@@ -18773,7 +19010,8 @@ __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_js_modal__WEBPACK_IMPORTED_MODULE_1___default.a);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('feather-icon', _components_FeatherIcon_vue__WEBPACK_IMPORTED_MODULE_2__["default"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('vue-typeahead', _components_VueTypeahead_vue__WEBPACK_IMPORTED_MODULE_3__["default"]);
-vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('course-update-modal', _components_CourseUpdateModal_vue__WEBPACK_IMPORTED_MODULE_4__["default"]);
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.component("course-update-modal", _components_CourseUpdateModal_vue__WEBPACK_IMPORTED_MODULE_4__["default"]);
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('paper-update-modal', _components_PaperUpdateModal_vue__WEBPACK_IMPORTED_MODULE_5__["default"]);
 var app = new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
   el: '#app'
 });
@@ -18958,6 +19196,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_FeatherIcon_vue_vue_type_template_id_6ce6aca1___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_FeatherIcon_vue_vue_type_template_id_6ce6aca1___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/PaperUpdateModal.vue":
+/*!******************************************************!*\
+  !*** ./resources/js/components/PaperUpdateModal.vue ***!
+  \******************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _PaperUpdateModal_vue_vue_type_template_id_590004a3___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./PaperUpdateModal.vue?vue&type=template&id=590004a3& */ "./resources/js/components/PaperUpdateModal.vue?vue&type=template&id=590004a3&");
+/* harmony import */ var _PaperUpdateModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./PaperUpdateModal.vue?vue&type=script&lang=js& */ "./resources/js/components/PaperUpdateModal.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _PaperUpdateModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _PaperUpdateModal_vue_vue_type_template_id_590004a3___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _PaperUpdateModal_vue_vue_type_template_id_590004a3___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/PaperUpdateModal.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/PaperUpdateModal.vue?vue&type=script&lang=js&":
+/*!*******************************************************************************!*\
+  !*** ./resources/js/components/PaperUpdateModal.vue?vue&type=script&lang=js& ***!
+  \*******************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_PaperUpdateModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./PaperUpdateModal.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/PaperUpdateModal.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_PaperUpdateModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/PaperUpdateModal.vue?vue&type=template&id=590004a3&":
+/*!*************************************************************************************!*\
+  !*** ./resources/js/components/PaperUpdateModal.vue?vue&type=template&id=590004a3& ***!
+  \*************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_PaperUpdateModal_vue_vue_type_template_id_590004a3___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./PaperUpdateModal.vue?vue&type=template&id=590004a3& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/PaperUpdateModal.vue?vue&type=template&id=590004a3&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_PaperUpdateModal_vue_vue_type_template_id_590004a3___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_PaperUpdateModal_vue_vue_type_template_id_590004a3___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
