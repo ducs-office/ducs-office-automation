@@ -1,7 +1,7 @@
 @extends('layouts.master')
 @section('body')
     <div class="m-6 page-card pb-2 overflow-x-auto">
-        <div class="flex items-baseline px-6 pb-4 border-b mb-2">
+        <div class="flex items-baseline px-6 pb-4 border-b">
             <h1 class="page-header mb-0 px-0 mr-4">Outgoing Letters</h1>
             <a href="/outgoing-letters/create" class="btn btn-magenta is-sm shadow-inset">
                 Create

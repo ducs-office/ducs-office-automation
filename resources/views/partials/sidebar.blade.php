@@ -19,6 +19,12 @@
                     Outgoing Letters
                 </a>
             </li>
+            <li>
+                <a href="/courses" class="flex items-center py-2 px-4 hover:bg-magenta-700 hover:pl-6">
+                    <feather-icon name="book" class="h-4 mr-2">Courses</feather-icon>
+                    Courses
+                </a>
+            </li>
         </ul>
     </aside>
 </div>
