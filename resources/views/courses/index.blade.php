@@ -35,10 +35,16 @@
                     {{ ucwords($course->name) }}
                 </h3>
             </div>
-            <div>
-                <button class="btn btn-gray" @click.prevent="$modal.show('course-update-modal', {course: {{ $course->toJson() }}})">
+            <div class="flex">
+                <button class="p-1 hover:text-blue-500 mr-1" @click.prevent="$modal.show('course-update-modal', {course: {{ $course->toJson() }}})">
                     <feather-icon class="h-current" name="edit">Edit</feather-icon>
                 </button>
+                <form action="/courses/{{ $course->id }}" method="POST">
+                    @csrf @method('delete')
+                    <button type="submit" class="p-1 hover:text-red-700">
+                        <feather-icon class="h-current" name="trash-2">Trash</feather-icon>
+                    </button>
+                </form>
             </div>
         </div>
     @endforeach

@@ -50,4 +50,13 @@ class CoursesController extends Controller
         return redirect('/courses');
     }
 
+    public function destroy(Course $course)
+    {
+        $course->delete();
+
+        flash('Course deleted successfully!', 'success');
+
+        return redirect('/courses');
+    }
+
 }
