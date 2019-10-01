@@ -12,6 +12,15 @@ class ViewCoursesTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
+    public function guest_cannot_view_courses()
+    {
+        $courses = factory('App\Course', 3)->create();
+
+        $this->withExceptionHandling();
+
+        $this->get('/courses')->assertRedirect('/login');
+    }
+    /** @test */
     public function admin_can_view_all_courses()
     {
         $this->be(factory(User::class)->create());

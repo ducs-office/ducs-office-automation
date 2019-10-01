@@ -1,5 +1,6 @@
 <?php
 
+use App\Course;
 use App\OutgoingLetter;
 use App\User;
 use Illuminate\Database\Seeder;
@@ -20,5 +21,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         factory(OutgoingLetter::class, 10)->create();
+
+        factory(Course::class, 10)->create();
     }
 }
