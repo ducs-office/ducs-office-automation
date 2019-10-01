@@ -1,4 +1,4 @@
-<div class="px-6 py-4 hover:bg-gray-100 border-t">
+<div class="px-6 py-4 hover:bg-gray-100 border-b">
     <div class="flex items-center mb-1">
         <h5 class="mr-12 text-gray-700 font-bold">{{ $letter->date->format('M d, Y') }}</h5>
         <div class="flex items-center text-gray-700">
@@ -9,7 +9,7 @@
             {{ $letter->recipient }}
         </div>
         <div class="ml-auto flex">
-            <a href="/outgoing-letters/{{$letter->id}}/edit" 
+            <a href="/outgoing-letters/{{$letter->id}}/edit"
                 class="p-1 text-gray-500 hover:bg-gray-200 hover:text-blue-600 rounded mr-3" title="Edit">
                 <feather-icon name="edit-3" stroke-width="2.5" class="h-current">Edit</feather-icon>
             </a>
@@ -30,7 +30,7 @@
             &#x20B9;{{ substr(number_format($letter->amount, 2), 0, -2) }}
             <span class="text-sm">
                 {{ substr(number_format($letter->amount, 2), -2, 2) }}
-            </span>   
+            </span>
         </div>
     </div>
     @else
