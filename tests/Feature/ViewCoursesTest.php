@@ -34,5 +34,6 @@ class ViewCoursesTest extends TestCase
             ->viewData('courses');
 
         $this->assertCount(3, $viewData);
+        $this->assertTrue($courses[2]->is($viewData[2])); //first created is at last
     }
 }
