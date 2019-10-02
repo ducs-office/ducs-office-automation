@@ -30,7 +30,7 @@ select {
     }
 }
 .page-card {
-    @apply bg-white text-gray-900 py-6 rounded-lg shadow overflow-hidden;
+    @apply bg-white text-gray-900 py-6 rounded-lg shadow;
 }
 .page-header {
     @apply px-6 text-2xl font-bold mb-6;
@@ -97,6 +97,10 @@ select {
 
 @tailwind utilities;
 
+.top-100 {
+    top: 100%;
+}
+
 .table-fit {
     width: 1%;
     @apply whitespace-no-wrap;
@@ -105,4 +109,59 @@ select {
 .absolute-y-center {
     top: 50%;
     transform: translateY(-50%);
+}
+
+.transition {
+    transition: all .3s;
+}
+.transition-opacity {
+    transition: opacity .3s;
+}
+.transition-transform {
+    transition: transform .3s;
+}
+
+
+.translate-100 {
+    transform: translate(100%, 100%);
+}
+.translate-0 {
+    transform: translate(0%, 0%);
+}
+.translate-x-100 {
+    transform: translateX(100%);
+}
+.translate-x-0 {
+    transform: translateX(0%);
+}
+.translate-y-100 {
+    transform: translateY(100%);
+}
+.translate-y-0 {
+    transform: translateY(0%);
+}
+.scale-0 {
+    transform: scale(0);
+}
+.scale-100 {
+    transform: scale(1);
+}
+.scale-x-0 {
+    transform: scaleX(0);
+}
+.scale-x-100 {
+    transform: scaleX(1);
+}
+.scale-y-0 {
+    transform: scaleY(0);
+}
+.scale-y-100 {
+    transform: scaleY(1);
+}
+
+.transform-top-left {
+    transform-origin: 0% 0%;
+}
+.transform-bottom-right {
+    transform-origin: 100% 100%;
 }

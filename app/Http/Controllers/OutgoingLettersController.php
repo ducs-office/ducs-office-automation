@@ -13,20 +13,20 @@ class OutgoingLettersController extends Controller
     public function index(Request $request)
     {
         $filters = $request->query('filters');
-
+        
         $query = OutgoingLetter::applyFilter($filters);
 
         if ($request->has('search') && request('search')!= '') {
-            $query->where('subject','like','%'.request('search').'%')
-                ->orWhere('description','like','%'.request('search').'%');
+            $query->where('subject', 'like', '%'.request('search').'%')
+                ->orWhere('description', 'like', '%'.request('search').'%');
         }
 
-        $outgoing_letters = $query->orderBy('date','DESC')->get();
+        $outgoing_letters = $query->orderBy('date', 'DESC')->get();
 
-        $recipients = OutgoingLetter::selectRaw('DISTINCT(recipient)')->get()->pluck('recipient')->toArray();
-        $types = OutgoingLetter::selectRaw('DISTINCT(type)')->get()->pluck('type')->toArray();
-        $senders = User::select('id', 'name')->whereIn('id', OutgoingLetter::selectRaw('DISTINCT(sender_id)'))->get()->toArray();
-        $creators = User::select('id', 'name')->whereIn('id', OutgoingLetter::selectRaw('DISTINCT(creator_id)'))->get()->toArray();
+        $recipients = OutgoingLetter::selectRaw('DISTINCT(recipient)')->get()->pluck('recipient', 'recipient');
+        $types = OutgoingLetter::selectRaw('DISTINCT(type)')->get()->pluck('type', 'type');
+        $senders = User::select('id', 'name')->whereIn('id', OutgoingLetter::selectRaw('DISTINCT(sender_id)'))->get()->pluck('name', 'id');
+        $creators = User::select('id', 'name')->whereIn('id', OutgoingLetter::selectRaw('DISTINCT(creator_id)'))->get()->pluck('name', 'id');
 
         return view('outgoing_letters.index', compact(
             'outgoing_letters',

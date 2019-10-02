@@ -59,6 +59,9 @@ module.exports = {
       },
       height: {
         current: '1em'
+      },
+      maxHeight: {
+        'screen-1/2': '50vh',
       }
     }
   },

@@ -12,10 +12,10 @@
         }
     </style>
 </head>
-<body class="font-sans leading-tight bg-gray-200">
-    <div id="app" class="flex min-h-screen">
+<body class="font-sans leading-tight bg-gray-200 overflow-y-hidden">
+    <div id="app" class="flex h-screen">
         @auth @include('partials.sidebar') @endauth
-        <main class="flex-1 overflow-x-hidden">
+        <main class="flex-1 overflow-x-hidden overflow-y-auto">
             @include('partials.header')
             @yield('body')
         </main>

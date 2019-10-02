@@ -714,7 +714,6 @@ select {
   padding-bottom: 1.5rem;
   border-radius: 0.5rem;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-  overflow: hidden;
 }
 
 .page-header {
@@ -5878,6 +5877,10 @@ select {
 
 .max-h-screen {
   max-height: 100vh;
+}
+
+.max-h-screen-1\/2 {
+  max-height: 50vh;
 }
 
 .max-w-16 {
@@ -14156,6 +14159,10 @@ select {
   z-index: auto;
 }
 
+.top-100 {
+  top: 100%;
+}
+
 .table-fit {
   width: 1%;
   white-space: nowrap;
@@ -14164,6 +14171,74 @@ select {
 .absolute-y-center {
   top: 50%;
   transform: translateY(-50%);
+}
+
+.transition {
+  transition: all 0.3s;
+}
+
+.transition-opacity {
+  transition: opacity 0.3s;
+}
+
+.transition-transform {
+  transition: transform 0.3s;
+}
+
+.translate-100 {
+  transform: translate(100%, 100%);
+}
+
+.translate-0 {
+  transform: translate(0%, 0%);
+}
+
+.translate-x-100 {
+  transform: translateX(100%);
+}
+
+.translate-x-0 {
+  transform: translateX(0%);
+}
+
+.translate-y-100 {
+  transform: translateY(100%);
+}
+
+.translate-y-0 {
+  transform: translateY(0%);
+}
+
+.scale-0 {
+  transform: scale(0);
+}
+
+.scale-100 {
+  transform: scale(1);
+}
+
+.scale-x-0 {
+  transform: scaleX(0);
+}
+
+.scale-x-100 {
+  transform: scaleX(1);
+}
+
+.scale-y-0 {
+  transform: scaleY(0);
+}
+
+.scale-y-100 {
+  transform: scaleY(1);
+}
+
+.transform-top-left {
+  transform-origin: 0% 0%;
+}
+
+.transform-bottom-right {
+  transform-origin: 100% 100%;
 }
 
 @media (min-width: 640px) {
@@ -19195,6 +19270,10 @@ select {
 
   .sm\:max-h-screen {
     max-height: 100vh;
+  }
+
+  .sm\:max-h-screen-1\/2 {
+    max-height: 50vh;
   }
 
   .sm\:max-w-16 {
@@ -32505,6 +32584,10 @@ select {
     max-height: 100vh;
   }
 
+  .md\:max-h-screen-1\/2 {
+    max-height: 50vh;
+  }
+
   .md\:max-w-16 {
     max-width: 4rem;
   }
@@ -45813,6 +45896,10 @@ select {
     max-height: 100vh;
   }
 
+  .lg\:max-h-screen-1\/2 {
+    max-height: 50vh;
+  }
+
   .lg\:max-w-16 {
     max-width: 4rem;
   }
@@ -59119,6 +59206,10 @@ select {
 
   .xl\:max-h-screen {
     max-height: 100vh;
+  }
+
+  .xl\:max-h-screen-1\/2 {
+    max-height: 50vh;
   }
 
   .xl\:max-w-16 {
