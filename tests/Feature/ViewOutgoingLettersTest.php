@@ -49,7 +49,6 @@ class ViewOutgoingLettersTest extends TestCase
             ->assertViewIs('outgoing_letters.index')
             ->assertViewHas('outgoing_letters')
             ->viewData('outgoing_letters');
-        
         $letters = $letters->sortByDesc('date');
         $sorted_letters_ids = $letters->pluck('id')->toArray();
         $viewData_ids = $viewData->pluck('id')->toArray();
