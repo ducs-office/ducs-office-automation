@@ -38,48 +38,25 @@ class CollegeController extends Controller
         //
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\College  $college
-     * @return \Illuminate\Http\Response
-     */
-    public function show(College $college)
-    {
-        //
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\College  $college
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(College $college)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\College  $college
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, College $college)
     {
-        //
+        $validData = $request->validate([
+            'code'=>'sometimes|required|min:3|max:15|unique:colleges,code',
+            'name'=>'sometimes|required|min:5|max:50|unique:colleges,name'
+        ]);
+
+        $college->update($validData);
+        
+        flash('College updated successfully!', 'success');
+
+        return redirect('/colleges');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\College  $college
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(College $college)
     {
-        //
+        $college->delete();
+        flash('College deleted successfully!', 'success');
+        return redirect('/colleges');
     }
 }

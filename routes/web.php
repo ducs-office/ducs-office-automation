@@ -40,4 +40,6 @@ Route::post('/papers', 'PaperController@store')->middleware('auth');
 Route::patch('/papers/{paper}', 'PaperController@update')->middleware('auth');
 Route::delete('/papers/{paper}', 'PaperController@destroy')->middleware('auth');
 
-Route::resource('colleges', 'CollegeController');
+
+Route::patch('/colleges/{college}', 'CollegeController@update')->middleware('auth');
+Route::delete('/colleges/{college}', 'CollegeController@destroy')->middleware('auth');

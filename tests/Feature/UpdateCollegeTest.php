@@ -5,6 +5,8 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
+use App\User;
+use App\College;
 
 class UpdateCollegeTest extends TestCase
 {
@@ -15,10 +17,10 @@ class UpdateCollegeTest extends TestCase
     {
         $college = factory(College::class)->create();
 
-        $this->withoutExceptionHandling()
+        $this->withExceptionHandling()
             ->patch('/colleges/'. $college->id, ['code' => 'code1'])
-            ->assertRedirect('/colleges')
-            ->assertSessionHasFlash('fail', 'Not authorised');
+            ->assertRedirect('/login');
+
 
         $this->assertEquals($college->code, $college->fresh()->code);
     }
@@ -34,7 +36,7 @@ class UpdateCollegeTest extends TestCase
             ->assertRedirect('/colleges')
             ->assertSessionHasFlash('success', 'College updated successfully');
 
-        $this->assertCount(1, College::count());
+        $this->assertEquals(1, College::count());
         $this->assertEquals($new_code, $college->fresh()->code);
 
     }
@@ -51,7 +53,7 @@ class UpdateCollegeTest extends TestCase
             ->assertRedirect('/colleges')
             ->assertSessionHasFlash('success', 'College updated successfully');
 
-        $this->assertCount(1, College::count());
+        $this->assertEquals(1, College::count());
         $this->assertEquals($new_name, $college->fresh()->name);
 
     }

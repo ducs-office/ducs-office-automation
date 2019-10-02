@@ -5,6 +5,8 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
+use App\College;
+use App\User;
 
 class DeleteCollegeTest extends TestCase
 {
@@ -15,10 +17,8 @@ class DeleteCollegeTest extends TestCase
     {
         $college = factory(College::class)->create();
 
-        $this->withoutExceptionHandling()
-            ->delete('/colleges/'. $college->id)
-            ->assertRedirect('/colleges')
-            ->assertSessionHasFlash('fail', 'Not authorised');
+        $this->delete('/colleges/'. $college->id)
+            ->assertRedirect('/login');
 
         $this->assertEquals($college->code, $college->fresh()->code);
     }
