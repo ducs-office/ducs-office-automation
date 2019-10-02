@@ -74,7 +74,10 @@ class ViewOutgoingLettersTest extends TestCase
                 ->viewData('recipients');
         
         $this->assertCount(3,$recipients);
-        $this->assertEquals(1,array_count_values($recipients)['Exam Office']);
+        $this->assertSame(
+            OutgoingLetter::all()->pluck('recipient', 'recipient')->toArray(),
+            $recipients->toArray()
+        );
     }
 
     /** @test */
@@ -86,15 +89,18 @@ class ViewOutgoingLettersTest extends TestCase
         factory(OutgoingLetter::class)->create();
         factory(OutgoingLetter::class)->create();
 
-        $type = $this->withExceptionHandling()
+        $types = $this->withExceptionHandling()
                 ->get('/outgoing-letters')
                 ->assertSuccessful()
                 ->assertViewIs('outgoing_letters.index')
                 ->assertViewHas('types')
                 ->viewData('types');
         
-        $this->assertCount(3,$type);
-        $this->assertEquals(1,array_count_values($type)['Invite Letter']);
+        $this->assertCount(3,$types);
+        $this->assertSame(
+            OutgoingLetter::all()->pluck('type', 'type')->toArray(), 
+            $types->toArray()
+        );
     }
 
     /** @test */
@@ -114,17 +120,18 @@ class ViewOutgoingLettersTest extends TestCase
                 ->viewData('senders');
         
         $this->assertCount(3,$senders);
-        $this->assertEquals(1,array_count_values(
-            array_column($senders,'id')
-        )[2]);
+        $this->assertSame(
+            OutgoingLetter::with('sender')->get()->pluck('sender.name', 'sender_id')->toArray(), 
+            $senders->toArray()
+        );
     }
 
     /** @test */
     public function view_has_a_unique_list_of_creators()
     {
-        $this->be(factory(User::class)->create());
+        $this->be($user = factory(User::class)->create());
 
-        factory(OutgoingLetter::class,3)->create(['creator_id' => 2]);
+        factory(OutgoingLetter::class,3)->create(['creator_id' => $user->id]);
         factory(OutgoingLetter::class)->create();
         factory(OutgoingLetter::class)->create();
 
@@ -136,8 +143,9 @@ class ViewOutgoingLettersTest extends TestCase
                 ->viewData('creators');
         
         $this->assertCount(3,$creators);
-        $this->assertEquals(1,array_count_values(
-            array_column($creators,'id')
-        )[2]);
+        $this->assertSame(
+            OutgoingLetter::with('creator')->get()->pluck('creator.name', 'creator_id')->toArray(), 
+            $creators->toArray()
+        );
     }
 }
