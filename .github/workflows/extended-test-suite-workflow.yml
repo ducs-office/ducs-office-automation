@@ -1,0 +1,67 @@
+# name of the action
+name: Extended Test Suite
+
+# run this action on
+on:
+  push:
+    # on push events to master, run extended suite
+    branches: 
+      - master  
+    # when commits are tagged, they are important, run extended suite
+    tags:
+    - '*'
+  
+  # when release published, run extended suite
+  release:
+    types: [published]
+  
+# jobs execute in parallel, we can however specify dependence, if any
+jobs:
+  
+  # A job to setup php and run all the tests
+  run-tests:
+    
+    # parallel test for matrix builds
+    strategy:
+      max-parallel: 10
+      matrix: 
+        platform: [ubuntu-latest, ubuntu-18.04, ubuntu-16.04]
+        php-versions: ['7.2', '7.3']
+    name: PHP ${{ matrix.php-versions }} Test on ${{ matrix.platform }}
+    
+    # platform for this build
+    runs-on: ${{ matrix.platform }}
+    
+    # steps to be done in this job
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v1
+    
+    - name: Install PHP
+      uses: shivammathur/setup-php@master
+      with:
+        php-version: ${{ matrix.php-versions }}
+    
+    - name: Verify PHP and composer Installation
+      run: |
+        php -v
+        composer -V  
+    
+    - name: Copy ENV Laravel Configuration for CI
+      run: php -r "file_exists('.env') || copy('.env.ci', '.env');"
+    
+    - name: Install Dependencies (PHP vendors)
+      run: composer install -q --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
+    
+    - name: Generate key
+      run: php artisan key:generate
+   
+# enable database step when needed  
+#     - name: Create DB and schemas
+#       run: |
+#         mkdir -p database
+#         touch database/database.sqlite
+#         php artisan migrate
+    
+    - name: Execute tests (Unit and Feature tests) via PHPUnit
+      run: vendor/bin/phpunit
