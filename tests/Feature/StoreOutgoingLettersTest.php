@@ -241,10 +241,12 @@ class StoreOutgoingLettersTest extends TestCase
     public function request_validates_description_field_can_be_null()
     {
         $this->be(factory(\App\User::class)->create());
-        $letter = factory(OutgoingLetter::class)->make(['description' => 'aswe']);
+        $letter = factory(OutgoingLetter::class)->make()->toArray();
+
+        unset($letter['description']);
     
         $this->withoutExceptionHandling()
-            ->post('/outgoing-letters', $letter->toArray())
+            ->post('/outgoing-letters', $letter)
             ->assertRedirect('/outgoing-letters');
 
         $this->assertEquals(1, OutgoingLetter::count());

@@ -34,6 +34,9 @@ class ViewCoursesTest extends TestCase
             ->viewData('courses');
 
         $this->assertCount(3, $viewData);
-        $this->assertTrue($courses[2]->is($viewData[2])); //first created is at last
+        $this->assertEquals(
+            $courses->sortByDesc('created_at')->first()->toArray(),
+            $viewData->first()->toArray()
+        ); //first created is at last
     }
 }
