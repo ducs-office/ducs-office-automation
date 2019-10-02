@@ -3,7 +3,7 @@
     <div class="m-6 page-card">
         <div class="flex items-baseline px-6 pb-4 border-b">
             <h1 class="page-header mb-0 px-0 mr-4">Course Papers</h1>
-            <button class="btn btn-magenta is-sm" @click="$modal.show('create-papers-modal')">
+            <button class="btn btn-magenta is-sm shadow-inset" @click="$modal.show('create-papers-modal')">
                 New
             </button>
         </div>

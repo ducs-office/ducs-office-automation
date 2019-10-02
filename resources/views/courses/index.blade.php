@@ -3,9 +3,9 @@
 <div class="m-6 page-card pb-0">
     <div class="flex items-baseline px-6 pb-4 border-b">
         <h1 class="page-header mb-0 px-0 mr-4">Academic Courses</h1>
-        <a href="/courses/create" class="btn btn-magenta is-sm shadow-inset" @click.prevent="$modal.show('create-course-form')">
-            Create
-        </a>
+        <button class="btn btn-magenta is-sm shadow-inset" @click.prevent="$modal.show('create-course-form')">
+            New
+        </button>
     </div>
     <modal name="create-course-form" height="auto">
         <div class="p-6">
