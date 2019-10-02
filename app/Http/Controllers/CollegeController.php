@@ -36,15 +36,14 @@ class CollegeController extends Controller
 
     public function update(Request $request, College $college)
     {
+        
         $validData = $request->validate([
             'code'=>'sometimes|required|min:3|max:15|unique:colleges,code',
             'name'=>'sometimes|required|min:5|max:50|unique:colleges,name'
         ]);
-
-        $college->update($validData);
         
+        $college->update($validData);
         flash('College updated successfully!', 'success');
-
         return redirect('/colleges');
     }
 
