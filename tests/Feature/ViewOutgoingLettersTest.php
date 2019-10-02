@@ -49,7 +49,6 @@ class ViewOutgoingLettersTest extends TestCase
             ->assertViewIs('outgoing_letters.index')
             ->assertViewHas('outgoing_letters')
             ->viewData('outgoing_letters');
-        dd($viewData);
         $letters = $letters->sortByDesc('date');
         $sorted_letters_ids = $letters->pluck('id')->toArray();
         $viewData_ids = $viewData->pluck('id')->toArray();
@@ -74,7 +73,6 @@ class ViewOutgoingLettersTest extends TestCase
                 ->viewData('recipients');
         
         $this->assertCount(3,$recipients);
-        dd($recipients);
         $this->assertCount(1,$recipients->pluck('Exam Office'));
     }
 
@@ -137,9 +135,8 @@ class ViewOutgoingLettersTest extends TestCase
                 ->viewData('creators');
         
         $this->assertCount(3,$creators);
-        dd($creators);
-        // $this->assertEquals(1,array_count_values(
-        //     array_column($creators,'id')
-        // )[2]);
+        $this->assertEquals(1,array_count_values(
+            array_column($creators,'id')
+        )[2]);
     }
 }

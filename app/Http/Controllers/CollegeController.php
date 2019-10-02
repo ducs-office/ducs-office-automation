@@ -14,28 +14,23 @@ class CollegeController extends Controller
      */
     public function index()
     {
-        //
+        $colleges = College::all();
+
+        return view('colleges.index',compact('colleges'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'code'=>['required','min:3','max:15','unique:colleges,code'],
+            'name'=>['required','min:5','max:50','unique:colleges,name']
+        ]);
+
+        College::create($data);
+
+        flash('College created successfully!','success');
+
+        return redirect('/colleges');
     }
 
 

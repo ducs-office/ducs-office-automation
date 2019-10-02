@@ -6,6 +6,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\User;
+use App\College;
 
 class CreateCollegeTest extends TestCase
 {
@@ -21,12 +22,12 @@ class CreateCollegeTest extends TestCase
     {
         $this->be(factory(User::class)->create());
 
-        $this->post('colleges/',[
-            'code' => '123',
+        $this->post('/colleges',[
+            'code' => 'DU-KMV-21',
             'name' => 'Keshav Mahavidyalaya'
         ])->assertRedirect('/colleges')
-        ->assertSessionHasFlag('successs','College added successfully');
+        ->assertSessionHasFlash('success','College created successfully!');
 
-        $this->assertEquals(1,colleges::count());
+        $this->assertEquals(1,College::count());
     }
 }
