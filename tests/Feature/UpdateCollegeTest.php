@@ -57,4 +57,44 @@ class UpdateCollegeTest extends TestCase
         $this->assertEquals($new_name, $college->fresh()->name);
 
     }
+
+    /** @test */
+    public function college_is_not_validated_for_uniqueness_if_code_is_not_changed()
+    {
+        $this->be(factory(User::class)->create())
+            ->withoutExceptionHandling();
+        
+        $college = factory(College::class)->create();
+
+        $response = $this->patch('/colleges/'.$college->id, [
+            'code' => $college->code,
+            'name' => $newName = 'New college'
+        ])->assertRedirect('/colleges')
+        ->assertSessionHasNoErrors()
+        ->assertSessionHasFlash('success', 'College updated successfully!');
+
+
+        $this->assertEquals(1, College::count());
+        $this->assertEquals($newName, $college->fresh()->name);
+    }
+
+    /** @test */
+    public function college_is_not_validated_for_uniqueness_if_name_is_not_changed()
+    {
+        $this->be(factory(User::class)->create())
+            ->withoutExceptionHandling();
+        
+        $college = factory(College::class)->create();
+
+        $response = $this->patch('/colleges/'.$college->id, [
+            'code' => $new_code = 'new_code123',
+            'name' => $college->name
+        ])->assertRedirect('/colleges')
+        ->assertSessionHasNoErrors()
+        ->assertSessionHasFlash('success', 'College updated successfully!');
+
+
+        $this->assertEquals(1, College::count());
+        $this->assertEquals($new_code, $college->fresh()->code);
+    }
 }
