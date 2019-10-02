@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\User;
+use App\College;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -22,11 +23,12 @@ class ViewCollegesTest extends TestCase
      {
         factory(College::class,3)->create();
 
-        $this->withoutExceptionHandling()
+        $this->withExceptionHandling()
             ->get('/colleges')
             ->assertRedirect('/login');
     }
 
+    /** @test */
     public function admin_can_view_colleges()
     {
         $this->be(factory(User::class)->create());
@@ -35,7 +37,7 @@ class ViewCollegesTest extends TestCase
 
         $viewData = $this->withoutExceptionHandling()
                     ->get('/colleges')
-                    ->assertViewIs('/colleges')
+                    ->assertViewIs('colleges.index')
                     ->assertViewHas('colleges')
                     ->viewData('colleges');
                     
