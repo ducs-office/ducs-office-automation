@@ -35,6 +35,7 @@ class CoursesController extends Controller
 
     public function update(Request $request, Course $course)
     {
+       
         $data = $request->validate([
             'code' => [
                 'sometimes', 'required', 'min:3', 'max:10', 

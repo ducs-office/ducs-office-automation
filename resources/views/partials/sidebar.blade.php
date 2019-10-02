@@ -31,6 +31,12 @@
                     Course Papers
                 </a>
             </li>
+            <li>
+                <a href="/colleges" class="flex items-center py-2 px-4 hover:bg-magenta-700 hover:pl-6">
+                    <feather-icon name="home" class="h-4 mr-2">Colleges</feather-icon>
+                    Colleges
+                </a>
+            </li>
         </ul>
     </aside>
 </div>

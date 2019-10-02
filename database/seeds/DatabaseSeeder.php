@@ -28,9 +28,15 @@ class DatabaseSeeder extends Seeder
             factory(Paper::class, 20)->create(['course_id' => $course->id]);
         });
 
-        factory(College::class,10)->create();
-        factory(College::class)->create(['name' => 'Keshav Mahavidyalaya']);
-        factory(College::class)->create(['name' => 'Atma Ram Sanatan Dharma College']);
+        factory(College::class)->create([
+            'code'=> 'DU-KMV-001' ,
+            'name' => 'Keshav Mahavidyalaya'
+        ]);
+        factory(College::class)->create([
+            'code' => 'DU-ARSD-002',
+            'name' => 'Atma Ram Sanatan Dharma College'
+        ]);
+        factory(College::class,5)->create();
 
     }
 }
