@@ -100,7 +100,7 @@ php artisan migrate --seed
 To create default user:
 
 ```
-php tinker
+php artisan tinker
 App\Users::create(["name"=>"root", "email"=>"root@localhost.com", "password"=>bcrypt("root")]);
 ```
 
