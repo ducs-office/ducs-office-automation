@@ -1,5 +1,10 @@
 <header class="bg-white text-gray-900 py-2 h-16 px-4 flex justify-end items-center">
     @auth
+    <sidebar-nav-button inline-template>
+        <button class="md:hidden p-3 text-gray-700 mr-3 btn" @click="openSidebarNav">
+            <feather-icon name="menu" class="h-current" stroke-width="3">Toggle Menu</feather-icon>
+        </button>
+    </sidebar-nav-button>
     <form action="" method="GET" class="relative flex-1 mr-4">
         <input type="text" class="w-full form-input pl-8" placeholder="Search..." >
         <feather-icon name="search" class="absolute left-0 ml-2 absolute-y-center text-gray-600 h-5"></feather-icon>
