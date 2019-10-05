@@ -97,13 +97,6 @@ To create all the tables & seed your database with dummy data, run:
 php artisan migrate --seed
 ```
 
-To create default user:
-
-```
-php artisan tinker
-App\Users::create(["name"=>"root", "email"=>"root@localhost.com", "password"=>bcrypt("root")]);
-```
-
 ### Start Local Development Server
 
 To begin browsing & testing the portal you'd need to start a local development server.
@@ -117,6 +110,6 @@ This will serve your website at `localhost:8000`, you can now open this up in yo
 ### Default login credentials
 
 ```
-Email: root@localhost.com
-Password: root
+Email: himani@ducs.in
+Password: secret
 ```
