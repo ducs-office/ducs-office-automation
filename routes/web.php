@@ -12,6 +12,7 @@
 */
 
 use App\Http\Controllers\OutgoingLettersController;
+use App\Http\Controllers\RemarksController;
 
 Route::get('/', function () {
     return view('dashboard');
@@ -29,7 +30,10 @@ Route::get('/outgoing-letters', 'OutgoingLettersController@index')->middleware('
 Route::patch('/outgoing-letters/{outgoing_letter}', 'OutgoingLettersController@update')->middleware('auth');
 Route::delete('/outgoing-letters/{outgoing_letter}','OutgoingLettersController@destroy')->middleware('auth');
 
-
+Route::post('/outgoing-letters/{outgoing_letter}/remarks','RemarksController@store')->middleware('auth');
+Route::patch('/remarks/{remark}','RemarksController@update')->middleware('auth');
+Route::delete('/remarks/{remark}', 'RemarksController@delete')->middleware('auth');
+    
 Route::get('/courses', 'CoursesController@index')->middleware('auth');
 Route::post('/courses', 'CoursesController@store')->middleware('auth');
 Route::patch('/courses/{course}', 'CoursesController@update')->middleware('auth');
