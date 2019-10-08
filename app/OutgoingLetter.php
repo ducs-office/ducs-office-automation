@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Model;
+use App\Remark;
 
 class OutgoingLetter extends Model
 {   
@@ -26,5 +27,15 @@ class OutgoingLetter extends Model
     public function creator()
     {
         return $this->belongsTo(User::class,'creator_id');
+    }
+
+    public function remarks()
+    {
+        return $this->hasMany(Remark::class, 'id');
+    }
+
+    public function addRemark($description)
+    {
+        $this->remarks()->create($description);
     }
 }
