@@ -10,6 +10,16 @@
             {{ $letter->recipient }}
         </div>
         <div class="ml-auto flex">
+            <remark-modal name = "remark-modal"></remark-modal>
+            <button 
+                class="p-1 text-gray-500 hover:bg-gray-200 hover:text-green-600 rounded mr-3" 
+                title="Add Remark"
+                @click.prevent = "$modal.show('remark-modal', {
+                    letter: {{ $letter->toJson() }},
+                    remarks: {{ $letter->remarks->toJson()}}
+                })">
+                <feather-icon name="book-open" stroke-width="2.5" class="h-current">Add Remark</feather-icon>
+            </button>
             <a href="/outgoing-letters/{{$letter->id}}/edit"
                 class="p-1 text-gray-500 hover:bg-gray-200 hover:text-blue-600 rounded mr-3" title="Edit">
                 <feather-icon name="edit-3" stroke-width="2.5" class="h-current">Edit</feather-icon>

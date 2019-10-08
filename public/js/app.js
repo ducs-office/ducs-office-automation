@@ -2197,6 +2197,57 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/RemarkModal.vue?vue&type=script&lang=js&":
+/*!**********************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/RemarkModal.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      letter: {
+        id: ''
+      },
+      remarks: []
+    };
+  },
+  methods: {
+    beforeOpen: function beforeOpen(event) {
+      this.letter = event.params.letter;
+      this.remarks = event.params.remarks;
+    },
+    log: function log() {
+      console.log(this.letter.id);
+      console.log(this.remarks);
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/VueTypeahead.vue?vue&type=script&lang=js&":
 /*!***********************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/VueTypeahead.vue?vue&type=script&lang=js& ***!
@@ -7252,6 +7303,99 @@ var render = function() {
             ])
           ],
           2
+        )
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/RemarkModal.vue?vue&type=template&id=3789b91c&":
+/*!**************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/RemarkModal.vue?vue&type=template&id=3789b91c& ***!
+  \**************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "modal",
+    {
+      attrs: { name: "remark-modal", height: "auto" },
+      on: { "before-open": _vm.beforeOpen }
+    },
+    [
+      _c("div", { staticClass: "p-6" }, [
+        _c("h2", { staticClass: "text-lg font-bold mb-8" }, [
+          _vm._v("Remarks")
+        ]),
+        _vm._v(" "),
+        _c(
+          "div",
+          {
+            staticClass: "px-6 py-2 hover:bg-gray-100 border-b justify-between"
+          },
+          _vm._l(_vm.remarks, function(remark, id) {
+            return _c(
+              "div",
+              {
+                key: id,
+                staticClass: "flex items-baseline mb-2",
+                attrs: { value: id }
+              },
+              [
+                _c(
+                  "h4",
+                  { staticClass: "font-bold text-sm text-gray-600 w-24" },
+                  [_vm._v(_vm._s(remark.updated_at))]
+                ),
+                _vm._v(" "),
+                _c("h4", { staticClass: "font-bold text-lg  mr-2" }, [
+                  _vm._v(_vm._s(remark.description))
+                ]),
+                _vm._v(" "),
+                _c(
+                  "a",
+                  {
+                    staticClass:
+                      "p-1 text-gray-500 hover:bg-gray-200 hover:text-blue-600 rounded mr-3",
+                    attrs: { title: "Edit" }
+                  },
+                  [
+                    _c(
+                      "feather-icon",
+                      {
+                        staticClass: "h-current",
+                        attrs: { name: "edit-3", "stroke-width": "2.5" }
+                      },
+                      [_vm._v("Edit")]
+                    )
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _c("form", {
+                  attrs: {
+                    action: "/remark/" + remark.id + "/",
+                    method: "POST"
+                  }
+                })
+              ]
+            )
+          }),
+          0
         )
       ])
     ]
@@ -19563,7 +19707,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_PaperUpdateModal_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/PaperUpdateModal.vue */ "./resources/js/components/PaperUpdateModal.vue");
 /* harmony import */ var _components_LettersSearchFilters_vue__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./components/LettersSearchFilters.vue */ "./resources/js/components/LettersSearchFilters.vue");
 /* harmony import */ var _components_CollegeUpdateModal_vue__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./components/CollegeUpdateModal.vue */ "./resources/js/components/CollegeUpdateModal.vue");
+/* harmony import */ var _components_RemarkModal_vue__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./components/RemarkModal.vue */ "./resources/js/components/RemarkModal.vue");
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
+
 
 
 
@@ -19582,6 +19728,7 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.component("course-update-modal", _com
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component("paper-update-modal", _components_PaperUpdateModal_vue__WEBPACK_IMPORTED_MODULE_6__["default"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('letter-search-filters', _components_LettersSearchFilters_vue__WEBPACK_IMPORTED_MODULE_7__["default"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component("college-update-modal", _components_CollegeUpdateModal_vue__WEBPACK_IMPORTED_MODULE_8__["default"]);
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.component("remark-modal", _components_RemarkModal_vue__WEBPACK_IMPORTED_MODULE_9__["default"]);
 var app = new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
   el: '#app'
 });
@@ -20065,6 +20212,75 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/RemarkModal.vue":
+/*!*************************************************!*\
+  !*** ./resources/js/components/RemarkModal.vue ***!
+  \*************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _RemarkModal_vue_vue_type_template_id_3789b91c___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./RemarkModal.vue?vue&type=template&id=3789b91c& */ "./resources/js/components/RemarkModal.vue?vue&type=template&id=3789b91c&");
+/* harmony import */ var _RemarkModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./RemarkModal.vue?vue&type=script&lang=js& */ "./resources/js/components/RemarkModal.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _RemarkModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _RemarkModal_vue_vue_type_template_id_3789b91c___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _RemarkModal_vue_vue_type_template_id_3789b91c___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/RemarkModal.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/RemarkModal.vue?vue&type=script&lang=js&":
+/*!**************************************************************************!*\
+  !*** ./resources/js/components/RemarkModal.vue?vue&type=script&lang=js& ***!
+  \**************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_RemarkModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./RemarkModal.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/RemarkModal.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_RemarkModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/RemarkModal.vue?vue&type=template&id=3789b91c&":
+/*!********************************************************************************!*\
+  !*** ./resources/js/components/RemarkModal.vue?vue&type=template&id=3789b91c& ***!
+  \********************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_RemarkModal_vue_vue_type_template_id_3789b91c___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./RemarkModal.vue?vue&type=template&id=3789b91c& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/RemarkModal.vue?vue&type=template&id=3789b91c&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_RemarkModal_vue_vue_type_template_id_3789b91c___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_RemarkModal_vue_vue_type_template_id_3789b91c___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/components/VueTypeahead.vue":
 /*!**************************************************!*\
   !*** ./resources/js/components/VueTypeahead.vue ***!
@@ -20170,8 +20386,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /home/ducs/code/ducs-office-automation/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /home/ducs/code/ducs-office-automation/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /home/gautam/ducs-office-automation/ducs-office-automation/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /home/gautam/ducs-office-automation/ducs-office-automation/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

@@ -5,6 +5,7 @@ use App\OutgoingLetter;
 use App\Paper;
 use App\User;
 use App\College;
+use App\Remark;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -37,6 +38,8 @@ class DatabaseSeeder extends Seeder
             'name' => 'Atma Ram Sanatan Dharma College'
         ]);
         factory(College::class,5)->create();
+
+        factory(Remark::class,4)->create(['letter_id' => 1]);
 
     }
 }
