@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\OutgoingLetter;
+use App\Remark;
 
 class RemarksController extends Controller
 {
 
-    public function store(OutgoingLetter $outgoingletter)
+    public function store(OutgoingLetter $outgoing_letter)
     {
-        $outgoingletter->addRemark(request()->validate([
+        $outgoing_letter->addRemark(request()->validate([
             'description'=>'required|min:10|max:255|string'
         ]));
         
@@ -19,10 +20,10 @@ class RemarksController extends Controller
 
     public function update(Remark $remark)
     {
+        
         $remark->update(request()->validate([
             'description'=>'required|min:10|max:255|string' 
         ]));
-
         return back();
     }
 

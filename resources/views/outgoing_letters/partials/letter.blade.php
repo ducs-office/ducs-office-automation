@@ -1,4 +1,3 @@
-
 <div class="px-6 py-4 hover:bg-gray-100 border-b">
     <div class="flex items-center mb-1">
         <h5 class="mr-12 text-gray-700 font-bold">{{ $letter->date->format('M d, Y') }}</h5>

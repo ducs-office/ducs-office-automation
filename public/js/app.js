@@ -2225,13 +2225,24 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       letter: {
         id: ''
       },
-      remarks: []
+      remarks: [{
+        editRemark: false
+      }]
     };
   },
   methods: {
@@ -2242,6 +2253,11 @@ __webpack_require__.r(__webpack_exports__);
     log: function log() {
       console.log(this.letter.id);
       console.log(this.remarks);
+    },
+    openEditForm: function openEditForm(remark) {
+      console.log("I was called");
+      remark.editRemark = true;
+      console.log(remark.editRemark);
     }
   }
 });
@@ -7362,36 +7378,41 @@ var render = function() {
                   [_vm._v(_vm._s(remark.updated_at))]
                 ),
                 _vm._v(" "),
-                _c("h4", { staticClass: "font-bold text-lg  mr-2" }, [
-                  _vm._v(_vm._s(remark.description))
-                ]),
+                !remark.editRemark
+                  ? _c("div", [
+                      _c("h4", { staticClass: "font-bold text-lg  mr-2" }, [
+                        _vm._v(_vm._s(remark.description))
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "button",
+                        {
+                          staticClass:
+                            "p-1 text-gray-500 hover:bg-gray-200 hover:text-blue-600 rounded mr-3",
+                          on: {
+                            click: function($event) {
+                              return _vm.openEditForm(remark)
+                            }
+                          }
+                        },
+                        [
+                          _c(
+                            "feather-icon",
+                            {
+                              staticClass: "h-current",
+                              attrs: { name: "edit-3", "stroke-width": "2.5" }
+                            },
+                            [_vm._v("Edit")]
+                          )
+                        ],
+                        1
+                      )
+                    ])
+                  : _vm._e(),
                 _vm._v(" "),
-                _c(
-                  "a",
-                  {
-                    staticClass:
-                      "p-1 text-gray-500 hover:bg-gray-200 hover:text-blue-600 rounded mr-3",
-                    attrs: { title: "Edit" }
-                  },
-                  [
-                    _c(
-                      "feather-icon",
-                      {
-                        staticClass: "h-current",
-                        attrs: { name: "edit-3", "stroke-width": "2.5" }
-                      },
-                      [_vm._v("Edit")]
-                    )
-                  ],
-                  1
-                ),
-                _vm._v(" "),
-                _c("form", {
-                  attrs: {
-                    action: "/remark/" + remark.id + "/",
-                    method: "POST"
-                  }
-                })
+                remark.editRemark
+                  ? _c("div", [_c("h4", [_vm._v("hello")])])
+                  : _vm._e()
               ]
             )
           }),

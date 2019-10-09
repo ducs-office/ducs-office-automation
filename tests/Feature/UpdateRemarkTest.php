@@ -5,8 +5,10 @@ namespace Tests\Feature;
 use App\Remark;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
+use Illuminate\Support\Str;
 
 class UpdateRemarkTest extends TestCase
 {
@@ -39,7 +41,7 @@ class UpdateRemarkTest extends TestCase
         $this->withoutExceptionHandling()
             ->patch("remarks/$remark->id",$new_remark);
         
-        $this->assertEquals($new_remark->description,$remark->fresh()->description);
+        $this->assertEquals($new_remark['description'],$remark->fresh()->description);
      }
 
      /** @test */
@@ -47,11 +49,12 @@ class UpdateRemarkTest extends TestCase
      {
          $this->be(factory(User::class)->create());
          $remark = factory(Remark::class)->create(['description'=>'Received by University']);
-         $new_remark = ['description'=>''];
+         $new_remark = ['description'=> ''];
 
          try{
             $this->withoutExceptionHandling()
-                ->patch("remarks/$remark->id",$new_remark);
+                ->patch("/remarks/{$remark->id}",$new_remark)
+                ->assertSuccessful();
          }catch(ValidationException $e){
              $this->assertArrayHasKey('description',$e->errors());
          }
@@ -65,7 +68,7 @@ class UpdateRemarkTest extends TestCase
      {
          $this->be(factory(User::class)->create());
          $remark = factory(Remark::class)->create(['description'=>'Received by University']);
-         $new_remark = ['description'=>str_random(9)];
+         $new_remark = ['description'=>Str::random(9)];
 
          try{
             $this->withoutExceptionHandling()
@@ -82,7 +85,7 @@ class UpdateRemarkTest extends TestCase
      {
         $this->be(factory(User::class)->create());
          $remark = factory(Remark::class)->create(['description'=>'Received by University']);
-         $new_remark = ['description'=>str_random(256)];
+         $new_remark = ['description'=>Str::random(256)];
 
          try{
             $this->withoutExceptionHandling()

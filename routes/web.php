@@ -12,7 +12,7 @@
 */
 
 use App\Http\Controllers\OutgoingLettersController;
-use App\Http\Controllers\RemarksController;
+// use App\Http\Controllers\RemarksController;
 
 Route::get('/', function () {
     return view('dashboard');

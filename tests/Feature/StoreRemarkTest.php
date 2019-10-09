@@ -2,10 +2,10 @@
 
 namespace Tests\Feature;
 
-use \App\OutgoingLetter;
-use \App\Remark;
-use \App\User;
-use Dotenv\Exception\ValidationException;
+use App\OutgoingLetter;
+use App\Remark;
+use App\User;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -25,16 +25,16 @@ class StoreRemarkTest extends TestCase
      /** @test */
      public function guest_cannot_store_remark()
      {
-         $outgoingletter = factory(OutgoingLetter::class)->make();
-         $remark=['description'=>'Not received by University'];;
-
+         $outgoingletter = factory(OutgoingLetter::class)->create();
+         $remark=['description'=>'Not received by University'];
+        
          $this->withExceptionHandling()
-            ->post("/outgoing-letters/$outgoingletter->id/remarks", $remark)
+            ->post("/outgoing-letters/{$outgoingletter->id}/remarks", $remark)
             ->assertRedirect('/login');
         
         $this->assertEquals(0,Remark::count());
      }
-
+    
      /** @test */
      public function user_can_store_remark()
      {
@@ -43,7 +43,7 @@ class StoreRemarkTest extends TestCase
         $remark=['description'=>'Not received by University'];
         
         $this->withoutExceptionHandling()
-            ->post("/outgoing-letters/$letter->id/remarks", $remark);
+            ->post("/outgoing-letters/{$letter->id}/remarks", $remark);
         
         $this->assertEquals(1,Remark::count());
      }
@@ -57,7 +57,7 @@ class StoreRemarkTest extends TestCase
 
          try{
             $this->withoutExceptionHandling()
-                ->post("/outging-letter/$letter->id/remarks",$remark);
+                ->post("/outgoing-letters/$letter->id/remarks",$remark);
          }catch(ValidationException $e){
              $this->assertArrayHasKey('description',$e->errors());
          }
