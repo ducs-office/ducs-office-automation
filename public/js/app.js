@@ -2206,6 +2206,8 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_0__);
 //
 //
 //
@@ -2234,29 +2236,32 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       letter: {
         id: ''
       },
-      remarks: [{
-        editRemark: false
-      }]
+      remarks: []
     };
   },
   methods: {
     beforeOpen: function beforeOpen(event) {
       this.letter = event.params.letter;
       this.remarks = event.params.remarks;
-    },
-    log: function log() {
-      console.log(this.letter.id);
-      console.log(this.remarks);
+      this.remarks.forEach(function (remark) {
+        vue__WEBPACK_IMPORTED_MODULE_0___default.a.set(remark, 'editRemark', false);
+      });
     },
     openEditForm: function openEditForm(remark) {
-      console.log("I was called");
       remark.editRemark = true;
+    },
+    closeEditForm: function closeEditForm(remark) {
+      console.log("here");
+      remark.editRemark = false;
       console.log(remark.editRemark);
     }
   }
@@ -7368,7 +7373,7 @@ var render = function() {
               "div",
               {
                 key: id,
-                staticClass: "flex items-baseline mb-2",
+                staticClass: "flex items-baseline mb-2 justify-between",
                 attrs: { value: id }
               },
               [
@@ -7378,41 +7383,157 @@ var render = function() {
                   [_vm._v(_vm._s(remark.updated_at))]
                 ),
                 _vm._v(" "),
-                !remark.editRemark
-                  ? _c("div", [
-                      _c("h4", { staticClass: "font-bold text-lg  mr-2" }, [
-                        _vm._v(_vm._s(remark.description))
-                      ]),
-                      _vm._v(" "),
-                      _c(
-                        "button",
-                        {
-                          staticClass:
-                            "p-1 text-gray-500 hover:bg-gray-200 hover:text-blue-600 rounded mr-3",
+                _c(
+                  "div",
+                  {
+                    directives: [
+                      {
+                        name: "show",
+                        rawName: "v-show",
+                        value: !remark.editRemark,
+                        expression: "!remark.editRemark"
+                      }
+                    ],
+                    staticClass: "flex justify-between"
+                  },
+                  [
+                    _c(
+                      "h4",
+                      {
+                        staticClass: "font-bold text-lg  mr-2",
+                        on: {
+                          click: function($event) {
+                            return _vm.openEditForm(remark)
+                          }
+                        }
+                      },
+                      [_vm._v(_vm._s(remark.description))]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "form",
+                      {
+                        attrs: {
+                          action: "/remarks/" + remark.id + "/",
+                          method: "POST"
+                        }
+                      },
+                      [
+                        _vm._t("default"),
+                        _vm._v(" "),
+                        _c(
+                          "button",
+                          {
+                            staticClass:
+                              "mr-2 p-1 hover:bg-gray-200 text-red-700 rounded",
+                            attrs: { type: "submit" }
+                          },
+                          [
+                            _c(
+                              "feather-icon",
+                              {
+                                staticClass: "h-current",
+                                attrs: {
+                                  name: "trash-2",
+                                  "stroke-width": "2.5"
+                                }
+                              },
+                              [_vm._v("Delete")]
+                            )
+                          ],
+                          1
+                        )
+                      ],
+                      2
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    directives: [
+                      {
+                        name: "show",
+                        rawName: "v-show",
+                        value: remark.editRemark,
+                        expression: "remark.editRemark"
+                      }
+                    ]
+                  },
+                  [
+                    _c(
+                      "form",
+                      {
+                        staticClass: "flex",
+                        attrs: {
+                          action: "/remarks/" + remark.id + "/",
+                          method: "POST"
+                        }
+                      },
+                      [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: remark.description,
+                              expression: "remark.description"
+                            }
+                          ],
+                          staticClass: "w-full form-input",
+                          attrs: {
+                            id: "description",
+                            type: "text",
+                            name: "description"
+                          },
+                          domProps: { value: remark.description },
                           on: {
-                            click: function($event) {
-                              return _vm.openEditForm(remark)
+                            blur: function($event) {
+                              return _vm.closeEditForm(remark)
+                            },
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                remark,
+                                "description",
+                                $event.target.value
+                              )
                             }
                           }
-                        },
-                        [
-                          _c(
-                            "feather-icon",
-                            {
-                              staticClass: "h-current",
-                              attrs: { name: "edit-3", "stroke-width": "2.5" }
-                            },
-                            [_vm._v("Edit")]
-                          )
-                        ],
-                        1
-                      )
-                    ])
-                  : _vm._e(),
-                _vm._v(" "),
-                remark.editRemark
-                  ? _c("div", [_c("h4", [_vm._v("hello")])])
-                  : _vm._e()
+                        }),
+                        _vm._v(" "),
+                        _c("input", {
+                          attrs: {
+                            type: "hidden",
+                            name: "_token",
+                            id: "csrf-token",
+                            value: "csrf"
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("input", {
+                          attrs: {
+                            type: "hidden",
+                            name: "_method",
+                            value: "PUT"
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c(
+                          "button",
+                          {
+                            staticClass: "btn btn-magenta mr-2",
+                            attrs: { type: "submit" }
+                          },
+                          [_vm._v("Update")]
+                        )
+                      ]
+                    )
+                  ]
+                )
               ]
             )
           }),

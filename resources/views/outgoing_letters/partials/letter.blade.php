@@ -9,7 +9,7 @@
             {{ $letter->recipient }}
         </div>
         <div class="ml-auto flex">
-            <remark-modal name = "remark-modal"></remark-modal>
+            <remark-modal name = "remark-modal">@csrf @method('delete')</remark-modal>
             <button 
                 class="p-1 text-gray-500 hover:bg-gray-200 hover:text-green-600 rounded mr-3" 
                 title="Add Remark"
