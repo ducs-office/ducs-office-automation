@@ -2238,31 +2238,63 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      letter: {
+      outgoing_letter: {
         id: ''
       },
-      remarks: []
+      remarks: [],
+      showAddForm: false
     };
   },
   methods: {
     beforeOpen: function beforeOpen(event) {
-      this.letter = event.params.letter;
+      this.outgoing_letter = event.params.letter;
       this.remarks = event.params.remarks;
+      this.showAddForm = false;
       this.remarks.forEach(function (remark) {
         vue__WEBPACK_IMPORTED_MODULE_0___default.a.set(remark, 'editRemark', false);
       });
+    },
+    openAddForm: function openAddForm() {
+      console.log("here");
+      console.log(this.showAddForm);
+      this.showAddForm = true;
+    },
+    closeAddForm: function closeAddForm() {
+      this.showAddForm = false;
     },
     openEditForm: function openEditForm(remark) {
       remark.editRemark = true;
     },
     closeEditForm: function closeEditForm(remark) {
-      console.log("here");
       remark.editRemark = false;
-      console.log(remark.editRemark);
     }
   }
 });
@@ -7359,23 +7391,133 @@ var render = function() {
     },
     [
       _c("div", { staticClass: "p-6" }, [
-        _c("h2", { staticClass: "text-lg font-bold mb-8" }, [
-          _vm._v("Remarks")
+        _c("div", { staticClass: "flex justify-between items-baseline" }, [
+          _c("h2", { staticClass: "text-lg font-bold mb-8" }, [
+            _vm._v("Remarks")
+          ]),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: !_vm.showAddForm,
+                  expression: "!showAddForm"
+                }
+              ],
+              staticClass: "btn is-sm btn-magenta mr-3",
+              on: {
+                click: function($event) {
+                  return _vm.openAddForm()
+                }
+              }
+            },
+            [_vm._v("New")]
+          )
         ]),
         _vm._v(" "),
         _c(
           "div",
           {
-            staticClass: "px-6 py-2 hover:bg-gray-100 border-b justify-between"
+            directives: [
+              {
+                name: "show",
+                rawName: "v-show",
+                value: _vm.showAddForm,
+                expression: "showAddForm"
+              }
+            ],
+            staticClass: "flex items-baseline mb-2"
+          },
+          [
+            _c(
+              "form",
+              {
+                staticClass: "flex  items-baseline w-full",
+                attrs: {
+                  action:
+                    "/outgoing-letters/" + _vm.outgoing_letter.id + "/remarks",
+                  method: "POST"
+                }
+              },
+              [
+                _vm._t("default"),
+                _vm._v(" "),
+                _c("input", {
+                  staticClass: "w-full form-input",
+                  attrs: {
+                    type: "text",
+                    id: "description",
+                    placeholder: "Description",
+                    name: "description"
+                  }
+                }),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass:
+                      "mr-2 ml-2 p-1 hover:bg-gray-200 text-green-700 rounded",
+                    attrs: { type: "submit" },
+                    on: {
+                      click: function($event) {
+                        return _vm.closeAddForm()
+                      }
+                    }
+                  },
+                  [
+                    _c(
+                      "feather-icon",
+                      {
+                        staticClass: "h-current",
+                        attrs: { name: "plus-circle", "stroke-width": "3" }
+                      },
+                      [_vm._v("Add")]
+                    )
+                  ],
+                  1
+                )
+              ],
+              2
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "mr-2 p-1 hover:bg-gray-200 text-red-700 rounded ",
+                on: {
+                  click: function($event) {
+                    return _vm.closeAddForm()
+                  }
+                }
+              },
+              [
+                _c(
+                  "feather-icon",
+                  {
+                    staticClass: "h-current",
+                    attrs: { name: "x-circle", "stroke-width": "3" }
+                  },
+                  [_vm._v("Cancel")]
+                )
+              ],
+              1
+            )
+          ]
+        ),
+        _vm._v(" "),
+        _c(
+          "div",
+          {
+            staticClass:
+              "px-6 py-2 hover:bg-gray-100 border-b justify-between overflow-y-auto"
           },
           _vm._l(_vm.remarks, function(remark, id) {
             return _c(
               "div",
-              {
-                key: id,
-                staticClass: "flex items-baseline mb-2 justify-between",
-                attrs: { value: id }
-              },
+              { key: id, staticClass: "flex  mb-2", attrs: { value: id } },
               [
                 _c(
                   "h4",
@@ -7394,58 +7536,84 @@ var render = function() {
                         expression: "!remark.editRemark"
                       }
                     ],
-                    staticClass: "flex justify-between"
+                    staticClass: "flex"
                   },
                   [
-                    _c(
-                      "h4",
-                      {
-                        staticClass: "font-bold text-lg  mr-2",
-                        on: {
-                          click: function($event) {
-                            return _vm.openEditForm(remark)
-                          }
-                        }
-                      },
-                      [_vm._v(_vm._s(remark.description))]
-                    ),
+                    _c("h4", { staticClass: "font-bold text-lg mr-2" }, [
+                      _vm._v(_vm._s(remark.description))
+                    ]),
                     _vm._v(" "),
-                    _c(
-                      "form",
-                      {
-                        attrs: {
-                          action: "/remarks/" + remark.id + "/",
-                          method: "POST"
-                        }
-                      },
-                      [
-                        _vm._t("default"),
-                        _vm._v(" "),
-                        _c(
-                          "button",
-                          {
-                            staticClass:
-                              "mr-2 p-1 hover:bg-gray-200 text-red-700 rounded",
-                            attrs: { type: "submit" }
-                          },
-                          [
-                            _c(
-                              "feather-icon",
-                              {
-                                staticClass: "h-current",
-                                attrs: {
-                                  name: "trash-2",
-                                  "stroke-width": "2.5"
-                                }
-                              },
-                              [_vm._v("Delete")]
-                            )
-                          ],
-                          1
-                        )
-                      ],
-                      2
-                    )
+                    _c("div", { staticClass: "flex ml-auto items-baseline" }, [
+                      _c(
+                        "button",
+                        {
+                          staticClass:
+                            "p-1 text-gray-500 hover:bg-gray-200 hover:text-blue-600 rounded",
+                          attrs: { title: "Edit" },
+                          on: {
+                            click: function($event) {
+                              return _vm.openEditForm(remark)
+                            }
+                          }
+                        },
+                        [
+                          _c(
+                            "feather-icon",
+                            {
+                              staticClass: "h-current",
+                              attrs: { name: "edit-3", "stroke-width": "2.5" }
+                            },
+                            [_vm._v("Edit")]
+                          )
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "form",
+                        {
+                          attrs: {
+                            action: "/remarks/" + remark.id + "/",
+                            method: "POST"
+                          }
+                        },
+                        [
+                          _vm._t("default"),
+                          _vm._v(" "),
+                          _c("input", {
+                            attrs: {
+                              type: "hidden",
+                              name: "_method",
+                              value: "DELETE"
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c(
+                            "button",
+                            {
+                              staticClass:
+                                "p-1 hover:bg-gray-200 text-red-700 rounded",
+                              attrs: { type: "submit" }
+                            },
+                            [
+                              _c(
+                                "feather-icon",
+                                {
+                                  staticClass: "h-current",
+                                  attrs: {
+                                    name: "trash-2",
+                                    "stroke-width": "2.5"
+                                  }
+                                },
+                                [_vm._v("Delete")]
+                              )
+                            ],
+                            1
+                          )
+                        ],
+                        2
+                      )
+                    ])
                   ]
                 ),
                 _vm._v(" "),
@@ -7459,19 +7627,30 @@ var render = function() {
                         value: remark.editRemark,
                         expression: "remark.editRemark"
                       }
-                    ]
+                    ],
+                    staticClass: "flex items-baseline"
                   },
                   [
                     _c(
                       "form",
                       {
-                        staticClass: "flex",
+                        staticClass: "flex items-baseline",
                         attrs: {
                           action: "/remarks/" + remark.id + "/",
                           method: "POST"
                         }
                       },
                       [
+                        _vm._t("default"),
+                        _vm._v(" "),
+                        _c("input", {
+                          attrs: {
+                            type: "hidden",
+                            name: "_method",
+                            value: "PATCH"
+                          }
+                        }),
+                        _vm._v(" "),
                         _c("input", {
                           directives: [
                             {
@@ -7489,9 +7668,6 @@ var render = function() {
                           },
                           domProps: { value: remark.description },
                           on: {
-                            blur: function($event) {
-                              return _vm.closeEditForm(remark)
-                            },
                             input: function($event) {
                               if ($event.target.composing) {
                                 return
@@ -7505,30 +7681,37 @@ var render = function() {
                           }
                         }),
                         _vm._v(" "),
-                        _c("input", {
-                          attrs: {
-                            type: "hidden",
-                            name: "_token",
-                            id: "csrf-token",
-                            value: "csrf"
-                          }
-                        }),
-                        _vm._v(" "),
-                        _c("input", {
-                          attrs: {
-                            type: "hidden",
-                            name: "_method",
-                            value: "PUT"
-                          }
-                        }),
-                        _vm._v(" "),
                         _c(
                           "button",
                           {
-                            staticClass: "btn btn-magenta mr-2",
-                            attrs: { type: "submit" }
+                            staticClass: "btn is-sm btn-magenta mr-2 ml-4",
+                            attrs: { type: "submit" },
+                            on: {
+                              click: function($event) {
+                                return _vm.closeEditForm(remark)
+                              }
+                            }
                           },
                           [_vm._v("Update")]
+                        )
+                      ],
+                      2
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        staticClass:
+                          "mr-2 p-1 hover:bg-gray-200 rounded is-sm btn btn-magenta",
+                        on: {
+                          click: function($event) {
+                            return _vm.closeEditForm(remark)
+                          }
+                        }
+                      },
+                      [
+                        _vm._v(
+                          "\n                            Cancel\n                    "
                         )
                       ]
                     )

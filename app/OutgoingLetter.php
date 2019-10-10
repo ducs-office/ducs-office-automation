@@ -32,7 +32,7 @@ class OutgoingLetter extends Model
     public function remarks()
     {
         
-        return $this->hasMany(Remark::class, 'letter_id');
+        return $this->hasMany(Remark::class, 'letter_id')->orderBy('updated_at', 'DESC');
     }
 
     public function addRemark($description)
