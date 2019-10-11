@@ -2197,17 +2197,15 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/RemarkModal.vue?vue&type=script&lang=js&":
-/*!**********************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/RemarkModal.vue?vue&type=script&lang=js& ***!
-  \**********************************************************************************************************************************************************************/
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/RemarkUpdateModal.vue?vue&type=script&lang=js&":
+/*!****************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/RemarkUpdateModal.vue?vue&type=script&lang=js& ***!
+  \****************************************************************************************************************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
-/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_0__);
 //
 //
 //
@@ -2224,77 +2222,21 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      outgoing_letter: {
-        id: ''
-      },
-      remarks: [],
-      showAddForm: false
+      remark: {
+        description: ''
+      }
     };
   },
   methods: {
     beforeOpen: function beforeOpen(event) {
-      this.outgoing_letter = event.params.letter;
-      this.remarks = event.params.remarks;
-      this.showAddForm = false;
-      this.remarks.forEach(function (remark) {
-        vue__WEBPACK_IMPORTED_MODULE_0___default.a.set(remark, 'editRemark', false);
-      });
-    },
-    openAddForm: function openAddForm() {
-      console.log("here");
-      console.log(this.showAddForm);
-      this.showAddForm = true;
-    },
-    closeAddForm: function closeAddForm() {
-      this.showAddForm = false;
-    },
-    openEditForm: function openEditForm(remark) {
-      remark.editRemark = true;
-    },
-    closeEditForm: function closeEditForm(remark) {
-      remark.editRemark = false;
+      if (!event.params.remark || !event.params.remark.id) {
+        return false;
+      }
+
+      this.remark = event.params.remark;
     }
   }
 });
@@ -7368,10 +7310,10 @@ render._withStripped = true
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/RemarkModal.vue?vue&type=template&id=3789b91c&":
-/*!**************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/RemarkModal.vue?vue&type=template&id=3789b91c& ***!
-  \**************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/RemarkUpdateModal.vue?vue&type=template&id=9ea6322e&":
+/*!********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/RemarkUpdateModal.vue?vue&type=template&id=9ea6322e& ***!
+  \********************************************************************************************************************************************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -7386,341 +7328,56 @@ var render = function() {
   return _c(
     "modal",
     {
-      attrs: { name: "remark-modal", height: "auto" },
+      attrs: { name: "remark-update-modal", height: "auto" },
       on: { "before-open": _vm.beforeOpen }
     },
     [
       _c("div", { staticClass: "p-6" }, [
-        _c("div", { staticClass: "flex justify-between items-baseline" }, [
-          _c("h2", { staticClass: "text-lg font-bold mb-8" }, [
-            _vm._v("Remarks")
-          ]),
-          _vm._v(" "),
-          _c(
-            "button",
-            {
-              directives: [
-                {
-                  name: "show",
-                  rawName: "v-show",
-                  value: !_vm.showAddForm,
-                  expression: "!showAddForm"
-                }
-              ],
-              staticClass: "btn is-sm btn-magenta mr-3",
-              on: {
-                click: function($event) {
-                  return _vm.openAddForm()
-                }
-              }
-            },
-            [_vm._v("New")]
-          )
+        _c("h3", { staticClass: "font-bold text-lg mb-2" }, [
+          _vm._v("Update Letter Remark")
         ]),
         _vm._v(" "),
         _c(
-          "div",
+          "form",
           {
-            directives: [
-              {
-                name: "show",
-                rawName: "v-show",
-                value: _vm.showAddForm,
-                expression: "showAddForm"
-              }
-            ],
-            staticClass: "flex items-baseline mb-2"
+            attrs: { action: "/remarks/" + _vm.remark.id + "/", method: "POST" }
           },
           [
-            _c(
-              "form",
-              {
-                staticClass: "flex  items-baseline w-full",
-                attrs: {
-                  action:
-                    "/outgoing-letters/" + _vm.outgoing_letter.id + "/remarks",
-                  method: "POST"
-                }
-              },
-              [
-                _vm._t("default"),
-                _vm._v(" "),
-                _c("input", {
-                  staticClass: "w-full form-input",
-                  attrs: {
-                    type: "text",
-                    id: "description",
-                    placeholder: "Description",
-                    name: "description"
-                  }
-                }),
-                _vm._v(" "),
-                _c(
-                  "button",
-                  {
-                    staticClass:
-                      "mr-2 ml-2 p-1 hover:bg-gray-200 text-green-700 rounded",
-                    attrs: { type: "submit" },
-                    on: {
-                      click: function($event) {
-                        return _vm.closeAddForm()
-                      }
-                    }
-                  },
-                  [
-                    _c(
-                      "feather-icon",
-                      {
-                        staticClass: "h-current",
-                        attrs: { name: "plus-circle", "stroke-width": "3" }
-                      },
-                      [_vm._v("Add")]
-                    )
-                  ],
-                  1
-                )
-              ],
-              2
-            ),
+            _vm._t("default"),
             _vm._v(" "),
-            _c(
-              "button",
-              {
-                staticClass: "mr-2 p-1 hover:bg-gray-200 text-red-700 rounded ",
+            _c("div", { staticClass: "my-4" }, [
+              _c("textarea", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.remark.description,
+                    expression: "remark.description"
+                  }
+                ],
+                staticClass: "w-full form-input",
+                attrs: { name: "description" },
+                domProps: { value: _vm.remark.description },
                 on: {
-                  click: function($event) {
-                    return _vm.closeAddForm()
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.remark, "description", $event.target.value)
                   }
                 }
-              },
-              [
-                _c(
-                  "feather-icon",
-                  {
-                    staticClass: "h-current",
-                    attrs: { name: "x-circle", "stroke-width": "3" }
-                  },
-                  [_vm._v("Cancel")]
-                )
-              ],
-              1
-            )
-          ]
-        ),
-        _vm._v(" "),
-        _c(
-          "div",
-          {
-            staticClass:
-              "px-6 py-2 hover:bg-gray-100 border-b justify-between overflow-y-auto"
-          },
-          _vm._l(_vm.remarks, function(remark, id) {
-            return _c(
-              "div",
-              { key: id, staticClass: "flex  mb-2", attrs: { value: id } },
-              [
-                _c(
-                  "h4",
-                  { staticClass: "font-bold text-sm text-gray-600 w-24" },
-                  [_vm._v(_vm._s(remark.updated_at))]
-                ),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  {
-                    directives: [
-                      {
-                        name: "show",
-                        rawName: "v-show",
-                        value: !remark.editRemark,
-                        expression: "!remark.editRemark"
-                      }
-                    ],
-                    staticClass: "flex"
-                  },
-                  [
-                    _c("h4", { staticClass: "font-bold text-lg mr-2" }, [
-                      _vm._v(_vm._s(remark.description))
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "flex ml-auto items-baseline" }, [
-                      _c(
-                        "button",
-                        {
-                          staticClass:
-                            "p-1 text-gray-500 hover:bg-gray-200 hover:text-blue-600 rounded",
-                          attrs: { title: "Edit" },
-                          on: {
-                            click: function($event) {
-                              return _vm.openEditForm(remark)
-                            }
-                          }
-                        },
-                        [
-                          _c(
-                            "feather-icon",
-                            {
-                              staticClass: "h-current",
-                              attrs: { name: "edit-3", "stroke-width": "2.5" }
-                            },
-                            [_vm._v("Edit")]
-                          )
-                        ],
-                        1
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "form",
-                        {
-                          attrs: {
-                            action: "/remarks/" + remark.id + "/",
-                            method: "POST"
-                          }
-                        },
-                        [
-                          _vm._t("default"),
-                          _vm._v(" "),
-                          _c("input", {
-                            attrs: {
-                              type: "hidden",
-                              name: "_method",
-                              value: "DELETE"
-                            }
-                          }),
-                          _vm._v(" "),
-                          _c(
-                            "button",
-                            {
-                              staticClass:
-                                "p-1 hover:bg-gray-200 text-red-700 rounded",
-                              attrs: { type: "submit" }
-                            },
-                            [
-                              _c(
-                                "feather-icon",
-                                {
-                                  staticClass: "h-current",
-                                  attrs: {
-                                    name: "trash-2",
-                                    "stroke-width": "2.5"
-                                  }
-                                },
-                                [_vm._v("Delete")]
-                              )
-                            ],
-                            1
-                          )
-                        ],
-                        2
-                      )
-                    ])
-                  ]
-                ),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  {
-                    directives: [
-                      {
-                        name: "show",
-                        rawName: "v-show",
-                        value: remark.editRemark,
-                        expression: "remark.editRemark"
-                      }
-                    ],
-                    staticClass: "flex items-baseline"
-                  },
-                  [
-                    _c(
-                      "form",
-                      {
-                        staticClass: "flex items-baseline",
-                        attrs: {
-                          action: "/remarks/" + remark.id + "/",
-                          method: "POST"
-                        }
-                      },
-                      [
-                        _vm._t("default"),
-                        _vm._v(" "),
-                        _c("input", {
-                          attrs: {
-                            type: "hidden",
-                            name: "_method",
-                            value: "PATCH"
-                          }
-                        }),
-                        _vm._v(" "),
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: remark.description,
-                              expression: "remark.description"
-                            }
-                          ],
-                          staticClass: "w-full form-input",
-                          attrs: {
-                            id: "description",
-                            type: "text",
-                            name: "description"
-                          },
-                          domProps: { value: remark.description },
-                          on: {
-                            input: function($event) {
-                              if ($event.target.composing) {
-                                return
-                              }
-                              _vm.$set(
-                                remark,
-                                "description",
-                                $event.target.value
-                              )
-                            }
-                          }
-                        }),
-                        _vm._v(" "),
-                        _c(
-                          "button",
-                          {
-                            staticClass: "btn is-sm btn-magenta mr-2 ml-4",
-                            attrs: { type: "submit" },
-                            on: {
-                              click: function($event) {
-                                return _vm.closeEditForm(remark)
-                              }
-                            }
-                          },
-                          [_vm._v("Update")]
-                        )
-                      ],
-                      2
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "button",
-                      {
-                        staticClass:
-                          "mr-2 p-1 hover:bg-gray-200 rounded is-sm btn btn-magenta",
-                        on: {
-                          click: function($event) {
-                            return _vm.closeEditForm(remark)
-                          }
-                        }
-                      },
-                      [
-                        _vm._v(
-                          "\n                            Cancel\n                    "
-                        )
-                      ]
-                    )
-                  ]
-                )
-              ]
-            )
-          }),
-          0
+              })
+            ]),
+            _vm._v(" "),
+            _c("div", [
+              _c(
+                "button",
+                { staticClass: "btn btn-magenta", attrs: { type: "submit" } },
+                [_vm._v("Update")]
+              )
+            ])
+          ],
+          2
         )
       ])
     ]
@@ -20032,7 +19689,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_PaperUpdateModal_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/PaperUpdateModal.vue */ "./resources/js/components/PaperUpdateModal.vue");
 /* harmony import */ var _components_LettersSearchFilters_vue__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./components/LettersSearchFilters.vue */ "./resources/js/components/LettersSearchFilters.vue");
 /* harmony import */ var _components_CollegeUpdateModal_vue__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./components/CollegeUpdateModal.vue */ "./resources/js/components/CollegeUpdateModal.vue");
-/* harmony import */ var _components_RemarkModal_vue__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./components/RemarkModal.vue */ "./resources/js/components/RemarkModal.vue");
+/* harmony import */ var _components_RemarkUpdateModal_vue__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./components/RemarkUpdateModal.vue */ "./resources/js/components/RemarkUpdateModal.vue");
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 
@@ -20053,7 +19710,7 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.component("course-update-modal", _com
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component("paper-update-modal", _components_PaperUpdateModal_vue__WEBPACK_IMPORTED_MODULE_6__["default"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('letter-search-filters', _components_LettersSearchFilters_vue__WEBPACK_IMPORTED_MODULE_7__["default"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component("college-update-modal", _components_CollegeUpdateModal_vue__WEBPACK_IMPORTED_MODULE_8__["default"]);
-vue__WEBPACK_IMPORTED_MODULE_0___default.a.component("remark-modal", _components_RemarkModal_vue__WEBPACK_IMPORTED_MODULE_9__["default"]);
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.component("remark-update-modal", _components_RemarkUpdateModal_vue__WEBPACK_IMPORTED_MODULE_9__["default"]);
 var app = new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
   el: '#app'
 });
@@ -20537,17 +20194,17 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/components/RemarkModal.vue":
-/*!*************************************************!*\
-  !*** ./resources/js/components/RemarkModal.vue ***!
-  \*************************************************/
+/***/ "./resources/js/components/RemarkUpdateModal.vue":
+/*!*******************************************************!*\
+  !*** ./resources/js/components/RemarkUpdateModal.vue ***!
+  \*******************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _RemarkModal_vue_vue_type_template_id_3789b91c___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./RemarkModal.vue?vue&type=template&id=3789b91c& */ "./resources/js/components/RemarkModal.vue?vue&type=template&id=3789b91c&");
-/* harmony import */ var _RemarkModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./RemarkModal.vue?vue&type=script&lang=js& */ "./resources/js/components/RemarkModal.vue?vue&type=script&lang=js&");
+/* harmony import */ var _RemarkUpdateModal_vue_vue_type_template_id_9ea6322e___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./RemarkUpdateModal.vue?vue&type=template&id=9ea6322e& */ "./resources/js/components/RemarkUpdateModal.vue?vue&type=template&id=9ea6322e&");
+/* harmony import */ var _RemarkUpdateModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./RemarkUpdateModal.vue?vue&type=script&lang=js& */ "./resources/js/components/RemarkUpdateModal.vue?vue&type=script&lang=js&");
 /* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
@@ -20557,9 +20214,9 @@ __webpack_require__.r(__webpack_exports__);
 /* normalize component */
 
 var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
-  _RemarkModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _RemarkModal_vue_vue_type_template_id_3789b91c___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _RemarkModal_vue_vue_type_template_id_3789b91c___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  _RemarkUpdateModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _RemarkUpdateModal_vue_vue_type_template_id_9ea6322e___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _RemarkUpdateModal_vue_vue_type_template_id_9ea6322e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
   false,
   null,
   null,
@@ -20569,38 +20226,38 @@ var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_
 
 /* hot reload */
 if (false) { var api; }
-component.options.__file = "resources/js/components/RemarkModal.vue"
+component.options.__file = "resources/js/components/RemarkUpdateModal.vue"
 /* harmony default export */ __webpack_exports__["default"] = (component.exports);
 
 /***/ }),
 
-/***/ "./resources/js/components/RemarkModal.vue?vue&type=script&lang=js&":
-/*!**************************************************************************!*\
-  !*** ./resources/js/components/RemarkModal.vue?vue&type=script&lang=js& ***!
-  \**************************************************************************/
+/***/ "./resources/js/components/RemarkUpdateModal.vue?vue&type=script&lang=js&":
+/*!********************************************************************************!*\
+  !*** ./resources/js/components/RemarkUpdateModal.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_RemarkModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./RemarkModal.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/RemarkModal.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_RemarkModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_RemarkUpdateModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./RemarkUpdateModal.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/RemarkUpdateModal.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_RemarkUpdateModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
 
 /***/ }),
 
-/***/ "./resources/js/components/RemarkModal.vue?vue&type=template&id=3789b91c&":
-/*!********************************************************************************!*\
-  !*** ./resources/js/components/RemarkModal.vue?vue&type=template&id=3789b91c& ***!
-  \********************************************************************************/
+/***/ "./resources/js/components/RemarkUpdateModal.vue?vue&type=template&id=9ea6322e&":
+/*!**************************************************************************************!*\
+  !*** ./resources/js/components/RemarkUpdateModal.vue?vue&type=template&id=9ea6322e& ***!
+  \**************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_RemarkModal_vue_vue_type_template_id_3789b91c___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./RemarkModal.vue?vue&type=template&id=3789b91c& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/RemarkModal.vue?vue&type=template&id=3789b91c&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_RemarkModal_vue_vue_type_template_id_3789b91c___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_RemarkUpdateModal_vue_vue_type_template_id_9ea6322e___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./RemarkUpdateModal.vue?vue&type=template&id=9ea6322e& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/RemarkUpdateModal.vue?vue&type=template&id=9ea6322e&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_RemarkUpdateModal_vue_vue_type_template_id_9ea6322e___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_RemarkModal_vue_vue_type_template_id_3789b91c___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_RemarkUpdateModal_vue_vue_type_template_id_9ea6322e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

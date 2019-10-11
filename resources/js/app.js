@@ -10,7 +10,7 @@ import CourseUpdateModal from "./components/CourseUpdateModal.vue";
 import PaperUpdateModal from './components/PaperUpdateModal.vue';
 import LettersSearchFilters from './components/LettersSearchFilters.vue';
 import CollegeUpdateModal from './components/CollegeUpdateModal.vue';
-import RemarkModal from './components/RemarkModal.vue';
+import RemarkUpdateModal from './components/RemarkUpdateModal.vue';
 
 Vue.use(VueJsModal);
 
@@ -21,7 +21,7 @@ Vue.component("course-update-modal", CourseUpdateModal);
 Vue.component("paper-update-modal", PaperUpdateModal);
 Vue.component('letter-search-filters', LettersSearchFilters);
 Vue.component("college-update-modal", CollegeUpdateModal);
-Vue.component("remark-modal", RemarkModal);
+Vue.component("remark-update-modal", RemarkUpdateModal);
 
 const app = new Vue({
     el: '#app'

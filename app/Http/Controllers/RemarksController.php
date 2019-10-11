@@ -9,12 +9,14 @@ use App\Remark;
 class RemarksController extends Controller
 {
 
-    public function store(OutgoingLetter $outgoing_letter)
+    public function store()
     {
-        
-        $outgoing_letter->addRemark(request()->validate([
-            'description'=>'required|min:10|max:255|string'
-        ]));
+        $data = request()->validate([
+            'description'=>'required|min:10|max:255|string',
+            'letter_id' => 'required|integer|exists:outgoing_letters,id'
+        ]);
+
+        Remark::create($data);
         
         return back();
     }
