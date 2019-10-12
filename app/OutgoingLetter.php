@@ -34,9 +34,4 @@ class OutgoingLetter extends Model
         
         return $this->hasMany(Remark::class, 'letter_id');
     }
-
-    public function addRemark($description)
-    {
-        $this->remarks()->create($description);
-    }
 }

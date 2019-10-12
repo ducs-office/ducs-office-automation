@@ -58,7 +58,7 @@ class StoreRemarkTest extends TestCase
 
         try{
         $this->withoutExceptionHandling()
-            ->post("/outgoing-letters/$letter->id/remarks",$remark);
+            ->post('/remarks',$remark);
         }catch(ValidationException $e){
             $this->assertArrayHasKey('description',$e->errors());
         }
@@ -76,7 +76,7 @@ class StoreRemarkTest extends TestCase
 
         try{
             $this->withoutExceptionHandling()
-                ->post("outgoing-letters/$letter->id/remarks",$remark);
+                ->post('/remarks',$remark);
         }catch(ValidationException $e){
             $this->assertArrayHasKey('description',$e->errors());
         }
@@ -93,11 +93,59 @@ class StoreRemarkTest extends TestCase
 
         try{
             $this->withoutExceptionHandling()
-                ->post("outgoing-letters/$letter->id/remarks",$remark);
+                ->post('/remarks',$remark);
         }catch(ValidationException $e){
             $this->assertArrayHasKey('description',$e->errors());
         }
 
         $this->assertEquals(0,Remark::count());
+    }
+
+    /** @test */
+    public function request_validates_letter_id_field_cannot_be_null()
+    {
+        $this->be(factory(User::class)->create());
+        $remark = factory(Remark::class)->make(['letter_id'=>'']);
+
+        try{
+            $this->withoutExceptionHandling()
+                ->post('/remarks',$remark->toArray());
+        }catch(ValidationException $e){
+            $this->assertArrayHasKey('letter_id', $e->errors());
+        }
+
+        $this->assertEquals(0,Remark::count());
+    }
+
+    /** @test */
+    public function request_validates_letter_id_field_cannot_be_string()
+    {
+        $this->be(factory(User::class)->create());
+        $remark = factory(Remark::class)->make(['letter_id'=>'string']);
+
+        try{
+            $this->withoutExceptionHandling()
+                ->post('/remarks',$remark->toArray());
+        }catch(ValidationException $e){
+            $this->assertArrayHasKey('letter_id', $e->errors());
+        }
+        
+        $this->assertEquals(0,Remark::count());
+    }
+
+    /** @test */
+    public function request_validates_letter_id_field_must_be_existing_outgoing_letter()
+    {
+        $this->be(factory(User::class)->create());
+        $remark = factory(Remark::class)->make(['letter_id'=>2]);
+
+        try{
+            $this->withoutExceptionHandling()
+                ->post('/remarks',$remark->toArray());
+        }catch(ValidationException $e){
+            $this->assertArrayHasKey('letter_id', $e->errors());
+        }
+
+        $this->assertEquals(0, Remark::count());
     }
 }
