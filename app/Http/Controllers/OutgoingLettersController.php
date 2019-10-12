@@ -22,8 +22,11 @@ class OutgoingLettersController extends Controller
         }
 
         $outgoing_letters = $query->orderBy('date', 'DESC')->get();
+
         $outgoing_letters->load(['remarks'=>function($query){
             $query->orderBy('updated_at', 'DESC');
+            } , 'reminders'=>function($query){
+            $query->orderBy('created_at','DESC');
         }]);
 
         $recipients = OutgoingLetter::selectRaw('DISTINCT(recipient)')->get()->pluck('recipient', 'recipient');

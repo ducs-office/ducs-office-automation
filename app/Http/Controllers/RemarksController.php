@@ -30,7 +30,7 @@ class RemarksController extends Controller
         return back();
     }
 
-    public function delete(Remark $remark)
+    public function destroy(Remark $remark)
     {
         $remark->delete();
         

@@ -30,9 +30,12 @@ Route::get('/outgoing-letters', 'OutgoingLettersController@index')->middleware('
 Route::patch('/outgoing-letters/{outgoing_letter}', 'OutgoingLettersController@update')->middleware('auth');
 Route::delete('/outgoing-letters/{outgoing_letter}','OutgoingLettersController@destroy')->middleware('auth');
 
-Route::post('/remarks','RemarksController@store')->middleware('auth');
-Route::patch('/remarks/{remark}','RemarksController@update')->middleware('auth');
-Route::delete('/remarks/{remark}', 'RemarksController@delete')->middleware('auth');
+Route::post('/remarks', 'RemarksController@store')->middleware('auth');
+Route::patch('/remarks/{remark}', 'RemarksController@update')->middleware('auth');
+Route::delete('/remarks/{remark}', 'RemarksController@destroy')->middleware('auth');
+
+Route::post('/reminders', 'RemindersController@store')->middleware('auth');
+Route::delete('/reminders/{reminder}','RemindersController@destroy')->middleware('auth');
     
 Route::get('/courses', 'CoursesController@index')->middleware('auth');
 Route::post('/courses', 'CoursesController@store')->middleware('auth');

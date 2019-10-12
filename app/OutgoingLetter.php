@@ -31,7 +31,11 @@ class OutgoingLetter extends Model
 
     public function remarks()
     {
-        
         return $this->hasMany(Remark::class, 'letter_id');
+    }
+
+    public function reminders() 
+    {
+        return $this->hasMany(LetterReminder::class, 'letter_id');
     }
 }
