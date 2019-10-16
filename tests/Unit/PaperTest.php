@@ -12,12 +12,12 @@ use Tests\TestCase;
 class PaperTest extends TestCase
 {
     use RefreshDatabase;
-    
+
     /** @test */
-    public function paper_belongs_to_a_course() 
+    public function paper_belongs_to_a_course()
     {
-        $course = factory(Course::class)->create();
-        $paper = factory(Paper::class)->create(['course_id' => $course->id]);
+        $course = create(Course::class);
+        $paper = create(Paper::class, 1, ['course_id' => $course->id]);
 
         $this->assertInstanceOf(BelongsTo::class, $paper->course());
         $this->assertInstanceOf(Course::class, $paper->course);

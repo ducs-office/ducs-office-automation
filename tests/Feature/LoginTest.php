@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\User;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
@@ -23,15 +24,15 @@ class LoginTest extends TestCase
     {
         $adminRole = Role::create(['name' => 'admin-staff']);
 
-        $adminStaff = factory(\App\User::class)->create([
-            'password' => bcrypt('secret')
+        $adminStaff = create(User::class, 1, [
+            'password' => bcrypt($password = 'secret')
         ])->assignRole($adminRole);
 
         $this->withoutExceptionHandling();
 
         $this->post('/login', [
             'email' => $adminStaff->email,
-            'password' => 'secret'
+            'password' => $password
         ])->assertRedirect('/');
 
         $this->assertTrue(Auth::check(), 'User was expected to login but was not.');
@@ -42,15 +43,15 @@ class LoginTest extends TestCase
     {
         $teacherRole = Role::create(['name' => 'teacher']);
 
-        $teacher = factory(\App\User::class)->create([
-            'password' => bcrypt('secret')
+        $teacher = create(User::class, [
+            'password' => bcrypt($password = 'secret')
         ])->assignRole($teacherRole);
 
         $this->withoutExceptionHandling();
 
         $this->post('/login', [
             'email' => $teacher->email,
-            'password' => 'secret'
+            'password' => $password
         ])->assertRedirect('teacher/dashboard');
 
         $this->assertTrue(Auth::check(), 'User was expected to login but was not.');
@@ -59,8 +60,7 @@ class LoginTest extends TestCase
     /** @test */
     public function if_user_is_logged_in_redirect_to_home()
     {
-        $user = factory(\App\User::class)->create();
-        $this->be($user);
+        $this->signIn();
 
         $this->get('/login')->assertRedirect('/');
         $this->post('/login')->assertRedirect('/');
@@ -70,10 +70,11 @@ class LoginTest extends TestCase
     /** @test */
     public function logged_in_user_can_logout()
     {
-        $user = factory(\App\User::class)->create();
-        $this->be($user)->withoutExceptionHandling();
+        $this->signIn();
 
-        $this->post('/logout')->assertRedirect('/');
+        $this->withoutExceptionHandling()
+            ->post('/logout')
+            ->assertRedirect('/');
 
         $this->assertFalse(auth()->check(), 'User was expected to be logged out, but was not logged out!');
     }

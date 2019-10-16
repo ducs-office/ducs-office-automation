@@ -12,14 +12,14 @@ use Tests\TestCase;
 class UpdatePaperTest extends TestCase
 {
     use RefreshDatabase;
-    
+
     /** @test */
     public function admin_can_update_paper_code()
     {
-        $this->be(factory(User::class)->create())
-            ->withoutExceptionHandling();
-        
-        $paper = factory(Paper::class)->create();
+        $this->withoutExceptionHandling()
+            ->signIn();
+
+        $paper = create(Paper::class);
 
         $response = $this->patch('/papers/'.$paper->id, [
             'code' => $newCode = 'New123'
@@ -33,10 +33,10 @@ class UpdatePaperTest extends TestCase
     /** @test */
     public function admin_can_update_paper_name()
     {
-        $this->be(factory(User::class)->create())
-            ->withoutExceptionHandling();
-        
-        $paper = factory(Paper::class)->create();
+        $this->withoutExceptionHandling()
+            ->signIn();
+
+        $paper = create(Paper::class);
 
         $response = $this->patch('/papers/' . $paper->id, [
             'name' => $newName = 'New paper'
@@ -50,11 +50,11 @@ class UpdatePaperTest extends TestCase
     /** @test */
     public function admin_can_update_papers_related_course()
     {
-        $this->be(factory(User::class)->create())
-            ->withoutExceptionHandling();
-        
-        $paper = factory(Paper::class)->create();
-        $newCourse = factory(Course::class)->create();
+        $this->withoutExceptionHandling()
+            ->signIn();
+
+        $paper = create(Paper::class);
+        $newCourse = create(Course::class);
 
         $response = $this->patch('/papers/' . $paper->id, [
             'course_id' => $newCourse->id
@@ -68,10 +68,10 @@ class UpdatePaperTest extends TestCase
     /** @test */
     public function paper_is_not_validated_for_uniqueness_if_code_is_not_changed()
     {
-        $this->be(factory(User::class)->create())
-            ->withoutExceptionHandling();
-        
-        $paper = factory(Paper::class)->create();
+        $this->withoutExceptionHandling()
+            ->signIn();
+
+        $paper = create(Paper::class);
 
         $response = $this->patch('/papers/'.$paper->id, [
             'code' => $paper->code,
