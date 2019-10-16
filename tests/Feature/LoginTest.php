@@ -43,7 +43,7 @@ class LoginTest extends TestCase
     {
         $teacherRole = Role::create(['name' => 'teacher']);
 
-        $teacher = create(User::class, [
+        $teacher = create(User::class, 1, [
             'password' => bcrypt($password = 'secret')
         ])->assignRole($teacherRole);
 
