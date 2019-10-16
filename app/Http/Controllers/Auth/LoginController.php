@@ -15,7 +15,10 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/';
+    protected function redirectTo() {
+        $roles = auth()->user()->getRoleNames();
 
+        return $roles->contains('admin-staff') ? '/': '/teacher/dashboard';
+    }
 
 }
