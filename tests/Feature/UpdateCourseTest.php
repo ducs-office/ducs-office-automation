@@ -11,14 +11,14 @@ use Tests\TestCase;
 class UpdateCourseTest extends TestCase
 {
     use RefreshDatabase;
-    
+
     /** @test */
     public function admin_can_update_course_code()
     {
-        $this->be(factory(User::class)->create())
-            ->withoutExceptionHandling();
-        
-        $course = factory(Course::class)->create();
+        $this->withoutExceptionHandling()
+            ->signIn();
+
+        $course = create(Course::class);
 
         $response = $this->patch('/courses/'.$course->id, [
             'code' => $newCode = 'New123'
@@ -32,10 +32,10 @@ class UpdateCourseTest extends TestCase
     /** @test */
     public function admin_can_update_course_name()
     {
-        $this->be(factory(User::class)->create())
-            ->withoutExceptionHandling();
-        
-        $course = factory(Course::class)->create();
+        $this->withoutExceptionHandling()
+            ->signIn();
+
+        $course = create(Course::class);
 
         $response = $this->patch('/courses/'.$course->id, [
             'name' => $newName = 'New Course'
@@ -49,10 +49,10 @@ class UpdateCourseTest extends TestCase
     /** @test */
     public function course_is_not_validated_for_uniqueness_if_code_is_not_changed()
     {
-        $this->be(factory(User::class)->create())
-            ->withoutExceptionHandling();
-        
-        $course = factory(Course::class)->create();
+        $this->withoutExceptionHandling()
+            ->signIn();
+
+        $course = create(Course::class);
 
         $response = $this->patch('/courses/'.$course->id, [
             'code' => $course->code,

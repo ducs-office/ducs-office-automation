@@ -13,14 +13,14 @@ use Tests\TestCase;
 class ViewPapersTest extends TestCase
 {
     use RefreshDatabase;
-    
+
     /** @test */
     public function admin_can_view_all_papers_ordered_by_latest_added()
     {
-        $this->be(factory(User::class)->create());
+        $this->signIn();
 
-        $papers = factory(Paper::class, 3)->create();
-        
+        $papers = create(Paper::class, 3);
+
         $viewPapers = $this->withoutExceptionHandling()->get('/papers')
             ->assertSuccessful()
             ->assertViewIs('papers.index')
@@ -37,10 +37,10 @@ class ViewPapersTest extends TestCase
     /** @test */
     public function papers_index_page_also_has_courses()
     {
-        $this->be(factory(User::class)->create());
+        $this->signIn();
 
-        $courses = factory(Course::class, 3)->create();
-        
+        $courses = create(Course::class, 3);
+
         $viewCourses = $this->withoutExceptionHandling()->get('/papers')
             ->assertSuccessful()
             ->assertViewHas('courses')

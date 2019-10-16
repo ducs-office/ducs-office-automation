@@ -10,10 +10,10 @@ class QueryUsersTest extends TestCase
 {
 
     use RefreshDatabase;
-    
+
     /** @test */
     public function guest_cannot_query_other_users_by_keyword() {
-        $john = factory(User::class)->create(['name' => 'John']);
+        $john = create(User::class, 1, ['name' => 'John']);
 
         $this->getJson('/api/users?q='.$john->name)
             ->assertUnauthorized();
@@ -21,14 +21,13 @@ class QueryUsersTest extends TestCase
 
     /** @test */
     public function user_can_query_other_users_by_keyword() {
-        $john = factory(User::class)->create(['name' => 'John Doe']);
-        $jane = factory(User::class)->create(['name' => 'Jane Doe']);
-        $mary = factory(User::class)->create(['name' => 'Mary John']);
+        $john = create(User::class, 1, ['name' => 'John Doe']);
+        $jane = create(User::class, 1, ['name' => 'Jane Doe']);
+        $mary = create(User::class, 1, ['name' => 'Mary John']);
 
-        $this->withoutExceptionHandling();
+        $this->withoutExceptionHandling()->signIn($jane);
 
-        $users = $this->be($jane)
-            ->getJson('/api/users?q=John')
+        $users = $this->getJson('/api/users?q=John')
             ->assertSuccessful()
             ->json();
 
@@ -47,14 +46,13 @@ class QueryUsersTest extends TestCase
 
     /** @test */
     public function if_query_matches_exact_email_only_that_user_is_returned() {
-        $maliciousUser = factory(User::class)->create(['name' => 'john@example.com']);
-        $john = factory(User::class)->create(['name' => 'John', 'email' => 'john@example.com']);
-        $jane = factory(User::class)->create(['name' => 'Jane Doe']);
+        $maliciousUser = create(User::class, 1, ['name' => 'john@example.com']);
+        $john = create(User::class, 1, ['name' => 'John', 'email' => 'john@example.com']);
+        $jane = create(User::class, 1, ['name' => 'Jane Doe']);
 
-        $this->withoutExceptionHandling();
+        $this->withoutExceptionHandling()->signIn($jane);
 
-        $users = $this->be($jane)
-            ->getJson('/api/users?q=john@example.com')
+        $users = $this->getJson('/api/users?q=john@example.com')
             ->assertSuccessful()
             ->json();
 
@@ -68,9 +66,9 @@ class QueryUsersTest extends TestCase
 
     /** @test */
     public function without_query_parameter_no_user_is_returned() {
-        $john = factory(User::class)->create(['name' => 'John']);
+        $john = create(User::class, 1, ['name' => 'John']);
 
-        $this->be($john);
+        $this->signIn($john);
 
         $users = $this->getJson('/api/users?q=')
             ->assertSuccessful()
@@ -81,13 +79,13 @@ class QueryUsersTest extends TestCase
 
     /** @test */
     public function limit_query_parameter_limits_number_of_matches_returned() {
-        $john = factory(User::class)->create(['name' => 'John Doe']);
-        factory(User::class)->create(['name' => 'Jane Doe']);
-        factory(User::class)->create(['name' => 'Joe Doe']);
-        factory(User::class)->create(['name' => 'Joe Doe']);
-        factory(User::class)->create(['name' => 'Jon Doe']);
-        
-        $this->be($john);
+        $john = create(User::class, 1, ['name' => 'John Doe']);
+        create(User::class, 1, ['name' => 'Jane Doe']);
+        create(User::class, 1, ['name' => 'Joe Doe']);
+        create(User::class, 1, ['name' => 'Joe Doe']);
+        create(User::class, 1, ['name' => 'Jon Doe']);
+
+        $this->signIn($john);
 
         $users = $this->getJson('/api/users?q=Jo&limit=2')
             ->assertSuccessful()

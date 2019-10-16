@@ -11,18 +11,18 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 class CreateCourseTest extends TestCase
 {
     use RefreshDatabase;
-    
+
     /** @test */
     public function admin_can_create_new_course()
     {
-        $this->be(factory(User::class)->create());
+        $this->signIn();
 
         $this->post('/courses', [
             'code' => 'MCS',
             'name' => 'M.Sc. Computer Science',
         ])->assertRedirect('/courses')
         ->assertSessionHasFlash('success', 'Course created successfully');
-        
+
         $this->assertEquals(1, Course::count());
     }
 }

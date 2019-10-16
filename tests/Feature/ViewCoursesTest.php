@@ -14,7 +14,7 @@ class ViewCoursesTest extends TestCase
     /** @test */
     public function guest_cannot_view_courses()
     {
-        $courses = factory('App\Course', 3)->create();
+        $courses = create('App\Course', 3);
 
         $this->withExceptionHandling();
 
@@ -23,9 +23,9 @@ class ViewCoursesTest extends TestCase
     /** @test */
     public function admin_can_view_all_courses()
     {
-        $this->be(factory(User::class)->create());
+        $this->signIn();
 
-        $courses = factory('App\Course', 3)->create();
+        $courses = create('App\Course', 3);
 
         $this->withoutExceptionHandling();
 
