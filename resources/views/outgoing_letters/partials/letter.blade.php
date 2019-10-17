@@ -89,27 +89,55 @@
                 @endforeach
             </div>
         </details>
-
-
         <details class="ml-3">
             <summary class="inline-flex is-sm btn btn-magenta"> 
                 Reminders
             </summary>
             <div class="py-2 hover:bg-gray-100 border-b justify-between overflow-y-auto">
-                <form action="/reminders" method="POST" >
-                    @csrf <input type="hidden" name="letter_id" value="{{ $letter->id }}">
-                    <div class="flex mt-2 mb-3">
-                        <button class="btn btn-blue is-sm text-xs ml-auto" >
-                                New
-                        </button> 
+                <div class="flex mt-2 mb-3">
+                    <button class="btn btn-blue is-sm text-xs ml-auto" 
+                        @click.prevent="$modal.show('create-letter-{{$letter->id}}-reminder')" >
+                            New
+                    </button> 
+                </div>
+                <reminder-update-modal name="reminder-update-modal">@csrf @method('patch')</reminder-update-modal>
+                <modal name="create-letter-{{$letter->id}}-reminder" height="auto">
+                    <div class="p-6">
+                        <h3 class="font-bold text-lg mb-2">Upload Letter Reminder</h3>
+                        <h4 class="font-bold text-gray-600 mb-4">{{ $letter->subject }}</h4>
+                        <form action="/reminders" method="POST" enctype="multipart/form-data">
+                            @csrf <input type="hidden" name="letter_id" value="{{ $letter->id }}">
+                            <div class="my-4 flex">
+                                {{-- <label for="pdf" class="btn btn-magenta is-sm">Upload pdf</label> --}}
+                                <input type="file" name="pdf" accept="application/pdf" id="pdf"/>
+                                {{-- <label for="scan" class="btn btn-magenta is-sm">Upload scanned</label> --}}
+                                <input type="file" name="scan" accept="image/* , application/pdf" id="scan"/>
+                            </div>
+                            <div>
+                                <button class="btn btn-magenta is-sm">Submit</button>
+                            </div>
+                        </form>
                     </div>
-                </form>
+                </modal>
                 @foreach($letter->reminders as $i => $reminder)
                     <div class="flex mb-2">
-                        <h4 class="font-bold text-sm text-gray-500 w-12">#{{ $i+1 }}</h4>
-                        <p class="text-gray-600 mr-2">{{ $reminder->letter_id }}</p>
-                        
+                        <h4 class="font-bold text-sm text-gray-500 w-12">{{ $reminder->id }}</h4>
+                        <h4 class="font-bold text-sm w-48">{{ $reminder->updated_at->format('M d, Y h:i a') }}</h4>
+                        <form action="reminders/{{ $reminder->id}}" method="GET">
+                            @csrf
+                            <button class="p-1 hover:bg-gray-200 text-blue-700 rounded">
+                                <feather-icon name="eye" stroke-width="2.5" class="h-current">Show</feather-icon>
+                            </button>             
+                        </form>
                         <div class="flex ml-auto items-baseline">
+                            <button class="p-1 text-gray-500 hover:bg-gray-200 hover:text-blue-600 rounded mr-3" title="Edit"
+                                @click.prevent="$modal.show('reminder-update-modal',{
+                                    reminder: {{ $reminder->toJson() }}
+                                })"
+                                {{-- onclick="alert('hello')" --}}
+                                >
+                                <feather-icon name="edit-3" stroke-width="2.5" class="h-current">Edit</feather-icon>
+                            </button>
                             <form action="/reminders/{{ $reminder->id }}" method="POST">
                                 @csrf
                                 @method('DELETE')

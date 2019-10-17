@@ -15,6 +15,8 @@ class CreateLetterRemindersTable extends Migration
     {
         Schema::create('letter_reminders', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('pdf')->nullable();
+            $table->string('scan')->nullable();
             $table->timestamps();
             $table->unsignedBigInteger('letter_id')->references('id')->on('outgoing_letters');
         });

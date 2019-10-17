@@ -36,6 +36,9 @@ Route::delete('/remarks/{remark}', 'RemarksController@destroy')->middleware('aut
 
 Route::post('/reminders', 'RemindersController@store')->middleware('auth');
 Route::delete('/reminders/{reminder}','RemindersController@destroy')->middleware('auth');
+Route::get('/reminders/{reminder}', 'RemindersController@show')->middleware('auth');
+Route::patch('/reminders/{reminder}', 'RemindersController@update')->middleware('auth');
+
     
 Route::get('/courses', 'CoursesController@index')->middleware('auth');
 Route::post('/courses', 'CoursesController@store')->middleware('auth');
