@@ -41,7 +41,7 @@ class LoginTest extends TestCase
     /** @test */
     public function external_teacher_can_login_with_correct_credentials()
     {
-        $teacherRole = Role::create(['name' => 'teacher']);
+        $teacherRole = Role::firstOrCreate(['name' => 'teacher']);
 
         $teacher = create(User::class, 1, [
             'password' => bcrypt($password = 'secret')

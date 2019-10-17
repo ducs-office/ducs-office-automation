@@ -18,14 +18,14 @@ abstract class TestCase extends BaseTestCase
         $this->app->make(\Spatie\Permission\PermissionRegistrar::class)->registerPermissions();
     }
 
-    public function signIn($user = null, $role = null)
+    public function signIn($user = null, $role = 'admin_staff')
     {
 
         if (!$user) {
             $user = create(User::class);
         }
 
-        $user->assignRole($role ?? Role::create(['name' => 'admin']));
+        $user->assignRole(Role::firstOrCreate(['name' => $role]));
 
         $this->be($user);
 

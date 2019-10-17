@@ -1,0 +1,69 @@
+@extends('layouts.master')
+@section('body')
+<div class="page-card m-6">
+    <div class="flex items-baseline px-6 pb-4 border-b">
+        <h1 class="page-header mb-0 px-0 mr-4">Users</h1>
+        <button class="btn btn-magenta is-sm shadow-inner"
+            @click.prevent="$modal.show('create-new-user-form')">
+            New
+        </button>
+    </div>
+    <modal name="create-new-user-form" height="auto">
+        <div class="p-6">
+            <h2 class="text-lg font-bold mb-8">Create Users</h2>
+            <form action="/users" method="POST" class="px-6">
+                @csrf
+                <div class="mb-2">
+                    <label for="name" class="w-full form-label">Full Name</label>
+                    <input id="name" type="text" name="name" class="w-full form-input" placholder="Enter user's full name here..." required>
+                </div>
+                <div class="mb-2">
+                    <label for="email" class="w-full form-label">Email</label>
+                    <input id="email" type="email" name="email" class="w-full form-input" placholder="Enter user's email here..." required>
+                </div>
+                <div class="mb-2">
+                    <label for="role" class="w-full form-label">Role</label>
+                    <select id="role" name="role_id" class="w-full form-input">
+                        @foreach ($roles as $role)
+                            <option value="{{ $role->id }}">{{ ucwords(str_replace('_', ' ', $role->name)) }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="mt-5">
+                    <button class="btn btn-magenta">Create</button>
+                </div>
+            </form>
+        </div>
+    </modal>
+    @forelse($users as $user)
+        <div class="px-4 py-2 hover:bg-gray-100 border-b flex justify-between">
+            <div class="px-2">
+                <h3 class="text-lg font-bold mr-2">
+                    {{ ucwords($user->name) }}
+                </h3>
+                <h4 class="text-sm font-semibold text-gray-600 mr-2 w-24">{{ $user->email }}</h4>
+            </div>
+            <div class="px-2 flex flex-wrap items-center">
+                @foreach ($user->getRoleNames() as $role)
+                    <span class="bg-blue-500 text-white p-1 text-xs font-bold tracking-wide">{{ $role }}</span>
+                @endforeach
+            </div>
+            <div class="px-2 flex items-center">
+                <form action="/users/{{ $user->id }}" method="POST">
+                    @csrf @method('delete')
+                    <button type="submit" class="p-1 hover:text-red-700">
+                        <feather-icon class="h-current" name="trash-2">Trash</feather-icon>
+                    </button>
+                </form>
+            </div>
+        </div>
+    @empty
+        <div class="py-8 flex flex-col items-center justify-center text-gray-500">
+            <feather-icon name="frown" class="h-16"></feather-icon>
+            <p class="mt-4 mb-2  font-bold">
+                Sorry! No Letters {{ count(request()->query()) ? 'found for your query.' : 'added yet.' }}
+            </p>
+        </div>
+    @endforelse
+</div>
+@endsection

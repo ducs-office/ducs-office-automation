@@ -37,6 +37,12 @@
                     Colleges
                 </a>
             </li>
+            <li>
+                <a href="/users" class="flex items-center py-2 px-4 hover:bg-magenta-700 hover:pl-6">
+                    <feather-icon name="user" class="h-4 mr-2">User</feather-icon>
+                    Users
+                </a>
+            </li>
         </ul>
     </aside>
 </div>

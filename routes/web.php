@@ -45,3 +45,5 @@ Route::post('/colleges','CollegeController@store')->middleware('auth');
 Route::patch('/colleges/{college}', 'CollegeController@update')->middleware('auth');
 Route::delete('/colleges/{college}', 'CollegeController@destroy')->middleware('auth');
 
+Route::get('/users', 'UserController@index')->middleware('auth');
+Route::post('/users', 'UserController@store')->middleware('auth');
