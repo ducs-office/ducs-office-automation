@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
+// use lluminate\Contracts\Routing\ResponseFactory;
 use App\LetterReminder;
-use App\OutgoingLetter;
 
 class RemindersController extends Controller
 {
@@ -28,13 +30,9 @@ class RemindersController extends Controller
         return back();
     }
 
-    public function show(LetterReminder $reminder) 
-    {
-        return Storage::download($reminder->pdf, $reminder->id);
-    }
-
     public function update(LetterReminder $reminder)
     {
+        dd("/attachments?file={$reminder->pdf}");
         $data = request()->validate([
             'pdf' => 'required_without:scan|max:200|mimes:pdf',
             'scan' => 'required_without:pdf|max:200|mimes:jpeg,jpg,png'

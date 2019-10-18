@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\LetterReminder;
@@ -39,6 +40,8 @@ class DeleteLetterRemindersTest extends TestCase
         $this->withoutExceptionHandling()
             ->delete("/reminders/$reminder->id");
         
+        Storage::assertMissing($reminder->scan);
+        Storage::assertMissing($reminder->pdf);
         $this->assertEquals(0, LetterReminder::count());
     }
 

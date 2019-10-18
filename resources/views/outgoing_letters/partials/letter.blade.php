@@ -123,11 +123,20 @@
                     <div class="flex mb-2">
                         <h4 class="font-bold text-sm text-gray-500 w-12">{{ $reminder->id }}</h4>
                         <h4 class="font-bold text-sm w-48">{{ $reminder->updated_at->format('M d, Y h:i a') }}</h4>
-                        <form action="reminders/{{ $reminder->id}}" method="GET">
+                        
+                        <form action="/attachments" method="GET">
+                            <input name="file" value="{{$reminder->pdf}}" type="hidden">
                             @csrf
                             <button class="p-1 hover:bg-gray-200 text-blue-700 rounded">
-                                <feather-icon name="eye" stroke-width="2.5" class="h-current">Show</feather-icon>
+                                 Pdf
                             </button>             
+                        </form>
+                        <form action="/attachments" method="GET">
+                            <input name="file" value="{{$reminder->scan}}" type="hidden">
+                            @csrf 
+                            <button class="p-1 hover:bg-gray-200 text-blue-700">
+                                Scan
+                            </button>
                         </form>
                         <div class="flex ml-auto items-baseline">
                             <button class="p-1 text-gray-500 hover:bg-gray-200 hover:text-blue-600 rounded mr-3" title="Edit"
