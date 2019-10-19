@@ -10,9 +10,10 @@ use \App\LetterReminder;
 
 class AttachmentController extends Controller
 {
-    public function show()
+    public function show(Request $request)
     {
-        $file = request('file');
+        $file =$request->file;
+        
         return response()->file(Storage::path($file));
     }
 }

@@ -6,6 +6,7 @@ use Auth;
 use App\OutgoingLetter;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage; 
 use DB;
 
 class OutgoingLettersController extends Controller
@@ -58,9 +59,21 @@ class OutgoingLettersController extends Controller
             'subject' => 'required|string|max:80',
             'description' => 'nullable|string|max:400',
             'amount' => 'nullable|numeric',
+            'pdf' => 'required_without:scan|max:200|mimes:pdf',
+            'scan' => 'required_without:pdf|max:200|mimes:jpeg,jpg,png,pdf'
         ]);
 
-        OutgoingLetter::create($validData + ['creator_id'=> Auth::id()]);
+        $pdf = request()->file('pdf');
+        $scan = request()->file('scan');
+
+        if($pdf) {
+            $validData['pdf'] = $pdf->store('letters/outgoing');
+        }
+        if($scan) {
+            $validData['scan'] = $scan->store('letters/outgoing');
+        }
+
+        OutgoingLetter::create($validData + ['creator_id'=>Auth::id()]);
 
         return redirect('/outgoing-letters');
     }
@@ -79,9 +92,21 @@ class OutgoingLettersController extends Controller
             'subject' => 'sometimes|required|string|max:80',
             'description' => 'nullable|string|max:400',
             'amount' => 'nullable|numeric',
-            'sender_id' => 'sometimes|required|exists:users,id'
+            'sender_id' => 'sometimes|required|exists:users,id',
+            'pdf' => 'required_without:scan|max:200|mimes:pdf',
+            'scan' => 'required_without:pdf|max:200|mimes:jpeg,jpg,png,pdf'
         ]);
+        
+        $pdf = request()->file('pdf');
+        $scan = request()->file('scan');
 
+        if($pdf) {
+            $validData['pdf'] = $pdf->store('letters/outgoing');
+        }
+        if($scan) {
+            $validData['scan'] = $scan->store('letters/outgoing');
+        }
+        
         $outgoing_letter->update($validData);
 
         return redirect('/outgoing-letters');
@@ -89,6 +114,18 @@ class OutgoingLettersController extends Controller
 
     public function destroy(OutgoingLetter $outgoing_letter)
     {
+        $pdf = $outgoing_letter['pdf'];
+        $scan = $outgoing_letter['scan'];
+
+        if($pdf) 
+        {
+            Storage::delete($pdf);
+        }
+        if($scan)
+        {
+            Storage::delete($scan);
+        }
+        
         $outgoing_letter->delete();
 
         return redirect('/outgoing-letters');

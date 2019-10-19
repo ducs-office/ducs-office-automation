@@ -90,7 +90,6 @@ class StoreLetterRemindersTest extends TestCase
     }
 
     /** @test*/
-
     public function request_validates_only_pdf_can_be_uploaded()
     {
         $this->be(factory(User::class)->create());
@@ -111,7 +110,6 @@ class StoreLetterRemindersTest extends TestCase
     }
 
     /** @test*/
-
     public function request_validates_only_scan_can_be_uploaded()
     {
         $this->be(factory(User::class)->create());

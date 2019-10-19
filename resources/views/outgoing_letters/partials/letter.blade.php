@@ -9,8 +9,18 @@
             {{ $letter->recipient }}
         </div>
         <div class="ml-auto flex">
+            @isset($letter->pdf)
+                <a href="/attachments?file={{ $letter->pdf }}" target="_blank" class="p-1 text-orange-600 hover:bg-gray-200 rounded mr-3" title="pdf">
+                    <feather-icon name="file" stroke-width="2.5" class="h-current">pdf</feather-icon>
+                </a>
+            @endisset
+            @isset($letter->scan)
+            <a href="/attachments?file={{ $letter->scan }}" target="_blank" class="p-1 text-gray-600 hover:bg-gray-200 rounded mr-3" title="scan">
+                <feather-icon name="file-minus" stroke-width="2.5" class="h-current">scan</feather-icon>
+            </a>
+            @endisset
             <a href="/outgoing-letters/{{$letter->id}}/edit"
-                class="p-1 text-gray-500 hover:bg-gray-200 hover:text-blue-600 rounded mr-3" title="Edit">
+                class="p-1 text-gray-500 text-blue-600 hover:bg-gray-200 rounded mr-3" title="Edit">
                 <feather-icon name="edit-3" stroke-width="2.5" class="h-current">Edit</feather-icon>
             </a>
             <form method="POST" action="/outgoing-letters/{{$letter->id}}">
@@ -68,10 +78,9 @@
                     <div class="flex mb-2">
                         <h4 class="font-bold text-sm text-gray-500 w-12">#{{ $i+1 }}</h4>
                         <h4 class="font-bold text-sm w-48">{{ $remark->updated_at->format('M d, Y h:i a') }}</h4>
-                        <p class="text-gray-600 mr-2">{{ $remark->description }}</p>
-                        
+                        <p class="text-gray-600 mr-10">{{ $remark->description }}</p>
                         <div class="flex ml-auto items-baseline">
-                            <button class="p-1 text-gray-500 hover:bg-gray-200 hover:text-blue-600 rounded mr-3" title="Edit"
+                            <button class="p-1 text-gray-500 hover:bg-gray-200 text-blue-600 rounded mr-3" title="Edit"
                                 @click.prevent="$modal.show('remark-update-modal',{
                                     remark: {{ $remark->toJson() }}
                                 })">
@@ -108,10 +117,14 @@
                         <form action="/reminders" method="POST" enctype="multipart/form-data">
                             @csrf <input type="hidden" name="letter_id" value="{{ $letter->id }}">
                             <div class="my-4 flex">
-                                {{-- <label for="pdf" class="btn btn-magenta is-sm">Upload pdf</label> --}}
-                                <input type="file" name="pdf" accept="application/pdf" id="pdf"/>
-                                {{-- <label for="scan" class="btn btn-magenta is-sm">Upload scanned</label> --}}
-                                <input type="file" name="scan" accept="image/* , application/pdf" id="scan"/>
+                                <div class="mx-2">
+                                    <input type="file" name="pdf" accept="application/pdf" class="w-full mb-2">
+                                    <label for="pdf" class="w-full form-label">Upload PDF copy</label>
+                                </div>
+                                <div class="mx-2">
+                                    <input type="file" name="scan" accept="image/*, application/pdf" class="w-full mb-2">
+                                    <label for="scan" class="w-full form-label">Upload scanned copy</label>
+                                </div>
                             </div>
                             <div>
                                 <button class="btn btn-magenta is-sm">Submit</button>
@@ -123,28 +136,21 @@
                     <div class="flex mb-2">
                         <h4 class="font-bold text-sm text-gray-500 w-12">{{ $reminder->id }}</h4>
                         <h4 class="font-bold text-sm w-48">{{ $reminder->updated_at->format('M d, Y h:i a') }}</h4>
-                        
-                        <form action="/attachments" method="GET">
-                            <input name="file" value="{{$reminder->pdf}}" type="hidden">
-                            @csrf
-                            <button class="p-1 hover:bg-gray-200 text-blue-700 rounded">
-                                 Pdf
-                            </button>             
-                        </form>
-                        <form action="/attachments" method="GET">
-                            <input name="file" value="{{$reminder->scan}}" type="hidden">
-                            @csrf 
-                            <button class="p-1 hover:bg-gray-200 text-blue-700">
-                                Scan
-                            </button>
-                        </form>
                         <div class="flex ml-auto items-baseline">
-                            <button class="p-1 text-gray-500 hover:bg-gray-200 hover:text-blue-600 rounded mr-3" title="Edit"
+                            @isset($reminder->pdf)
+                               <a href="/attachments?file={{ $reminder->pdf }}" target="_blank" class="p-1 text-orange-600 hover:bg-gray-200 rounded mr-3" title="pdf">
+                                    <feather-icon name="file" stroke-width="2.5" class="h-current">pdf</feather-icon>
+                               </a>
+                            @endisset
+                            @isset($reminder->scan)
+                            <a href="/attachments?file={{ $reminder->scan }}" target="_blank" class="p-1 text-gray-600 hover:bg-gray-200 rounded mr-3" title="scan">
+                                <feather-icon name="file-minus" stroke-width="2.5" class="h-current">scan</feather-icon>
+                            </a>
+                            @endisset
+                            <button class="p-1 text-gray-500 hover:bg-gray-200 text-blue-600 rounded mr-3" title="Edit"
                                 @click.prevent="$modal.show('reminder-update-modal',{
                                     reminder: {{ $reminder->toJson() }}
-                                })"
-                                {{-- onclick="alert('hello')" --}}
-                                >
+                                })">
                                 <feather-icon name="edit-3" stroke-width="2.5" class="h-current">Edit</feather-icon>
                             </button>
                             <form action="/reminders/{{ $reminder->id }}" method="POST">

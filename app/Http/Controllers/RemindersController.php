@@ -22,20 +22,20 @@ class RemindersController extends Controller
         $pdf = request()->file('pdf');
         $scan = request()->file('scan');
         if($pdf)
-            $data['pdf']= $pdf->store('letters/outgoing/reminders');
+            $data['pdf'] = $pdf->store('letters/outgoing/reminders');
         if($scan)
             $data['scan'] = $scan->store('letters/outgoing/reminders');
         
         LetterReminder::create($data);
+
         return back();
     }
 
     public function update(LetterReminder $reminder)
     {
-        dd("/attachments?file={$reminder->pdf}");
         $data = request()->validate([
             'pdf' => 'required_without:scan|max:200|mimes:pdf',
-            'scan' => 'required_without:pdf|max:200|mimes:jpeg,jpg,png'
+            'scan' => 'required_without:pdf|max:200|mimes:jpeg,jpg,png,pdf'
         ]);
         
         $pdf = request()->file('pdf');
@@ -46,17 +46,27 @@ class RemindersController extends Controller
             $data['scan'] = $scan->store('letters/outgoing/reminders');
         
         $reminder->update($data);
+
         return back();
     }
 
     public function destroy(LetterReminder $reminder)
     {
+        $pdf = $reminder['pdf'];
+        $scan = $reminder['scan'];
+
+        if($pdf) 
+        {
+            Storage::delete($pdf);
+        }
+        if($scan)
+        {
+            Storage::delete($scan);
+        }
+        
         $reminder->delete();
 
         return back();
     }
-
-
-
 
 }

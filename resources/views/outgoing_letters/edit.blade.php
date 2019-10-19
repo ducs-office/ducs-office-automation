@@ -2,7 +2,7 @@
 @section('body')
 <div class="page-card max-w-lg mx-auto mt-4">
     <h1 class="page-header">Update Outgoing Letter</h1>
-    <form action="/outgoing-letters/{{ $outgoing_letter->id }}" method="POST" class="px-6">
+    <form action="/outgoing-letters/{{ $outgoing_letter->id }}" method="POST" class="px-6" enctype="multipart/form-data">
         @csrf
         @method('PATCH')
         <div class="mb-2">
@@ -59,13 +59,29 @@
             <p class="text-red-500">{{ $errors->first('description') }}</p>
             @endif
         </div>
-        <div class="mb-6">
+        <div class="mb-2">
             <label for="amount" class="w-full form-label mb-1">Amount</label>
             <input type="number" name="amount" step="0.01" value="{{ old('amount') ?? $outgoing_letter->amount }}" class=" w-full form-input"
                 placeholder="Amount (INR)">
             @if($errors->has('amount'))
             <p class="text-red-500">{{ $errors->first('amount') }}</p>
             @endif
+        </div>
+        <div class="flex -mx-2 mb-6">
+            <div class="mx-2">
+                <label for="pdf" class="w-full form-label mb-1">Upload PDF copy</label>
+                <input type="file" name="pdf" accept="application/pdf" class="w-full">
+                @if($errors->has('pdf'))
+                    <p class="text-red-500">{{ $errors->first('pdf') }}</p>
+                @endif
+            </div>
+            <div class="mx-2">
+                <label for="scan" class="w-full form-label mb-1">Upload scanned copy</label>
+                <input type="file" name="scan" accept="image/*, application/pdf" class="w-full">
+                @if($errors->has('scan'))
+                    <p class="text-red-500">{{ $errors->first('scan') }}</p>
+                @endif
+            </div>
         </div>
         <div class="mb-3">
             <button type="submit" class="w-full btn btn-magenta">Update</button>

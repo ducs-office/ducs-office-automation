@@ -2247,6 +2247,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -7477,23 +7483,39 @@ var render = function() {
             _vm._t("default"),
             _vm._v(" "),
             _c("div", { staticClass: "my-4 flex" }, [
-              _c("input", {
-                attrs: {
-                  type: "file",
-                  name: "pdf",
-                  accept: "application/pdf",
-                  id: "pdf"
-                }
-              }),
+              _c("div", { staticClass: "mx-2" }, [
+                _c("input", {
+                  staticClass: "w-full mb-2",
+                  attrs: {
+                    type: "file",
+                    name: "pdf",
+                    accept: "application/pdf"
+                  }
+                }),
+                _vm._v(" "),
+                _c(
+                  "label",
+                  { staticClass: "w-full form-label", attrs: { for: "pdf" } },
+                  [_vm._v("Upload PDF copy")]
+                )
+              ]),
               _vm._v(" "),
-              _c("input", {
-                attrs: {
-                  type: "file",
-                  name: "scan",
-                  accept: "image/* , application/pdf",
-                  id: "scan"
-                }
-              })
+              _c("div", { staticClass: "mx-2" }, [
+                _c("input", {
+                  staticClass: "w-full mb-2",
+                  attrs: {
+                    type: "file",
+                    name: "scan",
+                    accept: "image/*, application/pdf"
+                  }
+                }),
+                _vm._v(" "),
+                _c(
+                  "label",
+                  { staticClass: "w-full form-label", attrs: { for: "scan" } },
+                  [_vm._v("Upload scanned copy")]
+                )
+              ])
             ]),
             _vm._v(" "),
             _c("div", [
@@ -20395,15 +20417,14 @@ __webpack_require__.r(__webpack_exports__);
 /*!*********************************************************!*\
   !*** ./resources/js/components/ReminderUpdateModal.vue ***!
   \*********************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ReminderUpdateModal_vue_vue_type_template_id_649e8f12___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ReminderUpdateModal.vue?vue&type=template&id=649e8f12& */ "./resources/js/components/ReminderUpdateModal.vue?vue&type=template&id=649e8f12&");
 /* harmony import */ var _ReminderUpdateModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ReminderUpdateModal.vue?vue&type=script&lang=js& */ "./resources/js/components/ReminderUpdateModal.vue?vue&type=script&lang=js&");
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _ReminderUpdateModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _ReminderUpdateModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
@@ -20433,7 +20454,7 @@ component.options.__file = "resources/js/components/ReminderUpdateModal.vue"
 /*!**********************************************************************************!*\
   !*** ./resources/js/components/ReminderUpdateModal.vue?vue&type=script&lang=js& ***!
   \**********************************************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
