@@ -13,7 +13,11 @@
         </div>
         <div class="mb-2">
             <label for="type" class="w-full form-label mb-1">Letter Type</label>
-            <input type="text" name="type" value="{{ old('type') }}" class="w-full form-input" placeholder="e.g. Bill, Invitation Letter, Progress Report">
+            <select class="w-full form-input" name="type">
+                <option value="Bill">Bill</option>
+                <option value="Notesheet">Notesheet</option>
+                <option value="General">General</option>
+            </select>
             @if($errors->has('type'))
                 <p class="text-red-500">{{ $errors->first('type') }}</p>
             @endif

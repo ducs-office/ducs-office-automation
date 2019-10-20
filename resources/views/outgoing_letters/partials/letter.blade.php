@@ -1,5 +1,6 @@
 <div class="px-6 py-4 hover:bg-gray-100 border-b">
     <div class="flex items-center mb-1">
+        <h5 class="mr-12 text-gray-700 font-bold">{{$letter->serial_no}}</h5>
         <h5 class="mr-12 text-gray-700 font-bold">{{ $letter->date->format('M d, Y') }}</h5>
         <div class="flex items-center text-gray-700">
             {{ $letter->sender->name }}
@@ -134,8 +135,8 @@
                 </modal>
                 @foreach($letter->reminders as $i => $reminder)
                     <div class="flex mb-2">
-                        <h4 class="font-bold text-sm text-gray-500 w-12">{{ $reminder->id }}</h4>
-                        <h4 class="font-bold text-sm w-48">{{ $reminder->updated_at->format('M d, Y h:i a') }}</h4>
+                        <h4 class="text-gray-800 font-bold mr-10">{{ $reminder->serial_no }}</h4>
+                        <h4 class="font-bold text-sm w-48">{{ $reminder->updated_at->format('M d, h:i a') }}</h4>
                         <div class="flex ml-auto items-baseline">
                             @isset($reminder->pdf)
                                <a href="/attachments?file={{ $reminder->pdf }}" target="_blank" class="p-1 text-orange-600 hover:bg-gray-200 rounded mr-3" title="pdf">

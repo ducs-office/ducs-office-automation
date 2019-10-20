@@ -7,6 +7,9 @@ use App\OutgoingLetter;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage; 
+use Illuminate\Support\Facades\Cache;
+    
+
 use DB;
 
 class OutgoingLettersController extends Controller
@@ -53,7 +56,7 @@ class OutgoingLettersController extends Controller
     {
         $validData = $request->validate([
             'date' => 'required|date|before_or_equal:today',
-            'type' => 'required',
+            'type' => 'required|in:Bill,Notesheet,General',
             'recipient' => 'required',
             'sender_id' => 'required|exists:users,id',
             'subject' => 'required|string|max:80',
@@ -62,6 +65,29 @@ class OutgoingLettersController extends Controller
             'pdf' => 'required_without:scan|max:200|mimes:pdf',
             'scan' => 'required_without:pdf|max:200|mimes:jpeg,jpg,png,pdf'
         ]);
+        
+        
+        $type = $validData['type'];
+        $validData['serial_no'] = 'CS/';
+        
+        if($type == 'Bill') {
+            $validData['serial_no'] .= 'TR/';
+        }
+        else if($type == 'Notesheet') {
+            $validData['serial_no'] .= 'NTS/';
+        }
+        
+        $validData['serial_no'] .= now()->year.'/';
+        
+        if(Cache::has($type)) {
+            Cache::increment($type);
+        }
+        else {
+            Cache::put($type, 1, 525600);    //1 year in miuntes
+        }
+        
+        $serial_no_val = Cache::get($type);
+        $validData['serial_no'] .= str_pad($serial_no_val,4,'0',STR_PAD_LEFT);
 
         $pdf = request()->file('pdf');
         $scan = request()->file('scan');
@@ -87,7 +113,7 @@ class OutgoingLettersController extends Controller
     {
         $validData = $request->validate([
             'date' => 'sometimes|required|date|before_or_equal:today',
-            'type' => 'sometimes|required',
+            'type' => 'sometimes|required|in:Bill,Notesheet,General',
             'recipient' =>  'sometimes|required|',
             'subject' => 'sometimes|required|string|max:80',
             'description' => 'nullable|string|max:400',

@@ -15,8 +15,8 @@
         </div>
         <div class="mb-2">
             <label for="type" class="w-full form-label mb-1">Letter Type</label>
-            <input type="text" name="type" value="{{ old('type') ?? $outgoing_letter->type }}" class="w-full form-input"
-                placeholder="e.g. Bill, Invitation Letter, Progress Report">
+            <input type="text" name="type" value="{{ old('type') ?? $outgoing_letter->type }}" class="w-full form-input "
+                placeholder="e.g. Bill, Invitation Letter, Progress Report" disabled>
             @if($errors->has('type'))
             <p class="text-red-500">{{ $errors->first('type') }}</p>
             @endif

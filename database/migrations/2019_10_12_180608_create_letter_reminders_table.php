@@ -17,6 +17,7 @@ class CreateLetterRemindersTable extends Migration
             $table->bigIncrements('id');
             $table->string('pdf')->nullable();
             $table->string('scan')->nullable();
+            $table->string('serial_no')->unique();
             $table->timestamps();
             $table->unsignedBigInteger('letter_id')->references('id')->on('outgoing_letters');
         });
