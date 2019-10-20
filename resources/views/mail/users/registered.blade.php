@@ -1,8 +1,13 @@
-@component('mail::message')
-    ### Welcome
+<h1>
+    Welcome to DUCS
+</h1>
 
-    Hi there! you have been registered on DUCS Office Portal. Below are your login credentials.
+<p>
+    Hi {{ $user->name }}! you have been registered on DUCS Office Portal. Below are your login credentials.
     Please change your password immediately after first login.
-    <p><b>Email:</b> {{ $email }}</p>
-    <p><b>Password:</b> {{ $password }}</p>
-@endcomponent
+</p>
+    
+<p>
+    <b>Email:</b> {{ $user->email }} <br>
+    <b>Password:</b> {{ $password }}
+</p>

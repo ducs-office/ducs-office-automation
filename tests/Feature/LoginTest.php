@@ -22,7 +22,7 @@ class LoginTest extends TestCase
     /** @test */
     public function admin_staff_can_login_with_correct_credentials()
     {
-        $adminRole = Role::create(['name' => 'admin-staff']);
+        $adminRole = Role::firstOrCreate(['name' => 'admin_staff']);
 
         $adminStaff = create(User::class, 1, [
             'password' => bcrypt($password = 'secret')
@@ -34,25 +34,6 @@ class LoginTest extends TestCase
             'email' => $adminStaff->email,
             'password' => $password
         ])->assertRedirect('/');
-
-        $this->assertTrue(Auth::check(), 'User was expected to login but was not.');
-    }
-
-    /** @test */
-    public function external_teacher_can_login_with_correct_credentials()
-    {
-        $teacherRole = Role::firstOrCreate(['name' => 'teacher']);
-
-        $teacher = create(User::class, 1, [
-            'password' => bcrypt($password = 'secret')
-        ])->assignRole($teacherRole);
-
-        $this->withoutExceptionHandling();
-
-        $this->post('/login', [
-            'email' => $teacher->email,
-            'password' => $password
-        ])->assertRedirect('teacher/dashboard');
 
         $this->assertTrue(Auth::check(), 'User was expected to login but was not.');
     }

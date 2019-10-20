@@ -11,7 +11,7 @@ class UserRegisteredMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
-    public $email;
+    public $user;
     public $password;
 
     /**
@@ -19,9 +19,9 @@ class UserRegisteredMail extends Mailable implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($email, $password)
+    public function __construct($user, $password)
     {
-        $this->email = $email;
+        $this->user = $user;
         $this->password = $password;
     }
 
@@ -32,6 +32,6 @@ class UserRegisteredMail extends Mailable implements ShouldQueue
      */
     public function build()
     {
-        return $this->markdown('mail.users.registered');
+        return $this->view('mail.users.registered');
     }
 }

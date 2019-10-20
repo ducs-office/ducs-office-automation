@@ -36,6 +36,8 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $himani->assignRole(Role::firstOrCreate(['name' => 'admin_Staff']));
+        $ng->assignRole(Role::firstOrCreate(['name' => 'faculty']));
+        $nk->assignRole(Role::firstOrCreate(['name' => 'faculty']));
 
         factory(OutgoingLetter::class, 5)->create(['sender_id' => $ng->id, 'creator_id' => $himani->id]);
         factory(OutgoingLetter::class, 5)->create(['sender_id' => $nk->id, 'creator_id' => $himani->id]);

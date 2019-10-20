@@ -5,7 +5,6 @@ namespace Tests\Feature;
 use App\Mail\UserRegisteredMail;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Mail;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
@@ -15,22 +14,7 @@ class CreateNewUserTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function admin_staff_can_retrive_create_teacher_form()
-    {
-        $this->signIn(create(User::class), 'admin_staff');
-
-        $viewRoles = $this->withoutExceptionHandling()
-            ->get("/users/create")
-            ->assertSuccessful()
-            ->assertViewIs('users.create')
-            ->assertViewHas('roles')
-            ->viewData('roles');
-
-        $this->assertCount(Role::count(), $viewRoles);
-    }
-
-    /** @test */
-    public function admin_staff_can_create_new_teacher()
+    public function admin_staff_can_create_new_user_with_a_role()
     {
         Mail::fake();
 
@@ -40,19 +24,44 @@ class CreateNewUserTest extends TestCase
 
         $this->withoutExceptionHandling()
             ->post('/users', [
-                'name' => 'Teacher',
-                'email' => 'contact@teacher.me',
-                'role_id' => $teacherRole->id
+                'name' => $name = 'HOD Faculty',
+                'email' => $email = 'hod@uni.ac.in',
+                'roles' => [$teacherRole->id]
             ])->assertRedirect('/')
             ->assertSessionHasFlash('success', 'User created successfully!');
 
-        tap(
-            User::whereEmail('contact@teacher.me')->whereName('Teacher')->first(),
-            function($user) use ($teacherRole) {
-                $this->assertNotNull($user, 'User was not created.');
-                $this->assertTrue($user->hasRole($teacherRole), 'Created user is not a teacher!');
-            }
-        );
+        $user = User::whereEmail($email)->first();
+
+        $this->assertNotNull($user, 'User was not created.');
+        $this->assertEquals($name, $user->name, 'User\'s name was not corretly set.');
+
+        $this->assertTrue($user->hasRole($teacherRole), 'Created user was not assigned the expected role!');
+
+    }
+
+    /** @test */
+    public function admin_staff_can_create_new_user_with_mutliple_roles()
+    {
+        Mail::fake();
+
+        $facultyRole = Role::firstOrcreate(['name' => 'faculty']);
+        $hodRole = Role::firstOrcreate(['name' => 'hod']);
+
+        $this->signIn(create(User::class), 'admin_staff');
+
+        $this->withoutExceptionHandling()
+            ->post('/users', [
+                'name' => $name = 'HOD Faculty',
+                'email' => $email = 'hod@uni.ac.in',
+                'roles' => [$facultyRole->id, $hodRole->id]
+            ])->assertRedirect('/')
+            ->assertSessionHasFlash('success', 'User created successfully!');
+
+        $user = User::whereEmail($email)->first();
+        $this->assertNotNull($user, 'User was not created.');
+        $this->assertEquals($name, $user->name, 'User\'s name was not corretly set.');
+
+        $this->assertTrue($user->hasRole([$facultyRole, $hodRole]), 'Created user was not assigned all roles!');
     }
 
     /** @test */
@@ -68,12 +77,12 @@ class CreateNewUserTest extends TestCase
             ->post('/users', [
                 'name' => 'Teacher',
                 'email' => 'contact@teacher.me',
-                'role_id' => $teacherRole->id
+                'roles' => [$teacherRole->id]
             ])->assertRedirect('/')
             ->assertSessionHasFlash('success', 'User created successfully!');
 
-        Mail::assertQueued(UserRegisteredMail::class, function($mail) {
-            return $mail->password;
+        Mail::assertQueued(UserRegisteredMail::class, function ($mail) {
+            return $mail->password && $mail->user;
         });
     }
 }

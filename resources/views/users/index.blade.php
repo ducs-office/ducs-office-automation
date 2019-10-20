@@ -23,7 +23,7 @@
                 </div>
                 <div class="mb-2">
                     <label for="role" class="w-full form-label">Role</label>
-                    <select id="role" name="role_id" class="w-full form-input">
+                    <select id="role" name="roles[]" class="w-full form-input" multiple>
                         @foreach ($roles as $role)
                             <option value="{{ $role->id }}">{{ ucwords(str_replace('_', ' ', $role->name)) }}</option>
                         @endforeach
@@ -32,23 +32,36 @@
                 <div class="mt-5">
                     <button class="btn btn-magenta">Create</button>
                 </div>
-            </form>
+            </form> 
         </div>
     </modal>
+    <user-update-modal name="user-update-modal" :roles="{{ $roles->toJson() }}">@csrf @method('PATCH')</user-update-modal>
     @forelse($users as $user)
-        <div class="px-4 py-2 hover:bg-gray-100 border-b flex justify-between">
-            <div class="px-2">
+        <div class="px-4 py-2 hover:bg-gray-100 border-b flex">
+            <div class="px-2 w-64">
                 <h3 class="text-lg font-bold mr-2">
                     {{ ucwords($user->name) }}
                 </h3>
-                <h4 class="text-sm font-semibold text-gray-600 mr-2 w-24">{{ $user->email }}</h4>
+                <h4 class="text-sm font-semibold text-gray-600 mr-2">{{ $user->email }}</h4>
             </div>
             <div class="px-2 flex flex-wrap items-center">
-                @foreach ($user->getRoleNames() as $role)
-                    <span class="bg-blue-500 text-white p-1 text-xs font-bold tracking-wide">{{ $role }}</span>
+                @foreach ($user->roles as $role)
+                    <span class="mx-1 bg-blue-500 text-white p-1 rounded text-xs font-bold tracking-wide">{{ ucwords(str_replace('_', ' ', $role->name)) }}</span>
                 @endforeach
             </div>
-            <div class="px-2 flex items-center">
+            <div class="ml-auto px-2 flex items-center">
+                <button type="submit" class="p-1 hover:text-red-700 mr-2" 
+                    @click="
+                        $modal.show('user-update-modal', { 
+                            user: {
+                                id: {{ $user->id }}, 
+                                name: '{{ $user->name }}', 
+                                email: '{{ $user->email }}'
+                            },
+                            user_roles: {{ $user->roles->pluck('id')->toJson() }} 
+                        })">
+                    <feather-icon class="h-current" name="edit">Edit</feather-icon>
+                </button>
                 <form action="/users/{{ $user->id }}" method="POST">
                     @csrf @method('delete')
                     <button type="submit" class="p-1 hover:text-red-700">

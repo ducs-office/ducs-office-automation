@@ -14,6 +14,7 @@ class CreateRolesAndPermissionsData extends Migration
     {
         DB::table('roles')->insert([
             [ 'name' => 'admin_staff', 'guard_name' => 'web' ],
+            [ 'name' => 'faculty', 'guard_name' => 'web' ],
             [ 'name' => 'teacher', 'guard_name' => 'web' ],
         ]);
     }
