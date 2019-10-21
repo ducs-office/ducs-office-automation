@@ -17,7 +17,7 @@ class CreateOutgoingLettersTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('creator_id');
             $table->date('date');
-            $table->set('type', ['Bill', 'Notesheet', 'General']);
+            $table->enum('type', ['Bill', 'Notesheet', 'General']);
             $table->string('subject', 80);
             $table->string('recipient', 50);
             $table->unsignedBigInteger('sender_id');
