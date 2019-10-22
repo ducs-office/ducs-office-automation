@@ -12,14 +12,14 @@ class EditUserTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function admin_staff_can_update_users_email()
+    public function office_can_update_users_email()
     {
         $facultyRole = Role::firstOrCreate(['name' => 'faculty']);
         $john = create(User::class, 1, ['email' => 'john.errored@gmail.com']);
         $john->assignRole($facultyRole);
 
-        $this->signIn(create(User::class), 'admin_staff');
-        
+        $this->signIn(create(User::class), 'office');
+
         $this->withoutExceptionHandling()
             ->from('/users')
             ->patch('/users/' . $john->id, [
@@ -36,21 +36,21 @@ class EditUserTest extends TestCase
     }
 
     /** @test */
-    public function admin_staff_can_update_users_name()
+    public function office_can_update_users_name()
     {
         $facultyRole = Role::firstOrCreate(['name' => 'faculty']);
         $john = create(User::class, 1, ['name' => 'John Foo']);
         $john->assignRole($facultyRole);
 
-        $this->signIn(create(User::class), 'admin_staff');
-        
+        $this->signIn(create(User::class), 'office');
+
         $this->withoutExceptionHandling()
             ->from('/users')
             ->patch('/users/' . $john->id, [
                 'name' => $correctName = 'John Doe'
             ])->assertRedirect('/users')
             ->assertSessionHasFlash('success', 'User updated successfully!');
-        
+
         tap($john->fresh(), function ($updated) use ($john, $correctName) {
             $this->assertEquals($correctName, $updated->name);
             $this->assertEquals($john->email, $updated->email);
@@ -60,23 +60,23 @@ class EditUserTest extends TestCase
     }
 
     /** @test */
-    public function admin_staff_can_update_users_roles()
+    public function office_can_update_users_roles()
     {
         $facultyRole = Role::firstOrCreate(['name' => 'faculty']);
-        $adminRole = Role::firstOrCreate(['name' => 'admin_staff']);
-        
+        $adminRole = Role::firstOrCreate(['name' => 'office']);
+
         $john = create(User::class, 1, ['name' => 'John Foo']);
         $john->assignRole($facultyRole);
 
-        $this->signIn(create(User::class), 'admin_staff');
-        
+        $this->signIn(create(User::class), 'office');
+
         $this->withoutExceptionHandling()
             ->from('/users')
             ->patch('/users/' . $john->id, [
                 'roles' => [ $adminRole->id ]
             ])->assertRedirect('/users')
             ->assertSessionHasFlash('success', 'User updated successfully!');
-        
+
         $this->assertTrue($john->fresh()->getRoleNames()->contains($adminRole->name));
         $this->assertFalse($john->fresh()->getRoleNames()->contains($facultyRole->name));
     }

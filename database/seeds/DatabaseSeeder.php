@@ -35,7 +35,7 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('secret'),
         ]);
 
-        $himani->assignRole(Role::firstOrCreate(['name' => 'admin_Staff']));
+        $himani->assignRole(Role::firstOrCreate(['name' => 'office']));
         $ng->assignRole(Role::firstOrCreate(['name' => 'faculty']));
         $nk->assignRole(Role::firstOrCreate(['name' => 'faculty']));
 

@@ -17,7 +17,7 @@ class ViewUsersTest extends TestCase
     {
         $users = create(User::class, 5);
 
-        $this->signIn($users[0], 'admin_staff');
+        $this->signIn($users[0], 'office');
 
         $response = $this->withoutExceptionHandling()
             ->get('/users')

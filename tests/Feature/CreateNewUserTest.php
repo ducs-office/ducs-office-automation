@@ -14,13 +14,13 @@ class CreateNewUserTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function admin_staff_can_create_new_user_with_a_role()
+    public function office_can_create_new_user_with_a_role()
     {
         Mail::fake();
 
-        $teacherRole = Role::firstOrcreate(['name' => 'teacher']);
+        $teacherRole = Role::firstOrcreate(['name' => 'college teacher']);
 
-        $this->signIn(create(User::class), 'admin_staff');
+        $this->signIn(create(User::class), 'office');
 
         $this->withoutExceptionHandling()
             ->post('/users', [
@@ -40,14 +40,14 @@ class CreateNewUserTest extends TestCase
     }
 
     /** @test */
-    public function admin_staff_can_create_new_user_with_mutliple_roles()
+    public function office_can_create_new_user_with_mutliple_roles()
     {
         Mail::fake();
 
         $facultyRole = Role::firstOrcreate(['name' => 'faculty']);
         $hodRole = Role::firstOrcreate(['name' => 'hod']);
 
-        $this->signIn(create(User::class), 'admin_staff');
+        $this->signIn(create(User::class), 'office');
 
         $this->withoutExceptionHandling()
             ->post('/users', [
@@ -69,13 +69,13 @@ class CreateNewUserTest extends TestCase
     {
         Mail::fake();
 
-        $this->signIn(create(User::class), 'admin_staff');
+        $this->signIn(create(User::class), 'office');
 
-        $teacherRole = Role::firstOrCreate(['name' => 'teacher']);
+        $teacherRole = Role::firstOrCreate(['name' => 'college teacher']);
 
         $this->withoutExceptionHandling()
             ->post('/users', [
-                'name' => 'Teacher',
+                'name' => 'college teacher',
                 'email' => 'contact@teacher.me',
                 'roles' => [$teacherRole->id]
             ])->assertRedirect('/')

@@ -84,6 +84,41 @@ return [
         'model_morph_key' => 'model_id',
     ],
 
+    'static' => [
+        'permissions' => [
+            'outgoing letters' => ['create', 'view', 'edit', 'delete'],
+            'colleges' => ['create', 'view', 'edit', 'delete'],
+            'courses' => ['create', 'view', 'edit', 'delete'],
+            'papers' => ['create', 'view', 'edit', 'delete'],
+            'roles' => ['create', 'view', 'edit', 'delete'],
+            'users' => ['create', 'view', 'edit', 'delete'],
+        ],
+
+        'roles' => [
+            'office' => [
+                'outgoing letters' => ['create', 'view', 'edit', 'delete'],
+                'colleges' => ['create', 'view', 'edit', 'delete'],
+                'courses' => ['create', 'view', 'edit', 'delete'],
+                'papers' => ['create', 'view', 'edit', 'delete'],
+                'roles' => ['create', 'view', 'edit', 'delete'],
+                'users' => ['create', 'view', 'edit', 'delete'],
+            ],
+            'faculty' => [
+                'outgoing letters' => ['create', 'view', 'edit', 'delete'],
+                'colleges' => ['create', 'view', 'edit', 'delete'],
+                'courses' => ['create', 'view', 'edit', 'delete'],
+                'papers' => ['create', 'view', 'edit', 'delete'],
+                'roles' => ['create', 'view', 'edit', 'delete'],
+                'users' => ['create', 'view', 'edit', 'delete'],
+            ],
+            'college teacher' => [
+                'colleges' => ['view'],
+                'courses' => ['view'],
+                'papers' => ['view'],
+            ]
+        ]
+    ]
+
     /*
      * When set to true, the required permission/role names are added to the exception
      * message. This could be considered an information leak in some contexts, so
