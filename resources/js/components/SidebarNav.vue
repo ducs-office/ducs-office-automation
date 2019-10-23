@@ -1,15 +1,27 @@
+<template>
+    <span>
+        <slot :isvisible="isVisible" :closesidebarnav="closeSidebarNav"></slot>
+    </span>
+</template>
+
 <script>
 export default {
     data() {
         return {
-            is_visible: screen.width <= 640 ? false : true,
+            isVisible: screen.width <= 640 ? false : true,
         };
     },
+    
     created() {
-        const app = this;
-        Events.$on('openSidebarNav', function() {
-            app.is_visible = true;
+        Events.$on('openSidebarNav', () => {
+            this.isVisible = true;
         });
+    },
+
+    methods: {
+        closeSidebarNav() {
+            this.isVisible = false;
+        }
     }
 }
 </script>
