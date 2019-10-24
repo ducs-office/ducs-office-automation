@@ -51,3 +51,8 @@ Route::get('/users', 'UserController@index')->middleware('auth');
 Route::post('/users', 'UserController@store')->middleware('auth');
 Route::patch('/users/{user}', 'UserController@update')->middleware('auth');
 Route::delete('/users/{user}', 'UserController@destroy')->middleware('auth');
+
+Route::get('/roles', 'RoleController@index')->middleware('auth');
+Route::post('/roles', 'RoleController@store')->middleware('auth');
+Route::patch('/roles/{role}', 'RoleController@update')->middleware('auth');
+Route::delete('/roles/{role}', 'RoleController@destroy')->middleware('auth');
