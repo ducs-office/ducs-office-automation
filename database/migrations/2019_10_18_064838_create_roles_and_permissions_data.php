@@ -21,15 +21,16 @@ class CreateRolesAndPermissionsData extends Migration
         );
 
         DB::table(config('permission.table_names.roles'))->insert(
-            config('permission.static.roles')->keys()->map(function($role) {
+            collect(config('permission.static.roles'))->keys()->map(function($role) {
                 return ['name' => $role, 'guard_name' => 'web'];
             })->toArray()
         );
 
-        DB::table(config('permission.table_names.role_has_permissions'))->insert(
-            config('permission.static.roles')->map(function($permissions, $role) {
+        $role_permissions = collect(config('permission.static.roles'))
+            ->map(function($permissions, $role) {
 
-                $role = Role::whereName($role)->first();
+                $role = DB::table(config('permission.table_names.roles'))
+                    ->where('name', $role)->first();
 
                 if(!$role) {
                     return false;
@@ -49,8 +50,9 @@ class CreateRolesAndPermissionsData extends Migration
                     })->filter();
                 })->toArray();
 
-            })->filter()->flatten(1)->toArray()
-        );
+            })->filter()->flatten(2)->toArray();
+
+        DB::table(config('permission.table_names.role_has_permissions'))->insert($role_permissions);
     }
 
     /**

@@ -117,7 +117,7 @@ return [
                 'papers' => ['view'],
             ]
         ]
-    ]
+    ],
 
     /*
      * When set to true, the required permission/role names are added to the exception
