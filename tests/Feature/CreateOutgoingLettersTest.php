@@ -15,7 +15,7 @@ class CreateOutgoingLettersTest extends TestCase
     /** @test */
     public function user_can_fill_outgoing_letters_form()
     {
-        $this->be(factory(\App\User::class)->create());
+        $this->signIn();
 
         $this->withoutExceptionHandling()
             ->get('/outgoing-letters/create')

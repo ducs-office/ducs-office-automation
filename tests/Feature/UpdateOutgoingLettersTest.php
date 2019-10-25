@@ -17,20 +17,20 @@ class UpdateOutgoingLettersTest extends TestCase
     /** @test */
     public function guest_cannot_update_letters()
     {
-        $letter = factory(OutgoingLetter::class)->create();
+        $letter = create(OutgoingLetter::class);
         $this->withExceptionHandling()
             ->patch("/outgoing-letters/{$letter->id}", ['date' => '2018-08-9'])
             ->assertRedirect('/login');
-            
+
         $this->assertEquals($letter->date, $letter->fresh()->date);
     }
 
     /** @test */
     public function user_can_update_outgoing_letter_in_database()
     {
-        $this->be($user = factory(User::class)->create());
-        $sender = factory(User::class)->create();
-        $letter = factory(OutgoingLetter::class)->create(['type' => 'Notesheet']);
+        $this->be($user = create(User::class));
+        $sender = create(User::class);
+        $letter = create(OutgoingLetter::class, 1, ['type' => 'Notesheet']);
 
         $new_outgoing_letter = [
             'date' => "1987-02-08",
@@ -60,40 +60,40 @@ class UpdateOutgoingLettersTest extends TestCase
     /** @test */
     public function user_can_not_update_creator_id_of_an_outgoing_letter_in_database()
     {
-        $this->be($user = factory(User::class)->create());
-        $letter = factory(OutgoingLetter::class)->create();
+        $this->be($user = create(User::class));
+        $letter = create(OutgoingLetter::class);
 
 
         $this->withoutExceptionHandling()
             ->patch(
                 "/outgoing-letters/{$letter->id}",
-                ['creator_id' => factory(User::class)->create()->id]
+                ['creator_id' => create(User::class)->id]
             )->assertRedirect('/outgoing-letters');
-            
+
         $this->assertEquals($letter->creator_id, $letter->fresh()->creator_id);
-        
+
     }
 
     /** @test */
     public function request_validates_date_field_cannot_be_null()
     {
         try{
-            $letter = factory(OutgoingLetter::class)->create();
-            $this->be(factory(\App\User::class)->create());
+            $letter = create(OutgoingLetter::class);
+            $this->signIn();
             $this->withoutExceptionHandling()
                 ->patch("/outgoing-letters/{$letter->id}", ['date'=>'']);
         }catch(ValidationException $e){
             $this->assertArrayHasKey('date', $e->errors());
         }
-        
+
         $this->assertEquals($letter->date,$letter->fresh()->date);
     }
 
     /** @test */
     public function request_validates_date_field_is_a_valid_date()
     {
-        $letter = factory(OutgoingLetter::class)->create();
-        $this->be(factory(\App\User::class)->create());
+        $letter = create(OutgoingLetter::class);
+        $this->signIn();
 
         $invalidDates = [
             '2014-16-14', //16 is not a valid month
@@ -107,14 +107,14 @@ class UpdateOutgoingLettersTest extends TestCase
             '2016-02-29',
             '2018-02-28',
             '2018-03-30',
-            
+
         ];
 
         foreach ($invalidDates as $date) {
             try {
                 $this->withoutExceptionHandling()
                     ->patch("/outgoing-letters/{$letter->id}", ['date'=>$date]);
-                        
+
                 $this->fail("Invalid date '{$date}' was not validated");
             } catch (ValidationException $e) {
                 $this->assertArrayHasKey('date', $e->errors());
@@ -136,8 +136,8 @@ class UpdateOutgoingLettersTest extends TestCase
     /** @test */
     public function request_validates_date_field_cannot_be_a_future_date()
     {
-        $letter = factory(OutgoingLetter::class)->create();
-        $this->be(factory(\App\User::class)->create());
+        $letter = create(OutgoingLetter::class);
+        $this->signIn();
 
         try {
             $this->withoutExceptionHandling()
@@ -163,27 +163,27 @@ class UpdateOutgoingLettersTest extends TestCase
     public function request_validates_sender_id_field_cannot_be_null()
     {
         try{
-            $letter = factory(OutgoingLetter::class)->create();
-            $this->be(factory(\App\User::class)->create());
+            $letter = create(OutgoingLetter::class);
+            $this->signIn();
             $this->withoutExceptionHandling()
                 ->patch("/outgoing-letters/{$letter->id}", ['sender_id'=>'']);
         }catch(ValidationException $e){
             $this->assertArrayHasKey('sender_id', $e->errors());
         }
-        
+
         $this->assertEquals($letter->sender_id,$letter->fresh()->sender_id);
     }
 
     /** @test */
     public function request_validates_sender_id_field_must_be_a_existing_user()
     {
-        $letter = factory(OutgoingLetter::class)->create();
+        $letter = create(OutgoingLetter::class);
         try {
-            $this->be(factory(\App\User::class)->create());
-        
+            $this->signIn();
+
             $this->withoutExceptionHandling()
                 ->patch("/outgoing-letters/{$letter->id}", ['sender_id' => 4]);
-            
+
             $this->fail('Failed to validate \'sender_id\' is a valid existing user id');
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('sender_id', $e->errors());
@@ -195,8 +195,8 @@ class UpdateOutgoingLettersTest extends TestCase
     public function request_validates_subject_field_is_not_null()
     {
         try {
-            $this -> be(factory(\App\User::class)->create());
-            $letter = factory(OutgoingLetter::class)->create();
+            $this -> be(create(User::class));
+            $letter = create(OutgoingLetter::class);
 
             $this->withoutExceptionHandling()
                 ->patch("/outgoing-letters/{$letter->id}",['subject' => '']);
@@ -214,8 +214,8 @@ class UpdateOutgoingLettersTest extends TestCase
     {
         try
         {
-            $this -> be(factory(\App\User::class)->create());
-            $letter = factory(OutgoingLetter::class)->create();
+            $this -> be(create(User::class));
+            $letter = create(OutgoingLetter::class);
 
             $this -> withoutExceptionHandling()
                 -> patch("/outgoing-letters/{$letter->id}",['subject' => Str::random(81)]);
@@ -229,9 +229,9 @@ class UpdateOutgoingLettersTest extends TestCase
     /** @test */
     public function request_validates_description_field_can_be_null()
     {
-        $letter = factory(OutgoingLetter::class)->create();
-        $this->be(factory(\App\User::class)->create());
-    
+        $letter = create(OutgoingLetter::class);
+        $this->signIn();
+
         $this->withoutExceptionHandling()
             ->patch("/outgoing-letters/{$letter->id}", ['description' => ''])
             ->assertRedirect('/outgoing-letters');
@@ -242,9 +242,9 @@ class UpdateOutgoingLettersTest extends TestCase
      /** @test */
      public function request_validates_description_field_maxlimit_400()
      {
-         $letter = factory(OutgoingLetter::class)->create();
-         $this->be(factory(\App\User::class)->create());
-        
+         $letter = create(OutgoingLetter::class);
+         $this->signIn();
+
          try{
             $this->withoutExceptionHandling()
                 ->patch("/outgoing-letters/{$letter->id}", ['description' => Str::random(401)])
@@ -252,15 +252,15 @@ class UpdateOutgoingLettersTest extends TestCase
          }catch(ValidationException $e){
              $this->assertArrayHasKey('description',$e->errors());
          }
- 
+
          $this->assertEquals($letter->description,$letter->fresh()->description);
      }
 
     /** @test */
     public function request_validates_amount_field_can_be_null()
     {
-        $letter = factory(OutgoingLetter::class)->create();
-        $this->be(factory(\App\User::class)->create());
+        $letter = create(OutgoingLetter::class);
+        $this->signIn();
         $this->withoutExceptionHandling()
              ->patch("/outgoing-letters/{$letter->id}", ['amount'=>''])
              ->assertRedirect('/outgoing-letters');
@@ -270,13 +270,13 @@ class UpdateOutgoingLettersTest extends TestCase
     /** @test */
     public function request_validates_amount_field_can_not_be_a_string_value()
     {
-        $letter = factory(OutgoingLetter::class)->create();
+        $letter = create(OutgoingLetter::class);
         try {
-            $this->be(factory(\App\User::class)->create());
-                
+            $this->signIn();
+
             $this->withoutExceptionHandling()
                 ->patch("/outgoing-letters/{$letter->id}", ['amount' => 'some string']);
-                    
+
             $this->fail('Failed to validate \'amount\' cannot be a string value');
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('amount', $e->errors());
@@ -288,14 +288,14 @@ class UpdateOutgoingLettersTest extends TestCase
     public function request_validates_type_field_cannot_be_null()
     {
         try{
-            $letter = factory(OutgoingLetter::class)->create();
-            $this->be(factory(\App\User::class)->create());
+            $letter = create(OutgoingLetter::class);
+            $this->signIn();
             $this->withoutExceptionHandling()
                 ->patch("/outgoing-letters/{$letter->id}", ['type'=>'']);
         }catch(ValidationException $e){
             $this->assertArrayHasKey('type', $e->errors());
         }
-        
+
         $this->assertEquals($letter->type,$letter->fresh()->type);
     }
 
@@ -303,14 +303,14 @@ class UpdateOutgoingLettersTest extends TestCase
     public function request_validates_recipient_field_cannot_be_null()
     {
         try{
-            $letter = factory(OutgoingLetter::class)->create();
-            $this->be(factory(\App\User::class)->create());
+            $letter = create(OutgoingLetter::class);
+            $this->signIn();
             $this->withoutExceptionHandling()
                 ->patch("/outgoing-letters/{$letter->id}", ['recipient'=>'']);
         }catch(ValidationException $e){
             $this->assertArrayHasKey('recipient', $e->errors());
         }
-        
+
         $this->assertEquals($letter->recipient,$letter->fresh()->recipient);
     }
 

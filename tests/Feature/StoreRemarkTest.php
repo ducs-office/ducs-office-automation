@@ -25,7 +25,7 @@ class StoreRemarkTest extends TestCase
     /** @test */
     public function guest_cannot_store_remark()
     {
-        $outgoingletter = factory(OutgoingLetter::class)->create();
+        $outgoingletter = create(OutgoingLetter::class);
     
         $this->withExceptionHandling()
             ->post('/remarks')
@@ -37,8 +37,9 @@ class StoreRemarkTest extends TestCase
     /** @test */
     public function user_can_store_remark()
     {
-        $this->be(factory(User::class)->create());
-        $letter = factory(OutgoingLetter::class)->create();
+        $this->signIn();
+        
+        $letter = create(OutgoingLetter::class);
         
         $this->withoutExceptionHandling()
             ->post('/remarks', [
@@ -52,8 +53,9 @@ class StoreRemarkTest extends TestCase
      /** @test */
     public function request_validates_description_field_cannot_be_null()
     {
-        $this->be(factory(User::class)->create());
-        $letter = factory(OutgoingLetter::class)->create();
+        $this->signIn();
+        
+        $letter = create(OutgoingLetter::class);
         $remark = ['description'=>''];
 
         try{
@@ -70,8 +72,9 @@ class StoreRemarkTest extends TestCase
      /** @test */
     public function request_validates_description_field_minlimit_10()
     {
-        $this->be(factory(User::class)->create());
-        $letter = factory(OutgoingLetter::class)->create();
+        $this->signIn();
+        
+        $letter = create(OutgoingLetter::class);
         $remark = ['description'=>Str::random(9)];
 
         try{
@@ -87,8 +90,9 @@ class StoreRemarkTest extends TestCase
      /** @test */
     public function request_validates_description_field_maxlimit_255()
     {
-        $this->be(factory(User::class)->create());
-        $letter = factory(OutgoingLetter::class)->create();
+        $this->signIn();
+        
+        $letter = create(OutgoingLetter::class);
         $remark = ['description' => Str::random(256)];
 
         try{
@@ -104,12 +108,13 @@ class StoreRemarkTest extends TestCase
     /** @test */
     public function request_validates_letter_id_field_cannot_be_null()
     {
-        $this->be(factory(User::class)->create());
-        $remark = factory(Remark::class)->make(['letter_id'=>'']);
+        $this->signIn();
+        
+        $remark = make(Remark::class, 1, ['letter_id'=>'']);
 
         try{
             $this->withoutExceptionHandling()
-                ->post('/remarks',$remark->toArray());
+                ->post('/remarks', $remark->toArray());
         }catch(ValidationException $e){
             $this->assertArrayHasKey('letter_id', $e->errors());
         }
@@ -120,28 +125,30 @@ class StoreRemarkTest extends TestCase
     /** @test */
     public function request_validates_letter_id_field_cannot_be_string()
     {
-        $this->be(factory(User::class)->create());
-        $remark = factory(Remark::class)->make(['letter_id'=>'string']);
+        $this->signIn();
+        
+        $remark = make(Remark::class, 1, ['letter_id' => 'string']);
 
         try{
             $this->withoutExceptionHandling()
-                ->post('/remarks',$remark->toArray());
+                ->post('/remarks', $remark->toArray());
         }catch(ValidationException $e){
             $this->assertArrayHasKey('letter_id', $e->errors());
         }
         
-        $this->assertEquals(0,Remark::count());
+        $this->assertEquals(0, Remark::count());
     }
 
     /** @test */
     public function request_validates_letter_id_field_must_be_existing_outgoing_letter()
     {
-        $this->be(factory(User::class)->create());
-        $remark = factory(Remark::class)->make(['letter_id'=>2]);
+        $this->signIn();
+        
+        $remark = make(Remark::class, 1, ['letter_id' => 123]);
 
         try{
             $this->withoutExceptionHandling()
-                ->post('/remarks',$remark->toArray());
+                ->post('/remarks', $remark->toArray());
         }catch(ValidationException $e){
             $this->assertArrayHasKey('letter_id', $e->errors());
         }

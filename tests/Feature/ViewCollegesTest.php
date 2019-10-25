@@ -21,7 +21,7 @@ class ViewCollegesTest extends TestCase
      /** @test */
      public function guest_cannot_view_colleges()
      {
-        factory(College::class,3)->create();
+        create(College::class,3);
 
         $this->withExceptionHandling()
             ->get('/colleges')
@@ -31,16 +31,16 @@ class ViewCollegesTest extends TestCase
     /** @test */
     public function admin_can_view_colleges()
     {
-        $this->be(factory(User::class)->create());
+        $this->signIn();
 
-        factory(College::class,3)->create();
+        create(College::class,3);
 
         $viewData = $this->withoutExceptionHandling()
                     ->get('/colleges')
                     ->assertViewIs('colleges.index')
                     ->assertViewHas('colleges')
                     ->viewData('colleges');
-                    
+
         $this->assertCount(3,$viewData);
     }
 }

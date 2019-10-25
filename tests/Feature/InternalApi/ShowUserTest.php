@@ -11,15 +11,15 @@ class ShowUserTest extends TestCase
 {
 
     use RefreshDatabase;
-    
+
     /** @test */
     public function user_can_query_another_user_containing_id_name_email() {
-        $himani_mam = factory(User::class)->create(['id' => 1]);
-        factory(User::class)->create(['id' => 2]);
+        $himani_mam = create(User::class, 1, ['id' => 1]);
+        create(User::class, 1, ['id' => 2]);
 
-        $this->withoutExceptionHandling();
-        
-        $user = $this->be($himani_mam)
+        $this->signIn($himani_mam);
+
+        $user = $this->withoutExceptionHandling()
             ->getJson('/api/users/2')
             ->assertSuccessful()
             ->json();

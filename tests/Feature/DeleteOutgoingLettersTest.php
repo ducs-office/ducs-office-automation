@@ -15,10 +15,10 @@ class DeleteOutgoingLettersTest extends TestCase
     /** @test */
     public function guest_cannot_delete_letters()
     {
-        $letter = factory(OutgoingLetter::class)->create();
+        $letter = create(OutgoingLetter::class);
 
         $this -> delete("/outgoing-letters/$letter->id")
-              -> assertRedirect('/login');  
+              -> assertRedirect('/login');
 
         $this -> assertEquals(1,OutgoingLetter::count());
     }
@@ -26,14 +26,14 @@ class DeleteOutgoingLettersTest extends TestCase
     /** @test */
     public function user_can_delete_letters()
     {
-        $this -> be(factory(User::class)->create());
-        $letter = factory(OutgoingLetter::class)->create();
+        $this -> be(create(User::class));
+        $letter = create(OutgoingLetter::class);
 
         $this -> withoutExceptionHandling()
-              -> delete("/outgoing-letters/$letter->id")  
+              -> delete("/outgoing-letters/$letter->id")
               -> assertRedirect('/outgoing-letters');
 
         $this -> assertEquals(0,OutgoingLetter::count());
     }
-    
+
 }

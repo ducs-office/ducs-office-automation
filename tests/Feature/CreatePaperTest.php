@@ -17,9 +17,9 @@ class CreatePaperTest extends TestCase
     public function admin_can_create_new_paper_and_assign_it_to_a_course()
     {
         $this->withoutExceptionHandling()
-            ->be(factory(User::class)->create());
+            ->be(create(User::class));
 
-        $course = factory(Course::class)->create();
+        $course = create(Course::class);
 
         $this->post('/papers', $params = [
             'code' => 'MCS-102',
@@ -29,7 +29,7 @@ class CreatePaperTest extends TestCase
         ->assertSessionHasFlash('success', 'Paper created successfully!');
 
         $this->assertEquals(1, Paper::count());
-        
+
         tap(Paper::first(), function($paper) use ($params) {
             foreach($params as $param => $value) {
                 $this->assertEquals($value, $paper->{$param});

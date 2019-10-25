@@ -11,17 +11,17 @@ use Tests\TestCase;
 class DeleteCourseTest extends TestCase
 {
     use RefreshDatabase;
-    
+
     /** @test */
     public function admin_can_delete_any_course()
     {
-        $course = factory(Course::class)->create();
-        $this->be(factory(User::class)->create());
+        $course = create(Course::class);
+        $this->signIn();
 
         $this->delete('/courses/'.$course->id)
             ->assertRedirect('courses')
             ->assertSessionHasFlash('success', 'Course deleted successfully!');
-        
+
         $this->assertNull($course->fresh(), 'Course still exists in database.');
     }
 }

@@ -15,7 +15,7 @@ class UpdateCollegeTest extends TestCase
     /** @test */
     public function guest_can_not_update_a_college()
     {
-        $college = factory(College::class)->create();
+        $college = create(College::class);
 
         $this->withExceptionHandling()
             ->patch('/colleges/'. $college->id, ['code' => 'code1'])
@@ -27,9 +27,9 @@ class UpdateCollegeTest extends TestCase
     /** @test */
     public function admin_can_update_a_college_code()
     {
-        $this->be(factory(User::class)->create());
+        $this->signIn();
 
-        $college = factory(College::class)->create();
+        $college = create(College::class);
 
         $this->withoutExceptionHandling()
             ->patch('/colleges/'. $college->id, ['code' => $new_code = 'code1'])
@@ -44,9 +44,9 @@ class UpdateCollegeTest extends TestCase
     /** @test */
     public function admin_can_update_a_college_name()
     {
-        $this->be(factory(User::class)->create());
+        $this->signIn();
 
-        $college = factory(College::class)->create();
+        $college = create(College::class);
 
         $this->withoutExceptionHandling()
             ->patch('/colleges/'. $college->id, ['name' => $new_name = 'new name'])
@@ -61,10 +61,10 @@ class UpdateCollegeTest extends TestCase
     /** @test */
     public function college_is_not_validated_for_uniqueness_if_code_is_not_changed()
     {
-        $this->be(factory(User::class)->create())
-            ->withoutExceptionHandling();
-        
-        $college = factory(College::class)->create();
+        $this->withoutExceptionHandling()
+            ->signIn();
+
+        $college = create(College::class);
 
         $response = $this->patch('/colleges/'.$college->id, [
             'code' => $college->code,
@@ -81,10 +81,10 @@ class UpdateCollegeTest extends TestCase
     /** @test */
     public function college_is_not_validated_for_uniqueness_if_name_is_not_changed()
     {
-        $this->be(factory(User::class)->create())
-            ->withoutExceptionHandling();
-        
-        $college = factory(College::class)->create();
+        $this->withoutExceptionHandling()
+            ->signIn();
+
+        $college = create(College::class);
 
         $response = $this->patch('/colleges/'.$college->id, [
             'code' => $new_code = 'new_code123',

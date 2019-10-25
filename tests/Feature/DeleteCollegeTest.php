@@ -15,7 +15,7 @@ class DeleteCollegeTest extends TestCase
     /** @test */
     public function guest_can_not_delete_a_college()
     {
-        $college = factory(College::class)->create();
+        $college = create(College::class);
 
         $this->delete('/colleges/'. $college->id)
             ->assertRedirect('/login');
@@ -26,15 +26,15 @@ class DeleteCollegeTest extends TestCase
     /** @test */
     public function admin_can_delete_any_college()
     {
-        $this->be(factory(User::class)->create());
+        $this->signIn();
 
-        $college = factory(College::class)->create();
+        $college = create(College::class);
 
         $this->withoutExceptionHandling()
             ->delete('/colleges/'.$college->id)
             ->assertRedirect('/colleges')
             ->assertSessionHasFlash('success', 'College deleted successfully!');
-        
+
         $this->assertNull($college->fresh(), "College still exists in database");
     }
 }

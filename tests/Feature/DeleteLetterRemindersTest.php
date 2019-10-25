@@ -22,7 +22,7 @@ class DeleteLetterRemindersTest extends TestCase
     /** @test */
     public function guest_cannot_delete_letter_reminder()
     {
-        $reminder = factory(LetterReminder::class)->create();
+        $reminder = create(LetterReminder::class);
 
         $this->withExceptionHandling()
             ->delete("/reminders/$reminder->id")
@@ -34,8 +34,8 @@ class DeleteLetterRemindersTest extends TestCase
     /** @test */
     public function user_can_delete_letter_reminder()
     {
-        $this->be(factory(User::class)->create());
-        $reminder = factory(LetterReminder::class)->create();
+        $this->be(create(User::class));
+        $reminder = create(LetterReminder::class);
 
         $this->withoutExceptionHandling()
             ->delete("/reminders/$reminder->id");

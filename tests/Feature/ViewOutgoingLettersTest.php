@@ -12,7 +12,7 @@ use Illuminate\Support\Collection;
 class ViewOutgoingLettersTest extends TestCase
 {
     use RefreshDatabase;
-    
+
     /** @test */
     public function guest_cannot_view_outgoing_letters()
     {
@@ -23,8 +23,8 @@ class ViewOutgoingLettersTest extends TestCase
     /** @test */
     public function user_can_view_outgoing_letters()
     {
-        $this->be(factory(User::class)->create());
-        factory(OutgoingLetter::class, 3)->create();
+        $this->signIn();
+        create(OutgoingLetter::class, 3);
 
         $viewOutgoingLetters = $this->withoutExceptionHandling()
             ->get('/outgoing-letters')
@@ -40,8 +40,8 @@ class ViewOutgoingLettersTest extends TestCase
     /** @test */
     public function view_letters_are_sorted_on_date()
     {
-        $this->be(factory(User::class)->create());
-        $letters = factory(OutgoingLetter::class, 3)->create();
+        $this->signIn();
+        $letters = create(OutgoingLetter::class,3);
 
         $viewData = $this->withExceptionHandling()
             ->get('/outgoing-letters')
@@ -59,11 +59,11 @@ class ViewOutgoingLettersTest extends TestCase
 
     public function view_has_a_unique_list_of_recipients()
     {
-        $this->be(factory(User::class)->create());
+        $this->signIn();
 
-        factory(OutgoingLetter::class, 3)->create(['recipient' => 'Exam Office']);
-        factory(OutgoingLetter::class)->create();
-        factory(OutgoingLetter::class)->create();
+        create(OutgoingLetter::class, 3, ['recipient' => 'Exam Office']);
+        create(OutgoingLetter::class);
+        create(OutgoingLetter::class);
 
         $recipients = $this->withExceptionHandling()
                 ->get('/outgoing-letters')
@@ -82,11 +82,11 @@ class ViewOutgoingLettersTest extends TestCase
     /** @test */
     public function view_has_a_unique_list_of_types()
     {
-        $this->be(factory(User::class)->create());
+        $this->signIn();
 
-        factory(OutgoingLetter::class, 3)->create(['type' => 'Bill']);
-        factory(OutgoingLetter::class, 2)->create(['type' => 'Notesheet']);
-        factory(OutgoingLetter::class)->create(['type' => 'General']);
+        create(OutgoingLetter::class, 3, ['type' => 'Bill']);
+        create(OutgoingLetter::class, 1, ['type' => 'Notesheet']);
+        create(OutgoingLetter::class, 1, ['type' => 'General']);
 
         $types = $this->withExceptionHandling()
                 ->get('/outgoing-letters')
@@ -105,11 +105,11 @@ class ViewOutgoingLettersTest extends TestCase
     /** @test */
     public function view_has_a_unique_list_of_senders()
     {
-        $this->be(factory(User::class)->create());
+        $this->signIn();
 
-        factory(OutgoingLetter::class, 3)->create(['sender_id' => 2]);
-        factory(OutgoingLetter::class)->create();
-        factory(OutgoingLetter::class)->create();
+        create(OutgoingLetter::class, 3, ['sender_id' => 2]);
+        create(OutgoingLetter::class);
+        create(OutgoingLetter::class);
 
         $senders = $this->withExceptionHandling()
                 ->get('/outgoing-letters')
@@ -128,11 +128,11 @@ class ViewOutgoingLettersTest extends TestCase
     /** @test */
     public function view_has_a_unique_list_of_creators()
     {
-        $this->be($user = factory(User::class)->create());
+        $user = $this->signIn();
 
-        factory(OutgoingLetter::class, 3)->create(['creator_id' => $user->id]);
-        factory(OutgoingLetter::class)->create();
-        factory(OutgoingLetter::class)->create();
+        create(OutgoingLetter::class, 3, ['creator_id' => $user->id]);
+        create(OutgoingLetter::class);
+        create(OutgoingLetter::class);
 
         $creators = $this->withExceptionHandling()
                 ->get('/outgoing-letters')

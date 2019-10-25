@@ -22,7 +22,7 @@ class UpdateRemarkTest extends TestCase
      /** @test */
     public function guest_cannot_update_remark()
     {
-        $remark = factory(Remark::class)->create(['description'=>'Received by University']);
+        $remark = create(Remark::class, 1, ['description'=>'Received by University']);
 
         $this->withExceptionHandling()
         ->patch("remarks/$remark->id",['description'=>'Not received by University'])
@@ -34,8 +34,8 @@ class UpdateRemarkTest extends TestCase
      /** @test */
     public function user_can_update_remark()
     {
-        $this->be(factory(User::class)->create());
-        $remark = factory(Remark::class)->create(['description'=>'Received by University']);
+        $this->be(create(User::class));
+        $remark = create(Remark::class, 1, ['description'=>'Received by University']);
         $new_remark = ['description'=>'Not received by University'];
 
         $this->withoutExceptionHandling()
@@ -47,8 +47,8 @@ class UpdateRemarkTest extends TestCase
      /** @test */
     public function request_validates_description_field_cannot_be_null()
     {
-        $this->be(factory(User::class)->create());
-        $remark = factory(Remark::class)->create(['description'=>'Received by University']);
+        $this->be(create(User::class));
+        $remark = create(Remark::class, 1, ['description'=>'Received by University']);
         $new_remark = ['description'=> ''];
 
         try{
@@ -66,8 +66,8 @@ class UpdateRemarkTest extends TestCase
      /** @test */
     public function request_validates_description_field_minlimit_10()
     {
-        $this->be(factory(User::class)->create());
-        $remark = factory(Remark::class)->create(['description'=>'Received by University']);
+        $this->be(create(User::class));
+        $remark = create(Remark::class, 1, ['description'=>'Received by University']);
         $new_remark = ['description'=>Str::random(9)];
 
         try{
@@ -83,8 +83,8 @@ class UpdateRemarkTest extends TestCase
      /** @test */
     public function request_validates_description_field_maxlimit_255()
     {
-    $this->be(factory(User::class)->create());
-        $remark = factory(Remark::class)->create(['description'=>'Received by University']);
+    $this->be(create(User::class));
+        $remark = create(Remark::class, 1, ['description'=>'Received by University']);
         $new_remark = ['description'=>Str::random(256)];
 
         try{

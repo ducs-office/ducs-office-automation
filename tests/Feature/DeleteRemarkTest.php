@@ -20,7 +20,7 @@ class DeleteRemarkTest extends TestCase
     /** @test */
     public function guest_cannot_delete_remark()
     {
-        $remark = factory(Remark::class)->create();
+        $remark = create(Remark::class);
 
         $this->withExceptionHandling()
             ->delete("/remarks/$remark->id")
@@ -32,8 +32,8 @@ class DeleteRemarkTest extends TestCase
     /** @test */
     public function user_can_delete_remark()
     {
-        $this->be(factory(User::class)->create());
-        $remark = factory(Remark::class)->create();
+        $this->be(create(User::class));
+        $remark = create(Remark::class);
 
         $this->withoutExceptionHandling()
             ->delete("/remarks/$remark->id");

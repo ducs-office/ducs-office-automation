@@ -24,7 +24,7 @@ class ViewAttachmentTest extends TestCase
     /** @test */
     public function user_can_view_an_attachmemt()
     {
-        $this->be(factory(User::class)->create());
+        $this->be(create(User::class));
         $attachment = UploadedFile::fake()->create('document.pdf', 50);
 
         Storage::disk('local')->put("/", $attachment);

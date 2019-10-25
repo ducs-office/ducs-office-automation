@@ -11,19 +11,19 @@ use Tests\TestCase;
 class DeletePaperTest extends TestCase
 {
     use RefreshDatabase;
-    
+
     /** @test */
     public function admin_can_delete_paper()
     {
-        $this->be(factory(User::class)->create());
+        $this->signIn();
 
-        $paper = factory(Paper::class)->create();
+        $paper = create(Paper::class);
 
         $this->withoutExceptionHandling()
             ->delete('/papers/'.$paper->id)
             ->assertRedirect('/papers')
             ->assertSessionHasFlash('success', 'Paper deleted successfully!');
-        
+
         $this->assertNull($paper->fresh(), 'Paper was not deleted!');
     }
 }

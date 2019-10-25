@@ -12,12 +12,12 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 class EditOutgoingLettersTest extends TestCase
 {
     use RefreshDatabase;
-    
+
     /** @test */
     public function user_can_edit_outgoing_letters()
     {
-        $this->be(factory(User::class)->create());
-        $letter = factory(OutgoingLetter::class)->create();
+        $this->signIn();
+        $letter = create(OutgoingLetter::class);
 
         $this->withoutExceptionHandling()
             ->get("/outgoing-letters/$letter->id/edit")
@@ -30,9 +30,9 @@ class EditOutgoingLettersTest extends TestCase
     public function guest_cannot_edit_any_outgoing_letter()
     {
         $this->expectException(AuthenticationException::class);
-        
-        $letter = factory(OutgoingLetter::class)->create();
-        
+
+        $letter = create(OutgoingLetter::class);
+
         $this->withoutExceptionHandling()
             ->get("/outgoing-letters/$letter->id/edit");
     }

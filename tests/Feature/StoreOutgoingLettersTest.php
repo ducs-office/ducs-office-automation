@@ -29,9 +29,7 @@ class StoreOutgoingLettersTest extends TestCase
     /** @test */
     public function store_outgoing_letter_in_database()
     {
-        Storage::fake();
-        
-        $this->be(factory(User::class)->create());
+        $this->signIn();
         
         $outgoing_letter = [
             'date' => now()->format('Y-m-d'),
@@ -39,7 +37,7 @@ class StoreOutgoingLettersTest extends TestCase
             'recipient' => $this->faker->name(),
             'type' => 'Bill',
             'amount' => $this->faker->randomFloat,
-            'sender_id' => factory(User::class)->create()->id,
+            'sender_id' => create(User::class)->id,
             'pdf' => UploadedFile::fake()->create('document.pdf')
         ];
 
@@ -54,7 +52,7 @@ class StoreOutgoingLettersTest extends TestCase
     public function request_validates_date_field_is_not_null()
     {
         try {
-            $this->be(factory(User::class)->create());
+            $this->signIn();
 
             $letter = [
                 // 'date' => now()->format('Y-m-d'),
@@ -62,7 +60,7 @@ class StoreOutgoingLettersTest extends TestCase
                 'recipient' => $this->faker->name(),
                 'type' => 'Bill',
                 'amount' => $this->faker->randomFloat,
-                'sender_id' => factory(User::class)->create()->id,
+                'sender_id' => create(User::class)->id,
                 'pdf' => UploadedFile::fake()->create('document.pdf')
             ];
 
@@ -79,14 +77,15 @@ class StoreOutgoingLettersTest extends TestCase
     /** @test */
     public function request_validates_date_field_is_a_valid_date()
     {
-        $this->be($user = factory(\App\User::class)->create());
+        $this->be($user = create(User::class));
+
         $letter = [
             'date' => now()->format('Y-m-d'),
             'subject' => $this->faker->words(3, true),
             'recipient' => $this->faker->name(),
             'type' => 'Bill',
             'amount' => $this->faker->randomFloat,
-            'sender_id' => factory(User::class)->create()->id,
+            'sender_id' => create(User::class)->id,
             'pdf' => UploadedFile::fake()->create('document.pdf')
         ];
 
@@ -130,7 +129,7 @@ class StoreOutgoingLettersTest extends TestCase
     /** @test */
     public function request_validates_date_field_cannot_be_a_future_date()
     {
-        $this->be(factory(\App\User::class)->create());
+        $this->be(create(\App\User::class));
         
         $letter = [
             'date' => now()->addMonth(2)->format('Y-m-d'),
@@ -138,7 +137,7 @@ class StoreOutgoingLettersTest extends TestCase
             'recipient' => $this->faker->name(),
             'type' => 'Bill',
             'amount' => $this->faker->randomFloat,
-            'sender_id' => factory(User::class)->create()->id,
+            'sender_id' => create(User::class)->id,
             'pdf' => UploadedFile::fake()->create('document.pdf')
         ];
 
@@ -167,7 +166,7 @@ class StoreOutgoingLettersTest extends TestCase
     public function request_validates_type_field_is_not_null()
     {
         try {
-            $this->be(factory(\App\User::class)->create());
+            $this->be(create(\App\User::class));
 
             $letter = [
                 'date' => now()->format('Y-m-d'),
@@ -175,7 +174,7 @@ class StoreOutgoingLettersTest extends TestCase
                 'recipient' => $this->faker->name(),
                 'type' => '', // Empty type
                 'amount' => $this->faker->randomFloat,
-                'sender_id' => factory(User::class)->create()->id,
+                'sender_id' => create(User::class)->id,
                 'pdf' => UploadedFile::fake()->create('document.pdf')
             ];
         
@@ -195,11 +194,20 @@ class StoreOutgoingLettersTest extends TestCase
     public function request_validates_subject_field_is_not_null()
     {
         try {
-            $this -> be(factory(\App\User::class)->create());
-            $letter = factory(OutgoingLetter::class)->make(['subject' => '']);
+            $this -> be(create(\App\User::class));
+
+            $letter = [
+                'date' => now()->format('Y-m-d'),
+                'subject' => '', //Empty
+                'recipient' => $this->faker->name(),
+                'type' => 'Bill',
+                'amount' => $this->faker->randomFloat,
+                'sender_id' => create(User::class)->id,
+                'pdf' => UploadedFile::fake()->create('document.pdf')
+            ];
 
             $this->withoutExceptionHandling()
-                ->post('/outgoing-letters', $letter->toArray());
+                ->post('/outgoing-letters', $letter);
 
             $this->fail('Empty \'subject\' field was not validated.');
         } catch (ValidationException $e) {
@@ -213,27 +221,43 @@ class StoreOutgoingLettersTest extends TestCase
     public function request_validates_subject_field_maxlimit_80()
     {
         try {
-            $this -> be(factory(\App\User::class)->create());
-            $letter = factory(OutgoingLetter::class)->make(['subject' => Str::random(81)]);
+            $this -> be(create(\App\User::class));
+            $letter = [
+                'date' => now()->format('Y-m-d'),
+                'subject' => $this->faker->regexify('[A-Za-z0-9]{81}'),
+                'recipient' => $this->faker->name(),
+                'type' => 'Bill',
+                'amount' => $this->faker->randomFloat,
+                'sender_id' => create(User::class)->id,
+                'pdf' => UploadedFile::fake()->create('document.pdf')
+            ];
 
-            $this -> withoutExceptionHandling()
-                -> post('/outgoing-letters', $letter -> toArray());
+            $this->withoutExceptionHandling()
+                ->post('/outgoing-letters', $letter);
         } catch (ValidationException $e) {
-            $this -> assertArrayHasKey('subject', $e->errors());
+            $this->assertArrayHasKey('subject', $e->errors());
         }
 
-        $this -> assertEquals(0, OutgoingLetter::count());
+        $this->assertEquals(0, OutgoingLetter::count());
     }
 
     /** @test */
     public function request_validates_recipient_field_is_not_null()
     {
         try {
-            $this->be(factory(\App\User::class)->create());
-            $letter = factory(OutgoingLetter::class)->make(['recipient' => '']);
+            $this->be(create(\App\User::class));
+            $letter = [
+                'date' => now()->format('Y-m-d'),
+                'subject' => $this->faker->words(3, true),
+                'recipient' => '', // Empty
+                'type' => 'Bill',
+                'amount' => $this->faker->randomFloat,
+                'sender_id' => create(User::class)->id,
+                'pdf' => UploadedFile::fake()->create('document.pdf')
+            ];
         
             $this->withoutExceptionHandling()
-                ->post('/outgoing-letters', $letter->toArray());
+                ->post('/outgoing-letters', $letter);
             
             $this->fail('Empty \'recipient\' field was not validated.');
         } catch (ValidationException $e) {
@@ -248,11 +272,19 @@ class StoreOutgoingLettersTest extends TestCase
     public function request_validates_sender_id_field_is_not_null()
     {
         try {
-            $this->be(factory(\App\User::class)->create());
-            $letter = factory(OutgoingLetter::class)->make(['sender_id' => '']);
+            $this->be(create(\App\User::class));
+            $letter = [
+                'date' => now()->format('Y-m-d'),
+                'subject' => $this->faker->words(3, true),
+                'recipient' => $this->faker->name(),
+                'type' => 'Bill', 
+                'amount' => $this->faker->randomFloat,
+                'sender_id' => '', // Empty type
+                'pdf' => UploadedFile::fake()->create('document.pdf')
+            ];
         
             $this->withoutExceptionHandling()
-                ->post('/outgoing-letters', $letter->toArray());
+                ->post('/outgoing-letters', $letter);
             
             $this->fail('Empty \'sender_id\' field was not validated.');
         } catch (ValidationException $e) {
@@ -267,11 +299,19 @@ class StoreOutgoingLettersTest extends TestCase
     public function request_validates_sender_id_field_must_be_a_existing_user()
     {
         try {
-            $this->be(factory(\App\User::class)->create());
-            $letter = factory(OutgoingLetter::class)->make(['sender_id' => 4]);
+            $this->signIn();
+            $letter = [
+                'date' => now()->format('Y-m-d'),
+                'subject' => $this->faker->words(3, true),
+                'recipient' => $this->faker->name(),
+                'type' => 'Bill',
+                'amount' => $this->faker->randomFloat,
+                'sender_id' => 123,
+                'pdf' => UploadedFile::fake()->create('document.pdf')
+            ];
             
             $this->withoutExceptionHandling()
-                ->post('/outgoing-letters', $letter->toArray());
+                ->post('/outgoing-letters', $letter);
             
             $this->fail('Failed to validate \'sender_id\' is a valid existing user id');
         } catch (ValidationException $e) {
@@ -285,7 +325,8 @@ class StoreOutgoingLettersTest extends TestCase
     /** @test */
     public function request_validates_description_field_can_be_null()
     {
-        $this->be(factory(\App\User::class)->create());
+        $this->signIn();
+
         $letter = [
             'date' => now()->format('Y-m-d'),
             'subject' => $this->faker->words(3, true),
@@ -293,7 +334,7 @@ class StoreOutgoingLettersTest extends TestCase
             'type' => 'Bill',
             // 'description' => $this->faker->sentence(),
             'amount' => $this->faker->randomFloat,
-            'sender_id' => factory(User::class)->create()->id,
+            'sender_id' => create(User::class)->id,
             'pdf' => UploadedFile::fake()->create('document.pdf')
         ];
     
@@ -307,7 +348,7 @@ class StoreOutgoingLettersTest extends TestCase
     /** @test */
     public function request_validates_amount_field_can_be_null()
     {
-        $this->be(factory(\App\User::class)->create());
+        $this->be(create(\App\User::class));
 
         $letter = [
             'date' => now()->format('Y-m-d'),
@@ -315,7 +356,7 @@ class StoreOutgoingLettersTest extends TestCase
             'recipient' => $this->faker->name(),
             'type' => 'Bill',
             'amount' => '', // empty string amount
-            'sender_id' => factory(User::class)->create()->id,
+            'sender_id' => create(User::class)->id,
             'pdf' => UploadedFile::fake()->create('document.pdf')
         ];
     
@@ -330,7 +371,7 @@ class StoreOutgoingLettersTest extends TestCase
     public function request_validates_amount_field_cannot_be_a_string_value()
     {
         try {
-            $this->be(factory(\App\User::class)->create());
+            $this->be(create(\App\User::class));
 
             $letter = [
                 'date' => now()->format('Y-m-d'),
@@ -338,7 +379,7 @@ class StoreOutgoingLettersTest extends TestCase
                 'recipient' => $this->faker->name(),
                 'type' => 'Bill',
                 'amount' => 'some string',
-                'sender_id' => factory(User::class)->create()->id,
+                'sender_id' => create(User::class)->id,
                 'pdf' => UploadedFile::fake()->create('document.pdf')
             ];
                 

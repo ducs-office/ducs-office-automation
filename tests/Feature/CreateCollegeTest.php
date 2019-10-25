@@ -20,7 +20,7 @@ class CreateCollegeTest extends TestCase
     /** @test */
     public function admin_can_create_new_college()
     {
-        $this->be(factory(User::class)->create());
+        $this->signIn();
 
         $this->post('/colleges',[
             'code' => 'DU-KMV-21',
