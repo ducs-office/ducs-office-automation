@@ -11,10 +11,6 @@
 |
 */
 
-use App\Http\Controllers\OutgoingLettersController;
-use App\Mail\UserRegisteredMail;
-use App\User;
-
 Route::get('/', function () {
     return view('dashboard');
 })->middleware('auth');
@@ -31,7 +27,15 @@ Route::get('/outgoing-letters', 'OutgoingLettersController@index')->middleware('
 Route::patch('/outgoing-letters/{outgoing_letter}', 'OutgoingLettersController@update')->middleware('auth');
 Route::delete('/outgoing-letters/{outgoing_letter}', 'OutgoingLettersController@destroy')->middleware('auth');
 
+Route::post('/remarks', 'RemarksController@store')->middleware('auth');
+Route::patch('/remarks/{remark}', 'RemarksController@update')->middleware('auth');
+Route::delete('/remarks/{remark}', 'RemarksController@destroy')->middleware('auth');
 
+Route::post('/reminders', 'RemindersController@store')->middleware('auth');
+Route::delete('/reminders/{reminder}','RemindersController@destroy')->middleware('auth');
+Route::patch('/reminders/{reminder}', 'RemindersController@update')->middleware('auth');
+
+    
 Route::get('/courses', 'CoursesController@index')->middleware('auth');
 Route::post('/courses', 'CoursesController@store')->middleware('auth');
 Route::patch('/courses/{course}', 'CoursesController@update')->middleware('auth');
@@ -56,3 +60,8 @@ Route::get('/roles', 'RoleController@index')->middleware('auth');
 Route::post('/roles', 'RoleController@store')->middleware('auth');
 Route::patch('/roles/{role}', 'RoleController@update')->middleware('auth');
 Route::delete('/roles/{role}', 'RoleController@destroy')->middleware('auth');
+
+Route::get('/attachments', 'AttachmentController@show')->middleware('auth');
+    // ->where('file', '(.*)')->middleware('auth');
+
+

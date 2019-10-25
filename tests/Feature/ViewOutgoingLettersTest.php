@@ -71,8 +71,8 @@ class ViewOutgoingLettersTest extends TestCase
                 ->assertViewIs('outgoing_letters.index')
                 ->assertViewHas('recipients')
                 ->viewData('recipients');
-
-        $this->assertCount(3,$recipients);
+        
+        $this->assertCount(3, $recipients);
         $this->assertSame(
             OutgoingLetter::all()->pluck('recipient', 'recipient')->toArray(),
             $recipients->toArray()
@@ -84,9 +84,9 @@ class ViewOutgoingLettersTest extends TestCase
     {
         $this->signIn();
 
-        create(OutgoingLetter::class, 3, ['type' => 'Invite Letter']);
-        create(OutgoingLetter::class);
-        create(OutgoingLetter::class);
+        create(OutgoingLetter::class, 3, ['type' => 'Bill']);
+        create(OutgoingLetter::class, 1, ['type' => 'Notesheet']);
+        create(OutgoingLetter::class, 1, ['type' => 'General']);
 
         $types = $this->withExceptionHandling()
                 ->get('/outgoing-letters')
@@ -94,8 +94,8 @@ class ViewOutgoingLettersTest extends TestCase
                 ->assertViewIs('outgoing_letters.index')
                 ->assertViewHas('types')
                 ->viewData('types');
-
-        $this->assertCount(3,$types);
+        
+        $this->assertCount(3, $types);
         $this->assertSame(
             OutgoingLetter::all()->pluck('type', 'type')->toArray(),
             $types->toArray()
@@ -117,8 +117,8 @@ class ViewOutgoingLettersTest extends TestCase
                 ->assertViewIs('outgoing_letters.index')
                 ->assertViewHas('senders')
                 ->viewData('senders');
-
-        $this->assertCount(3,$senders);
+        
+        $this->assertCount(3, $senders);
         $this->assertSame(
             OutgoingLetter::with('sender')->get()->pluck('sender.name', 'sender_id')->toArray(),
             $senders->toArray()
@@ -140,8 +140,8 @@ class ViewOutgoingLettersTest extends TestCase
                 ->assertViewIs('outgoing_letters.index')
                 ->assertViewHas('creators')
                 ->viewData('creators');
-
-        $this->assertCount(3,$creators);
+        
+        $this->assertCount(3, $creators);
         $this->assertSame(
             OutgoingLetter::with('creator')->get()->pluck('creator.name', 'creator_id')->toArray(),
             $creators->toArray()

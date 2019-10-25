@@ -5,6 +5,8 @@ use App\OutgoingLetter;
 use App\Paper;
 use App\User;
 use App\College;
+use App\LetterReminder;
+use App\Remark;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 
@@ -52,11 +54,14 @@ class DatabaseSeeder extends Seeder
         ]);
 
         factory(College::class)->create([
-            'code' => 'DU-ARSD-002',
-            'name' => 'Atma Ram Sanatan Dharma College'
+            'code' => 'DU-ANDC-002',
+            'name' => 'Acharya Narendra Dev College'
         ]);
 
         factory(College::class,5)->create();
 
+        factory(Remark::class,4)->create(['letter_id' => 1]);
+
+        factory(LetterReminder::class,4)->create(['letter_id' => 1]);
     }
 }

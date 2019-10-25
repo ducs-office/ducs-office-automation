@@ -7,6 +7,7 @@ use App\OutgoingLetter;
 use App\User;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
 
 class UpdateOutgoingLettersTest extends TestCase
@@ -27,16 +28,18 @@ class UpdateOutgoingLettersTest extends TestCase
     /** @test */
     public function user_can_update_outgoing_letter_in_database()
     {
-        $user = $this->signIn();
+        $this->be($user = create(User::class));
         $sender = create(User::class);
-        $letter = create(OutgoingLetter::class);
+        $letter = create(OutgoingLetter::class, 1, ['type' => 'Notesheet']);
+
         $new_outgoing_letter = [
-            'date' =>  "1987-02-08",
-            'type' =>  "et facilis deserunt",
-            'recipient' =>  "Raleigh Wunsch",
-            'sender_id' =>  $sender->id,
-            'description' =>  "Voluptatem est odit voluptas eius deserunt. Nihil nostrum cum sunt a dolores voluptatibus assumenda. Magni inventore quae sed sequi magni voluptatem voluptate. Illo tenetur magnam laboriosam nihil.",
-            'amount' =>  11243.56
+            'date' => "1987-02-08",
+            'type' => "Bill",
+            'recipient' => "Raleigh Wunsch",
+            'sender_id' => $sender->id,
+            'description' => "Voluptatem est odit voluptas eius deserunt.",
+            'amount' => 11243.56,
+            'pdf' => UploadedFile::fake()->create('document.pdf')
         ];
 
         $this->withoutExceptionHandling()
@@ -57,14 +60,14 @@ class UpdateOutgoingLettersTest extends TestCase
     /** @test */
     public function user_can_not_update_creator_id_of_an_outgoing_letter_in_database()
     {
-        $user = $this->signIn();
+        $this->be($user = create(User::class));
         $letter = create(OutgoingLetter::class);
-        $new_outgoing_letter = make(OutgoingLetter::class);
+
 
         $this->withoutExceptionHandling()
             ->patch(
                 "/outgoing-letters/{$letter->id}",
-                $new_outgoing_letter->toArray()
+                ['creator_id' => create(User::class)->id]
             )->assertRedirect('/outgoing-letters');
 
         $this->assertEquals($letter->creator_id, $letter->fresh()->creator_id);
