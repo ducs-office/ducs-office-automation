@@ -11,9 +11,6 @@
 |
 */
 
-use App\Http\Controllers\OutgoingLettersController;
-// use App\Http\Controllers\RemarksController;
-
 Route::get('/', function () {
     return view('dashboard');
 })->middleware('auth');
@@ -28,7 +25,7 @@ Route::post('/outgoing-letters', 'OutgoingLettersController@store')->middleware(
 Route::get('/outgoing-letters/{outgoing_letter}/edit', 'OutgoingLettersController@edit')->middleware('auth');
 Route::get('/outgoing-letters', 'OutgoingLettersController@index')->middleware('auth');
 Route::patch('/outgoing-letters/{outgoing_letter}', 'OutgoingLettersController@update')->middleware('auth');
-Route::delete('/outgoing-letters/{outgoing_letter}','OutgoingLettersController@destroy')->middleware('auth');
+Route::delete('/outgoing-letters/{outgoing_letter}', 'OutgoingLettersController@destroy')->middleware('auth');
 
 Route::post('/remarks', 'RemarksController@store')->middleware('auth');
 Route::patch('/remarks/{remark}', 'RemarksController@update')->middleware('auth');
@@ -50,9 +47,19 @@ Route::patch('/papers/{paper}', 'PaperController@update')->middleware('auth');
 Route::delete('/papers/{paper}', 'PaperController@destroy')->middleware('auth');
 
 Route::get('/colleges', 'CollegeController@index')->middleware('auth');
-Route::post('/colleges','CollegeController@store')->middleware('auth');
+Route::post('/colleges', 'CollegeController@store')->middleware('auth');
 Route::patch('/colleges/{college}', 'CollegeController@update')->middleware('auth');
 Route::delete('/colleges/{college}', 'CollegeController@destroy')->middleware('auth');
+
+Route::get('/users', 'UserController@index')->middleware('auth');
+Route::post('/users', 'UserController@store')->middleware('auth');
+Route::patch('/users/{user}', 'UserController@update')->middleware('auth');
+Route::delete('/users/{user}', 'UserController@destroy')->middleware('auth');
+
+Route::get('/roles', 'RoleController@index')->middleware('auth');
+Route::post('/roles', 'RoleController@store')->middleware('auth');
+Route::patch('/roles/{role}', 'RoleController@update')->middleware('auth');
+Route::delete('/roles/{role}', 'RoleController@destroy')->middleware('auth');
 
 Route::get('/attachments', 'AttachmentController@show')->middleware('auth');
     // ->where('file', '(.*)')->middleware('auth');

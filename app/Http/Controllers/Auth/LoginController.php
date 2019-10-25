@@ -17,5 +17,4 @@ class LoginController extends Controller
      */
     protected $redirectTo = '/';
 
-
 }

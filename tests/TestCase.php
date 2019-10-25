@@ -11,11 +11,21 @@ abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication;
 
-    public function signIn($user = null)
+    public function setUp(): void
     {
+        parent::setUp();
+
+        $this->app->make(\Spatie\Permission\PermissionRegistrar::class)->registerPermissions();
+    }
+
+    public function signIn($user = null, $role = 'office')
+    {
+
         if (!$user) {
             $user = create(User::class);
         }
+
+        $user->assignRole(Role::firstOrCreate(['name' => $role]));
 
         $this->be($user);
 
