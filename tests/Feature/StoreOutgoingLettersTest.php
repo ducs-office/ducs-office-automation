@@ -6,12 +6,15 @@ use \App\User;
 use Tests\TestCase;
 use App\OutgoingLetter;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\str;
 
 class StoreOutgoingLettersTest extends TestCase
 {
-    use RefreshDatabase;
+    use RefreshDatabase, WithFaker;
 
     /** @test */
     public function guest_cannot_store_outgoing_letters()
@@ -26,12 +29,22 @@ class StoreOutgoingLettersTest extends TestCase
     /** @test */
     public function store_outgoing_letter_in_database()
     {
+        Storage::fake();
+        
         $this->be(factory(User::class)->create());
         
-        $outgoing_letter = factory(OutgoingLetter::class)->make();
+        $outgoing_letter = [
+            'date' => now()->format('Y-m-d'),
+            'subject' => $this->faker->words(3, true),
+            'recipient' => $this->faker->name(),
+            'type' => 'Bill',
+            'amount' => $this->faker->randomFloat,
+            'sender_id' => factory(User::class)->create()->id,
+            'pdf' => UploadedFile::fake()->create('document.pdf')
+        ];
 
         $this->withoutExceptionHandling()
-            ->post('/outgoing-letters', $outgoing_letter->toArray())
+            ->post('/outgoing-letters', $outgoing_letter)
             ->assertRedirect('/outgoing-letters');
             
         $this->assertEquals(1, OutgoingLetter::count());
@@ -42,8 +55,16 @@ class StoreOutgoingLettersTest extends TestCase
     {
         try {
             $this->be(factory(User::class)->create());
-            $letter = factory(OutgoingLetter::class)->make()->toArray();
-            unset($letter['date']);
+
+            $letter = [
+                // 'date' => now()->format('Y-m-d'),
+                'subject' => $this->faker->words(3, true),
+                'recipient' => $this->faker->name(),
+                'type' => 'Bill',
+                'amount' => $this->faker->randomFloat,
+                'sender_id' => factory(User::class)->create()->id,
+                'pdf' => UploadedFile::fake()->create('document.pdf')
+            ];
 
             $this->withoutExceptionHandling()
                 ->post('/outgoing-letters', $letter);
@@ -59,7 +80,15 @@ class StoreOutgoingLettersTest extends TestCase
     public function request_validates_date_field_is_a_valid_date()
     {
         $this->be($user = factory(\App\User::class)->create());
-        $letter = factory(\App\OutgoingLetter::class)->make()->toArray();
+        $letter = [
+            'date' => now()->format('Y-m-d'),
+            'subject' => $this->faker->words(3, true),
+            'recipient' => $this->faker->name(),
+            'type' => 'Bill',
+            'amount' => $this->faker->randomFloat,
+            'sender_id' => factory(User::class)->create()->id,
+            'pdf' => UploadedFile::fake()->create('document.pdf')
+        ];
 
         $invalidDates = [
             '2014-16-14', //16 is not a valid month
@@ -102,24 +131,33 @@ class StoreOutgoingLettersTest extends TestCase
     public function request_validates_date_field_cannot_be_a_future_date()
     {
         $this->be(factory(\App\User::class)->create());
-        $letter = factory(OutgoingLetter::class)->make();
+        
+        $letter = [
+            'date' => now()->addMonth(2)->format('Y-m-d'),
+            'subject' => $this->faker->words(3, true),
+            'recipient' => $this->faker->name(),
+            'type' => 'Bill',
+            'amount' => $this->faker->randomFloat,
+            'sender_id' => factory(User::class)->create()->id,
+            'pdf' => UploadedFile::fake()->create('document.pdf')
+        ];
+
         try {
-            $letter->date = now()->addMonth(1)->format('Y-m-d');
-
             $this->withoutExceptionHandling()
-                ->post('/outgoing-letters', $letter->toArray());
+                ->post('/outgoing-letters', $letter);
 
-            $this->fail("Future date '{$letter->date}' was not validated");
+            $this->fail("Future date '{$letter['date']}' was not validated");
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('date', $e->errors());
             $this->assertEquals(0, OutgoingLetter::count());
         } catch (\Exception $e) {
-            $this->fail("Future date '{$letter->date}' was not validated");
+            $this->fail("Future date '{$letter['date']}' was not validated");
         }
 
-        $letter->date = now()->subMonth(1)->format('Y-m-d');
+        $letter['date'] = now()->subMonth(1)->format('Y-m-d');
+
         $this->withoutExceptionHandling()
-            ->post('/outgoing-letters', $letter->toArray())
+            ->post('/outgoing-letters', $letter)
             ->assertRedirect('/outgoing-letters');
 
         $this->assertEquals(1, OutgoingLetter::count());
@@ -130,18 +168,26 @@ class StoreOutgoingLettersTest extends TestCase
     {
         try {
             $this->be(factory(\App\User::class)->create());
-            $letter = factory(OutgoingLetter::class)->make(['type' => '']);
+
+            $letter = [
+                'date' => now()->format('Y-m-d'),
+                'subject' => $this->faker->words(3, true),
+                'recipient' => $this->faker->name(),
+                'type' => '', // Empty type
+                'amount' => $this->faker->randomFloat,
+                'sender_id' => factory(User::class)->create()->id,
+                'pdf' => UploadedFile::fake()->create('document.pdf')
+            ];
         
             $this->withoutExceptionHandling()
-                ->post('/outgoing-letters', $letter->toArray());
+                ->post('/outgoing-letters', $letter);
             
             $this->fail('Empty \'type\' field was not validated.');
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('type', $e->errors());
             $this->assertEquals(0, OutgoingLetter::count());
         } catch (\Exception $e) {
-            // $this->fail('Empty \'type\' field was not validated.');
-            $this->fail($e->getMessage());
+            $this->fail('Empty \'type\' field was not validated.');
         }
     }
 
@@ -153,31 +199,30 @@ class StoreOutgoingLettersTest extends TestCase
             $letter = factory(OutgoingLetter::class)->make(['subject' => '']);
 
             $this->withoutExceptionHandling()
-                ->post('/outgoing-letters',$letter->toArray());
+                ->post('/outgoing-letters', $letter->toArray());
 
             $this->fail('Empty \'subject\' field was not validated.');
-        }catch(ValidationException $e) {
-            $this->assertArrayHasKey('subject',$e->errors());
+        } catch (ValidationException $e) {
+            $this->assertArrayHasKey('subject', $e->errors());
         }
 
-        $this->assertEquals(0,OutgoingLetter::count());
+        $this->assertEquals(0, OutgoingLetter::count());
     }
 
     /** @test */
     public function request_validates_subject_field_maxlimit_80()
     {
-        try
-        {
+        try {
             $this -> be(factory(\App\User::class)->create());
             $letter = factory(OutgoingLetter::class)->make(['subject' => Str::random(81)]);
 
             $this -> withoutExceptionHandling()
-                -> post('/outgoing-letters',$letter -> toArray());
-        }catch(ValidationException $e){
-            $this -> assertArrayHasKey('subject',$e->errors());
+                -> post('/outgoing-letters', $letter -> toArray());
+        } catch (ValidationException $e) {
+            $this -> assertArrayHasKey('subject', $e->errors());
         }
 
-        $this -> assertEquals(0,OutgoingLetter::count());
+        $this -> assertEquals(0, OutgoingLetter::count());
     }
 
     /** @test */
@@ -241,9 +286,16 @@ class StoreOutgoingLettersTest extends TestCase
     public function request_validates_description_field_can_be_null()
     {
         $this->be(factory(\App\User::class)->create());
-        $letter = factory(OutgoingLetter::class)->make()->toArray();
-
-        unset($letter['description']);
+        $letter = [
+            'date' => now()->format('Y-m-d'),
+            'subject' => $this->faker->words(3, true),
+            'recipient' => $this->faker->name(),
+            'type' => 'Bill',
+            // 'description' => $this->faker->sentence(),
+            'amount' => $this->faker->randomFloat,
+            'sender_id' => factory(User::class)->create()->id,
+            'pdf' => UploadedFile::fake()->create('document.pdf')
+        ];
     
         $this->withoutExceptionHandling()
             ->post('/outgoing-letters', $letter)
@@ -256,10 +308,19 @@ class StoreOutgoingLettersTest extends TestCase
     public function request_validates_amount_field_can_be_null()
     {
         $this->be(factory(\App\User::class)->create());
-        $letter = factory(OutgoingLetter::class)->make(['amount' => '']);
+
+        $letter = [
+            'date' => now()->format('Y-m-d'),
+            'subject' => $this->faker->words(3, true),
+            'recipient' => $this->faker->name(),
+            'type' => 'Bill',
+            'amount' => '', // empty string amount
+            'sender_id' => factory(User::class)->create()->id,
+            'pdf' => UploadedFile::fake()->create('document.pdf')
+        ];
     
         $this->withoutExceptionHandling()
-            ->post('/outgoing-letters', $letter->toArray())
+            ->post('/outgoing-letters', $letter)
             ->assertRedirect('/outgoing-letters');
 
         $this->assertEquals(1, OutgoingLetter::count());
@@ -270,10 +331,19 @@ class StoreOutgoingLettersTest extends TestCase
     {
         try {
             $this->be(factory(\App\User::class)->create());
-            $letter = factory(OutgoingLetter::class)->make(['amount' => 'some string']);
+
+            $letter = [
+                'date' => now()->format('Y-m-d'),
+                'subject' => $this->faker->words(3, true),
+                'recipient' => $this->faker->name(),
+                'type' => 'Bill',
+                'amount' => 'some string',
+                'sender_id' => factory(User::class)->create()->id,
+                'pdf' => UploadedFile::fake()->create('document.pdf')
+            ];
                 
             $this->withoutExceptionHandling()
-                        ->post('/outgoing-letters', $letter->toArray());
+                        ->post('/outgoing-letters', $letter);
                     
             $this->fail('Failed to validate \'amount\' cannot be a string value');
         } catch (ValidationException $e) {

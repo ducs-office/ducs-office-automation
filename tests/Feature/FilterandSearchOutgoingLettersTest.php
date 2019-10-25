@@ -35,7 +35,7 @@ class FilterOutgoingLettersTest extends TestCase
         $this->assertInstanceOf(Collection::class, $viewOutgoingLetters);
         $this->assertCount(2, $viewOutgoingLetters, 'Only 2 letters were expected but :actual letters were returned');
 
-        $lettersAfterBeforeFilter = $viewOutgoingLetters->filter(function($letter) use ($beforeFilter){
+        $lettersAfterBeforeFilter = $viewOutgoingLetters->filter(function ($letter) use ($beforeFilter) {
             return Carbon::parse($beforeFilter)->lessThan($letter->date);
         });
         
@@ -63,7 +63,7 @@ class FilterOutgoingLettersTest extends TestCase
         $this->assertInstanceOf(Collection::class, $viewOutgoingLetters);
         $this->assertCount(1, $viewOutgoingLetters, 'Only 1 letter was expected but :actual letters were returned');
 
-        $lettersBeforeAfterFilter = $viewOutgoingLetters->filter(function($letter) use ($afterFilter){
+        $lettersBeforeAfterFilter = $viewOutgoingLetters->filter(function ($letter) use ($afterFilter) {
             return Carbon::parse($afterFilter)->greaterThan($letter->date);
         });
         
@@ -93,7 +93,7 @@ class FilterOutgoingLettersTest extends TestCase
         $this->assertInstanceOf(Collection::class, $viewOutgoingLetters);
         $this->assertCount(2, $viewOutgoingLetters, 'Only 2 letters were expected but :actual letters were returned');
 
-        $lettersOutOfFilterRange = $viewOutgoingLetters->filter(function($letter) use ($afterFilter, $beforeFilter){
+        $lettersOutOfFilterRange = $viewOutgoingLetters->filter(function ($letter) use ($afterFilter, $beforeFilter) {
             return Carbon::parse($beforeFilter)->lessThan($letter->date)
                 && Carbon::parse($afterFilter)->greaterThan($letter->date);
         });
@@ -115,7 +115,7 @@ class FilterOutgoingLettersTest extends TestCase
             ->assertViewHas('outgoing_letters')
             ->viewData('outgoing_letters');
 
-        $this -> assertCount(1,$viewLetters);
+        $this -> assertCount(1, $viewLetters);
     }
 
     /** @test */
@@ -132,7 +132,7 @@ class FilterOutgoingLettersTest extends TestCase
             ->assertViewHas('outgoing_letters')
             ->viewData('outgoing_letters');
 
-        $this -> assertCount(1,$viewLetters);
+        $this -> assertCount(1, $viewLetters);
     }
 
     /** @test */
@@ -150,15 +150,16 @@ class FilterOutgoingLettersTest extends TestCase
             ->assertViewHas('outgoing_letters')
             ->viewData('outgoing_letters');
 
-        $this -> assertCount(1,$viewLetters);
+        $this -> assertCount(1, $viewLetters);
     }
 
     /** @test */
     public function user_can_filter_letters_based_on_its_type()
     {
         $bills = factory(OutgoingLetter::class, 2)->create(['type' => 'Bill']);
-        factory(OutgoingLetter::class)->create(['type' => 'Invitation Letter']);
-        factory(OutgoingLetter::class)->create(['type' => 'Fellowship']);
+        factory(OutgoingLetter::class)->create(['type' => 'Notesheet']);
+        factory(OutgoingLetter::class)->create(['type' => 'General']);
+        
         $this -> be(factory(User::class)->create());
 
         $viewLetters = $this -> withoutExceptionHandling()
@@ -168,7 +169,7 @@ class FilterOutgoingLettersTest extends TestCase
             ->assertViewHas('outgoing_letters')
             ->viewData('outgoing_letters');
 
-        $this->assertCount(2,$viewLetters);
+        $this->assertCount(2, $viewLetters);
         $this->assertTrue($viewLetters->pluck('id')->contains($bills[0]->id));
         $this->assertTrue($viewLetters->pluck('id')->contains($bills[1]->id));
     }
@@ -189,7 +190,7 @@ class FilterOutgoingLettersTest extends TestCase
             ->assertViewHas('outgoing_letters')
             ->viewData('outgoing_letters');
 
-        $this->assertCount(2,$viewLetters);
+        $this->assertCount(2, $viewLetters);
         $this->assertTrue($viewLetters->pluck('id')->contains($sentToDUCC[0]->id));
         $this->assertTrue($viewLetters->pluck('id')->contains($sentToDUCC[1]->id));
     }
@@ -210,7 +211,7 @@ class FilterOutgoingLettersTest extends TestCase
             ->assertViewHas('outgoing_letters')
             ->viewData('outgoing_letters');
 
-        $this->assertCount(2,$viewLetters);
+        $this->assertCount(2, $viewLetters);
         $this->assertTrue($viewLetters->pluck('id')->contains($createdBy1[0]->id));
         $this->assertTrue($viewLetters->pluck('id')->contains($createdBy1[1]->id));
     }
@@ -231,13 +232,13 @@ class FilterOutgoingLettersTest extends TestCase
             ->assertViewHas('outgoing_letters')
             ->viewData('outgoing_letters');
 
-        $this->assertCount(2,$viewLetters);
+        $this->assertCount(2, $viewLetters);
         $this->assertTrue($viewLetters->pluck('id')->contains($sentBy1[0]->id));
         $this->assertTrue($viewLetters->pluck('id')->contains($sentBy1[1]->id));
     }
 
     /** @test */
-    public function user_can_search_letters_based_on_subject_and_description () 
+    public function user_can_search_letters_based_on_subject_and_description()
     {
         $sender1 = factory(OutgoingLetter::class)->create(['subject' => 'abc def ghi' , 'description' => 'abc jkl ghi']);
         $sender2 = factory(OutgoingLetter::class)->create(['subject'=>'jkl abc ghi' , 'description'=>'ghi def jkl']);
@@ -252,7 +253,7 @@ class FilterOutgoingLettersTest extends TestCase
                             ->assertViewHas('outgoing_letters')
                             ->viewData('outgoing_letters');
 
-        $this->assertCount(2,$viewLetters);
+        $this->assertCount(2, $viewLetters);
         $this->assertTrue($viewLetters->pluck('id')->contains($sender1->id));
         $this->assertTrue($viewLetters->pluck('id')->contains($sender2->id));
     }

@@ -119,8 +119,8 @@ class OutgoingLettersController extends Controller
             'description' => 'nullable|string|max:400',
             'amount' => 'nullable|numeric',
             'sender_id' => 'sometimes|required|exists:users,id',
-            'pdf' => 'required_without:scan|max:200|mimes:pdf',
-            'scan' => 'required_without:pdf|max:200|mimes:jpeg,jpg,png,pdf'
+            'pdf' => 'sometimes|required_without:scan|max:200|mimes:pdf',
+            'scan' => 'sometimes|required_without:pdf|max:200|mimes:jpeg,jpg,png,pdf'
         ]);
         
         $pdf = request()->file('pdf');
