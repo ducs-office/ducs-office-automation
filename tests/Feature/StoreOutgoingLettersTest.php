@@ -2,16 +2,19 @@
 
 namespace Tests\Feature;
 
-use User;
+use \App\User;
 use Tests\TestCase;
 use App\OutgoingLetter;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\str;
 
 class StoreOutgoingLettersTest extends TestCase
 {
-    use RefreshDatabase;
+    use RefreshDatabase, WithFaker;
 
     /** @test */
     public function guest_cannot_store_outgoing_letters()
@@ -19,7 +22,7 @@ class StoreOutgoingLettersTest extends TestCase
         $this->withExceptionHandling()
             ->post('/outgoing-letters')
             ->assertRedirect('/login');
-
+            
         $this->assertEquals(0, OutgoingLetter::count());
     }
 
@@ -27,13 +30,21 @@ class StoreOutgoingLettersTest extends TestCase
     public function store_outgoing_letter_in_database()
     {
         $this->signIn();
-
-        $outgoing_letter = make(OutgoingLetter::class);
+        
+        $outgoing_letter = [
+            'date' => now()->format('Y-m-d'),
+            'subject' => $this->faker->words(3, true),
+            'recipient' => $this->faker->name(),
+            'type' => 'Bill',
+            'amount' => $this->faker->randomFloat,
+            'sender_id' => create(User::class)->id,
+            'pdf' => UploadedFile::fake()->create('document.pdf')
+        ];
 
         $this->withoutExceptionHandling()
-            ->post('/outgoing-letters', $outgoing_letter->toArray())
+            ->post('/outgoing-letters', $outgoing_letter)
             ->assertRedirect('/outgoing-letters');
-
+            
         $this->assertEquals(1, OutgoingLetter::count());
     }
 
@@ -42,12 +53,20 @@ class StoreOutgoingLettersTest extends TestCase
     {
         try {
             $this->signIn();
-            $letter = make(OutgoingLetter::class)->toArray();
-            unset($letter['date']);
+
+            $letter = [
+                // 'date' => now()->format('Y-m-d'),
+                'subject' => $this->faker->words(3, true),
+                'recipient' => $this->faker->name(),
+                'type' => 'Bill',
+                'amount' => $this->faker->randomFloat,
+                'sender_id' => create(User::class)->id,
+                'pdf' => UploadedFile::fake()->create('document.pdf')
+            ];
 
             $this->withoutExceptionHandling()
                 ->post('/outgoing-letters', $letter);
-
+            
             $this->fail('Empty date field was not validated.');
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('date', $e->errors());
@@ -58,8 +77,17 @@ class StoreOutgoingLettersTest extends TestCase
     /** @test */
     public function request_validates_date_field_is_a_valid_date()
     {
-        $user = $this->signIn();
-        $letter = make(OutgoingLetter::class)->toArray();
+        $this->be($user = create(User::class));
+
+        $letter = [
+            'date' => now()->format('Y-m-d'),
+            'subject' => $this->faker->words(3, true),
+            'recipient' => $this->faker->name(),
+            'type' => 'Bill',
+            'amount' => $this->faker->randomFloat,
+            'sender_id' => create(User::class)->id,
+            'pdf' => UploadedFile::fake()->create('document.pdf')
+        ];
 
         $invalidDates = [
             '2014-16-14', //16 is not a valid month
@@ -101,25 +129,34 @@ class StoreOutgoingLettersTest extends TestCase
     /** @test */
     public function request_validates_date_field_cannot_be_a_future_date()
     {
-        $this->signIn();
-        $letter = make(OutgoingLetter::class);
+        $this->be(create(\App\User::class));
+        
+        $letter = [
+            'date' => now()->addMonth(2)->format('Y-m-d'),
+            'subject' => $this->faker->words(3, true),
+            'recipient' => $this->faker->name(),
+            'type' => 'Bill',
+            'amount' => $this->faker->randomFloat,
+            'sender_id' => create(User::class)->id,
+            'pdf' => UploadedFile::fake()->create('document.pdf')
+        ];
+
         try {
-            $letter->date = now()->addMonth(1)->format('Y-m-d');
-
             $this->withoutExceptionHandling()
-                ->post('/outgoing-letters', $letter->toArray());
+                ->post('/outgoing-letters', $letter);
 
-            $this->fail("Future date '{$letter->date}' was not validated");
+            $this->fail("Future date '{$letter['date']}' was not validated");
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('date', $e->errors());
             $this->assertEquals(0, OutgoingLetter::count());
         } catch (\Exception $e) {
-            $this->fail("Future date '{$letter->date}' was not validated");
+            $this->fail("Future date '{$letter['date']}' was not validated");
         }
 
-        $letter->date = now()->subMonth(1)->format('Y-m-d');
+        $letter['date'] = now()->subMonth(1)->format('Y-m-d');
+
         $this->withoutExceptionHandling()
-            ->post('/outgoing-letters', $letter->toArray())
+            ->post('/outgoing-letters', $letter)
             ->assertRedirect('/outgoing-letters');
 
         $this->assertEquals(1, OutgoingLetter::count());
@@ -129,19 +166,27 @@ class StoreOutgoingLettersTest extends TestCase
     public function request_validates_type_field_is_not_null()
     {
         try {
-            $this->signIn();
-            $letter = make(OutgoingLetter::class, 1, ['type' => '']);
+            $this->be(create(\App\User::class));
 
+            $letter = [
+                'date' => now()->format('Y-m-d'),
+                'subject' => $this->faker->words(3, true),
+                'recipient' => $this->faker->name(),
+                'type' => '', // Empty type
+                'amount' => $this->faker->randomFloat,
+                'sender_id' => create(User::class)->id,
+                'pdf' => UploadedFile::fake()->create('document.pdf')
+            ];
+        
             $this->withoutExceptionHandling()
-                ->post('/outgoing-letters', $letter->toArray());
-
+                ->post('/outgoing-letters', $letter);
+            
             $this->fail('Empty \'type\' field was not validated.');
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('type', $e->errors());
             $this->assertEquals(0, OutgoingLetter::count());
         } catch (\Exception $e) {
-            // $this->fail('Empty \'type\' field was not validated.');
-            $this->fail($e->getMessage());
+            $this->fail('Empty \'type\' field was not validated.');
         }
     }
 
@@ -149,47 +194,71 @@ class StoreOutgoingLettersTest extends TestCase
     public function request_validates_subject_field_is_not_null()
     {
         try {
-            $this->signIn();
-            $letter = make(OutgoingLetter::class, 1, ['subject' => '']);
+            $this -> be(create(\App\User::class));
+
+            $letter = [
+                'date' => now()->format('Y-m-d'),
+                'subject' => '', //Empty
+                'recipient' => $this->faker->name(),
+                'type' => 'Bill',
+                'amount' => $this->faker->randomFloat,
+                'sender_id' => create(User::class)->id,
+                'pdf' => UploadedFile::fake()->create('document.pdf')
+            ];
 
             $this->withoutExceptionHandling()
-                ->post('/outgoing-letters',$letter->toArray());
+                ->post('/outgoing-letters', $letter);
 
             $this->fail('Empty \'subject\' field was not validated.');
-        }catch(ValidationException $e) {
-            $this->assertArrayHasKey('subject',$e->errors());
+        } catch (ValidationException $e) {
+            $this->assertArrayHasKey('subject', $e->errors());
         }
 
-        $this->assertEquals(0,OutgoingLetter::count());
+        $this->assertEquals(0, OutgoingLetter::count());
     }
 
     /** @test */
     public function request_validates_subject_field_maxlimit_80()
     {
-        try
-        {
-            $this->signIn();
-            $letter = make(OutgoingLetter::class, 1, ['subject' => Str::random(81)]);
+        try {
+            $this -> be(create(\App\User::class));
+            $letter = [
+                'date' => now()->format('Y-m-d'),
+                'subject' => $this->faker->regexify('[A-Za-z0-9]{81}'),
+                'recipient' => $this->faker->name(),
+                'type' => 'Bill',
+                'amount' => $this->faker->randomFloat,
+                'sender_id' => create(User::class)->id,
+                'pdf' => UploadedFile::fake()->create('document.pdf')
+            ];
 
-            $this -> withoutExceptionHandling()
-                -> post('/outgoing-letters',$letter -> toArray());
-        }catch(ValidationException $e){
-            $this -> assertArrayHasKey('subject',$e->errors());
+            $this->withoutExceptionHandling()
+                ->post('/outgoing-letters', $letter);
+        } catch (ValidationException $e) {
+            $this->assertArrayHasKey('subject', $e->errors());
         }
 
-        $this -> assertEquals(0,OutgoingLetter::count());
+        $this->assertEquals(0, OutgoingLetter::count());
     }
 
     /** @test */
     public function request_validates_recipient_field_is_not_null()
     {
         try {
-            $this->signIn();
-            $letter = make(OutgoingLetter::class, 1, ['recipient' => '']);
-
+            $this->be(create(\App\User::class));
+            $letter = [
+                'date' => now()->format('Y-m-d'),
+                'subject' => $this->faker->words(3, true),
+                'recipient' => '', // Empty
+                'type' => 'Bill',
+                'amount' => $this->faker->randomFloat,
+                'sender_id' => create(User::class)->id,
+                'pdf' => UploadedFile::fake()->create('document.pdf')
+            ];
+        
             $this->withoutExceptionHandling()
-                ->post('/outgoing-letters', $letter->toArray());
-
+                ->post('/outgoing-letters', $letter);
+            
             $this->fail('Empty \'recipient\' field was not validated.');
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('recipient', $e->errors());
@@ -203,12 +272,20 @@ class StoreOutgoingLettersTest extends TestCase
     public function request_validates_sender_id_field_is_not_null()
     {
         try {
-            $this->signIn();
-            $letter = make(OutgoingLetter::class, 1, ['sender_id' => '']);
-
+            $this->be(create(\App\User::class));
+            $letter = [
+                'date' => now()->format('Y-m-d'),
+                'subject' => $this->faker->words(3, true),
+                'recipient' => $this->faker->name(),
+                'type' => 'Bill', 
+                'amount' => $this->faker->randomFloat,
+                'sender_id' => '', // Empty type
+                'pdf' => UploadedFile::fake()->create('document.pdf')
+            ];
+        
             $this->withoutExceptionHandling()
-                ->post('/outgoing-letters', $letter->toArray());
-
+                ->post('/outgoing-letters', $letter);
+            
             $this->fail('Empty \'sender_id\' field was not validated.');
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('sender_id', $e->errors());
@@ -223,11 +300,19 @@ class StoreOutgoingLettersTest extends TestCase
     {
         try {
             $this->signIn();
-            $letter = make(OutgoingLetter::class, 1, ['sender_id' => 4]);
-
+            $letter = [
+                'date' => now()->format('Y-m-d'),
+                'subject' => $this->faker->words(3, true),
+                'recipient' => $this->faker->name(),
+                'type' => 'Bill',
+                'amount' => $this->faker->randomFloat,
+                'sender_id' => 123,
+                'pdf' => UploadedFile::fake()->create('document.pdf')
+            ];
+            
             $this->withoutExceptionHandling()
-                ->post('/outgoing-letters', $letter->toArray());
-
+                ->post('/outgoing-letters', $letter);
+            
             $this->fail('Failed to validate \'sender_id\' is a valid existing user id');
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('sender_id', $e->errors());
@@ -241,10 +326,18 @@ class StoreOutgoingLettersTest extends TestCase
     public function request_validates_description_field_can_be_null()
     {
         $this->signIn();
-        $letter = make(OutgoingLetter::class)->toArray();
 
-        unset($letter['description']);
-
+        $letter = [
+            'date' => now()->format('Y-m-d'),
+            'subject' => $this->faker->words(3, true),
+            'recipient' => $this->faker->name(),
+            'type' => 'Bill',
+            // 'description' => $this->faker->sentence(),
+            'amount' => $this->faker->randomFloat,
+            'sender_id' => create(User::class)->id,
+            'pdf' => UploadedFile::fake()->create('document.pdf')
+        ];
+    
         $this->withoutExceptionHandling()
             ->post('/outgoing-letters', $letter)
             ->assertRedirect('/outgoing-letters');
@@ -255,11 +348,20 @@ class StoreOutgoingLettersTest extends TestCase
     /** @test */
     public function request_validates_amount_field_can_be_null()
     {
-        $this->signIn();
-        $letter = make(OutgoingLetter::class, 1, ['amount' => '']);
+        $this->be(create(\App\User::class));
 
+        $letter = [
+            'date' => now()->format('Y-m-d'),
+            'subject' => $this->faker->words(3, true),
+            'recipient' => $this->faker->name(),
+            'type' => 'Bill',
+            'amount' => '', // empty string amount
+            'sender_id' => create(User::class)->id,
+            'pdf' => UploadedFile::fake()->create('document.pdf')
+        ];
+    
         $this->withoutExceptionHandling()
-            ->post('/outgoing-letters', $letter->toArray())
+            ->post('/outgoing-letters', $letter)
             ->assertRedirect('/outgoing-letters');
 
         $this->assertEquals(1, OutgoingLetter::count());
@@ -269,12 +371,21 @@ class StoreOutgoingLettersTest extends TestCase
     public function request_validates_amount_field_cannot_be_a_string_value()
     {
         try {
-            $this->signIn();
-            $letter = make(OutgoingLetter::class, 1, ['amount' => 'some string']);
+            $this->be(create(\App\User::class));
 
+            $letter = [
+                'date' => now()->format('Y-m-d'),
+                'subject' => $this->faker->words(3, true),
+                'recipient' => $this->faker->name(),
+                'type' => 'Bill',
+                'amount' => 'some string',
+                'sender_id' => create(User::class)->id,
+                'pdf' => UploadedFile::fake()->create('document.pdf')
+            ];
+                
             $this->withoutExceptionHandling()
-                        ->post('/outgoing-letters', $letter->toArray());
-
+                        ->post('/outgoing-letters', $letter);
+                    
             $this->fail('Failed to validate \'amount\' cannot be a string value');
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('amount', $e->errors());

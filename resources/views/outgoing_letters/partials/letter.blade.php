@@ -1,5 +1,6 @@
 <div class="px-6 py-4 hover:bg-gray-100 border-b">
     <div class="flex items-center mb-1">
+        <h5 class="mr-12 text-gray-700 font-bold">{{$letter->serial_no}}</h5>
         <h5 class="mr-12 text-gray-700 font-bold">{{ $letter->date->format('M d, Y') }}</h5>
         <div class="flex items-center text-gray-700">
             {{ $letter->sender->name }}
@@ -9,8 +10,18 @@
             {{ $letter->recipient }}
         </div>
         <div class="ml-auto flex">
+            @isset($letter->pdf)
+                <a href="/attachments?file={{ $letter->pdf }}" target="_blank" class="p-1 text-orange-600 hover:bg-gray-200 rounded mr-3" title="pdf">
+                    <feather-icon name="file" stroke-width="2.5" class="h-current">pdf</feather-icon>
+                </a>
+            @endisset
+            @isset($letter->scan)
+            <a href="/attachments?file={{ $letter->scan }}" target="_blank" class="p-1 text-gray-600 hover:bg-gray-200 rounded mr-3" title="scan">
+                <feather-icon name="file-minus" stroke-width="2.5" class="h-current">scan</feather-icon>
+            </a>
+            @endisset
             <a href="/outgoing-letters/{{$letter->id}}/edit"
-                class="p-1 text-gray-500 hover:bg-gray-200 hover:text-blue-600 rounded mr-3" title="Edit">
+                class="p-1 text-gray-500 text-blue-600 hover:bg-gray-200 rounded mr-3" title="Edit">
                 <feather-icon name="edit-3" stroke-width="2.5" class="h-current">Edit</feather-icon>
             </a>
             <form method="POST" action="/outgoing-letters/{{$letter->id}}">
@@ -36,4 +47,124 @@
     @else
         <p class="text-black-50">{{ $letter->description }}</p>
     @endisset
+    <div class = "mt-2 flex">
+        <details >
+            <summary class="inline-flex is-sm btn btn-magenta"> 
+                Remarks
+            </summary>
+            <div class="py-2 hover:bg-gray-100 border-b justify-between overflow-y-auto">
+                <div class="flex mt-2 mb-3">
+                    <button class="btn btn-blue is-sm text-xs ml-auto" 
+                        @click.prevent="$modal.show('create-letter-{{ $letter->id }}-remark')">
+                        New
+                    </button>
+                </div>
+                <remark-update-modal name="remark-update-modal">@csrf @method('patch')</remark-update-modal>
+                <modal name="create-letter-{{ $letter->id }}-remark" height="auto">
+                    <div class="p-6">
+                        <h3 class="font-bold text-lg mb-2">Add Letter Remark</h3>
+                        <h4 class="font-bold text-gray-600 mb-4">{{ $letter->subject }}</h4>
+                        <form action="/remarks" method="POST">
+                            @csrf <input type="hidden" name="letter_id" value="{{ $letter->id }}">
+                            <div class="my-4">
+                                <textarea name="description" placeholder="Give remarks here..." class="w-full form-input"></textarea>
+                            </div>
+                            <div>
+                                <button class="btn btn-magenta is-sm">Create</button>
+                            </div>
+                        </form>
+                    </div>
+                </modal>
+                @foreach($letter->remarks as $i => $remark)
+                    <div class="flex mb-2">
+                        <h4 class="font-bold text-sm text-gray-500 w-12">#{{ $i+1 }}</h4>
+                        <h4 class="font-bold text-sm w-48">{{ $remark->updated_at->format('M d, Y h:i a') }}</h4>
+                        <p class="text-gray-600 mr-10">{{ $remark->description }}</p>
+                        <div class="flex ml-auto items-baseline">
+                            <button class="p-1 text-gray-500 hover:bg-gray-200 text-blue-600 rounded mr-3" title="Edit"
+                                @click.prevent="$modal.show('remark-update-modal',{
+                                    remark: {{ $remark->toJson() }}
+                                })">
+                                <feather-icon name="edit-3" stroke-width="2.5" class="h-current">Edit</feather-icon>
+                            </button>
+                            <form action="/remarks/{{ $remark->id }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button class="p-1 hover:bg-gray-200 text-red-700 rounded">
+                                    <feather-icon name="trash-2" stroke-width="2.5" class="h-current">Delete</feather-icon>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </details>
+        <details class="ml-3">
+            <summary class="inline-flex is-sm btn btn-magenta"> 
+                Reminders
+            </summary>
+            <div class="py-2 hover:bg-gray-100 border-b justify-between overflow-y-auto">
+                <div class="flex mt-2 mb-3">
+                    <button class="btn btn-blue is-sm text-xs ml-auto" 
+                        @click.prevent="$modal.show('create-letter-{{$letter->id}}-reminder')" >
+                            New
+                    </button> 
+                </div>
+                <reminder-update-modal name="reminder-update-modal">@csrf @method('patch')</reminder-update-modal>
+                <modal name="create-letter-{{$letter->id}}-reminder" height="auto">
+                    <div class="p-6">
+                        <h3 class="font-bold text-lg mb-2">Upload Letter Reminder</h3>
+                        <h4 class="font-bold text-gray-600 mb-4">{{ $letter->subject }}</h4>
+                        <form action="/reminders" method="POST" enctype="multipart/form-data">
+                            @csrf <input type="hidden" name="letter_id" value="{{ $letter->id }}">
+                            <div class="my-4 flex">
+                                <div class="mx-2">
+                                    <input type="file" name="pdf" accept="application/pdf" class="w-full mb-2">
+                                    <label for="pdf" class="w-full form-label">Upload PDF copy</label>
+                                </div>
+                                <div class="mx-2">
+                                    <input type="file" name="scan" accept="image/*, application/pdf" class="w-full mb-2">
+                                    <label for="scan" class="w-full form-label">Upload scanned copy</label>
+                                </div>
+                            </div>
+                            <div>
+                                <button class="btn btn-magenta is-sm">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </modal>
+                @foreach($letter->reminders as $i => $reminder)
+                    <div class="flex mb-2">
+                        <h4 class="text-gray-800 font-bold mr-10">{{ $reminder->serial_no }}</h4>
+                        <h4 class="font-bold text-sm w-48">{{ $reminder->updated_at->format('M d, h:i a') }}</h4>
+                        <div class="flex ml-auto items-baseline">
+                            @isset($reminder->pdf)
+                               <a href="/attachments?file={{ $reminder->pdf }}" target="_blank" class="p-1 text-orange-600 hover:bg-gray-200 rounded mr-3" title="pdf">
+                                    <feather-icon name="file" stroke-width="2.5" class="h-current">pdf</feather-icon>
+                               </a>
+                            @endisset
+                            @isset($reminder->scan)
+                            <a href="/attachments?file={{ $reminder->scan }}" target="_blank" class="p-1 text-gray-600 hover:bg-gray-200 rounded mr-3" title="scan">
+                                <feather-icon name="file-minus" stroke-width="2.5" class="h-current">scan</feather-icon>
+                            </a>
+                            @endisset
+                            <button class="p-1 text-gray-500 hover:bg-gray-200 text-blue-600 rounded mr-3" title="Edit"
+                                @click.prevent="$modal.show('reminder-update-modal',{
+                                    reminder: {{ $reminder->toJson() }}
+                                })">
+                                <feather-icon name="edit-3" stroke-width="2.5" class="h-current">Edit</feather-icon>
+                            </button>
+                            <form action="/reminders/{{ $reminder->id }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button class="p-1 hover:bg-gray-200 text-red-700 rounded">
+                                    <feather-icon name="trash-2" stroke-width="2.5" class="h-current">Delete</feather-icon>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </details>
+    </div>
 </div>

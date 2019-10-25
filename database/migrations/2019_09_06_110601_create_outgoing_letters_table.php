@@ -17,14 +17,17 @@ class CreateOutgoingLettersTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('creator_id');
             $table->date('date');
-            $table->string('type', 50);
+            $table->enum('type', ['Bill', 'Notesheet', 'General']);
             $table->string('subject', 80);
             $table->string('recipient', 50);
             $table->unsignedBigInteger('sender_id');
             $table->text('description', 400)->nullable();
             $table->float('amount')->nullable();
+            $table->string('pdf')->nullable();
+            $table->string('scan')->nullable();
+            $table->string('serial_no')->unique();
             $table->timestamps();
-
+            
             $table->foreign('sender_id')->references('id')->on('users');
             $table->foreign('creator_id')->references('id')->on('users');
         });
