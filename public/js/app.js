@@ -2197,6 +2197,65 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/RoleUpdateModal.vue?vue&type=script&lang=js&":
+/*!**************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/RoleUpdateModal.vue?vue&type=script&lang=js& ***!
+  \**************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['permissions'],
+  data: function data() {
+    return {
+      role: {
+        id: '',
+        name: ''
+      },
+      role_permissions: []
+    };
+  },
+  methods: {
+    beforeOpen: function beforeOpen(event) {
+      if (!event.params.role || !event.params.role_permissions) {
+        return false;
+      }
+
+      this.role = event.params.role;
+      this.role_permissions = event.params.role_permissions;
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/UserUpdateModal.vue?vue&type=script&lang=js&":
 /*!**************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/UserUpdateModal.vue?vue&type=script&lang=js& ***!
@@ -7306,6 +7365,155 @@ var render = function() {
                   return _c("option", {
                     key: id,
                     domProps: { value: id, textContent: _vm._s(course) }
+                  })
+                }),
+                0
+              )
+            ]),
+            _vm._v(" "),
+            _c("div", [
+              _c(
+                "button",
+                { staticClass: "btn btn-magenta", attrs: { type: "submit" } },
+                [_vm._v("Update")]
+              )
+            ])
+          ],
+          2
+        )
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/RoleUpdateModal.vue?vue&type=template&id=148d1e73&":
+/*!******************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/RoleUpdateModal.vue?vue&type=template&id=148d1e73& ***!
+  \******************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "modal",
+    {
+      attrs: { name: "role-update-modal", height: "auto" },
+      on: { "before-open": _vm.beforeOpen }
+    },
+    [
+      _c("div", { staticClass: "p-6" }, [
+        _c("h2", { staticClass: "text-lg font-bold mb-8" }, [
+          _vm._v("Update User")
+        ]),
+        _vm._v(" "),
+        _c(
+          "form",
+          { attrs: { action: "/roles/" + _vm.role.name, method: "POST" } },
+          [
+            _vm._t("default"),
+            _vm._v(" "),
+            _c("div", { staticClass: "mb-2" }, [
+              _c(
+                "label",
+                {
+                  staticClass: "w-full form-label mb-1",
+                  attrs: { for: "name" }
+                },
+                [_vm._v("Role Name")]
+              ),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.role.name,
+                    expression: "role.name"
+                  }
+                ],
+                staticClass: "w-full form-input",
+                attrs: {
+                  id: "name",
+                  type: "text",
+                  name: "name",
+                  placeholder: "Enter a name for the role...",
+                  required: ""
+                },
+                domProps: { value: _vm.role.name },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.role, "name", $event.target.value)
+                  }
+                }
+              })
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "mb-5" }, [
+              _c(
+                "label",
+                {
+                  staticClass: "w-full form-label mb-1",
+                  attrs: { for: "permissions" }
+                },
+                [_vm._v("Assign Permissions")]
+              ),
+              _vm._v(" "),
+              _c(
+                "select",
+                {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.role_permissions,
+                      expression: "role_permissions"
+                    }
+                  ],
+                  staticClass: "w-full form-input",
+                  attrs: {
+                    id: "permissions",
+                    name: "permissions[]",
+                    multiple: ""
+                  },
+                  on: {
+                    change: function($event) {
+                      var $$selectedVal = Array.prototype.filter
+                        .call($event.target.options, function(o) {
+                          return o.selected
+                        })
+                        .map(function(o) {
+                          var val = "_value" in o ? o._value : o.value
+                          return val
+                        })
+                      _vm.role_permissions = $event.target.multiple
+                        ? $$selectedVal
+                        : $$selectedVal[0]
+                    }
+                  }
+                },
+                _vm._l(_vm.permissions, function(permission) {
+                  return _c("option", {
+                    key: permission.id,
+                    domProps: {
+                      value: permission.id,
+                      textContent: _vm._s(permission.name)
+                    }
                   })
                 }),
                 0
@@ -19802,7 +20010,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_LettersSearchFilters_vue__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./components/LettersSearchFilters.vue */ "./resources/js/components/LettersSearchFilters.vue");
 /* harmony import */ var _components_CollegeUpdateModal_vue__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./components/CollegeUpdateModal.vue */ "./resources/js/components/CollegeUpdateModal.vue");
 /* harmony import */ var _components_UserUpdateModal_vue__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./components/UserUpdateModal.vue */ "./resources/js/components/UserUpdateModal.vue");
+/* harmony import */ var _components_RoleUpdateModal_vue__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./components/RoleUpdateModal.vue */ "./resources/js/components/RoleUpdateModal.vue");
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
+
 
 
 
@@ -19824,6 +20034,7 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.component("paper-update-modal", _comp
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('letter-search-filters', _components_LettersSearchFilters_vue__WEBPACK_IMPORTED_MODULE_7__["default"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component("college-update-modal", _components_CollegeUpdateModal_vue__WEBPACK_IMPORTED_MODULE_8__["default"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component("user-update-modal", _components_UserUpdateModal_vue__WEBPACK_IMPORTED_MODULE_9__["default"]);
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.component("role-update-modal", _components_RoleUpdateModal_vue__WEBPACK_IMPORTED_MODULE_10__["default"]);
 var app = new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
   el: '#app'
 });
@@ -20302,6 +20513,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_PaperUpdateModal_vue_vue_type_template_id_590004a3___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_PaperUpdateModal_vue_vue_type_template_id_590004a3___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/RoleUpdateModal.vue":
+/*!*****************************************************!*\
+  !*** ./resources/js/components/RoleUpdateModal.vue ***!
+  \*****************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _RoleUpdateModal_vue_vue_type_template_id_148d1e73___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./RoleUpdateModal.vue?vue&type=template&id=148d1e73& */ "./resources/js/components/RoleUpdateModal.vue?vue&type=template&id=148d1e73&");
+/* harmony import */ var _RoleUpdateModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./RoleUpdateModal.vue?vue&type=script&lang=js& */ "./resources/js/components/RoleUpdateModal.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _RoleUpdateModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _RoleUpdateModal_vue_vue_type_template_id_148d1e73___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _RoleUpdateModal_vue_vue_type_template_id_148d1e73___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/RoleUpdateModal.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/RoleUpdateModal.vue?vue&type=script&lang=js&":
+/*!******************************************************************************!*\
+  !*** ./resources/js/components/RoleUpdateModal.vue?vue&type=script&lang=js& ***!
+  \******************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_RoleUpdateModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./RoleUpdateModal.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/RoleUpdateModal.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_RoleUpdateModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/RoleUpdateModal.vue?vue&type=template&id=148d1e73&":
+/*!************************************************************************************!*\
+  !*** ./resources/js/components/RoleUpdateModal.vue?vue&type=template&id=148d1e73& ***!
+  \************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_RoleUpdateModal_vue_vue_type_template_id_148d1e73___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./RoleUpdateModal.vue?vue&type=template&id=148d1e73& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/RoleUpdateModal.vue?vue&type=template&id=148d1e73&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_RoleUpdateModal_vue_vue_type_template_id_148d1e73___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_RoleUpdateModal_vue_vue_type_template_id_148d1e73___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
