@@ -8,7 +8,10 @@ use Illuminate\Support\Facades\Cache;
 
 class OutgoingLetter extends Model
 {
-    protected $guarded = [];
+    protected $fillable = [
+        'date', 'type', 'subject', 'recipient', 'description', 'amount', 
+        'sender_id', 'creator_id'
+    ];
 
     protected $dates = ['date'];
 
@@ -37,6 +40,8 @@ class OutgoingLetter extends Model
             $number_sequence = str_pad(Cache::increment($cache_key), 4, '0', STR_PAD_LEFT);
             
             $outgoing_letter->serial_no = "$serial_no/$number_sequence";
+
+            return $outgoing_letter;
         });
     }
 
@@ -48,6 +53,11 @@ class OutgoingLetter extends Model
     public function creator()
     {
         return $this->belongsTo(User::class, 'creator_id');
+    }
+
+    public function attachments()
+    {
+        return $this->morphMany(Attachment::class, 'attachable');
     }
 
     public function remarks()

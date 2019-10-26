@@ -23,8 +23,6 @@ class CreateOutgoingLettersTable extends Migration
             $table->unsignedBigInteger('sender_id');
             $table->text('description', 400)->nullable();
             $table->float('amount')->nullable();
-            $table->string('pdf')->nullable();
-            $table->string('scan')->nullable();
             $table->string('serial_no')->unique();
             $table->timestamps();
             

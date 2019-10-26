@@ -8,6 +8,7 @@ use App\User;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class UpdateOutgoingLettersTest extends TestCase
@@ -28,6 +29,8 @@ class UpdateOutgoingLettersTest extends TestCase
     /** @test */
     public function user_can_update_outgoing_letter_in_database()
     {
+        Storage::fake();
+        
         $this->be($user = create(User::class));
         $sender = create(User::class);
         $letter = create(OutgoingLetter::class, 1, ['type' => 'Notesheet']);
@@ -39,7 +42,7 @@ class UpdateOutgoingLettersTest extends TestCase
             'sender_id' => $sender->id,
             'description' => "Voluptatem est odit voluptas eius deserunt.",
             'amount' => 11243.56,
-            'pdf' => UploadedFile::fake()->create('document.pdf')
+            'attachments' => [ $file = UploadedFile::fake()->create('document.pdf') ]
         ];
 
         $this->withoutExceptionHandling()
@@ -55,6 +58,9 @@ class UpdateOutgoingLettersTest extends TestCase
         $this->assertEquals($new_outgoing_letter['amount'], $letter->amount);
         $this->assertEquals($new_outgoing_letter['recipient'], $letter->recipient);
         $this->assertEquals($new_outgoing_letter['date'], $letter->date->format('Y-m-d'));
+
+        $this->assertEquals('letter_attachments/outgoing/' . $file->hashName(), $letter->attachments->last()->path);
+        Storage::assertExists($letter->attachments->last()->path);
     }
 
     /** @test */

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\OutgoingLetter;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
@@ -16,25 +17,38 @@ class ViewAttachmentTest extends TestCase
 
     public function guest_can_not_view_an_attachment()
     {
+        Storage::fake();
+        
+        $letter = create(OutgoingLetter::class);
+        $documentPath = UploadedFile::fake()->create('document.pdf', 50)->store('random/location');
+
+        $attachment = $letter->attachments()->create([
+            'original_name' => 'My Document',
+            'path' => $documentPath
+        ]);
+        
         $this->withExceptionHandling()
-            ->get('/attachments')
+            ->get('/attachments/' . $attachment->id)
             ->assertRedirect('login');
     }
 
     /** @test */
     public function user_can_view_an_attachmemt()
     {
-        $this->be(create(User::class));
-        $attachment = UploadedFile::fake()->create('document.pdf', 50);
+        Storage::fake();
+        
+        $letter = create(OutgoingLetter::class);
+        $documentPath = UploadedFile::fake()->create('document.pdf', 50)->store('random/location');
 
-        Storage::disk('local')->put("/", $attachment);
-        Storage::disk('local')->assertExists($attachment->hashName());
+        $attachment = $letter->attachments()->create([
+            'original_name' => 'My Document',
+            'path' => $documentPath
+        ]);
+        
+        $this->signIn();
 
         $this->withoutExceptionHandling()
-            ->call('GET', '/attachments', ["file"=> $attachment->hashName()])
+            ->get('/attachments/' . $attachment->id)
             ->assertSuccessful();
-        
-        Storage::delete($attachment->hashName());
-        Storage::assertMissing($attachment->hashName());
     }
 }

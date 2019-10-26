@@ -61,7 +61,8 @@ Route::post('/roles', 'RoleController@store')->middleware('auth');
 Route::patch('/roles/{role}', 'RoleController@update')->middleware('auth');
 Route::delete('/roles/{role}', 'RoleController@destroy')->middleware('auth');
 
-Route::get('/attachments', 'AttachmentController@show')->middleware('auth');
+Route::get('/attachments/{attachment}', 'AttachmentController@show')->middleware('auth');
+Route::delete('/attachments/{attachment}', 'AttachmentController@destroy')->middleware('auth');
     // ->where('file', '(.*)')->middleware('auth');
 
 

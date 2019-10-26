@@ -71,14 +71,14 @@
         <div class="flex -mx-2 mb-6">
             <div class="mx-2">
                 <label for="pdf" class="w-full form-label mb-1">Upload PDF copy</label>
-                <input type="file" name="pdf" accept="application/pdf" class="w-full">
+                <input type="file" name="attachments[]" accept="application/pdf" class="w-full">
                 @if($errors->has('pdf'))
                     <p class="text-red-500">{{ $errors->first('pdf') }}</p>
                 @endif
             </div>
             <div class="mx-2">
                 <label for="scan" class="w-full form-label mb-1">Upload scanned copy</label>
-                <input type="file" name="scan" accept="image/*, application/pdf" class="w-full">
+                <input type="file" name="attachments[]" accept="image/*, application/pdf" class="w-full">
                 @if($errors->has('scan'))
                     <p class="text-red-500">{{ $errors->first('scan') }}</p>
                 @endif

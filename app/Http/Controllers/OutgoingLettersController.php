@@ -52,21 +52,20 @@ class OutgoingLettersController extends Controller
             'subject' => 'required|string|max:80',
             'description' => 'nullable|string|max:400',
             'amount' => 'nullable|numeric',
-            'pdf' => 'required_without:scan|max:200|mimes:pdf',
-            'scan' => 'required_without:pdf|max:200|mimes:jpeg,jpg,png,pdf'
+            'attachments' => 'required|array|max:2',
+            'attachments.*' => 'file|max:200|mimes:jpeg,jpg,png,pdf'
         ]);
+        
+        $letter = OutgoingLetter::create($validData + ['creator_id' => Auth::id()]);
 
-        $pdf = request()->file('pdf');
-        $scan = request()->file('scan');
-
-        if ($pdf) {
-            $validData['pdf'] = $pdf->store('letters/outgoing');
-        }
-        if ($scan) {
-            $validData['scan'] = $scan->store('letters/outgoing');
-        }
-
-        OutgoingLetter::create($validData + ['creator_id'=>Auth::id()]);
+        $letter->attachments()->createMany(
+            array_map(function($attachedFile) {
+                return [
+                    'original_name' => $attachedFile->getClientOriginalName(),
+                    'path' => $attachedFile->store('/letter_attachments/outgoing')
+                ];
+            }, $request->file('attachments'))
+        );
 
         return redirect('/outgoing-letters');
     }
@@ -86,36 +85,29 @@ class OutgoingLettersController extends Controller
             'description' => 'nullable|string|max:400',
             'amount' => 'nullable|numeric',
             'sender_id' => 'sometimes|required|exists:users,id',
-            'pdf' => 'sometimes|required_without:scan|max:200|mimes:pdf',
-            'scan' => 'sometimes|required_without:pdf|max:200|mimes:jpeg,jpg,png,pdf'
+            'attachments' => 'sometimes|required|array|max:2',
+            'attachments.*' => 'file|max:200|mimes:jpeg,jpg,png,pdf'
         ]);
         
-        $pdf = request()->file('pdf');
-        $scan = request()->file('scan');
-
-        if ($pdf) {
-            $validData['pdf'] = $pdf->store('letters/outgoing');
-        }
-        if ($scan) {
-            $validData['scan'] = $scan->store('letters/outgoing');
-        }
-        
         $outgoing_letter->update($validData);
+
+        if($request->hasFile('attachments')) {
+            $outgoing_letter->attachments()->createMany(
+                array_map(function ($attachedFile) {
+                    return [
+                                'original_name' => $attachedFile->getClientOriginalName(),
+                                'path' => $attachedFile->store('/letter_attachments/outgoing')
+                            ];
+                }, $request->file('attachments'))
+            );
+        }
 
         return redirect('/outgoing-letters');
     }
 
     public function destroy(OutgoingLetter $outgoing_letter)
     {
-        $pdf = $outgoing_letter['pdf'];
-        $scan = $outgoing_letter['scan'];
-
-        if ($pdf) {
-            Storage::delete($pdf);
-        }
-        if ($scan) {
-            Storage::delete($scan);
-        }
+        $outgoing_letter->attachments->each->delete();
         
         $outgoing_letter->delete();
 

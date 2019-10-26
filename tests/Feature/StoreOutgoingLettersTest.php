@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Attachment;
 use \App\User;
 use Tests\TestCase;
 use App\OutgoingLetter;
@@ -15,6 +16,13 @@ use Illuminate\Support\str;
 class StoreOutgoingLettersTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        
+        Storage::fake();
+    }
 
     /** @test */
     public function guest_cannot_store_outgoing_letters()
@@ -38,7 +46,10 @@ class StoreOutgoingLettersTest extends TestCase
             'type' => 'Bill',
             'amount' => $this->faker->randomFloat,
             'sender_id' => create(User::class)->id,
-            'pdf' => UploadedFile::fake()->create('document.pdf')
+            'attachments' => [
+                $pdfFile = UploadedFile::fake()->create('document.pdf'),
+                $scanFile = UploadedFile::fake()->image('scanned_copy.jpg'),
+            ]
         ];
 
         $this->withoutExceptionHandling()
@@ -46,6 +57,14 @@ class StoreOutgoingLettersTest extends TestCase
             ->assertRedirect('/outgoing-letters');
             
         $this->assertEquals(1, OutgoingLetter::count());
+
+        tap(OutgoingLetter::first(), function($letter) use ($pdfFile, $scanFile) {
+            $this->assertCount(2, $letter->attachments);
+            $this->assertEquals('letter_attachments/outgoing/' . $pdfFile->hashName(), $letter->attachments[0]->path);
+            $this->assertEquals('letter_attachments/outgoing/' . $scanFile->hashName(), $letter->attachments[1]->path);
+            Storage::assertExists('letter_attachments/outgoing/' . $pdfFile->hashName());
+            Storage::assertExists('letter_attachments/outgoing/' . $scanFile->hashName());
+        });
     }
 
     /** @test */
@@ -61,7 +80,7 @@ class StoreOutgoingLettersTest extends TestCase
                 'type' => 'Bill',
                 'amount' => $this->faker->randomFloat,
                 'sender_id' => create(User::class)->id,
-                'pdf' => UploadedFile::fake()->create('document.pdf')
+                'attachments' =>  [UploadedFile::fake()->create('document.pdf')]
             ];
 
             $this->withoutExceptionHandling()
@@ -86,7 +105,7 @@ class StoreOutgoingLettersTest extends TestCase
             'type' => 'Bill',
             'amount' => $this->faker->randomFloat,
             'sender_id' => create(User::class)->id,
-            'pdf' => UploadedFile::fake()->create('document.pdf')
+            'attachments' => [UploadedFile::fake()->create('document.pdf')]
         ];
 
         $invalidDates = [
@@ -138,7 +157,7 @@ class StoreOutgoingLettersTest extends TestCase
             'type' => 'Bill',
             'amount' => $this->faker->randomFloat,
             'sender_id' => create(User::class)->id,
-            'pdf' => UploadedFile::fake()->create('document.pdf')
+            'attachments' => [UploadedFile::fake()->create('document.pdf')]
         ];
 
         try {
@@ -175,7 +194,7 @@ class StoreOutgoingLettersTest extends TestCase
                 'type' => '', // Empty type
                 'amount' => $this->faker->randomFloat,
                 'sender_id' => create(User::class)->id,
-                'pdf' => UploadedFile::fake()->create('document.pdf')
+                'attachments' =>  [UploadedFile::fake()->create('document.pdf')]
             ];
         
             $this->withoutExceptionHandling()
@@ -203,7 +222,7 @@ class StoreOutgoingLettersTest extends TestCase
                 'type' => 'Bill',
                 'amount' => $this->faker->randomFloat,
                 'sender_id' => create(User::class)->id,
-                'pdf' => UploadedFile::fake()->create('document.pdf')
+                'attachments' =>  [UploadedFile::fake()->create('document.pdf')]
             ];
 
             $this->withoutExceptionHandling()
@@ -229,7 +248,7 @@ class StoreOutgoingLettersTest extends TestCase
                 'type' => 'Bill',
                 'amount' => $this->faker->randomFloat,
                 'sender_id' => create(User::class)->id,
-                'pdf' => UploadedFile::fake()->create('document.pdf')
+                'attachments' =>  [UploadedFile::fake()->create('document.pdf')]
             ];
 
             $this->withoutExceptionHandling()
@@ -253,7 +272,7 @@ class StoreOutgoingLettersTest extends TestCase
                 'type' => 'Bill',
                 'amount' => $this->faker->randomFloat,
                 'sender_id' => create(User::class)->id,
-                'pdf' => UploadedFile::fake()->create('document.pdf')
+                'attachments' =>  [UploadedFile::fake()->create('document.pdf')]
             ];
         
             $this->withoutExceptionHandling()
@@ -280,7 +299,7 @@ class StoreOutgoingLettersTest extends TestCase
                 'type' => 'Bill', 
                 'amount' => $this->faker->randomFloat,
                 'sender_id' => '', // Empty type
-                'pdf' => UploadedFile::fake()->create('document.pdf')
+                'attachments' =>  [UploadedFile::fake()->create('document.pdf')]
             ];
         
             $this->withoutExceptionHandling()
@@ -307,7 +326,7 @@ class StoreOutgoingLettersTest extends TestCase
                 'type' => 'Bill',
                 'amount' => $this->faker->randomFloat,
                 'sender_id' => 123,
-                'pdf' => UploadedFile::fake()->create('document.pdf')
+                'attachments' =>  [UploadedFile::fake()->create('document.pdf')]
             ];
             
             $this->withoutExceptionHandling()
@@ -335,7 +354,7 @@ class StoreOutgoingLettersTest extends TestCase
             // 'description' => $this->faker->sentence(),
             'amount' => $this->faker->randomFloat,
             'sender_id' => create(User::class)->id,
-            'pdf' => UploadedFile::fake()->create('document.pdf')
+            'attachments' =>  [UploadedFile::fake()->create('document.pdf')]
         ];
     
         $this->withoutExceptionHandling()
@@ -357,7 +376,7 @@ class StoreOutgoingLettersTest extends TestCase
             'type' => 'Bill',
             'amount' => '', // empty string amount
             'sender_id' => create(User::class)->id,
-            'pdf' => UploadedFile::fake()->create('document.pdf')
+            'attachments' =>  [UploadedFile::fake()->create('document.pdf')]
         ];
     
         $this->withoutExceptionHandling()
@@ -380,7 +399,7 @@ class StoreOutgoingLettersTest extends TestCase
                 'type' => 'Bill',
                 'amount' => 'some string',
                 'sender_id' => create(User::class)->id,
-                'pdf' => UploadedFile::fake()->create('document.pdf')
+                'attachments' =>  [UploadedFile::fake()->create('document.pdf')]
             ];
                 
             $this->withoutExceptionHandling()

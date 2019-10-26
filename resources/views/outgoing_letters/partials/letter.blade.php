@@ -10,16 +10,6 @@
             {{ $letter->recipient }}
         </div>
         <div class="ml-auto flex">
-            @isset($letter->pdf)
-                <a href="/attachments?file={{ $letter->pdf }}" target="_blank" class="p-1 text-orange-600 hover:bg-gray-200 rounded mr-3" title="pdf">
-                    <feather-icon name="file" stroke-width="2.5" class="h-current">pdf</feather-icon>
-                </a>
-            @endisset
-            @isset($letter->scan)
-            <a href="/attachments?file={{ $letter->scan }}" target="_blank" class="p-1 text-gray-600 hover:bg-gray-200 rounded mr-3" title="scan">
-                <feather-icon name="file-minus" stroke-width="2.5" class="h-current">scan</feather-icon>
-            </a>
-            @endisset
             <a href="/outgoing-letters/{{$letter->id}}/edit"
                 class="p-1 text-gray-500 text-blue-600 hover:bg-gray-200 rounded mr-3" title="Edit">
                 <feather-icon name="edit-3" stroke-width="2.5" class="h-current">Edit</feather-icon>
@@ -47,6 +37,16 @@
     @else
         <p class="text-black-50">{{ $letter->description }}</p>
     @endisset
+    <div class="flex flex-wrap -mx-2">
+        @foreach ($letter->attachments as $attachment)
+            <span class="p-2 rounded border hover:bg-gray-300 text-gray-600 m-2">
+                <a href="/attachments/{{ $attachment->id }}" target="__blank" class="inline-flex items-center mr-1">
+                    <feather-icon name="paperclip" class="h-4 mr-2" stroke-width="2">View Attachment</feather-icon>
+                    <span>{{ $attachment->original_name }}</span>
+                </a>
+            </span>
+        @endforeach
+    </div>
     <div class = "mt-2 flex">
         <details >
             <summary class="inline-flex is-sm btn btn-magenta"> 
