@@ -6,11 +6,7 @@ use Auth;
 use App\OutgoingLetter;
 use App\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage; 
-use Illuminate\Support\Facades\Cache;
-    
-
-use DB;
+use Illuminate\Support\Facades\Storage;
 
 class OutgoingLettersController extends Controller
 {
@@ -18,7 +14,7 @@ class OutgoingLettersController extends Controller
     {
         $filters = $request->query('filters');
         
-        $query = OutgoingLetter::applyFilter($filters);
+        $query = OutgoingLetter::applyFilter($filters)->with(['remarks', 'reminders']);
 
         if ($request->has('search') && request('search')!= '') {
             $query->where('subject', 'like', '%'.request('search').'%')
@@ -26,12 +22,6 @@ class OutgoingLettersController extends Controller
         }
 
         $outgoing_letters = $query->orderBy('date', 'DESC')->get();
-
-        $outgoing_letters->load(['remarks'=>function($query){
-            $query->orderBy('updated_at', 'DESC');
-            } , 'reminders'=>function($query){
-            $query->orderBy('created_at','DESC');
-        }]);
 
         $recipients = OutgoingLetter::selectRaw('DISTINCT(recipient)')->get()->pluck('recipient', 'recipient');
         $types = OutgoingLetter::selectRaw('DISTINCT(type)')->get()->pluck('type', 'type');
@@ -65,37 +55,14 @@ class OutgoingLettersController extends Controller
             'pdf' => 'required_without:scan|max:200|mimes:pdf',
             'scan' => 'required_without:pdf|max:200|mimes:jpeg,jpg,png,pdf'
         ]);
-        
-        
-        $type = $validData['type'];
-        $validData['serial_no'] = 'CS/';
-        
-        if($type == 'Bill') {
-            $validData['serial_no'] .= 'TR/';
-        }
-        else if($type == 'Notesheet') {
-            $validData['serial_no'] .= 'NTS/';
-        }
-        
-        $validData['serial_no'] .= now()->year.'/';
-        
-        if(Cache::has($type)) {
-            Cache::increment($type);
-        }
-        else {
-            Cache::put($type, 1, 525600);    //1 year in miuntes
-        }
-        
-        $serial_no_val = Cache::get($type);
-        $validData['serial_no'] .= str_pad($serial_no_val,4,'0',STR_PAD_LEFT);
 
         $pdf = request()->file('pdf');
         $scan = request()->file('scan');
 
-        if($pdf) {
+        if ($pdf) {
             $validData['pdf'] = $pdf->store('letters/outgoing');
         }
-        if($scan) {
+        if ($scan) {
             $validData['scan'] = $scan->store('letters/outgoing');
         }
 
@@ -126,10 +93,10 @@ class OutgoingLettersController extends Controller
         $pdf = request()->file('pdf');
         $scan = request()->file('scan');
 
-        if($pdf) {
+        if ($pdf) {
             $validData['pdf'] = $pdf->store('letters/outgoing');
         }
-        if($scan) {
+        if ($scan) {
             $validData['scan'] = $scan->store('letters/outgoing');
         }
         
@@ -143,12 +110,10 @@ class OutgoingLettersController extends Controller
         $pdf = $outgoing_letter['pdf'];
         $scan = $outgoing_letter['scan'];
 
-        if($pdf) 
-        {
+        if ($pdf) {
             Storage::delete($pdf);
         }
-        if($scan)
-        {
+        if ($scan) {
             Storage::delete($scan);
         }
         
