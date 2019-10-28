@@ -32,28 +32,39 @@ class StoreLetterRemindersTest extends TestCase
     }
 
     /** @test */
-    public function user_can_store_letter_reminders() 
+    public function user_can_store_letter_reminders()
     {
         Storage::fake();
         
         $this->be(create(User::class));
-        $pdf = UploadedFile::fake()->create('document.pdf', 50);
-        $scan = UploadedFile::fake()->image('testImage.jpg');
         $letter = create(OutgoingLetter::class);
 
         $reminder = [
             'date' => now()->subDay(1)->format('Y-m-d'),
             'letter_id' => $letter->id,
-            'pdf' => $pdf,
-            'scan' => $scan
+            'attachments' => [ 
+                $photo = UploadedFile::fake()->image('Scanned.jpg'),
+                $document = UploadedFile::fake()->create('Document.pdf') 
+            ],
         ];
 
         $this->withOutExceptionHandling()
             ->post('/reminders', $reminder);
         
         $this->assertEquals(1, LetterReminder::count());
-        Storage::disk('local')->assertExists('letters/outgoing/reminders/'.$pdf->hashName()); 
-        Storage::disk('local')->assertExists('letters/outgoing/reminders/'.$scan->hashName());
+        $reminder = LetterReminder::first();
+        $this->assertCount(2, $reminder->attachments);
+        $this->assertEquals(
+            'letter_attachments/outgoing/reminders/' . $photo->hashName(),
+            $reminder->attachments->first()->path
+        );
+        $this->assertEquals(
+            'letter_attachments/outgoing/reminders/' . $document->hashName(),
+            $reminder->attachments->last()->path
+        );
+
+        Storage::assertExists($reminder->attachments->first()->path);
+        Storage::assertExists($reminder->attachments->last()->path);
     }
 
     /** @test*/
@@ -61,20 +72,19 @@ class StoreLetterRemindersTest extends TestCase
     {
         $this->be(create(User::class));
 
-        $pdf = UploadedFile::fake()->create('document.pdf', 50);
-        $scan = UploadedFile::fake()->image('testImage.jpg');
-
         $reminder = [
             'date' => now()->subDay(1)->format('Y-m-d'),
             // 'letter_id' => $letter->id,
-            'pdf' => $pdf,
-            'scan' => $scan
+            'attachments' => [ 
+                UploadedFile::fake()->image('Scanned.jpg'),
+                UploadedFile::fake()->create('Document.pdf') 
+            ],
         ];
 
-        try{
+        try {
             $this->withExceptionHandling()
                 ->post('/reminders', $reminder);
-        }catch(ValidationException $e) {
+        } catch (ValidationException $e) {
             $this->assertArrayHasKey('letter_id', $e->errors());
         }
 
@@ -86,68 +96,22 @@ class StoreLetterRemindersTest extends TestCase
     {
         $this->be(create(User::class));
 
-        $pdf = UploadedFile::fake()->create('document.pdf', 50);
-        $scan = UploadedFile::fake()->image('testImage.jpg');
-
         $reminder = [
             'date' => now()->subDay(1)->format('Y-m-d'),
             'letter_id' => 123,
-            'pdf' => $pdf,
-            'scan' => $scan
+            'attachments' => [ 
+                UploadedFile::fake()->image('Scanned.jpg'),
+                UploadedFile::fake()->create('Document.pdf') 
+            ],
         ];
 
-        try{
+        try {
             $this->withExceptionHandling()
                 ->post('/reminders', $reminder);
-        }catch(ValidationException $e) {
+        } catch (ValidationException $e) {
             $this->assertArrayHasKey('letter_id', $e->errors());
         }
 
         $this->assertEquals(0, LetterReminder::count());
     }
-
-    /** @test*/
-    public function request_validates_only_pdf_can_be_uploaded()
-    {
-        Storage::fake();
-        
-        $this->be(create(User::class));
-        $letter = create(OutgoingLetter::class);
-        $pdf = UploadedFile::fake()->create('document.pdf', 50);
-
-        $reminder = [
-            'date' => now()->subDay(1)->format('Y-m-d'),
-            'letter_id' => $letter->id,
-            'pdf' => $pdf,
-        ];
-
-
-        $this->withOutExceptionHandling()
-            ->post('/reminders', $reminder);
-        
-        $this->assertEquals(1, LetterReminder::count());
-        Storage::disk('local')->assertExists('letters/outgoing/reminders/'.$pdf->hashName()); 
-        
-    }
-
-    /** @test*/
-    public function request_validates_only_scan_can_be_uploaded()
-    {
-        $this->be(create(User::class));
-        $scan = UploadedFile::fake()->image('testImage.jpg');
-        $letter = create(OutgoingLetter::class);
-        $reminder = [
-            'date' => now()->format('Y-m-d'),
-            'letter_id' => $letter->id,
-            'scan' => $scan
-        ];
-
-        $this->withOutExceptionHandling()
-            ->post('/reminders', $reminder);
-        
-        $this->assertEquals(1, LetterReminder::count());
-        Storage::disk('local')->assertExists('letters/outgoing/reminders/'.$scan->hashName());
-    }
-
-
 }

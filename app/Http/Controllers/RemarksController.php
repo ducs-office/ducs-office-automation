@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\OutgoingLetter;
 use App\Remark;
+use Illuminate\Support\Facades\Auth;
 
 class RemarksController extends Controller
 {
@@ -16,7 +17,7 @@ class RemarksController extends Controller
             'letter_id' => 'required|integer|exists:outgoing_letters,id'
         ]);
 
-        Remark::create($data);
+        Remark::create($data + ['user_id' => Auth::id()]);
         
         return back();
     }

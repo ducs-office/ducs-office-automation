@@ -15,9 +15,13 @@ class CreateRemarksTable extends Migration
     {
         Schema::create('remarks', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->timestamps();
+            $table->unsignedBigInteger('letter_id');
+            $table->unsignedBigInteger('user_id');
             $table->string('description');
-            $table->unsignedBigInteger('letter_id')->references('id')->on('outgoing_letters');
+            $table->timestamps();
+            
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('letter_id')->references('id')->on('outgoing_letters');
         });
 
     }

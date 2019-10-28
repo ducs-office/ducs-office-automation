@@ -14,7 +14,7 @@ class OutgoingLettersController extends Controller
     {
         $filters = $request->query('filters');
         
-        $query = OutgoingLetter::applyFilter($filters)->with(['remarks', 'reminders']);
+        $query = OutgoingLetter::applyFilter($filters)->with(['remarks.user', 'reminders']);
 
         if ($request->has('search') && request('search')!= '') {
             $query->where('subject', 'like', '%'.request('search').'%')

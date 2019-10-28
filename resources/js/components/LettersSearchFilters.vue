@@ -7,7 +7,7 @@
             leave-active-class="transition"
             enter-class="translate-x-100 opacity-0"
             leave-to-class="translate-x-100 opacity-0">
-            <form method="GET" v-if="showing" class="absolute max-h-screen-1/2 top-100 border max-w-64 shadow-lg rounded overflow-y-auto bg-white p-4">
+            <form method="GET" v-if="showing" class="absolute max-h-screen-1/2 right-0 top-100 border max-w-64 shadow-lg rounded overflow-y-auto bg-white p-4">
                 <input type="text" name="search" class="w-full form-input is-sm w-full mb-4" placeholder="Search keywords..">
 
                 <div v-for="(filter, index) in filters" :key="index" class="mb-2">

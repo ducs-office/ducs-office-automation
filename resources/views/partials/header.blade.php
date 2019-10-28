@@ -5,8 +5,8 @@
         <feather-icon name="search" class="absolute left-0 ml-2 absolute-y-center text-gray-600 h-5"></feather-icon>
     </form>
     <button class="flex items-center mr-3 btn">
-        <img src="https://gravatar.com/avatar/{{ md5(trim(Auth::user()->email)) }}" alt="{{ Auth::user()->name }}"
-            class="w-6 h-6 rounded-full mr-2">
+        <img src="https://gravatar.com/avatar/{{ md5(strtolower(trim(Auth::user()->email))) }}?s=48&d=identicon"
+            alt="{{ Auth::user()->name }}" width="32" height="32" class="w-6 h-6 rounded-full mr-2">
         <h2 class="font-bold truncate max-w-32">{{ head(explode(' ', Auth::user()->name)) }}</h2>
     </button>
     <form action="\logout" method="POST" class="inline-flex items-center">
