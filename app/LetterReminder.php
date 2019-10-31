@@ -29,6 +29,10 @@ class LetterReminder extends Model
 
             return $letter_reminder;
         });
+
+        static::deleting(function ($letter_reminder) {
+            $letter_reminder->attachments->each->delete();
+        });
     }
     
     public function letter()
