@@ -42,9 +42,9 @@ class StoreLetterRemindersTest extends TestCase
         $reminder = [
             'date' => now()->subDay(1)->format('Y-m-d'),
             'letter_id' => $letter->id,
-            'attachments' => [ 
+            'attachments' => [
                 $photo = UploadedFile::fake()->image('Scanned.jpg'),
-                $document = UploadedFile::fake()->create('Document.pdf') 
+                $document = UploadedFile::fake()->create('Document.pdf')
             ],
         ];
 
@@ -75,9 +75,9 @@ class StoreLetterRemindersTest extends TestCase
         $reminder = [
             'date' => now()->subDay(1)->format('Y-m-d'),
             // 'letter_id' => $letter->id,
-            'attachments' => [ 
+            'attachments' => [
                 UploadedFile::fake()->image('Scanned.jpg'),
-                UploadedFile::fake()->create('Document.pdf') 
+                UploadedFile::fake()->create('Document.pdf')
             ],
         ];
 
@@ -99,9 +99,9 @@ class StoreLetterRemindersTest extends TestCase
         $reminder = [
             'date' => now()->subDay(1)->format('Y-m-d'),
             'letter_id' => 123,
-            'attachments' => [ 
+            'attachments' => [
                 UploadedFile::fake()->image('Scanned.jpg'),
-                UploadedFile::fake()->create('Document.pdf') 
+                UploadedFile::fake()->create('Document.pdf')
             ],
         ];
 

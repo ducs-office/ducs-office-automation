@@ -8,14 +8,15 @@ use App\User;
 
 class UsersController extends Controller
 {
-    public function index(Request $request) {
-        if(!$request->has('q') || $request->q == '') {
+    public function index(Request $request)
+    {
+        if (!$request->has('q') || $request->q == '') {
             return [];
         }
         
         $query = User::where('email', 'like', $request->q);
 
-        if($query->exists()) {
+        if ($query->exists()) {
             return $query->limit($request->limit)->get();
         }
 
@@ -24,7 +25,8 @@ class UsersController extends Controller
             ->get();
     }
 
-    public function show(User $user) {
+    public function show(User $user)
+    {
         return $user;
     }
 }

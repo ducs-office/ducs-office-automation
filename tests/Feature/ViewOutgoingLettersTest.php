@@ -8,6 +8,8 @@ use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class ViewOutgoingLettersTest extends TestCase
 {
@@ -20,6 +22,22 @@ class ViewOutgoingLettersTest extends TestCase
             ->assertRedirect('/login');
     }
 
+    /** @test */
+    public function user_cannot_view_any_outgoing_letter_if_permission_not_given()
+    {
+        $user = create(User::class);
+        $role = Role::create(['name' => 'random role']);
+        $permission = Permission::firstOrCreate(['name' => 'view outgoing letters']);
+
+        $role->revokePermissionTo($permission);
+        
+        $this->signIn($user, $role->name);
+
+        $this->withExceptionHandling()
+            ->get('/outgoing-letters')
+            ->assertForbidden();
+    }
+    
     /** @test */
     public function user_can_view_outgoing_letters()
     {
@@ -41,7 +59,7 @@ class ViewOutgoingLettersTest extends TestCase
     public function view_letters_are_sorted_on_date()
     {
         $this->signIn();
-        $letters = create(OutgoingLetter::class,3);
+        $letters = create(OutgoingLetter::class, 3);
 
         $viewData = $this->withExceptionHandling()
             ->get('/outgoing-letters')

@@ -13,12 +13,14 @@
                     Dashboard
                 </a>
             </li>
+            @canany('viewAny', \App\OutgoingLetter::class)
             <li>
                 <a href="/outgoing-letters" class="flex items-center py-2 px-4 hover:bg-magenta-700 hover:pl-6">
                     <feather-icon name="mail" class="h-4 mr-2">Outgoing Letters</feather-icon>
                     Outgoing Letters
                 </a>
             </li>
+            @endcanany
             <li>
                 <a href="/programmes" class="flex items-center py-2 px-4 hover:bg-magenta-700 hover:pl-6">
                     <feather-icon name="book" class="h-4 mr-2">Academic Programmes</feather-icon>

@@ -11,7 +11,6 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use Illuminate\Support\str;
 
-
 class StoreRemarkTest extends TestCase
 {
     /**
@@ -47,7 +46,7 @@ class StoreRemarkTest extends TestCase
         $this->assertEquals(1, Remark::count());
     }
 
-     /** @test */
+    /** @test */
     public function request_validates_description_field_cannot_be_null()
     {
         $this->signIn();
@@ -55,18 +54,17 @@ class StoreRemarkTest extends TestCase
         $letter = create(OutgoingLetter::class);
         $remark = ['description'=>''];
 
-        try{
-        $this->withoutExceptionHandling()
-            ->post("/outgoing-letters/{$letter->id}/remarks",$remark);
-        }catch(ValidationException $e){
+        try {
+            $this->withoutExceptionHandling()
+                ->post("/outgoing-letters/{$letter->id}/remarks",$remark);
+        } catch(ValidationException $e) {
             $this->assertArrayHasKey('description',$e->errors());
         }
 
-        $this->assertEquals(0,Remark::count());
-            
+        $this->assertEquals(0, Remark::count());
     }
 
-     /** @test */
+    /** @test */
     public function request_validates_description_field_minlimit_10()
     {
         $this->signIn();
@@ -74,17 +72,17 @@ class StoreRemarkTest extends TestCase
         $letter = create(OutgoingLetter::class);
         $remark = ['description'=>Str::random(9)];
 
-        try{
+        try {
             $this->withoutExceptionHandling()
                 ->post("/outgoing-letters/{$letter->id}/remarks",$remark);
         }catch(ValidationException $e){
             $this->assertArrayHasKey('description',$e->errors());
         }
 
-        $this->assertEquals(0,Remark::count());
+        $this->assertEquals(0, Remark::count());
     }
 
-     /** @test */
+    /** @test */
     public function request_validates_description_field_maxlimit_255()
     {
         $this->signIn();
@@ -92,13 +90,13 @@ class StoreRemarkTest extends TestCase
         $letter = create(OutgoingLetter::class);
         $remark = ['description' => Str::random(256)];
 
-        try{
+        try {
             $this->withoutExceptionHandling()
                 ->post("/outgoing-letters/{$letter->id}/remarks",$remark);
         }catch(ValidationException $e){
             $this->assertArrayHasKey('description',$e->errors());
         }
 
-        $this->assertEquals(0,Remark::count());
+        $this->assertEquals(0, Remark::count());
     }
 }

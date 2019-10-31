@@ -2,8 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Attachment;
-use \App\User;
+use App\User;
 use Tests\TestCase;
 use App\OutgoingLetter;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -11,7 +10,6 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
-use Illuminate\Support\str;
 
 class StoreOutgoingLettersTest extends TestCase
 {
@@ -58,7 +56,7 @@ class StoreOutgoingLettersTest extends TestCase
             
         $this->assertEquals(1, OutgoingLetter::count());
 
-        tap(OutgoingLetter::first(), function($letter) use ($pdfFile, $scanFile) {
+        tap(OutgoingLetter::first(), function ($letter) use ($pdfFile, $scanFile) {
             $this->assertCount(2, $letter->attachments);
             $this->assertEquals('letter_attachments/outgoing/' . $pdfFile->hashName(), $letter->attachments[0]->path);
             $this->assertEquals('letter_attachments/outgoing/' . $scanFile->hashName(), $letter->attachments[1]->path);
@@ -96,7 +94,7 @@ class StoreOutgoingLettersTest extends TestCase
     /** @test */
     public function request_validates_date_field_is_a_valid_date()
     {
-        $this->be($user = create(User::class));
+        $this->signIn();
 
         $letter = [
             'date' => now()->format('Y-m-d'),
@@ -130,8 +128,6 @@ class StoreOutgoingLettersTest extends TestCase
             } catch (ValidationException $e) {
                 $this->assertArrayHasKey('date', $e->errors());
                 $this->assertEquals(0, OutgoingLetter::count());
-            } catch (\Exception $e) {
-                $this->fail("Invalid date '{$date}' was not validated");
             }
         }
 
@@ -148,7 +144,7 @@ class StoreOutgoingLettersTest extends TestCase
     /** @test */
     public function request_validates_date_field_cannot_be_a_future_date()
     {
-        $this->be(create(\App\User::class));
+        $this->signIn();
         
         $letter = [
             'date' => now()->addMonth(2)->format('Y-m-d'),
@@ -185,7 +181,7 @@ class StoreOutgoingLettersTest extends TestCase
     public function request_validates_type_field_is_not_null()
     {
         try {
-            $this->be(create(\App\User::class));
+            $this->signIn();
 
             $letter = [
                 'date' => now()->format('Y-m-d'),
@@ -213,7 +209,7 @@ class StoreOutgoingLettersTest extends TestCase
     public function request_validates_subject_field_is_not_null()
     {
         try {
-            $this -> be(create(\App\User::class));
+            $this->signIn();
 
             $letter = [
                 'date' => now()->format('Y-m-d'),
@@ -240,7 +236,7 @@ class StoreOutgoingLettersTest extends TestCase
     public function request_validates_subject_field_maxlimit_80()
     {
         try {
-            $this -> be(create(\App\User::class));
+            $this->signIn();
             $letter = [
                 'date' => now()->format('Y-m-d'),
                 'subject' => $this->faker->regexify('[A-Za-z0-9]{81}'),
@@ -264,7 +260,7 @@ class StoreOutgoingLettersTest extends TestCase
     public function request_validates_recipient_field_is_not_null()
     {
         try {
-            $this->be(create(\App\User::class));
+            $this->signIn();
             $letter = [
                 'date' => now()->format('Y-m-d'),
                 'subject' => $this->faker->words(3, true),
@@ -291,12 +287,12 @@ class StoreOutgoingLettersTest extends TestCase
     public function request_validates_sender_id_field_is_not_null()
     {
         try {
-            $this->be(create(\App\User::class));
+            $this->signIn();
             $letter = [
                 'date' => now()->format('Y-m-d'),
                 'subject' => $this->faker->words(3, true),
                 'recipient' => $this->faker->name(),
-                'type' => 'Bill', 
+                'type' => 'Bill',
                 'amount' => $this->faker->randomFloat,
                 'sender_id' => '', // Empty type
                 'attachments' =>  [UploadedFile::fake()->create('document.pdf')]
@@ -367,7 +363,7 @@ class StoreOutgoingLettersTest extends TestCase
     /** @test */
     public function request_validates_amount_field_can_be_null()
     {
-        $this->be(create(\App\User::class));
+        $this->signIn();
 
         $letter = [
             'date' => now()->format('Y-m-d'),
@@ -390,7 +386,7 @@ class StoreOutgoingLettersTest extends TestCase
     public function request_validates_amount_field_cannot_be_a_string_value()
     {
         try {
-            $this->be(create(\App\User::class));
+            $this->signIn();
 
             $letter = [
                 'date' => now()->format('Y-m-d'),

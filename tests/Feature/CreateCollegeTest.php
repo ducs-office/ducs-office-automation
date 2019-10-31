@@ -22,12 +22,12 @@ class CreateCollegeTest extends TestCase
     {
         $this->signIn();
 
-        $this->post('/colleges',[
+        $this->post('/colleges', [
             'code' => 'DU-KMV-21',
             'name' => 'Keshav Mahavidyalaya'
         ])->assertRedirect('/colleges')
-        ->assertSessionHasFlash('success','College created successfully!');
+        ->assertSessionHasFlash('success', 'College created successfully!');
 
-        $this->assertEquals(1,College::count());
+        $this->assertEquals(1, College::count());
     }
 }

@@ -10,6 +10,11 @@ use Illuminate\Support\Facades\Storage;
 
 class OutgoingLettersController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(OutgoingLetter::class, 'outgoing_letter');
+    }
+    
     public function index(Request $request)
     {
         $filters = $request->query('filters');
@@ -59,7 +64,7 @@ class OutgoingLettersController extends Controller
         $letter = OutgoingLetter::create($validData + ['creator_id' => Auth::id()]);
 
         $letter->attachments()->createMany(
-            array_map(function($attachedFile) {
+            array_map(function ($attachedFile) {
                 return [
                     'original_name' => $attachedFile->getClientOriginalName(),
                     'path' => $attachedFile->store('/letter_attachments/outgoing')
@@ -91,7 +96,7 @@ class OutgoingLettersController extends Controller
         
         $outgoing_letter->update($validData);
 
-        if($request->hasFile('attachments')) {
+        if ($request->hasFile('attachments')) {
             $outgoing_letter->attachments()->createMany(
                 array_map(function ($attachedFile) {
                     return [

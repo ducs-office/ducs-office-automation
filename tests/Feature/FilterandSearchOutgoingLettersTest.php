@@ -105,7 +105,8 @@ class FilterOutgoingLettersTest extends TestCase
     public function user_can_view_filtered_letters_even_if_after_date_not_given()
     {
         create(OutgoingLetter::class, 1, ['date' => '1997-07-15']);
-        $this -> be(create(User::class));
+        $this->signIn(create(User::class), 'office');
+
         $after_date = '';
 
         $viewLetters = $this -> withoutExceptionHandling()
@@ -122,7 +123,8 @@ class FilterOutgoingLettersTest extends TestCase
     public function user_can_view_filtered_letters_even_if_before_date_not_given()
     {
         create(OutgoingLetter::class, 1, ['date' => '1997-07-15']);
-        $this -> be(create(User::class));
+        $this->signIn(create(User::class), 'office');
+
         $before_date = '';
 
         $viewLetters = $this -> withoutExceptionHandling()
@@ -139,7 +141,8 @@ class FilterOutgoingLettersTest extends TestCase
     public function user_can_view_filtered_letters_even_if_before_and_after_date_not_given()
     {
         create(OutgoingLetter::class, 1, ['date' => '1997-07-15']);
-        $this -> be(create(User::class));
+        $this->signIn(create(User::class), 'office');
+
         $after_date = '';
         $before_date = '';
 
@@ -160,7 +163,7 @@ class FilterOutgoingLettersTest extends TestCase
         create(OutgoingLetter::class, 1, ['type' => 'Notesheet']);
         create(OutgoingLetter::class, 1, ['type' => 'General']);
         
-        $this->be(create(User::class));
+        $this->signIn(create(User::class), 'office');
 
         $viewLetters = $this -> withoutExceptionHandling()
             ->get('/outgoing-letters?filters[type][equals]=Bill')

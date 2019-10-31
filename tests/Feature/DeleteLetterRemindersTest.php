@@ -44,5 +44,4 @@ class DeleteLetterRemindersTest extends TestCase
         Storage::assertMissing($reminder->pdf);
         $this->assertEquals(0, LetterReminder::count());
     }
-
 }

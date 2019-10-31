@@ -26,7 +26,7 @@ class DeleteRemarkTest extends TestCase
             ->delete("/remarks/$remark->id")
             ->assertRedirect('/login');
         
-        $this->assertEquals(1,Remark::count());
+        $this->assertEquals(1, Remark::count());
     }
 
     /** @test */
@@ -38,7 +38,6 @@ class DeleteRemarkTest extends TestCase
         $this->withoutExceptionHandling()
             ->delete("/remarks/$remark->id");
         
-        $this->assertEquals(0,Remark::count());
+        $this->assertEquals(0, Remark::count());
     }
-
 }

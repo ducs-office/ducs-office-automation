@@ -8,14 +8,14 @@ use Faker\Generator as Faker;
 
 $factory->define(OutgoingLetter::class, function (Faker $faker) {
     return [
-        'creator_id' => function() {
+        'creator_id' => function () {
             return factory(User::class)->create()->id;
         },
         'date' => $faker->date('Y-m-d'),
         'type' => $type = $faker->randomElement(['Bill', 'Notesheet', 'General']),
         'subject' => $faker->sentence,
         'recipient' => $faker->name,
-        'sender_id' => function() {
+        'sender_id' => function () {
             return factory(User::class)->create()->id;
         },
         'description' => $faker->paragraph,

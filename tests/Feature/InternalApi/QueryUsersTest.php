@@ -8,11 +8,11 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class QueryUsersTest extends TestCase
 {
-
     use RefreshDatabase;
 
     /** @test */
-    public function guest_cannot_query_other_users_by_keyword() {
+    public function guest_cannot_query_other_users_by_keyword()
+    {
         $john = create(User::class, 1, ['name' => 'John']);
 
         $this->getJson('/api/users?q='.$john->name)
@@ -20,7 +20,8 @@ class QueryUsersTest extends TestCase
     }
 
     /** @test */
-    public function user_can_query_other_users_by_keyword() {
+    public function user_can_query_other_users_by_keyword()
+    {
         $john = create(User::class, 1, ['name' => 'John Doe']);
         $jane = create(User::class, 1, ['name' => 'Jane Doe']);
         $mary = create(User::class, 1, ['name' => 'Mary John']);
@@ -45,7 +46,8 @@ class QueryUsersTest extends TestCase
     }
 
     /** @test */
-    public function if_query_matches_exact_email_only_that_user_is_returned() {
+    public function if_query_matches_exact_email_only_that_user_is_returned()
+    {
         $maliciousUser = create(User::class, 1, ['name' => 'john@example.com']);
         $john = create(User::class, 1, ['name' => 'John', 'email' => 'john@example.com']);
         $jane = create(User::class, 1, ['name' => 'Jane Doe']);
@@ -65,7 +67,8 @@ class QueryUsersTest extends TestCase
     }
 
     /** @test */
-    public function without_query_parameter_no_user_is_returned() {
+    public function without_query_parameter_no_user_is_returned()
+    {
         $john = create(User::class, 1, ['name' => 'John']);
 
         $this->signIn($john);
@@ -78,7 +81,8 @@ class QueryUsersTest extends TestCase
     }
 
     /** @test */
-    public function limit_query_parameter_limits_number_of_matches_returned() {
+    public function limit_query_parameter_limits_number_of_matches_returned()
+    {
         $john = create(User::class, 1, ['name' => 'John Doe']);
         create(User::class, 1, ['name' => 'Jane Doe']);
         create(User::class, 1, ['name' => 'Joe Doe']);
@@ -96,10 +100,5 @@ class QueryUsersTest extends TestCase
             ->assertSuccessful()
             ->json();
         $this->assertCount(4, $users);
-
-
     }
-
-
-
 }

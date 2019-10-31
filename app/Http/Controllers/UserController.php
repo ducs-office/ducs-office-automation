@@ -56,7 +56,7 @@ class UserController extends Controller
 
         $user->update($request->only(['name', 'email']));
 
-        if($request->has('roles')) {
+        if ($request->has('roles')) {
             $user->syncRoles($request->roles);
         }
 
@@ -65,7 +65,7 @@ class UserController extends Controller
         return redirect()->back();
     }
 
-    public function destroy(User $user) 
+    public function destroy(User $user)
     {
         $user->delete();
         

@@ -46,7 +46,7 @@ class RoleController extends Controller
             'name' => $request->name
         ]);
 
-        if($request->has('permissions')) {
+        if ($request->has('permissions')) {
             $role->syncPermissions($request->permissions);
         }
 

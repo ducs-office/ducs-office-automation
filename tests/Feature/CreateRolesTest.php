@@ -14,7 +14,7 @@ class CreateRolesTest extends TestCase
     use RefreshDatabase;
     
     /** @test */
-    public function office_staff_can_create_new_roles_with_permissions() 
+    public function office_staff_can_create_new_roles_with_permissions()
     {
         $this->signIn($user = create(User::class), 'office');
 

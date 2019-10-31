@@ -87,6 +87,8 @@ return [
     'static' => [
         'permissions' => [
             'outgoing letters' => ['create', 'view', 'edit', 'delete'],
+            'remarks' => ['create', 'view', 'edit', 'delete'],
+            'reminders' => ['create', 'view', 'edit', 'delete'],
             'colleges' => ['create', 'view', 'edit', 'delete'],
             'programmes' => ['create', 'view', 'edit', 'delete'],
             'courses' => ['create', 'view', 'edit', 'delete'],

@@ -23,9 +23,8 @@ class RemarksController extends Controller
 
     public function update(Remark $remark)
     {
-        
         $remark->update(request()->validate([
-            'description'=>'required|min:10|max:255|string' 
+            'description'=>'required|min:10|max:255|string'
         ]));
         return back();
     }

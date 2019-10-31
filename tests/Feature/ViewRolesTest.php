@@ -27,6 +27,5 @@ class ViewRolesTest extends TestCase
 
         $this->assertEquals(Role::count(), $viewRoles->count());
         $this->assertEquals(Permission::count(), $viewPermissions->count());
-
     }
 }

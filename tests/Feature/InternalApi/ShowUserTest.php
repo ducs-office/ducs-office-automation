@@ -9,11 +9,11 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ShowUserTest extends TestCase
 {
-
     use RefreshDatabase;
 
     /** @test */
-    public function user_can_query_another_user_containing_id_name_email() {
+    public function user_can_query_another_user_containing_id_name_email()
+    {
         $himani_mam = create(User::class, 1, ['id' => 1]);
         create(User::class, 1, ['id' => 2]);
 

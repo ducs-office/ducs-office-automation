@@ -58,10 +58,10 @@ class DatabaseSeeder extends Seeder
             'name' => 'Acharya Narendra Dev College'
         ]);
 
-        factory(College::class,5)->create();
+        factory(College::class, 5)->create();
 
-        factory(Remark::class,4)->create();
+        factory(Remark::class, 4)->create(['letter_id' => 1]);
 
-        factory(LetterReminder::class,4)->create(['letter_id' => 1]);
+        factory(LetterReminder::class, 4)->create(['letter_id' => 1]);
     }
 }
