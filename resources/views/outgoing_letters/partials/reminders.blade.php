@@ -41,6 +41,12 @@
                 </feather-icon>
                 {{ $attachment->original_name }}
             </a>
+            <button type="submit"
+                form="remove-attachment"
+                formaction="/attachments/{{ $attachment->id}}"
+                class="p-1 rounded hover:bg-red-500 hover:text-white">
+                <feather-icon name="x" class="h-4" stroke-width="2">Delete Attachment</feather-icon>
+            </button>
             @endforeach
         </div>
         <div class="px-2 flex items-baseline">
@@ -64,4 +70,9 @@
         <p class="text-gray-600">No Reminders sent yet.</p>
     </div>
     @endforelse
+    <form id="remove-attachment"
+        method="POST"
+        onsubmit="return confirm('Do you really want to delete attachment?');">
+        @csrf @method('DELETE')
+    </form>
 </div>

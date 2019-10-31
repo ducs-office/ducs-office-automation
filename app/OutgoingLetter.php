@@ -4,6 +4,7 @@ namespace App;
 
 use App\Model;
 use App\Remark;
+use App\LetterReminder;
 use Illuminate\Support\Facades\Cache;
 
 class OutgoingLetter extends Model
@@ -34,7 +35,7 @@ class OutgoingLetter extends Model
                 'General' => ''
             ];
 
-            $year = now()->year;
+            $year = $outgoing_letter->date->format('Y');
             $serial_no = "CS/{$prefixes[$outgoing_letter->type]}{$year}";
             $cache_key = "letter_seq_{$serial_no}";
             $number_sequence = str_pad(Cache::increment($cache_key), 4, '0', STR_PAD_LEFT);
@@ -43,6 +44,7 @@ class OutgoingLetter extends Model
 
             return $outgoing_letter;
         });
+
     }
 
     public function sender()
@@ -62,11 +64,12 @@ class OutgoingLetter extends Model
 
     public function remarks()
     {
-        return $this->hasMany(Remark::class, 'letter_id')->orderBy('updated_at', 'DESC');
+        return $this->morphMany(Remark::class, 'remarkable')->orderBy('updated_at', 'DESC');
     }
 
     public function reminders()
     {
         return $this->hasMany(LetterReminder::class, 'letter_id')->orderBy('created_at', 'DESC');
     }
+
 }

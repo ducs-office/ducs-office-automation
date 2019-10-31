@@ -13,8 +13,9 @@ $factory->define(Remark::class, function (Faker $faker) {
         'user_id' => function() {
             return factory(User::class)->create()->id;
         },
-        'letter_id' => function () {
+        'remarkable_id' => function () {
             return factory(OutgoingLetter::class)->create()->id;
-        }
+        },
+        'remarkable_type' => OutgoingLetter::class
     ];
 });

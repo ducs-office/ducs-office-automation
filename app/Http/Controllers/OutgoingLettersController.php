@@ -107,8 +107,16 @@ class OutgoingLettersController extends Controller
 
     public function destroy(OutgoingLetter $outgoing_letter)
     {
+        $reminders = $outgoing_letter->reminders;
+
+        foreach($reminders as $reminder) 
+        {
+            app('App\Http\Controllers\RemindersController')->destroy($reminder);
+        }
+
+        $outgoing_letter->remarks->each->delete();
         $outgoing_letter->attachments->each->delete();
-        
+    
         $outgoing_letter->delete();
 
         return redirect('/outgoing-letters');
