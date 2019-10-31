@@ -40,11 +40,12 @@ class StoreRemarkTest extends TestCase
         $this->signIn();
         
         $letter = create(OutgoingLetter::class);
-        
+        // dd($remark);
         $this->withoutExceptionHandling()
             ->post('/remarks', [
                 'description'=>'Not received by University',
-                'letter_id' => $letter->id
+                'remarkable_id' => $letter->id,
+                'remarkable_type' => OutgoingLetter::class
             ]);
         
         $this->assertEquals(1, Remark::count());
@@ -110,13 +111,13 @@ class StoreRemarkTest extends TestCase
     {
         $this->signIn();
         
-        $remark = make(Remark::class, 1, ['letter_id'=>'']);
+        $remark = make(Remark::class, 1, ['remarkable_id'=>'']);
 
         try{
             $this->withoutExceptionHandling()
                 ->post('/remarks', $remark->toArray());
         }catch(ValidationException $e){
-            $this->assertArrayHasKey('letter_id', $e->errors());
+            $this->assertArrayHasKey('remarkable_id', $e->errors());
         }
 
         $this->assertEquals(0,Remark::count());
@@ -127,13 +128,13 @@ class StoreRemarkTest extends TestCase
     {
         $this->signIn();
         
-        $remark = make(Remark::class, 1, ['letter_id' => 'string']);
+        $remark = make(Remark::class, 1, ['remarkable_id' => 'string']);
 
         try{
             $this->withoutExceptionHandling()
                 ->post('/remarks', $remark->toArray());
         }catch(ValidationException $e){
-            $this->assertArrayHasKey('letter_id', $e->errors());
+            $this->assertArrayHasKey('remarkable_id', $e->errors());
         }
         
         $this->assertEquals(0, Remark::count());
@@ -144,13 +145,13 @@ class StoreRemarkTest extends TestCase
     {
         $this->signIn();
         
-        $remark = make(Remark::class, 1, ['letter_id' => 123]);
+        $remark = make(Remark::class, 1, ['remarkable_id' => 123]);
 
         try{
             $this->withoutExceptionHandling()
                 ->post('/remarks', $remark->toArray());
         }catch(ValidationException $e){
-            $this->assertArrayHasKey('letter_id', $e->errors());
+            $this->assertArrayHasKey('remarkable_id', $e->errors());
         }
 
         $this->assertEquals(0, Remark::count());
