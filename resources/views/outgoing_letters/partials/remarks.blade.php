@@ -1,7 +1,7 @@
 <div class="bg-gray-100 justify-between overflow-y-auto">
     <remark-update-modal name="remark-update-modal">@csrf @method('patch')</remark-update-modal>
     <div class="border-b px-6 py-2">
-        <form action="/remarks" method="POST">
+        <form action="/outgoing-letters/{{$letter->id}}/remarks" method="POST">
             @csrf <input type="hidden" name="letter_id" value="{{ $letter->id }}">
             <div class="flex items-center">
             <img src="https://gravatar.com/avatar/{{ md5(strtolower(trim(Auth::user()->email))) }}?s=48&d=identicon" 

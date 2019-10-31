@@ -24,11 +24,9 @@ class StoreRemarkTest extends TestCase
 
     /** @test */
     public function guest_cannot_store_remark()
-    {
-        $outgoingletter = create(OutgoingLetter::class);
-    
+    {    
         $this->withExceptionHandling()
-            ->post('/remarks')
+            ->post('/outgoing-letters/1/remarks')
             ->assertRedirect('/login');
     
         $this->assertEquals(0, Remark::count());
@@ -40,11 +38,10 @@ class StoreRemarkTest extends TestCase
         $this->signIn();
         
         $letter = create(OutgoingLetter::class);
-        
+        // dd($remark);
         $this->withoutExceptionHandling()
-            ->post('/remarks', [
-                'description'=>'Not received by University',
-                'letter_id' => $letter->id
+            ->post("/outgoing-letters/{$letter->id}/remarks", [
+                'description'=>'Not received by University'
             ]);
         
         $this->assertEquals(1, Remark::count());
@@ -60,7 +57,7 @@ class StoreRemarkTest extends TestCase
 
         try{
         $this->withoutExceptionHandling()
-            ->post('/remarks',$remark);
+            ->post("/outgoing-letters/{$letter->id}/remarks",$remark);
         }catch(ValidationException $e){
             $this->assertArrayHasKey('description',$e->errors());
         }
@@ -79,7 +76,7 @@ class StoreRemarkTest extends TestCase
 
         try{
             $this->withoutExceptionHandling()
-                ->post('/remarks',$remark);
+                ->post("/outgoing-letters/{$letter->id}/remarks",$remark);
         }catch(ValidationException $e){
             $this->assertArrayHasKey('description',$e->errors());
         }
@@ -97,62 +94,11 @@ class StoreRemarkTest extends TestCase
 
         try{
             $this->withoutExceptionHandling()
-                ->post('/remarks',$remark);
+                ->post("/outgoing-letters/{$letter->id}/remarks",$remark);
         }catch(ValidationException $e){
             $this->assertArrayHasKey('description',$e->errors());
         }
 
         $this->assertEquals(0,Remark::count());
-    }
-
-    /** @test */
-    public function request_validates_letter_id_field_cannot_be_null()
-    {
-        $this->signIn();
-        
-        $remark = make(Remark::class, 1, ['letter_id'=>'']);
-
-        try{
-            $this->withoutExceptionHandling()
-                ->post('/remarks', $remark->toArray());
-        }catch(ValidationException $e){
-            $this->assertArrayHasKey('letter_id', $e->errors());
-        }
-
-        $this->assertEquals(0,Remark::count());
-    }
-
-    /** @test */
-    public function request_validates_letter_id_field_cannot_be_string()
-    {
-        $this->signIn();
-        
-        $remark = make(Remark::class, 1, ['letter_id' => 'string']);
-
-        try{
-            $this->withoutExceptionHandling()
-                ->post('/remarks', $remark->toArray());
-        }catch(ValidationException $e){
-            $this->assertArrayHasKey('letter_id', $e->errors());
-        }
-        
-        $this->assertEquals(0, Remark::count());
-    }
-
-    /** @test */
-    public function request_validates_letter_id_field_must_be_existing_outgoing_letter()
-    {
-        $this->signIn();
-        
-        $remark = make(Remark::class, 1, ['letter_id' => 123]);
-
-        try{
-            $this->withoutExceptionHandling()
-                ->post('/remarks', $remark->toArray());
-        }catch(ValidationException $e){
-            $this->assertArrayHasKey('letter_id', $e->errors());
-        }
-
-        $this->assertEquals(0, Remark::count());
     }
 }

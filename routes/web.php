@@ -27,7 +27,7 @@ Route::get('/outgoing-letters', 'OutgoingLettersController@index')->middleware('
 Route::patch('/outgoing-letters/{outgoing_letter}', 'OutgoingLettersController@update')->middleware('auth');
 Route::delete('/outgoing-letters/{outgoing_letter}', 'OutgoingLettersController@destroy')->middleware('auth');
 
-Route::post('/remarks', 'RemarksController@store')->middleware('auth');
+Route::post('/outgoing-letters/{outgoing_letter}/remarks', 'RemarksController@store')->middleware('auth');
 Route::patch('/remarks/{remark}', 'RemarksController@update')->middleware('auth');
 Route::delete('/remarks/{remark}', 'RemarksController@destroy')->middleware('auth');
 
@@ -63,6 +63,5 @@ Route::delete('/roles/{role}', 'RoleController@destroy')->middleware('auth');
 
 Route::get('/attachments/{attachment}', 'AttachmentController@show')->middleware('auth');
 Route::delete('/attachments/{attachment}', 'AttachmentController@destroy')->middleware('auth');
-    // ->where('file', '(.*)')->middleware('auth');
 
 

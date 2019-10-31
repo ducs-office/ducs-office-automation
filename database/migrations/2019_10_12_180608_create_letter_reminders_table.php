@@ -19,7 +19,7 @@ class CreateLetterRemindersTable extends Migration
             $table->string('serial_no')->unique();
             $table->timestamps();
 
-            $table->foreign('letter_id')->references('id')->on('outgoing_letters');
+            $table->foreign('letter_id')->references('id')->on('outgoing_letters');            
         });
     }
 

@@ -11,7 +11,7 @@ class AttachmentController extends Controller
 {
     public function show(Attachment $attachment)
     {
-        return Response::file(Storage::path($attachment->path), );
+        return Response::file(Storage::path($attachment->path));
     }
 
     public function destroy(Attachment $attachment)

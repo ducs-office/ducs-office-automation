@@ -9,13 +9,14 @@ class Remark extends Model
 {
     protected $guarded = [];
 
-    public function letter()
+    public function remarkable() 
     {
-        return $this->belongsTo(OutgoingLetter::class, 'letter_id');
+        return $this->morphTo();
     }
 
     public function user()
     {
         return $this->belongsTo(User::class);
     }
+
 }

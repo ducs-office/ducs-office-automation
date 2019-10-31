@@ -25,7 +25,6 @@ class CreateOutgoingLettersTable extends Migration
             $table->float('amount')->nullable();
             $table->string('serial_no')->unique();
             $table->timestamps();
-            
             $table->foreign('sender_id')->references('id')->on('users');
             $table->foreign('creator_id')->references('id')->on('users');
         });

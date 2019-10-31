@@ -67,8 +67,12 @@
             <p class="text-red-500">{{ $errors->first('amount') }}</p>
             @endif
         </div>
-        <h5>Related Attachments</h5>
-        <div class="flex flex-wrap -mx-2">
+        @if($outgoing_letter->attachments->count())
+            <h5>Related Attachments</h5>
+        @else
+            <h5>No Attachments Uploaded</h5>
+        @endif
+        <div class="flex flex-wrap -mx-2 mt-2">
             @foreach ($outgoing_letter->attachments as $attachment)
             <div class="inline-flex items-center p-2 rounded border hover:bg-gray-300 text-gray-600 mx-2 my-1">
                 <a href="/attachments/{{ $attachment->id }}" target="__blank" class="inline-flex items-center mr-1">
