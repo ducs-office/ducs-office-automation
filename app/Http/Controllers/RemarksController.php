@@ -10,15 +10,13 @@ use Illuminate\Support\Facades\Auth;
 class RemarksController extends Controller
 {
 
-    public function store()
+    public function store(OutgoingLetter $outgoing_letter)
     {
-        // dd(request());
         $data = request()->validate([
             'description'=>'required|min:10|max:255|string',
-            'remarkable_id' => 'required|integer|exists:outgoing_letters,id',
-            'remarkable_type' => 'required'
         ]);
-        Remark::create($data + ['user_id' => Auth::id()]);
+
+        $outgoing_letter->remarks()->create($data + ['user_id' => Auth::id()]);
         
         return back();
     }
