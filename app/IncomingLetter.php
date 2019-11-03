@@ -2,8 +2,10 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+
 use Illuminate\Support\Facades\Cache;
+use App\Model;
+use App\Remark;
 
 class IncomingLetter extends Model
 {
@@ -29,6 +31,13 @@ class IncomingLetter extends Model
             return $incoming_letter;
         });
     }
+    protected $allowedFilters = [
+        'date' => 'less_than',
+        'priority' => 'equals',
+        'recipient_id' => 'equals',
+        'sender' => 'equals',
+        'handover_id' => 'equals'
+    ];
 
     public function recipient() 
     {

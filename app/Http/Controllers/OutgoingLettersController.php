@@ -28,6 +28,7 @@ class OutgoingLettersController extends Controller
         $senders = User::select('id', 'name')->whereIn('id', OutgoingLetter::selectRaw('DISTINCT(sender_id)'))->get()->pluck('name', 'id');
         $creators = User::select('id', 'name')->whereIn('id', OutgoingLetter::selectRaw('DISTINCT(creator_id)'))->get()->pluck('name', 'id');
 
+
         return view('outgoing_letters.index', compact(
             'outgoing_letters',
             'types',

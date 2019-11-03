@@ -11,6 +11,7 @@
 |
 */
 
+
 Route::get('/', function () {
     return view('dashboard');
 })->middleware('auth');
@@ -30,6 +31,9 @@ Route::delete('/outgoing-letters/{outgoing_letter}', 'OutgoingLettersController@
 Route::get('/incoming-letters/create', 'IncomingLettersController@create')->middleware('auth');
 Route::post('/incoming-letters', 'IncomingLettersController@store')->middleware('auth');
 Route::delete('/incoming-letters/{incoming_letter}', 'IncomingLettersController@destroy')->middleware('auth');
+Route::get('/incoming-letters', 'IncomingLettersController@index')->middleware('auth');
+Route::get('/incoming-letters/{incoming_letter}/edit', 'IncomingLettersController@edit')->middleware('auth');
+Route::patch('/incoming-letters/{incoming_letter}', 'IncomingLettersController@update')->middleware('auth');
 
 Route::post('/outgoing-letters/{outgoing_letter}/remarks', 'RemarksController@store')->middleware('auth');
 Route::patch('/remarks/{remark}', 'RemarksController@update')->middleware('auth');

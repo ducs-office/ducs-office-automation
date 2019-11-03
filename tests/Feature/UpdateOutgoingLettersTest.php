@@ -201,7 +201,7 @@ class UpdateOutgoingLettersTest extends TestCase
     public function request_validates_subject_field_is_not_null()
     {
         try {
-            $this -> be(create(User::class));
+            $this->signIn();
             $letter = create(OutgoingLetter::class);
 
             $this->withoutExceptionHandling()
