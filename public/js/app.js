@@ -7398,10 +7398,10 @@ var render = function() {
                               _vm._v(" "),
                               _vm._l(filter.options, function(value, option) {
                                 return _c("option", {
-                                  key: value,
+                                  key: option,
                                   domProps: {
-                                    value: value,
-                                    textContent: _vm._s(option)
+                                    value: option,
+                                    textContent: _vm._s(value)
                                   }
                                 })
                               })

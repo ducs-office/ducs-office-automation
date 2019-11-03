@@ -12,7 +12,6 @@ class IncomingLettersController extends Controller
     public function index(Request $request)
     {
         $filters = $request->query('filters');
-
         $query = IncomingLetter::applyFilter($filters)->with(['remarks.user']);
 
         if($request->has('search') && $request['search']!= '') {

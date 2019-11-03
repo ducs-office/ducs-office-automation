@@ -13,7 +13,7 @@ class IncomingLetter extends Model
         'date', 'received_id', 'sender', 'description', 'subject', 'priority',
         'recipient_id', 'handover_id', 
     ];
-
+ 
     protected $dates = ['date'];
 
     protected static function boot()
