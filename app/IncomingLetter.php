@@ -3,10 +3,32 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 
 class IncomingLetter extends Model
 {
-    protected $guareded = [];
+    protected $fillable = [
+        'date', 'received_id', 'sender', 'description', 'subject', 'priority',
+        'recipient_id', 'handover_id', 
+    ];
+
+    protected $dates = ['date'];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function (IncomingLetter $incoming_letter) {
+            $year = $incoming_letter->date->format('y');
+            $seq_id = "CS/D/{$year}";
+            $cache_key = "letter_seq_{$seq_id}";
+            $number_seq = str_pad(Cache::increment($cache_key) , 4, STR_PAD_LEFT);
+            
+            $incoming_letter->serial_no = "$seq_id/$number_seq";
+
+            return $incoming_letter;
+        });
+    }
 
     public function recipient() 
     {

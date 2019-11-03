@@ -27,6 +27,10 @@ Route::get('/outgoing-letters', 'OutgoingLettersController@index')->middleware('
 Route::patch('/outgoing-letters/{outgoing_letter}', 'OutgoingLettersController@update')->middleware('auth');
 Route::delete('/outgoing-letters/{outgoing_letter}', 'OutgoingLettersController@destroy')->middleware('auth');
 
+Route::get('/incoming-letters/create', 'IncomingLettersController@create')->middleware('auth');
+Route::post('/incoming-letters', 'IncomingLettersController@store')->middleware('auth');
+Route::delete('/incoming-letters/{incoming_letter}', 'IncomingLettersController@destroy')->middleware('auth');
+
 Route::post('/outgoing-letters/{outgoing_letter}/remarks', 'RemarksController@store')->middleware('auth');
 Route::patch('/remarks/{remark}', 'RemarksController@update')->middleware('auth');
 Route::delete('/remarks/{remark}', 'RemarksController@destroy')->middleware('auth');

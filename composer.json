@@ -13,7 +13,7 @@
         "laracasts/flash": "^3.0",
         "laravel/framework": "^6.0",
         "laravel/tinker": "^1.0",
-        "spatie/laravel-permission": "^3.0"
+        "spatie/laravel-permission": "^3.2"
     },
     "require-dev": {
         "filp/whoops": "^2.0",

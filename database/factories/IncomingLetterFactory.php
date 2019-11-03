@@ -18,10 +18,8 @@ $factory->define(IncomingLetter::class, function (Faker $faker) {
         'handover_id' => function() {
             return factory(User::class)->create()->id;
         },
-        'priority' => $type = $faker->randomElement([1,2,3]),
+        'priority' => $faker->randomElement([1,2,3]),
         'subject' => $faker->sentence,
         'description' => $faker->paragraph
-        
-        
     ];
 });

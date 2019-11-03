@@ -16,14 +16,14 @@ class CreateIncomingLettersTable extends Migration
         Schema::create('incoming_letters', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->date('date');
-            $table->string('serial_no');
+            $table->string('serial_no')->unique();
             $table->string('received_id');
             $table->string('sender',50);
             $table->unsignedBigInteger('recipient_id');
-            $table->unsignedBigInteger('handover_id');
-            $table->enum('priority',[1,2,3]);
+            $table->unsignedBigInteger('handover_id')->nullable();
+            $table->enum('priority',[1,2,3])->nullable();
             $table->string('subject',80);
-            $table->text('description', 400);
+            $table->text('description', 400)->nullable();
             $table->timestamps();
 
             $table->foreign('recipient_id')->references('id')->on('users');
