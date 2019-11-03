@@ -6,8 +6,8 @@
             <a href="/outgoing-letters/create" class="btn btn-magenta is-sm shadow-inset">
                 New
             </a>
-        <letter-search-filters class="ml-auto"
-            :filters="{{ json_encode([
+            <letter-search-filters class="ml-auto"
+                :filters="{{ json_encode([
                 [ 'field' => 'date', 'label' => 'Before Date', 'type' => 'date', 'operator' => 'greater_than' ],
                 [ 'field' => 'date', 'label' => 'After Date', 'type' => 'date', 'operator' => 'less_than' ],
                 [ 'field' => 'type', 'label' => 'Type', 'type' => 'select', 'operator' => 'equals', 'options' => $types->toArray() ],

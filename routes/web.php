@@ -36,6 +36,7 @@ Route::get('/incoming-letters/{incoming_letter}/edit', 'IncomingLettersControlle
 Route::patch('/incoming-letters/{incoming_letter}', 'IncomingLettersController@update')->middleware('auth');
 
 Route::post('/outgoing-letters/{outgoing_letter}/remarks', 'RemarksController@store')->middleware('auth');
+Route::post('/incoming-letters/{outgoing_letter?}/{incoming_letter}/remarks', 'RemarksController@store')->middleware('auth');
 Route::patch('/remarks/{remark}', 'RemarksController@update')->middleware('auth');
 Route::delete('/remarks/{remark}', 'RemarksController@destroy')->middleware('auth');
 

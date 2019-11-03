@@ -56,6 +56,6 @@ class IncomingLetter extends Model
 
     public function remarks()
     {
-        return $this->morphMany(Remark::class, 'remarkable');
+        return $this->morphMany(Remark::class, 'remarkable')->orderBy('updated_at', 'DESC');
     }
 }

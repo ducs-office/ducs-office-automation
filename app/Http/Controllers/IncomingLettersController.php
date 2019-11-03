@@ -29,7 +29,7 @@ class IncomingLettersController extends Controller
         $handovers = User::select('id','name')->whereIn(
             'id', IncomingLetter::selectRaw('DISTINCT(handover_id)')
         )->get()->pluck('name', 'id');
-
+        
         $senders = IncomingLetter::selectRaw('DISTINCT(sender)')->get()->pluck('sender', 'sender');
         
         $priorities = IncomingLetter::selectRaw('DISTINCT(priority)')->get()->pluck('priority', 'priority');
