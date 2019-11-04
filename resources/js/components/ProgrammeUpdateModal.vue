@@ -8,6 +8,10 @@
                     <label for="programme_code" class="w-full form-label">Programme Code</label>
                     <input id="programme_code" type="text" name="code" class="w-full form-input" v-model="programme.code">
                 </div>
+                <div class="flex-1 mr-2">
+                    <label class="w-full form-label">Date (w.e.f)</label>
+                    <input type="date" name="wef" class="w-full form-input" v-model="programme.wef">
+                </div>
                 <div class="flex-1 mr-5">
                     <label for="programme_name" class="w-full form-label">Programme</label>
                     <input id="programme_name" type="text" name="name" class="w-full form-input" v-model="programme.name">
@@ -26,6 +30,7 @@ export default {
             programme: {
                 id: '',
                 code: '',
+                wef: '',
                 name: '',
             }
         }

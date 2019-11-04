@@ -42,6 +42,7 @@ class ProgrammesController extends Controller
                 'sometimes', 'required', 'min:3', 'max:10',
                 Rule::unique('programmes')->ignore($programme)
             ],
+            'wef' => ['sometimes', 'required', 'date'],
             'name' => ['sometimes', 'required', 'min:3', 'max:190'],
         ]);
 

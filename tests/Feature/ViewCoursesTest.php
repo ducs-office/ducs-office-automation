@@ -2,41 +2,52 @@
 
 namespace Tests\Feature;
 
+use App\Programme;
+use App\Course;
 use App\User;
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Collection;
+use Tests\TestCase;
 
-class ViewProgrammesTest extends TestCase
+class ViewCoursesTest extends TestCase
 {
     use RefreshDatabase;
 
     /** @test */
-    public function guest_cannot_view_programmes()
-    {
-        $programmes = create('App\Programme', 3);
-
-        $this->withExceptionHandling();
-
-        $this->get('/programmes')->assertRedirect('/login');
-    }
-    /** @test */
-    public function admin_can_view_all_programmes()
+    public function admin_can_view_all_courses_ordered_by_latest_added()
     {
         $this->signIn();
 
-        $programmes = create('App\Programme', 3);
+        $courses = create(Course::class, 3);
 
-        $this->withoutExceptionHandling();
+        $viewCourses = $this->withoutExceptionHandling()->get('/courses')
+            ->assertSuccessful()
+            ->assertViewIs('courses.index')
+            ->assertViewHas('courses')
+            ->viewData('courses');
 
-        $viewData = $this->get('/programmes')->assertViewIs('programmes.index')
+        $this->assertCount(3, $viewCourses);
+        $this->assertSame(
+            $courses->sortByDesc('created_at')->pluck('id')->toArray(),
+            $viewCourses->pluck('id')->toArray()
+        );
+    }
+
+    /** @test */
+    public function courses_index_page_also_has_programmes()
+    {
+        $this->signIn();
+
+        $programmes = create(Programme::class, 3);
+
+        $viewProgrammes = $this->withoutExceptionHandling()->get('/courses')
+            ->assertSuccessful()
             ->assertViewHas('programmes')
             ->viewData('programmes');
 
-        $this->assertCount(3, $viewData);
-        $this->assertEquals(
-            $programmes->sortByDesc('created_at')->first()->toArray(),
-            $viewData->first()->toArray()
-        ); //first created is at last
+        $this->assertInstanceOf(Collection::class, $viewProgrammes);
+        $this->assertCount(3, $viewProgrammes);
+        $this->assertSame($viewProgrammes->toArray(), $programmes->pluck('name', 'id')->toArray());
     }
 }

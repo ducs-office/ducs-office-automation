@@ -2226,12 +2226,17 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       programme: {
         id: '',
         code: '',
+        wef: '',
         name: ''
       }
     };
@@ -7564,6 +7569,34 @@ var render = function() {
                       return
                     }
                     _vm.$set(_vm.programme, "code", $event.target.value)
+                  }
+                }
+              })
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "flex-1 mr-2" }, [
+              _c("label", { staticClass: "w-full form-label" }, [
+                _vm._v("Date (w.e.f)")
+              ]),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.programme.wef,
+                    expression: "programme.wef"
+                  }
+                ],
+                staticClass: "w-full form-input",
+                attrs: { type: "date", name: "wef" },
+                domProps: { value: _vm.programme.wef },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.programme, "wef", $event.target.value)
                   }
                 }
               })
@@ -20452,7 +20485,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_TabbedPane_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/TabbedPane.vue */ "./resources/js/components/TabbedPane.vue");
 /* harmony import */ var _components_FileInput_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/FileInput.vue */ "./resources/js/components/FileInput.vue");
 /* harmony import */ var _components_LettersSearchFilters_vue__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./components/LettersSearchFilters.vue */ "./resources/js/components/LettersSearchFilters.vue");
-/* harmony import */ var _components_ProgrammeUpdateModal_vue__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./components/ProgrammeUpdateModal.vue */ "./resources/js/components/ProgrammeUpdateModal.vue");
+/* harmony import */ var _components_ProgrammeUpdateModal_vue__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./components/ProgrammeUpdateModal.vue */ "./resources/js/components/ProgrammeUpdateModal.vue");
 /* harmony import */ var _components_CourseUpdateModal_vue__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./components/CourseUpdateModal.vue */ "./resources/js/components/CourseUpdateModal.vue");
 /* harmony import */ var _components_CollegeUpdateModal_vue__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./components/CollegeUpdateModal.vue */ "./resources/js/components/CollegeUpdateModal.vue");
 /* harmony import */ var _components_RemarkUpdateModal_vue__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./components/RemarkUpdateModal.vue */ "./resources/js/components/RemarkUpdateModal.vue");
@@ -20483,7 +20516,7 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('feather-icon', _components
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('vue-typeahead', _components_VueTypeahead_vue__WEBPACK_IMPORTED_MODULE_4__["default"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component("v-tabbed-pane", _components_TabbedPane_vue__WEBPACK_IMPORTED_MODULE_5__["default"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component("v-file-input", _components_FileInput_vue__WEBPACK_IMPORTED_MODULE_6__["default"]);
-vue__WEBPACK_IMPORTED_MODULE_0___default.a.component("programme-update-modal", _components_ProgrammeUpdateModal_vue__WEBPACK_IMPORTED_MODULE_15__["default"]);
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.component("programme-update-modal", _components_ProgrammeUpdateModal_vue__WEBPACK_IMPORTED_MODULE_8__["default"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component("course-update-modal", _components_CourseUpdateModal_vue__WEBPACK_IMPORTED_MODULE_9__["default"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('letter-search-filters', _components_LettersSearchFilters_vue__WEBPACK_IMPORTED_MODULE_7__["default"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component("college-update-modal", _components_CollegeUpdateModal_vue__WEBPACK_IMPORTED_MODULE_10__["default"]);
