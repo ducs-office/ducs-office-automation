@@ -7,35 +7,35 @@ use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class ViewCoursesTest extends TestCase
+class ViewProgrammesTest extends TestCase
 {
     use RefreshDatabase;
 
     /** @test */
-    public function guest_cannot_view_courses()
+    public function guest_cannot_view_programmes()
     {
-        $courses = create('App\Course', 3);
+        $programmes = create('App\Programme', 3);
 
         $this->withExceptionHandling();
 
-        $this->get('/courses')->assertRedirect('/login');
+        $this->get('/programmes')->assertRedirect('/login');
     }
     /** @test */
-    public function admin_can_view_all_courses()
+    public function admin_can_view_all_programmes()
     {
         $this->signIn();
 
-        $courses = create('App\Course', 3);
+        $programmes = create('App\Programme', 3);
 
         $this->withoutExceptionHandling();
 
-        $viewData = $this->get('/courses')->assertViewIs('courses.index')
-            ->assertViewHas('courses')
-            ->viewData('courses');
+        $viewData = $this->get('/programmes')->assertViewIs('programmes.index')
+            ->assertViewHas('programmes')
+            ->viewData('programmes');
 
         $this->assertCount(3, $viewData);
         $this->assertEquals(
-            $courses->sortByDesc('created_at')->first()->toArray(),
+            $programmes->sortByDesc('created_at')->first()->toArray(),
             $viewData->first()->toArray()
         ); //first created is at last
     }

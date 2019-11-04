@@ -88,8 +88,8 @@ return [
         'permissions' => [
             'outgoing letters' => ['create', 'view', 'edit', 'delete'],
             'colleges' => ['create', 'view', 'edit', 'delete'],
+            'programmes' => ['create', 'view', 'edit', 'delete'],
             'courses' => ['create', 'view', 'edit', 'delete'],
-            'papers' => ['create', 'view', 'edit', 'delete'],
             'roles' => ['create', 'view', 'edit', 'delete'],
             'users' => ['create', 'view', 'edit', 'delete'],
         ],
@@ -98,23 +98,23 @@ return [
             'office' => [
                 'outgoing letters' => ['create', 'view', 'edit', 'delete'],
                 'colleges' => ['create', 'view', 'edit', 'delete'],
+                'programmes' => ['create', 'view', 'edit', 'delete'],
                 'courses' => ['create', 'view', 'edit', 'delete'],
-                'papers' => ['create', 'view', 'edit', 'delete'],
                 'roles' => ['create', 'view', 'edit', 'delete'],
                 'users' => ['create', 'view', 'edit', 'delete'],
             ],
             'faculty' => [
                 'outgoing letters' => ['create', 'view', 'edit', 'delete'],
                 'colleges' => ['create', 'view', 'edit', 'delete'],
+                'programmes' => ['create', 'view', 'edit', 'delete'],
                 'courses' => ['create', 'view', 'edit', 'delete'],
-                'papers' => ['create', 'view', 'edit', 'delete'],
                 'roles' => ['create', 'view', 'edit', 'delete'],
                 'users' => ['create', 'view', 'edit', 'delete'],
             ],
             'college teacher' => [
                 'colleges' => ['view'],
+                'programmes' => ['view'],
                 'courses' => ['view'],
-                'papers' => ['view'],
             ]
         ]
     ],

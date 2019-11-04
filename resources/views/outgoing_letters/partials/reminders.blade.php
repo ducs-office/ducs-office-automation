@@ -6,23 +6,23 @@
     <form action="/reminders" method="POST" enctype="multipart/form-data" class="px-6 py-2 border-b">
         @csrf <input type="hidden" name="letter_id" value="{{ $letter->id }}">
         <div class="flex">
-            <v-file-input id="scan" 
-                class="inline-flex items-center cursor-pointer form-input is-sm mr-4" 
+            <v-file-input id="scan"
+                class="inline-flex items-center cursor-pointer form-input is-sm mr-4"
                 placeholder="Upload a scanned copy"
                 name="attachments[]"
                 accept="image/*, application/pdf">
                 <template v-slot="{ label }">
-                    <feather-icon name="paperclip" class="h-current mr-2"></feather-icon>
+                    <feather-icon name="courseclip" class="h-current mr-2"></feather-icon>
                     <span v-text="label"></span>
                 </template>
             </v-file-input>
-            <v-file-input id="pdf" 
-                class="inline-flex items-center cursor-pointer form-input is-sm mr-4" 
+            <v-file-input id="pdf"
+                class="inline-flex items-center cursor-pointer form-input is-sm mr-4"
                 placeholder="Upload a PDF copy"
                 name="attachments[]"
                 accept="application/pdf">
                 <template v-slot="{ label }">
-                    <feather-icon name="paperclip" class="h-current mr-2"></feather-icon>
+                    <feather-icon name="courseclip" class="h-current mr-2"></feather-icon>
                     <span v-text="label"></span>
                 </template>
             </v-file-input>
@@ -37,7 +37,7 @@
             @foreach($reminder->attachments as $attachment)
             <a href="/attachments/{{ $attachment->id }}" target="_blank"
                 class="p-1 text-xs text-gray-700 bg-gray-300 hover:bg-gray-400 rounded mx-2 inline-flex items-center">
-                <feather-icon name="paperclip" stroke-width="2" class="h-current mr-1">{{ $attachment->original_name }}
+                <feather-icon name="courseclip" stroke-width="2" class="h-current mr-1">{{ $attachment->original_name }}
                 </feather-icon>
                 {{ $attachment->original_name }}
             </a>

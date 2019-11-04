@@ -2,25 +2,25 @@
 
 namespace Tests\Unit;
 
+use App\Programme;
 use App\Course;
-use App\Paper;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class PaperTest extends TestCase
+class CourseTest extends TestCase
 {
     use RefreshDatabase;
 
     /** @test */
-    public function paper_belongs_to_a_course()
+    public function course_belongs_to_a_programme()
     {
-        $course = create(Course::class);
-        $paper = create(Paper::class, 1, ['course_id' => $course->id]);
+        $programme = create(Programme::class);
+        $course = create(Course::class, 1, ['programme_id' => $programme->id]);
 
-        $this->assertInstanceOf(BelongsTo::class, $paper->course());
-        $this->assertInstanceOf(Course::class, $paper->course);
-        $this->assertEquals($course->id, $paper->course->id);
+        $this->assertInstanceOf(BelongsTo::class, $course->programme());
+        $this->assertInstanceOf(Programme::class, $course->programme);
+        $this->assertEquals($programme->id, $course->programme->id);
     }
 }

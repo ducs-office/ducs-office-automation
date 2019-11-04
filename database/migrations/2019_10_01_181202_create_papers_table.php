@@ -13,14 +13,14 @@ class CreatePapersTable extends Migration
      */
     public function up()
     {
-        Schema::create('papers', function (Blueprint $table) {
+        Schema::create('courses', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('code')->unique();
             $table->string('name');
-            $table->unsignedBigInteger('course_id')->index();
+            $table->unsignedBigInteger('programme_id')->index();
             $table->timestamps();
 
-            $table->foreign('course_id')->references('id')->on('courses')->onDelete('cascade');
+            $table->foreign('programme_id')->references('id')->on('programmes')->onDelete('cascade');
         });
     }
 
@@ -31,6 +31,6 @@ class CreatePapersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('papers');
+        Schema::dropIfExists('courses');
     }
 }

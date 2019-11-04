@@ -20,15 +20,15 @@
                 </a>
             </li>
             <li>
-                <a href="/courses" class="flex items-center py-2 px-4 hover:bg-magenta-700 hover:pl-6">
-                    <feather-icon name="book" class="h-4 mr-2">Academic Courses</feather-icon>
-                    Academic Courses
+                <a href="/programmes" class="flex items-center py-2 px-4 hover:bg-magenta-700 hover:pl-6">
+                    <feather-icon name="book" class="h-4 mr-2">Academic Programmes</feather-icon>
+                    Academic Programmes
                 </a>
             </li>
             <li>
-                <a href="/papers" class="flex items-center py-2 px-4 hover:bg-magenta-700 hover:pl-6">
-                    <feather-icon name="file-text" class="h-4 mr-2">Course Papers</feather-icon>
-                    Course Papers
+                <a href="/courses" class="flex items-center py-2 px-4 hover:bg-magenta-700 hover:pl-6">
+                    <feather-icon name="file-text" class="h-4 mr-2">Programme Courses</feather-icon>
+                    Programme Courses
                 </a>
             </li>
             <li>

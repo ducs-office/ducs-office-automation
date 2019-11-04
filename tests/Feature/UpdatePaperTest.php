@@ -2,86 +2,86 @@
 
 namespace Tests\Feature;
 
+use App\Programme;
 use App\Course;
-use App\Paper;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class UpdatePaperTest extends TestCase
+class UpdateCourseTest extends TestCase
 {
     use RefreshDatabase;
 
     /** @test */
-    public function admin_can_update_paper_code()
+    public function admin_can_update_course_code()
     {
         $this->withoutExceptionHandling()
             ->signIn();
 
-        $paper = create(Paper::class);
+        $course = create(Course::class);
 
-        $response = $this->patch('/papers/'.$paper->id, [
+        $response = $this->patch('/courses/'.$course->id, [
             'code' => $newCode = 'New123'
-        ])->assertRedirect('/papers')
-        ->assertSessionHasFlash('success', 'Paper updated successfully!');
+        ])->assertRedirect('/courses')
+        ->assertSessionHasFlash('success', 'Course updated successfully!');
 
-        $this->assertEquals(1, Paper::count());
-        $this->assertEquals($newCode, $paper->fresh()->code);
+        $this->assertEquals(1, Course::count());
+        $this->assertEquals($newCode, $course->fresh()->code);
     }
 
     /** @test */
-    public function admin_can_update_paper_name()
+    public function admin_can_update_course_name()
     {
         $this->withoutExceptionHandling()
             ->signIn();
 
-        $paper = create(Paper::class);
+        $course = create(Course::class);
 
-        $response = $this->patch('/papers/' . $paper->id, [
-            'name' => $newName = 'New paper'
-        ])->assertRedirect('/papers')
-        ->assertSessionHasFlash('success', 'Paper updated successfully!');
+        $response = $this->patch('/courses/' . $course->id, [
+            'name' => $newName = 'New course'
+        ])->assertRedirect('/courses')
+        ->assertSessionHasFlash('success', 'Course updated successfully!');
 
-        $this->assertEquals(1, Paper::count());
-        $this->assertEquals($newName, $paper->fresh()->name);
+        $this->assertEquals(1, Course::count());
+        $this->assertEquals($newName, $course->fresh()->name);
     }
 
     /** @test */
-    public function admin_can_update_papers_related_course()
+    public function admin_can_update_courses_related_programme()
     {
         $this->withoutExceptionHandling()
             ->signIn();
 
-        $paper = create(Paper::class);
-        $newCourse = create(Course::class);
+        $course = create(Course::class);
+        $newProgramme = create(Programme::class);
 
-        $response = $this->patch('/papers/' . $paper->id, [
-            'course_id' => $newCourse->id
-        ])->assertRedirect('/papers')
-        ->assertSessionHasFlash('success', 'Paper updated successfully!');
+        $response = $this->patch('/courses/' . $course->id, [
+            'programme_id' => $newProgramme->id
+        ])->assertRedirect('/courses')
+        ->assertSessionHasFlash('success', 'Course updated successfully!');
 
-        $this->assertEquals(1, Paper::count());
-        $this->assertEquals($newCourse->id, $paper->fresh()->course_id);
+        $this->assertEquals(1, Course::count());
+        $this->assertEquals($newProgramme->id, $course->fresh()->programme_id);
     }
 
     /** @test */
-    public function paper_is_not_validated_for_uniqueness_if_code_is_not_changed()
+    public function course_is_not_validated_for_uniqueness_if_code_is_not_changed()
     {
         $this->withoutExceptionHandling()
             ->signIn();
 
-        $paper = create(Paper::class);
+        $course = create(Course::class);
 
-        $response = $this->patch('/papers/'.$paper->id, [
-            'code' => $paper->code,
-            'name' => $newName = 'New paper'
-        ])->assertRedirect('/papers')
+        $response = $this->patch('/courses/'.$course->id, [
+            'code' => $course->code,
+            'name' => $newName = 'New course'
+        ])->assertRedirect('/courses')
         ->assertSessionHasNoErrors()
-        ->assertSessionHasFlash('success', 'Paper updated successfully!');
+        ->assertSessionHasFlash('success', 'Course updated successfully!');
 
 
-        $this->assertEquals(1, Paper::count());
-        $this->assertEquals($newName, $paper->fresh()->name);
+        $this->assertEquals(1, Course::count());
+        $this->assertEquals($newName, $course->fresh()->name);
     }
 }

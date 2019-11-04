@@ -2,26 +2,26 @@
 
 namespace Tests\Feature;
 
-use App\Course;
+use App\Programme;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class DeleteCourseTest extends TestCase
+class DeleteProgrammeTest extends TestCase
 {
     use RefreshDatabase;
 
     /** @test */
-    public function admin_can_delete_any_course()
+    public function admin_can_delete_any_programme()
     {
-        $course = create(Course::class);
+        $programme = create(Programme::class);
         $this->signIn();
 
-        $this->delete('/courses/'.$course->id)
-            ->assertRedirect('courses')
-            ->assertSessionHasFlash('success', 'Course deleted successfully!');
+        $this->delete('/programmes/'.$programme->id)
+            ->assertRedirect('programmes')
+            ->assertSessionHasFlash('success', 'Programme deleted successfully!');
 
-        $this->assertNull($course->fresh(), 'Course still exists in database.');
+        $this->assertNull($programme->fresh(), 'Programme still exists in database.');
     }
 }

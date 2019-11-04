@@ -1,8 +1,8 @@
 <?php
 
-use App\Course;
+use App\Programme;
 use App\OutgoingLetter;
-use App\Paper;
+use App\Course;
 use App\User;
 use App\College;
 use App\LetterReminder;
@@ -44,8 +44,8 @@ class DatabaseSeeder extends Seeder
         factory(OutgoingLetter::class, 5)->create(['sender_id' => $ng->id, 'creator_id' => $himani->id]);
         factory(OutgoingLetter::class, 5)->create(['sender_id' => $nk->id, 'creator_id' => $himani->id]);
 
-        factory(Course::class, 5)->create()->each(function($course) {
-            factory(Paper::class, 10)->create(['course_id' => $course->id]);
+        factory(Programme::class, 5)->create()->each(function($programme) {
+            factory(Course::class, 10)->create(['programme_id' => $programme->id]);
         });
 
         factory(College::class)->create([
