@@ -3,11 +3,14 @@
 <div class="page-card m-6">
     <div class="flex items-baseline px-6 pb-4 border-b">
         <h1 class="page-header mb-0 px-0 mr-4">Users</h1>
+        @can('create', App\User::class)
         <button class="btn btn-magenta is-sm shadow-inner"
             @click.prevent="$modal.show('create-new-user-form')">
             New
         </button>
+        @endcan
     </div>
+    @can('create', App\User::class)
     <modal name="create-new-user-form" height="auto">
         <div class="p-6">
             <h2 class="text-lg font-bold mb-8">Create Users</h2>
@@ -32,10 +35,13 @@
                 <div class="mt-5">
                     <button class="btn btn-magenta">Create</button>
                 </div>
-            </form> 
+            </form>
         </div>
     </modal>
+    @endcan
+    @can('update', App\User::class)
     <user-update-modal name="user-update-modal" :roles="{{ $roles->toJson() }}">@csrf @method('PATCH')</user-update-modal>
+    @endcan
     @forelse($users as $user)
         <div class="px-4 py-2 hover:bg-gray-100 border-b flex">
             <div class="px-2 w-64">
@@ -50,24 +56,28 @@
                 @endforeach
             </div>
             <div class="ml-auto px-2 flex items-center">
-                <button type="submit" class="p-1 hover:text-red-700 mr-2" 
+                @can('update', App\User::class)
+                <button type="submit" class="p-1 hover:text-red-700 mr-2"
                     @click="
-                        $modal.show('user-update-modal', { 
+                        $modal.show('user-update-modal', {
                             user: {
-                                id: {{ $user->id }}, 
-                                name: '{{ $user->name }}', 
+                                id: {{ $user->id }},
+                                name: '{{ $user->name }}',
                                 email: '{{ $user->email }}'
                             },
-                            user_roles: {{ $user->roles->pluck('id')->toJson() }} 
+                            user_roles: {{ $user->roles->pluck('id')->toJson() }}
                         })">
                     <feather-icon class="h-current" name="edit">Edit</feather-icon>
                 </button>
+                @endcan
+                @can('delete', App\User::class)
                 <form action="/users/{{ $user->id }}" method="POST">
                     @csrf @method('delete')
                     <button type="submit" class="p-1 hover:text-red-700">
                         <feather-icon class="h-current" name="trash-2">Trash</feather-icon>
                     </button>
                 </form>
+                @endcan
             </div>
         </div>
     @empty

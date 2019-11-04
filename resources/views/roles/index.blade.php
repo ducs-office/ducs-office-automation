@@ -3,10 +3,13 @@
 <div class="page-card m-6">
     <div class="flex items-baseline px-6 pb-4 border-b">
         <h1 class="page-header mb-0 px-0 mr-4">Roles & Permissions</h1>
+        @can('create', Spatie\Permission\Models\Role::class)
         <button class="btn btn-magenta is-sm shadow-inner" @click.prevent="$modal.show('create-new-role-form')">
             New
         </button>
+        @endcan
     </div>
+    @can('create', Spatie\Permission\Models\Role::class)
     <modal name="create-new-role-form" height="auto">
         <div class="p-6">
             <h2 class="text-lg font-bold mb-8">Create Role</h2>
@@ -31,8 +34,11 @@
             </form>
         </div>
     </modal>
+    @endcan
+    @can('update', Spatie\Permission\Models\Role::class)
     <role-update-modal name="role-update-modal" :permissions="{{ $permissions->toJson() }}">@csrf @method('PATCH')
     </role-update-modal>
+    @endcan
     @forelse($roles as $role)
     <div class="px-4 py-2 hover:bg-gray-100 border-b flex">
         <div class="px-2 w-64">
@@ -48,23 +54,27 @@
             @endforeach
         </div>
         <div class="ml-auto px-2 flex items-center">
+            @can('update', Spatie\Permission\Models\Role::class)
             <button type="submit" class="p-1 hover:text-red-700 mr-2" @click="
-                        $modal.show('role-update-modal', { 
+                        $modal.show('role-update-modal', {
                             role: {
-                                id: {{ $role->id }}, 
-                                name: '{{ $role->name }}', 
+                                id: {{ $role->id }},
+                                name: '{{ $role->name }}',
                                 guard_name: '{{ $role->guard_name }}'
                             },
-                            role_permissions: {{ $role->permissions->pluck('id')->toJson() }} 
+                            role_permissions: {{ $role->permissions->pluck('id')->toJson() }}
                         })">
                 <feather-icon class="h-current" name="edit">Edit</feather-icon>
             </button>
+            @endcan
+            @can('delete', Spatie\Permission\Models\Role::class)
             <form action="/roles/{{ $role->name }}" method="POST">
                 @csrf @method('delete')
                 <button type="submit" class="p-1 hover:text-red-700">
                     <feather-icon class="h-current" name="trash-2">Trash</feather-icon>
                 </button>
             </form>
+            @endcan
         </div>
     </div>
     @empty

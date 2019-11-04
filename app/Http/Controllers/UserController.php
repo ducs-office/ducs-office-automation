@@ -11,6 +11,11 @@ use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(User::class, 'user');
+    }
+
     public function index()
     {
         $roles = Role::all();
@@ -68,7 +73,7 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         $user->delete();
-        
+
         flash('User deleted successfully!')->success();
 
         return redirect()->back();

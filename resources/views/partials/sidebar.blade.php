@@ -45,18 +45,22 @@
                 </a>
             </li>
             @endcan
+            @can('viewAny', App\User::class)
             <li>
                 <a href="/users" class="flex items-center py-2 px-4 hover:bg-magenta-700 hover:pl-6">
                     <feather-icon name="user" class="h-4 mr-2">User</feather-icon>
                     Users
                 </a>
             </li>
+            @endcan
+            @can('viewAny', Spatie\Permission\Models\Role::class)
             <li>
                 <a href="/roles" class="flex items-center py-2 px-4 hover:bg-magenta-700 hover:pl-6">
                     <feather-icon name="key" class="h-4 mr-2">User</feather-icon>
                     Roles & Permissions
                 </a>
             </li>
+            @endcan
         </ul>
     </aside>
 </div>

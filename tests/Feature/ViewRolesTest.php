@@ -11,12 +11,12 @@ use Tests\TestCase;
 class ViewRolesTest extends TestCase
 {
     use RefreshDatabase;
-    
+
     /** @test */
     public function office_staff_can_view_all_roles_and_all_permissions()
     {
         $this->signIn();
-        
+
         $response = $this->get('/roles')
             ->assertSuccessful()
             ->assertViewIs('roles.index')
