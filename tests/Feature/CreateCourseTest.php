@@ -17,7 +17,7 @@ class CreateCourseTest extends TestCase
     public function admin_can_create_new_course_and_assign_it_to_a_programme()
     {
         $this->withoutExceptionHandling()
-            ->be(create(User::class));
+            ->signIn(create(User::class));
 
         $programme = create(Programme::class);
 
@@ -35,6 +35,5 @@ class CreateCourseTest extends TestCase
                 $this->assertEquals($value, $course->{$param});
             }
         });
-
     }
 }

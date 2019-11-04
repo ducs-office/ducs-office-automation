@@ -8,6 +8,11 @@ use Illuminate\Validation\Rule;
 
 class ProgrammesController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Programme::class, 'programme');
+    }
+
     /**
      * Display a listing of the resource.
      *

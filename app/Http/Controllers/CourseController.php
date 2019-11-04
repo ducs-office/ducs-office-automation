@@ -9,6 +9,11 @@ use Illuminate\Validation\Rule;
 
 class CourseController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Course::class, 'course');
+    }
+
     /**
      * Display a listing of the resource.
      *

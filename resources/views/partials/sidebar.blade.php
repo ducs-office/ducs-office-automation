@@ -21,24 +21,30 @@
                 </a>
             </li>
             @endcanany
+            @can('viewAny', App\Programme::class)
             <li>
                 <a href="/programmes" class="flex items-center py-2 px-4 hover:bg-magenta-700 hover:pl-6">
                     <feather-icon name="book" class="h-4 mr-2">Academic Programmes</feather-icon>
                     Academic Programmes
                 </a>
             </li>
+            @endcan
+            @can('viewAny', App\Course::class)
             <li>
                 <a href="/courses" class="flex items-center py-2 px-4 hover:bg-magenta-700 hover:pl-6">
                     <feather-icon name="file-text" class="h-4 mr-2">Programme Courses</feather-icon>
                     Programme Courses
                 </a>
             </li>
+            @endcan
+            @can('viewAny', App\College::class)
             <li>
                 <a href="/colleges" class="flex items-center py-2 px-4 hover:bg-magenta-700 hover:pl-6">
                     <feather-icon name="home" class="h-4 mr-2">Colleges</feather-icon>
                     Colleges
                 </a>
             </li>
+            @endcan
             <li>
                 <a href="/users" class="flex items-center py-2 px-4 hover:bg-magenta-700 hover:pl-6">
                     <feather-icon name="user" class="h-4 mr-2">User</feather-icon>

@@ -6,6 +6,8 @@ use App\Programme;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 class UpdateProgrammeTest extends TestCase
@@ -15,8 +17,12 @@ class UpdateProgrammeTest extends TestCase
     /** @test */
     public function admin_can_update_programme_code()
     {
+        $role = Role::create(['name' => 'admin']);
+        $permission = Permission::firstOrCreate(['name' => 'edit programmes']);
+        $role->givePermissionTo($permission);
+
         $this->withoutExceptionHandling()
-            ->signIn();
+            ->signIn(create(User::class), $role->name);
 
         $programme = create(Programme::class);
 

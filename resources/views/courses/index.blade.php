@@ -3,11 +3,16 @@
     <div class="m-6 page-card">
         <div class="flex items-baseline px-6 pb-4 border-b">
             <h1 class="page-header mb-0 px-0 mr-4">Programme Courses</h1>
+            @can('create', App\Course::class)
             <button class="btn btn-magenta is-sm shadow-inset" @click="$modal.show('create-courses-modal')">
                 New
             </button>
+            @endcan
         </div>
+        @can('update', App\Course::class)
         <course-update-modal name="course-update-modal">@csrf @method('patch')</course-update-modal>
+        @endcan
+        @can('create', App\Course::class)
         <modal name="create-courses-modal" height="auto">
             <form action="/courses" method="POST" class="p-6">
                 <h2 class="mb-8 font-bold text-lg">Create New Course</h2>
@@ -34,6 +39,7 @@
                 </div>
             </form>
         </modal>
+        @endcan
         <div>
             @foreach ($courses as $course)
                 <div class="px-6 py-2 hover:bg-gray-100 border-b flex justify-between">
@@ -43,6 +49,7 @@
                         <p class="text-gray-500 truncate">{{ ucwords($course->programme->name) }} ({{ $course->programme->code }})</p>
                     </div>
                     <div class="flex items-center">
+                        @can('update', App\Course::class)
                         <button class="p-1 hover:text-blue-500 mr-2"
                         @click.prevent="$modal.show('course-update-modal', {
                             course: {{ $course->toJson() }},
@@ -50,6 +57,8 @@
                         })">
                             <feather-icon name="edit" class="h-current">Edit</feather-icon>
                         </button>
+                        @endcan
+                        @can('delete', App\Course::class)
                         <form action="/courses/{{ $course->id }}" method="POST">
                             @csrf
                             @method('DELETE')
@@ -57,6 +66,7 @@
                                 <feather-icon name="trash-2" class="h-current">Delete</feather-icon>
                             </button>
                         </form>
+                        @endcan
                     </div>
                 </div>
             @endforeach

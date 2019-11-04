@@ -8,6 +8,11 @@ use Illuminate\Validation\Rule;
 
 class CollegeController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(College::class, 'college');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -47,7 +52,7 @@ class CollegeController extends Controller
                 Rule::unique('colleges')->ignore($college)
             ],
         ]);
-        
+
         $college->update($validData);
         flash('College updated successfully!', 'success');
         return redirect('/colleges');
