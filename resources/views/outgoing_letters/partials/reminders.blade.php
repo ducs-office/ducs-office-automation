@@ -3,8 +3,9 @@
     <reminder-update-modal name="reminder-update-modal">
         @csrf @method('patch')
     </reminder-update-modal>
-    <form action="/reminders" method="POST" enctype="multipart/form-data" class="px-6 py-2 border-b">
-        @csrf <input type="hidden" name="letter_id" value="{{ $letter->id }}">
+    @can('create', [\App\LetterReminder::class, $letter])
+    <form action="/outgoing_letters/{{ $letter->id }}/reminders" method="POST" enctype="multipart/form-data" class="px-6 py-2 border-b">
+        @csrf
         <div class="flex">
             <v-file-input id="scan"
                 class="inline-flex items-center cursor-pointer form-input is-sm mr-4"
@@ -29,6 +30,7 @@
             <button type="submit" class="btn btn-magenta is-sm">Add Reminder</button>
         </div>
     </form>
+    @endcan
     @forelse($letter->reminders as $i => $reminder)
     <div class="flex py-3 hover:bg-gray-200 px-6">
         <h4 class="text-sm w-32 px-2">{{ $reminder->updated_at->format('M d, h:i a') }}</h4>

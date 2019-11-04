@@ -76,6 +76,7 @@
                     <span class="ml-3 py-1 px-2 inline-flex items-center rounded-full bg-gray-500 text-xs text-black">{{ $letter->remarks->count() }}</span>
                 </button>
                 @endcan
+                @can('viewAny', App\LetterReminder::class)
                 <button class="inline-flex items-center border border-b-0 rounded-t px-3 py-2 mx-1"
                     style="margin-bottom: -1px;" role="tab"
                     :class="{
@@ -87,6 +88,7 @@
                     Reminders
                     <span class="ml-3 py-1 px-2 inline-flex items-center rounded-full bg-gray-500 text-xs text-black">{{ $letter->reminders->count() }}</span>
                 </button>
+                @endcan
             </div>
         </template>
         <template v-slot:default="{ isActive }">
@@ -95,9 +97,11 @@
                 @include('outgoing_letters.partials.remarks')
             </div>
             @endcan
+            @can('viewAny', App\LetterReminder::class)
             <div v-show="isActive('reminders')">
                 @include('outgoing_letters.partials.reminders')
             </div>
+            @endcan
         </template>
     </v-tabbed-pane>
 </div>

@@ -11,6 +11,8 @@ use App\User;
 use Dotenv\Exception\ValidationException;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\UploadedFile;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class StoreLetterRemindersTest extends TestCase
 {
@@ -24,8 +26,10 @@ class StoreLetterRemindersTest extends TestCase
     /** @test */
     public function guest_can_not_store_letter_reminders()
     {
+        $letter = create(OutgoingLetter::class);
+
         $this->withExceptionHandling()
-            ->post('/reminders')
+            ->post("/outgoing_letters/{$letter->id}/reminders")
             ->assertRedirect('login');
 
         $this->assertEquals(0, LetterReminder::count());
@@ -35,9 +39,17 @@ class StoreLetterRemindersTest extends TestCase
     public function user_can_store_letter_reminders()
     {
         Storage::fake();
-        
-        $this->be(create(User::class));
-        $letter = create(OutgoingLetter::class);
+
+        $role = Role::create(['name' => 'random']);
+        $permission = Permission::firstOrCreate(['name' => 'create letter reminders']);
+
+        $role->givePermissionTo($permission);
+
+        $this->signIn(create(User::class), $role->name);
+
+        $letter = create(OutgoingLetter::class, 1, [
+            'creator_id' => auth()->id()
+        ]);
 
         $reminder = [
             'date' => now()->subDay(1)->format('Y-m-d'),
@@ -49,8 +61,8 @@ class StoreLetterRemindersTest extends TestCase
         ];
 
         $this->withOutExceptionHandling()
-            ->post('/reminders', $reminder);
-        
+            ->post("/outgoing_letters/{$letter->id}/reminders", $reminder);
+
         $this->assertEquals(1, LetterReminder::count());
         $reminder = LetterReminder::first();
         $this->assertCount(2, $reminder->attachments);
@@ -67,49 +79,24 @@ class StoreLetterRemindersTest extends TestCase
         Storage::assertExists($reminder->attachments->last()->path);
     }
 
-    /** @test*/
-    public function request_validates_letter_id_can_not_be_null()
-    {
-        $this->be(create(User::class));
-
-        $reminder = [
-            'date' => now()->subDay(1)->format('Y-m-d'),
-            // 'letter_id' => $letter->id,
-            'attachments' => [
-                UploadedFile::fake()->image('Scanned.jpg'),
-                UploadedFile::fake()->create('Document.pdf')
-            ],
-        ];
-
-        try {
-            $this->withExceptionHandling()
-                ->post('/reminders', $reminder);
-        } catch (ValidationException $e) {
-            $this->assertArrayHasKey('letter_id', $e->errors());
-        }
-
-        $this->assertEquals(0, LetterReminder::count());
-    }
 
     /** @test */
-    public function request_validates_letter_id_is_an_existing_letter()
+    public function request_validates_atleast_on_attachment_is_uploaded()
     {
         $this->be(create(User::class));
 
+        $letter = create(OutgoingLetter::class);
+
         $reminder = [
-            'date' => now()->subDay(1)->format('Y-m-d'),
-            'letter_id' => 123,
             'attachments' => [
-                UploadedFile::fake()->image('Scanned.jpg'),
-                UploadedFile::fake()->create('Document.pdf')
             ],
         ];
 
         try {
             $this->withExceptionHandling()
-                ->post('/reminders', $reminder);
+                ->post("/outgoing_letters/{$letter->id}/reminders", $reminder);
         } catch (ValidationException $e) {
-            $this->assertArrayHasKey('letter_id', $e->errors());
+            $this->assertArrayHasKey('attachments', $e->errors());
         }
 
         $this->assertEquals(0, LetterReminder::count());

@@ -28,11 +28,11 @@ Route::patch('/outgoing-letters/{outgoing_letter}', 'OutgoingLettersController@u
 Route::delete('/outgoing-letters/{outgoing_letter}', 'OutgoingLettersController@destroy')->middleware('auth');
 
 Route::post('/outgoing-letters/{outgoing_letter}/remarks', 'OutgoingLetterRemarksController@store')->middleware('auth');
+Route::post('/outgoing_letters/{letter}/reminders', 'OutgoingLetterRemindersController@store')->middleware('auth');
 
 Route::patch('/remarks/{remark}', 'RemarksController@update')->middleware('auth');
 Route::delete('/remarks/{remark}', 'RemarksController@destroy')->middleware('auth');
 
-Route::post('/reminders', 'RemindersController@store')->middleware('auth');
 Route::delete('/reminders/{reminder}', 'RemindersController@destroy')->middleware('auth');
 Route::patch('/reminders/{reminder}', 'RemindersController@update')->middleware('auth');
 
@@ -64,4 +64,3 @@ Route::delete('/roles/{role}', 'RoleController@destroy')->middleware('auth');
 
 Route::get('/attachments/{attachment}', 'AttachmentController@show')->middleware('auth');
 Route::delete('/attachments/{attachment}', 'AttachmentController@destroy')->middleware('auth');
-

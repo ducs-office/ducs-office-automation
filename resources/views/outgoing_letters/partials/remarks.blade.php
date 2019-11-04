@@ -1,6 +1,9 @@
 <div class="bg-gray-100 justify-between overflow-y-auto">
+    @can('edit remarks')
     <remark-update-modal name="remark-update-modal">@csrf @method('patch')</remark-update-modal>
+    @endcan
     <div class="border-b px-6 py-2">
+        @can('create', App\Remark::class)
         <form action="/outgoing-letters/{{$letter->id}}/remarks" method="POST">
             @csrf <input type="hidden" name="letter_id" value="{{ $letter->id }}">
             <div class="flex items-center">
@@ -14,6 +17,9 @@
                 <button class="btn btn-magenta">Add Remark</button>
             </div>
         </form>
+        @else
+        <p class="text-center text-gray-600">You are not allowed to add remarks.</p>
+        @endcan
     </div>
     @forelse($letter->remarks as $i => $remark)
     <div class="relative hover:bg-gray-200 px-6 py-2 mb-2 last:mb-0">
@@ -30,6 +36,7 @@
         </div>
         <p class="pl-12 text-gray-800 mr-10">{{ $remark->description }}</p>
         <div class="absolute right-0 top-0 mr-4 flex items-center">
+            @can('update', $remark)
             <button class="p-1 text-gray-500 hover:bg-gray-200 text-blue-600 rounded mr-3" 
                 title="Edit" 
                 @click.prevent="$modal.show('remark-update-modal',{
@@ -37,12 +44,15 @@
                 })">
                 <feather-icon name="edit-3" stroke-width="2.5" class="h-current">Edit</feather-icon>
             </button>
+            @endcan
+            @can('delete', $remark)
             <form action="/remarks/{{ $remark->id }}" method="POST">
                 @csrf @method('DELETE')
                 <button class="p-1 hover:bg-gray-200 text-red-700 rounded">
                     <feather-icon name="trash-2" stroke-width="2.5" class="h-current">Delete</feather-icon>
                 </button>
             </form>
+            @endcan
         </div>
     </div>
     @empty

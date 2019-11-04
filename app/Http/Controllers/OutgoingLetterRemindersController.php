@@ -9,38 +9,30 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Cache;
 // use lluminate\Contracts\Routing\ResponseFactory;
 use App\LetterReminder;
+use App\OutgoingLetter;
 
-class RemindersController extends Controller
+class OutgoingLetterRemindersController extends Controller
 {
-    public function update(LetterReminder $reminder)
+    public function store(Request $request, OutgoingLetter $letter)
     {
-        $this->authorize('update', $reminder);
+        $this->authorize('create', [LetterReminder::class, $letter]);
 
-        $data = request()->validate([
+        $validData = request()->validate([
             'attachments' => 'required|array|max:2',
             'attachments.*' => 'file|max:200|mimes:jpeg,jpg,png,pdf'
         ]);
 
-        $reminder->attachments()->createMany(
+        $letter_reminder = $letter->reminders()->create($validData);
+
+        $letter_reminder->attachments()->createMany(
             array_map(function ($attachedFile) {
                 return [
                     'original_name' => $attachedFile->getClientOriginalName(),
                     'path' => $attachedFile->store('/letter_attachments/outgoing/reminders')
                 ];
-            }, $data['attachments'])
+            }, $request->file('attachments'))
         );
 
         return redirect()->back();
-    }
-
-    public function destroy(LetterReminder $reminder)
-    {
-        $this->authorize('delete', $reminder);
-
-        $reminder->attachments->each->delete();
-
-        $reminder->delete();
-
-        return back();
     }
 }
