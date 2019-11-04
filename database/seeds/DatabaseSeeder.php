@@ -60,7 +60,7 @@ class DatabaseSeeder extends Seeder
 
         factory(College::class, 5)->create();
 
-        factory(Remark::class, 4)->create(['letter_id' => 1]);
+        factory(Remark::class, 4)->create(['remarkable_id' => 1]);
 
         factory(LetterReminder::class, 4)->create(['letter_id' => 1]);
     }

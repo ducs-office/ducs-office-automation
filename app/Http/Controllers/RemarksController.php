@@ -10,19 +10,10 @@ use Illuminate\Support\Facades\Auth;
 class RemarksController extends Controller
 {
 
-    public function store(OutgoingLetter $outgoing_letter)
-    {
-        $data = request()->validate([
-            'description'=>'required|min:10|max:255|string',
-        ]);
-
-        $outgoing_letter->remarks()->create($data + ['user_id' => Auth::id()]);
-        
-        return back();
-    }
-
     public function update(Remark $remark)
     {
+        $this->authorize('update', $remark);
+
         $remark->update(request()->validate([
             'description'=>'required|min:10|max:255|string'
         ]));
@@ -31,8 +22,10 @@ class RemarksController extends Controller
 
     public function destroy(Remark $remark)
     {
+        $this->authorize('delete', $remark);
+
         $remark->delete();
-        
+
         return back();
     }
 }

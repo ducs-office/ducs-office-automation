@@ -63,6 +63,7 @@
     <v-tabbed-pane default-tab="remarks">
         <template v-slot:tabs="{ select, isActive }">
             <div class="flex px-6 border-b">
+                @can('viewAny', App\Remark::class)
                 <button class="inline-flex items-center border border-b-0 rounded-t px-3 py-2 mx-1"
                     style="margin-bottom: -1px;" role="tab"
                     :class="{
@@ -74,6 +75,7 @@
                     Remarks
                     <span class="ml-3 py-1 px-2 inline-flex items-center rounded-full bg-gray-500 text-xs text-black">{{ $letter->remarks->count() }}</span>
                 </button>
+                @endcan
                 <button class="inline-flex items-center border border-b-0 rounded-t px-3 py-2 mx-1"
                     style="margin-bottom: -1px;" role="tab"
                     :class="{
@@ -88,9 +90,11 @@
             </div>
         </template>
         <template v-slot:default="{ isActive }">
+            @can('viewAny', App\Remark::class)
             <div v-show="isActive('remarks')">
                 @include('outgoing_letters.partials.remarks')
             </div>
+            @endcan
             <div v-show="isActive('reminders')">
                 @include('outgoing_letters.partials.reminders')
             </div>

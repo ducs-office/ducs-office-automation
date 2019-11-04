@@ -9,6 +9,8 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use Illuminate\Support\Str;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class UpdateRemarkTest extends TestCase
 {
@@ -18,7 +20,7 @@ class UpdateRemarkTest extends TestCase
      * @return void
      */
     use RefreshDatabase;
-    
+
     /** @test */
     public function guest_cannot_update_remark()
     {
@@ -27,28 +29,46 @@ class UpdateRemarkTest extends TestCase
         $this->withExceptionHandling()
         ->patch("remarks/$remark->id", ['description'=>'Not received by University'])
         ->assertRedirect('/login');
-    
+
         $this->assertEquals($remark->description, $remark->fresh()->description);
     }
 
     /** @test */
     public function user_can_update_remark()
     {
-        $this->be(create(User::class));
-        $remark = create(Remark::class, 1, ['description'=>'Received by University']);
-        $new_remark = ['description'=>'Not received by University'];
+        $role = Role::create(['name' => 'random']);
+        $permission = Permission::firstOrCreate(['name' => 'edit remarks']);
+        $role->givePermissionTo($permission);
+
+        $this->signIn(create(User::class), $role->name);
+
+        $remark = create(Remark::class, 1, [
+            'description'=>'Received by University',
+            'user_id' => auth()->id()
+        ]);
 
         $this->withoutExceptionHandling()
-            ->patch("remarks/$remark->id", $new_remark);
-        
-        $this->assertEquals($new_remark['description'], $remark->fresh()->description);
+            ->patch("remarks/$remark->id", [
+                'description'=> $newDesc = 'Not received by University'
+            ]);
+
+        $this->assertEquals($newDesc, $remark->fresh()->description);
     }
 
     /** @test */
     public function request_validates_description_field_cannot_be_null()
     {
-        $this->be(create(User::class));
-        $remark = create(Remark::class, 1, ['description'=>'Received by University']);
+        $role = Role::create(['name' => 'random']);
+        $permission = Permission::firstOrCreate(['name' => 'edit remarks']);
+        $role->givePermissionTo($permission);
+
+        $this->signIn(create(User::class), $role->name);
+
+        $remark = create(Remark::class, 1, [
+            'description' => 'Received by University',
+            'user_id' => auth()->id()
+        ]);
+
         $new_remark = ['description'=> ''];
 
         try {
@@ -65,8 +85,17 @@ class UpdateRemarkTest extends TestCase
     /** @test */
     public function request_validates_description_field_minlimit_10()
     {
-        $this->be(create(User::class));
-        $remark = create(Remark::class, 1, ['description'=>'Received by University']);
+        $role = Role::create(['name' => 'random']);
+        $permission = Permission::firstOrCreate(['name' => 'edit remarks']);
+        $role->givePermissionTo($permission);
+
+        $this->signIn(create(User::class), $role->name);
+
+        $remark = create(Remark::class, 1, [
+            'description'=>'Received by University',
+            'user_id' => auth()->id()
+        ]);
+
         $new_remark = ['description'=>Str::random(9)];
 
         try {
@@ -82,8 +111,17 @@ class UpdateRemarkTest extends TestCase
     /** @test */
     public function request_validates_description_field_maxlimit_255()
     {
-        $this->be(create(User::class));
-        $remark = create(Remark::class, 1, ['description'=>'Received by University']);
+$role = Role::create(['name' => 'random']);
+        $permission = Permission::firstOrCreate(['name' => 'edit remarks']);
+        $role->givePermissionTo($permission);
+
+        $this->signIn(create(User::class), $role->name);
+
+        $remark = create(Remark::class, 1, [
+            'description'=>'Received by University',
+            'user_id' => auth()->id()
+        ]);
+
         $new_remark = ['description'=>Str::random(256)];
 
         try {

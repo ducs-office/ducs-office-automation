@@ -99,6 +99,7 @@ return [
         'roles' => [
             'office' => [
                 'outgoing letters' => ['create', 'view', 'edit', 'delete'],
+                'remarks' => ['create', 'view', 'edit', 'delete'],
                 'colleges' => ['create', 'view', 'edit', 'delete'],
                 'programmes' => ['create', 'view', 'edit', 'delete'],
                 'courses' => ['create', 'view', 'edit', 'delete'],
@@ -107,6 +108,7 @@ return [
             ],
             'faculty' => [
                 'outgoing letters' => ['create', 'view', 'edit', 'delete'],
+                'remarks' => ['create', 'view', 'edit', 'delete'],
                 'colleges' => ['create', 'view', 'edit', 'delete'],
                 'programmes' => ['create', 'view', 'edit', 'delete'],
                 'courses' => ['create', 'view', 'edit', 'delete'],
