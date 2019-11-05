@@ -1,13 +1,13 @@
 <sidebar-nav>
     <template v-slot:default="data">
-        <div v-if="data.isvisible" class="bg-magenta-800 text-white sm:w-80 flex flex-col flex-shrink-0 h-full absolute sm:static z-50">
+        <div v-if="data.isVisible" class="bg-magenta-800 text-white sm:w-80 flex flex-col flex-shrink-0 h-full absolute sm:static z-50">
             <div class="h-20 flex items-center px-4 mb-8">
                 <img src="{{ asset('images/university-logo.png') }}" alt="DU Logo" class="h-12 mr-3">
                 <a href="/" class="inline-block logo leading-tight max-w-sm">
                     <h1 class="text-lg font-bold">Department of <br> Computer Science</h1>
                 </a>
                 <div class="self-center flex-grow text-right">
-                    <button class="sm:hidden p-3 bg-magenta-800 hover:bg-magenta-900 text-white btn ml-3" @click="data.closesidebarnav">
+                    <button class="sm:hidden p-3 rounded hover:bg-magenta-900 text-white ml-3" @click="data.closeSidebarNav">
                         <feather-icon name="close" class="h-current" stroke-width="3">Close Menu</feather-icon>
                     </button>
                 </div>
