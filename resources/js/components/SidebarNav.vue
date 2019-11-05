@@ -1,6 +1,6 @@
 <template>
     <span>
-        <slot :isvisible="isVisible" :closesidebarnav="closeSidebarNav"></slot>
+        <slot :is-visible="isVisible" :close-sidebar-nav="closeSidebarNav"></slot>
     </span>
 </template>
 

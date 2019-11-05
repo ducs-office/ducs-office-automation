@@ -7339,8 +7339,8 @@ var render = function() {
     "span",
     [
       _vm._t("default", null, {
-        isvisible: _vm.isVisible,
-        closesidebarnav: _vm.closeSidebarNav
+        isVisible: _vm.isVisible,
+        closeSidebarNav: _vm.closeSidebarNav
       })
     ],
     2
