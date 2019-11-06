@@ -87,6 +87,7 @@ return [
     'static' => [
         'permissions' => [
             'outgoing letters' => ['create', 'view', 'edit', 'delete'],
+            'incoming letters' =>['create', 'view', 'edit', 'delete'],
             'colleges' => ['create', 'view', 'edit', 'delete'],
             'courses' => ['create', 'view', 'edit', 'delete'],
             'papers' => ['create', 'view', 'edit', 'delete'],
@@ -97,6 +98,7 @@ return [
         'roles' => [
             'office' => [
                 'outgoing letters' => ['create', 'view', 'edit', 'delete'],
+                'incoming letters' => ['create', 'view', 'edit', 'delete'],
                 'colleges' => ['create', 'view', 'edit', 'delete'],
                 'courses' => ['create', 'view', 'edit', 'delete'],
                 'papers' => ['create', 'view', 'edit', 'delete'],
@@ -105,6 +107,7 @@ return [
             ],
             'faculty' => [
                 'outgoing letters' => ['create', 'view', 'edit', 'delete'],
+                'incoming letters' => ['view'],
                 'colleges' => ['create', 'view', 'edit', 'delete'],
                 'courses' => ['create', 'view', 'edit', 'delete'],
                 'papers' => ['create', 'view', 'edit', 'delete'],
