@@ -116,4 +116,15 @@ class OutgoingLettersController extends Controller
 
         return redirect('/outgoing-letters');
     }
+
+    public function storeRemark(OutgoingLetter $outgoing_letter) 
+    {
+        $data = request()->validate([
+            'description'=>'required|min:10|max:255|string',
+        ]);
+
+        $outgoing_letter->remarks()->create($data + ['user_id' => Auth::id()]);
+        
+        return back();
+    }
 }
