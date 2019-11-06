@@ -17,17 +17,21 @@
                     {{ $letter->handover->name}}
                 </div>
                 <div class="ml-auto flex">
-                    <a href="/incoming-letters/{{$letter->id}}/edit"
-                        class="p-1 text-gray-500 text-blue-600 hover:bg-gray-200 rounded mr-3" title="Edit">
-                        <feather-icon name="edit-3" stroke-width="2.5" class="h-current">Edit</feather-icon>
-                    </a>
-                    <form method="POST" action="/incoming-letters/{{$letter->id}}">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="p-1 hover:bg-gray-200 text-red-700 rounded">
-                            <feather-icon name="trash-2" stroke-width="2.5" class="h-current">Delete</feather-icon>
-                        </button>
-                    </form>
+                    @can('update', $letter)
+                        <a href="/incoming-letters/{{$letter->id}}/edit"
+                            class="p-1 text-gray-500 text-blue-600 hover:bg-gray-200 rounded mr-3" title="Edit">
+                            <feather-icon name="edit-3" stroke-width="2.5" class="h-current">Edit</feather-icon>
+                        </a>
+                    @endcan
+                    @can('delete', $letter)
+                        <form method="POST" action="/incoming-letters/{{$letter->id}}">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="p-1 hover:bg-gray-200 text-red-700 rounded">
+                                <feather-icon name="trash-2" stroke-width="2.5" class="h-current">Delete</feather-icon>
+                            </button>
+                        </form>
+                    @endcan
                 </div>
             </div>
             <h4 class="text-xl font-bold mb-3">{{ $letter->subject ?? 'Subject of Letter' }}</h4>

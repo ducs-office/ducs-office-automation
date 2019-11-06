@@ -3,9 +3,11 @@
     <div class="m-6">
         <div class="flex items-baseline px-4 mb-4">
             <h1 class="page-header mb-0 px-0 mr-4">Incoming Letters</h1>
-            <a href="/incoming-letters/create" class="btn btn-magenta is-sm shadow-inset">
-                New
-            </a>
+            @can('create', $letter)
+                <a href="/incoming-letters/create" class="btn btn-magenta is-sm shadow-inset">
+                    New
+                </a>
+            @endcan
             <letter-search-filters class="ml-auto"
                 :filters="{{ json_encode([
                 [ 'field' => 'date', 'label' => 'Before Date', 'type' => 'date', 'operator' => 'greater_than' ],
