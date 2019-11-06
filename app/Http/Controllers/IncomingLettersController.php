@@ -10,6 +10,10 @@ use App\User;
 
 class IncomingLettersController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(IncomingLetter::class, 'incoming letters');
+    }
     public function index(Request $request)
     {
         $filters = $request->query('filters');
