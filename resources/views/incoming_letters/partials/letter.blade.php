@@ -7,8 +7,14 @@
                     {{ $letter->sender}}
                     <feather-icon name="arrow-down-right"
                     stroke-width="3"
-                    class="h-current text-green-600 mx-2">Sent to</feather-icon>
+                    class="h-current text-green-600 mx-2">Recipient-</feather-icon>
                     {{ $letter->recipient->name }}
+                </div>
+                <div class="flex items-center text-gray-700">
+                    <feather-icon name="corner-down-right"
+                    stroke-width="3"
+                    class="h-current text-blue-600 mx-2">Handover</feather-icon>
+                    {{ $letter->handover->name}}
                 </div>
                 <div class="ml-auto flex">
                     <a href="/incoming-letters/{{$letter->id}}/edit"
@@ -25,9 +31,7 @@
                 </div>
             </div>
             <h4 class="text-xl font-bold mb-3">{{ $letter->subject ?? 'Subject of Letter' }}</h4>
-            @isset($letter->description)
-                <p class="text-black-50">{{ $letter->description }}</p>
-            @endisset
+            <p class="text-black-50">{{ $letter->description }}</p>
             <div class="flex flex-wrap -mx-2 my-3">
                 @foreach ($letter->attachments as $attachment)
                     <span class="p-2 rounded border hover:bg-gray-300 text-gray-600 m-2">

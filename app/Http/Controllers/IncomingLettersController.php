@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\IncomingLetter;
+use App\OutgoingLetter;
 use Auth;
 use App\User;
 
@@ -126,5 +127,16 @@ class IncomingLettersController extends Controller
         $incoming_letter->delete();
 
         return redirect('/incoming-letters');
+    }
+
+    public function storeRemark(IncomingLetter $incoming_letter) 
+    {
+        $data = request()->validate([
+            'description'=>'required|min:10|max:255|string',
+        ]);
+
+        $incoming_letter->remarks()->create($data + ['user_id' => Auth::id()]);
+        
+        return back();
     }
 }
