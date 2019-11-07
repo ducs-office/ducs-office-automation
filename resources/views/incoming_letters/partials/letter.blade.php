@@ -1,7 +1,10 @@
 <div class="page-card border-b mb-4 pt-6 pb-0 overflow-hidden">
         <div class="px-6">
-            <div class="flex items-center mb-3">
-                <h5 class="mr-12 text-gray-700 font-bold">{{$letter->serial_no}}</h5>
+            <div class="flex items-baseline mb-3">
+                <div>
+                    <h5 class="mr-12 text-gray-700 font-bold">{{$letter->serial_no}}</h5>
+                    <h5 class="mr-12 text-gray-700">{{$letter->received_id}}</h5>
+                </div>
                 <h5 class="mr-12 text-gray-700 font-bold">{{ $letter->date->format('M d, Y') }}</h5>
                 <div class="flex items-center text-gray-700">
                     {{ $letter->sender}}
