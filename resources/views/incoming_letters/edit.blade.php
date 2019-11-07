@@ -110,7 +110,7 @@
                 @endif
             </div>
             <div class="mb-3">
-                <button type="submit" class="w-full btn btn-magenta">Upload</button>
+                <button type="submit" class="w-full btn btn-magenta">Update</button>
             </div>
         </form>
         <form id="remove-attachment" 

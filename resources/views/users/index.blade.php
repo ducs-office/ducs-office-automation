@@ -55,8 +55,8 @@
                         $modal.show('user-update-modal', { 
                             user: {
                                 id: {{ $user->id }}, 
-                                name: '{{ $user->name }}', 
-                                email: '{{ $user->email }}'
+                                name: {{ json_encode($user->name) }}, 
+                                email: {{ json_encode($user->email) }}
                             },
                             user_roles: {{ $user->roles->pluck('id')->toJson() }} 
                         })">

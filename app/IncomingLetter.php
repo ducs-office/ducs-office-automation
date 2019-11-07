@@ -24,8 +24,7 @@ class IncomingLetter extends Model
             $year = $incoming_letter->date->format('y');
             $seq_id = "CS/D/{$year}";
             $cache_key = "letter_seq_{$seq_id}";
-            $number_seq = str_pad(Cache::increment($cache_key) , 4, STR_PAD_LEFT);
-            
+            $number_seq = str_pad(Cache::increment($cache_key) , 4, "0", STR_PAD_LEFT);
             $incoming_letter->serial_no = "$seq_id/$number_seq";
 
             return $incoming_letter;

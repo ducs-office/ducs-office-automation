@@ -12,7 +12,7 @@ class IncomingLettersController extends Controller
 {
     public function __construct()
     {
-        $this->authorizeResource(IncomingLetter::class, 'incoming letters');
+        $this->authorizeResource(IncomingLetter::class, 'incoming_letter');
     }
     public function index(Request $request)
     {

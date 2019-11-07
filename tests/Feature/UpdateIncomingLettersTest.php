@@ -52,6 +52,8 @@ class UpdateIncomingLettersTest extends TestCase
             'attachments' => [$file = UploadedFile::fake()->create('letter-scan.pdf')]
         ];
 
+        // dd(auth()->user()->roles->map->name);
+
         $this->withoutExceptionHandling()
             ->patch("incoming-letters/{$letter->id}", $new_incoming_letter)
             ->assertRedirect('/incoming-letters');
