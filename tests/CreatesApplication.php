@@ -21,15 +21,15 @@ trait CreatesApplication
 
         $app->make(Kernel::class)->bootstrap();
 
-        TestResponse::macro('assertSessionHasFlash', function($level = '', $contains = '') {
+        TestResponse::macro('assertSessionHasFlash', function ($level = '', $contains = '') {
             $this->assertSessionHas('flash_notification');
             
-            $test = Session::get('flash_notification')->some(function($notification) use ($level, $contains){
+            $test = Session::get('flash_notification')->some(function ($notification) use ($level, $contains) {
                 return $notification->level == $level
                     && Str::contains($notification->message, $contains);
             });
             
-            if(!$test) {
+            if (!$test) {
                 Assert::fail("No Flash message with `{$level}` level and containing `{$contains}`.");
             }
         });

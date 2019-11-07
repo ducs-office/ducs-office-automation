@@ -1,8 +1,8 @@
 <?php
 
-use App\Course;
+use App\Programme;
 use App\OutgoingLetter;
-use App\Paper;
+use App\Course;
 use App\User;
 use App\College;
 use App\IncomingLetter;
@@ -54,8 +54,8 @@ class DatabaseSeeder extends Seeder
             'handover_id' => $ng->id
         ]);
 
-        factory(Course::class, 5)->create()->each(function($course) {
-            factory(Paper::class, 10)->create(['course_id' => $course->id]);
+        factory(Programme::class, 5)->create()->each(function($programme) {
+            factory(Course::class, 10)->create(['programme_id' => $programme->id]);
         });
 
         factory(College::class)->create([
@@ -68,10 +68,10 @@ class DatabaseSeeder extends Seeder
             'name' => 'Acharya Narendra Dev College'
         ]);
 
-        factory(College::class,5)->create();
+        factory(College::class, 5)->create();
 
-        factory(Remark::class,4)->create();
+        factory(Remark::class, 4)->create(['remarkable_id' => 1]);
 
-        factory(LetterReminder::class,4)->create(['letter_id' => 1]);
+        factory(LetterReminder::class, 4)->create(['letter_id' => 1]);
     }
 }

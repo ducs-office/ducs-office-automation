@@ -1,0 +1,91 @@
+<?php
+
+namespace Tests\Feature;
+
+use App\Programme;
+use App\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
+use Tests\TestCase;
+
+class UpdateProgrammeTest extends TestCase
+{
+    use RefreshDatabase;
+
+    /** @test */
+    public function admin_can_update_programme_code()
+    {
+        $role = Role::create(['name' => 'admin']);
+        $permission = Permission::firstOrCreate(['name' => 'edit programmes']);
+        $role->givePermissionTo($permission);
+
+        $this->withoutExceptionHandling()
+            ->signIn(create(User::class), $role->name);
+
+        $programme = create(Programme::class);
+
+        $response = $this->patch('/programmes/'.$programme->id, [
+            'code' => $newCode = 'New123'
+        ])->assertRedirect('/programmes')
+        ->assertSessionHasFlash('success', 'Programme updated successfully!');
+
+        $this->assertEquals(1, Programme::count());
+        $this->assertEquals($newCode, $programme->fresh()->code);
+    }
+
+    /** @test */
+    public function admin_can_update_programme_date_wef()
+    {
+        $this->withoutExceptionHandling()
+            ->signIn();
+
+        $programme = create(Programme::class);
+
+        $response = $this->patch('/programmes/'.$programme->id, [
+            'wef' => $newDate = '2014-05-10'
+        ])->assertRedirect('/programmes')
+        ->assertSessionHasFlash('success', 'Programme updated successfully!');
+
+        $this->assertEquals(1, Programme::count());
+        $this->assertEquals($newDate, $programme->fresh()->wef);
+    }
+
+    /** @test */
+    public function admin_can_update_programme_name()
+    {
+        $this->withoutExceptionHandling()
+            ->signIn();
+
+        $programme = create(Programme::class);
+
+        $response = $this->patch('/programmes/'.$programme->id, [
+            'name' => $newName = 'New Programme'
+        ])->assertRedirect('/programmes')
+        ->assertSessionHasFlash('success', 'Programme updated successfully!');
+
+        $this->assertEquals(1, Programme::count());
+        $this->assertEquals($newName, $programme->fresh()->name);
+    }
+
+    /** @test */
+    public function programme_is_not_validated_for_uniqueness_if_code_is_not_changed()
+    {
+        $this->withoutExceptionHandling()
+            ->signIn();
+
+        $programme = create(Programme::class);
+
+        $response = $this->patch('/programmes/'.$programme->id, [
+            'code' => $programme->code,
+            'name' => $newName = 'New Programme'
+        ])->assertRedirect('/programmes')
+        ->assertSessionHasNoErrors()
+        ->assertSessionHasFlash('success', 'Programme updated successfully!');
+
+
+        $this->assertEquals(1, Programme::count());
+        $this->assertEquals($newName, $programme->fresh()->name);
+    }
+}

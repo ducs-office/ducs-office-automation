@@ -13,12 +13,14 @@
                     Dashboard
                 </a>
             </li>
+            @can('viewAny', \App\OutgoingLetter::class)
             <li>
                 <a href="/outgoing-letters" class="flex items-center py-2 px-4 hover:bg-magenta-700 hover:pl-6">
                     <feather-icon name="mail" class="h-4 mr-2">Outgoing Letters</feather-icon>
                     Outgoing Letters
                 </a>
             </li>
+            @endcan
             @can('viewAny', App\IncomingLetter::class)
                 <li>
                     <a href="/incoming-letters" class="flex items-center py-2 px-4 hover:bg-magenta-700 hover:pl-6">
@@ -27,36 +29,46 @@
                     </a>
                 </li>
             @endcan
+            @can('viewAny', App\Programme::class)
+            <li>
+                <a href="/programmes" class="flex items-center py-2 px-4 hover:bg-magenta-700 hover:pl-6">
+                    <feather-icon name="book" class="h-4 mr-2">Academic Programmes</feather-icon>
+                    Academic Programmes
+                </a>
+            </li>
+            @endcan
+            @can('viewAny', App\Course::class)
             <li>
                 <a href="/courses" class="flex items-center py-2 px-4 hover:bg-magenta-700 hover:pl-6">
-                    <feather-icon name="book" class="h-4 mr-2">Academic Courses</feather-icon>
-                    Academic Courses
+                    <feather-icon name="file-text" class="h-4 mr-2">Programme Courses</feather-icon>
+                    Programme Courses
                 </a>
             </li>
-            <li>
-                <a href="/papers" class="flex items-center py-2 px-4 hover:bg-magenta-700 hover:pl-6">
-                    <feather-icon name="file-text" class="h-4 mr-2">Course Papers</feather-icon>
-                    Course Papers
-                </a>
-            </li>
+            @endcan
+            @can('viewAny', App\College::class)
             <li>
                 <a href="/colleges" class="flex items-center py-2 px-4 hover:bg-magenta-700 hover:pl-6">
                     <feather-icon name="home" class="h-4 mr-2">Colleges</feather-icon>
                     Colleges
                 </a>
             </li>
+            @endcan
+            @can('viewAny', App\User::class)
             <li>
                 <a href="/users" class="flex items-center py-2 px-4 hover:bg-magenta-700 hover:pl-6">
                     <feather-icon name="user" class="h-4 mr-2">User</feather-icon>
                     Users
                 </a>
             </li>
+            @endcan
+            @can('viewAny', Spatie\Permission\Models\Role::class)
             <li>
                 <a href="/roles" class="flex items-center py-2 px-4 hover:bg-magenta-700 hover:pl-6">
                     <feather-icon name="key" class="h-4 mr-2">User</feather-icon>
                     Roles & Permissions
                 </a>
             </li>
+            @endcan
         </ul>
     </aside>
 </div>

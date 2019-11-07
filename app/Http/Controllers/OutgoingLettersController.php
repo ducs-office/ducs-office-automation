@@ -4,12 +4,18 @@ namespace App\Http\Controllers;
 
 use Auth;
 use App\OutgoingLetter;
+use App\Remark;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class OutgoingLettersController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(OutgoingLetter::class, 'outgoing_letter');
+    }
+    
     public function index(Request $request)
     {
         $filters = $request->query('filters');
@@ -60,7 +66,7 @@ class OutgoingLettersController extends Controller
         $letter = OutgoingLetter::create($validData + ['creator_id' => Auth::id()]);
 
         $letter->attachments()->createMany(
-            array_map(function($attachedFile) {
+            array_map(function ($attachedFile) {
                 return [
                     'original_name' => $attachedFile->getClientOriginalName(),
                     'path' => $attachedFile->store('/letter_attachments/outgoing')
@@ -92,7 +98,7 @@ class OutgoingLettersController extends Controller
         
         $outgoing_letter->update($validData);
 
-        if($request->hasFile('attachments')) {
+        if ($request->hasFile('attachments')) {
             $outgoing_letter->attachments()->createMany(
                 array_map(function ($attachedFile) {
                     return [
@@ -119,6 +125,8 @@ class OutgoingLettersController extends Controller
 
     public function storeRemark(OutgoingLetter $outgoing_letter) 
     {
+        $this->authorize('create', Remark::class, $outgoing_letter);
+        
         $data = request()->validate([
             'description'=>'required|min:10|max:255|string',
         ]);

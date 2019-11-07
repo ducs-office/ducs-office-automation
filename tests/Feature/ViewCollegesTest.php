@@ -16,12 +16,12 @@ class ViewCollegesTest extends TestCase
      * @return void
      */
 
-     use RefreshDatabase;
+    use RefreshDatabase;
 
-     /** @test */
-     public function guest_cannot_view_colleges()
-     {
-        create(College::class,3);
+    /** @test */
+    public function guest_cannot_view_colleges()
+    {
+        create(College::class, 3);
 
         $this->withExceptionHandling()
             ->get('/colleges')
@@ -33,7 +33,7 @@ class ViewCollegesTest extends TestCase
     {
         $this->signIn();
 
-        create(College::class,3);
+        create(College::class, 3);
 
         $viewData = $this->withoutExceptionHandling()
                     ->get('/colleges')
@@ -41,6 +41,6 @@ class ViewCollegesTest extends TestCase
                     ->assertViewHas('colleges')
                     ->viewData('colleges');
 
-        $this->assertCount(3,$viewData);
+        $this->assertCount(3, $viewData);
     }
 }

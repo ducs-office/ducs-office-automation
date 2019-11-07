@@ -8,6 +8,11 @@ use Illuminate\Validation\Rule;
 
 class CollegeController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(College::class, 'college');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -17,7 +22,7 @@ class CollegeController extends Controller
     {
         $colleges = College::all();
 
-        return view('colleges.index',compact('colleges'));
+        return view('colleges.index', compact('colleges'));
     }
 
     public function store(Request $request)
@@ -29,7 +34,7 @@ class CollegeController extends Controller
 
         College::create($data);
 
-        flash('College created successfully!','success');
+        flash('College created successfully!', 'success');
 
         return redirect('/colleges');
     }
@@ -37,18 +42,17 @@ class CollegeController extends Controller
 
     public function update(Request $request, College $college)
     {
-        
         $validData = $request->validate([
             'code' => [
-                'sometimes', 'required', 'min:3', 'max:15', 
+                'sometimes', 'required', 'min:3', 'max:15',
                 Rule::unique('colleges')->ignore($college)
             ],
             'name'=>[
-                'sometimes', 'required', 'min:5', 'max:50', 
+                'sometimes', 'required', 'min:5', 'max:50',
                 Rule::unique('colleges')->ignore($college)
             ],
         ]);
-        
+
         $college->update($validData);
         flash('College updated successfully!', 'success');
         return redirect('/colleges');

@@ -2,8 +2,8 @@
     <div class="px-6">
         <div class="flex items-center mb-3">
             <span class="px-2 py-1 rounded text-xs uppercase text-white bg-{{
-                $letter->type == 'Bill' 
-                ? 'blue-600' 
+                $letter->type == 'Bill'
+                ? 'blue-600'
                 : ($letter->type == 'Notesheet' ? 'teal-600' : 'gray-800')
             }} mr-2 font-bold">
                 {{ $letter->type }}
@@ -18,10 +18,13 @@
                 {{ $letter->recipient }}
             </div>
             <div class="ml-auto flex">
+                @can('update', $letter)
                 <a href="/outgoing-letters/{{$letter->id}}/edit"
                     class="p-1 text-gray-500 text-blue-600 hover:bg-gray-200 rounded mr-3" title="Edit">
                     <feather-icon name="edit-3" stroke-width="2.5" class="h-current">Edit</feather-icon>
                 </a>
+                @endcan
+                @can('delete', $letter)
                 <form method="POST" action="/outgoing-letters/{{$letter->id}}">
                     @csrf
                     @method('DELETE')
@@ -29,6 +32,7 @@
                         <feather-icon name="trash-2" stroke-width="2.5" class="h-current">Delete</feather-icon>
                     </button>
                 </form>
+                @endcan
             </div>
         </div>
         <h4 class="text-xl font-bold mb-3">{{ $letter->subject ?? 'Subject of Letter' }}</h4>
@@ -49,7 +53,7 @@
             @foreach ($letter->attachments as $attachment)
                 <span class="p-2 rounded border hover:bg-gray-300 text-gray-600 m-2">
                     <a href="/attachments/{{ $attachment->id }}" target="__blank" class="inline-flex items-center mr-1">
-                        <feather-icon name="paperclip" class="h-4 mr-2" stroke-width="2">View Attachment</feather-icon>
+                        <feather-icon name="courseclip" class="h-4 mr-2" stroke-width="2">View Attachment</feather-icon>
                         <span>{{ $attachment->original_name }}</span>
                     </a>
                 </span>
@@ -59,8 +63,9 @@
     <v-tabbed-pane default-tab="remarks">
         <template v-slot:tabs="{ select, isActive }">
             <div class="flex px-6 border-b">
-                <button class="inline-flex items-center border border-b-0 rounded-t px-3 py-2 mx-1" 
-                    style="margin-bottom: -1px;" role="tab" 
+                @can('viewAny', App\Remark::class)
+                <button class="inline-flex items-center border border-b-0 rounded-t px-3 py-2 mx-1"
+                    style="margin-bottom: -1px;" role="tab"
                     :class="{
                         'bg-gray-100': isActive('remarks'),
                         'bg-gray-300': !isActive('remarks'),
@@ -70,8 +75,10 @@
                     Remarks
                     <span class="ml-3 py-1 px-2 inline-flex items-center rounded-full bg-gray-500 text-xs text-black">{{ $letter->remarks->count() }}</span>
                 </button>
-                <button class="inline-flex items-center border border-b-0 rounded-t px-3 py-2 mx-1" 
-                    style="margin-bottom: -1px;" role="tab" 
+                @endcan
+                @can('viewAny', App\LetterReminder::class)
+                <button class="inline-flex items-center border border-b-0 rounded-t px-3 py-2 mx-1"
+                    style="margin-bottom: -1px;" role="tab"
                     :class="{
                         'bg-gray-100': isActive('reminders'),
                         'bg-gray-300': !isActive('reminders'),
@@ -81,15 +88,20 @@
                     Reminders
                     <span class="ml-3 py-1 px-2 inline-flex items-center rounded-full bg-gray-500 text-xs text-black">{{ $letter->reminders->count() }}</span>
                 </button>
+                @endcan
             </div>
         </template>
         <template v-slot:default="{ isActive }">
+            @can('viewAny', App\Remark::class)
             <div v-show="isActive('remarks')">
                 @include('outgoing_letters.partials.remarks')
             </div>
+            @endcan
+            @can('viewAny', App\LetterReminder::class)
             <div v-show="isActive('reminders')">
                 @include('outgoing_letters.partials.reminders')
             </div>
+            @endcan
         </template>
     </v-tabbed-pane>
 </div>

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Programme;
 use App\Course;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -37,13 +38,31 @@ class UpdateCourseTest extends TestCase
 
         $course = create(Course::class);
 
-        $response = $this->patch('/courses/'.$course->id, [
-            'name' => $newName = 'New Course'
+        $response = $this->patch('/courses/' . $course->id, [
+            'name' => $newName = 'New course'
         ])->assertRedirect('/courses')
         ->assertSessionHasFlash('success', 'Course updated successfully!');
 
         $this->assertEquals(1, Course::count());
         $this->assertEquals($newName, $course->fresh()->name);
+    }
+
+    /** @test */
+    public function admin_can_update_courses_related_programme()
+    {
+        $this->withoutExceptionHandling()
+            ->signIn();
+
+        $course = create(Course::class);
+        $newProgramme = create(Programme::class);
+
+        $response = $this->patch('/courses/' . $course->id, [
+            'programme_id' => $newProgramme->id
+        ])->assertRedirect('/courses')
+        ->assertSessionHasFlash('success', 'Course updated successfully!');
+
+        $this->assertEquals(1, Course::count());
+        $this->assertEquals($newProgramme->id, $course->fresh()->programme_id);
     }
 
     /** @test */
@@ -56,7 +75,7 @@ class UpdateCourseTest extends TestCase
 
         $response = $this->patch('/courses/'.$course->id, [
             'code' => $course->code,
-            'name' => $newName = 'New Course'
+            'name' => $newName = 'New course'
         ])->assertRedirect('/courses')
         ->assertSessionHasNoErrors()
         ->assertSessionHasFlash('success', 'Course updated successfully!');

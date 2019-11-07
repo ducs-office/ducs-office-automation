@@ -32,15 +32,15 @@ class UpdateRolesTest extends TestCase
             ])->assertRedirect('/roles')
             ->assertSessionHasFlash('success', 'Role updated');
 
-        tap($role->fresh(), function($role) use (
-                $firstPermission, 
-                $secondPermission, 
+        tap($role->fresh(), function ($role) use (
+                $firstPermission,
+                $secondPermission,
                 $thirdPermission
             ) {
-                $this->assertEquals('existing role updated', $role->name);
-                $this->assertTrue($role->hasPermissionTo($firstPermission));
-                $this->assertFalse($role->hasPermissionTo($secondPermission));
-                $this->assertTrue($role->hasPermissionTo($thirdPermission));
-            });
+            $this->assertEquals('existing role updated', $role->name);
+            $this->assertTrue($role->hasPermissionTo($firstPermission));
+            $this->assertFalse($role->hasPermissionTo($secondPermission));
+            $this->assertTrue($role->hasPermissionTo($thirdPermission));
+        });
     }
 }

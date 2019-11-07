@@ -27,7 +27,7 @@ class EditUserTest extends TestCase
             ])->assertRedirect('/users')
             ->assertSessionHasFlash('success', 'User updated successfully!');
 
-        tap($john->fresh(), function($updated) use ($john, $correctEmail) {
+        tap($john->fresh(), function ($updated) use ($john, $correctEmail) {
             $this->assertEquals($correctEmail, $updated->email);
             $this->assertEquals($john->name, $updated->name);
         });

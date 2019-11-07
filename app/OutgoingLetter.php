@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Cache;
 class OutgoingLetter extends Model
 {
     protected $fillable = [
-        'date', 'type', 'subject', 'recipient', 'description', 'amount', 
+        'date', 'type', 'subject', 'recipient', 'description', 'amount',
         'sender_id', 'creator_id'
     ];
 

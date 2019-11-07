@@ -24,9 +24,9 @@
         <div class="flex -mx-2 mb-2">
             <div class="mx-2">
                 <label for="sender" class="w-full form-label mb-1">Sender</label>
-                <vue-typeahead name="sender_id" 
-                    source="/api/users" 
-                    find-source="/api/users/{value}" 
+                <vue-typeahead name="sender_id"
+                    source="/api/users"
+                    find-source="/api/users/{value}"
                     limit="5"
                     value="{{ old('sender_id') ?? $outgoing_letter->sender_id }}"
                     placeholder="Sender">
@@ -76,15 +76,15 @@
             @foreach ($outgoing_letter->attachments as $attachment)
             <div class="inline-flex items-center p-2 rounded border hover:bg-gray-300 text-gray-600 mx-2 my-1">
                 <a href="/attachments/{{ $attachment->id }}" target="__blank" class="inline-flex items-center mr-1">
-                    <feather-icon name="paperclip" class="h-4 mr-2" stroke-width="2">View Attachment</feather-icon>
+                    <feather-icon name="courseclip" class="h-4 mr-2" stroke-width="2">View Attachment</feather-icon>
                     <span>{{ $attachment->original_name }}</span>
                 </a>
-                <button type="submit" 
+                <button type="submit"
                     form="remove-attachment"
                     formaction="/attachments/{{ $attachment->id }}"
                     class="p-1 rounded hover:bg-red-500 hover:text-white">
                     <feather-icon name="x" class="h-4" stroke-width="2">Delete Attachment</feather-icon>
-                </button>        
+                </button>
             </div>
             @endforeach
         </div>
@@ -108,7 +108,7 @@
             <button type="submit" class="w-full btn btn-magenta">Update</button>
         </div>
     </form>
-    <form id="remove-attachment" 
+    <form id="remove-attachment"
         method="POST"
         onsubmit="return confirm('Do you really want to delete attachment?');">
         @csrf @method('DELETE')

@@ -9,11 +9,11 @@ class Attachment extends Model
 {
     protected $fillable = ['original_name', 'type', 'path'];
 
-    protected static function boot() 
+    protected static function boot()
     {
         parent::boot();
 
-        static::deleting(function($file) {
+        static::deleting(function ($file) {
             Storage::delete($file->path);
         });
     }

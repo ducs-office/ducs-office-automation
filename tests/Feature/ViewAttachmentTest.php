@@ -12,7 +12,7 @@ use App\User;
 
 class ViewAttachmentTest extends TestCase
 {
-   /** @test */
+    /** @test */
     use RefreshDatabase;
 
     public function guest_can_not_view_an_attachment()

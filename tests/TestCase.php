@@ -20,7 +20,6 @@ abstract class TestCase extends BaseTestCase
 
     public function signIn($user = null, $role = 'office')
     {
-
         if (!$user) {
             $user = create(User::class);
         }

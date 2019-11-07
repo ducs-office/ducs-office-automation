@@ -36,7 +36,6 @@ class CreateNewUserTest extends TestCase
         $this->assertEquals($name, $user->name, 'User\'s name was not corretly set.');
 
         $this->assertTrue($user->hasRole($teacherRole), 'Created user was not assigned the expected role!');
-
     }
 
     /** @test */

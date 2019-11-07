@@ -9,6 +9,11 @@ use Spatie\Permission\Models\Role;
 
 class RoleController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Role::class, 'role');
+    }
+
     public function index()
     {
         return view('roles.index', [
@@ -16,7 +21,7 @@ class RoleController extends Controller
             'permissions' => Permission::all()
         ]);
     }
-    
+
     public function store(Request $request)
     {
         $request->validate([
@@ -46,7 +51,7 @@ class RoleController extends Controller
             'name' => $request->name
         ]);
 
-        if($request->has('permissions')) {
+        if ($request->has('permissions')) {
             $role->syncPermissions($request->permissions);
         }
 
@@ -58,9 +63,9 @@ class RoleController extends Controller
     public function destroy(Role $role)
     {
         $role->delete();
-        
+
         flash('Role deleted successfully!')->success();
-        
+
         return redirect()->back();
     }
 }

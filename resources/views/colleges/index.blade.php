@@ -3,10 +3,13 @@
 <div class= "m-6 page-card pb-0">
     <div class = "flex items-baseline px-6 pb-4">
         <h1 class="page-header mb-0 px-0 mr-4">Colleges</h1>
+        @can('create', App\College::class)
         <button class="btn btn-magenta is-sm shadow-inset" @click.prevent = "$modal.show('create-college-form')">
         New
         </button>
+        @endcan
     </div>
+    @can('create', App\College::class)
     <modal name="create-college-form" height="auto">
         <div class="p-6">
             <h2 class="text-lg font-bold mb-8">New College</h2>
@@ -26,8 +29,11 @@
             </form>
         </div>
     </modal>
+    @endcan
 
+    @can('update', App\College::class)
     <college-update-modal name ="college-update-modal">@csrf @method('patch')</college-update-modal>
+    @endcan
     @foreach($colleges as $college)
         <div class="px-6 py-2 hover:bg-gray-100 border-b flex justify-between">
             <div class="flex items-baseline">
@@ -37,18 +43,22 @@
                 </h3>
             </div>
             <div class="flex">
+                @can('update', App\College::class)
                 <button class="p-1 hover:text-blue-500 mr-1" @click.prevent="$modal.show('college-update-modal',{college: {{$college->toJson()}}})">
-                   <feather-icon class="h-current" name="edit">Edit</feather-icon>
+                    <feather-icon class="h-current" name="edit">Edit</feather-icon>
                 </button>
+                @endcan
+                @can('delete', App\College::class)
                 <form action="/colleges/{{ $college->id }}" method="POST">
                     @csrf @method('delete')
                     <button type="submit" class="p-1 hover:text-red-700">
                         <feather-icon class="h-current" name="trash-2">Trash</feather-icon>
                     </button>
                 </form>
+                @endcan
             </div>
         </div>
     @endforeach
 </div>
-    
+
 @endsection

@@ -10,8 +10,8 @@ import TabbedPane from './components/TabbedPane.vue';
 import FileInput from './components/FileInput.vue';
 
 import LettersSearchFilters from './components/LettersSearchFilters.vue';
-import CourseUpdateModal from "./components/CourseUpdateModal.vue";
-import PaperUpdateModal from './components/PaperUpdateModal.vue';
+import ProgrammeUpdateModal from "./components/ProgrammeUpdateModal.vue";
+import CourseUpdateModal from './components/CourseUpdateModal.vue';
 import CollegeUpdateModal from "./components/CollegeUpdateModal.vue";
 import RemarkUpdateModal from './components/RemarkUpdateModal.vue';
 import ReminderUpdateModal from './components/ReminderUpdateModal.vue';
@@ -28,8 +28,8 @@ Vue.component('vue-typeahead', VueTypeahead);
 Vue.component("v-tabbed-pane", TabbedPane);
 Vue.component("v-file-input", FileInput);
 
+Vue.component("programme-update-modal", ProgrammeUpdateModal);
 Vue.component("course-update-modal", CourseUpdateModal);
-Vue.component("paper-update-modal", PaperUpdateModal);
 Vue.component('letter-search-filters', LettersSearchFilters);
 Vue.component("college-update-modal", CollegeUpdateModal);
 Vue.component("remark-update-modal", RemarkUpdateModal);

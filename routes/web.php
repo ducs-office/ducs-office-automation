@@ -37,23 +37,25 @@ Route::patch('/incoming-letters/{incoming_letter}', 'IncomingLettersController@u
 
 Route::post('/outgoing-letters/{outgoing_letter}/remarks', 'OutgoingLettersController@storeRemark')->middleware('auth');
 Route::post('/incoming-letters/{incoming_letter}/remarks', 'IncomingLettersController@storeRemark')->middleware('auth');
+
+Route::post('/outgoing_letters/{letter}/reminders', 'OutgoingLetterRemindersController@store')->middleware('auth');
+
 Route::patch('/remarks/{remark}', 'RemarksController@update')->middleware('auth');
 Route::delete('/remarks/{remark}', 'RemarksController@destroy')->middleware('auth');
 
-Route::post('/reminders', 'RemindersController@store')->middleware('auth');
-Route::delete('/reminders/{reminder}','RemindersController@destroy')->middleware('auth');
+Route::delete('/reminders/{reminder}', 'RemindersController@destroy')->middleware('auth');
 Route::patch('/reminders/{reminder}', 'RemindersController@update')->middleware('auth');
 
-    
-Route::get('/courses', 'CoursesController@index')->middleware('auth');
-Route::post('/courses', 'CoursesController@store')->middleware('auth');
-Route::patch('/courses/{course}', 'CoursesController@update')->middleware('auth');
-Route::delete('/courses/{course}', 'CoursesController@destroy')->middleware('auth');
 
-Route::get('/papers', 'PaperController@index')->middleware('auth');
-Route::post('/papers', 'PaperController@store')->middleware('auth');
-Route::patch('/papers/{paper}', 'PaperController@update')->middleware('auth');
-Route::delete('/papers/{paper}', 'PaperController@destroy')->middleware('auth');
+Route::get('/programmes', 'ProgrammesController@index')->middleware('auth');
+Route::post('/programmes', 'ProgrammesController@store')->middleware('auth');
+Route::patch('/programmes/{programme}', 'ProgrammesController@update')->middleware('auth');
+Route::delete('/programmes/{programme}', 'ProgrammesController@destroy')->middleware('auth');
+
+Route::get('/courses', 'CourseController@index')->middleware('auth');
+Route::post('/courses', 'CourseController@store')->middleware('auth');
+Route::patch('/courses/{course}', 'CourseController@update')->middleware('auth');
+Route::delete('/courses/{course}', 'CourseController@destroy')->middleware('auth');
 
 Route::get('/colleges', 'CollegeController@index')->middleware('auth');
 Route::post('/colleges', 'CollegeController@store')->middleware('auth');
@@ -72,5 +74,3 @@ Route::delete('/roles/{role}', 'RoleController@destroy')->middleware('auth');
 
 Route::get('/attachments/{attachment}', 'AttachmentController@show')->middleware('auth');
 Route::delete('/attachments/{attachment}', 'AttachmentController@destroy')->middleware('auth');
-
-

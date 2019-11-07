@@ -1,53 +1,76 @@
 @extends('layouts.master')
 @section('body')
-<div class="m-6 page-card pb-0">
-    <div class="flex items-baseline px-6 pb-4 border-b">
-        <h1 class="page-header mb-0 px-0 mr-4">Academic Courses</h1>
-        <button class="btn btn-magenta is-sm shadow-inset" @click.prevent="$modal.show('create-course-form')">
-            New
-        </button>
-    </div>
-    <modal name="create-course-form" height="auto">
-        <div class="p-6">
-            <h2 class="text-lg font-bold mb-8">New Course</h2>
-            <form action="/courses" method="POST" class="flex items-end">
+    <div class="m-6 page-card">
+        <div class="flex items-baseline px-6 pb-4 border-b">
+            <h1 class="page-header mb-0 px-0 mr-4">Programme Courses</h1>
+            @can('create', App\Course::class)
+            <button class="btn btn-magenta is-sm shadow-inset" @click="$modal.show('create-courses-modal')">
+                New
+            </button>
+            @endcan
+        </div>
+        @can('update', App\Course::class)
+        <course-update-modal name="course-update-modal">@csrf @method('patch')</course-update-modal>
+        @endcan
+        @can('create', App\Course::class)
+        <modal name="create-courses-modal" height="auto">
+            <form action="/courses" method="POST" class="p-6">
+                <h2 class="mb-8 font-bold text-lg">Create New Course</h2>
                 @csrf
-                <div class="flex-1 mr-2">
-                    <label for="course_code" class="w-full form-label">Course Code</label>
-                    <input id="course_code" type="text" name="code" class="w-full form-input">
+                <div class="mb-2">
+                    <label for="unique-course-code" class="w-full form-label mb-1">Unique Course Code</label>
+                    <input id="unique-course-code" name="code" type="text" class="w-full form-input" placeholder="e.g. 4234201">
                 </div>
-                <div class="flex-1 mr-5">
-                    <label for="course_name" class="w-full form-label">Course</label>
-                    <input id="course_name" type="text" name="name" class="w-full form-input">
+                <div class="mb-2">
+                    <label for="course-name" class="w-full form-label mb-1">Course Name</label>
+                    <input id="course-name" type="text" name="name" class="w-full form-input" placeholder="e.g. Artificial Intelligence">
                 </div>
-                <div>
+                <div class="mb-2">
+                    <label for="course-programme" class="w-full form-label mb-1">Programme</label>
+                    <select id="course-programme" name="programme_id" class="w-full form-input">
+                        <option value="" selected disabled>-- Select a Programme --</option>
+                        @foreach ($programmes as $id => $programme)
+                            <option value="{{ $id }}">{{ $programme }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="mt-6 mb-3">
                     <button type="submit" class="btn btn-magenta">Create</button>
                 </div>
             </form>
+        </modal>
+        @endcan
+        <div>
+            @foreach ($courses as $course)
+                <div class="px-6 py-2 hover:bg-gray-100 border-b flex justify-between">
+                    <div class="flex items-baseline">
+                        <h4 class="font-bold text-sm text-gray-600 w-24">{{ $course->code }}</h4>
+                        <h3 class="font-bold text-lg capitalize mr-2">{{ $course->name }}</h3>
+                        <p class="text-gray-500 truncate">{{ ucwords($course->programme->name) }} ({{ $course->programme->code }})</p>
+                    </div>
+                    <div class="flex items-center">
+                        @can('update', App\Course::class)
+                        <button class="p-1 hover:text-blue-500 mr-2"
+                        @click.prevent="$modal.show('course-update-modal', {
+                            course: {{ $course->toJson() }},
+                            programmes: {{ $programmes->toJson() }}
+                        })">
+                            <feather-icon name="edit" class="h-current">Edit</feather-icon>
+                        </button>
+                        @endcan
+                        @can('delete', App\Course::class)
+                        <form action="/courses/{{ $course->id }}" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="p-1 hover:text-red-700">
+                                <feather-icon name="trash-2" class="h-current">Delete</feather-icon>
+                            </button>
+                        </form>
+                        @endcan
+                    </div>
+                </div>
+            @endforeach
         </div>
-    </modal>
-    <course-update-modal name="course-update-modal">@csrf @method('patch')</course-update-modal>
-    @foreach ($courses as $course)
-        <div class="px-6 py-2 hover:bg-gray-100 border-b flex justify-between">
-            <div class="flex items-baseline">
-                <h4 class="text-sm font-semibold text-gray-600 mr-2 w-24">{{ $course->code }}</h4>
-                <h3 class="text-lg font-bold mr-2">
-                    {{ ucwords($course->name) }}
-                </h3>
-            </div>
-            <div class="flex">
-                <button class="p-1 hover:text-blue-500 mr-1" @click.prevent="$modal.show('course-update-modal', {course: {{ $course->toJson() }}})">
-                    <feather-icon class="h-current" name="edit">Edit</feather-icon>
-                </button>
-                <form action="/courses/{{ $course->id }}" method="POST">
-                    @csrf @method('delete')
-                    <button type="submit" class="p-1 hover:text-red-700">
-                        <feather-icon class="h-current" name="trash-2">Trash</feather-icon>
-                    </button>
-                </form>
-            </div>
-        </div>
-    @endforeach
-    
-</div>
+
+    </div>
 @endsection

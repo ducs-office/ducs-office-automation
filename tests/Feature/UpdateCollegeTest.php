@@ -38,7 +38,6 @@ class UpdateCollegeTest extends TestCase
 
         $this->assertEquals(1, College::count());
         $this->assertEquals($new_code, $college->fresh()->code);
-
     }
 
     /** @test */
@@ -55,7 +54,6 @@ class UpdateCollegeTest extends TestCase
 
         $this->assertEquals(1, College::count());
         $this->assertEquals($new_name, $college->fresh()->name);
-
     }
 
     /** @test */
