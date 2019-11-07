@@ -1,6 +1,21 @@
 <div class="page-card border-b mb-4 pt-6 pb-0 overflow-hidden">
         <div class="px-6">
             <div class="flex items-baseline mb-3">
+                @php
+                    $colour = [
+                        '1' => 'red',
+                        '2' => 'blue',
+                        '3' => 'yellow'
+                    ]
+                @endphp
+                @isset($letter->priority)
+                    <div class="flex items-center text-gray-700">
+                        <feather-icon name="flag"
+                            stroke-width="3"
+                            class="h-current text-{{$colour[$letter->priority]}}-600 mx-2 fill-current">{{$letter->priority}}
+                        </feather-icon>
+                    </div>
+                @endisset
                 <div>
                     <h5 class="mr-12 text-gray-700 font-bold">{{$letter->serial_no}}</h5>
                     <h5 class="mr-12 text-gray-700">{{$letter->received_id}}</h5>
