@@ -388,7 +388,7 @@ class StoreIncomingLettters extends TestCase
                 'sender' => $this->faker->name(),
                 'recipient_id' => create(User::class)->id,
                 'handover_id' => create(User::class)->id,
-                'priority' => $this->faker->randomNumber()+3,
+                'priority' => $this->faker->numberBetween(4, 10),
                 'subject' => $this->faker->words(3, true),
                 'description' => $this->faker->paragraph(),
                 'attachments' =>  [UploadedFile::fake()->create('document.pdf')]
