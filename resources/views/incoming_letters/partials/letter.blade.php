@@ -17,7 +17,7 @@
                     {{ $letter->handover->name}}
                 </div>
                 <div class="ml-auto flex">
-                    @can('update', $letter)
+                    @can('edit', $letter)
                         <a href="/incoming-letters/{{$letter->id}}/edit"
                             class="p-1 text-gray-500 text-blue-600 hover:bg-gray-200 rounded mr-3" title="Edit">
                             <feather-icon name="edit-3" stroke-width="2.5" class="h-current">Edit</feather-icon>
