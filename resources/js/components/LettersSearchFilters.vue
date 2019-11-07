@@ -14,7 +14,7 @@
                     <label class="w-full form-label mb-1" v-text="filter.label"></label>
                     <select v-if="filter.type == 'select'" :name="`filters[${filter.field}][${filter.operator}]`" class="w-full form-input is-sm">
                         <option value="">All</option>
-                        <option v-for="(value, option) in filter.options" :key="value" :value="value" v-text="option"></option>
+                        <option v-for="(value, option) in filter.options" :key="option" :value="option" v-text="value"></option>
                     </select>
                     <input v-else :type="filter.type" :name="`filters[${filter.field}][${filter.operator}]`" class="w-full w-full form-input is-sm">
                 </div>

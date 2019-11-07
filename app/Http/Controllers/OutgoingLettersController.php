@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Auth;
 use App\OutgoingLetter;
+use App\Remark;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -32,6 +33,7 @@ class OutgoingLettersController extends Controller
         $types = OutgoingLetter::selectRaw('DISTINCT(type)')->get()->pluck('type', 'type');
         $senders = User::select('id', 'name')->whereIn('id', OutgoingLetter::selectRaw('DISTINCT(sender_id)'))->get()->pluck('name', 'id');
         $creators = User::select('id', 'name')->whereIn('id', OutgoingLetter::selectRaw('DISTINCT(creator_id)'))->get()->pluck('name', 'id');
+
 
         return view('outgoing_letters.index', compact(
             'outgoing_letters',
@@ -119,5 +121,18 @@ class OutgoingLettersController extends Controller
         $outgoing_letter->delete();
 
         return redirect('/outgoing-letters');
+    }
+
+    public function storeRemark(OutgoingLetter $outgoing_letter) 
+    {
+        $this->authorize('create', Remark::class, $outgoing_letter);
+        
+        $data = request()->validate([
+            'description'=>'required|min:10|max:255|string',
+        ]);
+
+        $outgoing_letter->remarks()->create($data + ['user_id' => Auth::id()]);
+        
+        return back();
     }
 }
