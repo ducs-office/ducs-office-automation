@@ -54,7 +54,7 @@ class DatabaseSeeder extends Seeder
             'handover_id' => $ng->id
         ]);
 
-        factory(Programme::class, 5)->create()->each(function($programme) {
+        factory(Programme::class, 5)->create()->each(function ($programme) {
             factory(Course::class, 10)->create(['programme_id' => $programme->id]);
         });
 

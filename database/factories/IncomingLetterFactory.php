@@ -11,10 +11,10 @@ $factory->define(IncomingLetter::class, function (Faker $faker) {
         'date' => $faker->date('Y-m-d'),
         'received_id' => $faker->regexify('Dept/\RD/\[0-9]{4}'),
         'sender' => $faker->name,
-        'recipient_id' => function() {
+        'recipient_id' => function () {
             return factory(User::class)->create()->id;
         },
-        'handover_id' => function() {
+        'handover_id' => function () {
             return factory(User::class)->create()->id;
         },
         'priority' => $faker->randomElement([1,2,3]),

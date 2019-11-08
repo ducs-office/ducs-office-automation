@@ -18,11 +18,11 @@ class CreateIncomingLettersTable extends Migration
             $table->date('date');
             $table->string('serial_no')->unique();
             $table->string('received_id');
-            $table->string('sender',50);
+            $table->string('sender', 50);
             $table->unsignedBigInteger('recipient_id');
             $table->unsignedBigInteger('handover_id')->nullable();
-            $table->enum('priority',[1,2,3])->nullable();
-            $table->string('subject',80);
+            $table->enum('priority', [1,2,3])->nullable();
+            $table->string('subject', 80);
             $table->text('description', 400)->nullable();
             $table->timestamps();
 

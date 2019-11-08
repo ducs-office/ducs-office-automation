@@ -34,7 +34,7 @@ class FilterAndSearchIncomingLettersTest extends TestCase
         $this->assertInstanceOf(Collection::class, $viewIncomingLetters);
         $this->assertCount(2, $viewIncomingLetters, 'Only 2 letters were expected but :actual letters were returned');
 
-        $lettersAfterBeforeFilter = $viewIncomingLetters->filter(function($letter) use ($beforeFilter) {
+        $lettersAfterBeforeFilter = $viewIncomingLetters->filter(function ($letter) use ($beforeFilter) {
             return Carbon::parse($beforeFilter)->lessThan($letter->date);
         });
 

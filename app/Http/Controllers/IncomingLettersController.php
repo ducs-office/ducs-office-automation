@@ -19,7 +19,7 @@ class IncomingLettersController extends Controller
         $filters = $request->query('filters');
         $query = IncomingLetter::applyFilter($filters)->with(['remarks.user']);
 
-        if($request->has('search') && $request['search']!= '') {
+        if ($request->has('search') && $request['search']!= '') {
             $query->where('subject', 'like', '%'.$request['search'].'%')
                     ->orWhere('description', 'like', '%'.$request['search'].'%');
         }
@@ -27,11 +27,13 @@ class IncomingLettersController extends Controller
         $incoming_letters = $query->orderBy('date', 'DESC')->get();
         
         $recipients = User::select('id', 'name')->whereIn(
-            'id', IncomingLetter::selectRaw('DISTINCT(recipient_id)')
-            )->get()->pluck('name', 'id');
+            'id',
+            IncomingLetter::selectRaw('DISTINCT(recipient_id)')
+        )->get()->pluck('name', 'id');
             
-        $handovers = User::select('id','name')->whereIn(
-            'id', IncomingLetter::selectRaw('DISTINCT(handover_id)')
+        $handovers = User::select('id', 'name')->whereIn(
+            'id',
+            IncomingLetter::selectRaw('DISTINCT(handover_id)')
         )->get()->pluck('name', 'id');
         
         $senders = IncomingLetter::selectRaw('DISTINCT(sender)')->get()->pluck('sender', 'sender');
@@ -74,7 +76,7 @@ class IncomingLettersController extends Controller
         
         $incoming_letter->update($validData);
 
-        if($request->hasFile('attachments')) {
+        if ($request->hasFile('attachments')) {
             $incoming_letter->attachments()->createMany(
                 array_map(function ($attachedFile) {
                     return [
@@ -111,8 +113,7 @@ class IncomingLettersController extends Controller
         $letter = IncomingLetter::create($data);
 
         $letter->attachments()->createMany(
-            array_map(function ($attachedFile) 
-            {
+            array_map(function ($attachedFile) {
                 return [
                     'original_name' => $attachedFile->getClientOriginalName(),
                     'path' => $attachedFile->store('/letter_attachments/incoming')
@@ -133,7 +134,7 @@ class IncomingLettersController extends Controller
         return redirect('/incoming-letters');
     }
 
-    public function storeRemark(IncomingLetter $incoming_letter) 
+    public function storeRemark(IncomingLetter $incoming_letter)
     {
         $data = request()->validate([
             'description'=>'required|min:10|max:255|string',

@@ -67,6 +67,4 @@ class IncomingLetterPolicy
     {
         return $user->can('delete incoming letters');
     }
-
-    
 }

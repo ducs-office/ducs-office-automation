@@ -53,7 +53,7 @@ class RemarkPolicy
      */
     public function update(User $user, Remark $remark)
     {
-        return $user->can('edit remarks') 
+        return $user->can('edit remarks')
             && $remark->user_id == $user->id;
     }
 
@@ -69,5 +69,4 @@ class RemarkPolicy
         return $user->can('delete remarks')
             && $remark->user_id == $user->id;
     }
-    
 }

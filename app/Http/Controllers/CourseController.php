@@ -71,7 +71,6 @@ class CourseController extends Controller
         flash('Course updated successfully!', 'success');
 
         return redirect('/courses');
-
     }
 
     /**

@@ -38,7 +38,7 @@ class UpdateIncomingLettersTest extends TestCase
 
         $this->signIn();
         $receiver = create(User::class);
-        $letter = create(IncomingLetter::class,1, ['priority' => 2]);
+        $letter = create(IncomingLetter::class, 1, ['priority' => 2]);
 
         $new_incoming_letter = [
             'date' => '2019-04-02',
@@ -82,7 +82,7 @@ class UpdateIncomingLettersTest extends TestCase
         try {
             $this->withoutExceptionHandling()
             ->patch("/incoming-letters/{$letter->id}", ['date'=>'']);
-        }catch(ValidationException $e) {
+        } catch (ValidationException $e) {
             $this->assertArrayHasKey('date', $e->errors());
         }
         $this->assertEquals($letter->date, $letter->fresh()->date);
@@ -101,16 +101,16 @@ class UpdateIncomingLettersTest extends TestCase
             '04-2017-12', // wrong format
         ];
 
-        foreach($invalidDates as $date) {
+        foreach ($invalidDates as $date) {
             try {
                 $this->withoutExceptionHandling()
                 ->patch("incoming-letters/{$letter->id}", [ 'date' => $date ]);
                 
                 $this->fail("Invalid date '{$date}' was not validated");
-            } catch(ValidationException $e) {
+            } catch (ValidationException $e) {
                 $this->assertArrayHasKey('date', $e->errors());
                 $this->assertEquals($letter->date, $letter->fresh()->date);
-            } catch(\Exception $e) {
+            } catch (\Exception $e) {
                 $this->fail("Invalid date '{$date}' was not validated");
             }
         }
@@ -123,7 +123,7 @@ class UpdateIncomingLettersTest extends TestCase
 
         ];
 
-        foreach($validDates as $date) {
+        foreach ($validDates as $date) {
             $this->withoutExceptionHandling()
                 ->patch("incoming-letters/{$letter->id}", ['date' => $date])
                 ->assertRedirect('incoming-letters');
@@ -167,7 +167,7 @@ class UpdateIncomingLettersTest extends TestCase
         try {
             $this->withoutExceptionHandling()
                 ->patch("incoming-letters/{$letter->id}", ['sender' => '']);
-        }catch(ValidationException $e) {
+        } catch (ValidationException $e) {
             $this->assertArrayHasKey('sender', $e->errors());
         }
 
@@ -183,7 +183,7 @@ class UpdateIncomingLettersTest extends TestCase
         try {
             $this->withoutExceptionHandling()
                 ->patch("incoming-letters/{$letter->id}", ['recipient_id' => '']);
-        }catch(ValidationException $e) {
+        } catch (ValidationException $e) {
             $this->assertArrayHasKey('recipient_id', $e->errors());
         }
 
@@ -196,12 +196,12 @@ class UpdateIncomingLettersTest extends TestCase
         $this->signIn();
         $letter = create(IncomingLetter::class);
 
-        try{
+        try {
             $this->withoutExceptionHandling()
             ->patch("/incoming-letters/{$letter->id}", ['recipient_id'=>4]);
 
             $this->fail("Failed to validate \'recipient_id\' is an existing user");
-        }catch(ValidationException $e) {
+        } catch (ValidationException $e) {
             $this->assertArrayHasKey('recipient_id', $e->errors());
         }
 
@@ -214,12 +214,12 @@ class UpdateIncomingLettersTest extends TestCase
         $this->signIn();
         $letter = create(IncomingLetter::class);
 
-        try{
+        try {
             $this->withoutExceptionHandling()
             ->patch("/incoming-letters/{$letter->id}", ['handover_id'=>4]);
 
             $this->fail("Failed to validate \'handover_id\' is an existing user");
-        }catch(ValidationException $e) {
+        } catch (ValidationException $e) {
             $this->assertArrayHasKey('handover_id', $e->errors());
         }
 
@@ -260,14 +260,14 @@ class UpdateIncomingLettersTest extends TestCase
 
         try {
             $this->withoutExceptionHandling()
-                ->patch("/incoming-letters/{$letter->id}",['subject' => '']);
+                ->patch("/incoming-letters/{$letter->id}", ['subject' => '']);
 
             $this->fail('Empty \'subject\' was not validated.');
-        }catch(ValidationException $e) {
-            $this->assertArrayHasKey('subject',$e->errors());
+        } catch (ValidationException $e) {
+            $this->assertArrayHasKey('subject', $e->errors());
         }
 
-        $this -> assertEquals($letter->subject,$letter->fresh()->subject);
+        $this -> assertEquals($letter->subject, $letter->fresh()->subject);
     }
 
     /** @test */
@@ -278,12 +278,12 @@ class UpdateIncomingLettersTest extends TestCase
         
         try {
             $this->withoutExceptionHandling()
-                ->patch("/incoming-letters/{$letter->id}",['subject' => Str::random(81)]);
-        }catch(ValidationException $e){
-            $this -> assertArrayHasKey('subject',$e->errors());
+                ->patch("/incoming-letters/{$letter->id}", ['subject' => Str::random(81)]);
+        } catch (ValidationException $e) {
+            $this -> assertArrayHasKey('subject', $e->errors());
         }
 
-        $this -> assertEquals($letter->subject,$letter->fresh()->subject);
+        $this -> assertEquals($letter->subject, $letter->fresh()->subject);
     }
 
     /** @test */
@@ -308,11 +308,10 @@ class UpdateIncomingLettersTest extends TestCase
         try {
             $this->withoutExceptionHandling()
                 ->patch("/incoming-letters/{$letter->id}", ['description' => Str::random(401)]);
-        }catch(ValidationException $e) {
+        } catch (ValidationException $e) {
             $this->assertArrayHasKey('description', $e->errors());
         }
 
         $this->assertEquals($letter->description, $letter->fresh()->description);
     }
-
 }

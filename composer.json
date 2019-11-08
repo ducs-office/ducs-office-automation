@@ -36,11 +36,11 @@
         "hooks": {
             "pre-commit": [
                 "echo committing as $(git config user.name)",
-                "php-cs-fixer fix ."
+                "vendor/bin/php-cs-fixer fix ."
             ],
             "pre-push": [
-                "php-cs-fixer fix --dry-run .",
-                "phpunit"
+                "vendor/bin/php-cs-fixer fix --dry-run .",
+                "vendor/bin/phpunit"
             ]
         }
     },
@@ -63,7 +63,6 @@
     "prefer-stable": true,
     "scripts": {
         "cghooks": "vendor/bin/cghooks",
-        "php-cs-fixer": "vendor/bin/php-cs-fixer",
         "post-install-cmd": "cghooks add --ignore-lock",
         "post-update-cmd": "cghooks update",
         "post-autoload-dump": [

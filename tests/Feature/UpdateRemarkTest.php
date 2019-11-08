@@ -111,7 +111,7 @@ class UpdateRemarkTest extends TestCase
     /** @test */
     public function request_validates_description_field_maxlimit_255()
     {
-$role = Role::create(['name' => 'random']);
+        $role = Role::create(['name' => 'random']);
         $permission = Permission::firstOrCreate(['name' => 'edit remarks']);
         $role->givePermissionTo($permission);
 

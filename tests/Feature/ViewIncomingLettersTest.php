@@ -22,7 +22,7 @@ class ViewIncomingLettersTest extends TestCase
         $this->withoutExceptionHandling()
             ->get('/incoming-letters')
             ->assertRedirect('/login');
-    } 
+    }
 
     /** @test */
     public function user_can_view_incoming_letters()
@@ -120,7 +120,7 @@ class ViewIncomingLettersTest extends TestCase
                     ->assertViewHas('senders')
                     ->viewData('senders');
 
-        $this->assertCount(3,$senders);
+        $this->assertCount(3, $senders);
         $this->assertSame(
             IncomingLetter::all()->pluck('sender', 'sender')->toArray(),
             $senders->toArray()

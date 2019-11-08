@@ -41,7 +41,6 @@ class ProgrammesController extends Controller
 
     public function update(Request $request, Programme $programme)
     {
-
         $data = $request->validate([
             'code' => [
                 'sometimes', 'required', 'min:3', 'max:10',
@@ -66,5 +65,4 @@ class ProgrammesController extends Controller
 
         return redirect('/programmes');
     }
-
 }

@@ -44,7 +44,6 @@ class OutgoingLetter extends Model
 
             return $outgoing_letter;
         });
-
     }
 
     public function sender()
@@ -71,5 +70,4 @@ class OutgoingLetter extends Model
     {
         return $this->hasMany(LetterReminder::class, 'letter_id')->orderBy('created_at', 'DESC');
     }
-
 }

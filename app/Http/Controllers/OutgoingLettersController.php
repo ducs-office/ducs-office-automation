@@ -123,7 +123,7 @@ class OutgoingLettersController extends Controller
         return redirect('/outgoing-letters');
     }
 
-    public function storeRemark(OutgoingLetter $outgoing_letter) 
+    public function storeRemark(OutgoingLetter $outgoing_letter)
     {
         $this->authorize('create', Remark::class, $outgoing_letter);
         

@@ -2,7 +2,6 @@
 
 namespace App;
 
-
 use Illuminate\Support\Facades\Cache;
 use App\Model;
 use App\Remark;
@@ -11,7 +10,7 @@ class IncomingLetter extends Model
 {
     protected $fillable = [
         'date', 'received_id', 'sender', 'description', 'subject', 'priority',
-        'recipient_id', 'handover_id', 
+        'recipient_id', 'handover_id',
     ];
  
     protected $dates = ['date'];
@@ -24,7 +23,7 @@ class IncomingLetter extends Model
             $year = $incoming_letter->date->format('y');
             $seq_id = "CS/D/{$year}";
             $cache_key = "letter_seq_{$seq_id}";
-            $number_seq = str_pad(Cache::increment($cache_key) , 4, "0", STR_PAD_LEFT);
+            $number_seq = str_pad(Cache::increment($cache_key), 4, "0", STR_PAD_LEFT);
             $incoming_letter->serial_no = "$seq_id/$number_seq";
 
             return $incoming_letter;
@@ -38,14 +37,14 @@ class IncomingLetter extends Model
         'handover_id' => 'equals'
     ];
 
-    public function recipient() 
+    public function recipient()
     {
-        return $this->belongsTo(User::class,'recipient_id');
+        return $this->belongsTo(User::class, 'recipient_id');
     }
     
     public function handover()
     {
-        return $this->belongsTo(User::class,'handover_id');
+        return $this->belongsTo(User::class, 'handover_id');
     }
 
     public function attachments()

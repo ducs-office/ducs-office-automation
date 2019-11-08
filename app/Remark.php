@@ -9,7 +9,7 @@ class Remark extends Model
 {
     protected $guarded = [];
 
-    public function remarkable() 
+    public function remarkable()
     {
         return $this->morphTo();
     }
@@ -18,5 +18,4 @@ class Remark extends Model
     {
         return $this->belongsTo(User::class);
     }
-
 }

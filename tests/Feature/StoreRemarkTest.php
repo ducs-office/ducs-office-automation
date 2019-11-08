@@ -76,9 +76,9 @@ class StoreRemarkTest extends TestCase
 
         try {
             $this->withoutExceptionHandling()
-                ->post("/outgoing-letters/{$letter->id}/remarks",$remark);
-        } catch(ValidationException $e) {
-            $this->assertArrayHasKey('description',$e->errors());
+                ->post("/outgoing-letters/{$letter->id}/remarks", $remark);
+        } catch (ValidationException $e) {
+            $this->assertArrayHasKey('description', $e->errors());
         }
 
         $this->assertEquals(0, Remark::count());
@@ -96,9 +96,9 @@ class StoreRemarkTest extends TestCase
 
         try {
             $this->withoutExceptionHandling()
-                ->post("/outgoing-letters/{$letter->id}/remarks",$remark);
-        }catch(ValidationException $e){
-            $this->assertArrayHasKey('description',$e->errors());
+                ->post("/outgoing-letters/{$letter->id}/remarks", $remark);
+        } catch (ValidationException $e) {
+            $this->assertArrayHasKey('description', $e->errors());
         }
 
         $this->assertEquals(0, Remark::count());
@@ -117,8 +117,8 @@ class StoreRemarkTest extends TestCase
         try {
             $this->withoutExceptionHandling()
                 ->post("/outgoing-letters/{$letter->id}/remarks", $remark);
-        }catch(ValidationException $e){
-            $this->assertArrayHasKey('description',$e->errors());
+        } catch (ValidationException $e) {
+            $this->assertArrayHasKey('description', $e->errors());
         }
 
         $this->assertEquals(0, Remark::count());

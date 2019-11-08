@@ -12,9 +12,9 @@ class DeleteIncomingLettersTest extends TestCase
 {
     use RefreshDatabase;
 
-     /** @test */
-      public function guest_cannot_delete_letters()
-     {
+    /** @test */
+    public function guest_cannot_delete_letters()
+    {
         $letter = create(IncomingLetter::class);
 
         $this->withExceptionHandling()
@@ -22,18 +22,18 @@ class DeleteIncomingLettersTest extends TestCase
             ->assertRedirect('/login');
         
         $this->assertEquals(IncomingLetter::count(), 1);
-     }
+    }
 
-     /** @test */
-     public function user_can_delete_letters()
-     {
-         $this->signIn();
-         $letter = create(IncomingLetter::class);
+    /** @test */
+    public function user_can_delete_letters()
+    {
+        $this->signIn();
+        $letter = create(IncomingLetter::class);
 
-         $this->withoutExceptionHandling()
+        $this->withoutExceptionHandling()
          ->delete("/incoming-letters/$letter->id")
-         ->assertRedirect('/incoming-letters');       
+         ->assertRedirect('/incoming-letters');
          
-         $this->assertEquals(IncomingLetter::count(), 0);
-     }
+        $this->assertEquals(IncomingLetter::count(), 0);
+    }
 }

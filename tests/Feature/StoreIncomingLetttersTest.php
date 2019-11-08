@@ -48,7 +48,7 @@ class StoreIncomingLettters extends TestCase
 
         $this->assertEquals(IncomingLetter::count(), 1);
 
-        tap(IncomingLetter::first(), function($letter) use ($scanFile) {
+        tap(IncomingLetter::first(), function ($letter) use ($scanFile) {
             $this->assertCount(1, $letter->attachments);
             $this->assertEquals('letter_attachments/incoming/' . $scanFile->hashName(), $letter->attachments[0]->path);
             Storage::assertExists('letter_attachments/incoming/' . $scanFile->hashName());
@@ -58,8 +58,7 @@ class StoreIncomingLettters extends TestCase
     /** @test */
     public function request_validates_date_field_is_not_null()
     {
-        try 
-        {
+        try {
             $this->signIn();
             $letter = [
                 'date' => '',
@@ -75,8 +74,7 @@ class StoreIncomingLettters extends TestCase
         
             $this->withoutExceptionHandling()
                 ->post('/incoming-letters', $letter);
-
-        } catch(ValidationException $e) {
+        } catch (ValidationException $e) {
             $this->assertArrayHasKey('date', $e->errors());
         }
 
@@ -109,23 +107,20 @@ class StoreIncomingLettters extends TestCase
             '2012-2-29'
         ];
 
-        foreach($invalid_dates as $date)
-        {
-            try
-            {
+        foreach ($invalid_dates as $date) {
+            try {
                 $letter['date'] = $date;
 
                 $this->withoutExceptionHandling()
                     ->post('/incoming-letters', $letter);
-            } catch(ValidationException $e) {
+            } catch (ValidationException $e) {
                 $this->assertArrayHasKey('date', $e->errors());
             }
 
             $this->assertEquals(IncomingLetter::count(), 0);
         }
 
-        foreach($valid_dates as $date)
-        {
+        foreach ($valid_dates as $date) {
             $letter['date'] = $date;
 
             $this->withoutExceptionHandling()
@@ -141,8 +136,7 @@ class StoreIncomingLettters extends TestCase
     /** @test */
     public function request_validates_date_field_is_not_a_future_date()
     {
-        try
-        {
+        try {
             $this->signIn();
             $letter = [
                 'date' => now()->addDay()->format('Y-m-d'),
@@ -158,8 +152,7 @@ class StoreIncomingLettters extends TestCase
 
             $this->withoutExceptionHandling()
                 ->post('/incoming-letters', $letter);
-
-        } catch(ValidationException $e) {
+        } catch (ValidationException $e) {
             $this->assertArrayHasKey('date', $e->errors());
         }
         
@@ -169,8 +162,7 @@ class StoreIncomingLettters extends TestCase
     /** @test */
     public function request_validates_received_id_field_is_not_null()
     {
-        try
-        {
+        try {
             $this->signIn();
             $letter = [
                 'date' => now()->format('Y-m-d'),
@@ -186,7 +178,7 @@ class StoreIncomingLettters extends TestCase
 
             $this->withoutExceptionHandling()
                 ->post('/incoming-letters', $letter);
-        } catch(ValidationException $e) {
+        } catch (ValidationException $e) {
             $this->assertArrayHasKey('received_id', $e->errors());
         }
 
@@ -194,10 +186,9 @@ class StoreIncomingLettters extends TestCase
     }
 
     /** @test */
-    public function request_validates_sender_field_is_not_null() 
+    public function request_validates_sender_field_is_not_null()
     {
-        try
-        {
+        try {
             $this->signIn();
             $letter = [
                 'date' => now()->format('Y-m-d'),
@@ -213,7 +204,7 @@ class StoreIncomingLettters extends TestCase
 
             $this->withoutExceptionHandling()
                 ->post('/incoming-letters', $letter);
-        } catch(ValidationException $e) {
+        } catch (ValidationException $e) {
             $this->assertArrayHasKey('sender', $e->errors());
         }
 
@@ -223,8 +214,7 @@ class StoreIncomingLettters extends TestCase
     /** @test */
     public function request_validates_sender_field_max_length_is_50()
     {
-        try
-        {
+        try {
             $this->signIn();
             $letter = [
                 'date' => now()->format('Y-m-d'),
@@ -240,7 +230,7 @@ class StoreIncomingLettters extends TestCase
 
             $this->withoutExceptionHandling()
                 ->post('/incoming-letters', $letter);
-        } catch(ValidationException $e) {
+        } catch (ValidationException $e) {
             $this->assertArrayHasKey('sender', $e->errors());
         }
 
@@ -250,8 +240,7 @@ class StoreIncomingLettters extends TestCase
     /** @test */
     public function request_validates_recipient_id_field_is_not_null()
     {
-        try
-        {
+        try {
             $this->signIn();
             $letter = [
                 'date' => now()->format('Y-m-d'),
@@ -267,8 +256,7 @@ class StoreIncomingLettters extends TestCase
 
             $this->withoutExceptionHandling()
                 ->post('/incoming-letters', $letter);
-
-        } catch(ValidationException $e) {
+        } catch (ValidationException $e) {
             $this->assertArrayHasKey('recipient_id', $e->errors());
         }
 
@@ -278,8 +266,7 @@ class StoreIncomingLettters extends TestCase
     /** @test */
     public function request_validates_recipient_id_field_is_existing_user()
     {
-        try
-        {
+        try {
             $this->signIn();
             $letter = [
                 'date' => now()->format('Y-m-d'),
@@ -295,7 +282,7 @@ class StoreIncomingLettters extends TestCase
 
             $this->withoutExceptionHandling()
                 ->post('/incoming-letters', $letter);
-        } catch(ValidationException $e) {
+        } catch (ValidationException $e) {
             $this->assertArrayHasKey('recipient_id', $e->errors());
         }
 
@@ -328,8 +315,7 @@ class StoreIncomingLettters extends TestCase
     /** @test */
     public function request_validates_handover_id_field_is_existing_user()
     {
-        try
-        {
+        try {
             $this->signIn();
             $letter = [
                 'date' => now()->format('Y-m-d'),
@@ -345,8 +331,7 @@ class StoreIncomingLettters extends TestCase
 
             $this->withoutExceptionHandling()
                 ->post('/incoming-letters', $letter);
-
-        } catch(ValidationException $e) {
+        } catch (ValidationException $e) {
             $this->assertArrayHasKey('handover_id', $e->errors());
         }
         
@@ -379,8 +364,7 @@ class StoreIncomingLettters extends TestCase
     /** @test */
     public function request_validates_priority_field_is_valid_priority()
     {
-        try
-        {
+        try {
             $this->signIn();
             $letter = [
                 'date' => now()->format('Y-m-d'),
@@ -396,8 +380,7 @@ class StoreIncomingLettters extends TestCase
 
             $this->withoutExceptionHandling()
                 ->post('/incoming-letters', $letter);
-
-        } catch(ValidationException $e) {
+        } catch (ValidationException $e) {
             $this->assertArrayHasKey('priority', $e->errors());
         }
 
@@ -407,8 +390,7 @@ class StoreIncomingLettters extends TestCase
     /** @test */
     public function request_validates_subject_field_is_not_null()
     {
-        try
-        {
+        try {
             $this->signIn();
             $letter = [
                 'date' => now()->format('Y-m-d'),
@@ -424,8 +406,7 @@ class StoreIncomingLettters extends TestCase
 
             $this->withoutExceptionHandling()
                 ->post('/incoming-letters', $letter);
-
-        } catch(ValidationException $e) {
+        } catch (ValidationException $e) {
             $this->assertArrayHasKey('subject', $e->errors());
         }
 
@@ -435,8 +416,7 @@ class StoreIncomingLettters extends TestCase
     /** @test */
     public function request_validates_subject_field_max_length_is_80()
     {
-        try
-        {
+        try {
             $this->signIn();
             $letter = [
                 'date' => now()->format('Y-m-d'),
@@ -452,8 +432,7 @@ class StoreIncomingLettters extends TestCase
 
             $this->withoutExceptionHandling()
                 ->post('/incoming-letters', $letter);
-
-        } catch(ValidationException $e) {
+        } catch (ValidationException $e) {
             $this->assertArrayHasKey('subject', $e->errors());
         }
 
@@ -486,8 +465,7 @@ class StoreIncomingLettters extends TestCase
     /** @test */
     public function request_validates_description_field_max_length_is_400()
     {
-        try
-        {
+        try {
             $this->signIn();
             $letter = [
                 'date' => now()->format('Y-m-d'),
@@ -503,8 +481,7 @@ class StoreIncomingLettters extends TestCase
 
             $this->withoutExceptionHandling()
                 ->post('/incoming-letters', $letter);
-
-        } catch(ValidationException $e) {
+        } catch (ValidationException $e) {
             $this->assertArrayHasKey('description', $e->errors());
         }
 

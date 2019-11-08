@@ -30,8 +30,8 @@ class CreateCourseTest extends TestCase
 
         $this->assertEquals(1, Course::count());
 
-        tap(Course::first(), function($course) use ($params) {
-            foreach($params as $param => $value) {
+        tap(Course::first(), function ($course) use ($params) {
+            foreach ($params as $param => $value) {
                 $this->assertEquals($value, $course->{$param});
             }
         });
