@@ -16,7 +16,9 @@
         "spatie/laravel-permission": "^3.2"
     },
     "require-dev": {
+        "brainmaestro/composer-git-hooks": "^2.8",
         "filp/whoops": "^2.0",
+        "friendsofphp/php-cs-fixer": "^2.16",
         "fzaninotto/faker": "^1.4",
         "mockery/mockery": "^1.0",
         "nunomaduro/collision": "^3.0",
@@ -30,6 +32,16 @@
     "extra": {
         "laravel": {
             "dont-discover": []
+        },
+        "hooks": {
+            "pre-commit": [
+                "echo committing as $(git config user.name)",
+                "php-cs-fixer fix ."
+            ],
+            "pre-push": [
+                "php-cs-fixer fix --dry-run .",
+                "phpunit"
+            ]
         }
     },
     "autoload": {
@@ -50,6 +62,10 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "scripts": {
+        "cghooks": "vendor/bin/cghooks",
+        "php-cs-fixer": "vendor/bin/php-cs-fixer",
+        "post-install-cmd": "cghooks add --ignore-lock",
+        "post-update-cmd": "cghooks update",
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"
