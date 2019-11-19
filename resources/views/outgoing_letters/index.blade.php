@@ -18,7 +18,7 @@
                     [ 'field' => 'creator', 'label' => 'Creator', 'type' => 'select', 'operator' => 'equals', 'options' => $creators->toArray() ],
                 ]) }}">
             </letter-search-filters>
-====    </div>
+        </div>
         @forelse($outgoing_letters as $letter)
             @include('outgoing_letters.partials.letter', compact('letter'))
         @empty

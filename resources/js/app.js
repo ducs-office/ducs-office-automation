@@ -6,6 +6,7 @@ import VueJsModal from 'vue-js-modal';
 import Flash from './components/Flash.vue';
 import FeatherIcon from './components/FeatherIcon.vue';
 import VueTypeahead from './components/VueTypeahead.vue';
+import VueMultiTypeahead from './components/VueMultiTypeahead.vue';
 import TabbedPane from './components/TabbedPane.vue';
 import FileInput from './components/FileInput.vue';
 
@@ -25,6 +26,7 @@ window.Events = new Vue();
 Vue.component('v-flash', Flash);
 Vue.component('feather-icon', FeatherIcon);
 Vue.component('vue-typeahead', VueTypeahead);
+Vue.component('v-multi-typeahead', VueMultiTypeahead);
 Vue.component("v-tabbed-pane", TabbedPane);
 Vue.component("v-file-input", FileInput);
 
