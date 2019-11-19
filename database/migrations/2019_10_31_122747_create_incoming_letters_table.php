@@ -20,14 +20,12 @@ class CreateIncomingLettersTable extends Migration
             $table->string('received_id');
             $table->string('sender', 50);
             $table->unsignedBigInteger('recipient_id');
-            $table->unsignedBigInteger('handover_id')->nullable();
             $table->enum('priority', [1,2,3])->nullable();
             $table->string('subject', 80);
             $table->text('description', 400)->nullable();
             $table->timestamps();
 
             $table->foreign('recipient_id')->references('id')->on('users');
-            $table->foreign('handover_id')->references('id')->on('users');
         });
     }
 

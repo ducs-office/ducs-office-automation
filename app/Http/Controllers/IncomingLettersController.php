@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Handover;
 use App\IncomingLetter;
 use App\OutgoingLetter;
 use Auth;
@@ -17,7 +18,7 @@ class IncomingLettersController extends Controller
     public function index(Request $request)
     {
         $filters = $request->query('filters');
-        $query = IncomingLetter::applyFilter($filters)->with(['remarks.user']);
+        $query = IncomingLetter::applyFilter($filters)->with(['remarks.user', 'handovers']);
 
         if ($request->has('search') && $request['search']!= '') {
             $query->where('subject', 'like', '%'.$request['search'].'%')
@@ -31,11 +32,6 @@ class IncomingLettersController extends Controller
             IncomingLetter::selectRaw('DISTINCT(recipient_id)')
         )->get()->pluck('name', 'id');
             
-        $handovers = User::select('id', 'name')->whereIn(
-            'id',
-            IncomingLetter::selectRaw('DISTINCT(handover_id)')
-        )->get()->pluck('name', 'id');
-        
         $senders = IncomingLetter::selectRaw('DISTINCT(sender)')->get()->pluck('sender', 'sender');
         
         $priorities = IncomingLetter::selectRaw('DISTINCT(priority)')->get()->pluck('priority', 'priority');
@@ -47,7 +43,6 @@ class IncomingLettersController extends Controller
         return view('incoming_letters.index', compact(
             'incoming_letters',
             'recipients',
-            'handovers',
             'senders',
             'priorities'
         ));
@@ -66,15 +61,19 @@ class IncomingLettersController extends Controller
             'received_id' => 'sometimes|required|string',
             'sender' => 'sometimes|required|string',
             'recipient_id' => 'sometimes|required|exists:users,id',
-            'handover_id' => 'nullable|exists:users,id',
+            'handovers' => 'sometimes|nullable|array',
+            'handovers.*' => 'exists:users,id',
             'priority' => 'nullable|in:1,2,3',
             'subject' => 'sometimes|required|string|max:80',
             'description' => 'nullable|string|max:400',
             'attachments' => 'sometimes|required|array|max:2',
             'attachments.*' => 'file|max:200|mimes:jpeg,jpg,png,pdf'
         ]);
-        
+
         $incoming_letter->update($validData);
+        if ($request->has('handovers')) {
+            $incoming_letter->handovers()->sync($validData['handovers']);
+        }
 
         if ($request->hasFile('attachments')) {
             $incoming_letter->attachments()->createMany(
@@ -102,7 +101,8 @@ class IncomingLettersController extends Controller
             'received_id' => 'required|string',
             'sender' => 'required|string|max:50',
             'recipient_id' => 'required|exists:users,id',
-            'handover_id' => 'nullable|exists:users,id',
+            'handovers' => 'nullable|array',
+            'handovers.*' => 'exists:users,id',
             'priority' => 'nullable|in:1,2,3',
             'subject' => 'required|string|max:80',
             'description' => 'nullable|string|max:400',
@@ -111,6 +111,8 @@ class IncomingLettersController extends Controller
         ]);
 
         $letter = IncomingLetter::create($data);
+
+        $letter->handovers()->attach($data['handovers']);
 
         $letter->attachments()->createMany(
             array_map(function ($attachedFile) {

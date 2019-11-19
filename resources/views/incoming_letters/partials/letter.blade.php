@@ -32,7 +32,9 @@
                     <feather-icon name="corner-down-right"
                     stroke-width="3"
                     class="h-current text-blue-600 mx-2">Handover</feather-icon>
-                    {{ $letter->handover->name}}
+                    @foreach ($letter->handovers as $handover)
+                        {{ $handover->name }}
+                    @endforeach
                 </div>
                 <div class="ml-auto flex">
                     @can('update', $letter)

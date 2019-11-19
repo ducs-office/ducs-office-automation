@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Handover;
 use App\IncomingLetter;
 use App\Http\Controllers\IncomingLetterController;
 use Illuminate\Auth\AuthenticationException;
@@ -65,7 +66,7 @@ class ViewIncomingLettersTest extends TestCase
     {
         $this->signIn();
 
-        create(IncomingLetter::class, 3, ['recipient_id' => 2]);
+        create(IncomingLetter::class, 3, ['recipient_id' => 1]);
         create(IncomingLetter::class);
         create(IncomingLetter::class);
 
@@ -87,9 +88,9 @@ class ViewIncomingLettersTest extends TestCase
     public function view_has_an_unique_list_of_handovers()
     {
         $this->signIn();
-        create(IncomingLetter::class, 3, ['handover_id' => 2]);
-        create(IncomingLetter::class);
-        create(IncomingLetter::class);
+        create(IncomingLetter::class, 2);
+        create(Handover::class, 1, ['letter_id'=>1, 'handover_id'=>1]);
+        create(Handover::class, 1, ['letter_id'=>2, 'handover_id'=>1]);
 
         $handovers = $this->withExceptionHandling()
                     ->get('/incoming-letters')
@@ -98,9 +99,10 @@ class ViewIncomingLettersTest extends TestCase
                     ->assertViewHas('handovers')
                     ->viewData('handovers');
 
-        $this->assertCount(3, $handovers);
+        $this->assertEquals(2, Handover::count());
+        $this->assertCount(1, $handovers);
         $this->assertSame(
-            IncomingLetter::with('handover')->get()->pluck('handover.name', 'handover_id')->toArray(),
+            Handover::with('handover')->get()->pluck('handover.name', 'handover_id')->toArray(),
             $handovers->toArray()
         );
     }

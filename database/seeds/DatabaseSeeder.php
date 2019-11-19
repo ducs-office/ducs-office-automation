@@ -8,6 +8,7 @@ use App\College;
 use App\IncomingLetter;
 use App\LetterReminder;
 use App\Remark;
+use App\Handover;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 
@@ -46,12 +47,10 @@ class DatabaseSeeder extends Seeder
         factory(OutgoingLetter::class, 5)->create(['sender_id' => $nk->id, 'creator_id' => $himani->id]);
         
         factory(IncomingLetter::class, 5)->create([
-            'recipient_id' => $ng->id,
-            'handover_id' => $nk->id
+            'recipient_id' => $ng->id
         ]);
         factory(IncomingLetter::class, 5)->create([
-            'recipient_id' => $nk->id,
-            'handover_id' => $ng->id
+            'recipient_id' => $nk->id
         ]);
 
         factory(Programme::class, 5)->create()->each(function ($programme) {

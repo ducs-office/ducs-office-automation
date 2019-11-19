@@ -38,21 +38,20 @@ class UpdateIncomingLettersTest extends TestCase
 
         $this->signIn();
         $receiver = create(User::class);
+        $handovers = [create(User::class)->id, create(User::class)->id];
         $letter = create(IncomingLetter::class, 1, ['priority' => 2]);
-
+        
         $new_incoming_letter = [
             'date' => '2019-04-02',
             'received_id' => 'Dept/RD/0002',
             'sender' => "Exam Office",
             'recipient_id' => $receiver->id,
-            'handover_id' => $receiver->id,
+            'handovers' => $handovers,
             'priority' => 3,
             'subject' => 'foobar',
             'description' => "lorem ipsum",
             'attachments' => [$file = UploadedFile::fake()->create('letter-scan.pdf')]
         ];
-
-        // dd(auth()->user()->roles->map->name);
 
         $this->withoutExceptionHandling()
             ->patch("incoming-letters/{$letter->id}", $new_incoming_letter)
@@ -64,7 +63,6 @@ class UpdateIncomingLettersTest extends TestCase
         $this->assertEquals($new_incoming_letter['received_id'], $letter['received_id']);
         $this->assertEquals($new_incoming_letter['sender'], $letter['sender']);
         $this->assertEquals($new_incoming_letter['recipient_id'], $letter['recipient_id']);
-        $this->assertEquals($new_incoming_letter['handover_id'], $letter['handover_id']);
         $this->assertEquals($new_incoming_letter['priority'], $letter['priority']);
         $this->assertEquals($new_incoming_letter['subject'], $letter['subject']);
         $this->assertEquals($new_incoming_letter['description'], $letter['description']);
@@ -216,11 +214,11 @@ class UpdateIncomingLettersTest extends TestCase
 
         try {
             $this->withoutExceptionHandling()
-            ->patch("/incoming-letters/{$letter->id}", ['handover_id'=>4]);
+            ->patch("/incoming-letters/{$letter->id}", ['handovers'=>[4]]);
 
             $this->fail("Failed to validate \'handover_id\' is an existing user");
         } catch (ValidationException $e) {
-            $this->assertArrayHasKey('handover_id', $e->errors());
+            $this->assertArrayHasKey('handovers.0', $e->errors());
         }
 
         $this->assertEquals($letter->handover_id, $letter->fresh()->handover_id);
@@ -233,7 +231,7 @@ class UpdateIncomingLettersTest extends TestCase
         $letter = create(IncomingLetter::class);
 
         $this->withoutExceptionHandling()
-            ->patch("incoming-letters/{$letter->id}", ['handover_id' => ''])
+            ->patch("incoming-letters/{$letter->id}", ['handovers' => []])
             ->assertRedirect('/incoming-letters');
 
         $this->assertNull($letter->fresh()->handover_id);

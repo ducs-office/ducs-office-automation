@@ -42,17 +42,17 @@
                     @endif
                 </div> 
                 <div class="mx-2">
-                    <label for="handover_id" class="w-full form-label mb-1">Handover To</label>
-                    <vue-typeahead
-                        name="handover_id"
+                    <label for="handovers[]" class="w-full form-label mb-1">Handover To</label>
+                    <v-multi-typeahead
+                        name="handovers[]"
                         source="/api/users"
                         find-source="/api/users/{value}"
                         limit="5"
-                        value="{{ old('handover_id') ?? $incoming_letter->handover_id }}"
+                        :value="{{ json_encode( old('handovers') ?? $incoming_letter->handovers->map->id ) }}"
                         placeholder="Handover To">
-                    </vue-typeahead>
-                    @if($errors->has('handover_id'))
-                        <p class="text-red-500">{{ $errors->first('handover_id') }}</p>
+                    </v-multi-typeahead>
+                    @if($errors->has('handovers'))
+                        <p class="text-red-500">{{ $errors->first('handovers') }}</p>
                     @endif
                 </div> 
             </div>

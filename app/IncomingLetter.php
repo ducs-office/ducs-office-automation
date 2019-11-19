@@ -10,7 +10,7 @@ class IncomingLetter extends Model
 {
     protected $fillable = [
         'date', 'received_id', 'sender', 'description', 'subject', 'priority',
-        'recipient_id', 'handover_id',
+        'recipient_id',
     ];
  
     protected $dates = ['date'];
@@ -34,7 +34,6 @@ class IncomingLetter extends Model
         'priority' => 'equals',
         'recipient_id' => 'equals',
         'sender' => 'equals',
-        'handover_id' => 'equals'
     ];
 
     public function recipient()
@@ -42,9 +41,9 @@ class IncomingLetter extends Model
         return $this->belongsTo(User::class, 'recipient_id');
     }
     
-    public function handover()
+    public function handovers()
     {
-        return $this->belongsTo(User::class, 'handover_id');
+        return $this->belongsToMany(User::class, 'handovers', 'letter_id', 'user_id');
     }
 
     public function attachments()

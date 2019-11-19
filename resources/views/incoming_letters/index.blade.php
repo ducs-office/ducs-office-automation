@@ -14,7 +14,6 @@
                 [ 'field' => 'date', 'label' => 'After Date', 'type' => 'date', 'operator' => 'less_than' ],
                 [ 'field' => 'priority', 'label' => 'Priority', 'type' => 'select', 'operator' => 'equals', 'options' => $priorities->toArray() ],
                 [ 'field' => 'recipient_id', 'label' => 'Recipient', 'type' => 'select', 'operator' => 'equals', 'options' => $recipients->toArray() ],
-                [ 'field' => 'handover_id', 'label' => 'handover', 'type' => 'select', 'operator' => 'equals', 'options' => $handovers->toArray() ],
                 [ 'field' => 'sender', 'label' => 'Sender', 'type' => 'select', 'operator' => 'equals', 'options' => $senders->toArray() ],
             ]) }}"></letter-search-filters>
         </div>

@@ -35,13 +35,16 @@ class StoreIncomingLettters extends TestCase
             'received_id' => 'CS/xyz/2019/12',
             'sender' => $this->faker->name(),
             'recipient_id' => create(User::class)->id,
-            'handover_id' => create(User::class)->id,
+            'handovers' => [
+               create(User::class)->id,
+               create(User::class)->id
+            ],
             'priority' => 2,
             'subject' => $this->faker->words(3, true),
             'description' => $this->faker->paragraph(),
             'attachments' => [ $scanFile = UploadedFile::fake()->image('scanned_copy.jpg')]
         ];
-
+        
         $this->withoutExceptionHandling()
             ->post('/incoming-letters', $letter)
             ->assertRedirect('/incoming-letters');
@@ -65,7 +68,7 @@ class StoreIncomingLettters extends TestCase
                 'received_id' => 'CS/xyz/2019/12',
                 'sender' => $this->faker->name(),
                 'recipient_id' => create(User::class)->id,
-                'handover_id' => create(User::class)->id,
+                'handovers' => [create(User::class)->id],
                 'priority' => 2,
                 'subject' => $this->faker->words(3, true),
                 'description' => $this->faker->paragraph(),
@@ -89,7 +92,7 @@ class StoreIncomingLettters extends TestCase
             'received_id' => 'CS/xyz/2019/12',
             'sender' => $this->faker->name(),
             'recipient_id' => create(User::class)->id,
-            'handover_id' => create(User::class)->id,
+            'handovers' => [create(User::class)->id],
             'priority' => 2,
             'subject' => $this->faker->words(3, true),
             'description' => $this->faker->paragraph(),
@@ -143,7 +146,7 @@ class StoreIncomingLettters extends TestCase
                 'received_id' => 'CS/xyz/2019/12',
                 'sender' => $this->faker->name(),
                 'recipient_id' => create(User::class)->id,
-                'handover_id' => create(User::class)->id,
+                'handovers' => [create(User::class)->id],
                 'priority' => 2,
                 'subject' => $this->faker->words(3, true),
                 'description' => $this->faker->paragraph(),
@@ -169,7 +172,7 @@ class StoreIncomingLettters extends TestCase
                 'received_id' => '',
                 'sender' => $this->faker->name(),
                 'recipient_id' => create(User::class)->id,
-                'handover_id' => create(User::class)->id,
+                'handovers' => [create(User::class)->id],
                 'priority' => 2,
                 'subject' => $this->faker->words(3, true),
                 'description' => $this->faker->paragraph(),
@@ -195,7 +198,7 @@ class StoreIncomingLettters extends TestCase
                 'received_id' => 'CS/xyz/2019/12',
                 'sender' => '',
                 'recipient_id' => create(User::class)->id,
-                'handover_id' => create(User::class)->id,
+                'handovers' => [create(User::class)->id],
                 'priority' => 2,
                 'subject' => $this->faker->words(3, true),
                 'description' => $this->faker->paragraph(),
@@ -221,7 +224,7 @@ class StoreIncomingLettters extends TestCase
                 'received_id' => 'CS/xyz/2019/12',
                 'sender' => $this->faker->regexify('[A-Ba-b0-9]{51}'),
                 'recipient_id' => create(User::class)->id,
-                'handover_id' => create(User::class)->id,
+                'handovers' => [create(User::class)->id],
                 'priority' => 2,
                 'subject' => $this->faker->words(3, true),
                 'description' => $this->faker->paragraph(),
@@ -247,7 +250,7 @@ class StoreIncomingLettters extends TestCase
                 'received_id' => 'CS/xyz/2019/12',
                 'sender' => $this->faker->name(),
                 'recipient_id' => '',
-                'handover_id' => create(User::class)->id,
+                'handovers' => [create(User::class)->id],
                 'priority' => 2,
                 'subject' => $this->faker->words(3, true),
                 'description' => $this->faker->paragraph(),
@@ -273,7 +276,7 @@ class StoreIncomingLettters extends TestCase
                 'received_id' => 'CS/xyz/2019/12',
                 'sender' => $this->faker->name(),
                 'recipient_id' => 15,
-                'handover_id' => create(User::class)->id,
+                'handovers' => [create(User::class)->id],
                 'priority' => 2,
                 'subject' => $this->faker->words(3, true),
                 'description' => $this->faker->paragraph(),
@@ -290,7 +293,7 @@ class StoreIncomingLettters extends TestCase
     }
 
     /** @test */
-    public function request_validates_handover_id_can_be_null()
+    public function request_validates_handover_ids_field_can_be_null()
     {
         $this->signIn();
         $letter = [
@@ -298,7 +301,7 @@ class StoreIncomingLettters extends TestCase
             'received_id' => 'CS/xyz/2019/12',
             'sender' => $this->faker->name(),
             'recipient_id' => create(User::class)->id,
-            'handover_id' => '',
+            'handovers' => [],
             'priority' => 2,
             'subject' => $this->faker->words(3, true),
             'description' => $this->faker->paragraph(),
@@ -313,7 +316,7 @@ class StoreIncomingLettters extends TestCase
     }
 
     /** @test */
-    public function request_validates_handover_id_field_is_existing_user()
+    public function request_validates_handover_ids_field_is_existing_user()
     {
         try {
             $this->signIn();
@@ -322,7 +325,7 @@ class StoreIncomingLettters extends TestCase
                 'received_id' => 'CS/xyz/2019/12',
                 'sender' => $this->faker->name(),
                 'recipient_id' => create(User::class)->id,
-                'handover_id' => 51,
+                'handovers' => [51],
                 'priority' => 2,
                 'subject' => $this->faker->words(3, true),
                 'description' => $this->faker->paragraph(),
@@ -332,7 +335,7 @@ class StoreIncomingLettters extends TestCase
             $this->withoutExceptionHandling()
                 ->post('/incoming-letters', $letter);
         } catch (ValidationException $e) {
-            $this->assertArrayHasKey('handover_id', $e->errors());
+            $this->assertArrayHasKey('handovers.0', $e->errors());
         }
         
         $this->assertEquals(IncomingLetter::count(), 0);
@@ -347,7 +350,7 @@ class StoreIncomingLettters extends TestCase
             'received_id' => 'CS/xyz/2019/12',
             'sender' => $this->faker->name(),
             'recipient_id' => create(User::class)->id,
-            'handover_id' => create(User::class)->id,
+            'handovers' => [create(User::class)->id],
             'priority' => '',
             'subject' => $this->faker->words(3, true),
             'description' => $this->faker->paragraph(),
@@ -371,7 +374,7 @@ class StoreIncomingLettters extends TestCase
                 'received_id' => 'CS/xyz/2019/12',
                 'sender' => $this->faker->name(),
                 'recipient_id' => create(User::class)->id,
-                'handover_id' => create(User::class)->id,
+                'handovers' => [create(User::class)->id],
                 'priority' => $this->faker->numberBetween(4, 10),
                 'subject' => $this->faker->words(3, true),
                 'description' => $this->faker->paragraph(),
@@ -397,7 +400,7 @@ class StoreIncomingLettters extends TestCase
                 'received_id' => 'CS/xyz/2019/12',
                 'sender' => $this->faker->name(),
                 'recipient_id' => create(User::class)->id,
-                'handover_id' => create(User::class)->id,
+                'handovers' => [create(User::class)->id],
                 'priority' => 2,
                 'subject' => '',
                 'description' => $this->faker->paragraph(),
@@ -423,7 +426,7 @@ class StoreIncomingLettters extends TestCase
                 'received_id' => 'CS/xyz/2019/12',
                 'sender' => $this->faker->name(),
                 'recipient_id' => create(User::class)->id,
-                'handover_id' => create(User::class)->id,
+                'handovers' => [create(User::class)->id],
                 'priority' => 2,
                 'subject' => $this->faker->regexify('[A-Ba-b0-9]{81}'),
                 'description' => $this->faker->paragraph(),
@@ -448,7 +451,7 @@ class StoreIncomingLettters extends TestCase
             'received_id' => 'CS/xyz/2019/12',
             'sender' => $this->faker->name(),
             'recipient_id' => create(User::class)->id,
-            'handover_id' => create(User::class)->id,
+            'handovers' => [create(User::class)->id],
             'priority' => 2,
             'subject' => $this->faker->words(3, true),
             'description' => '',
@@ -472,7 +475,7 @@ class StoreIncomingLettters extends TestCase
                 'received_id' => 'CS/xyz/2019/12',
                 'sender' => $this->faker->name(),
                 'recipient_id' => create(User::class)->id,
-                'handover_id' => create(User::class)->id,
+                'handovers' => [create(User::class)->id],
                 'priority' => 2,
                 'subject' => $this->faker->words(3, true),
                 'description' => $this->faker->regexify('[A-Ba-b0-9]{401}'),
