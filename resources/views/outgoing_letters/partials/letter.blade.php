@@ -1,10 +1,10 @@
 <div class="page-card border-b mb-4 pt-6 pb-0 overflow-hidden">
     <div class="px-6">
         <div class="flex items-center mb-3">
-            <span class="px-2 py-1 rounded text-xs uppercase text-white bg-{{
+            <span class="px-2 py-1 rounded text-xs uppercase text-white {{
                 $letter->type == 'Bill'
-                ? 'blue-600'
-                : ($letter->type == 'Notesheet' ? 'teal-600' : 'gray-800')
+                ? 'bg-blue-600'
+                : ($letter->type == 'Notesheet' ? 'bg-teal-600' : 'bg-gray-800')
             }} mr-2 font-bold">
                 {{ $letter->type }}
             </span>
