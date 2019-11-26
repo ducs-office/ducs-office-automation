@@ -19,7 +19,7 @@ class ViewIncomingLettersTest extends TestCase
     public function guest_can_not_view_incoming_letters()
     {
         $this->expectException(AuthenticationException::class);
-        
+
         $this->withoutExceptionHandling()
             ->get('/incoming-letters')
             ->assertRedirect('/login');
@@ -85,29 +85,6 @@ class ViewIncomingLettersTest extends TestCase
     }
 
     /** @test */
-    public function view_has_an_unique_list_of_handovers()
-    {
-        $this->signIn();
-        create(IncomingLetter::class, 2);
-        create(Handover::class, 1, ['letter_id'=>1, 'handover_id'=>1]);
-        create(Handover::class, 1, ['letter_id'=>2, 'handover_id'=>1]);
-
-        $handovers = $this->withExceptionHandling()
-                    ->get('/incoming-letters')
-                    ->assertSuccessful()
-                    ->assertViewIs('incoming_letters.index')
-                    ->assertViewHas('handovers')
-                    ->viewData('handovers');
-
-        $this->assertEquals(2, Handover::count());
-        $this->assertCount(1, $handovers);
-        $this->assertSame(
-            Handover::with('handover')->get()->pluck('handover.name', 'handover_id')->toArray(),
-            $handovers->toArray()
-        );
-    }
-
-    /** @test */
     public function view_has_an_unique_list_of_senders()
     {
         $this->signIn();
@@ -146,12 +123,12 @@ class ViewIncomingLettersTest extends TestCase
                         ->viewData('priorities');
 
         $this->assertCount(3, $priorities);
-        
+
         $allLetters = IncomingLetter::all()->pluck('priority', 'priority')->toArray();
         $allLetters[1] = 'High';
         $allLetters[2] = 'Medium';
         $allLetters[3] = 'Low';
-       
+
         $this->assertSame($allLetters, $priorities->toArray());
     }
 }

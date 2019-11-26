@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\IncomingLetter;
+use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Carbon;
@@ -30,7 +31,7 @@ class FilterAndSearchIncomingLettersTest extends TestCase
                                 ->assertViewIs('incoming_letters.index')
                                 ->assertViewHas('incoming_letters')
                                 ->viewdata('incoming_letters');
-        
+
         $this->assertInstanceOf(Collection::class, $viewIncomingLetters);
         $this->assertCount(2, $viewIncomingLetters, 'Only 2 letters were expected but :actual letters were returned');
 
@@ -176,9 +177,10 @@ class FilterAndSearchIncomingLettersTest extends TestCase
     /** @test */
     public function user_can_filter_letters_based_on_recipient()
     {
-        $recipientIs1 = create(IncomingLetter::class, 2, ['recipient_id' => 1]);
-        create(IncomingLetter::class, 1, ['recipient_id' => 2]);
-        create(IncomingLetter::class, 1, ['recipient_id' => 3]);
+        $users = create(User::class, 3);
+        $recipientIs1 = create(IncomingLetter::class, 2, ['recipient_id' => $users[0]->id]);
+        create(IncomingLetter::class, 1, ['recipient_id' => $users[1]->id]);
+        create(IncomingLetter::class, 1, ['recipient_id' => $users[2]->id]);
 
         $this->signIn();
 
@@ -192,27 +194,6 @@ class FilterAndSearchIncomingLettersTest extends TestCase
         $this->assertCount(2, $viewIncomingLetters);
         $this->assertTrue($viewIncomingLetters->pluck('id')->contains($recipientIs1[0]->id));
         $this->assertTrue($viewIncomingLetters->pluck('id')->contains($recipientIs1[1]->id));
-    }
-
-    /** @test */
-    public function user_can_filter_letters_based_on_handover()
-    {
-        $handoverTo1 = create(IncomingLetter::class, 2, ['handover_id' => 1]);
-        create(IncomingLetter::class, 1, ['handover_id' => 2]);
-        create(IncomingLetter::class, 1, ['handover_id' => 3]);
-
-        $this->signIn();
-
-        $viewIncomingLetters = $this -> withoutExceptionHandling()
-                                ->get('/incoming-letters?filters[handover_id][equals]=1')
-                                ->assertSuccessful()
-                                ->assertViewIs('incoming_letters.index')
-                                ->assertViewHas('incoming_letters')
-                                ->viewData('incoming_letters');
-
-        $this->assertCount(2, $viewIncomingLetters);
-        $this->assertTrue($viewIncomingLetters->pluck('id')->contains($handoverTo1[0]->id));
-        $this->assertTrue($viewIncomingLetters->pluck('id')->contains($handoverTo1[1]->id));
     }
 
     /** @test */
