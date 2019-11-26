@@ -76,7 +76,7 @@
             @foreach ($outgoing_letter->attachments as $attachment)
             <div class="inline-flex items-center p-2 rounded border hover:bg-gray-300 text-gray-600 mx-2 my-1">
                 <a href="/attachments/{{ $attachment->id }}" target="__blank" class="inline-flex items-center mr-1">
-                    <feather-icon name="courseclip" class="h-4 mr-2" stroke-width="2">View Attachment</feather-icon>
+                    <feather-icon name="paperclip" class="h-4 mr-2" stroke-width="2">View Attachment</feather-icon>
                     <span>{{ $attachment->original_name }}</span>
                 </a>
                 <button type="submit"
