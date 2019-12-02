@@ -2,7 +2,7 @@
     <modal name="user-update-modal" height="auto" @before-open="beforeOpen">
         <div class="p-6">
             <h2 class="text-lg font-bold mb-8">Update User</h2>
-            <form :action="route('users.udpate', user)" method="POST">
+            <form :action="route('users.update', user)" method="POST">
                 <slot></slot>
                 <div class="mb-2">
                     <label for="name" class="w-full form-label mb-1">Full Name</label>
