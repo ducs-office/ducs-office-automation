@@ -19,13 +19,13 @@
             </div>
             <div class="ml-auto flex">
                 @can('update', $letter)
-                <a href="/outgoing-letters/{{$letter->id}}/edit"
+                <a href="{{ route('outgoing_letters.edit', $letter) }}"
                     class="p-1 text-gray-500 text-blue-600 hover:bg-gray-200 rounded mr-3" title="Edit">
                     <feather-icon name="edit-3" stroke-width="2.5" class="h-current">Edit</feather-icon>
                 </a>
                 @endcan
                 @can('delete', $letter)
-                <form method="POST" action="/outgoing-letters/{{$letter->id}}">
+                <form method="POST" action="{{ route('outgoing_letters.destroy', $letter) }}">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="p-1 hover:bg-gray-200 text-red-700 rounded">
@@ -52,7 +52,7 @@
         <div class="flex flex-wrap -mx-2 my-3">
             @foreach ($letter->attachments as $attachment)
                 <span class="p-2 rounded border hover:bg-gray-300 text-gray-600 m-2">
-                    <a href="/attachments/{{ $attachment->id }}" target="__blank" class="inline-flex items-center mr-1">
+                    <a href="{{ route('attachments.show', $attachment) }}" target="__blank" class="inline-flex items-center mr-1">
                         <feather-icon name="paperclip" class="h-4 mr-2" stroke-width="2">View Attachment</feather-icon>
                         <span>{{ $attachment->original_name }}</span>
                     </a>

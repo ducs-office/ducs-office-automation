@@ -2,7 +2,7 @@
     <modal name="role-update-modal" height="auto" @before-open="beforeOpen">
         <div class="p-6">
             <h2 class="text-lg font-bold mb-8">Update User</h2>
-            <form :action="`/roles/${role.name}`" method="POST">
+            <form :action="route('roles.update', role)" method="POST">
                 <slot></slot>
                 <div class="mb-2">
                     <label for="name" class="w-full form-label mb-1">Role Name</label>
@@ -11,8 +11,8 @@
                 <div class="mb-5">
                     <label for="permissions" class="w-full form-label mb-1">Assign Permissions</label>
                     <select id="permissions" name="permissions[]" class="w-full form-input" v-model="role_permissions" multiple>
-                        <option v-for="permission in permissions" 
-                            :key="permission.id" :value="permission.id" 
+                        <option v-for="permission in permissions"
+                            :key="permission.id" :value="permission.id"
                             v-text="permission.name"></option>
                     </select>
                 </div>
@@ -40,7 +40,7 @@ export default {
             if(!event.params.role || !event.params.role_permissions) {
                 return false;
             }
-            
+
             this.role = event.params.role;
             this.role_permissions = event.params.role_permissions;
         },

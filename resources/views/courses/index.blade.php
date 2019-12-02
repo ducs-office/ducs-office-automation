@@ -14,7 +14,7 @@
         @endcan
         @can('create', App\Course::class)
         <modal name="create-courses-modal" height="auto">
-            <form action="/courses" method="POST" class="p-6">
+            <form action="{{ route('courses.index') }}" method="POST" class="p-6">
                 <h2 class="mb-8 font-bold text-lg">Create New Course</h2>
                 @csrf
                 <div class="mb-2">
@@ -59,7 +59,7 @@
                         </button>
                         @endcan
                         @can('delete', App\Course::class)
-                        <form action="/courses/{{ $course->id }}" method="POST">
+                        <form action="{{ route('courses.destroy', $course) }}" method="POST">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="p-1 hover:text-red-700">

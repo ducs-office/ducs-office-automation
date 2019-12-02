@@ -39,6 +39,12 @@ Vue.component("reminder-update-modal", ReminderUpdateModal);
 Vue.component("user-update-modal", UserUpdateModal);
 Vue.component("role-update-modal", RoleUpdateModal);
 
+Vue.mixin({
+    methods: {
+        route: route
+    }
+});
+
 const app = new Vue({
     el: '#app'
 });

@@ -3025,7 +3025,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".flip-enter-active,\r\n.flip-leave-active {\n  transition: all 0.3s;\n}\n.flip-enter,\r\n.flip-leave-to {\n  opacity: 0;\n  transform-origin: 50% 0;\n  transform: translateY(50%);\n}\r\n", ""]);
+exports.push([module.i, ".flip-enter-active,\n.flip-leave-active {\n  transition: all 0.3s;\n}\n.flip-enter,\n.flip-leave-to {\n  opacity: 0;\n  transform-origin: 50% 0;\n  transform: translateY(50%);\n}\n", ""]);
 
 // exports
 
@@ -3044,7 +3044,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".flip-enter-active,\r\n.flip-leave-active {\n  transition: all 0.3s;\n}\n.flip-enter,\r\n.flip-leave-to {\n  opacity: 0;\n  transform-origin: 50% 0;\n  transform: translateY(50%);\n}\r\n", ""]);
+exports.push([module.i, ".flip-enter-active,\n.flip-leave-active {\n  transition: all 0.3s;\n}\n.flip-enter,\n.flip-leave-to {\n  opacity: 0;\n  transform-origin: 50% 0;\n  transform: translateY(50%);\n}\n", ""]);
 
 // exports
 
@@ -8041,7 +8041,10 @@ var render = function() {
           "form",
           {
             staticClass: "flex items-end",
-            attrs: { action: "/colleges/" + _vm.college.id, method: "POST" }
+            attrs: {
+              action: _vm.route("colleges.update", _vm.college),
+              method: "POST"
+            }
           },
           [
             _vm._t("default"),
@@ -8162,7 +8165,12 @@ var render = function() {
         _vm._v(" "),
         _c(
           "form",
-          { attrs: { action: "/courses/" + _vm.course.id, method: "POST" } },
+          {
+            attrs: {
+              action: _vm.route("courses.update", _vm.course),
+              method: "POST"
+            }
+          },
           [
             _vm._t("default"),
             _vm._v(" "),
@@ -8614,7 +8622,10 @@ var render = function() {
           "form",
           {
             staticClass: "flex items-end",
-            attrs: { action: "/programmes/" + _vm.programme.id, method: "POST" }
+            attrs: {
+              action: _vm.route("programmes.update", _vm.programme),
+              method: "POST"
+            }
           },
           [
             _vm._t("default"),
@@ -8764,7 +8775,10 @@ var render = function() {
         _c(
           "form",
           {
-            attrs: { action: "/remarks/" + _vm.remark.id + "/", method: "POST" }
+            attrs: {
+              action: _vm.route("remarks.update", _vm.remark),
+              method: "POST"
+            }
           },
           [
             _vm._t("default"),
@@ -8845,7 +8859,7 @@ var render = function() {
           "form",
           {
             attrs: {
-              action: "/reminders/" + _vm.reminder.id,
+              action: _vm.route("reminders.update", _vm.reminder),
               method: "POST",
               enctype: "multipart/form-data"
             }
@@ -8937,7 +8951,12 @@ var render = function() {
         _vm._v(" "),
         _c(
           "form",
-          { attrs: { action: "/roles/" + _vm.role.name, method: "POST" } },
+          {
+            attrs: {
+              action: _vm.route("roles.update", _vm.role),
+              method: "POST"
+            }
+          },
           [
             _vm._t("default"),
             _vm._v(" "),
@@ -9125,7 +9144,12 @@ var render = function() {
         _vm._v(" "),
         _c(
           "form",
-          { attrs: { action: "/users/" + _vm.user.id, method: "POST" } },
+          {
+            attrs: {
+              action: _vm.route("users.udpate", _vm.user),
+              method: "POST"
+            }
+          },
           [
             _vm._t("default"),
             _vm._v(" "),
@@ -21824,6 +21848,11 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.component("remark-update-modal", _com
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component("reminder-update-modal", _components_ReminderUpdateModal_vue__WEBPACK_IMPORTED_MODULE_13__["default"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component("user-update-modal", _components_UserUpdateModal_vue__WEBPACK_IMPORTED_MODULE_14__["default"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component("role-update-modal", _components_RoleUpdateModal_vue__WEBPACK_IMPORTED_MODULE_15__["default"]);
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.mixin({
+  methods: {
+    route: route
+  }
+});
 var app = new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
   el: '#app'
 });
@@ -22913,8 +22942,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\xampp\htdocs\Laravel-Applications\DUCS-Office-Automation\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\xampp\htdocs\Laravel-Applications\DUCS-Office-Automation\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /hdd/code/work/ducs-office-automation/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /hdd/code/work/ducs-office-automation/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

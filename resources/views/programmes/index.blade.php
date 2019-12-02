@@ -13,7 +13,7 @@
     <modal name="create-programme-form" height="auto">
         <div class="p-6">
             <h2 class="text-lg font-bold mb-8">New Programme</h2>
-            <form action="/programmes" method="POST" class="flex items-end">
+            <form action="{{ route('programmes.store') }}" method="POST" class="flex items-end">
                 @csrf
                 <div class="flex-1 mr-2">
                     <label for="programme_code" class="w-full form-label">Programme Code</label>
@@ -53,7 +53,7 @@
                 </button>
                 @endcan
                 @can('delete', App\Programme::class)
-                <form action="/programmes/{{ $programme->id }}" method="POST">
+                <form action="{{ route('programmes.destroy', $programme) }}" method="POST">
                     @csrf @method('delete')
                     <button type="submit" class="p-1 hover:text-red-700">
                         <feather-icon class="h-current" name="trash-2">Trash</feather-icon>

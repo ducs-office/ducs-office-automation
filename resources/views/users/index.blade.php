@@ -14,7 +14,7 @@
     <modal name="create-new-user-form" height="auto">
         <div class="p-6">
             <h2 class="text-lg font-bold mb-8">Create Users</h2>
-            <form action="/users" method="POST" class="px-6">
+            <form action="{{ route('users.store') }}" method="POST" class="px-6">
                 @csrf
                 <div class="mb-2">
                     <label for="name" class="w-full form-label">Full Name</label>
@@ -61,8 +61,8 @@
                     @click="
                         $modal.show('user-update-modal', {
                             user: {
-                                id: {{ $user->id }}, 
-                                name: {{ json_encode($user->name) }}, 
+                                id: {{ $user->id }},
+                                name: {{ json_encode($user->name) }},
                                 email: {{ json_encode($user->email) }}
                             },
                             user_roles: {{ $user->roles->pluck('id')->toJson() }}
@@ -71,7 +71,7 @@
                 </button>
                 @endcan
                 @can('delete', App\User::class)
-                <form action="/users/{{ $user->id }}" method="POST">
+                <form action="{{ route('users.destroy', $user) }}" method="POST">
                     @csrf @method('delete')
                     <button type="submit" class="p-1 hover:text-red-700">
                         <feather-icon class="h-current" name="trash-2">Trash</feather-icon>

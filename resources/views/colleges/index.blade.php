@@ -13,7 +13,7 @@
     <modal name="create-college-form" height="auto">
         <div class="p-6">
             <h2 class="text-lg font-bold mb-8">New College</h2>
-            <form action="/colleges" method="POST" class="flex items-end">
+            <form action="{{ route('colleges.index') }}" method="POST" class="flex items-end">
                 @csrf
                 <div class="flex-1 mr-2">
                     <label for="college_code" class="w-full form-label">College Code</label>
@@ -49,7 +49,7 @@
                 </button>
                 @endcan
                 @can('delete', App\College::class)
-                <form action="/colleges/{{ $college->id }}" method="POST">
+                <form action="{{ route('colleges.destroy', $college) }}" method="POST">
                     @csrf @method('delete')
                     <button type="submit" class="p-1 hover:text-red-700">
                         <feather-icon class="h-current" name="trash-2">Trash</feather-icon>

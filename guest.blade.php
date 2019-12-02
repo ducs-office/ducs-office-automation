@@ -6,8 +6,7 @@
     <meta name="viewport" content="width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{{ config('app.name') }}</title>
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-    @routes
+    <link rel="stylesheet" href="{{ mix('css/app.css') }}">
 </head>
 <body class="font-sans leading-tight bg-magenta-800 text-sm">
     <div id="app" class="min-h-screen px-4">
@@ -22,6 +21,6 @@
             @yield('body')
         </main>
     </div>
-    <script src="{{ asset('js/app.js') }}"></script>
+    <script src="{{ mix('js/app.js') }}"></script>
 </body>
 </html>

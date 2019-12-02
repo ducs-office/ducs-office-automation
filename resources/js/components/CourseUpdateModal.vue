@@ -2,7 +2,7 @@
     <modal name="course-update-modal" height="auto" @before-open="beforeOpen">
         <div class="p-6">
             <h2 class="text-lg font-bold mb-8">Update Course</h2>
-            <form :action="`/courses/${course.id}`" method="POST">
+            <form :action="route('courses.update', course)" method="POST">
                 <slot></slot>
                 <div class="mb-2">
                     <label for="course_code" class="w-full form-label mb-1">Unique Course Code</label>

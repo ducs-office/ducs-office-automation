@@ -4,7 +4,7 @@
         @csrf @method('patch')
     </reminder-update-modal>
     @can('create', [\App\LetterReminder::class, $letter])
-    <form action="/outgoing_letters/{{ $letter->id }}/reminders" method="POST" enctype="multipart/form-data" class="px-6 py-2 border-b">
+    <form action="{{ route('outgoing_letters.reminders.store', $letter) }}" method="POST" enctype="multipart/form-data" class="px-6 py-2 border-b">
         @csrf
         <div class="flex">
             <v-file-input id="scan"
@@ -37,7 +37,7 @@
         <h4 class="px-2 text-sm text-gray-800 font-bold">{{ $reminder->serial_no }}</h4>
         <div class="px-2 flex-1 flex flex-wrap -mx-2 items-center">
             @foreach($reminder->attachments as $attachment)
-            <a href="/attachments/{{ $attachment->id }}" target="_blank"
+            <a href="{{ route('attachments.show', $attachment) }}" target="_blank"
                 class="p-1 text-xs text-gray-700 bg-gray-300 hover:bg-gray-400 rounded mx-2 inline-flex items-center">
                 <feather-icon name="paperclip" stroke-width="2" class="h-current mr-1">{{ $attachment->original_name }}
                 </feather-icon>
@@ -45,7 +45,7 @@
             </a>
             <button type="submit"
                 form="remove-attachment"
-                formaction="/attachments/{{ $attachment->id}}"
+                formaction="{{ route('attachments.destroy', $attachment) }}"
                 class="p-1 rounded hover:bg-red-500 hover:text-white">
                 <feather-icon name="x" class="h-4" stroke-width="2">Delete Attachment</feather-icon>
             </button>
@@ -58,7 +58,7 @@
                             })">
                 <feather-icon name="edit-3" stroke-width="2.5" class="h-current">Edit</feather-icon>
             </button>
-            <form action="/reminders/{{ $reminder->id }}" method="POST">
+            <form action="{{ route('reminders.destroy', $reminder) }}" method="POST">
                 @csrf
                 @method('DELETE')
                 <button class="p-1 hover:bg-gray-200 text-red-700 rounded">

@@ -2,7 +2,7 @@
     <modal name="college-update-modal" height="auto" @before-open="beforeOpen">
         <div class = "p-6">
             <h2 class="text-lg font-bold mb-8">Update College</h2>
-            <form :action="`/colleges/${college.id}`" method="POST" class="flex items-end">
+            <form :action="route('colleges.update', college)" method="POST" class="flex items-end">
                 <slot></slot>
                 <div class="flex-1 mr-2">
                     <label for="college_code" class="w-full form-label">College Code</label>
@@ -18,7 +18,7 @@
             </form>
         </div>
     </modal>
-</template>  
+</template>
 <script>
     export default {
         data() {

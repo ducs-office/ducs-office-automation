@@ -2,7 +2,7 @@
 @section('body')
 <div class="page-card max-w-lg mt-4 mx-auto">
     <h1 class="page-header px-6">New Outgoing Letter</h1>
-    <form action="/outgoing-letters" method="POST" class="px-6" enctype="multipart/form-data">
+    <form action="{{ route('outgoing_letters.store') }}" method="POST" class="px-6" enctype="multipart/form-data">
         @csrf
         <div class="mb-2">
             <label for="date" class="w-full form-label mb-1">Sent Date</label>
@@ -25,12 +25,12 @@
         <div class="flex -mx-2 mb-2">
             <div class="mx-2">
                 <label for="sender" class="w-full form-label mb-1">Sender</label>
-                <vue-typeahead 
-                    name="sender_id" 
+                <vue-typeahead
+                    name="sender_id"
                     source="/api/users"
                     find-source="/api/users/{value}"
                     limit="5"
-                    value="{{ old('sender_id') }}" 
+                    value="{{ old('sender_id') }}"
                     placeholder="Sender">
                 </vue-typeahead>
                 @if($errors->has('sender_id'))
@@ -54,7 +54,7 @@
         </div>
         <div class="mb-2">
             <label for="description" class="w-full form-label mb-1">Description</label>
-            <textarea name="description" id="description" 
+            <textarea name="description" id="description"
             placeholder="What this letter is about?"
             class="w-full form-input" rows="3">{{ old('description') }}</textarea>
             @if($errors->has('description'))

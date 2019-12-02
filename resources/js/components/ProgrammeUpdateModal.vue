@@ -2,7 +2,7 @@
     <modal name="programme-update-modal" height="auto" @before-open="beforeOpen">
         <div class="p-6">
             <h2 class="text-lg font-bold mb-8">Update Programme</h2>
-            <form :action="`/programmes/${programme.id}`" method="POST" class="flex items-end">
+            <form :action="route('programmes.update', programme)" method="POST" class="flex items-end">
                 <slot></slot>
                 <div class="flex-1 mr-2">
                     <label for="programme_code" class="w-full form-label">Programme Code</label>

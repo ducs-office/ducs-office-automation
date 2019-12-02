@@ -13,7 +13,7 @@
     <modal name="create-new-role-form" height="auto">
         <div class="p-6">
             <h2 class="text-lg font-bold mb-8">Create Role</h2>
-            <form action="/roles" method="POST" class="px-6">
+            <form action="{{ route('roles.store') }}" method="POST" class="px-6">
                 @csrf
                 <div class="mb-2">
                     <label for="name" class="w-full form-label">Role Name</label>
@@ -68,7 +68,7 @@
             </button>
             @endcan
             @can('delete', Spatie\Permission\Models\Role::class)
-            <form action="/roles/{{ $role->name }}" method="POST">
+            <form action="{{ route('roles.destroy', $role) }}" method="POST">
                 @csrf @method('delete')
                 <button type="submit" class="p-1 hover:text-red-700">
                     <feather-icon class="h-current" name="trash-2">Trash</feather-icon>

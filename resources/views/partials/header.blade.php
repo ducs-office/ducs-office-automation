@@ -9,7 +9,7 @@
             alt="{{ Auth::user()->name }}" width="32" height="32" class="w-6 h-6 rounded-full mr-2">
         <h2 class="font-bold truncate max-w-32">{{ head(explode(' ', Auth::user()->name)) }}</h2>
     </button>
-    <form action="\logout" method="POST" class="inline-flex items-center">
+    <form action="{{ route('logout') }}" method="POST" class="inline-flex items-center">
         @csrf
         <button type="submit" class="p-3 text-red-700 hover:bg-gray-100 rounded">
             <feather-icon name="power" class="h-current" stroke-width="3">Logout Button</feather-icon>
@@ -17,6 +17,6 @@
     </form>
     @endauth
     @guest
-    <a class="bg-white text-gray-900 px-3 py-1 rounded font-bold" href="/login">Login</a>
+    <a class="bg-white text-gray-900 px-3 py-1 rounded font-bold" href="{{ route('login') }}">Login</a>
     @endguest
 </header>

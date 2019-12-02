@@ -2,7 +2,7 @@
     <modal name="reminder-update-modal" height="auto" @before-open="beforeOpen">
         <div class= "p-6">
             <h3 class="font-bold text-lg mb-2">Upload Letter Reminder</h3>
-            <form :action="`/reminders/${reminder.id}`" method="POST" enctype="multipart/form-data">
+            <form :action="route('reminders.update', reminder)" method="POST" enctype="multipart/form-data">
                 <slot></slot>
                 <div class="my-4 flex">
                     <div class="mx-2">
@@ -35,7 +35,7 @@ export default {
             if(!event.params.reminder || !event.params.reminder.id) {
                 return false;
             }
-            
+
             this.reminder = event.params.reminder;
         }
     }
