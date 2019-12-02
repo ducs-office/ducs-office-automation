@@ -59,8 +59,8 @@ class UserPolicy
      * @param  \App\User  $user
      * @return mixed
      */
-    public function delete(User $user)
+    public function delete(User $user, User $userModel)
     {
-        return $user->can('delete users');
+        return $user->can('delete users') && $userModel->id != $user->id;
     }
 }

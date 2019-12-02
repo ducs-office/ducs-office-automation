@@ -70,7 +70,7 @@
                     <feather-icon class="h-current" name="edit">Edit</feather-icon>
                 </button>
                 @endcan
-                @can('delete', App\User::class)
+                @can('delete', $user)
                 <form action="{{ route('users.destroy', $user) }}" method="POST">
                     @csrf @method('delete')
                     <button type="submit" class="p-1 hover:text-red-700">
