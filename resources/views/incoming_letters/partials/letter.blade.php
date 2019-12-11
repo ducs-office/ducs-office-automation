@@ -45,7 +45,7 @@
                     @endcan
                     @can('delete', $letter)
                         <form method="POST" action="{{ route('incoming_letters.destroy', $letter->id) }}">
-                            @csrf
+                            @csrf_token
                             @method('DELETE')
                             <button type="submit" class="p-1 hover:bg-gray-200 text-red-700 rounded">
                                 <feather-icon name="trash-2" stroke-width="2.5" class="h-current">Delete</feather-icon>

@@ -123,6 +123,8 @@ return [
 
     'cipher' => 'AES-256-CBC',
 
+    'csrf_token_name' => 'csrf_token',
+
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers

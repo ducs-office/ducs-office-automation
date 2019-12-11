@@ -14,7 +14,7 @@
         <div class="p-6">
             <h2 class="text-lg font-bold mb-8">Create Role</h2>
             <form action="{{ route('roles.store') }}" method="POST" class="px-6">
-                @csrf
+                @csrf_token
                 <div class="mb-2">
                     <label for="name" class="w-full form-label">Role Name</label>
                     <input id="name" type="text" name="name" class="w-full form-input"
@@ -36,7 +36,7 @@
     </modal>
     @endcan
     @can('update', Spatie\Permission\Models\Role::class)
-    <role-update-modal name="role-update-modal" :permissions="{{ $permissions->toJson() }}">@csrf @method('PATCH')
+    <role-update-modal name="role-update-modal" :permissions="{{ $permissions->toJson() }}">@csrf_token @method('PATCH')
     </role-update-modal>
     @endcan
     @forelse($roles as $role)
@@ -69,7 +69,7 @@
             @endcan
             @can('delete', Spatie\Permission\Models\Role::class)
             <form action="{{ route('roles.destroy', $role) }}" method="POST">
-                @csrf @method('delete')
+                @csrf_token @method('delete')
                 <button type="submit" class="p-1 hover:text-red-700">
                     <feather-icon class="h-current" name="trash-2">Trash</feather-icon>
                 </button>

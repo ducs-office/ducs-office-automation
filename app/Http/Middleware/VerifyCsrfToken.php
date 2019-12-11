@@ -21,4 +21,21 @@ class VerifyCsrfToken extends Middleware
     protected $except = [
         //
     ];
+
+    /**
+     * Get the CSRF token from the request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return string
+     */
+    protected function getTokenFromRequest($request)
+    {
+        $token = $request->input(config('app.csrf_token_name')) ?: $request->header('X-CSRF-TOKEN');
+
+        if (! $token && $header = $request->header('X-XSRF-TOKEN')) {
+            $token = $this->encrypter->decrypt($header, static::serialized());
+        }
+
+        return $token;
+    }
 }

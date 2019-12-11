@@ -1,11 +1,11 @@
 
 <div class="bg-gray-100">
     <reminder-update-modal name="reminder-update-modal">
-        @csrf @method('patch')
+        @csrf_token @method('patch')
     </reminder-update-modal>
     @can('create', [\App\LetterReminder::class, $letter])
     <form action="{{ route('outgoing_letters.reminders.store', $letter) }}" method="POST" enctype="multipart/form-data" class="px-6 py-2 border-b">
-        @csrf
+        @csrf_token
         <div class="flex">
             <v-file-input id="scan"
                 class="inline-flex items-center cursor-pointer form-input is-sm mr-4"
@@ -59,7 +59,7 @@
                 <feather-icon name="edit-3" stroke-width="2.5" class="h-current">Edit</feather-icon>
             </button>
             <form action="{{ route('reminders.destroy', $reminder) }}" method="POST">
-                @csrf
+                @csrf_token
                 @method('DELETE')
                 <button class="p-1 hover:bg-gray-200 text-red-700 rounded">
                     <feather-icon name="trash-2" stroke-width="2.5" class="h-current">Delete</feather-icon>
@@ -75,6 +75,6 @@
     <form id="remove-attachment"
         method="POST"
         onsubmit="return confirm('Do you really want to delete attachment?');">
-        @csrf @method('DELETE')
+        @csrf_token @method('DELETE')
     </form>
 </div>

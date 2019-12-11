@@ -3,7 +3,7 @@
     <div class="page-card max-w-lg mt-4 mx-auto">
         <h1 class="page-header px-6">New Incoming Letter</h1>
         <form action="{{ route('incoming_letters.store') }}" method="POST" class="px-6" enctype="multipart/form-data">
-            @csrf
+            @csrf_token
             <div class="mb-2">
                 <label for="date" class="w-full form-label mb-1">Received Date</label>
                 <input type="text" name="date" value="{{ old('date') }}" class="w-full form-input" placeholder="YYYY-MM-DD" onfocus="this.type='date'" onblur="this.type='text'">

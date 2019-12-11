@@ -14,7 +14,7 @@
         <div class="p-6">
             <h2 class="text-lg font-bold mb-8">New College</h2>
             <form action="{{ route('colleges.index') }}" method="POST" class="flex items-end">
-                @csrf
+                @csrf_token
                 <div class="flex-1 mr-2">
                     <label for="college_code" class="w-full form-label">College Code</label>
                     <input id="college_code" type="text" name="code" class="w-full form-input">
@@ -32,7 +32,7 @@
     @endcan
 
     @can('update', App\College::class)
-    <college-update-modal name ="college-update-modal">@csrf @method('patch')</college-update-modal>
+    <college-update-modal name ="college-update-modal">@csrf_token @method('patch')</college-update-modal>
     @endcan
     @foreach($colleges as $college)
         <div class="px-6 py-2 hover:bg-gray-100 border-b flex justify-between">
@@ -50,7 +50,7 @@
                 @endcan
                 @can('delete', App\College::class)
                 <form action="{{ route('colleges.destroy', $college) }}" method="POST">
-                    @csrf @method('delete')
+                    @csrf_token @method('delete')
                     <button type="submit" class="p-1 hover:text-red-700">
                         <feather-icon class="h-current" name="trash-2">Trash</feather-icon>
                     </button>

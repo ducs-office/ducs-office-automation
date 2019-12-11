@@ -15,7 +15,7 @@
         <div class="p-6">
             <h2 class="text-lg font-bold mb-8">Create Users</h2>
             <form action="{{ route('users.store') }}" method="POST" class="px-6">
-                @csrf
+                @csrf_token
                 <div class="mb-2">
                     <label for="name" class="w-full form-label">Full Name</label>
                     <input id="name" type="text" name="name" class="w-full form-input" placholder="Enter user's full name here..." required>
@@ -40,7 +40,7 @@
     </modal>
     @endcan
     @can('update', App\User::class)
-    <user-update-modal name="user-update-modal" :roles="{{ $roles->toJson() }}">@csrf @method('PATCH')</user-update-modal>
+    <user-update-modal name="user-update-modal" :roles="{{ $roles->toJson() }}">@csrf_token @method('PATCH')</user-update-modal>
     @endcan
     @forelse($users as $user)
         <div class="px-4 py-2 hover:bg-gray-100 border-b flex">
@@ -72,7 +72,7 @@
                 @endcan
                 @can('delete', $user)
                 <form action="{{ route('users.destroy', $user) }}" method="POST">
-                    @csrf @method('delete')
+                    @csrf_token @method('delete')
                     <button type="submit" class="p-1 hover:text-red-700">
                         <feather-icon class="h-current" name="trash-2">Trash</feather-icon>
                     </button>

@@ -1,7 +1,7 @@
 @extends('layouts.guest')
 @section('body')
 <form action="{{ route('login') }}" method="POST" class="mt-6 sm:mt-16 max-w-lg mx-auto page-card px-6">
-    {{ csrf_field() }}
+    @csrf_token
     <h3 class="mb-6 text-2xl font-semibold">Login</h3>
     <div class="mb-3">
         <label class="w-full form-label mb-1" for="email">Email</label>

@@ -3,7 +3,7 @@
     <div class="page-card max-w-lg mt-4 mx-auto">
         <h1 class="page-header px-6">Update Incoming Letter</h1>
         <form action="{{ route('incoming_letters.update', $incoming_letter) }}" method="POST" class="px-6" enctype="multipart/form-data">
-            @csrf
+            @csrf_token
             @method('PATCH')
             <div class="mb-2">
                 <label for="date" class="w-full form-label mb-1">Received Date</label>
@@ -116,7 +116,7 @@
         <form id="remove-attachment"
             method="POST"
             onsubmit="return confirm('Do you really want to delete attachment?');">
-            @csrf @method('DELETE')
+            @csrf_token @method('DELETE')
         </form>
     </div>
 @endsection

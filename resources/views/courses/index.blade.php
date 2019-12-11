@@ -10,13 +10,13 @@
             @endcan
         </div>
         @can('update', App\Course::class)
-        <course-update-modal name="course-update-modal">@csrf @method('patch')</course-update-modal>
+        <course-update-modal name="course-update-modal">@csrf_token @method('patch')</course-update-modal>
         @endcan
         @can('create', App\Course::class)
         <modal name="create-courses-modal" height="auto">
             <form action="{{ route('courses.index') }}" method="POST" class="p-6">
                 <h2 class="mb-8 font-bold text-lg">Create New Course</h2>
-                @csrf
+                @csrf_token
                 <div class="mb-2">
                     <label for="unique-course-code" class="w-full form-label mb-1">Unique Course Code</label>
                     <input id="unique-course-code" name="code" type="text" class="w-full form-input" placeholder="e.g. 4234201">
@@ -60,7 +60,7 @@
                         @endcan
                         @can('delete', App\Course::class)
                         <form action="{{ route('courses.destroy', $course) }}" method="POST">
-                            @csrf
+                            @csrf_token
                             @method('DELETE')
                             <button type="submit" class="p-1 hover:text-red-700">
                                 <feather-icon name="trash-2" class="h-current">Delete</feather-icon>

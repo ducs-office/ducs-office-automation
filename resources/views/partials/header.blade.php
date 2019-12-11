@@ -10,7 +10,7 @@
         <h2 class="font-bold truncate max-w-32">{{ head(explode(' ', Auth::user()->name)) }}</h2>
     </button>
     <form action="{{ route('logout') }}" method="POST" class="inline-flex items-center">
-        @csrf
+        @csrf_token
         <button type="submit" class="p-3 text-red-700 hover:bg-gray-100 rounded">
             <feather-icon name="power" class="h-current" stroke-width="3">Logout Button</feather-icon>
         </button>

@@ -14,7 +14,7 @@
         <div class="p-6">
             <h2 class="text-lg font-bold mb-8">New Programme</h2>
             <form action="{{ route('programmes.store') }}" method="POST" class="flex items-end">
-                @csrf
+                @csrf_token
                 <div class="flex-1 mr-2">
                     <label for="programme_code" class="w-full form-label">Programme Code</label>
                     <input id="programme_code" type="text" name="code" class="w-full form-input">
@@ -35,7 +35,7 @@
     </modal>
     @endcan
     @can('update', App\Programme::class)
-    <programme-update-modal name="programme-update-modal">@csrf @method('patch')</programme-update-modal>
+    <programme-update-modal name="programme-update-modal">@csrf_token @method('patch')</programme-update-modal>
     @endcan
     @foreach ($programmes as $programme)
         <div class="px-6 py-2 hover:bg-gray-100 border-b flex justify-between">
@@ -54,7 +54,7 @@
                 @endcan
                 @can('delete', App\Programme::class)
                 <form action="{{ route('programmes.destroy', $programme) }}" method="POST">
-                    @csrf @method('delete')
+                    @csrf_token @method('delete')
                     <button type="submit" class="p-1 hover:text-red-700">
                         <feather-icon class="h-current" name="trash-2">Trash</feather-icon>
                     </button>

@@ -1,11 +1,11 @@
 <div class="bg-gray-100 justify-between overflow-y-auto">
     @can('edit remarks')
-    <remark-update-modal name="remark-update-modal">@csrf @method('patch')</remark-update-modal>
+    <remark-update-modal name="remark-update-modal">@csrf_token @method('patch')</remark-update-modal>
     @endcan
     <div class="border-b px-6 py-2">
         @can('create', App\Remark::class)
         <form action="{{ route('outgoing_letters.remarks.store', $letter) }}" method="POST">
-            @csrf
+            @csrf_token
             <div class="flex items-center">
             <img src="https://gravatar.com/avatar/{{ md5(strtolower(trim(Auth::user()->email))) }}?s=48&d=identicon"
                 alt="{{ Auth::user()->name }}"
@@ -47,7 +47,7 @@
             @endcan
             @can('delete', $remark)
             <form action="{{ route('remarks.destroy', $remark) }}" method="POST">
-                @csrf @method('DELETE')
+                @csrf_token @method('DELETE')
                 <button class="p-1 hover:bg-gray-200 text-red-700 rounded">
                     <feather-icon name="trash-2" stroke-width="2.5" class="h-current">Delete</feather-icon>
                 </button>
