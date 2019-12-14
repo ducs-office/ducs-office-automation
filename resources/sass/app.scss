@@ -78,13 +78,13 @@ select {
         @apply bg-gray-900 text-white border-gray-900;
         &:hover {
             @apply bg-gray-700 border-gray-700;
-        }   
+        }
     }
     &.btn-blue {
         @apply bg-blue-500 text-white border-blue-500;
         &:hover {
             @apply bg-blue-700 border-blue-700;
-        }   
+        }
     }
     &.btn-magenta {
         @apply bg-magenta-700 text-white border-magenta-700;
@@ -112,13 +112,13 @@ select {
 }
 
 .transition {
-    transition: all .3s;
+    transition: all .3s linear;
 }
 .transition-opacity {
-    transition: opacity .3s;
+    transition: opacity .3s linear;
 }
 .transition-transform {
-    transition: transform .3s;
+    transition: transform .3s linear;
 }
 
 
@@ -130,6 +130,9 @@ select {
 }
 .translate-x-100 {
     transform: translateX(100%);
+}
+.translate-x-back-100 {
+    transform: translateX(-100%);
 }
 .translate-x-0 {
     transform: translateX(0%);

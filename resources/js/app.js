@@ -18,6 +18,8 @@ import RemarkUpdateModal from './components/RemarkUpdateModal.vue';
 import ReminderUpdateModal from './components/ReminderUpdateModal.vue';
 import UserUpdateModal from "./components/UserUpdateModal.vue";
 import RoleUpdateModal from './components/RoleUpdateModal.vue';
+import SidebarNav from './components/SidebarNav.vue';
+import SidebarNavButton from './components/SidebarNavButton.vue';
 
 Vue.use(VueJsModal);
 
@@ -38,12 +40,16 @@ Vue.component("remark-update-modal", RemarkUpdateModal);
 Vue.component("reminder-update-modal", ReminderUpdateModal);
 Vue.component("user-update-modal", UserUpdateModal);
 Vue.component("role-update-modal", RoleUpdateModal);
+Vue.component("sidebar-nav", SidebarNav);
+Vue.component("sidebar-nav-button", SidebarNavButton);
 
 Vue.mixin({
     methods: {
         route: route
     }
 });
+
+window.Events = new Vue();
 
 const app = new Vue({
     el: '#app'
