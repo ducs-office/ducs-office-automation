@@ -1,26 +1,31 @@
 @extends('layouts.master')
 @section('body')
     <div class="page-card max-w-lg mt-4 mx-auto">
-        <h1 class="page-header px-6">Update Incoming Letter</h1>
+        <div class="flex items-baseline">
+            <h1 class="page-header px-6">Update Incoming Letter</h1>
+            <span class="px-2 rounded text-lg uppercase text-white bg-blue-600">
+                {{ $incoming_letter->serial_no }}
+            </span>
+        </div>
         <form action="{{ route('incoming_letters.update', $incoming_letter) }}" method="POST" class="px-6" enctype="multipart/form-data">
             @csrf_token
             @method('PATCH')
             <div class="mb-2">
-                <label for="date" class="w-full form-label mb-1">Received Date</label>
+                <label for="date" class="w-full form-label mb-1">Date of Receipt<span class="h-current text-red-500 text-lg">*</span></label>
                 <input type="text" name="date" value="{{ old('date') ?? $incoming_letter->date->format('Y-m-d') }}" class="w-full form-input" placeholder="YYYY-MM-DD" onfocus="this.type='date'" onblur="this.type='text'">
                 @if($errors->has('date'))
                     <p class="text-red-500">{{ $errors->first('date') }}</p>
                 @endif
             </div>
             <div class="mb-2">
-                <label for="received_id" class="w-full form-label mb-1">Letter Id</label>
+                <label for="received_id" class="w-full form-label mb-1">Received Letter Id<span class="h-current text-red-500 text-lg">*</span></label>
                 <input type="text" name="received_id" value="{{ old('received_id') ?? $incoming_letter->received_id }}" class="w-full form-input" placeholder="Id of the Letter">
                 @if($errors->has('received_id'))
                     <p class="text-red-500">{{ $errors->first('received_id') }}</p>
                 @endif
             </div>
             <div class="mb-2">
-                <label for="sender" class="w-full form-label mb-1">Sender</label>
+                <label for="sender" class="w-full form-label mb-1">Sender<span class="h-current text-red-500 text-lg">*</span></label>
                 <input type="text" name="sender" value="{{ old('sender') ?? $incoming_letter->sender }}" class="w-full form-input" placeholder="Sender (Received from)">
                 @if($errors->has('sender'))
                     <p class="text-red-500">{{ $errors->first('sender') }}</p>
@@ -28,7 +33,7 @@
             </div>
             <div class="flex -mx-2 mb-2">
                 <div class="mx-2">
-                    <label for="receiver" class="w-full form-label mb-1">Receiver</label>
+                    <label for="receiver" class="w-full form-label mb-1">Recipient<span class="h-current text-red-500 text-lg">*</span></label>
                     <vue-typeahead
                         name="recipient_id"
                         source="/api/users"
@@ -42,7 +47,7 @@
                     @endif
                 </div>
                 <div class="mx-2">
-                    <label for="handovers[]" class="w-full form-label mb-1">Handover To</label>
+                    <label for="handovers[]" class="w-full form-label mb-1">Handovers</label>
                     <v-multi-typeahead
                         name="handovers[]"
                         source="/api/users"
@@ -57,7 +62,7 @@
                 </div>
             </div>
             <div class="mb-2">
-                <label for="subject" class="w-full form-label mb-1">Subject</label>
+                <label for="subject" class="w-full form-label mb-1">Subject<span class="h-current text-red-500 text-lg">*</span></label>
                 <input type="text" name="subject" value="{{ old('subject') ?? $incoming_letter->subject }}" class="w-full form-input" placeholder="Subject of the letter">
                 @if($errors->has('subject'))
                     <p class="text-red-500">{{ $errors->first('subject') }}</p>
@@ -103,7 +108,7 @@
                 @endforeach
             </div>
             <div class="mb-2">
-                <label for="file" class="w-full form-label mb-1">Upload Letter</label>
+                <label for="file" class="w-full form-label mb-1">Upload Letter<span class="h-current text-red-500 text-lg">*</span></label>
                 <input type="file" name="attachments[]" accept="image/*, application/pdf" class="w-full">
                 @if($errors->has('file'))
                     <p class="text-red-500">{{ $errors->first('file') }}</p>

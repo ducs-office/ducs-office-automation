@@ -1,7 +1,7 @@
 <template>
     <modal name="role-update-modal" height="auto" @before-open="beforeOpen">
         <div class="p-6">
-            <h2 class="text-lg font-bold mb-8">Update User</h2>
+            <h2 class="text-lg font-bold mb-8">Update Role</h2>
             <form :action="route('roles.update', role)" method="POST">
                 <slot></slot>
                 <div class="mb-2">

@@ -25,20 +25,22 @@
                     {{ $letter->sender}}
                     <feather-icon name="arrow-down-right"
                     stroke-width="3"
-                    class="h-current text-green-600 mx-2">Recipient-</feather-icon>
+                    class="h-current text-green-600 mx-2">Recipient</feather-icon>
                     {{ $letter->recipient->name }}
                 </div>
-                <div class="flex items-center text-gray-700">
-                    <feather-icon name="corner-down-right"
-                    stroke-width="3"
-                    class="h-current text-blue-600 mx-2">Handover</feather-icon>
-                    @foreach ($letter->handovers as $handover)
-                        {{ $handover->name }}
-                    @endforeach
-                </div>
+                @if(count($letter->handovers))
+                    <div class="flex items-center text-gray-700">
+                        <feather-icon name="corner-down-right"
+                        stroke-width="3"
+                        class="h-current text-blue-600 mx-2">Handovers</feather-icon>
+                        @foreach ($letter->handovers as $handover)
+                            {{$handover->name }}
+                        @endforeach
+                    </div>
+                @endif
                 <div class="ml-auto flex">
                     @can('update', $letter)
-                        <a href="{{ route('incoming_letters.edit', $letter) }}/edit"
+                        <a href="{{ route('incoming_letters.edit', $letter) }}"
                             class="p-1 text-gray-500 text-blue-600 hover:bg-gray-200 rounded mr-3" title="Edit">
                             <feather-icon name="edit-3" stroke-width="2.5" class="h-current">Edit</feather-icon>
                         </a>

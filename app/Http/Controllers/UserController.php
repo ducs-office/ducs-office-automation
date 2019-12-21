@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role;
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
@@ -54,7 +55,10 @@ class UserController extends Controller
     {
         $data = $request->validate([
             'name' => ['sometimes', 'required', 'string', 'min:3', 'max:190'],
-            'email' => ['sometimes', 'required', 'string', 'min:3', 'max:190', 'email', 'unique:users'],
+            'email' => [
+                'sometimes', 'required', 'string', 'min:3', 'max:190', 'email',
+                Rule::unique('users')->ignore($user)
+            ],
             'roles' => ['sometimes', 'required', 'array', 'min:1'],
             'roles.*' => ['sometimes', 'required', 'integer', 'exists:roles,id']
         ]);

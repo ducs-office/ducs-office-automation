@@ -4,7 +4,7 @@
         <div class="flex items-baseline px-4 mb-4">
             <h1 class="page-header mb-0 px-0 mr-4">Incoming Letters</h1>
             @can('create incoming letters')
-                <a href="{{ route('outgoing_letters.create') }}" class="btn btn-magenta is-sm shadow-inset">
+                <a href="{{ route('incoming_letters.create') }}" class="btn btn-magenta is-sm shadow-inset">
                     New
                 </a>
             @endcan

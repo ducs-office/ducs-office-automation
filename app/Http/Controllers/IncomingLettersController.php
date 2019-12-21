@@ -111,8 +111,10 @@ class IncomingLettersController extends Controller
         ]);
 
         $letter = IncomingLetter::create($data);
-
-        $letter->handovers()->attach($data['handovers']);
+        
+        if (isset($data['handovers'])) {
+            $letter->handovers()->attach($data['handovers']);
+        }
 
         $letter->attachments()->createMany(
             array_map(function ($attachedFile) {

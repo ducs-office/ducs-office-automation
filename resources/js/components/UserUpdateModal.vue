@@ -10,7 +10,7 @@
                 </div>
                 <div class="mb-2">
                     <label for="email" class="w-full form-label mb-1">Email<span class="h-current text-red-500 text-lg">*</span></label>
-                    <input id="email" type="email" name="name" class="w-full form-input" v-model="user.email">
+                    <input id="email" type="email" name="email" class="w-full form-input" v-model="user.email">
                 </div>
                 <div class="mb-5">
                     <label for="roles" class="w-full form-label mb-1">Roles<span class="h-current text-red-500 text-lg">*</span></label>
