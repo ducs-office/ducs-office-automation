@@ -101,7 +101,7 @@ class OutgoingLettersController extends Controller
         $year = $outgoing_letter->date->format('Y');
         $update_date = new Carbon($validData['date']);
         $update_year = $update_date->format('Y');
-        if($year != $update_year) {
+        if ($year != $update_year) {
             $prefixes = [
                 'Bill' => 'TR/',
                 'Notesheet' => 'NTS/',
