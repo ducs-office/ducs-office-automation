@@ -98,7 +98,7 @@ class OutgoingLettersController extends Controller
             'attachments.*' => 'file|max:200|mimes:jpeg,jpg,png,pdf'
         ]);
          
-        if( isset($validData['date']) ) {
+        if (isset($validData['date'])) {
             $year = $outgoing_letter->date->format('Y');
             $update_date = new Carbon($validData['date']);
             $update_year = $update_date->format('Y');
