@@ -16,12 +16,12 @@
             <form action="{{ route('roles.store') }}" method="POST" class="px-6">
                 @csrf_token
                 <div class="mb-2">
-                    <label for="name" class="w-full form-label">Role Name</label>
+                    <label for="name" class="w-full form-label">Role Name<span class="h-current text-red-500 text-lg">*</span></label>
                     <input id="name" type="text" name="name" class="w-full form-input"
                         placeholder="Enter a name for the role..." required>
                 </div>
                 <div class="mb-2">
-                    <label for="permissions" class="w-full form-label">Assign Permissions</label>
+                    <label for="permissions" class="w-full form-label">Assign Permissions<span class="h-current text-red-500 text-lg">*</span></label>
                     <select id="permissions" name="permissions[]" class="w-full form-input" multiple>
                         @foreach ($permissions as $permission)
                         <option value="{{ $permission->id }}">{{ $permission->name }}</option>

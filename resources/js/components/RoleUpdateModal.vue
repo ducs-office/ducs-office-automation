@@ -5,11 +5,11 @@
             <form :action="route('roles.update', role)" method="POST">
                 <slot></slot>
                 <div class="mb-2">
-                    <label for="name" class="w-full form-label mb-1">Role Name</label>
+                    <label for="name" class="w-full form-label mb-1">Role Name<span class="h-current text-red-500 text-lg">*</span></label>
                     <input id="name" type="text" name="name" class="w-full form-input" v-model="role.name" placeholder="Enter a name for the role..." required>
                 </div>
                 <div class="mb-5">
-                    <label for="permissions" class="w-full form-label mb-1">Assign Permissions</label>
+                    <label for="permissions" class="w-full form-label mb-1">Assign Permissions<span class="h-current text-red-500 text-lg">*</span></label>
                     <select id="permissions" name="permissions[]" class="w-full form-input" v-model="role_permissions" multiple>
                         <option v-for="permission in permissions"
                             :key="permission.id" :value="permission.id"
