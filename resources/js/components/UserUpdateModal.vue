@@ -5,15 +5,15 @@
             <form :action="route('users.update', user)" method="POST">
                 <slot></slot>
                 <div class="mb-2">
-                    <label for="name" class="w-full form-label mb-1">Full Name</label>
+                    <label for="name" class="w-full form-label mb-1">Full Name<span class="h-current text-red-500 text-lg">*</span></label>
                     <input id="name" type="text" name="name" class="w-full form-input" v-model="user.name">
                 </div>
                 <div class="mb-2">
-                    <label for="email" class="w-full form-label mb-1">Email</label>
+                    <label for="email" class="w-full form-label mb-1">Email<span class="h-current text-red-500 text-lg">*</span></label>
                     <input id="email" type="email" name="name" class="w-full form-input" v-model="user.email">
                 </div>
                 <div class="mb-5">
-                    <label for="roles" class="w-full form-label mb-1">Roles</label>
+                    <label for="roles" class="w-full form-label mb-1">Roles<span class="h-current text-red-500 text-lg">*</span></label>
                     <select id="roles" name="roles[]" class="w-full form-input" v-model="user_roles" multiple>
                         <option v-for="role in roles"
                             :key="role.id" :value="role.id"

@@ -8,6 +8,8 @@ use App\Remark;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Carbon;
 
 class OutgoingLettersController extends Controller
 {
@@ -96,6 +98,23 @@ class OutgoingLettersController extends Controller
             'attachments.*' => 'file|max:200|mimes:jpeg,jpg,png,pdf'
         ]);
         
+        $year = $outgoing_letter->date->format('Y');
+        $update_date = new Carbon($validData['date']);
+        $update_year = $update_date->format('Y');
+        if($year != $update_year) {
+            $prefixes = [
+                'Bill' => 'TR/',
+                'Notesheet' => 'NTS/',
+                'General' => ''
+            ];
+
+            $serial_no = "CS/{$prefixes[$outgoing_letter->type]}{$update_year}";
+            $cache_key = "letter_seq_{$serial_no}";
+            $number_sequence = str_pad(Cache::increment($cache_key), 4, '0', STR_PAD_LEFT);
+            
+            $outgoing_letter->serial_no = "$serial_no/$number_sequence";
+        }
+
         $outgoing_letter->update($validData);
 
         if ($request->hasFile('attachments')) {

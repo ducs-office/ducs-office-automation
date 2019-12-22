@@ -17,15 +17,15 @@
             <form action="{{ route('users.store') }}" method="POST" class="px-6">
                 @csrf_token
                 <div class="mb-2">
-                    <label for="name" class="w-full form-label">Full Name</label>
+                    <label for="name" class="w-full form-label">Full Name<span class="h-current text-red-500 text-lg">*</span></label>
                     <input id="name" type="text" name="name" class="w-full form-input" placholder="Enter user's full name here..." required>
                 </div>
                 <div class="mb-2">
-                    <label for="email" class="w-full form-label">Email</label>
+                    <label for="email" class="w-full form-label">Email<span class="h-current text-red-500 text-lg">*</span></label>
                     <input id="email" type="email" name="email" class="w-full form-input" placholder="Enter user's email here..." required>
                 </div>
                 <div class="mb-2">
-                    <label for="role" class="w-full form-label">Role</label>
+                    <label for="role" class="w-full form-label">Role<span class="h-current text-red-500 text-lg">*</span></label>
                     <select id="role" name="roles[]" class="w-full form-input" multiple>
                         @foreach ($roles as $role)
                             <option value="{{ $role->id }}">{{ ucwords(str_replace('_', ' ', $role->name)) }}</option>

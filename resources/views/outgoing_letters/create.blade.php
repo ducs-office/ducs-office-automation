@@ -5,14 +5,14 @@
     <form action="{{ route('outgoing_letters.store') }}" method="POST" class="px-6" enctype="multipart/form-data">
         @csrf_token
         <div class="mb-2">
-            <label for="date" class="w-full form-label mb-1">Sent Date</label>
+            <label for="date" class="w-full form-label mb-1">Sent Date<span class="h-current text-red-500 text-lg">*</span></label>
             <input type="text" name="date" value="{{ old('date') }}" class="w-full form-input" placeholder="YYYY-MM-DD" onfocus="this.type='date'" onblur="this.type='text'">
             @if($errors->has('date'))
                 <p class="text-red-500">{{ $errors->first('date') }}</p>
             @endif
         </div>
         <div class="mb-2">
-            <label for="type" class="w-full form-label mb-1">Letter Type</label>
+            <label for="type" class="w-full form-label mb-1">Letter Type<span class="h-current text-red-500 text-lg">*</span></label>
             <select class="w-full form-input" name="type">
                 <option value="Bill">Bill</option>
                 <option value="Notesheet">Notesheet</option>
@@ -24,7 +24,7 @@
         </div>
         <div class="flex -mx-2 mb-2">
             <div class="mx-2">
-                <label for="sender" class="w-full form-label mb-1">Sender</label>
+                <label for="sender" class="w-full form-label mb-1">Sender<span class="h-current text-red-500 text-lg">*</span></label>
                 <vue-typeahead
                     name="sender_id"
                     source="/api/users"
@@ -38,7 +38,7 @@
                 @endif
             </div>
             <div class="mx-2">
-                <label for="recipient" class="w-full form-label mb-1">Recipient</label>
+                <label for="recipient" class="w-full form-label mb-1">Recipient<span class="h-current text-red-500 text-lg">*</span></label>
                 <input type="text" name="recipient" value="{{ old('recipient') }}" class="w-full form-input" placeholder="Recipient (Sent to)">
                 @if($errors->has('recipient'))
                     <p class="text-red-500">{{ $errors->first('recipient') }}</p>
@@ -46,7 +46,7 @@
             </div>
         </div>
         <div class="mb-2">
-            <label for="subject" class="w-full form-label mb-1">Subject</label>
+            <label for="subject" class="w-full form-label mb-1">Subject<span class="h-current text-red-500 text-lg">*</span></label>
             <input subject="text" name="subject" value="{{ old('subject') }}" class="w-full form-input" placeholder="Subject of the letter">
             @if($errors->has('subject'))
                 <p class="text-red-500">{{ $errors->first('subject') }}</p>
@@ -68,20 +68,23 @@
                 <p class="text-red-500">{{ $errors->first('amount') }}</p>
             @endif
         </div>
-        <div class="flex -mx-2 mb-6">
-            <div class="mx-2">
-                <label for="pdf" class="w-full form-label mb-1">Upload PDF copy</label>
-                <input type="file" name="attachments[]" accept="application/pdf" class="w-full">
-                @if($errors->has('pdf'))
-                    <p class="text-red-500">{{ $errors->first('pdf') }}</p>
-                @endif
-            </div>
-            <div class="mx-2">
-                <label for="scan" class="w-full form-label mb-1">Upload scanned copy</label>
-                <input type="file" name="attachments[]" accept="image/*, application/pdf" class="w-full">
-                @if($errors->has('scan'))
-                    <p class="text-red-500">{{ $errors->first('scan') }}</p>
-                @endif
+        <div class="mb-2">
+            <label for="attachments" class="w-full form-label mb-1">Attachments<span class="h-current text-red-500 text-lg">*</span></label>
+            <div class="flex -mx-2 mb-6">
+                <div class="mx-2">
+                    <label for="pdf" class="w-full form-label mb-1">Upload PDF copy</label>
+                    <input type="file" name="attachments[]" accept="application/pdf" class="w-full">
+                    @if($errors->has('pdf'))
+                        <p class="text-red-500">{{ $errors->first('pdf') }}</p>
+                    @endif
+                </div>
+                <div class="mx-2">
+                    <label for="scan" class="w-full form-label mb-1">Upload scanned copy</label>
+                    <input type="file" name="attachments[]" accept="image/*, application/pdf" class="w-full">
+                    @if($errors->has('scan'))
+                        <p class="text-red-500">{{ $errors->first('scan') }}</p>
+                    @endif
+                </div>
             </div>
         </div>
         <div class="mb-3">

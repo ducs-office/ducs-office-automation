@@ -56,6 +56,10 @@ select {
     }
 }
 
+.disable-input {
+    @apply px-3 py-2 border border-gray-400 rounded;
+}
+
 .btn {
     @apply inline-block px-3 py-2 bg-gray-100 text-black border border-gray-100 font-bold rounded;
     &:hover {
