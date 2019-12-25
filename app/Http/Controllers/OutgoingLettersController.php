@@ -17,11 +17,11 @@ class OutgoingLettersController extends Controller
     {
         $this->authorizeResource(OutgoingLetter::class, 'outgoing_letter');
     }
-    
+
     public function index(Request $request)
     {
         $filters = $request->query('filters');
-        
+
         $query = OutgoingLetter::applyFilter($filters)->with(['remarks.user', 'reminders']);
 
         if ($request->has('search') && request('search')!= '') {
@@ -64,7 +64,7 @@ class OutgoingLettersController extends Controller
             'attachments' => 'required|array|max:2',
             'attachments.*' => 'file|max:200|mimes:jpeg,jpg,png,pdf'
         ]);
-        
+
         $letter = OutgoingLetter::create($validData + ['creator_id' => Auth::id()]);
 
         $letter->attachments()->createMany(
@@ -88,7 +88,6 @@ class OutgoingLettersController extends Controller
     {
         $validData = $request->validate([
             'date' => 'sometimes|required|date|before_or_equal:today',
-            'type' => 'sometimes|required|in:Bill,Notesheet,General',
             'recipient' =>  'sometimes|required|',
             'subject' => 'sometimes|required|string|max:80',
             'description' => 'nullable|string|max:400',
@@ -97,7 +96,7 @@ class OutgoingLettersController extends Controller
             'attachments' => 'sometimes|required|array|max:2',
             'attachments.*' => 'file|max:200|mimes:jpeg,jpg,png,pdf'
         ]);
-         
+
         if (isset($validData['date'])) {
             $year = $outgoing_letter->date->format('Y');
             $update_date = new Carbon($validData['date']);
@@ -112,7 +111,7 @@ class OutgoingLettersController extends Controller
                 $serial_no = "CS/{$prefixes[$outgoing_letter->type]}{$update_year}";
                 $cache_key = "letter_seq_{$serial_no}";
                 $number_sequence = str_pad(Cache::increment($cache_key), 4, '0', STR_PAD_LEFT);
-                
+
                 $outgoing_letter->serial_no = "$serial_no/$number_sequence";
             }
         }
@@ -138,7 +137,7 @@ class OutgoingLettersController extends Controller
         $outgoing_letter->reminders->each->delete();
         $outgoing_letter->remarks->each->delete();
         $outgoing_letter->attachments->each->delete();
-    
+
         $outgoing_letter->delete();
 
         return redirect('/outgoing-letters');
@@ -147,13 +146,13 @@ class OutgoingLettersController extends Controller
     public function storeRemark(OutgoingLetter $outgoing_letter)
     {
         $this->authorize('create', Remark::class, $outgoing_letter);
-        
+
         $data = request()->validate([
             'description'=>'required|min:10|max:255|string',
         ]);
 
         $outgoing_letter->remarks()->create($data + ['user_id' => Auth::id()]);
-        
+
         return back();
     }
 }

@@ -3,7 +3,16 @@
 <div class="page-card max-w-lg mx-auto mt-4">
     <div class="flex items-baseline">
         <h1 class="page-header">Update Outgoing Letter</h1>
-        <span class="px-2 rounded text-lg uppercase text-white bg-blue-600">{{ $outgoing_letter->serial_no }}</span>
+    </div>
+    <div class="flex items-baseline mb-4 px-6">
+        <span class="px-2 py-1 rounded text-xs uppercase text-white mr-2 font-bold bg-gray-800">{{ $outgoing_letter->serial_no }}</span>
+        <span class="px-2 py-1 rounded text-xs uppercase text-white ml-2 font-bold {{
+                $outgoing_letter->type == 'Bill'
+                ? 'bg-blue-600'
+                : ($outgoing_letter->type == 'Notesheet' ? 'bg-teal-600' : 'bg-gray-800')
+            }}">
+            {{ $outgoing_letter->type }}
+        </span>
     </div>
     <form action="{{ route('outgoing_letters.update', $outgoing_letter) }}" method="POST" class="px-6" enctype="multipart/form-data">
         @csrf_token
@@ -14,14 +23,6 @@
                 onfocus="this.type='date'" onblur="this.type='text'">
             @if($errors->has('date'))
             <p class="text-red-500">{{ $errors->first('date') }}</p>
-            @endif
-        </div>
-        <div class="mb-2">
-            <label for="type" class="w-full form-label mb-1">Letter Type</label>
-            <label class="w-full form-label disable-input bg-gray-400 font-normal text-base">{{ old('type') ?? $outgoing_letter->type }}</label>
-            <input type="hidden" name="type" value="{{ old('type') ?? $outgoing_letter->type }}">
-            @if($errors->has('type'))
-            <p class="text-red-500">{{ $errors->first('type') }}</p>
             @endif
         </div>
         <div class="flex -mx-2 mb-2">

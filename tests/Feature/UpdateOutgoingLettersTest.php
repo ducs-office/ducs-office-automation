@@ -30,7 +30,7 @@ class UpdateOutgoingLettersTest extends TestCase
     public function user_can_update_outgoing_letter_in_database()
     {
         Storage::fake();
-        
+
         $this->signIn();
         $sender = create(User::class);
         $letter = create(OutgoingLetter::class, 1, [
@@ -40,7 +40,6 @@ class UpdateOutgoingLettersTest extends TestCase
 
         $new_outgoing_letter = [
             'date' => "1987-02-08",
-            'type' => "Bill",
             'recipient' => "Raleigh Wunsch",
             'sender_id' => $sender->id,
             'description' => "Voluptatem est odit voluptas eius deserunt.",
@@ -55,7 +54,6 @@ class UpdateOutgoingLettersTest extends TestCase
             )->assertRedirect('/outgoing-letters');
 
         $letter = $letter->fresh();
-        $this->assertEquals($new_outgoing_letter['type'], $letter->type);
         $this->assertEquals($new_outgoing_letter['description'], $letter->description);
         $this->assertEquals($new_outgoing_letter['sender_id'], $letter->sender_id);
         $this->assertEquals($new_outgoing_letter['amount'], $letter->amount);
@@ -93,7 +91,7 @@ class UpdateOutgoingLettersTest extends TestCase
             $letter = create(OutgoingLetter::class, 1, [
                 'creator_id' => auth()->id()
             ]);
-            
+
             $this->withoutExceptionHandling()
                 ->patch("/outgoing-letters/{$letter->id}", ['date'=>'']);
         } catch (ValidationException $e) {
@@ -198,7 +196,7 @@ class UpdateOutgoingLettersTest extends TestCase
     {
         try {
             $this->signIn();
-            
+
             $letter = create(OutgoingLetter::class, 1, [
                 'creator_id' => auth()->id()
             ]);
@@ -293,7 +291,7 @@ class UpdateOutgoingLettersTest extends TestCase
         $letter = create(OutgoingLetter::class, 1, [
             'creator_id' => auth()->id()
         ]);
-        
+
         $this->withoutExceptionHandling()
             ->patch("/outgoing-letters/{$letter->id}", ['amount'=>''])
             ->assertRedirect('/outgoing-letters');
@@ -305,7 +303,7 @@ class UpdateOutgoingLettersTest extends TestCase
     {
         try {
             $this->signIn();
-            
+
             $letter = create(OutgoingLetter::class, 1, [
                 'creator_id' => auth()->id()
             ]);
@@ -321,18 +319,16 @@ class UpdateOutgoingLettersTest extends TestCase
     }
 
     /** @test */
-    public function request_validates_type_field_cannot_be_null()
+    public function outgoing_letters_type_field_cannot_be_updated()
     {
-        try {
-            $this->signIn();
-            $letter = create(OutgoingLetter::class, 1, [
-                'creator_id' => auth()->id()
-            ]);
-            $this->withoutExceptionHandling()
-                ->patch("/outgoing-letters/{$letter->id}", ['type'=>'']);
-        } catch (ValidationException $e) {
-            $this->assertArrayHasKey('type', $e->errors());
-        }
+        $this->signIn();
+        $letter = create(OutgoingLetter::class, 1, [
+            'creator_id' => auth()->id(),
+            'type' => 'Bill',
+        ]);
+
+        $this->withoutExceptionHandling()
+            ->patch("/outgoing-letters/{$letter->id}", ['type'=> 'Notesheet']);
 
         $this->assertEquals($letter->type, $letter->fresh()->type);
     }
