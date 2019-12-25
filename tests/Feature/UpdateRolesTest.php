@@ -12,21 +12,21 @@ use Tests\TestCase;
 class UpdateRolesTest extends TestCase
 {
     use RefreshDatabase;
-    
+
     /** @test */
     public function office_staff_can_update_roles_and_change_permissions()
     {
         $this->signIn($user = create(User::class), 'office');
-        
+
         $role = Role::create(['name' => 'existing role']);
         $firstPermission = Permission::create(['name' => 'first permission']);
         $secondPermission = Permission::create(['name' => 'second permission']);
         $thirdPermission = Permission::create(['name' => 'third permission']);
         $role->givePermissionTo([$firstPermission, $secondPermission]);
-        
+
         $this->withoutExceptionHandling()
             ->from('/roles')
-            ->patch('/roles/' . $role->name, [
+            ->patch('/roles/' . $role->id, [
                 'name' => 'existing role updated',
                 'permissions' => [$firstPermission->id, $thirdPermission->id]
             ])->assertRedirect('/roles')

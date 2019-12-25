@@ -26,10 +26,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Route::bind('role', function ($value) {
-            return Role::where('name', $value)->first() ?? abort(404);
-        });
-
         Blade::directive('csrf_token', function () {
             return '<input type="hidden" name="<?php echo config(\'app.csrf_token_name\') ?>" value="<?php echo csrf_token(); ?>">';
         });
