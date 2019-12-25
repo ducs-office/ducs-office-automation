@@ -71,7 +71,8 @@
                 </button>
                 @endcan
                 @can('delete', $user)
-                <form action="{{ route('users.destroy', $user) }}" method="POST">
+                <form action="{{ route('users.destroy', $user) }}" method="POST"
+                    onsubmit="return confirm('Do you really want to delete user \'{{ $user->name }}\'?');">
                     @csrf_token @method('delete')
                     <button type="submit" class="p-1 hover:text-red-700">
                         <feather-icon class="h-current" name="trash-2">Trash</feather-icon>

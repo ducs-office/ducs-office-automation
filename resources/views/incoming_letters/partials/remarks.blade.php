@@ -37,7 +37,8 @@
                     })">
                     <feather-icon name="edit-3" stroke-width="2.5" class="h-current">Edit</feather-icon>
                 </button>
-                <form action="{{ route('remarks.destroy', $remark) }}" method="POST">
+                <form action="{{ route('remarks.destroy', $remark) }}" method="POST"
+                    onsubmit="return confirm('Do you really want to delete remark?');">
                     @csrf_token @method('DELETE')
                     <button class="p-1 hover:bg-gray-200 text-red-700 rounded">
                         <feather-icon name="trash-2" stroke-width="2.5" class="h-current">Delete</feather-icon>

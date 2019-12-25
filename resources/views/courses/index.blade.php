@@ -59,7 +59,8 @@
                         </button>
                         @endcan
                         @can('delete', App\Course::class)
-                        <form action="{{ route('courses.destroy', $course) }}" method="POST">
+                        <form action="{{ route('courses.destroy', $course) }}" method="POST"
+                            onsubmit="return confirm('Do you really want to delete course?');">
                             @csrf_token
                             @method('DELETE')
                             <button type="submit" class="p-1 hover:text-red-700">

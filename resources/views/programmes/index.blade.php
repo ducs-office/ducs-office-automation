@@ -53,7 +53,8 @@
                 </button>
                 @endcan
                 @can('delete', App\Programme::class)
-                <form action="{{ route('programmes.destroy', $programme) }}" method="POST">
+                <form action="{{ route('programmes.destroy', $programme) }}" method="POST"
+                    onsubmit="return confirm('Do you really want to delete programme?');">
                     @csrf_token @method('delete')
                     <button type="submit" class="p-1 hover:text-red-700">
                         <feather-icon class="h-current" name="trash-2">Trash</feather-icon>

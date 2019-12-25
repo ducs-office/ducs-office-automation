@@ -68,7 +68,8 @@
             </button>
             @endcan
             @can('delete', Spatie\Permission\Models\Role::class)
-            <form action="{{ route('roles.destroy', $role) }}" method="POST">
+            <form action="{{ route('roles.destroy', $role) }}" method="POST"
+                onsubmit="return confirm('Do you really want to delete role?');">
                 @csrf_token @method('delete')
                 <button type="submit" class="p-1 hover:text-red-700">
                     <feather-icon class="h-current" name="trash-2">Trash</feather-icon>

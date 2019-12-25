@@ -58,7 +58,8 @@
                             })">
                 <feather-icon name="edit-3" stroke-width="2.5" class="h-current">Edit</feather-icon>
             </button>
-            <form action="{{ route('reminders.destroy', $reminder) }}" method="POST">
+            <form action="{{ route('reminders.destroy', $reminder) }}" method="POST"
+                onsubmit="return confirm('Do you really want to delete this reminder?');">
                 @csrf_token
                 @method('DELETE')
                 <button class="p-1 hover:bg-gray-200 text-red-700 rounded">

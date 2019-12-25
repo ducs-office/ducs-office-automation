@@ -46,7 +46,8 @@
                         </a>
                     @endcan
                     @can('delete', $letter)
-                        <form method="POST" action="{{ route('incoming_letters.destroy', $letter->id) }}">
+                        <form method="POST" action="{{ route('incoming_letters.destroy', $letter->id) }}"
+                            onsubmit="return confirm('Do you really want to delete incoming letter?');">
                             @csrf_token
                             @method('DELETE')
                             <button type="submit" class="p-1 hover:bg-gray-200 text-red-700 rounded">
