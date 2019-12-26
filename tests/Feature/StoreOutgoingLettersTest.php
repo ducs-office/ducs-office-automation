@@ -18,7 +18,7 @@ class StoreOutgoingLettersTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        
+
         Storage::fake();
     }
 
@@ -28,7 +28,7 @@ class StoreOutgoingLettersTest extends TestCase
         $this->withExceptionHandling()
             ->post('/outgoing-letters')
             ->assertRedirect('/login');
-            
+
         $this->assertEquals(0, OutgoingLetter::count());
     }
 
@@ -36,7 +36,7 @@ class StoreOutgoingLettersTest extends TestCase
     public function store_outgoing_letter_in_database()
     {
         $this->signIn();
-        
+
         $outgoing_letter = [
             'date' => now()->format('Y-m-d'),
             'subject' => $this->faker->words(3, true),
@@ -53,7 +53,7 @@ class StoreOutgoingLettersTest extends TestCase
         $this->withoutExceptionHandling()
             ->post('/outgoing-letters', $outgoing_letter)
             ->assertRedirect('/outgoing-letters');
-            
+
         $this->assertEquals(1, OutgoingLetter::count());
 
         tap(OutgoingLetter::first(), function ($letter) use ($pdfFile, $scanFile) {
@@ -83,7 +83,7 @@ class StoreOutgoingLettersTest extends TestCase
 
             $this->withoutExceptionHandling()
                 ->post('/outgoing-letters', $letter);
-            
+
             $this->fail('Empty date field was not validated.');
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('date', $e->errors());
@@ -145,7 +145,7 @@ class StoreOutgoingLettersTest extends TestCase
     public function request_validates_date_field_cannot_be_a_future_date()
     {
         $this->signIn();
-        
+
         $letter = [
             'date' => now()->addMonth(2)->format('Y-m-d'),
             'subject' => $this->faker->words(3, true),
@@ -192,10 +192,10 @@ class StoreOutgoingLettersTest extends TestCase
                 'sender_id' => create(User::class)->id,
                 'attachments' =>  [UploadedFile::fake()->create('document.pdf')]
             ];
-        
+
             $this->withoutExceptionHandling()
                 ->post('/outgoing-letters', $letter);
-            
+
             $this->fail('Empty \'type\' field was not validated.');
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('type', $e->errors());
@@ -233,13 +233,13 @@ class StoreOutgoingLettersTest extends TestCase
     }
 
     /** @test */
-    public function request_validates_subject_field_maxlimit_80()
+    public function request_validates_subject_field_maxlimit_100()
     {
         try {
             $this->signIn();
             $letter = [
                 'date' => now()->format('Y-m-d'),
-                'subject' => $this->faker->regexify('[A-Za-z0-9]{81}'),
+                'subject' => $this->faker->regexify('[A-Za-z0-9]{101}'),
                 'recipient' => $this->faker->name(),
                 'type' => 'Bill',
                 'amount' => $this->faker->randomFloat,
@@ -270,10 +270,10 @@ class StoreOutgoingLettersTest extends TestCase
                 'sender_id' => create(User::class)->id,
                 'attachments' =>  [UploadedFile::fake()->create('document.pdf')]
             ];
-        
+
             $this->withoutExceptionHandling()
                 ->post('/outgoing-letters', $letter);
-            
+
             $this->fail('Empty \'recipient\' field was not validated.');
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('recipient', $e->errors());
@@ -297,10 +297,10 @@ class StoreOutgoingLettersTest extends TestCase
                 'sender_id' => '', // Empty type
                 'attachments' =>  [UploadedFile::fake()->create('document.pdf')]
             ];
-        
+
             $this->withoutExceptionHandling()
                 ->post('/outgoing-letters', $letter);
-            
+
             $this->fail('Empty \'sender_id\' field was not validated.');
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('sender_id', $e->errors());
@@ -324,10 +324,10 @@ class StoreOutgoingLettersTest extends TestCase
                 'sender_id' => 123,
                 'attachments' =>  [UploadedFile::fake()->create('document.pdf')]
             ];
-            
+
             $this->withoutExceptionHandling()
                 ->post('/outgoing-letters', $letter);
-            
+
             $this->fail('Failed to validate \'sender_id\' is a valid existing user id');
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('sender_id', $e->errors());
@@ -352,7 +352,7 @@ class StoreOutgoingLettersTest extends TestCase
             'sender_id' => create(User::class)->id,
             'attachments' =>  [UploadedFile::fake()->create('document.pdf')]
         ];
-    
+
         $this->withoutExceptionHandling()
             ->post('/outgoing-letters', $letter)
             ->assertRedirect('/outgoing-letters');
@@ -374,7 +374,7 @@ class StoreOutgoingLettersTest extends TestCase
             'sender_id' => create(User::class)->id,
             'attachments' =>  [UploadedFile::fake()->create('document.pdf')]
         ];
-    
+
         $this->withoutExceptionHandling()
             ->post('/outgoing-letters', $letter)
             ->assertRedirect('/outgoing-letters');
@@ -397,10 +397,10 @@ class StoreOutgoingLettersTest extends TestCase
                 'sender_id' => create(User::class)->id,
                 'attachments' =>  [UploadedFile::fake()->create('document.pdf')]
             ];
-                
+
             $this->withoutExceptionHandling()
                         ->post('/outgoing-letters', $letter);
-                    
+
             $this->fail('Failed to validate \'amount\' cannot be a string value');
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('amount', $e->errors());

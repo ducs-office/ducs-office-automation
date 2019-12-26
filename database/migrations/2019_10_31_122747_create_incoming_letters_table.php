@@ -16,12 +16,12 @@ class CreateIncomingLettersTable extends Migration
         Schema::create('incoming_letters', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->date('date');
-            $table->string('serial_no')->unique();
-            $table->string('received_id');
-            $table->string('sender', 50);
+            $table->string('serial_no')->unique(); // Serial no assigned to In bound letters
+            $table->string('received_id'); // ID on the received letter
+            $table->string('sender', 100);
             $table->unsignedBigInteger('recipient_id');
             $table->enum('priority', [1,2,3])->nullable();
-            $table->string('subject', 80);
+            $table->string('subject', 100);
             $table->text('description', 400)->nullable();
             $table->timestamps();
 

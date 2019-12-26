@@ -85,14 +85,14 @@ class StoreRemarkTest extends TestCase
     }
 
     /** @test */
-    public function request_validates_description_field_minlimit_10()
+    public function request_validates_description_field_minlimit_2()
     {
         $role = Role::firstOrCreate(['name' => 'Remarker']);
         $role->givePermissionTo('create remarks');
         $this->signIn(create(User::class), $role->name);
 
         $letter = create(OutgoingLetter::class);
-        $remark = ['description'=>Str::random(9)];
+        $remark = ['description'=>Str::random(1)];
 
         try {
             $this->withoutExceptionHandling()

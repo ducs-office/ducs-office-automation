@@ -15,7 +15,7 @@ class RemarksController extends Controller
         $this->authorize('update', $remark);
 
         $remark->update(request()->validate([
-            'description'=>'required|min:10|max:255|string'
+            'description'=>'required|string|min:2|max:190'
         ]));
         return back();
     }

@@ -28,8 +28,8 @@ class CollegeController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'code'=>['required','min:3','max:15','unique:colleges,code'],
-            'name'=>['required','min:5','max:50','unique:colleges,name']
+            'code' => ['required','min:3','max:20','unique:colleges,code'],
+            'name' => ['required','min:3','max:100','unique:colleges,name']
         ]);
 
         College::create($data);
@@ -44,24 +44,28 @@ class CollegeController extends Controller
     {
         $validData = $request->validate([
             'code' => [
-                'sometimes', 'required', 'min:3', 'max:15',
+                'sometimes', 'required', 'min:3', 'max:60',
                 Rule::unique('colleges')->ignore($college)
             ],
             'name'=>[
-                'sometimes', 'required', 'min:5', 'max:50',
+                'sometimes', 'required', 'min:5', 'max:100',
                 Rule::unique('colleges')->ignore($college)
             ],
         ]);
 
         $college->update($validData);
+
         flash('College updated successfully!', 'success');
+
         return redirect('/colleges');
     }
 
     public function destroy(College $college)
     {
         $college->delete();
+
         flash('College deleted successfully!', 'success');
+
         return redirect('/colleges');
     }
 }

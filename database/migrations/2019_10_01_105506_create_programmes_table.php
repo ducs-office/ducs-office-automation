@@ -15,9 +15,9 @@ class CreateProgrammesTable extends Migration
     {
         Schema::create('programmes', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('code', 10)->unique();
+            $table->string('code', 60)->unique();
             $table->date('wef');
-            $table->string('name', 180);
+            $table->string('name');
             $table->timestamps();
         });
     }

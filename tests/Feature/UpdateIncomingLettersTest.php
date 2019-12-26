@@ -40,7 +40,7 @@ class UpdateIncomingLettersTest extends TestCase
         $receiver = create(User::class);
         $handovers = [create(User::class)->id, create(User::class)->id];
         $letter = create(IncomingLetter::class, 1, ['priority' => 2]);
-        
+
         $new_incoming_letter = [
             'date' => '2019-04-02',
             'received_id' => 'Dept/RD/0002',
@@ -66,7 +66,7 @@ class UpdateIncomingLettersTest extends TestCase
         $this->assertEquals($new_incoming_letter['priority'], $letter['priority']);
         $this->assertEquals($new_incoming_letter['subject'], $letter['subject']);
         $this->assertEquals($new_incoming_letter['description'], $letter['description']);
-    
+
         $this->assertEquals('letter_attachments/incoming/'. $file->hashName(), $letter->attachments->last()->path);
         Storage::assertExists($letter->attachments->last()->path);
     }
@@ -103,7 +103,7 @@ class UpdateIncomingLettersTest extends TestCase
             try {
                 $this->withoutExceptionHandling()
                 ->patch("incoming-letters/{$letter->id}", [ 'date' => $date ]);
-                
+
                 $this->fail("Invalid date '{$date}' was not validated");
             } catch (ValidationException $e) {
                 $this->assertArrayHasKey('date', $e->errors());
@@ -125,7 +125,7 @@ class UpdateIncomingLettersTest extends TestCase
             $this->withoutExceptionHandling()
                 ->patch("incoming-letters/{$letter->id}", ['date' => $date])
                 ->assertRedirect('incoming-letters');
-        
+
             $this->assertEquals($date, $letter->fresh()->date->format('Y-m-d'));
         }
     }
@@ -249,7 +249,7 @@ class UpdateIncomingLettersTest extends TestCase
 
         $this->assertNull($letter->fresh()->priority);
     }
-    
+
     /** @test */
     public function request_validates_subject_field_can_not_be_null()
     {
@@ -269,14 +269,14 @@ class UpdateIncomingLettersTest extends TestCase
     }
 
     /** @test */
-    public function request_validates_subject_field_maxlimit_80()
+    public function request_validates_subject_field_maxlimit_100()
     {
         $this -> signIn();
         $letter = create(IncomingLetter::class);
-        
+
         try {
             $this->withoutExceptionHandling()
-                ->patch("/incoming-letters/{$letter->id}", ['subject' => Str::random(81)]);
+                ->patch("/incoming-letters/{$letter->id}", ['subject' => Str::random(101)]);
         } catch (ValidationException $e) {
             $this -> assertArrayHasKey('subject', $e->errors());
         }

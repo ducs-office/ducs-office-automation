@@ -36,7 +36,7 @@ class CourseController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'code' => ['required', 'min:3', 'max:10', 'unique:courses'],
+            'code' => ['required', 'min:3', 'max:60', 'unique:courses'],
             'name' => ['required', 'min:3', 'max:190'],
             'programme_id' => ['required', 'integer', 'exists:programmes,id'],
         ]);
@@ -59,7 +59,7 @@ class CourseController extends Controller
     {
         $data = $request->validate([
             'code' => [
-                'sometimes', 'required', 'min:3', 'max:10',
+                'sometimes', 'required', 'min:3', 'max:60',
                 Rule::unique('courses')->ignore($course)
             ],
             'name' => ['sometimes', 'required', 'min:3', 'max:190'],

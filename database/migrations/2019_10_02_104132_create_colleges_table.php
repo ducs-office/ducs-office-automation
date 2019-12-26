@@ -15,8 +15,8 @@ class CreateCollegesTable extends Migration
     {
         Schema::create('colleges', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('code', 15)->unique;
-            $table->string('name', 50)->unique;
+            $table->string('code', 60)->unique;
+            $table->string('name', 100)->unique;
             $table->timestamps();
         });
     }

@@ -15,17 +15,17 @@ class CreateOutgoingLettersTable extends Migration
     {
         Schema::create('outgoing_letters', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('creator_id');
+            $table->string('serial_no')->unique();
             $table->date('date');
             $table->enum('type', ['Bill', 'Notesheet', 'General']);
-            $table->string('subject', 80);
-            $table->string('recipient', 50);
             $table->unsignedBigInteger('sender_id');
+            $table->string('recipient', 100);
+            $table->string('subject', 100);
             $table->text('description', 400)->nullable();
             $table->float('amount')->nullable();
-            $table->string('serial_no')->unique();
+            $table->unsignedBigInteger('creator_id');
             $table->timestamps();
-            
+
             $table->foreign('sender_id')->references('id')->on('users');
             $table->foreign('creator_id')->references('id')->on('users');
         });

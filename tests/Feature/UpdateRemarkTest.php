@@ -83,7 +83,7 @@ class UpdateRemarkTest extends TestCase
     }
 
     /** @test */
-    public function request_validates_description_field_minlimit_10()
+    public function request_validates_description_field_minlimit_2()
     {
         $role = Role::create(['name' => 'random']);
         $permission = Permission::firstOrCreate(['name' => 'edit remarks']);
@@ -96,7 +96,7 @@ class UpdateRemarkTest extends TestCase
             'user_id' => auth()->id()
         ]);
 
-        $new_remark = ['description'=>Str::random(9)];
+        $new_remark = ['description'=>Str::random(1)];
 
         try {
             $this->withoutExceptionHandling()

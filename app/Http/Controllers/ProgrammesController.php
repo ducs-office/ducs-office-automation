@@ -27,7 +27,7 @@ class ProgrammesController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'code' => ['required', 'min:3', 'max:10', 'unique:programmes,code'],
+            'code' => ['required', 'min:3', 'max:60', 'unique:programmes,code'],
             'wef' => ['required', 'date'],
             'name' => ['required', 'min:3', 'max:190'],
         ]);
@@ -43,7 +43,7 @@ class ProgrammesController extends Controller
     {
         $data = $request->validate([
             'code' => [
-                'sometimes', 'required', 'min:3', 'max:10',
+                'sometimes', 'required', 'min:3', 'max:60',
                 Rule::unique('programmes')->ignore($programme)
             ],
             'wef' => ['sometimes', 'required', 'date'],

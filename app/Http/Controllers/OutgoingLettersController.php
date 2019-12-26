@@ -56,12 +56,12 @@ class OutgoingLettersController extends Controller
         $validData = $request->validate([
             'date' => 'required|date|before_or_equal:today',
             'type' => 'required|in:Bill,Notesheet,General',
-            'recipient' => 'required',
-            'sender_id' => 'required|exists:users,id',
-            'subject' => 'required|string|max:80',
+            'recipient' => 'required|min:5|max:100',
+            'sender_id' => 'required|integer|exists:users,id',
+            'subject' => 'required|string|min:5|max:100',
             'description' => 'nullable|string|max:400',
             'amount' => 'nullable|numeric',
-            'attachments' => 'required|array|max:2',
+            'attachments' => 'required|array|min:1|max:2',
             'attachments.*' => 'file|max:200|mimes:jpeg,jpg,png,pdf'
         ]);
 
@@ -88,11 +88,11 @@ class OutgoingLettersController extends Controller
     {
         $validData = $request->validate([
             'date' => 'sometimes|required|date|before_or_equal:today',
-            'recipient' =>  'sometimes|required|',
-            'subject' => 'sometimes|required|string|max:80',
+            'recipient' =>  'sometimes|required|min:5|max:100',
+            'subject' => 'sometimes|required|string|min:5|max:100',
             'description' => 'nullable|string|max:400',
             'amount' => 'nullable|numeric',
-            'sender_id' => 'sometimes|required|exists:users,id',
+            'sender_id' => 'sometimes|required|integer|exists:users,id',
             'attachments' => 'sometimes|required|array|max:2',
             'attachments.*' => 'file|max:200|mimes:jpeg,jpg,png,pdf'
         ]);
@@ -148,7 +148,7 @@ class OutgoingLettersController extends Controller
         $this->authorize('create', Remark::class, $outgoing_letter);
 
         $data = request()->validate([
-            'description'=>'required|min:10|max:255|string',
+            'description'=>'required|string|min:2|max:190',
         ]);
 
         $outgoing_letter->remarks()->create($data + ['user_id' => Auth::id()]);

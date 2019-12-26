@@ -232,7 +232,7 @@ class UpdateOutgoingLettersTest extends TestCase
     }
 
     /** @test */
-    public function request_validates_subject_field_maxlimit_80()
+    public function request_validates_subject_field_maxlimit_100()
     {
         try {
             $this->signIn(create(User::class));
@@ -241,7 +241,7 @@ class UpdateOutgoingLettersTest extends TestCase
             ]);
 
             $this->withoutExceptionHandling()
-                ->patch("/outgoing-letters/{$letter->id}", ['subject' => Str::random(81)]);
+                ->patch("/outgoing-letters/{$letter->id}", ['subject' => Str::random(101)]);
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('subject', $e->errors());
         }

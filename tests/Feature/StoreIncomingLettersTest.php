@@ -11,7 +11,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
-class StoreIncomingLettters extends TestCase
+class StoreIncomingLetters extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
@@ -21,7 +21,7 @@ class StoreIncomingLettters extends TestCase
         $this->withExceptionHandling()
             ->post('/incoming-letters')
             ->assertRedirect('/login');
-        
+
         $this->assertEquals(IncomingLetter::count(), 0);
     }
 
@@ -44,7 +44,7 @@ class StoreIncomingLettters extends TestCase
             'description' => $this->faker->paragraph(),
             'attachments' => [ $scanFile = UploadedFile::fake()->image('scanned_copy.jpg')]
         ];
-        
+
         $this->withoutExceptionHandling()
             ->post('/incoming-letters', $letter)
             ->assertRedirect('/incoming-letters');
@@ -74,7 +74,7 @@ class StoreIncomingLettters extends TestCase
                 'description' => $this->faker->paragraph(),
                 'attachments' =>  [UploadedFile::fake()->create('document.pdf')]
             ];
-        
+
             $this->withoutExceptionHandling()
                 ->post('/incoming-letters', $letter);
         } catch (ValidationException $e) {
@@ -158,7 +158,7 @@ class StoreIncomingLettters extends TestCase
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('date', $e->errors());
         }
-        
+
         $this->assertEquals(IncomingLetter::count(), 0);
     }
 
@@ -215,14 +215,14 @@ class StoreIncomingLettters extends TestCase
     }
 
     /** @test */
-    public function request_validates_sender_field_max_length_is_50()
+    public function request_validates_sender_field_max_length_is_100()
     {
         try {
             $this->signIn();
             $letter = [
                 'date' => now()->format('Y-m-d'),
                 'received_id' => 'CS/xyz/2019/12',
-                'sender' => $this->faker->regexify('[A-Ba-b0-9]{51}'),
+                'sender' => $this->faker->regexify('[A-Ba-b0-9]{101}'),
                 'recipient_id' => create(User::class)->id,
                 'handovers' => [create(User::class)->id],
                 'priority' => 2,
@@ -311,7 +311,7 @@ class StoreIncomingLettters extends TestCase
         $this->withoutExceptionHandling()
             ->post('/incoming-letters', $letter)
             ->assertRedirect('/incoming-letters');
-            
+
         $this->assertEquals(IncomingLetter::count(), 1);
     }
 
@@ -337,7 +337,7 @@ class StoreIncomingLettters extends TestCase
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('handovers.0', $e->errors());
         }
-        
+
         $this->assertEquals(IncomingLetter::count(), 0);
     }
 
@@ -417,7 +417,7 @@ class StoreIncomingLettters extends TestCase
     }
 
     /** @test */
-    public function request_validates_subject_field_max_length_is_80()
+    public function request_validates_subject_field_max_length_is_100()
     {
         try {
             $this->signIn();
@@ -428,7 +428,7 @@ class StoreIncomingLettters extends TestCase
                 'recipient_id' => create(User::class)->id,
                 'handovers' => [create(User::class)->id],
                 'priority' => 2,
-                'subject' => $this->faker->regexify('[A-Ba-b0-9]{81}'),
+                'subject' => $this->faker->regexify('[A-Ba-b0-9]{101}'),
                 'description' => $this->faker->paragraph(),
                 'attachments' =>  [UploadedFile::fake()->create('document.pdf')]
             ];
