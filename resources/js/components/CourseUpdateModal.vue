@@ -5,15 +5,15 @@
             <form :action="route('courses.update', course)" method="POST">
                 <slot></slot>
                 <div class="mb-2">
-                    <label for="course_code" class="w-full form-label mb-1">Unique Course Code</label>
+                    <label for="course_code" class="w-full form-label mb-1">Unique Course Code<span class="h-current text-red-500 text-lg">*</span></label>
                     <input id="course_code" type="text" name="code" class="w-full form-input" v-model="course.code">
                 </div>
                 <div class="mb-2">
-                    <label for="course_name" class="w-full form-label mb-1">Course Name</label>
+                    <label for="course_name" class="w-full form-label mb-1">Course Name<span class="h-current text-red-500 text-lg">*</span></label>
                     <input id="course_name" type="text" name="name" class="w-full form-input" v-model="course.name">
                 </div>
                 <div class="mb-5">
-                    <label for="course_programme" class="w-full form-label mb-1">Programme</label>
+                    <label for="course_programme" class="w-full form-label mb-1">Programme<span class="h-current text-red-500 text-lg">*</span></label>
                     <select id="course_programme" name="programme_id" class="w-full form-input" v-model="course.programme_id">
                         <option v-for="(programme, id) in programmes" :key="id" :value="id" v-text="programme"></option>
                     </select>

@@ -16,15 +16,15 @@
             <form action="{{ route('programmes.store') }}" method="POST" class="flex items-end">
                 @csrf_token
                 <div class="flex-1 mr-2">
-                    <label for="programme_code" class="w-full form-label">Programme Code</label>
+                    <label for="programme_code" class="w-full form-label">Programme Code<span class="h-current text-red-500 text-lg">*</span></label>
                     <input id="programme_code" type="text" name="code" class="w-full form-input">
                 </div>
                 <div class="flex-1 mr-5">
-                    <label for="programme_name" class="w-full form-label">Date (w.e.f)</label>
+                    <label for="programme_name" class="w-full form-label">Date (w.e.f)<span class="h-current text-red-500 text-lg">*</span></label>
                     <input id="programme_name" type="date" name="wef" class="w-full form-input">
                 </div>
                 <div class="flex-1 mr-5">
-                    <label for="programme_name" class="w-full form-label">Programme</label>
+                    <label for="programme_name" class="w-full form-label">Programme<span class="h-current text-red-500 text-lg">*</span></label>
                     <input id="programme_name" type="text" name="name" class="w-full form-input">
                 </div>
                 <div>
