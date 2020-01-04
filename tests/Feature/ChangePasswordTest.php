@@ -6,6 +6,7 @@ use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
 
 class ChangePasswordTest extends TestCase
@@ -25,7 +26,7 @@ class ChangePasswordTest extends TestCase
         $this->withoutExceptionHandling()->post('/account/change_password', [
             'password' => $curr_pass,
             'new_password' => $new_pass,
-            'confirmed_new_password' => $new_pass,
+            'new_password_confirmation' => $new_pass,
         ])->assertRedirect()
         ->assertSessionHasNoErrors();
 
@@ -42,7 +43,7 @@ class ChangePasswordTest extends TestCase
         $this->post('/account/change_password', [
                 'password' => 'incorrect_password',
                 'new_password' => 'new_pass',
-                'confirmed_new_password' => 'new_pass',
+                'new_password_confirmation' => 'new_pass',
             ])->assertRedirect()
             ->assertSessionHasErrors('password');
 
