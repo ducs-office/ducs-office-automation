@@ -26,6 +26,6 @@ class ViewRolesTest extends TestCase
         $viewPermissions = $response->viewData('permissions');
 
         $this->assertEquals(Role::count(), $viewRoles->count());
-        $this->assertEquals(Permission::count(), $viewPermissions->count());
+        $this->assertEquals(Permission::count(), $viewPermissions->flatten()->count());
     }
 }

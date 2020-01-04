@@ -9,6 +9,7 @@
         </button>
         @endcan
     </div>
+
     @can('create', Spatie\Permission\Models\Role::class)
     <modal name="create-new-role-form" height="auto">
         <div class="p-6">
@@ -21,12 +22,26 @@
                         placeholder="Enter a name for the role..." required>
                 </div>
                 <div class="mb-2">
-                    <label for="permissions" class="w-full form-label">Assign Permissions<span class="h-current text-red-500 text-lg">*</span></label>
-                    <select id="permissions" name="permissions[]" class="w-full form-input" multiple>
-                        @foreach ($permissions as $permission)
-                        <option value="{{ $permission->id }}">{{ $permission->name }}</option>
+                    <label for="permissions" class="w-full form-label">Assign Permissions <span class="h-current text-red-500 text-lg">*</span></label>
+                    <table>
+                        @foreach ($permissions as $group => $gPermissions)
+                            <tr class="py-1">
+                                <th class="px-2">{{ $group }}:</th>
+                                <td class="px-2">
+                                    @foreach ($gPermissions as $permission)
+                                        <label for="permission-{{ $permission->id }}" class="px-2 py-1 border rounded inline-flex items-center mr-3">
+                                            <input id="permission-{{ $permission->id }}"
+                                            type="checkbox"
+                                            name="permissions[]"
+                                            class="mr-1"
+                                            value="{{ $permission->id }}">
+                                            <span>{{ explode(' ', $permission->name, 2)[0] }}</span>
+                                        </label>
+                                    @endforeach
+                                </td>
+                            </tr>
                         @endforeach
-                    </select>
+                    </table>
                 </div>
                 <div class="mt-5">
                     <button class="btn btn-magenta">Create</button>
@@ -47,12 +62,22 @@
             </h3>
             <h4 class="text-sm font-semibold text-gray-600 mr-2">{{ $role->guard_name }}</h4>
         </div>
-        <div class="px-2 flex-1 flex flex-wrap items-center -my-1">
-            @foreach ($role->permissions as $permission)
-            <span
-                class="m-1 bg-blue-500 text-white p-1 rounded text-xs font-bold tracking-wide">{{ $permission->name }}</span>
+        <table class="px-2 flex-1 -my-1">
+            @foreach ($role->permissions->groupBy(function($p) {
+                return explode(' ', $p->name, 2)[1];
+            }) as $group => $permissions)
+            <tr>
+                <th class="text-left font-bold px-2 py-1"> {{ ucwords($group) }}: </th>
+                <td class="text-left px-2 py-1">
+                    @foreach ($permissions as $permission)
+                    <span class="m-1 bg-blue-500 text-white py-1 px-2 rounded text-sm font-bold leading-none">
+                        {{ ucwords(explode(' ', $permission->name, 2)[0]) }}
+                    </span>
+                    @endforeach
+                </td>
+            </tr>
             @endforeach
-        </div>
+        </table>
         <div class="ml-auto px-2 flex items-center">
             @can('update', Spatie\Permission\Models\Role::class)
             <button type="submit" class="p-1 hover:text-red-700 mr-2" @click="

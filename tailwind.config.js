@@ -61,7 +61,13 @@ module.exports = {
         current: '1em'
       },
       maxHeight: {
-        'screen-1/2': '50vh',
+                "24": "6rem",
+                "32": "8rem",
+                "40": "10rem",
+                "48": "12rem",
+                "56": "14rem",
+                "64": "16rem",
+                "screen-1/2": "50vh"
       }
     }
   },

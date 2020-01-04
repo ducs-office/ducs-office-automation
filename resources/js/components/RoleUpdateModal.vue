@@ -10,11 +10,25 @@
                 </div>
                 <div class="mb-5">
                     <label for="permissions" class="w-full form-label mb-1">Assign Permissions<span class="h-current text-red-500 text-lg">*</span></label>
-                    <select id="permissions" name="permissions[]" class="w-full form-input" v-model="role_permissions" multiple>
-                        <option v-for="permission in permissions"
-                            :key="permission.id" :value="permission.id"
-                            v-text="permission.name"></option>
-                    </select>
+                    <table>
+                            <tr class="py-1" v-for="(gPermissions, group) in permissions" :key="group">
+                                <th class="px-2" v-text="`${group} : `"></th>
+                                <td class="px-2">
+                                        <label v-for="permission in gPermissions"
+                                            :key="permission.id"
+                                            :for="`permission-${ permission.id }`"
+                                            class="px-2 py-1 border rounded inline-flex items-center mr-3">
+                                            <input :id="`permission-${ permission.id }`"
+                                            type="checkbox"
+                                            name="permissions[]"
+                                            class="mr-1"
+                                            :value="permission.id"
+                                            :checked="role_permissions.includes(permission.id)">
+                                            <span v-text="permission.name.split(' ')[0]"></span>
+                                        </label>
+                                </td>
+                            </tr>
+                    </table>
                 </div>
                 <div>
                     <button type="submit" class="btn btn-magenta">Update</button>
