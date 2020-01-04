@@ -45,7 +45,7 @@ Route::patch('/remarks/{remark}', 'RemarksController@update')->middleware('auth'
 Route::delete('/remarks/{remark}', 'RemarksController@destroy')->middleware('auth')->name('remarks.destroy');
 
 Route::delete('/reminders/{reminder}', 'RemindersController@destroy')->middleware('auth')->name('reminders.destroy');
-Route::patch('/reminders/{reminder}', 'RemindersController@update')->middleware('auth')->name('reminders.updates');
+Route::patch('/reminders/{reminder}', 'RemindersController@update')->middleware('auth')->name('reminders.update');
 
 
 Route::get('/programmes', 'ProgrammesController@index')->middleware('auth')->name('programmes.index');
