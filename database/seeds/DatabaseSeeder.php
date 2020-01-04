@@ -21,56 +21,37 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $himani = factory(User::class)->create([
-            'name' => 'Himani Saini',
-            'email' => 'himani@ducs.in',
-            'password' => bcrypt('secret'),
+        $admin = factory(User::class)->create([
+            'name' => 'Administrator',
+            'email' => 'admin@cs.du.ac.in',
+            'password' => bcrypt('password'),
         ]);
 
-        $ng = factory(User::class)->create([
-            'name' => 'Neelima Gupta',
-            'email' => 'ng@ducs.in',
-            'password' => bcrypt('secret'),
-        ]);
+        $admin->assignRole(Role::firstOrCreate(['name' => 'admin']));
 
-        $nk = factory(User::class)->create([
-            'name' => 'Naveen Kumar',
-            'email' => 'nk@ducs.in',
-            'password' => bcrypt('secret'),
-        ]);
+        $outgoing = factory(OutgoingLetter::class, 5)->create(['creator_id' => $admin->id]);
 
-        $himani->assignRole(Role::firstOrCreate(['name' => 'office']));
-        $ng->assignRole(Role::firstOrCreate(['name' => 'faculty']));
-        $nk->assignRole(Role::firstOrCreate(['name' => 'faculty']));
+        $outgoing->each(function ($letter) {
+            factory(IncomingLetter::class)->create([
+                'recipient_id' => $letter->sender_id
+            ]);
+        });
 
-        factory(OutgoingLetter::class, 5)->create(['sender_id' => $ng->id, 'creator_id' => $himani->id]);
-        factory(OutgoingLetter::class, 5)->create(['sender_id' => $nk->id, 'creator_id' => $himani->id]);
-        
-        factory(IncomingLetter::class, 5)->create([
-            'recipient_id' => $ng->id
-        ]);
-        factory(IncomingLetter::class, 5)->create([
-            'recipient_id' => $nk->id
-        ]);
-
-        factory(Programme::class, 5)->create()->each(function ($programme) {
+        factory(Programme::class, 3)->create()->each(function ($programme) {
             factory(Course::class, 10)->create(['programme_id' => $programme->id]);
         });
 
+
         factory(College::class)->create([
-            'code'=> 'DU-KMV-001' ,
+            'code' => 'DU-ANDC-001',
+            'name' => 'Acharya Narendra Dev College'
+            ]);
+
+        factory(College::class)->create([
+            'code'=> 'DU-KMV-002' ,
             'name' => 'Keshav Mahavidyalaya'
         ]);
 
-        factory(College::class)->create([
-            'code' => 'DU-ANDC-002',
-            'name' => 'Acharya Narendra Dev College'
-        ]);
-
         factory(College::class, 5)->create();
-
-        factory(Remark::class, 4)->create(['remarkable_id' => 1]);
-
-        factory(LetterReminder::class, 4)->create(['letter_id' => 1]);
     }
 }

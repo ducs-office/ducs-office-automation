@@ -17,12 +17,8 @@ class UpdateProgrammeTest extends TestCase
     /** @test */
     public function admin_can_update_programme_code()
     {
-        $role = Role::create(['name' => 'admin']);
-        $permission = Permission::firstOrCreate(['name' => 'edit programmes']);
-        $role->givePermissionTo($permission);
-
         $this->withoutExceptionHandling()
-            ->signIn(create(User::class), $role->name);
+            ->signIn(create(User::class), 'admin');
 
         $programme = create(Programme::class);
 

@@ -20,9 +20,9 @@ class LoginTest extends TestCase
     }
 
     /** @test */
-    public function office_can_login_with_correct_credentials()
+    public function admin_can_login_with_correct_credentials()
     {
-        $adminRole = Role::firstOrCreate(['name' => 'office']);
+        $adminRole = Role::firstOrCreate(['name' => 'admin']);
 
         $adminStaff = create(User::class, 1, [
             'password' => bcrypt($password = 'secret')

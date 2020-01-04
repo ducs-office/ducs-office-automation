@@ -18,7 +18,7 @@ class RemarkPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->can('view remarks');
+        return $user->can('remarks:view');
     }
 
     /**
@@ -30,7 +30,7 @@ class RemarkPolicy
      */
     public function view(User $user, Remark $remark)
     {
-        return $user->can('view remarks');
+        return $user->can('remarks:view');
     }
 
     /**
@@ -41,7 +41,7 @@ class RemarkPolicy
      */
     public function create(User $user)
     {
-        return $user->can('create remarks');
+        return $user->can('remarks:create');
     }
 
     /**
@@ -53,7 +53,7 @@ class RemarkPolicy
      */
     public function update(User $user, Remark $remark)
     {
-        return $user->can('edit remarks')
+        return $user->can('remarks:edit')
             && $remark->user_id == $user->id;
     }
 
@@ -66,7 +66,7 @@ class RemarkPolicy
      */
     public function delete(User $user, Remark $remark)
     {
-        return $user->can('delete remarks')
+        return $user->can('remarks:delete')
             && $remark->user_id == $user->id;
     }
 }

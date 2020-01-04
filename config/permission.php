@@ -86,45 +86,29 @@ return [
 
     'static' => [
         'permissions' => [
-            'outgoing letters' => ['create', 'view', 'edit', 'delete'],
-            'incoming letters' => ['create', 'view', 'edit', 'delete'],
-            'remarks' => ['create', 'view', 'edit', 'delete'],
-            'letter reminders' => ['create', 'view', 'edit', 'delete'],
-            'colleges' => ['create', 'view', 'edit', 'delete'],
-            'programmes' => ['create', 'view', 'edit', 'delete'],
-            'courses' => ['create', 'view', 'edit', 'delete'],
-            'roles' => ['create', 'view', 'edit', 'delete'],
-            'users' => ['create', 'view', 'edit', 'delete'],
+            'outgoing letters' => ['view', 'create', 'edit', 'delete'],
+            'incoming letters' => ['view', 'create', 'edit', 'delete'],
+            'remarks' => ['view', 'create', 'edit', 'delete'],
+            'letter reminders' => ['view', 'create', 'edit', 'delete'],
+            'colleges' => ['view', 'create', 'edit', 'delete'],
+            'programmes' => ['view', 'create', 'edit', 'delete'],
+            'courses' => ['view', 'create', 'edit', 'delete'],
+            'roles' => ['view', 'create', 'edit', 'delete'],
+            'users' => ['view', 'create', 'edit', 'delete'],
         ],
 
         'roles' => [
-            'office' => [
-                'outgoing letters' => ['create', 'view', 'edit', 'delete'],
-                'incoming letters' => ['create', 'view', 'edit', 'delete'],
-                'remarks' => ['create', 'view', 'edit', 'delete'],
-                'letter reminders' => ['create', 'view', 'edit', 'delete'],
-                'colleges' => ['create', 'view', 'edit', 'delete'],
-                'programmes' => ['create', 'view', 'edit', 'delete'],
-                'courses' => ['create', 'view', 'edit', 'delete'],
-                'roles' => ['create', 'view', 'edit', 'delete'],
-                'users' => ['create', 'view', 'edit', 'delete'],
+            'admin' => [
+                'outgoing letters' => ['view', 'create', 'edit', 'delete'],
+                'incoming letters' => ['view', 'create', 'edit', 'delete'],
+                'remarks' => ['view', 'create', 'edit', 'delete'],
+                'letter reminders' => ['view', 'create', 'edit', 'delete'],
+                'colleges' => ['view', 'create', 'edit', 'delete'],
+                'programmes' => ['view', 'create', 'edit', 'delete'],
+                'courses' => ['view', 'create', 'edit', 'delete'],
+                'roles' => ['view', 'create', 'edit', 'delete'],
+                'users' => ['view', 'create', 'edit', 'delete'],
             ],
-            'faculty' => [
-                'outgoing letters' => ['create', 'view', 'edit', 'delete'],
-                'incoming letters' => ['view'],
-                'remarks' => ['create', 'view', 'edit', 'delete'],
-                'letter reminders' => ['create', 'view', 'edit', 'delete'],
-                'colleges' => ['create', 'view', 'edit', 'delete'],
-                'programmes' => ['create', 'view', 'edit', 'delete'],
-                'courses' => ['create', 'view', 'edit', 'delete'],
-                'roles' => ['create', 'view', 'edit', 'delete'],
-                'users' => ['create', 'view', 'edit', 'delete'],
-            ],
-            'college teacher' => [
-                'colleges' => ['view'],
-                'programmes' => ['view'],
-                'courses' => ['view'],
-            ]
         ]
     ],
 

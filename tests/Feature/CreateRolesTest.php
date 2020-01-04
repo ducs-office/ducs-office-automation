@@ -12,17 +12,17 @@ use Tests\TestCase;
 class CreateRolesTest extends TestCase
 {
     use RefreshDatabase;
-    
+
     /** @test */
-    public function office_staff_can_create_new_roles_with_permissions()
+    public function admin_can_create_new_roles_with_permissions()
     {
-        $this->signIn($user = create(User::class), 'office');
+        $this->signIn($user = create(User::class), 'admin');
 
         $countRoles = Role::count();
 
         $permission = Permission::create(['name' => 'special permission']);
         $anotherPermssion = Permission::create(['name' => 'another permission']);
-        
+
         $this->withoutExceptionHandling()
             ->from('/roles')
             ->post('/roles', [

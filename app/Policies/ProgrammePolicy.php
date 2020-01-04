@@ -18,7 +18,7 @@ class ProgrammePolicy
      */
     public function viewAny(User $user)
     {
-        return $user->can('view programmes');
+        return $user->can('programmes:view');
     }
 
     /**
@@ -29,7 +29,7 @@ class ProgrammePolicy
      */
     public function view(User $user)
     {
-        return $user->can('view programmes');
+        return $user->can('programmes:view');
     }
 
     /**
@@ -40,7 +40,7 @@ class ProgrammePolicy
      */
     public function create(User $user)
     {
-        return $user->can('create programmes');
+        return $user->can('programmes:create');
     }
 
     /**
@@ -51,7 +51,7 @@ class ProgrammePolicy
      */
     public function update(User $user)
     {
-        return $user->can('edit programmes');
+        return $user->can('programmes:edit');
     }
 
     /**
@@ -62,6 +62,6 @@ class ProgrammePolicy
      */
     public function delete(User $user)
     {
-        return $user->can('delete programmes');
+        return $user->can('programmes:delete');
     }
 }

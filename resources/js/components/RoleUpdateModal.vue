@@ -24,7 +24,7 @@
                                             class="mr-1"
                                             :value="permission.id"
                                             :checked="role_permissions.includes(permission.id)">
-                                            <span v-text="permission.name.split(' ')[0]"></span>
+                                            <span v-text="permission.name.split(':')[1]"></span>
                                         </label>
                                 </td>
                             </tr>

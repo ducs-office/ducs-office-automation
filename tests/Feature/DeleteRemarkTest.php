@@ -34,11 +34,7 @@ class DeleteRemarkTest extends TestCase
     /** @test */
     public function user_can_delete_remark()
     {
-        $role = Role::create(['name' => 'random']);
-        $permission = Permission::firstOrCreate(['name' => 'delete remarks']);
-        $role->givePermissionTo($permission);
-
-        $this->signIn(create(User::class), $role->name);
+        $this->signIn(create(User::class), 'admin');
 
         $remark = create(Remark::class, 1, [
             'user_id' => auth()->id()

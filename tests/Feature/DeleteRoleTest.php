@@ -13,11 +13,11 @@ class DeleteRoleTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function office_staff_can_delete_existing_roles()
+    public function admin_can_delete_existing_roles()
     {
         $role = Role::create(['name' => 'existing role']);
 
-        $this->signIn(create(User::class), 'office');
+        $this->signIn(create(User::class), 'admin');
 
         $this->withoutExceptionHandling()
             ->from('/roles')

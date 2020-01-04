@@ -18,7 +18,7 @@ class OutgoingLetterPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->can('view outgoing letters');
+        return $user->can('outgoing letters:view');
     }
 
     /**
@@ -30,7 +30,7 @@ class OutgoingLetterPolicy
      */
     public function view(User $user, OutgoingLetter $outgoingLetter)
     {
-        return $user->can('view outgoing letters');
+        return $user->can('outgoing letters:view');
     }
 
     /**
@@ -41,7 +41,7 @@ class OutgoingLetterPolicy
      */
     public function create(User $user)
     {
-        return $user->can('create outgoing letters');
+        return $user->can('outgoing letters:create');
     }
 
     /**
@@ -53,7 +53,7 @@ class OutgoingLetterPolicy
      */
     public function update(User $user, OutgoingLetter $outgoingLetter)
     {
-        return $user->can('edit outgoing letters')
+        return $user->can('outgoing letters:edit')
             && $outgoingLetter->creator_id == $user->id;
     }
 
@@ -66,7 +66,7 @@ class OutgoingLetterPolicy
      */
     public function delete(User $user, OutgoingLetter $outgoingLetter)
     {
-        return $user->can('delete outgoing letters')
+        return $user->can('outgoing letters:delete')
             && $outgoingLetter->creator_id == $user->id;
     }
 }

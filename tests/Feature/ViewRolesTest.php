@@ -13,7 +13,7 @@ class ViewRolesTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function office_staff_can_view_all_roles_and_all_permissions()
+    public function admin_can_view_all_roles_and_all_permissions()
     {
         $this->signIn();
 

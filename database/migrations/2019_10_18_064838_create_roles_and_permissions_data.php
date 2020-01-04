@@ -15,7 +15,7 @@ class CreateRolesAndPermissionsData extends Migration
         DB::table(config('permission.table_names.permissions'))->insert(
             collect(config('permission.static.permissions'))->map(function ($operations, $resource) {
                 return collect($operations)->map(function ($operation) use ($resource) {
-                    return ['name' => "$operation $resource", 'guard_name' => 'web'];
+                    return ['name' => "$resource:$operation", 'guard_name' => 'web'];
                 });
             })->flatten(1)->toArray()
         );
@@ -38,7 +38,7 @@ class CreateRolesAndPermissionsData extends Migration
                 return collect($permissions)->map(function ($operations, $resource) use ($role) {
                     return collect($operations)->map(function ($operation) use ($resource, $role) {
                         $permission = DB::table(config('permission.table_names.permissions'))
-                            ->whereName("$operation $resource")
+                            ->whereName("$resource:$operation")
                             ->first();
 
                         if (!$permission) {

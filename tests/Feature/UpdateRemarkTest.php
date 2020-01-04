@@ -36,11 +36,7 @@ class UpdateRemarkTest extends TestCase
     /** @test */
     public function user_can_update_remark()
     {
-        $role = Role::create(['name' => 'random']);
-        $permission = Permission::firstOrCreate(['name' => 'edit remarks']);
-        $role->givePermissionTo($permission);
-
-        $this->signIn(create(User::class), $role->name);
+        $this->signIn(create(User::class), 'admin');
 
         $remark = create(Remark::class, 1, [
             'description'=>'Received by University',
@@ -58,11 +54,7 @@ class UpdateRemarkTest extends TestCase
     /** @test */
     public function request_validates_description_field_cannot_be_null()
     {
-        $role = Role::create(['name' => 'random']);
-        $permission = Permission::firstOrCreate(['name' => 'edit remarks']);
-        $role->givePermissionTo($permission);
-
-        $this->signIn(create(User::class), $role->name);
+        $this->signIn(create(User::class), 'admin');
 
         $remark = create(Remark::class, 1, [
             'description' => 'Received by University',
@@ -85,11 +77,7 @@ class UpdateRemarkTest extends TestCase
     /** @test */
     public function request_validates_description_field_minlimit_2()
     {
-        $role = Role::create(['name' => 'random']);
-        $permission = Permission::firstOrCreate(['name' => 'edit remarks']);
-        $role->givePermissionTo($permission);
-
-        $this->signIn(create(User::class), $role->name);
+        $this->signIn(create(User::class), 'admin');
 
         $remark = create(Remark::class, 1, [
             'description'=>'Received by University',
@@ -111,11 +99,7 @@ class UpdateRemarkTest extends TestCase
     /** @test */
     public function request_validates_description_field_maxlimit_255()
     {
-        $role = Role::create(['name' => 'random']);
-        $permission = Permission::firstOrCreate(['name' => 'edit remarks']);
-        $role->givePermissionTo($permission);
-
-        $this->signIn(create(User::class), $role->name);
+        $this->signIn(create(User::class), 'admin');
 
         $remark = create(Remark::class, 1, [
             'description'=>'Received by University',

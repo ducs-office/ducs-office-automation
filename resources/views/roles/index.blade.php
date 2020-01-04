@@ -35,7 +35,7 @@
                                             name="permissions[]"
                                             class="mr-1"
                                             value="{{ $permission->id }}">
-                                            <span>{{ explode(' ', $permission->name, 2)[0] }}</span>
+                                            <span>{{ explode(':', $permission->name, 2)[1] }}</span>
                                         </label>
                                     @endforeach
                                 </td>
@@ -64,14 +64,14 @@
         </div>
         <table class="px-2 flex-1 -my-1">
             @foreach ($role->permissions->groupBy(function($p) {
-                return explode(' ', $p->name, 2)[1];
-            }) as $group => $permissions)
+                return explode(':', $p->name, 2)[0];
+            }) as $group => $gPermissions)
             <tr>
                 <th class="text-left font-bold px-2 py-1"> {{ ucwords($group) }}: </th>
                 <td class="text-left px-2 py-1">
-                    @foreach ($permissions as $permission)
+                    @foreach ($gPermissions as $permission)
                     <span class="m-1 bg-blue-500 text-white py-1 px-2 rounded text-sm font-bold leading-none">
-                        {{ ucwords(explode(' ', $permission->name, 2)[0]) }}
+                        {{ ucwords(explode(':', $permission->name, 2)[1]) }}
                     </span>
                     @endforeach
                 </td>

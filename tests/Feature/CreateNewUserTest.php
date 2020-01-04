@@ -14,13 +14,13 @@ class CreateNewUserTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function office_can_create_new_user_with_a_role()
+    public function admin_can_create_new_user_with_a_role()
     {
         Mail::fake();
 
         $teacherRole = Role::firstOrcreate(['name' => 'college teacher']);
 
-        $this->signIn(create(User::class), 'office');
+        $this->signIn(create(User::class), 'admin');
 
         $this->withoutExceptionHandling()
             ->post('/users', [
@@ -39,14 +39,14 @@ class CreateNewUserTest extends TestCase
     }
 
     /** @test */
-    public function office_can_create_new_user_with_mutliple_roles()
+    public function admin_can_create_new_user_with_mutliple_roles()
     {
         Mail::fake();
 
         $facultyRole = Role::firstOrcreate(['name' => 'faculty']);
         $hodRole = Role::firstOrcreate(['name' => 'hod']);
 
-        $this->signIn(create(User::class), 'office');
+        $this->signIn(create(User::class), 'admin');
 
         $this->withoutExceptionHandling()
             ->post('/users', [
@@ -68,7 +68,7 @@ class CreateNewUserTest extends TestCase
     {
         Mail::fake();
 
-        $this->signIn(create(User::class), 'office');
+        $this->signIn(create(User::class), 'admin');
 
         $teacherRole = Role::firstOrCreate(['name' => 'college teacher']);
 

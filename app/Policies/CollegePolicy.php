@@ -18,7 +18,7 @@ class CollegePolicy
      */
     public function viewAny(User $user)
     {
-        return $user->can('view colleges');
+        return $user->can('colleges:view');
     }
 
     /**
@@ -29,7 +29,7 @@ class CollegePolicy
      */
     public function view(User $user)
     {
-        return $user->can('view colleges');
+        return $user->can('colleges:view');
     }
 
     /**
@@ -40,7 +40,7 @@ class CollegePolicy
      */
     public function create(User $user)
     {
-        return $user->can('create colleges');
+        return $user->can('colleges:create');
     }
 
     /**
@@ -51,7 +51,7 @@ class CollegePolicy
      */
     public function update(User $user)
     {
-        return $user->can('edit colleges');
+        return $user->can('colleges:edit');
     }
 
     /**
@@ -62,6 +62,6 @@ class CollegePolicy
      */
     public function delete(User $user)
     {
-        return $user->can('delete colleges');
+        return $user->can('colleges:delete');
     }
 }

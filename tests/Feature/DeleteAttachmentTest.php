@@ -14,10 +14,10 @@ class DeleteAttachmentTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function office_staff_can_delete_attachments()
+    public function admin_can_delete_attachments()
     {
         Storage::fake();
-        
+
         $letter = create(OutgoingLetter::class);
         $attachment = $letter->attachments()->create([
             'original_name' => 'Some random file.jpg',
@@ -25,12 +25,12 @@ class DeleteAttachmentTest extends TestCase
         ]);
 
         $this->signIn();
-        
+
         $this->withoutExceptionHandling()
             ->from('/outgoing_letters')
             ->delete('/attachments/' . $attachment->id)
             ->assertRedirect('/outgoing_letters');
-        
+
         Storage::assertMissing($attachment->path);
         $this->assertNull($attachment->fresh());
     }

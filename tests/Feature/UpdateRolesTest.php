@@ -14,9 +14,9 @@ class UpdateRolesTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function office_staff_can_update_roles_and_change_permissions()
+    public function admin_can_update_roles_and_change_permissions()
     {
-        $this->signIn($user = create(User::class), 'office');
+        $this->signIn($user = create(User::class), 'admin');
 
         $role = Role::create(['name' => 'existing role']);
         $firstPermission = Permission::create(['name' => 'first permission']);

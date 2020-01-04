@@ -40,12 +40,7 @@ class StoreLetterRemindersTest extends TestCase
     {
         Storage::fake();
 
-        $role = Role::create(['name' => 'random']);
-        $permission = Permission::firstOrCreate(['name' => 'create letter reminders']);
-
-        $role->givePermissionTo($permission);
-
-        $this->signIn(create(User::class), $role->name);
+        $this->signIn(create(User::class), 'admin');
 
         $letter = create(OutgoingLetter::class, 1, [
             'creator_id' => auth()->id()

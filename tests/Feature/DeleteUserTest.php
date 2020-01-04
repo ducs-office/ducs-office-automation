@@ -12,7 +12,7 @@ class DeleteUserTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function office_can_delete_user()
+    public function admin_can_delete_user()
     {
         $anotherUser = create(User::class);
 

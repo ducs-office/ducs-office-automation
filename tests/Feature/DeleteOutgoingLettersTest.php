@@ -28,7 +28,7 @@ class DeleteOutgoingLettersTest extends TestCase
     /** @test */
     public function user_can_delete_letters_if_they_have_created_and_have_permission_to()
     {
-        $this->signIn(create(User::class), 'office');
+        $this->signIn(create(User::class), 'admin');
 
         $letter = create(OutgoingLetter::class, 1, [
             'creator_id' => auth()->id()
@@ -49,9 +49,9 @@ class DeleteOutgoingLettersTest extends TestCase
         $permission = Permission::firstOrCreate(['name' => 'delete outgoing letters']);
 
         $letter = create(OutgoingLetter::class);
-        
+
         $role->revokePermissionTo($permission);
-        
+
         $this->signIn($user, $role->name);
 
         $this->withExceptionHandling()
@@ -73,9 +73,9 @@ class DeleteOutgoingLettersTest extends TestCase
         $letter = create(OutgoingLetter::class, 1, [
             'creator_id' => create(User::class)->id
         ]);
-        
+
         $role->givePermissionTo($permission);
-        
+
         $this->signIn($user, $role->name);
 
         $this->withExceptionHandling()

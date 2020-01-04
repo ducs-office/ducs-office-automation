@@ -12,13 +12,13 @@ class EditUserTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function office_can_update_users_email()
+    public function admin_can_update_users_email()
     {
         $facultyRole = Role::firstOrCreate(['name' => 'faculty']);
         $john = create(User::class, 1, ['email' => 'john.errored@gmail.com']);
         $john->assignRole($facultyRole);
 
-        $this->signIn(create(User::class), 'office');
+        $this->signIn(create(User::class), 'admin');
 
         $this->withoutExceptionHandling()
             ->from('/users')
@@ -36,13 +36,13 @@ class EditUserTest extends TestCase
     }
 
     /** @test */
-    public function office_can_update_users_name()
+    public function admin_can_update_users_name()
     {
         $facultyRole = Role::firstOrCreate(['name' => 'faculty']);
         $john = create(User::class, 1, ['name' => 'John Foo']);
         $john->assignRole($facultyRole);
 
-        $this->signIn(create(User::class), 'office');
+        $this->signIn(create(User::class), 'admin');
 
         $this->withoutExceptionHandling()
             ->from('/users')
@@ -60,15 +60,15 @@ class EditUserTest extends TestCase
     }
 
     /** @test */
-    public function office_can_update_users_roles()
+    public function admin_can_update_users_roles()
     {
         $facultyRole = Role::firstOrCreate(['name' => 'faculty']);
-        $adminRole = Role::firstOrCreate(['name' => 'office']);
+        $adminRole = Role::firstOrCreate(['name' => 'admin']);
 
         $john = create(User::class, 1, ['name' => 'John Foo']);
         $john->assignRole($facultyRole);
 
-        $this->signIn(create(User::class), 'office');
+        $this->signIn(create(User::class), 'admin');
 
         $this->withoutExceptionHandling()
             ->from('/users')

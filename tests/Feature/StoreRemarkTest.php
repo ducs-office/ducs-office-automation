@@ -36,7 +36,7 @@ class StoreRemarkTest extends TestCase
     public function user_cannot_store_remark_if_they_donot_have_permission()
     {
         $role = Role::firstOrCreate(['name' => 'Not a Remarker']);
-        $role->revokePermissionTo('create remarks');
+        $role->revokePermissionTo('remarks:create');
         $this->signIn(create(User::class), $role->name);
 
 
@@ -50,9 +50,7 @@ class StoreRemarkTest extends TestCase
     /** @test */
     public function user_can_create_remark_if_they_are_permitted_to()
     {
-        $role = Role::firstOrCreate(['name' => 'Remarker']);
-        $role->givePermissionTo('create remarks');
-        $this->signIn(create(User::class), $role->name);
+        $this->signIn(create(User::class), 'admin');
 
         $letter = create(OutgoingLetter::class);
 
@@ -67,9 +65,7 @@ class StoreRemarkTest extends TestCase
     /** @test */
     public function request_validates_description_field_cannot_be_null()
     {
-        $role = Role::firstOrCreate(['name' => 'Remarker']);
-        $role->givePermissionTo('create remarks');
-        $this->signIn(create(User::class), $role->name);
+        $this->signIn(create(User::class), 'admin');
 
         $letter = create(OutgoingLetter::class);
         $remark = ['description'=>''];
@@ -87,9 +83,7 @@ class StoreRemarkTest extends TestCase
     /** @test */
     public function request_validates_description_field_minlimit_2()
     {
-        $role = Role::firstOrCreate(['name' => 'Remarker']);
-        $role->givePermissionTo('create remarks');
-        $this->signIn(create(User::class), $role->name);
+        $this->signIn(create(User::class), 'admin');
 
         $letter = create(OutgoingLetter::class);
         $remark = ['description'=>Str::random(1)];
@@ -107,9 +101,7 @@ class StoreRemarkTest extends TestCase
     /** @test */
     public function request_validates_description_field_maxlimit_255()
     {
-        $role = Role::firstOrCreate(['name' => 'Remarker']);
-        $role->givePermissionTo('create remarks');
-        $this->signIn(create(User::class), $role->name);
+        $this->signIn(create(User::class), 'admin');
 
         $letter = create(OutgoingLetter::class);
         $remark = ['description' => Str::random(256)];
