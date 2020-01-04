@@ -27,17 +27,13 @@
                     stroke-width="3"
                     class="h-current text-green-600 mx-2">Recipient</feather-icon>
                     {{ $letter->recipient->name }}
-                </div>
-                @if(count($letter->handovers))
-                    <div class="flex items-center text-gray-700">
+                    @if(count($letter->handovers))
                         <feather-icon name="corner-down-right"
                         stroke-width="3"
                         class="h-current text-blue-600 mx-2">Handovers</feather-icon>
-                        @foreach ($letter->handovers as $handover)
-                            {{$handover->name }}
-                        @endforeach
-                    </div>
-                @endif
+                            {{ $letter->handovers->pluck('name')->implode(', ') }}
+                    @endif
+                </div>
                 <div class="ml-auto flex">
                     @can('update', $letter)
                         <a href="{{ route('incoming_letters.edit', $letter) }}"
