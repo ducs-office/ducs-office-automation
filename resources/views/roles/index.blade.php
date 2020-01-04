@@ -67,7 +67,7 @@
                 <feather-icon class="h-current" name="edit">Edit</feather-icon>
             </button>
             @endcan
-            @can('delete', Spatie\Permission\Models\Role::class)
+            @can('delete', $role)
             <form action="{{ route('roles.destroy', $role) }}" method="POST"
                 onsubmit="return confirm('Do you really want to delete role?');">
                 @csrf_token @method('delete')

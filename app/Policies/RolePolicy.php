@@ -60,8 +60,8 @@ class RolePolicy
      * @param  \App\User  $user
      * @return mixed
      */
-    public function delete(User $user)
+    public function delete(User $user, Role $role)
     {
-        return $user->can('delete roles');
+        return $user->can('delete roles') && ! $user->hasRole($role);
     }
 }

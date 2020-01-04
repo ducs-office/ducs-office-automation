@@ -27,4 +27,19 @@ class DeleteRoleTest extends TestCase
 
         $this->assertNull($role->fresh());
     }
+
+    /** @test */
+    public function user_cannot_delete_thier_own_role()
+    {
+        $role = Role::create(['name' => 'my role']);
+
+        $this->signIn(create(User::class), 'my role');
+
+        $this->withExceptionHandling()
+            ->from('/roles')
+            ->delete('/roles/' . $role->id)
+            ->assertForbidden();
+
+        $this->assertNotNull($role->fresh());
+    }
 }
