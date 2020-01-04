@@ -13,7 +13,7 @@ class OutgoingLetterRemindersController extends Controller
         $this->authorize('create', [LetterReminder::class, $letter]);
 
         $validData = request()->validate([
-            'attachments' => 'required|array|max:2',
+            'attachments' => 'required|array|min:1|max:2',
             'attachments.*' => 'file|max:200|mimes:jpeg,jpg,png,pdf'
         ]);
 

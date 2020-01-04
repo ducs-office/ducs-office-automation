@@ -3,7 +3,7 @@
     <div class="m-6">
         <div class="flex items-baseline px-4 mb-4">
             <h1 class="page-header mb-0 px-0 mr-4">Incoming Letters</h1>
-            @can('create incoming letters')
+            @can('create', 'App\IncomingLetter')
                 <a href="{{ route('incoming_letters.create') }}" class="btn btn-magenta is-sm shadow-inset">
                     New
                 </a>
@@ -28,4 +28,7 @@
             </div>
         @endforelse
     </div>
+    <form id="remove-attachment" method="POST" onsubmit="return confirm('Do you really want to delete attachment?');">
+        @csrf_token @method('DELETE')
+    </form>
 @endsection

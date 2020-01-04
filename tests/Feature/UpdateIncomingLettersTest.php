@@ -18,11 +18,23 @@ class UpdateIncomingLettersTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function createLetterWithAttachment($count = 1, $overrides = [])
+    {
+        $letter = create(IncomingLetter::class, $count, $overrides);
+
+        $letter->attachments()->create([
+            'original_name' => 'Some random file.jpg',
+            'path' => '/file/path.jpg'
+        ]);
+
+        return $letter;
+    }
+
     /** @test */
     public function guest_can_not_update_any_incoming_letter()
     {
         $this->expectException(AuthenticationException::class);
-        $letter = create(IncomingLetter::class);
+        $letter = $this->createLetterWithAttachment();
 
         $this->withoutExceptionHandling()
             ->patch("incoming-letters/{$letter->id}", ['date' => '2017-01-8'])
@@ -76,7 +88,7 @@ class UpdateIncomingLettersTest extends TestCase
     public function request_validates_date_field_can_not_be_null()
     {
         $this->signIn();
-        $letter = create(IncomingLetter::class);
+        $letter = $this->createLetterWithAttachment();
         try {
             $this->withoutExceptionHandling()
             ->patch("/incoming-letters/{$letter->id}", ['date'=>'']);
@@ -90,7 +102,7 @@ class UpdateIncomingLettersTest extends TestCase
     public function request_validates_date_field_is_a_valid_date()
     {
         $this->signIn();
-        $letter = create(IncomingLetter::class);
+        $letter = $this->createLetterWithAttachment();
 
         $invalidDates = [
             '2014-16-14', //16 is not a valid month
@@ -134,7 +146,7 @@ class UpdateIncomingLettersTest extends TestCase
     public function request_validates_date_field_cannot_be_a_future_date()
     {
         $this->signIn();
-        $letter = create(IncomingLetter::class);
+        $letter = $this->createLetterWithAttachment();
 
         try {
             $this->withoutExceptionHandling()
@@ -160,7 +172,7 @@ class UpdateIncomingLettersTest extends TestCase
     public function request_validates_sender_field_can_not_be_null()
     {
         $this->signIn();
-        $letter = create(IncomingLetter::class);
+        $letter = $this->createLetterWithAttachment();
 
         try {
             $this->withoutExceptionHandling()
@@ -176,7 +188,7 @@ class UpdateIncomingLettersTest extends TestCase
     public function request_validates_recipient_id_field_can_not_be_null()
     {
         $this->signIn();
-        $letter = create(IncomingLetter::class);
+        $letter = $this->createLetterWithAttachment();
 
         try {
             $this->withoutExceptionHandling()
@@ -192,7 +204,7 @@ class UpdateIncomingLettersTest extends TestCase
     public function request_validates_recipient_id_is_an_existing_user()
     {
         $this->signIn();
-        $letter = create(IncomingLetter::class);
+        $letter = $this->createLetterWithAttachment();
 
         try {
             $this->withoutExceptionHandling()
@@ -210,7 +222,7 @@ class UpdateIncomingLettersTest extends TestCase
     public function request_validates_handover_id_is_an_existing_user()
     {
         $this->signIn();
-        $letter = create(IncomingLetter::class);
+        $letter = $this->createLetterWithAttachment();
 
         try {
             $this->withoutExceptionHandling()
@@ -228,7 +240,7 @@ class UpdateIncomingLettersTest extends TestCase
     public function request_validates_handover_id_field_can_be_null()
     {
         $this->signIn();
-        $letter = create(IncomingLetter::class);
+        $letter = $this->createLetterWithAttachment();
 
         $this->withoutExceptionHandling()
             ->patch("incoming-letters/{$letter->id}", ['handovers' => []])
@@ -241,7 +253,7 @@ class UpdateIncomingLettersTest extends TestCase
     public function request_validates_priority_field_can_be_null()
     {
         $this->signIn();
-        $letter = create(IncomingLetter::class);
+        $letter = $this->createLetterWithAttachment();
 
         $this->withoutExceptionHandling()
             ->patch("/incoming-letters/{$letter->id}", ['priority' => ''])
@@ -254,7 +266,7 @@ class UpdateIncomingLettersTest extends TestCase
     public function request_validates_subject_field_can_not_be_null()
     {
         $this->signIn();
-        $letter = create(IncomingLetter::class);
+        $letter = $this->createLetterWithAttachment();
 
         try {
             $this->withoutExceptionHandling()
@@ -272,7 +284,7 @@ class UpdateIncomingLettersTest extends TestCase
     public function request_validates_subject_field_maxlimit_100()
     {
         $this -> signIn();
-        $letter = create(IncomingLetter::class);
+        $letter = $this->createLetterWithAttachment();
 
         try {
             $this->withoutExceptionHandling()
@@ -288,7 +300,7 @@ class UpdateIncomingLettersTest extends TestCase
     public function request_validates_description_field_can_be_null()
     {
         $this->signIn();
-        $letter = create(IncomingLetter::class);
+        $letter = $this->createLetterWithAttachment();
 
         $this->withoutExceptionHandling()
             ->patch("/incoming-letters/{$letter->id}", ['description' => ''])
@@ -301,7 +313,7 @@ class UpdateIncomingLettersTest extends TestCase
     public function request_validates_description_field_maxlimit_400()
     {
         $this->signIn();
-        $letter = create(IncomingLetter::class);
+        $letter = $this->createLetterWithAttachment();
 
         try {
             $this->withoutExceptionHandling()

@@ -70,22 +70,19 @@
         </div>
         <div class="mb-2">
             <label for="attachments" class="w-full form-label mb-1">Attachments<span class="h-current text-red-500 text-lg">*</span></label>
-            <div class="flex -mx-2 mb-6">
+            <div class="flex items-center -mx-2">
                 <div class="mx-2">
                     <label for="pdf" class="w-full form-label mb-1">Upload PDF copy</label>
                     <input type="file" name="attachments[]" accept="application/pdf" class="w-full">
-                    @if($errors->has('pdf'))
-                        <p class="text-red-500">{{ $errors->first('pdf') }}</p>
-                    @endif
                 </div>
                 <div class="mx-2">
                     <label for="scan" class="w-full form-label mb-1">Upload scanned copy</label>
-                    <input type="file" name="attachments[]" accept="image/*, application/pdf" class="w-full">
-                    @if($errors->has('scan'))
-                        <p class="text-red-500">{{ $errors->first('scan') }}</p>
-                    @endif
+                    <input type="file" name="attachments[]" accept="image/*" class="w-full">
                 </div>
             </div>
+            @if($errors->has('attachments'))
+                <p class="my-1 text-red-500">{{ $errors->first('attachments') }}</p>
+            @endif
         </div>
         <div class="mb-3">
             <button type="submit" class="w-full btn btn-magenta">Create</button>

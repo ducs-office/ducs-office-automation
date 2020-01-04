@@ -1,6 +1,6 @@
 @extends('layouts.master')
 @section('body')
-<div class="page-card max-w-lg mx-auto mt-4">
+<div class="page-card max-w-lg mx-auto my-4">
     <div class="flex items-baseline">
         <h1 class="page-header">Update Outgoing Letter</h1>
     </div>
@@ -74,44 +74,43 @@
             </div>
         @endif
         <div class="mb-2">
-            <label for="attachments" class="w-full form-label mb-1">Attachments<span class="h-current text-red-500 text-lg">*</span></label>
             @if($outgoing_letter->attachments->count())
-                <h5>Related Attachments</h5>
-            @else
-                <h5>No Attachments Uploaded</h5>
-            @endif
-            <div class="flex flex-wrap -mx-2 mt-2">
+            <label for="attachments" class="w-full form-label mb-1">Add Attachments</label>
+            <div class="flex flex-wrap -mx-2 mb-2">
                 @foreach ($outgoing_letter->attachments as $attachment)
                 <div class="inline-flex items-center p-2 rounded border hover:bg-gray-300 text-gray-600 mx-2 my-1">
-                    <a href="{{ route('attachments.show', $attachment) }}" target="__blank" class="inline-flex items-center mr-1">
+                    <a href="{{ route('attachments.show', $attachment) }}" target="__blank"
+                        class="inline-flex items-center mr-1">
                         <feather-icon name="paperclip" class="h-4 mr-2" stroke-width="2">View Attachment</feather-icon>
                         <span>{{ $attachment->original_name }}</span>
                     </a>
-                    <button type="submit"
-                        form="remove-attachment"
-                        formaction="{{ route('attachments.destroy', $attachment) }}"
+                    @can('delete', $attachment)
+                    <button type="submit" form="remove-attachment" formaction="{{ route('attachments.destroy', $attachment) }}"
                         class="p-1 rounded hover:bg-red-500 hover:text-white">
                         <feather-icon name="x" class="h-4" stroke-width="2">Delete Attachment</feather-icon>
                     </button>
+                    @endcan
                 </div>
                 @endforeach
             </div>
-            <div class="flex -mx-2 mb-6">
+            @else
+            <label for="attachments" class="w-full form-label mb-1">
+                Upload Attachments <span class="h-current text-red-500 text-lg">*</span>
+            </label>
+            @endif
+            <div class="flex -mx-2 mb-1">
                 <div class="mx-2">
                     <label for="pdf" class="w-full form-label mb-1">Upload PDF copy</label>
-                    <input type="file" name="attachments[]" accept="application/pdf" class="w-full">
-                    @if($errors->has('pdf'))
-                        <p class="text-red-500">{{ $errors->first('pdf') }}</p>
-                    @endif
+                    <input id="pdf" type="file" name="attachments[]" accept="application/pdf" class="w-full">
                 </div>
                 <div class="mx-2">
                     <label for="scan" class="w-full form-label mb-1">Upload scanned copy</label>
-                    <input type="file" name="attachments[]" accept="image/*, application/pdf" class="w-full">
-                    @if($errors->has('scan'))
-                        <p class="text-red-500">{{ $errors->first('scan') }}</p>
-                    @endif
+                    <input id="scan" type="file" name="attachments[]" accept="image/*" class="w-full">
                 </div>
             </div>
+            @if($errors->has('attachments'))
+                <p class="font-bold text-red-500">{{ $errors->first('attachments') }}</p>
+            @endif
         </div>
         <div class="mb-3">
             <button type="submit" class="w-full btn btn-magenta">Update</button>

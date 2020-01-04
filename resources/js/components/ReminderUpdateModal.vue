@@ -4,14 +4,14 @@
             <h3 class="font-bold text-lg mb-2">Upload Letter Reminder</h3>
             <form :action="route('reminders.update', reminder)" method="POST" enctype="multipart/form-data">
                 <slot></slot>
-                <div class="my-4 flex">
+                <div class="my-4 -mx-2 flex">
                     <div class="mx-2">
-                        <input type="file" name="pdf" accept="application/pdf" class="w-full mb-2">
-                        <label for="pdf" class="w-full form-label">Upload PDF copy</label>
+                        <label for="pdf" class="w-full form-label mb-1">Upload PDF copy</label>
+                        <input type="file" name="attachments[]" accept="image/*, application/pdf" class="w-full">
                     </div>
                     <div class="mx-2">
-                        <input type="file" name="scan" accept="image/*, application/pdf" class="w-full mb-2">
-                        <label for="scan" class="w-full form-label">Upload scanned copy</label>
+                        <label for="scan" class="w-full form-label mb-1">Upload scanned copy</label>
+                        <input type="file" name="attachments[]" accept="image/*, application/pdf" class="w-full">
                     </div>
                 </div>
                 <div>

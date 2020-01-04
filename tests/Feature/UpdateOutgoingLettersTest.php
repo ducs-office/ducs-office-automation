@@ -8,12 +8,25 @@ use App\User;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class UpdateOutgoingLettersTest extends TestCase
 {
     use RefreshDatabase;
+
+    protected function createLetterWithAttachment($count = 1, $overrides = [])
+    {
+        $letter = create(OutgoingLetter::class, $count, $overrides);
+
+        $letter->attachments()->create([
+            'original_name' => 'Some random file.jpg',
+            'path' => '/file/path.jpg'
+        ]);
+
+        return $letter;
+    }
 
     /** @test */
     public function guest_cannot_update_letters()
@@ -29,8 +42,6 @@ class UpdateOutgoingLettersTest extends TestCase
     /** @test */
     public function user_can_update_outgoing_letter_in_database()
     {
-        Storage::fake();
-
         $this->signIn();
         $sender = create(User::class);
         $letter = create(OutgoingLetter::class, 1, [
@@ -68,7 +79,7 @@ class UpdateOutgoingLettersTest extends TestCase
     public function user_can_not_update_creator_id_of_an_outgoing_letter_in_database()
     {
         $this->signIn();
-        $letter = create(OutgoingLetter::class, 1, [
+        $letter = $this->createLetterWithAttachment(1, [
             'creator_id' => auth()->id()
         ]);
 
@@ -88,8 +99,8 @@ class UpdateOutgoingLettersTest extends TestCase
         try {
             $this->signIn();
 
-            $letter = create(OutgoingLetter::class, 1, [
-                'creator_id' => auth()->id()
+            $letter = $this->createLetterWithAttachment(1, [
+                'creator_id' => Auth::id()
             ]);
 
             $this->withoutExceptionHandling()
@@ -106,7 +117,7 @@ class UpdateOutgoingLettersTest extends TestCase
     {
         $this->signIn();
 
-        $letter = create(OutgoingLetter::class, 1, [
+        $letter = $this->createLetterWithAttachment(1, [
             'creator_id' => auth()->id()
         ]);
 
@@ -150,7 +161,7 @@ class UpdateOutgoingLettersTest extends TestCase
     {
         $this->signIn();
 
-        $letter = create(OutgoingLetter::class, 1, [
+        $letter = $this->createLetterWithAttachment(1, [
             'creator_id' => auth()->id()
         ]);
 
@@ -179,8 +190,8 @@ class UpdateOutgoingLettersTest extends TestCase
     {
         try {
             $this->signIn();
-            $letter = create(OutgoingLetter::class, 1, [
-                'creator_id' => auth()->id()
+            $letter = $this->createLetterWithAttachment(1, [
+                'creator_id' => Auth::id()
             ]);
             $this->withoutExceptionHandling()
                 ->patch("/outgoing-letters/{$letter->id}", ['sender_id'=>'']);
@@ -197,8 +208,8 @@ class UpdateOutgoingLettersTest extends TestCase
         try {
             $this->signIn();
 
-            $letter = create(OutgoingLetter::class, 1, [
-                'creator_id' => auth()->id()
+            $letter = $this->createLetterWithAttachment(1, [
+                'creator_id' => Auth::id()
             ]);
 
             $this->withoutExceptionHandling()
@@ -216,8 +227,8 @@ class UpdateOutgoingLettersTest extends TestCase
     {
         try {
             $this->signIn(create(User::class));
-            $letter = create(OutgoingLetter::class, 1, [
-                'creator_id' => auth()->id()
+            $letter = $this->createLetterWithAttachment(1, [
+                'creator_id' => Auth::id()
             ]);
 
             $this->withoutExceptionHandling()
@@ -236,8 +247,8 @@ class UpdateOutgoingLettersTest extends TestCase
     {
         try {
             $this->signIn(create(User::class));
-            $letter = create(OutgoingLetter::class, 1, [
-                'creator_id' => auth()->id()
+            $letter = $this->createLetterWithAttachment(1, [
+                'creator_id' => Auth::id()
             ]);
 
             $this->withoutExceptionHandling()
@@ -253,7 +264,7 @@ class UpdateOutgoingLettersTest extends TestCase
     public function request_validates_description_field_can_be_null()
     {
         $this->signIn();
-        $letter = create(OutgoingLetter::class, 1, [
+        $letter = $this->createLetterWithAttachment(1, [
             'creator_id' => auth()->id()
         ]);
 
@@ -268,7 +279,7 @@ class UpdateOutgoingLettersTest extends TestCase
     public function request_validates_description_field_maxlimit_400()
     {
         $this->signIn();
-        $letter = create(OutgoingLetter::class, 1, [
+        $letter = $this->createLetterWithAttachment(1, [
             'creator_id' => auth()->id()
         ]);
 
@@ -288,7 +299,7 @@ class UpdateOutgoingLettersTest extends TestCase
     {
         $this->signIn();
 
-        $letter = create(OutgoingLetter::class, 1, [
+        $letter = $this->createLetterWithAttachment(1, [
             'creator_id' => auth()->id()
         ]);
 
@@ -304,8 +315,8 @@ class UpdateOutgoingLettersTest extends TestCase
         try {
             $this->signIn();
 
-            $letter = create(OutgoingLetter::class, 1, [
-                'creator_id' => auth()->id()
+            $letter = $this->createLetterWithAttachment(1, [
+                'creator_id' => Auth::id()
             ]);
 
             $this->withoutExceptionHandling()
@@ -322,7 +333,7 @@ class UpdateOutgoingLettersTest extends TestCase
     public function outgoing_letters_type_field_cannot_be_updated()
     {
         $this->signIn();
-        $letter = create(OutgoingLetter::class, 1, [
+        $letter = $this->createLetterWithAttachment(1, [
             'creator_id' => auth()->id(),
             'type' => 'Bill',
         ]);
@@ -338,8 +349,8 @@ class UpdateOutgoingLettersTest extends TestCase
     {
         try {
             $this->signIn();
-            $letter = create(OutgoingLetter::class, 1, [
-                'creator_id' => auth()->id()
+            $letter = $this->createLetterWithAttachment(1, [
+                'creator_id' => Auth::id()
             ]);
             $this->withoutExceptionHandling()
                 ->patch("/outgoing-letters/{$letter->id}", ['recipient'=>'']);

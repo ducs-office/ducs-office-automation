@@ -86,35 +86,24 @@ class OutgoingLettersController extends Controller
 
     public function update(OutgoingLetter $outgoing_letter, Request $request)
     {
-        $validData = $request->validate([
-            'date' => 'sometimes|required|date|before_or_equal:today',
-            'recipient' =>  'sometimes|required|min:5|max:100',
-            'subject' => 'sometimes|required|string|min:5|max:100',
-            'description' => 'nullable|string|max:400',
-            'amount' => 'nullable|numeric',
-            'sender_id' => 'sometimes|required|integer|exists:users,id',
-            'attachments' => 'sometimes|required|array|max:2',
-            'attachments.*' => 'file|max:200|mimes:jpeg,jpg,png,pdf'
-        ]);
+        $rules = [
+            'date' => ['sometimes', 'required', 'date', 'before_or_equal:today'],
+            'recipient' => ['sometimes', 'required', 'min:5', 'max:100'],
+            'subject' => ['sometimes', 'required', 'string', 'min:5', 'max:100'],
+            'description' => ['nullable', 'string', 'max:400'],
+            'amount' => ['nullable', 'numeric'],
+            'sender_id' => ['sometimes', 'required', 'integer', 'exists:users,id'],
+            'attachments' => ['required', 'array', 'max:2'],
+            'attachments.*' => ['file', 'max:200', 'mimes:jpeg,jpg,png,pdf'],
+        ];
 
-        if (isset($validData['date'])) {
-            $year = $outgoing_letter->date->format('Y');
-            $update_date = new Carbon($validData['date']);
-            $update_year = $update_date->format('Y');
-            if ($year != $update_year) {
-                $prefixes = [
-                    'Bill' => 'TR/',
-                    'Notesheet' => 'NTS/',
-                    'General' => ''
-                ];
-
-                $serial_no = "CS/{$prefixes[$outgoing_letter->type]}{$update_year}";
-                $cache_key = "letter_seq_{$serial_no}";
-                $number_sequence = str_pad(Cache::increment($cache_key), 4, '0', STR_PAD_LEFT);
-
-                $outgoing_letter->serial_no = "$serial_no/$number_sequence";
-            }
+        if ($outgoing_letter->attachments()->count() < 1) {
+            array_push($rules['attachments'], 'min:1');
+        } else {
+            array_unshift($rules['attachments'], 'sometimes');
         }
+
+        $validData = $request->validate($rules);
 
         $outgoing_letter->update($validData);
 
@@ -122,9 +111,9 @@ class OutgoingLettersController extends Controller
             $outgoing_letter->attachments()->createMany(
                 array_map(function ($attachedFile) {
                     return [
-                                'original_name' => $attachedFile->getClientOriginalName(),
-                                'path' => $attachedFile->store('/letter_attachments/outgoing')
-                            ];
+                        'original_name' => $attachedFile->getClientOriginalName(),
+                        'path' => $attachedFile->store('/letter_attachments/outgoing')
+                    ];
                 }, $request->file('attachments'))
             );
         }

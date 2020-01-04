@@ -17,7 +17,7 @@ class RemindersController extends Controller
         $this->authorize('update', $reminder);
 
         $data = request()->validate([
-            'attachments' => 'required|array|max:2',
+            'attachments' => 'required|array|min:1|max:2',
             'attachments.*' => 'file|max:200|mimes:jpeg,jpg,png,pdf'
         ]);
 

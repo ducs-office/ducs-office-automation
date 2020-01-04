@@ -27,7 +27,7 @@ class OutgoingLetter extends Model
     protected static function boot()
     {
         parent::boot();
-        
+
         static::creating(function ($outgoing_letter) {
             $prefixes = [
                 'Bill' => 'TR/',
@@ -39,7 +39,24 @@ class OutgoingLetter extends Model
             $serial_no = "CS/{$prefixes[$outgoing_letter->type]}{$year}";
             $cache_key = "letter_seq_{$serial_no}";
             $number_sequence = str_pad(Cache::increment($cache_key), 4, '0', STR_PAD_LEFT);
-            
+
+            $outgoing_letter->serial_no = "$serial_no/$number_sequence";
+
+            return $outgoing_letter;
+        });
+
+        static::updating(function ($outgoing_letter) {
+            $prefixes = [
+                'Bill' => 'TR/',
+                'Notesheet' => 'NTS/',
+                'General' => ''
+            ];
+
+            $year = $outgoing_letter->date->format('Y');
+            $serial_no = "CS/{$prefixes[$outgoing_letter->type]}{$year}";
+            $cache_key = "letter_seq_{$serial_no}";
+            $number_sequence = str_pad(Cache::increment($cache_key), 4, '0', STR_PAD_LEFT);
+
             $outgoing_letter->serial_no = "$serial_no/$number_sequence";
 
             return $outgoing_letter;

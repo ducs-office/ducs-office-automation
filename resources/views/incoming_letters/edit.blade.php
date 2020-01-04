@@ -1,6 +1,6 @@
 @extends('layouts.master')
 @section('body')
-    <div class="page-card max-w-lg mt-4 mx-auto">
+    <div class="page-card max-w-lg my-4 mx-auto">
         <div class="flex items-baseline">
             <h1 class="page-header px-6">Update Incoming Letter</h1>
             <span class="px-2 rounded text-lg uppercase text-white bg-blue-600">
@@ -62,13 +62,13 @@
                 </div>
             </div>
             <div class="mb-2">
-                <label for="subject" class="w-full form-label mb-1">Subject<span class="h-current text-red-500 text-lg">*</span></label>
+                <label for="subject" class="w-full form-label mb-1">Subject <span class="h-current text-red-500 text-lg">*</span></label>
                 <input type="text" name="subject" value="{{ old('subject') ?? $incoming_letter->subject }}" class="w-full form-input" placeholder="Subject of the letter">
                 @if($errors->has('subject'))
                     <p class="text-red-500">{{ $errors->first('subject') }}</p>
                 @endif
             </div>
-            <div class="mb 2">
+            <div class="mb-2">
                 <label for="priority" class="w-full form-label mb-1">Letter Priority</label>
                 @php($select = old('priority') ?? $incoming_letter->priority)
                 <select class="w-full form-input" name="priority">
@@ -90,31 +90,38 @@
                     <p class="text-red-500">{{ $errors->first('description') }}</p>
                 @endif
             </div>
-            <h5>Related Attachments</h5>
-            <div class="flex flex-wrap -mx-2 mt-2">
-                @foreach ($incoming_letter->attachments as $attachment)
-                <div class="inline-flex items-center p-2 rounded border hover:bg-gray-300 text-gray-600 mx-2 my-1">
-                    <a href="{{ route('attachments.show', $attachment) }}" target="__blank" class="inline-flex items-center mr-1">
-                        <feather-icon name="paperclip" class="h-4 mr-2" stroke-width="2">View Attachment</feather-icon>
-                        <span>{{ $attachment->original_name }}</span>
-                    </a>
-                    <button type="submit"
-                        form="remove-attachment"
-                        formaction="{{ route('attachments.destroy', $attachment) }}"
-                        class="p-1 rounded hover:bg-red-500 hover:text-white">
-                        <feather-icon name="x" class="h-4" stroke-width="2">Delete Attachment</feather-icon>
-                    </button>
-                </div>
-                @endforeach
-            </div>
             <div class="mb-2">
-                <label for="file" class="w-full form-label mb-1">Upload Letter<span class="h-current text-red-500 text-lg">*</span></label>
-                <input type="file" name="attachments[]" accept="image/*, application/pdf" class="w-full">
+                @if($incoming_letter->attachments->count())
+                    <label for="attachments" class="w-full form-label mb-1">Add Attachments</label>
+                    <div class="flex flex-wrap -mx-2 mb-2">
+                        @foreach ($incoming_letter->attachments as $attachment)
+                        <div class="inline-flex items-center p-2 rounded border hover:bg-gray-300 text-gray-600 mx-2 my-1">
+                            <a href="{{ route('attachments.show', $attachment) }}" target="__blank" class="inline-flex items-center mr-1">
+                                <feather-icon name="paperclip" class="h-4 mr-2" stroke-width="2">View Attachment</feather-icon>
+                                <span>{{ $attachment->original_name }}</span>
+                            </a>
+                            @can('delete', $attachment)
+                                <button type="submit"
+                                    form="remove-attachment"
+                                    formaction="{{ route('attachments.destroy', $attachment) }}"
+                                    class="p-1 rounded hover:bg-red-500 hover:text-white">
+                                    <feather-icon name="x" class="h-4" stroke-width="2">Delete Attachment</feather-icon>
+                                </button>
+                            @endcan
+                        </div>
+                        @endforeach
+                    </div>
+                @else
+                    <label for="attachments" class="w-full form-label mb-1">
+                        Upload Attachments <span class="h-current text-red-500 text-lg">*</span>
+                    </label>
+                @endif
+                <input type="file" name="attachments[]" accept="image/*, application/pdf" class="w-full" multiple>
                 @if($errors->has('file'))
                     <p class="text-red-500">{{ $errors->first('file') }}</p>
                 @endif
             </div>
-            <div class="mb-3">
+            <div class="my-3">
                 <button type="submit" class="w-full btn btn-magenta">Update</button>
             </div>
         </form>

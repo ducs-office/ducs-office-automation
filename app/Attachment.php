@@ -17,4 +17,9 @@ class Attachment extends Model
             Storage::delete($file->path);
         });
     }
+
+    public function attachable()
+    {
+        return $this->morphTo();
+    }
 }

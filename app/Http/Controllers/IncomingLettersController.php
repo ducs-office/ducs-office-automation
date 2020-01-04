@@ -97,31 +97,27 @@ class IncomingLettersController extends Controller
 
     public function update(IncomingLetter $incoming_letter, Request $request)
     {
-        $validData = $request->validate([
-            'date' => 'sometimes|required|date|before_or_equal:today',
-            'received_id' => 'sometimes|required|string|min:3|max:190',
-            'sender' => 'sometimes|required|string|min:5|max:100',
-            'recipient_id' => 'sometimes|required|exists:users,id',
-            'handovers' => 'sometimes|nullable|array',
-            'handovers.*' => 'integer|exists:users,id',
-            'priority' => 'nullable|in:1,2,3',
-            'subject' => 'sometimes|required|string|min:5|max:100',
-            'description' => 'nullable|string|max:400',
-            'attachments' => 'sometimes|required|array|max:2',
-            'attachments.*' => 'file|max:200|mimes:jpeg,jpg,png,pdf'
-        ]);
+        $rules = [
+            'date' => ['sometimes', 'required', 'date', 'before_or_equal:today'],
+            'received_id' => ['sometimes', 'required', 'string', 'min:3', 'max:190'],
+            'sender' => ['sometimes', 'required', 'string', 'min:5', 'max:100'],
+            'recipient_id' => ['sometimes', 'required', 'exists:users,id'],
+            'handovers' => ['sometimes', 'nullable', 'array'],
+            'handovers.*' => ['integer', 'exists:users,id'],
+            'priority' => ['nullable', 'in:1,2,3'],
+            'subject' => ['sometimes', 'required', 'string', 'min:5', 'max:100'],
+            'description' => ['nullable', 'string', 'max:400'],
+            'attachments' => ['required', 'array', 'max:2'],
+            'attachments.*' => ['file', 'max:200', 'mimes:jpeg,jpg,png,pdf'],
+        ];
 
-        if (isset($validData['date'])) {
-            $year = $incoming_letter->date->format('Y');
-            $update_date = new Carbon($validData['date']);
-            $update_year = $update_date->format('Y');
-            if ($year != $update_year) {
-                $seq_id = "CS/D/{$update_year}";
-                $cache_key = "letter_seq_{$seq_id}";
-                $number_seq = str_pad(Cache::increment($cache_key), 4, "0", STR_PAD_LEFT);
-                $incoming_letter->serial_no = "$seq_id/$number_seq";
-            }
+        if ($incoming_letter->attachments()->count() < 1) {
+            array_push($rules['attachments'], 'min:1');
+        } else {
+            array_unshift($rules['attachments'], 'sometimes');
         }
+
+        $validData = $request->validate($rules);
 
         $incoming_letter->update($validData);
 

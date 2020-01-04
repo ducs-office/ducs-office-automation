@@ -12,7 +12,7 @@ class IncomingLetter extends Model
         'date', 'received_id', 'sender', 'description', 'subject', 'priority',
         'recipient_id',
     ];
- 
+
     protected $dates = ['date'];
 
     protected static function boot()
@@ -20,7 +20,17 @@ class IncomingLetter extends Model
         parent::boot();
 
         static::creating(function (IncomingLetter $incoming_letter) {
-            $year = $incoming_letter->date->format('y');
+            $year = $incoming_letter->date->format('Y');
+            $seq_id = "CS/D/{$year}";
+            $cache_key = "letter_seq_{$seq_id}";
+            $number_seq = str_pad(Cache::increment($cache_key), 4, "0", STR_PAD_LEFT);
+            $incoming_letter->serial_no = "$seq_id/$number_seq";
+
+            return $incoming_letter;
+        });
+
+        static::updating(function (IncomingLetter $incoming_letter) {
+            $year = $incoming_letter->date->format('Y');
             $seq_id = "CS/D/{$year}";
             $cache_key = "letter_seq_{$seq_id}";
             $number_seq = str_pad(Cache::increment($cache_key), 4, "0", STR_PAD_LEFT);
@@ -40,7 +50,7 @@ class IncomingLetter extends Model
     {
         return $this->belongsTo(User::class, 'recipient_id');
     }
-    
+
     public function handovers()
     {
         return $this->belongsToMany(User::class, 'handovers', 'letter_id', 'user_id');

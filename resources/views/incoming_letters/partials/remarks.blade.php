@@ -16,7 +16,7 @@
             </form>
         </div>
         @forelse($letter->remarks as $i => $remark)
-        <div class="relative hover:bg-gray-200 px-6 py-2 mb-2 last:mb-0">
+        <div class="relative hover:bg-gray-200 px-6 py-4">
             <div class="flex items-center mb-2">
                 <img src="https://gravatar.com/avatar/{{ md5(strtolower(trim($remark->user->email))) }}?s=48&d=identicon"
                     alt="{{ $remark->user->name }}" width="32" height="32"
@@ -29,7 +29,7 @@
                 </div>
             </div>
             <p class="pl-12 text-gray-800 mr-10">{{ $remark->description }}</p>
-            <div class="absolute right-0 top-0 mr-4 flex items-center">
+            <div class="absolute right-0 top-0 mt-2 mr-4 flex items-center">
                 <button class="p-1 text-gray-500 hover:bg-gray-200 text-blue-600 rounded mr-3"
                     title="Edit"
                     @click.prevent="$modal.show('remark-update-modal',{
