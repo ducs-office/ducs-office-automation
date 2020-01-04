@@ -20,6 +20,7 @@ Route::get('/login', 'Auth\LoginController@showLoginForm')->middleware('guest')-
 Route::post('/login', 'Auth\LoginController@login')->middleware('guest')->name('login');
 Route::post('/logout', 'Auth\LoginController@logout')->middleware('auth')->name('logout');
 
+Route::post('/account/change_password', 'AccountController@change_password')->middleware('auth')->name('account.change_password');
 
 Route::get('/outgoing-letters/create', 'OutgoingLettersController@create')->middleware('auth')->name('outgoing_letters.create');
 Route::post('/outgoing-letters', 'OutgoingLettersController@store')->middleware('auth')->name('outgoing_letters.store');
