@@ -14,6 +14,9 @@ $factory->define(IncomingLetter::class, function (Faker $faker) {
         'recipient_id' => function () {
             return factory(User::class)->create()->id;
         },
+        'creator_id' => function () {
+            return factory(User::class)->create()->id;
+        },
         'priority' => $faker->randomElement([1,2,3]),
         'subject' => $faker->sentence,
         'description' => $faker->paragraph

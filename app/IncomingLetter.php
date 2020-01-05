@@ -5,12 +5,13 @@ namespace App;
 use Illuminate\Support\Facades\Cache;
 use App\Model;
 use App\Remark;
+use Auth;
 
 class IncomingLetter extends Model
 {
     protected $fillable = [
         'date', 'received_id', 'sender', 'description', 'subject', 'priority',
-        'recipient_id',
+        'recipient_id', 'creator_id'
     ];
 
     protected $dates = ['date'];
@@ -25,6 +26,10 @@ class IncomingLetter extends Model
             $cache_key = "letter_seq_{$seq_id}";
             $number_seq = str_pad(Cache::increment($cache_key), 4, "0", STR_PAD_LEFT);
             $incoming_letter->serial_no = "$seq_id/$number_seq";
+            
+            if (!isset($incoming_letter->creator_id)) {
+                $incoming_letter->creator_id = Auth::user()->id;
+            }
 
             return $incoming_letter;
         });
@@ -49,6 +54,11 @@ class IncomingLetter extends Model
     public function recipient()
     {
         return $this->belongsTo(User::class, 'recipient_id');
+    }
+
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'creator_id');
     }
 
     public function handovers()

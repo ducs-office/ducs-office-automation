@@ -28,7 +28,8 @@ class DeleteIncomingLettersTest extends TestCase
     public function user_can_delete_letters()
     {
         $this->signIn();
-        $letter = create(IncomingLetter::class);
+
+        $letter = create(IncomingLetter::class, 1, ['creator_id' => auth()->id()]);
 
         $this->withoutExceptionHandling()
          ->delete("/incoming-letters/$letter->id")

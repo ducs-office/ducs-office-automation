@@ -33,7 +33,8 @@ class DatabaseSeeder extends Seeder
 
         $outgoing->each(function ($letter) {
             factory(IncomingLetter::class)->create([
-                'recipient_id' => $letter->sender_id
+                'recipient_id' => $letter->sender_id,
+                'creator_id' => $letter->creator_id
             ]);
         });
 

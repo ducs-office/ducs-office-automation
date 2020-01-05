@@ -67,4 +67,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(IncomingLetter::class, 'recipient_id');
     }
+
+    public function createdIncomingLetters()
+    {
+        return $this->hasMany(IncomingLetter::class, 'creator_id');
+    }
 }
