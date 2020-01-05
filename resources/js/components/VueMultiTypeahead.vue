@@ -1,12 +1,12 @@
 <template>
     <div class="relative form-input" v-click-outside="cancel">
         <div v-if="hasSelected" class="flex flex-wrap -m-1 mb-1">
-            <div class="p-1 leading-none rounded text-xs bg-magenta-700 text-white m-1"
+            <div class="p-1 inline-flex items-center leading-none rounded text-sm bg-magenta-700 text-white m-1"
                 v-for="(item, index) in selectedItems"
                 :key="item.id">
                 <input type="hidden" :name="name" :value="item.id">
-                <span class="white-space-no-wrap" v-text="item.name"></span>
-                <button class="text-white-50" @click="removeItem(index)">
+                <span class="white-space-no-wrap mr-1" v-text="item.name"></span>
+                <button type="button" class="text-white-80" @click="removeItem(index)">
                   <feather-icon name="x" stroke-width="2.5" class="h-current"></feather-icon>
                 </button>
             </div>

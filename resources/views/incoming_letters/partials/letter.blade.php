@@ -1,24 +1,21 @@
+@php
+$priority_colour = [
+    '1' => 'text-red-600',
+    '2' => 'text-blue-600',
+    '3' => 'text-yellow-800'
+];
+$priority_name = [
+    '1' => 'High Priority',
+    '2' => 'Medium Priority',
+    '3' => 'Low Priority',
+]
+@endphp
 <div class="page-card border-b mb-4 pt-6 pb-0 overflow-hidden">
         <div class="px-6">
             <div class="flex items-baseline mb-3">
-                @php
-                    $colour = [
-                        '1' => 'red',
-                        '2' => 'blue',
-                        '3' => 'yellow'
-                    ]
-                @endphp
-                @isset($letter->priority)
-                    <div class="flex items-center text-gray-700">
-                        <feather-icon name="flag"
-                            stroke-width="3"
-                            class="h-current text-{{$colour[$letter->priority]}}-600 mx-2 fill-current">{{$letter->priority}}
-                        </feather-icon>
-                    </div>
-                @endisset
-                <div>
+                <div class="font-mono">
                     <h5 class="mr-12 text-gray-700 font-bold">{{$letter->serial_no}}</h5>
-                    <h5 class="mr-12 text-gray-700">{{$letter->received_id}}</h5>
+                    <h5 class="mr-12 text-gray-800">{{$letter->received_id}}</h5>
                 </div>
                 <h5 class="mr-12 text-gray-700 font-bold">{{ $letter->date->format('M d, Y') }}</h5>
                 <div class="flex items-center text-gray-700">
@@ -53,7 +50,15 @@
                     @endcan
                 </div>
             </div>
-            <h4 class="text-xl font-bold mb-3">{{ $letter->subject ?? 'Subject of Letter' }}</h4>
+            <h4 class="text-xl font-bold flex items-baseline mb-3">
+                @isset($letter->priority)
+                <span class="font-bold text-xl {{ $priority_colour[$letter->priority] }} mr-2"
+                    title="{{ $priority_name[$letter->priority] }}">
+                    {{ str_repeat('!', 4 - $letter->priority) }}
+                </span>
+                @endisset
+                <span class="flex-1">{{ $letter->subject ?? 'Subject of Letter' }}</span>
+            </h4>
             <p class="text-black-50">{{ $letter->description }}</p>
             <div class="flex flex-wrap -mx-2 my-3">
                 @foreach ($letter->attachments as $attachment)

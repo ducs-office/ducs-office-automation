@@ -1,22 +1,23 @@
 <template>
     <div class="relative" v-click-outside="cancel">
         <input type="hidden" :name="name" :value="hasSelected ? selectedItem.id : ''">
-        <input class="form-input pr-4" 
+        <input class="w-full form-input pr-4"
+        :class="{'border-red-600': hasErrors}"
           autocomplete="off"
           :placeholder="placeholder"
           :value="query"
           @input="onInput"
-          @focus.prevent="onFocus" 
+          @focus.prevent="onFocus"
           @keydown.esc.prevent="cancel"
           @keydown.tab="cancel"
-          @keydown.enter.prevent="selectItem(highlightedItemIndex)" 
+          @keydown.enter.prevent="selectItem(highlightedItemIndex)"
           @keydown.up.prevent="moveUp"
           @keydown.down.prevent="moveDown">
         <feather-icon v-if="loading" name="loader" class="absolute right-0 mr-1 absolute-y-center h-current"></feather-icon>
         <transition name="flip">
           <div class="absolute inset-x-0 top-100 mt-1 bg-white py-2 border rounded shadow-md" v-if="isOpen">
             <ul v-if="options.length > 0">
-                <li v-for="(option, index) in options" :key="index" 
+                <li v-for="(option, index) in options" :key="index"
                   @click="selectItem(index)"
                   @mouseover="highlightItem(index)"
                   class="px-3 py-1"
@@ -26,7 +27,7 @@
                     </slot>
                 </li>
             </ul>
-            <p v-else class="text-xs text-gray-600 px-3"> 
+            <p v-else class="text-xs text-gray-600 px-3">
               <span v-if="query.length > 0">No users found.</span>
               <span v-else>Start typing to search user...</span>
             </p>
@@ -46,7 +47,8 @@ export default {
     source: {required: true},
     findSource: {required: true},
     limit: {default: 10},
-    placeholder: { default: "" }
+    placeholder: { default: "" },
+    hasErrors: {default: false}
   },
   directives: { ClickOutside },
   data() {
@@ -102,7 +104,7 @@ export default {
     },
     highlightItem(index) {
       this.highlightedItemIndex = index % this.options.length;
-      
+
       if (this.highlightedItemIndex < 0) {
         this.highlightItem(this.options.length - 1);
       }
@@ -111,7 +113,7 @@ export default {
       if(!this.isOpen) {
         this.open();
       }
-      
+
       if(!this.hasSelected) {
         this.options = data;
         return true;

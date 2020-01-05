@@ -6,14 +6,18 @@
         @can('create', App\Remark::class)
         <form action="{{ route('outgoing_letters.remarks.store', $letter) }}" method="POST">
             @csrf_token
-            <div class="flex items-center">
-            <img src="https://gravatar.com/avatar/{{ md5(strtolower(trim(Auth::user()->email))) }}?s=48&d=identicon"
-                alt="{{ Auth::user()->name }}"
-                width="32" height="32"
-                class="w-8 h-8 rounded-full mr-4">
-                <input name="description" rows="1"
-                    placeholder="Give remarks here..."
-                    class="flex-1 form-input mr-4 bg-white">
+            <div class="flex items-start">
+                <img src="https://gravatar.com/avatar/{{ md5(strtolower(trim(Auth::user()->email))) }}?s=48&d=identicon"
+                    alt="{{ Auth::user()->name }}"
+                    width="30" height="30"
+                    class="w-8 h-8 rounded-full mr-4">
+                <div class="flex-1 mr-4">
+                    <input type="text"
+                        name="description"
+                        placeholder="Give remarks here..."
+                        class="w-full form-input bg-white{{ $errors->has('description') ? ' border-red-600' : ''}}"
+                        required>
+                </div>
                 <button class="btn btn-magenta">Add Remark</button>
             </div>
         </form>

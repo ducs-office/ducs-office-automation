@@ -15,9 +15,8 @@
 <script>
 export default {
     props: {
-        'data-messages':{
-            default: []
-        }
+        timeout: {default: 4000},
+        dataMessages:{default: []}
     },
     data() {
         return {
@@ -40,7 +39,7 @@ export default {
         },
         flash(message) {
             this.messages.push(message);
-            setTimeout(() => this.clear(), 3000);
+            setTimeout(() => this.clear(), this.timeout);
         },
         schema() {
             return ['id', 'message', 'level', 'important'];
@@ -48,7 +47,7 @@ export default {
     },
     mounted() {
         this.dataMessages.forEach(message => this.messages.push(message));
-        setTimeout(() => this.clear(), 3000);
+        setTimeout(() => this.clear(), this.timeout);
 
         window.Events.$on('flash', message => {
             this.flash(message)

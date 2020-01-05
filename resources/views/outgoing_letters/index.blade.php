@@ -20,7 +20,14 @@
             </letter-search-filters>
         </div>
         @forelse($outgoing_letters as $letter)
-            @include('outgoing_letters.partials.letter', compact('letter'))
+            @include('outgoing_letters.partials.letter', [
+                'letter' => $letter,
+                'type_colors' => [
+                    'General' => 'bg-magenta-700',
+                    'Notesheet' => 'bg-teal-600',
+                    'Bill' => 'bg-blue-600'
+                ]
+            ])
         @empty
             <div class="py-8 flex flex-col items-center justify-center text-gray-500">
                 <feather-icon name="frown" class="h-16"></feather-icon>

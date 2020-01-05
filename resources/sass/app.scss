@@ -15,6 +15,9 @@ select {
     &::placeholder {
         @apply opacity-75;
     }
+    :disabled {
+        @apply cursor-not-allowed;
+    }
 }
 
 select {
@@ -53,6 +56,9 @@ select {
     }
     &.is-xs {
         @apply px-2 py-1 text-sm;
+    }
+    &:disabled {
+        @apply bg-gray-400 border-gray-500 text-gray-200 cursor-not-allowed;
     }
 }
 
