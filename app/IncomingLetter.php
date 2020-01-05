@@ -27,7 +27,7 @@ class IncomingLetter extends Model
             $number_seq = str_pad(Cache::increment($cache_key), 4, "0", STR_PAD_LEFT);
             $incoming_letter->serial_no = "$seq_id/$number_seq";
             
-            if(!isset($incoming_letter->creator_id)) {
+            if (!isset($incoming_letter->creator_id)) {
                 $incoming_letter->creator_id = Auth::user()->id;
             }
 
