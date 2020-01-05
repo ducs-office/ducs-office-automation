@@ -2,8 +2,10 @@
 @section('body')
     <div class="page-card max-w-lg my-4 mx-auto">
         <div class="flex items-baseline">
-            <h1 class="page-header px-6">Update Incoming Letter</h1>
-            <span class="px-2 rounded text-lg uppercase text-white bg-blue-600">
+            <h1 class="page-header">Update Incoming Letter</h1>
+        </div>
+        <div class="flex items-baseline mb-4 px-6">
+            <span class="px-2 py-1 rounded text-xs uppercase text-white mr-2 font-bold bg-gray-800">
                 {{ $incoming_letter->serial_no }}
             </span>
         </div>
