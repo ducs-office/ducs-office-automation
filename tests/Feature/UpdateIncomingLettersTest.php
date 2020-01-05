@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Concerns\ValidatesAttributes;
 use Tests\TestCase;
+use Illuminate\Support\Facades\Auth;
 
 class UpdateIncomingLettersTest extends TestCase
 {
@@ -51,7 +52,10 @@ class UpdateIncomingLettersTest extends TestCase
         $this->signIn();
         $receiver = create(User::class);
         $handovers = [create(User::class)->id, create(User::class)->id];
-        $letter = create(IncomingLetter::class, 1, ['priority' => 2]);
+        $letter = create(IncomingLetter::class, 1, [
+            'priority' => 2,
+            'creator_id' => auth()->id()
+        ]);
 
         $new_incoming_letter = [
             'date' => '2019-04-02',
@@ -84,11 +88,31 @@ class UpdateIncomingLettersTest extends TestCase
     }
 
     /** @test */
+    public function user_can_not_update_creator_id_of_an_incoming_letter_in_database()
+    {
+        $this->signIn();
+        $letter = $this->createLetterWithAttachment(1, [
+            'creator_id' => auth()->id()
+        ]);
+
+
+        $this->withoutExceptionHandling()
+            ->patch(
+                "/incoming-letters/{$letter->id}",
+                ['creator_id' => create(User::class)->id]
+            )->assertRedirect('/incoming-letters');
+
+        $this->assertEquals($letter->creator_id, $letter->fresh()->creator_id);
+    }
+
+    /** @test */
 
     public function request_validates_date_field_can_not_be_null()
     {
         $this->signIn();
-        $letter = $this->createLetterWithAttachment();
+        $letter = $this->createLetterWithAttachment(1, [
+            'creator_id' => Auth::id()
+        ]);
         try {
             $this->withoutExceptionHandling()
             ->patch("/incoming-letters/{$letter->id}", ['date'=>'']);
@@ -102,8 +126,9 @@ class UpdateIncomingLettersTest extends TestCase
     public function request_validates_date_field_is_a_valid_date()
     {
         $this->signIn();
-        $letter = $this->createLetterWithAttachment();
-
+        $letter = $this->createLetterWithAttachment(1, [
+            'creator_id' => auth()->id()
+        ]);
         $invalidDates = [
             '2014-16-14', //16 is not a valid month
             '2017-02-29', //not a leap year
@@ -146,7 +171,9 @@ class UpdateIncomingLettersTest extends TestCase
     public function request_validates_date_field_cannot_be_a_future_date()
     {
         $this->signIn();
-        $letter = $this->createLetterWithAttachment();
+        $letter = $this->createLetterWithAttachment(1, [
+            'creator_id' => auth()->id()
+        ]);
 
         try {
             $this->withoutExceptionHandling()
@@ -172,7 +199,9 @@ class UpdateIncomingLettersTest extends TestCase
     public function request_validates_sender_field_can_not_be_null()
     {
         $this->signIn();
-        $letter = $this->createLetterWithAttachment();
+        $letter = $this->createLetterWithAttachment(1, [
+            'creator_id' => auth()->id()
+        ]);
 
         try {
             $this->withoutExceptionHandling()
@@ -188,7 +217,9 @@ class UpdateIncomingLettersTest extends TestCase
     public function request_validates_recipient_id_field_can_not_be_null()
     {
         $this->signIn();
-        $letter = $this->createLetterWithAttachment();
+        $letter = $this->createLetterWithAttachment(1, [
+            'creator_id' => auth()->id()
+        ]);
 
         try {
             $this->withoutExceptionHandling()
@@ -204,7 +235,9 @@ class UpdateIncomingLettersTest extends TestCase
     public function request_validates_recipient_id_is_an_existing_user()
     {
         $this->signIn();
-        $letter = $this->createLetterWithAttachment();
+        $letter = $this->createLetterWithAttachment(1, [
+            'creator_id' => auth()->id()
+        ]);
 
         try {
             $this->withoutExceptionHandling()
@@ -222,7 +255,9 @@ class UpdateIncomingLettersTest extends TestCase
     public function request_validates_handover_id_is_an_existing_user()
     {
         $this->signIn();
-        $letter = $this->createLetterWithAttachment();
+        $letter = $this->createLetterWithAttachment(1, [
+            'creator_id' => auth()->id()
+        ]);
 
         try {
             $this->withoutExceptionHandling()
@@ -240,7 +275,9 @@ class UpdateIncomingLettersTest extends TestCase
     public function request_validates_handover_id_field_can_be_null()
     {
         $this->signIn();
-        $letter = $this->createLetterWithAttachment();
+        $letter = $this->createLetterWithAttachment(1, [
+            'creator_id' => auth()->id()
+        ]);
 
         $this->withoutExceptionHandling()
             ->patch("incoming-letters/{$letter->id}", ['handovers' => []])
@@ -253,7 +290,9 @@ class UpdateIncomingLettersTest extends TestCase
     public function request_validates_priority_field_can_be_null()
     {
         $this->signIn();
-        $letter = $this->createLetterWithAttachment();
+        $letter = $this->createLetterWithAttachment(1, [
+            'creator_id' => auth()->id()
+        ]);
 
         $this->withoutExceptionHandling()
             ->patch("/incoming-letters/{$letter->id}", ['priority' => ''])
@@ -266,7 +305,9 @@ class UpdateIncomingLettersTest extends TestCase
     public function request_validates_subject_field_can_not_be_null()
     {
         $this->signIn();
-        $letter = $this->createLetterWithAttachment();
+        $letter = $this->createLetterWithAttachment(1, [
+            'creator_id' => auth()->id()
+        ]);
 
         try {
             $this->withoutExceptionHandling()
@@ -284,7 +325,9 @@ class UpdateIncomingLettersTest extends TestCase
     public function request_validates_subject_field_maxlimit_100()
     {
         $this -> signIn();
-        $letter = $this->createLetterWithAttachment();
+        $letter = $this->createLetterWithAttachment(1, [
+            'creator_id' => auth()->id()
+        ]);
 
         try {
             $this->withoutExceptionHandling()
@@ -300,7 +343,9 @@ class UpdateIncomingLettersTest extends TestCase
     public function request_validates_description_field_can_be_null()
     {
         $this->signIn();
-        $letter = $this->createLetterWithAttachment();
+        $letter = $this->createLetterWithAttachment(1, [
+            'creator_id' => auth()->id()
+        ]);
 
         $this->withoutExceptionHandling()
             ->patch("/incoming-letters/{$letter->id}", ['description' => ''])
@@ -313,7 +358,9 @@ class UpdateIncomingLettersTest extends TestCase
     public function request_validates_description_field_maxlimit_400()
     {
         $this->signIn();
-        $letter = $this->createLetterWithAttachment();
+        $letter = $this->createLetterWithAttachment(1, [
+            'creator_id' => auth()->id()
+        ]);
 
         try {
             $this->withoutExceptionHandling()

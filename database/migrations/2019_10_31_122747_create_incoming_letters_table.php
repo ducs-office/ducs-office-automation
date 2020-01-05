@@ -23,9 +23,11 @@ class CreateIncomingLettersTable extends Migration
             $table->enum('priority', [1,2,3])->nullable();
             $table->string('subject', 100);
             $table->text('description', 400)->nullable();
+            $table->unsignedBigInteger('creator_id');
             $table->timestamps();
 
             $table->foreign('recipient_id')->references('id')->on('users');
+            $table->foreign('creator_id')->references('id')->on('users');
         });
     }
 
