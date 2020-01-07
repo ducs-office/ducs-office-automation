@@ -65,7 +65,7 @@ class ProgrammesController extends Controller
         $programme->update($request->only(['code', 'wef', 'name']));
         Course::where('programme_id', $programme->id)->update(['programme_id' => null]);
         
-        if($request->has('courses')) {
+        if ($request->has('courses')) {
             Course::whereIn('id', $data['courses'])->update(['programme_id' => $programme->id]);
         }
 
