@@ -20,18 +20,22 @@ class UserController extends Controller
     public function index()
     {
         $roles = Role::all();
+        $categories = config('user.categories');
         $users = User::with('roles')->get();
 
-        return view('users.index', compact('users', 'roles'));
+        return view('users.index', compact('users', 'roles', 'categories'));
     }
 
     public function store(Request $request)
     {
+        $categories = implode(",", config('user.categories'));
+
         $request->validate([
             'name' => ['required', 'string', 'min:3', 'max:190'],
             'email' => ['required', 'string', 'min:3', 'max:190', 'email', 'unique:users'],
             'roles' => ['required', 'array', 'min:1'],
-            'roles.*' => ['required', 'integer', 'exists:roles,id']
+            'roles.*' => ['required', 'integer', 'exists:roles,id'],
+            'category' => ['required', 'in:'.$categories]
         ]);
 
         $plain_password = strtoupper(Str::random(8));
@@ -39,7 +43,8 @@ class UserController extends Controller
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => bcrypt($plain_password)
+            'category' => $request->category,
+            'password' => bcrypt($plain_password),
         ]);
 
         $user->syncRoles($request->roles);
@@ -47,12 +52,13 @@ class UserController extends Controller
         Mail::to($user)->send(new UserRegisteredMail($user, $plain_password));
 
         flash('User created successfully!')->success();
-
+        
         return redirect()->back();
     }
 
     public function update(Request $request, User $user)
     {
+        $categories = implode(",", config('user.categories'));
         $data = $request->validate([
             'name' => ['sometimes', 'required', 'string', 'min:3', 'max:190'],
             'email' => [
@@ -60,10 +66,11 @@ class UserController extends Controller
                 Rule::unique('users')->ignore($user)
             ],
             'roles' => ['sometimes', 'required', 'array', 'min:1'],
-            'roles.*' => ['sometimes', 'required', 'integer', 'exists:roles,id']
+            'roles.*' => ['sometimes', 'required', 'integer', 'exists:roles,id'],
+            'category' => ['sometimes', 'in:'.$categories]
         ]);
 
-        $user->update($request->only(['name', 'email']));
+        $user->update($request->only(['name', 'email','category']));
 
         if ($request->has('roles')) {
             $user->syncRoles($request->roles);

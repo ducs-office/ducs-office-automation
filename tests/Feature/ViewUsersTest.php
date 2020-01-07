@@ -23,7 +23,7 @@ class ViewUsersTest extends TestCase
             ->get('/users')
             ->assertSuccessful()
             ->assertViewIs('users.index')
-            ->assertViewHasAll(['users', 'roles']);
+            ->assertViewHasAll(['users', 'roles','categories']);
 
         $this->assertCount(User::count(), $response->viewData('users'));
         $this->assertCount(Role::count(), $response->viewData('roles'));
