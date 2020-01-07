@@ -25,15 +25,6 @@
                     <label for="course-name" class="w-full form-label mb-1">Course Name<span class="h-current text-red-500 text-lg">*</span></label>
                     <input id="course-name" type="text" name="name" class="w-full form-input" placeholder="e.g. Artificial Intelligence">
                 </div>
-                <div class="mb-2">
-                    <label for="course-programme" class="w-full form-label mb-1">Programme<span class="h-current text-red-500 text-lg">*</span></label>
-                    <select id="course-programme" name="programme_id" class="w-full form-input">
-                        <option value="" selected disabled>-- Select a Programme --</option>
-                        @foreach ($programmes as $id => $programme)
-                            <option value="{{ $id }}">{{ $programme }}</option>
-                        @endforeach
-                    </select>
-                </div>
                 <div class="mt-6 mb-3">
                     <button type="submit" class="btn btn-magenta">Create</button>
                 </div>
@@ -46,14 +37,15 @@
                     <div class="flex items-baseline">
                         <h4 class="font-bold text-sm text-gray-600 w-24">{{ $course->code }}</h4>
                         <h3 class="font-bold text-lg capitalize mr-2">{{ $course->name }}</h3>
-                        <p class="text-gray-500 truncate">{{ ucwords($course->programme->name) }} ({{ $course->programme->code }})</p>
+                        @if ($course->programme_id <> null)
+                            <p class="text-gray-500 truncate">{{ $course->programme->code }}</p>
+                        @endif
                     </div>
                     <div class="flex items-center">
                         @can('update', App\Course::class)
                         <button class="p-1 hover:text-blue-500 mr-2"
                         @click.prevent="$modal.show('course-update-modal', {
-                            course: {{ $course->toJson() }},
-                            programmes: {{ $programmes->toJson() }}
+                            course: {{ $course->toJson() }}
                         })">
                             <feather-icon name="edit" class="h-current">Edit</feather-icon>
                         </button>

@@ -21,10 +21,9 @@ class CourseController extends Controller
      */
     public function index()
     {
-        $courses = Course::latest()->get();
-        $programmes = Programme::all()->pluck('name', 'id');
+        $courses = Course::latest()->with(['programme'])->get();
 
-        return view('courses.index', compact('courses', 'programmes'));
+        return view('courses.index', compact('courses'));
     }
 
     /**
@@ -38,7 +37,6 @@ class CourseController extends Controller
         $data = $request->validate([
             'code' => ['required', 'min:3', 'max:60', 'unique:courses'],
             'name' => ['required', 'min:3', 'max:190'],
-            'programme_id' => ['required', 'integer', 'exists:programmes,id'],
         ]);
 
         Course::create($data);
@@ -63,7 +61,6 @@ class CourseController extends Controller
                 Rule::unique('courses')->ignore($course)
             ],
             'name' => ['sometimes', 'required', 'min:3', 'max:190'],
-            'programme_id' => ['sometimes', 'required', 'integer', 'exists:programmes,id'],
         ]);
 
         $course->update($data);

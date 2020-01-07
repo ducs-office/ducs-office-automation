@@ -13,21 +13,36 @@
     <modal name="create-programme-form" height="auto">
         <div class="p-6">
             <h2 class="text-lg font-bold mb-8">New Programme</h2>
-            <form action="{{ route('programmes.store') }}" method="POST" class="flex items-end">
+            <form action="{{ route('programmes.store') }}" method="POST" class="px-6">
                 @csrf_token
-                <div class="flex-1 mr-2">
+                <div class="mb-2">
                     <label for="programme_code" class="w-full form-label">Programme Code<span class="h-current text-red-500 text-lg">*</span></label>
                     <input id="programme_code" type="text" name="code" class="w-full form-input">
                 </div>
-                <div class="flex-1 mr-5">
-                    <label for="programme_name" class="w-full form-label">Date (w.e.f)<span class="h-current text-red-500 text-lg">*</span></label>
-                    <input id="programme_name" type="date" name="wef" class="w-full form-input">
+                <div class="mb-2">
+                    <label for="programme_wef" class="w-full form-label">Date (w.e.f)<span class="h-current text-red-500 text-lg">*</span></label>
+                    <input id="programme_wef" type="date" name="wef" class="w-full form-input">
                 </div>
-                <div class="flex-1 mr-5">
+                <div class="mb-2">
                     <label for="programme_name" class="w-full form-label">Programme<span class="h-current text-red-500 text-lg">*</span></label>
                     <input id="programme_name" type="text" name="name" class="w-full form-input">
                 </div>
-                <div>
+                <div class="mb-2">
+                    <label for="programme_course" class="w-full form-label">Add Courses</label>
+                    <div class="overflow-y-auto overflow-x-hidden h-32 border">
+                        @foreach ($courses as $course)
+                            <div class="flex justify-between mt-1 px-3 py-1">
+                                <label for="course-{{ $course->id }}">{{ $course->name }} ({{ $course->code }})</label>
+                                <input 
+                                    id="course-{{ $course->id }}"
+                                    type="checkbox"
+                                    name="courses[]"
+                                    value="{{ $course->id }}" />
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+                <div class="mb-2">
                     <button type="submit" class="btn btn-magenta">Create</button>
                 </div>
             </form>
@@ -48,7 +63,7 @@
             </div>
             <div class="flex">
                 @can('update', App\Programme::class)
-                <button class="p-1 hover:text-blue-500 mr-1" @click.prevent="$modal.show('programme-update-modal', {programme: {{ $programme->toJson() }}})">
+                <button class="p-1 hover:text-blue-500 mr-1" @click.prevent="$modal.show('programme-update-modal', {programme: {{ $programme->toJson() }}, courses: {{$programme->courses->merge($courses)->toJson()}}})">
                     <feather-icon class="h-current" name="edit">Edit</feather-icon>
                 </button>
                 @endcan
