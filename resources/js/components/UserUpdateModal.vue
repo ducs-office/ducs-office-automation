@@ -20,6 +20,15 @@
                             v-text="role.name"></option>
                     </select>
                 </div>
+                <div class="mb-5">
+                    <label for="category" class="w-full form-label mb-1">Category <span class="h-current text-red-500 text-lg">*</span></label>
+                    <select name="category" id="category" class="w-full form-input" v-model="user.category">
+                        <option v-for="category in categories"
+                            :key="category" :value="category"
+                            v-text="category">
+                        </option>
+                    </select>
+                </div>
                 <div>
                     <button type="submit" class="btn btn-magenta">Update</button>
                 </div>
@@ -29,13 +38,14 @@
 </template>
 <script>
 export default {
-    props: ['roles'],
+    props: ['roles', 'categories'],
     data() {
         return {
             user: {
                 id: '',
                 name: '',
                 email: '',
+                category: '',
             },
             user_roles: []
         }

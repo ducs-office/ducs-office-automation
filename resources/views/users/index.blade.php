@@ -32,6 +32,15 @@
                         @endforeach
                     </select>
                 </div>
+                <div class="mb-2">
+                    <label for="category" class="w-full form-label">Category<span class="h-current text-red-500 text-lg">*</span></label>
+                    <select name="category" id="category" class="w-full form-input" required>
+                        <option value="" selected disabled>Select a category for the user</option>
+                        @foreach ($categories as $category)
+                            <option value="{{ $category }}"> {{ $category }} </option>
+                        @endforeach
+                    </select>
+                </div>
                 <div class="mt-5">
                     <button class="btn btn-magenta">Create</button>
                 </div>
@@ -40,7 +49,7 @@
     </modal>
     @endcan
     @can('update', App\User::class)
-    <user-update-modal name="user-update-modal" :roles="{{ $roles->toJson() }}">@csrf_token @method('PATCH')</user-update-modal>
+    <user-update-modal name="user-update-modal" :roles="{{ $roles->toJson() }}" :categories="{{ json_encode($categories) }}">@csrf_token @method('PATCH')</user-update-modal>
     @endcan
     @forelse($users as $user)
         <div class="px-4 py-2 hover:bg-gray-100 border-b flex">
@@ -55,6 +64,9 @@
                     <span class="mx-1 bg-blue-500 text-white p-1 rounded text-xs font-bold tracking-wide">{{ ucwords(str_replace('_', ' ', $role->name)) }}</span>
                 @endforeach
             </div>
+            <div class="px-2 flex flex-wrap items-center">
+                <span class="mx-1 bg-green-500 text-white p-1 rounded text-xs font-bold tracking-wide">{{$user->category}}</span>
+            </div>
             <div class="ml-auto px-2 flex items-center">
                 @can('update', App\User::class)
                 <button type="submit" class="p-1 hover:text-red-700 mr-2"
@@ -63,7 +75,8 @@
                             user: {
                                 id: {{ $user->id }},
                                 name: {{ json_encode($user->name) }},
-                                email: {{ json_encode($user->email) }}
+                                email: {{ json_encode($user->email) }},
+                                category: {{ json_encode($user->category)}}
                             },
                             user_roles: {{ $user->roles->pluck('id')->toJson() }}
                         })">
