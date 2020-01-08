@@ -13,18 +13,28 @@
     <modal name="create-college-form" height="auto">
         <div class="p-6">
             <h2 class="text-lg font-bold mb-8">New College</h2>
-            <form action="{{ route('colleges.index') }}" method="POST" class="flex items-end">
+            <form action="{{ route('colleges.index') }}" method="POST" class="items-end">
                 @csrf_token
-                <div class="flex-1 mr-2">
-                    <label for="college_code" class="w-full form-label">College Code<span class="h-current text-red-500 text-lg">*</span></label>
-                    <input id="college_code" type="text" name="code" class="w-full form-input">
-                </div>
-                <div class="flex-1 mr-5">
-                    <label for="college_name" class="w-full form-label">College<span class="h-current text-red-500 text-lg">*</span></label>
-                    <input id="college_name" type="text" name="name" class="w-full form-input">
-                </div>
-                <div>
-                    <button type="submit" class="btn btn-magenta">Create</button>
+                <div class="items-baseline">
+                    <div class="mb-2">
+                        <label for="college_code" class="w-full form-label">College Code<span class="h-current text-red-500 text-lg">*</span></label>
+                        <input id="college_code" type="text" name="code" class="w-full form-input">
+                    </div>
+                    <div class="mb-2">
+                        <label for="college_name" class="w-full form-label">College Name<span class="h-current text-red-500 text-lg">*</span></label>
+                        <input id="college_name" type="text" name="name" class="w-full form-input">
+                    </div>
+                    <div class="mb-2">
+                        <label for="programme" class="w-full form-label">Programmes <span class="h-current text-red-500 text-lg">*</span></label>
+                        <select name="programmes[]" id="programme" class="w-full form-input" multiple>
+                            @foreach ($programmes as $programme)
+                                <option value="{{$programme->id}}">{{ucwords($programme->code)}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div>
+                        <button type="submit" class="btn btn-magenta">Create</button>
+                    </div>
                 </div>
             </form>
         </div>
@@ -32,7 +42,7 @@
     @endcan
 
     @can('update', App\College::class)
-    <college-update-modal name ="college-update-modal">@csrf_token @method('patch')</college-update-modal>
+    <college-update-modal name ="college-update-modal" :programmes="{{$programmes->toJson()}}">@csrf_token @method('patch') </college-update-modal>
     @endcan
     @foreach($colleges as $college)
         <div class="px-6 py-2 hover:bg-gray-100 border-b flex justify-between">
@@ -44,7 +54,12 @@
             </div>
             <div class="flex">
                 @can('update', App\College::class)
-                <button class="p-1 hover:text-blue-500 mr-1" @click.prevent="$modal.show('college-update-modal',{college: {{$college->toJson()}}})">
+                <button class="p-1 hover:text-blue-500 mr-1" 
+                    @click="
+                        $modal.show('college-update-modal',{
+                            college: {{$college->toJson()}},
+                            college_programmes: {{$college->programmes->pluck('id')->toJson()}}
+                        })">
                     <feather-icon class="h-current" name="edit">Edit</feather-icon>
                 </button>
                 @endcan
