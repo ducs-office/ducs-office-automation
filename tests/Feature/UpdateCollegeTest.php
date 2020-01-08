@@ -7,6 +7,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\User;
 use App\College;
+use App\Programme;
 
 class UpdateCollegeTest extends TestCase
 {
@@ -54,6 +55,29 @@ class UpdateCollegeTest extends TestCase
 
         $this->assertEquals(1, College::count());
         $this->assertEquals($new_name, $college->fresh()->name);
+    }
+
+    /** @test */
+    public function admin_can_update_a_college_programmes()
+    {
+        $this->signIn();
+
+        $college = create(College::class);
+        $programmes = create(Programme::class, 5);
+
+        $college->programmes()->attach([$programmes[0]->id, $programmes[1]->id, $programmes[2]->id]);
+
+        $this->withoutExceptionHandling()
+            ->patch('/colleges/'. $college->id, [
+                'programmes' => $new_programmes = [$programmes[3]->id, $programmes[4]->id]
+                ])
+            ->assertRedirect('/colleges')
+            ->assertSessionHasFlash('success', 'College updated successfully');
+
+        $this->assertEquals(1, College::count());
+
+        $college_programmes = $college->fresh()->programmes()->pluck('id')->toArray();
+        $this->assertSame($college_programmes, $new_programmes);
     }
 
     /** @test */

@@ -41,7 +41,7 @@ class CollegeController extends Controller
         $college->programmes()->attach($data['programmes']);
 
         flash('College created successfully!', 'success');
-
+        
         return redirect('/colleges');
     }
 
@@ -63,7 +63,9 @@ class CollegeController extends Controller
 
         $college->update($request->only(['code', 'name']));
 
-        $college->programmes()->sync($validData['programmes']);
+        if (isset($validData['programmes'])) {
+            $college->programmes()->sync($validData['programmes']);
+        }
 
         flash('College updated successfully!', 'success');
 
