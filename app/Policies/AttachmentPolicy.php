@@ -34,7 +34,7 @@ class AttachmentPolicy
     {
         return $user->can('update', $attachment->attachable)
             && (
-                $attachment->attachable_type === Course::class 
+                $attachment->attachable_type === Course::class
                 || $attachment->attachable->attachments()->count() > 1
             );
     }

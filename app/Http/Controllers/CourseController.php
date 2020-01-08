@@ -43,9 +43,9 @@ class CourseController extends Controller
         
         $course = Course::create($request->only(['code', 'name']));
 
-        if($request->hasFile('attachments')) {
-            $course->attachments()->createMany (
-                array_map(function($attachedFile) {
+        if ($request->hasFile('attachments')) {
+            $course->attachments()->createMany(
+                array_map(function ($attachedFile) {
                     return [
                         'path' => $attachedFile->store('/course_attachments'),
                         'original_name' => $attachedFile->getClientOriginalName(),
@@ -79,9 +79,9 @@ class CourseController extends Controller
         ]);
 
         $course->update($request->only(['code', 'name']));
-        if($request->hasFile('attachments')) {
+        if ($request->hasFile('attachments')) {
             $course->attachments()->createMany(
-                array_map(function($attachedFile){
+                array_map(function ($attachedFile) {
                     return [
                         'path' => $attachedFile->store('/course_attachments'),
                         'original_name' => $attachedFile->getClientOriginalName(),
