@@ -17,6 +17,13 @@
                     <input id="programme_name" type="text" name="name" class="w-full form-input" v-model="programme.name">
                 </div>
                 <div class="mb-2">
+                    <label for="programme_type" class="w-full form-label">Type<span class="h-current text-red-500 text-lg">*</span></label>
+                    <select class="w-full form-input" name="type" required v-model="programme.type">
+                        <option value="Under Graduate(U.G.)">Under Graduate(U.G.)</option>
+                        <option value="Post Graduate(P.G.)">Post Graduate(P.G.)</option>
+                    </select>
+                </div>
+                <div class="mb-2">
                     <label for="programme_course" class="w-full form-label">Courses</label>
                     <div class="overflow-y-auto overflow-x-hidden h-32 border">
                             <div class="flex justify-between mt-1 px-3 py-1" v-for=" course in courses " :key="course.id">

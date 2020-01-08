@@ -32,6 +32,7 @@ class ProgrammesController extends Controller
             'code' => ['required', 'min:3', 'max:60', 'unique:programmes,code'],
             'wef' => ['required', 'date'],
             'name' => ['required', 'min:3', 'max:190'],
+            'type' => ['required', 'in:Under Graduate(U.G.),Post Graduate(P.G.)'],
             'courses' => ['nullable', 'array', 'min:1'],
             'courses.*' => ['required', 'integer', 'exists:courses,id'],
         ]);
@@ -40,6 +41,7 @@ class ProgrammesController extends Controller
             'code' => $data['code'],
             'wef' => $data['wef'],
             'name' => $data['name'],
+            'type' => $data['type'],
         ]);
         
         if ($request->has('courses')) {
@@ -60,11 +62,12 @@ class ProgrammesController extends Controller
             ],
             'wef' => ['sometimes', 'required', 'date'],
             'name' => ['sometimes', 'required', 'min:3', 'max:190'],
+            'type' => ['sometimes', 'required', 'in:Under Graduate(U.G.),Post Graduate(P.G.)'],
             'courses' => ['nullable', 'array', 'min:1'],
             'courses.*' => ['sometimes', 'required', 'integer', 'exists:courses,id'],
         ]);
 
-        $programme->update($request->only(['code', 'wef', 'name']));
+        $programme->update($request->only(['code', 'wef', 'name', 'type']));
         Course::where('programme_id', $programme->id)->update(['programme_id' => null]);
         
         if ($request->has('courses')) {

@@ -28,6 +28,13 @@
                     <input id="programme_name" type="text" name="name" class="w-full form-input">
                 </div>
                 <div class="mb-2">
+                    <label for="programme_type" class="w-full form-label">Type<span class="h-current text-red-500 text-lg">*</span></label>
+                    <select class="w-full form-input" name="type" required>
+                        <option value="Under Graduate(U.G.)" {{ old('type', 'Under Graduate(U.G.') === 'Under Graduate(U.G.)' ? 'selected' : ''}}>Under Graduate(U.G.)</option>
+                        <option value="Post Graduate(P.G.)" {{ old('type', 'Post Graduate(P.G.') === 'Post Graduate(P.G.)' ? 'selected' : ''}}>Post Graduate(P.G.)</option>
+                    </select>
+                </div>
+                <div class="mb-2">
                     <label for="programme_course" class="w-full form-label">Add Courses</label>
                     <div class="overflow-y-auto overflow-x-hidden h-32 border">
                         @foreach ($courses as $course)
@@ -54,12 +61,15 @@
     @endcan
     @foreach ($programmes as $programme)
         <div class="px-6 py-2 hover:bg-gray-100 border-b flex justify-between">
-            <div class="flex items-baseline">
+            <div class="flex items-baseline justify-between">
                 <p class="px-4">{{ $programme->wef }}</p>
                 <h4 class="px-4 text-sm font-semibold text-gray-600 mr-2 w-24">{{ $programme->code }}</h4>
                 <h3 class="px-4 text-lg font-bold mr-2">
                     {{ ucwords($programme->name) }}
                 </h3>
+                <span class="px-2 py-1 rounded text-xs uppercase text-white bg-blue-600 mr-2 font-bold">
+                    {{ $programme->type === 'Under Graduate(U.G.)' ? 'UG' : 'PG' }}
+                </span>
             </div>
             <div class="flex">
                 @can('update', App\Programme::class)

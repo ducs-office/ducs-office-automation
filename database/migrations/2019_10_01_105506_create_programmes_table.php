@@ -17,6 +17,7 @@ class CreateProgrammesTable extends Migration
             $table->bigIncrements('id');
             $table->string('code', 60)->unique();
             $table->date('wef');
+            $table->enum('type', ['Under Graduate(U.G.)', 'Post Graduate(P.G.)']);
             $table->string('name');
             $table->timestamps();
         });
