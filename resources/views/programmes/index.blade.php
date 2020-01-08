@@ -62,14 +62,14 @@
     @foreach ($programmes as $programme)
         <div class="px-6 py-2 hover:bg-gray-100 border-b flex justify-between">
             <div class="flex items-baseline justify-between">
+                <span class="px-2 py-1 rounded text-xs uppercase text-white bg-blue-600 mr-2 font-bold">
+                    {{ $programme->type === 'Under Graduate(U.G.)' ? 'UG' : 'PG' }}
+                </span>
                 <p class="px-4">{{ $programme->wef }}</p>
                 <h4 class="px-4 text-sm font-semibold text-gray-600 mr-2 w-24">{{ $programme->code }}</h4>
                 <h3 class="px-4 text-lg font-bold mr-2">
                     {{ ucwords($programme->name) }}
                 </h3>
-                <span class="px-2 py-1 rounded text-xs uppercase text-white bg-blue-600 mr-2 font-bold">
-                    {{ $programme->type === 'Under Graduate(U.G.)' ? 'UG' : 'PG' }}
-                </span>
             </div>
             <div class="flex">
                 @can('update', App\Programme::class)

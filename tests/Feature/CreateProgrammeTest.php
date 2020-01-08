@@ -21,6 +21,7 @@ class CreateProgrammeTest extends TestCase
             'code' => 'MCS',
             'wef' => '2019-08-12',
             'name' => 'M.Sc. Computer Science',
+            'type' => 'Under Graduate(U.G.)',
         ])->assertRedirect('/programmes')
         ->assertSessionHasFlash('success', 'Programme created successfully');
 
