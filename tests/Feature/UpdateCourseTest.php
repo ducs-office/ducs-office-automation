@@ -48,24 +48,6 @@ class UpdateCourseTest extends TestCase
     }
 
     /** @test */
-    public function admin_can_update_courses_related_programme()
-    {
-        $this->withoutExceptionHandling()
-            ->signIn();
-
-        $course = create(Course::class);
-        $newProgramme = create(Programme::class);
-
-        $response = $this->patch('/courses/' . $course->id, [
-            'programme_id' => $newProgramme->id
-        ])->assertRedirect('/courses')
-        ->assertSessionHasFlash('success', 'Course updated successfully!');
-
-        $this->assertEquals(1, Course::count());
-        $this->assertEquals($newProgramme->id, $course->fresh()->programme_id);
-    }
-
-    /** @test */
     public function course_is_not_validated_for_uniqueness_if_code_is_not_changed()
     {
         $this->withoutExceptionHandling()

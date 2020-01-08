@@ -12,4 +12,9 @@ class Course extends Model
     {
         return $this->belongsTo(Programme::class, 'programme_id');
     }
+
+    public function attachments()
+    {
+        return $this->morphMany(Attachment::class, 'attachable');
+    }
 }

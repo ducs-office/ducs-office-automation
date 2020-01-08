@@ -14,17 +14,15 @@ class CreateCourseTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function admin_can_create_new_course_and_assign_it_to_a_programme()
+    public function admin_can_create_new_course()
     {
         $this->withoutExceptionHandling()
             ->signIn(create(User::class));
 
-        $programme = create(Programme::class);
 
         $this->post('/courses', $params = [
             'code' => 'MCS-102',
             'name' => 'Design and Analysis of Algorithms',
-            'programme_id' => $programme->id,
         ])->assertRedirect('/courses')
         ->assertSessionHasFlash('success', 'Course created successfully!');
 

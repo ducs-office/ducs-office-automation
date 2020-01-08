@@ -14,7 +14,7 @@
         @endcan
         @can('create', App\Course::class)
         <modal name="create-courses-modal" height="auto">
-            <form action="{{ route('courses.index') }}" method="POST" class="p-6">
+            <form action="{{ route('courses.index') }}" method="POST" class="p-6" enctype="multipart/form-data">
                 <h2 class="mb-8 font-bold text-lg">Create New Course</h2>
                 @csrf_token
                 <div class="mb-2">
@@ -24,6 +24,10 @@
                 <div class="mb-2">
                     <label for="course-name" class="w-full form-label mb-1">Course Name<span class="h-current text-red-500 text-lg">*</span></label>
                     <input id="course-name" type="text" name="name" class="w-full form-input" placeholder="e.g. Artificial Intelligence">
+                </div>
+                <div class="mb-2"> 
+                    <label for="file" class="w-full form-label mb-1">Upload Syllabus</label>
+                    <input type="file" name="attachments[]" accept="application/pdf, image/*" class="w-full" multiple>
                 </div>
                 <div class="mt-6 mb-3">
                     <button type="submit" class="btn btn-magenta">Create</button>
@@ -40,6 +44,22 @@
                         @if ($course->programme_id <> null)
                             <p class="text-gray-500 truncate">{{ $course->programme->code }}</p>
                         @endif
+                        <div class="flex flex-wrap mx-2">
+                            @foreach ($course->attachments as $attachment)
+                                <div class="inline-flex items-center px-2 rounded border hover:bg-gray-300 text-gray-600 mx-2">
+                                    <a href="{{ route('attachments.show', $attachment) }}" target="__blank" class="inline-flex items-center mr-1">
+                                        <feather-icon name="paperclip" class="h-4 mr-2" stroke-width="2">View Attachment</feather-icon>
+                                        <span>{{ $attachment->original_name }}</span>
+                                    </a>
+                                    <form action="{{ route('attachments.destroy', $attachment) }}" method="POST" onsubmit= "return confirm('Do you really want to delete attachment?'); ">
+                                        @csrf_token @method('DELETE')
+                                        <button type="submit" class="p-1 rounded hover:bg-red-500 hover:text-white">
+                                            <feather-icon name="x" class="h-4" stroke-width="2">Delete Attachment</feather-icon>
+                                        </button>
+                                    </form>
+                                </div>
+                            @endforeach
+                        </div> 
                     </div>
                     <div class="flex items-center">
                         @can('update', App\Course::class)

@@ -2,7 +2,7 @@
     <modal name="course-update-modal" height="auto" @before-open="beforeOpen">
         <div class="p-6">
             <h2 class="text-lg font-bold mb-8">Update Course</h2>
-            <form :action="route('courses.update', course)" method="POST">
+            <form :action="route('courses.update', course)" method="POST" enctype="multipart/form-data">
                 <slot></slot>
                 <div class="mb-2">
                     <label for="course_code" class="w-full form-label mb-1">Unique Course Code<span class="h-current text-red-500 text-lg">*</span></label>
@@ -11,6 +11,10 @@
                 <div class="mb-2">
                     <label for="course_name" class="w-full form-label mb-1">Course Name<span class="h-current text-red-500 text-lg">*</span></label>
                     <input id="course_name" type="text" name="name" class="w-full form-input" v-model="course.name">
+                </div>
+                <div class="mb-2">
+                    <label for="file" class="w-full form-label mb-1">Upload Syllabus</label>
+                    <input type="file" name="attachments[]" accept="application/pdf, image/*" class="w-full" multiple>
                 </div>
                 <div>
                     <button type="submit" class="btn btn-magenta">Update</button>

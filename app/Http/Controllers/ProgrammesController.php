@@ -42,7 +42,9 @@ class ProgrammesController extends Controller
             'name' => $data['name'],
         ]);
         
-        Course::whereIn('id', $data['courses'])->update(['programme_id' => $programme->id]);
+        if($request->has('courses')) {
+            Course::whereIn('id', $data['courses'])->update(['programme_id' => $programme->id]);
+        }
         
         flash('Programme created successfully!', 'success');
 
