@@ -91,7 +91,7 @@ class CreateNewUserTest extends TestCase
     /** @test */
     public function request_validates_name_field_is_not_null()
     {
-        $this->signIn(create(User::class), 'admin');
+        $this->signIn();
     
         $teacherRole = Role::firstOrcreate(['name' => 'college teacher']);
             
@@ -112,7 +112,7 @@ class CreateNewUserTest extends TestCase
     /** @test */
     public function request_validates_email_field_is_not_null()
     {
-        $this->signIn(create(User::class), 'admin');
+        $this->signIn();
     
         $teacherRole = Role::firstOrcreate(['name' => 'college teacher']);
             
@@ -129,11 +129,33 @@ class CreateNewUserTest extends TestCase
         }
         $this->assertEquals(1, User::count());
     }
+
+    /** @test */
+    public function request_validates_email_field_is_unique_value()
+    {
+        $this->signIn();
+
+        $user = create(User::class);
+        $teacherRole = Role::firstOrcreate(['name' => 'college teacher']);
+            
+        try {
+            $this->withoutExceptionHandling()
+                ->post('/users', [
+                    'name' => 'HOD Faculty',
+                    'email' => $user->email,
+                    'category' => 'HOD',
+                    'roles' => [$teacherRole->id]
+                ]);
+        } catch (ValidationException $e) {
+            $this->assertArrayHasKey('email', $e->errors());
+        }
+        $this->assertEquals(2, User::count());
+    }
     
     /** @test */
     public function request_validates_category_field_is_not_null()
     {
-        $this->signIn(create(User::class), 'admin');
+        $this->signIn();
     
         $teacherRole = Role::firstOrcreate(['name' => 'college teacher']);
             
@@ -154,7 +176,7 @@ class CreateNewUserTest extends TestCase
     /** @test */
     public function request_validates_category_field_is_a_valid_value()
     {
-        $this->signIn(create(User::class), 'admin');
+        $this->signIn();
     
         $teacherRole = Role::firstOrcreate(['name' => 'college teacher']);
             
@@ -175,7 +197,7 @@ class CreateNewUserTest extends TestCase
     /** @test */
     public function request_validates_roles_field_is_not_null()
     {
-        $this->signIn(create(User::class), 'admin');
+        $this->signIn();
     
         $teacherRole = Role::firstOrcreate(['name' => 'college teacher']);
             

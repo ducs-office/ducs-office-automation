@@ -77,7 +77,7 @@ class UserController extends Controller
         }
 
         flash('User updated successfully!')->success();
-
+        
         return redirect()->back();
     }
 

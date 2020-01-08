@@ -108,4 +108,26 @@ class EditUserTest extends TestCase
         $this->assertEquals($facultyRole->name, $john->getRoleNames()->first());
     }
 
+    /** @test */
+    public function user_is_not_validated_for_uniqueness_if_email_is_not_changed()
+    {
+        $this->signIn();
+
+        $user = create(User::class);
+
+        $this->withoutExceptionHandling()
+            ->from('/users')
+            ->patch('/users/'.$user->id, [
+            'email' => $user->email,
+            'name' => $newName = 'New name',
+            'category' => $newCategory = 'HOD'
+        ])->assertRedirect('/users')
+        ->assertSessionHasNoErrors()
+        ->assertSessionHasFlash('success', 'User updated successfully!');
+
+
+        $this->assertEquals(2, User::count());
+        $this->assertEquals($newName, $user->fresh()->name);
+        $this->assertEquals($newCategory, $user->fresh()->category);
+    }
 }
