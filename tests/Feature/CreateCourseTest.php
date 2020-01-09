@@ -6,6 +6,7 @@ use App\Programme;
 use App\Course;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
@@ -19,19 +20,16 @@ class CreateCourseTest extends TestCase
         $this->withoutExceptionHandling()
             ->signIn(create(User::class));
 
-
-        $this->post('/courses', $params = [
+        $this->post('/courses', $course = [
             'code' => 'MCS-102',
             'name' => 'Design and Analysis of Algorithms',
+            'attachments' =>  $attachment = [UploadedFile::fake()->create('document.pdf')]
         ])->assertRedirect('/courses')
         ->assertSessionHasFlash('success', 'Course created successfully!');
-
+           
         $this->assertEquals(1, Course::count());
-
-        tap(Course::first(), function ($course) use ($params) {
-            foreach ($params as $param => $value) {
-                $this->assertEquals($value, $course->{$param});
-            }
-        });
+        
+        $this->assertEquals(Course::first()->attachments[0]->path, 'course_attachments/'.$attachment[0]->hashName());
+        $this->assertEquals(Course::first()->code, $course['code']);
     }
 }

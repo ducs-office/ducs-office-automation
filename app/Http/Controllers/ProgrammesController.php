@@ -34,7 +34,7 @@ class ProgrammesController extends Controller
             'name' => ['required', 'min:3', 'max:190'],
             'type' => ['required', 'in:Under Graduate(U.G.),Post Graduate(P.G.)'],
             'courses' => ['nullable', 'array', 'min:1'],
-            'courses.*' => ['required', 'integer', 'exists:courses,id'],
+            'courses.*' => ['required', 'integer', 'exists:courses,id,programme_id,NULL'],
         ]);
 
         $programme = Programme::create([
@@ -64,7 +64,11 @@ class ProgrammesController extends Controller
             'name' => ['sometimes', 'required', 'min:3', 'max:190'],
             'type' => ['sometimes', 'required', 'in:Under Graduate(U.G.),Post Graduate(P.G.)'],
             'courses' => ['nullable', 'array', 'min:1'],
-            'courses.*' => ['sometimes', 'required', 'integer', 'exists:courses,id'],
+            'courses.*' => ['sometimes', 'required', 'integer',
+                             Rule::exists('courses', 'id')->where(function ($query) use ($programme) {
+                                 $query->whereNull('programme_id')->orwhere('programme_id', $programme->id);
+                             })
+                            ],
         ]);
 
         $programme->update($request->only(['code', 'wef', 'name', 'type']));

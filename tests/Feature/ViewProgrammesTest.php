@@ -14,12 +14,13 @@ class ViewProgrammesTest extends TestCase
     /** @test */
     public function guest_cannot_view_programmes()
     {
-        $programmes = create('App\Programme', 3);
+        create('App\Programme', 3);
 
         $this->withExceptionHandling();
 
         $this->get('/programmes')->assertRedirect('/login');
     }
+    
     /** @test */
     public function admin_can_view_all_programmes()
     {
