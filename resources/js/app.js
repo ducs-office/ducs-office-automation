@@ -11,13 +11,6 @@ import TabbedPane from './components/TabbedPane.vue';
 import FileInput from './components/FileInput.vue';
 import DynamicModal from './components/DynamicModal.vue';
 import LettersSearchFilters from './components/LettersSearchFilters.vue';
-import ProgrammeUpdateModal from "./components/ProgrammeUpdateModal.vue";
-import CourseUpdateModal from './components/CourseUpdateModal.vue';
-import CollegeUpdateModal from "./components/CollegeUpdateModal.vue";
-import RemarkUpdateModal from './components/RemarkUpdateModal.vue';
-import ReminderUpdateModal from './components/ReminderUpdateModal.vue';
-import UserUpdateModal from "./components/UserUpdateModal.vue";
-import RoleUpdateModal from './components/RoleUpdateModal.vue';
 import SidebarNav from './components/SidebarNav.vue';
 import SidebarNavButton from './components/SidebarNavButton.vue';
 
@@ -33,14 +26,7 @@ Vue.component('v-multi-typeahead', VueMultiTypeahead);
 Vue.component("v-tabbed-pane", TabbedPane);
 Vue.component("v-file-input", FileInput);
 
-Vue.component("programme-update-modal", ProgrammeUpdateModal);
-Vue.component("course-update-modal", CourseUpdateModal);
 Vue.component('letter-search-filters', LettersSearchFilters);
-Vue.component("college-update-modal", CollegeUpdateModal);
-Vue.component("remark-update-modal", RemarkUpdateModal);
-Vue.component("reminder-update-modal", ReminderUpdateModal);
-Vue.component("user-update-modal", UserUpdateModal);
-Vue.component("role-update-modal", RoleUpdateModal);
 Vue.component("sidebar-nav", SidebarNav);
 Vue.component("sidebar-nav-button", SidebarNavButton);
 
