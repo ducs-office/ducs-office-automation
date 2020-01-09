@@ -22,17 +22,23 @@
                     </label>
                     <select id="roles" name="roles[]" class="w-full form-input" :value="data('user.roles', [])" multiple>
                         @foreach ($roles as $role)
-                            <option value="{{ $role->id }}">{{ $role->name }}</option>
+                            <option value="{{ $role->id }}"
+                                :selected="data('user.roles', []).includes({{ $role->id }})">
+                                {{ $role->name }}
+                            </option>
                         @endforeach
                     </select>
                 </div>
                 <div class="mb-2">
                     <label for="category" class="w-full form-label">Category<span
                             class="h-current text-red-500 text-lg">*</span></label>
-                    <select name="category" id="category" class="w-full form-input" required :value="data('user.category')">
+                    <select name="category" id="category" class="w-full form-input" required>
                         <option value="" selected disabled>Select a category for the user</option>
                         @foreach ($categories as $category)
-                        <option value="{{ $category }}"> {{ $category }} </option>
+                        <option value="{{ $category }}"
+                            :selected="data('user.category') == '{{ $category }}'">
+                            {{ $category }}
+                        </option>
                         @endforeach
                     </select>
                 </div>

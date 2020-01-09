@@ -16,7 +16,7 @@
     </div>
     @can('update', App\User::class)
     @include('users.modals.edit', [
-        'modalName' => 'update-user-modal',
+        'modalName' => 'edit-user-modal',
         'roles' => $roles,
     ])
     @endcan
@@ -40,12 +40,12 @@
                 @can('update', App\User::class)
                 <button type="submit" class="p-1 hover:text-red-700 mr-2"
                     @click="
-                        $modal.show('update-user-modal', {
+                        $modal.show('edit-user-modal', {
                             user: {
                                 id: {{ $user->id }},
                                 name: {{ json_encode($user->name) }},
                                 email: {{ json_encode($user->email) }},
-                                roles: {{ $user->roles->pluck('id')->toJson() }}
+                                roles: {{ $user->roles->pluck('id')->toJson() }},
                                 category: {{ json_encode($user->category)}}
                             },
                         })">
