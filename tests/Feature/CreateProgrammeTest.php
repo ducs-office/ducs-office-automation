@@ -25,6 +25,7 @@ class CreateProgrammeTest extends TestCase
             'wef' => '2019-08-12',
             'name' => 'M.Sc. Computer Science',
             'type' => 'Under Graduate(U.G.)',
+            'duration' => 2,
         ])->assertRedirect('/programmes')
         ->assertSessionHasFlash('success', 'Programme created successfully');
 
@@ -45,6 +46,7 @@ class CreateProgrammeTest extends TestCase
                 'wef' => '2020-01-01',
                 'name' => 'M.C.A. Computer Science',
                 'type' => 'Under Graduate(U.G.)',
+                'duration' => 2,
                 'courses' => [$course->id],
             ]);
         } catch (ValidationException $e) {
@@ -60,6 +62,7 @@ class CreateProgrammeTest extends TestCase
                 'wef' => '2020-01-01',
                 'name' => 'M.C.A. Computer Science',
                 'type' => 'Under Graduate(U.G.)',
+                'duration' => 2,
                 'courses' => [$course->id],
             ])->assertRedirect('/programmes')
             ->assertSessionHasFlash('success', 'Programme created successfully');
@@ -78,10 +81,32 @@ class CreateProgrammeTest extends TestCase
                 'wef' => '2020-01-01',
                 'name' => 'M.C.A. Computer Science',
                 'type' => 'some random type',
+                'duration' => 2,
                 'courses' => ''
             ]);
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('type', $e->errors());
+        }
+        $this->assertEquals(Programme::count(), 0);
+    }
+
+    /** @test */
+    public function request_validates_duration_field_can_not_be_null()
+    {
+        $this->signIn();
+
+        try {
+            $this->withoutExceptionHandling()
+                ->post('/programmes', [
+                'code' => 'MCS',
+                'wef' => '2020-01-01',
+                'name' => 'M.C.A. Computer Science',
+                'type' => 'some random type',
+                'duration' => '',
+                'courses' => ''
+            ]);
+        } catch (ValidationException $e) {
+            $this->assertArrayHasKey('duration', $e->errors());
         }
         $this->assertEquals(Programme::count(), 0);
     }

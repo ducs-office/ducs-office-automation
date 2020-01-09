@@ -35,6 +35,7 @@ class ProgrammesController extends Controller
             'type' => ['required', 'in:Under Graduate(U.G.),Post Graduate(P.G.)'],
             'courses' => ['nullable', 'array', 'min:1'],
             'courses.*' => ['required', 'integer', 'exists:courses,id,programme_id,NULL'],
+            'duration' => ['required', 'integer'],
         ]);
 
         $programme = Programme::create([
@@ -42,6 +43,7 @@ class ProgrammesController extends Controller
             'wef' => $data['wef'],
             'name' => $data['name'],
             'type' => $data['type'],
+            'duration' => $data['duration']
         ]);
         
         if ($request->has('courses')) {
@@ -69,9 +71,10 @@ class ProgrammesController extends Controller
                                  $query->whereNull('programme_id')->orwhere('programme_id', $programme->id);
                              })
                             ],
+            'duration' => ['sometimes', 'required', 'integer'],
         ]);
 
-        $programme->update($request->only(['code', 'wef', 'name', 'type']));
+        $programme->update($request->only(['code', 'wef', 'name', 'type', 'duration']));
         Course::where('programme_id', $programme->id)->update(['programme_id' => null]);
         
         if ($request->has('courses')) {

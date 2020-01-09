@@ -82,7 +82,6 @@ class UpdateProgrammeTest extends TestCase
         ->assertSessionHasNoErrors()
         ->assertSessionHasFlash('success', 'Programme updated successfully!');
 
-
         $this->assertEquals(1, Programme::count());
         $this->assertEquals($newName, $programme->fresh()->name);
     }
@@ -91,6 +90,7 @@ class UpdateProgrammeTest extends TestCase
     public function admin_can_add_only_non_assigned_courses_to_the_programme()
     {
         $this->signIn();
+
         $programme1 = create(Programme::class);
         $course1 = create(Course::class, 1, ['programme_id' => $programme1->id]);
         $programme2 = create(Programme::class);
@@ -108,6 +108,7 @@ class UpdateProgrammeTest extends TestCase
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('courses.0', $e->errors());
         }
+
         $this->assertEquals(Programme::count(), 2);
         $this->assertEquals($course2->count(), $programme2->fresh()->courses()->count());
 
@@ -123,6 +124,7 @@ class UpdateProgrammeTest extends TestCase
             ])->assertRedirect('/programmes')
             ->assertSessionHasNoErrors()
             ->assertSessionHasFlash('success', 'Programme updated successfully!');
+
         $this->assertEquals(Programme::count(), 2);
         $this->assertEquals(1, $programme2->fresh()->courses()->count());
     }
@@ -159,5 +161,22 @@ class UpdateProgrammeTest extends TestCase
 
         $this->assertEquals(1, Programme::count());
         $this->assertEquals($newType, $programme->fresh()->type);
+    }
+
+    /** @test */
+    public function admin_can_update_duration_field()
+    {
+        $this->withoutExceptionHandling()
+            ->signIn();
+
+        $programme = create(Programme::class, 1, ['duration'=> 2]);
+
+        $response = $this->patch('/programmes/'.$programme->id, [
+            'duration' => $newDuration = 3
+        ])->assertRedirect('/programmes')
+        ->assertSessionHasFlash('success', 'Programme updated successfully!');
+
+        $this->assertEquals(1, Programme::count());
+        $this->assertEquals($newDuration, $programme->fresh()->duration);
     }
 }
