@@ -14,6 +14,7 @@ import LettersSearchFilters from './components/LettersSearchFilters.vue';
 import ProgrammeUpdateModal from "./components/ProgrammeUpdateModal.vue";
 import CourseUpdateModal from './components/CourseUpdateModal.vue';
 import CollegeUpdateModal from "./components/CollegeUpdateModal.vue";
+import CollegeProgrammesViewModal from "./components/CollegeProgrammesViewModal.vue"
 import RemarkUpdateModal from './components/RemarkUpdateModal.vue';
 import ReminderUpdateModal from './components/ReminderUpdateModal.vue';
 import UserUpdateModal from "./components/UserUpdateModal.vue";
@@ -36,6 +37,7 @@ Vue.component("programme-update-modal", ProgrammeUpdateModal);
 Vue.component("course-update-modal", CourseUpdateModal);
 Vue.component('letter-search-filters', LettersSearchFilters);
 Vue.component("college-update-modal", CollegeUpdateModal);
+Vue.component("college-programmes-view-modal", CollegeProgrammesViewModal);
 Vue.component("remark-update-modal", RemarkUpdateModal);
 Vue.component("reminder-update-modal", ReminderUpdateModal);
 Vue.component("user-update-modal", UserUpdateModal);

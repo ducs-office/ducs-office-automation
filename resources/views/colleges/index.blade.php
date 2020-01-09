@@ -28,7 +28,7 @@
                         <label for="programme" class="w-full form-label">Programmes <span class="h-current text-red-500 text-lg">*</span></label>
                         <select name="programmes[]" id="programme" class="w-full form-input" multiple>
                             @foreach ($programmes as $programme)
-                                <option value="{{$programme->id}}">{{ucwords($programme->code)}}</option>
+                                <option value="{{$programme->id}}">{{$programme->code}} - {{ucwords($programme->name)}}</option>
                             @endforeach
                         </select>
                     </div>
@@ -44,13 +44,22 @@
     @can('update', App\College::class)
     <college-update-modal name ="college-update-modal" :programmes="{{$programmes->toJson()}}">@csrf_token @method('patch') </college-update-modal>
     @endcan
+    <college-programmes-view-modal name="college-programmes-view-modal"></college-programmes-view-modal>
     @foreach($colleges as $college)
         <div class="px-6 py-2 hover:bg-gray-100 border-b flex justify-between">
-            <div class="flex items-baseline">
+            <div class="flex items-baseline w-2/3">
                 <h4 class="text-sm font-semibold text-gray-600 mr-2 w-40">{{$college->code}}</h4>
                 <h3 class="text-lg font-bold mr-2 ml-3">
                     {{ucwords($college->name)}}
                 </h3>
+            </div>
+            <div class="flex items-baseline">
+                <button class="btn btn-magenta is-sm shadow-inset" @click= "
+                    $modal.show('college-programmes-view-modal',{
+                    college_programmes: {{$college->programmes->toJson()}}
+                })">
+                    View Programmes
+                </button>
             </div>
             <div class="flex">
                 @can('update', App\College::class)

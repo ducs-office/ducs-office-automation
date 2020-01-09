@@ -54,7 +54,7 @@ class CollegeController extends Controller
                 Rule::unique('colleges')->ignore($college)
             ],
             'name'=>[
-                'sometimes', 'required', 'min:5', 'max:100',
+                'sometimes', 'required', 'min:3', 'max:100',
                 Rule::unique('colleges')->ignore($college)
             ],
             'programmes' => ['sometimes', 'required', 'array', 'min:1'],
