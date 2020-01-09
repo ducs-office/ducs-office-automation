@@ -1,7 +1,9 @@
 <div class="bg-gray-100 justify-between overflow-y-auto">
+    @if(isset($loop) && $loop->first)
     @include('outgoing_letters.remarks.modals.edit', [
         'modalName' => 'edit-remark-modal'
     ])
+    @endif
     <div class="border-b px-6 py-2">
         @can('create', App\Remark::class)
         <form action="{{ route('outgoing_letters.remarks.store', $letter) }}" method="POST">
