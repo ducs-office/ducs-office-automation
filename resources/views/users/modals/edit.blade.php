@@ -16,7 +16,7 @@
                     </label>
                     <input id="email" type="email" name="email" class="w-full form-input" :value="data('user.email')">
                 </div>
-                <div class="mb-5">
+                <div class="mb-2">
                     <label for="roles" class="w-full form-label mb-1">
                         Roles <span class="h-current text-red-500 text-lg">*</span>
                     </label>
@@ -26,7 +26,17 @@
                         @endforeach
                     </select>
                 </div>
-                <div>
+                <div class="mb-2">
+                    <label for="category" class="w-full form-label">Category<span
+                            class="h-current text-red-500 text-lg">*</span></label>
+                    <select name="category" id="category" class="w-full form-input" required :value="data('user.category')">
+                        <option value="" selected disabled>Select a category for the user</option>
+                        @foreach ($categories as $category)
+                        <option value="{{ $category }}"> {{ $category }} </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="mt-5">
                     <button type="submit" class="btn btn-magenta">Update</button>
                 </div>
             </form>

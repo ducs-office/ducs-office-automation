@@ -24,6 +24,16 @@
                     @endforeach
                 </select>
             </div>
+            <div class="mb-2">
+                <label for="category" class="w-full form-label">Category<span
+                        class="h-current text-red-500 text-lg">*</span></label>
+                <select name="category" id="category" class="w-full form-input" required>
+                    <option value="" selected disabled>Select a Category:</option>
+                    @foreach ($categories as $category)
+                    <option value="{{ $category }}"> {{ $category }} </option>
+                    @endforeach
+                </select>
+            </div>
             <div class="mt-5">
                 <button class="btn btn-magenta">Create</button>
             </div>

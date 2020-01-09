@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Administrator',
             'email' => 'admin@cs.du.ac.in',
             'password' => bcrypt('password'),
+            'category' => 'Admin'
         ]);
 
         $admin->assignRole(Role::firstOrCreate(['name' => 'admin']));
