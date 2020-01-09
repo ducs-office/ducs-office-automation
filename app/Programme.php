@@ -14,4 +14,9 @@ class Programme extends Model
     {
         return $this->belongsToMany(College::class, 'colleges_programmes', 'programe_id', 'college_id');
     }
+
+    public function courses()
+    {
+        return $this->hasMany(Course::class, 'programme_id');
+    }
 }

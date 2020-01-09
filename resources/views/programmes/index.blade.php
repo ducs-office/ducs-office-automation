@@ -8,18 +8,23 @@
             New
         </button>
         @include('programmes.modals.create', [
-            'modalName' => 'create-programme-modal'
+            'modalName' => 'create-programme-modal',
+            'courses' => $courses
         ])
         @endcan
     </div>
     @can('update', App\Programme::class)
     @include('programmes.modals.edit', [
-        'modalName' => 'edit-programme-modal'
+        'modalName' => 'edit-programme-modal',
+        'courses' => $courses
     ])
     @endcan
     @foreach ($programmes as $programme)
         <div class="px-6 py-2 hover:bg-gray-100 border-b flex justify-between">
-            <div class="flex items-baseline">
+            <div class="flex items-baseline justify-between">
+                <span class="px-2 py-1 rounded text-xs uppercase text-white bg-blue-600 mr-2 font-bold">
+                    {{ $programme->type === 'Under Graduate(U.G.)' ? 'UG' : 'PG' }}
+                </span>
                 <p class="px-4">{{ $programme->wef }}</p>
                 <h4 class="px-4 text-sm font-semibold text-gray-600 mr-2 w-24">{{ $programme->code }}</h4>
                 <h3 class="px-4 text-lg font-bold mr-2">
@@ -28,7 +33,10 @@
             </div>
             <div class="flex">
                 @can('update', App\Programme::class)
-                <button class="p-1 hover:text-blue-500 mr-1" @click.prevent="$modal.show('edit-programme-modal', {programme: {{ $programme->toJson() }}})">
+                <button class="p-1 hover:text-blue-500 mr-1" @click.prevent="
+                    $modal.show('edit-programme-modal', {
+                        programme: {{ $programme->toJson() }}
+                    })">
                     <feather-icon class="h-current" name="edit">Edit</feather-icon>
                 </button>
                 @endcan

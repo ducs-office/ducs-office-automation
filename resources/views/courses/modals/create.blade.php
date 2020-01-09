@@ -1,5 +1,5 @@
 <v-modal name="create-courses-modal" height="auto">
-    <form action="{{ route('courses.index') }}" method="POST" class="p-6">
+    <form action="{{ route('courses.index') }}" method="POST" class="p-6" enctype="multipart/form-data">
         <h2 class="mb-8 font-bold text-lg">Create New Course</h2>
         @csrf_token
         <div class="mb-2">
@@ -14,16 +14,10 @@
                 placeholder="e.g. Artificial Intelligence">
         </div>
         <div class="mb-2">
-            <label for="course-programme" class="w-full form-label mb-1">Programme<span
-                    class="h-current text-red-500 text-lg">*</span></label>
-            <select id="course-programme" name="programme_id" class="w-full form-input">
-                <option value="" selected disabled>-- Select a Programme --</option>
-                @foreach ($programmes as $id => $programme)
-                <option value="{{ $id }}">{{ $programme }}</option>
-                @endforeach
-            </select>
+            <label for="file" class="w-full form-label mb-1">Upload Syllabus</label>
+            <input type="file" name="attachments[]" accept="application/pdf, image/*" class="w-full" multiple>
         </div>
-        <div class="mt-6 mb-3">
+        <div class="mt-5">
             <button type="submit" class="btn btn-magenta">Create</button>
         </div>
     </form>

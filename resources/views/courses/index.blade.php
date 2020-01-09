@@ -9,14 +9,12 @@
             </button>
             @include('courses.modals.create', [
                 'modalName' => 'create-college-modal',
-                'programmes' => $programmes
             ])
             @endcan
         </div>
         @can('update', App\Course::class)
         @include('courses.modals.edit', [
-            'modalName' => 'edit-course-modal',
-            'programmes' => $programmes
+            'modalName' => 'edit-course-modal'
         ])
         @endcan
         <div>
@@ -25,14 +23,31 @@
                     <div class="flex items-baseline">
                         <h4 class="font-bold text-sm text-gray-600 w-24">{{ $course->code }}</h4>
                         <h3 class="font-bold text-lg capitalize mr-2">{{ $course->name }}</h3>
-                        <p class="text-gray-500 truncate">{{ ucwords($course->programme->name) }} ({{ $course->programme->code }})</p>
+                        @if ($course->programme_id != null)
+                            <p class="text-gray-500 truncate">{{ $course->programme->code }}</p>
+                        @endif
+                        <div class="flex flex-wrap mx-2">
+                            @foreach ($course->attachments as $attachment)
+                                <div class="inline-flex items-center px-2 rounded border hover:bg-gray-300 text-gray-600 mx-2">
+                                    <a href="{{ route('attachments.show', $attachment) }}" target="__blank" class="inline-flex items-center mr-1">
+                                        <feather-icon name="paperclip" class="h-4 mr-2" stroke-width="2">View Syllabus</feather-icon>
+                                        <span>{{ $attachment->original_name }}</span>
+                                    </a>
+                                    <form action="{{ route('attachments.destroy', $attachment) }}" method="POST" onsubmit= "return confirm('Do you really want to delete attachment?'); ">
+                                        @csrf_token @method('DELETE')
+                                        <button type="submit" class="p-1 rounded hover:bg-red-500 hover:text-white">
+                                            <feather-icon name="x" class="h-4" stroke-width="2">Delete Attachment</feather-icon>
+                                        </button>
+                                    </form>
+                                </div>
+                            @endforeach
+                        </div>
                     </div>
                     <div class="flex items-center">
                         @can('update', App\Course::class)
                         <button class="p-1 hover:text-blue-500 mr-2"
-                        @click.prevent="$modal.show('course-update-modal', {
-                            course: {{ $course->toJson() }},
-                            programmes: {{ $programmes->toJson() }}
+                        @click.prevent="$modal.show('edit-course-modal', {
+                            course: {{ $course->toJson() }}
                         })">
                             <feather-icon name="edit" class="h-current">Edit</feather-icon>
                         </button>

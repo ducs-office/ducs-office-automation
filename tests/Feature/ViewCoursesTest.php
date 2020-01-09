@@ -33,21 +33,4 @@ class ViewCoursesTest extends TestCase
             $viewCourses->pluck('id')->toArray()
         );
     }
-
-    /** @test */
-    public function courses_index_page_also_has_programmes()
-    {
-        $this->signIn();
-
-        $programmes = create(Programme::class, 3);
-
-        $viewProgrammes = $this->withoutExceptionHandling()->get('/courses')
-            ->assertSuccessful()
-            ->assertViewHas('programmes')
-            ->viewData('programmes');
-
-        $this->assertInstanceOf(Collection::class, $viewProgrammes);
-        $this->assertCount(3, $viewProgrammes);
-        $this->assertSame($viewProgrammes->toArray(), $programmes->pluck('name', 'id')->toArray());
-    }
 }

@@ -10,5 +10,6 @@ $factory->define(Programme::class, function (Faker $faker) {
         'code' => $faker->unique()->regexify('[A-Z0-9]{3}[0-9\-][0-9]{6}'),
         'wef' => $faker->date('Y-m-d'),
         'name' => $faker->words(3, true),
+        'type' => $faker->randomElement(['Under Graduate(U.G.)', 'Post Graduate(P.G.)']),
     ];
 });

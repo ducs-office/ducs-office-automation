@@ -21,10 +21,9 @@ class CourseController extends Controller
      */
     public function index()
     {
-        $courses = Course::latest()->get();
-        $programmes = Programme::all()->pluck('name', 'id');
+        $courses = Course::latest()->with(['programme'])->get();
 
-        return view('courses.index', compact('courses', 'programmes'));
+        return view('courses.index', compact('courses'));
     }
 
     /**
@@ -35,13 +34,25 @@ class CourseController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->validate([
+        $request->validate([
             'code' => ['required', 'min:3', 'max:60', 'unique:courses'],
             'name' => ['required', 'min:3', 'max:190'],
-            'programme_id' => ['required', 'integer', 'exists:programmes,id'],
+            'attachments' => ['nullable', 'array', 'max:5'],
+            'attachments.*' => ['file', 'max:200', 'mimes:jpeg,jpg,png,pdf'],
         ]);
+        
+        $course = Course::create($request->only(['code', 'name']));
 
-        Course::create($data);
+        if ($request->hasFile('attachments')) {
+            $course->attachments()->createMany(
+                array_map(function ($attachedFile) {
+                    return [
+                        'path' => $attachedFile->store('/course_attachments'),
+                        'original_name' => $attachedFile->getClientOriginalName(),
+                    ];
+                }, $request-> attachments)
+            );
+        }
 
         flash('Course created successfully!', 'success');
 
@@ -63,10 +74,21 @@ class CourseController extends Controller
                 Rule::unique('courses')->ignore($course)
             ],
             'name' => ['sometimes', 'required', 'min:3', 'max:190'],
-            'programme_id' => ['sometimes', 'required', 'integer', 'exists:programmes,id'],
+            'attachments' => ['nullable', 'array', 'max:5'],
+            'attachments.*' => ['file', 'mimes:jpeg,jpg,png,pdf', 'max:200'],
         ]);
 
-        $course->update($data);
+        $course->update($request->only(['code', 'name']));
+        if ($request->hasFile('attachments')) {
+            $course->attachments()->createMany(
+                array_map(function ($attachedFile) {
+                    return [
+                        'path' => $attachedFile->store('/course_attachments'),
+                        'original_name' => $attachedFile->getClientOriginalName(),
+                    ];
+                }, $data['attachments'])
+            );
+        }
 
         flash('Course updated successfully!', 'success');
 
