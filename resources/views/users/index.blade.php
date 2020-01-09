@@ -5,42 +5,20 @@
         <h1 class="page-header mb-0 px-0 mr-4">Users</h1>
         @can('create', App\User::class)
         <button class="btn btn-magenta is-sm shadow-inner"
-            @click.prevent="$modal.show('create-new-user-form')">
+            @click.prevent="$modal.show('create-user-modal')">
             New
         </button>
+        @include('users.modals.create', [
+            'modalName' => 'create-user-modal',
+            'roles' => $roles,
+        ])
         @endcan
     </div>
-    @can('create', App\User::class)
-    <modal name="create-new-user-form" height="auto">
-        <div class="p-6">
-            <h2 class="text-lg font-bold mb-8">Create Users</h2>
-            <form action="{{ route('users.store') }}" method="POST" class="px-6">
-                @csrf_token
-                <div class="mb-2">
-                    <label for="name" class="w-full form-label">Full Name<span class="h-current text-red-500 text-lg">*</span></label>
-                    <input id="name" type="text" name="name" class="w-full form-input" placholder="Enter user's full name here..." required>
-                </div>
-                <div class="mb-2">
-                    <label for="email" class="w-full form-label">Email<span class="h-current text-red-500 text-lg">*</span></label>
-                    <input id="email" type="email" name="email" class="w-full form-input" placholder="Enter user's email here..." required>
-                </div>
-                <div class="mb-2">
-                    <label for="role" class="w-full form-label">Role<span class="h-current text-red-500 text-lg">*</span></label>
-                    <select id="role" name="roles[]" class="w-full form-input" multiple>
-                        @foreach ($roles as $role)
-                            <option value="{{ $role->id }}">{{ ucwords(str_replace('_', ' ', $role->name)) }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="mt-5">
-                    <button class="btn btn-magenta">Create</button>
-                </div>
-            </form>
-        </div>
-    </modal>
-    @endcan
     @can('update', App\User::class)
-    <user-update-modal name="user-update-modal" :roles="{{ $roles->toJson() }}">@csrf_token @method('PATCH')</user-update-modal>
+    @include('users.modals.edit', [
+        'modalName' => 'update-user-modal',
+        'roles' => $roles,
+    ])
     @endcan
     @forelse($users as $user)
         <div class="px-4 py-2 hover:bg-gray-100 border-b flex">
@@ -59,13 +37,13 @@
                 @can('update', App\User::class)
                 <button type="submit" class="p-1 hover:text-red-700 mr-2"
                     @click="
-                        $modal.show('user-update-modal', {
+                        $modal.show('update-user-modal', {
                             user: {
                                 id: {{ $user->id }},
                                 name: {{ json_encode($user->name) }},
-                                email: {{ json_encode($user->email) }}
+                                email: {{ json_encode($user->email) }},
+                                roles: {{ $user->roles->pluck('id')->toJson() }}
                             },
-                            user_roles: {{ $user->roles->pluck('id')->toJson() }}
                         })">
                     <feather-icon class="h-current" name="edit">Edit</feather-icon>
                 </button>

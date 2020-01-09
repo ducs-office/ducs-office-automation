@@ -95,7 +95,7 @@ $priority_name = [
             </template>
             <template v-slot:default="{ isActive }">
                 <div v-show="isActive('remarks')">
-                    @include('incoming_letters.partials.remarks')
+                    @include('incoming_letters.remarks.index')
                 </div>
             </template>
         </v-tabbed-pane>

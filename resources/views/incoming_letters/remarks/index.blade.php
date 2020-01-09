@@ -1,5 +1,7 @@
 <div class="bg-gray-100 justify-between overflow-y-auto">
-        <remark-update-modal name="remark-update-modal">@csrf_token @method('patch')</remark-update-modal>
+        @include('incoming_letters.remarks.modals.edit', [
+            'modalName' => 'edit-remark-modal'
+        ])
         <div class="border-b px-6 py-2">
             <form action="{{ route('incoming_letters.remarks.store', $letter) }}" method="POST">
                 @csrf_token <input type="hidden" name="letter_id" value="{{ $letter->id }}">
@@ -30,13 +32,16 @@
             </div>
             <p class="pl-12 text-gray-800 mr-10">{{ $remark->description }}</p>
             <div class="absolute right-0 top-0 mt-2 mr-4 flex items-center">
+                @can('update', $remark)
                 <button class="p-1 text-gray-500 hover:bg-gray-200 text-blue-600 rounded mr-3"
                     title="Edit"
-                    @click.prevent="$modal.show('remark-update-modal',{
+                    @click.prevent="$modal.show('edit-remark-modal',{
                         remark: {{ $remark->toJson() }}
                     })">
                     <feather-icon name="edit-3" stroke-width="2.5" class="h-current">Edit</feather-icon>
                 </button>
+                @endcan
+                @can('delete', $remark)
                 <form action="{{ route('remarks.destroy', $remark) }}" method="POST"
                     onsubmit="return confirm('Do you really want to delete remark?');">
                     @csrf_token @method('DELETE')
@@ -44,6 +49,7 @@
                         <feather-icon name="trash-2" stroke-width="2.5" class="h-current">Delete</feather-icon>
                     </button>
                 </form>
+                @endcan
             </div>
         </div>
         @empty

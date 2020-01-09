@@ -9,7 +9,7 @@ import VueTypeahead from './components/VueTypeahead.vue';
 import VueMultiTypeahead from './components/VueMultiTypeahead.vue';
 import TabbedPane from './components/TabbedPane.vue';
 import FileInput from './components/FileInput.vue';
-
+import DynamicModal from './components/DynamicModal.vue';
 import LettersSearchFilters from './components/LettersSearchFilters.vue';
 import ProgrammeUpdateModal from "./components/ProgrammeUpdateModal.vue";
 import CourseUpdateModal from './components/CourseUpdateModal.vue';
@@ -26,6 +26,7 @@ Vue.use(VueJsModal);
 window.Events = new Vue();
 
 Vue.component('v-flash', Flash);
+Vue.component('v-modal', DynamicModal);
 Vue.component('feather-icon', FeatherIcon);
 Vue.component('vue-typeahead', VueTypeahead);
 Vue.component('v-multi-typeahead', VueMultiTypeahead);

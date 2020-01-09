@@ -1,8 +1,8 @@
 
 <div class="bg-gray-100">
-    <reminder-update-modal name="reminder-update-modal">
-        @csrf_token @method('patch')
-    </reminder-update-modal>
+    @include('outgoing_letters.reminders.modals.edit', [
+        'modalName' => 'edit-reminder-modal'
+    ])
     @can('create', [\App\LetterReminder::class, $letter])
     <form action="{{ route('outgoing_letters.reminders.store', $letter) }}" method="POST" enctype="multipart/form-data" class="px-6 py-2 border-b">
         @csrf_token
@@ -44,12 +44,15 @@
             @endforeach
         </div>
         <div class="px-2 flex items-baseline">
+            @can('update', $reminder)
             <button class="p-1 text-gray-500 hover:bg-gray-200 text-blue-600 rounded mr-3" title="Edit"
-                @click.prevent="$modal.show('reminder-update-modal',{
+                @click.prevent="$modal.show('edit-reminder-modal',{
                                 reminder: {{ $reminder->toJson() }}
                             })">
                 <feather-icon name="edit-3" stroke-width="2.5" class="h-current">Edit</feather-icon>
             </button>
+            @endcan
+            @can('delete', $reminder)
             <form action="{{ route('reminders.destroy', $reminder) }}" method="POST"
                 onsubmit="return confirm('Do you really want to delete this reminder?');">
                 @csrf_token
@@ -58,6 +61,7 @@
                     <feather-icon name="trash-2" stroke-width="2.5" class="h-current">Delete</feather-icon>
                 </button>
             </form>
+            @endcan
         </div>
     </div>
     @empty

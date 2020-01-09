@@ -97,12 +97,12 @@
         <template v-slot:default="{ isActive }">
             @can('viewAny', App\Remark::class)
             <div v-show="isActive('remarks')">
-                @include('outgoing_letters.partials.remarks')
+                @include('outgoing_letters.remarks.index')
             </div>
             @endcan
             @can('viewAny', App\LetterReminder::class)
             <div v-show="isActive('reminders')">
-                @include('outgoing_letters.partials.reminders')
+                @include('outgoing_letters.reminders.index')
             </div>
             @endcan
         </template>

@@ -1,7 +1,7 @@
 <div class="bg-gray-100 justify-between overflow-y-auto">
-    @can('edit remarks')
-    <remark-update-modal name="remark-update-modal">@csrf_token @method('patch')</remark-update-modal>
-    @endcan
+    @include('outgoing_letters.remarks.modals.edit', [
+        'modalName' => 'edit-remark-modal'
+    ])
     <div class="border-b px-6 py-2">
         @can('create', App\Remark::class)
         <form action="{{ route('outgoing_letters.remarks.store', $letter) }}" method="POST">
@@ -43,7 +43,7 @@
             @can('update', $remark)
             <button class="p-1 text-gray-500 hover:bg-gray-200 text-blue-600 rounded mr-3"
                 title="Edit"
-                @click.prevent="$modal.show('remark-update-modal',{
+                @click.prevent="$modal.show('edit-remark-modal',{
                     remark: {{ $remark->toJson() }}
                 })">
                 <feather-icon name="edit-3" stroke-width="2.5" class="h-current">Edit</feather-icon>
