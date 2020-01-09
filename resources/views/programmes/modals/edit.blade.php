@@ -6,7 +6,7 @@
                 @csrf_token @method('PATCH')
                 <div class="mb-2">
                     <label for="programme_code" class="w-full form-label">
-                        Programme Code <span class="h-current text-red-500 text-lg">*</span>
+                        Code <span class="h-current text-red-500 text-lg">*</span>
                     </label>
                     <input id="programme_code" type="text" name="code" class="w-full form-input" :value="data('programme.code')">
                 </div>
@@ -17,9 +17,14 @@
                     <input type="date" name="wef" class="w-full form-input" :value="data('programme.wef')">
                 </div>
                 <div class="mb-2">
-                    <label for="programme_name" class="w-full form-label">Programme Name<span
+                    <label for="programme_name" class="w-full form-label">Name<span
                             class="h-current text-red-500 text-lg">*</span></label>
                     <input id="programme_name" type="text" name="name" class="w-full form-input" :value="data('programme.name')">
+                </div>
+                <div class="mb-2">
+                    <label for="programme_duration" class="w-full form-label">Duration<span
+                            class="h-current text-red-500 text-lg">*</span></label>
+                    <input id="programme_duration" type="number" name="duration" class="w-full form-input" :value="data('programme.duration')">
                 </div>
                 <div class="mb-2">
                     <label for="programme_type" class="w-full form-label">Type<span
