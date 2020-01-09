@@ -16,9 +16,10 @@ class CreateProgrammesTable extends Migration
         Schema::create('programmes', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('code', 60)->unique();
-            $table->date('wef');
-            $table->enum('type', ['Under Graduate(U.G.)', 'Post Graduate(P.G.)']);
             $table->string('name');
+            $table->date('wef');
+            $table->tinyInteger('duration');
+            $table->enum('type', ['Under Graduate(U.G.)', 'Post Graduate(P.G.)']);
             $table->timestamps();
         });
     }
