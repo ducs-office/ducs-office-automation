@@ -4,65 +4,65 @@
         <h1 class="text-lg font-bold">Department of <br> Computer Science</h1>
     </a>
 </div>
-<aside class="flex-1">
+<aside class="flex-1 px-4">
     <ul class="font-bold text-white-90">
-        <li>
-            <a href="{{ route('dashboard') }}" class="flex items-center py-2 px-4 hover:bg-magenta-700">
+        <li class="mb-1 last:mb-0">
+            <a href="{{ route('dashboard') }}" class="flex items-center py-2 px-4 hover:bg-magenta-700 rounded">
                 <feather-icon name="grid" class="h-4 mr-2" stroke-width="2">Dashboard</feather-icon>
                 Dashboard
             </a>
         </li>
         @can('viewAny', \App\OutgoingLetter::class)
-        <li>
-            <a href="{{ route('outgoing_letters.index') }}" class="flex items-center py-2 px-4 hover:bg-magenta-700 hover:pl-6">
+        <li class="mb-1 last:mb-0">
+            <a href="{{ route('outgoing_letters.index') }}" class="flex items-center py-2 px-4 hover:bg-magenta-700 rounded">
                 <feather-icon name="mail" class="h-4 mr-2">Outgoing Letters</feather-icon>
                 Outgoing Letters
             </a>
         </li>
         @endcan
         @can('viewAny', App\IncomingLetter::class)
-            <li>
-                <a href="{{ route('incoming_letters.index') }}" class="flex items-center py-2 px-4 hover:bg-magenta-700 hover:pl-6">
+            <li class="mb-1 last:mb-0">
+                <a href="{{ route('incoming_letters.index') }}" class="flex items-center py-2 px-4 hover:bg-magenta-700 rounded">
                     <feather-icon name="mail" class="h-4 mr-2">Incoming Letters</feather-icon>
                     Incoming Letters
                 </a>
             </li>
         @endcan
         @can('viewAny', App\Programme::class)
-        <li>
-            <a href="{{ route('programmes.index') }}" class="flex items-center py-2 px-4 hover:bg-magenta-700 hover:pl-6">
+        <li class="mb-1 last:mb-0">
+            <a href="{{ route('programmes.index') }}" class="flex items-center py-2 px-4 hover:bg-magenta-700 rounded">
                 <feather-icon name="book" class="h-4 mr-2">Academic Programmes</feather-icon>
-                Academic Programmes
+                Programmes
             </a>
         </li>
         @endcan
         @can('viewAny', App\Course::class)
-        <li>
-            <a href="{{ route('courses.index') }}" class="flex items-center py-2 px-4 hover:bg-magenta-700 hover:pl-6">
+        <li class="mb-1 last:mb-0">
+            <a href="{{ route('courses.index') }}" class="flex items-center py-2 px-4 hover:bg-magenta-700 rounded">
                 <feather-icon name="file-text" class="h-4 mr-2">Programme Courses</feather-icon>
-                Programme Courses
+                Courses
             </a>
         </li>
         @endcan
         @can('viewAny', App\College::class)
-        <li>
-            <a href="{{ route('colleges.index') }}" class="flex items-center py-2 px-4 hover:bg-magenta-700 hover:pl-6">
+        <li class="mb-1 last:mb-0">
+            <a href="{{ route('colleges.index') }}" class="flex items-center py-2 px-4 hover:bg-magenta-700 rounded">
                 <feather-icon name="home" class="h-4 mr-2">Colleges</feather-icon>
                 Colleges
             </a>
         </li>
         @endcan
         @can('viewAny', App\User::class)
-        <li>
-            <a href="{{ route('users.index') }}" class="flex items-center py-2 px-4 hover:bg-magenta-700 hover:pl-6">
+        <li class="mb-1 last:mb-0">
+            <a href="{{ route('users.index') }}" class="flex items-center py-2 px-4 hover:bg-magenta-700 rounded">
                 <feather-icon name="user" class="h-4 mr-2">User</feather-icon>
                 Users
             </a>
         </li>
         @endcan
         @can('viewAny', Spatie\Permission\Models\Role::class)
-        <li>
-            <a href="{{ route('roles.index') }}" class="flex items-center py-2 px-4 hover:bg-magenta-700 hover:pl-6">
+        <li class="mb-1 last:mb-0">
+            <a href="{{ route('roles.index') }}" class="flex items-center py-2 px-4 hover:bg-magenta-700 rounded">
                 <feather-icon name="key" class="h-4 mr-2">User</feather-icon>
                 Roles & Permissions
             </a>
