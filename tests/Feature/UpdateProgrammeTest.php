@@ -92,7 +92,8 @@ class UpdateProgrammeTest extends TestCase
         $this->signIn();
 
         $programme1 = create(Programme::class);
-        $course1 = create(Course::class, 1, ['programme_id' => $programme1->id]);
+        $course1 = create(Course::class);
+        $course1->programmes()->attach([$programme1->id]);
         $programme2 = create(Programme::class);
         $course2 = $programme2->courses();
 
@@ -112,7 +113,7 @@ class UpdateProgrammeTest extends TestCase
         $this->assertEquals(Programme::count(), 2);
         $this->assertEquals($course2->count(), $programme2->fresh()->courses()->count());
 
-        $course1 = create(Course::class, 1, ['programme_id' => null]);
+        $course1 = create(Course::class);
     
         $this->withoutExceptionHandling()
         ->patch('/programmes/'.$programme2->id, [
@@ -135,7 +136,8 @@ class UpdateProgrammeTest extends TestCase
         $this->signIn();
 
         $programme = create(Programme::class);
-        $courses = create(Course::class, 3, ['programme_id'=>$programme->id]);
+        $courses = create(Course::class, 3);
+        $programme->courses()->attach($courses->pluck('id'));
 
         $this->withoutExceptionHandling()
             -> patch('/programmes/'.$programme->id, [

@@ -37,7 +37,8 @@ class CreateProgrammeTest extends TestCase
     {
         $this->signIn();
         $programme = create(Programme::class);
-        $course = create(Course::class, 1, ['programme_id' => $programme->id]);
+        $course = create(Course::class);
+        $course->programmes()->attach([$programme->id]);
 
         try {
             $this->withoutExceptionHandling()
@@ -54,7 +55,7 @@ class CreateProgrammeTest extends TestCase
         }
         $this->assertEquals(Programme::count(), 1);
 
-        $course = create(Course::class, 1, ['programme_id' => null]);
+        $course = create(Course::class);
         
         $this->withoutExceptionHandling()
                 ->post('/programmes', [

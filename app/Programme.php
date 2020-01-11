@@ -17,6 +17,6 @@ class Programme extends Model
 
     public function courses()
     {
-        return $this->hasMany(Course::class, 'programme_id');
+        return $this->belongsToMany(Course::class);
     }
 }

@@ -22,7 +22,7 @@ class ProgrammesController extends Controller
     public function index()
     {
         $programmes = Programme::latest()->with(['courses'])->get();
-        $courses = Course::where('programme_id', null)->get();
+        $courses = Course::doesntHave('programmes')->get();
         return view('programmes.index', compact('programmes', 'courses'));
     }
 
@@ -34,7 +34,7 @@ class ProgrammesController extends Controller
             'name' => ['required', 'min:3', 'max:190'],
             'type' => ['required', 'in:Under Graduate(U.G.),Post Graduate(P.G.)'],
             'courses' => ['nullable', 'array', 'min:1'],
-            'courses.*' => ['required', 'integer', 'exists:courses,id,programme_id,NULL'],
+            'courses.*' => ['required', 'integer', 'exists:courses,id', 'unique:course_programme,course_id'],
             'duration' => ['required', 'integer'],
         ]);
 
@@ -47,7 +47,7 @@ class ProgrammesController extends Controller
         ]);
         
         if ($request->has('courses')) {
-            Course::whereIn('id', $data['courses'])->update(['programme_id' => $programme->id]);
+            $programme->courses()->attach($data['courses']);
         }
         
         flash('Programme created successfully!', 'success');
@@ -66,19 +66,16 @@ class ProgrammesController extends Controller
             'name' => ['sometimes', 'required', 'min:3', 'max:190'],
             'type' => ['sometimes', 'required', 'in:Under Graduate(U.G.),Post Graduate(P.G.)'],
             'courses' => ['nullable', 'array', 'min:1'],
-            'courses.*' => ['sometimes', 'required', 'integer',
-                             Rule::exists('courses', 'id')->where(function ($query) use ($programme) {
-                                 $query->whereNull('programme_id')->orwhere('programme_id', $programme->id);
-                             })
-                            ],
+            'courses.*' => ['sometimes', 'required', 'integer', 'exists:courses,id',
+                             Rule::unique('course_programme', 'course_id')->ignore($programme->id, 'programme_id'),
+                        ],
             'duration' => ['sometimes', 'required', 'integer'],
         ]);
 
         $programme->update($request->only(['code', 'wef', 'name', 'type', 'duration']));
-        Course::where('programme_id', $programme->id)->update(['programme_id' => null]);
-        
+
         if ($request->has('courses')) {
-            Course::whereIn('id', $data['courses'])->update(['programme_id' => $programme->id]);
+            $programme->courses()->sync($data['courses']);
         }
 
         flash('Programme updated successfully!', 'success');
