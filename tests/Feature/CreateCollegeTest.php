@@ -3,35 +3,44 @@
 namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-use App\User;
 use App\College;
 use App\Programme;
-use Illuminate\Validation\ValidationException;
 
 class CreateCollegeTest extends TestCase
 {
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     */
     use RefreshDatabase;
+
+    /**
+     * creates array of form fields, this is a replacement for factory's make function
+     * `make()` tends to go through the model's accessors and mutators
+     *
+     * @param array $overrides
+     * @return array
+     */
+    protected function fillCollegeFormFields($overrides = [])
+    {
+        return $this->mergeFormFields([
+            'code' => 'DU/ANDC/01',
+            'name' => 'Acharaya Narendra Dev College',
+            'programmes' => function () {
+                return create(Programme::class, 3)->pluck('id')->toArray();
+            }
+        ], $overrides);
+    }
 
     /** @test */
     public function admin_can_create_new_college()
     {
         $this->signIn();
 
-        $this->post('/colleges', [
-            'code' => 'DU-KMV-21',
-            'name' => 'Keshav Mahavidyalaya',
-            'programmes' => [create(Programme::class)->id],
-        ])->assertRedirect('/colleges')
-        ->assertSessionHasFlash('success', 'College created successfully!');
+        $this->withoutExceptionHandling()
+            ->from('/colleges')
+            ->post('/colleges', $this->fillCollegeFormFields())
+            ->assertRedirect('/colleges')
+            ->assertSessionHasNoErrors()
+            ->assertSessionHasFlash('success', 'College created successfully!');
 
-        
         $this->assertEquals(1, College::count());
     }
 
@@ -40,16 +49,11 @@ class CreateCollegeTest extends TestCase
     {
         $this->signIn();
 
-        try {
-            $this->withoutExceptionHandling()
-            ->post('/colleges', [
-            'code' => '',
-            'name' => 'Keshav Mahavidyalaya',
-            'programmes' => [create(Programme::class)->id],
-            ]);
-        } catch (ValidationException $e) {
-            $this->assertArrayHasKey('code', $e->errors());
-        }
+        $params = $this->fillCollegeFormFields(['code' => '']);
+
+        $this->withExceptionHandling()
+            ->post('/colleges', $params)
+            ->assertSessionHasErrorsIn('code');
 
         $this->assertEquals(0, College::count());
     }
@@ -59,18 +63,12 @@ class CreateCollegeTest extends TestCase
     {
         $this->signIn();
 
-        $college_code = create(College::class)->code;
+        $existing_college_code = create(College::class)->code;
+        $params = $this->fillCollegeFormFields(['code' => $existing_college_code]);
 
-        try {
-            $this->withoutExceptionHandling()
-            ->post('/colleges', [
-            'code' => $college_code,
-            'name' => 'Keshav Mahavidyalaya',
-            'programmes' => [create(Programme::class)->id],
-            ]);
-        } catch (ValidationException $e) {
-            $this->assertArrayHasKey('code', $e->errors());
-        }
+        $this->withExceptionHandling()
+            ->post('/colleges', $params)
+            ->assertSessionHasErrorsIn('code');
 
         $this->assertEquals(1, College::count());
     }
@@ -80,16 +78,11 @@ class CreateCollegeTest extends TestCase
     {
         $this->signIn();
 
-        try {
-            $this->withoutExceptionHandling()
-            ->post('/colleges', [
-            'code' => 'DU-KMV-21',
-            'name' => '',
-            'programmes' => [create(Programme::class)->id],
-            ]);
-        } catch (ValidationException $e) {
-            $this->assertArrayHasKey('name', $e->errors());
-        }
+        $params = $this->fillCollegeFormFields(['name' => '']);
+
+        $this->withExceptionHandling()
+            ->post('/colleges', $params)
+            ->assertSessionHasErrorsIn('name');
 
         $this->assertEquals(0, College::count());
     }
@@ -99,18 +92,12 @@ class CreateCollegeTest extends TestCase
     {
         $this->signIn();
 
-        $college_name = create(College::class)->name;
+        $existing_college_name = create(College::class)->name;
+        $params = $this->fillCollegeFormFields(['name' => $existing_college_name]);
 
-        try {
-            $this->withoutExceptionHandling()
-            ->post('/colleges', [
-            'code' => 'DU-KMV-21',
-            'name' =>  $college_name,
-            'programmes' => [create(Programme::class)->id],
-            ]);
-        } catch (ValidationException $e) {
-            $this->assertArrayHasKey('name', $e->errors());
-        }
+        $this->withExceptionHandling()
+            ->post('/colleges', $params)
+            ->assertSessionHasErrorsIn('name');
 
         $this->assertEquals(1, College::count());
     }
@@ -120,16 +107,13 @@ class CreateCollegeTest extends TestCase
     {
         $this->signIn();
 
-        try {
-            $this->withoutExceptionHandling()
-            ->post('/colleges', [
-            'code' => 'DU-KMV-21',
-            'name' => 'Keshav Mahavidyalya',
-            'programmes' => '',
-            ]);
-        } catch (ValidationException $e) {
-            $this->assertArrayHasKey('programmes', $e->errors());
-        }
+        $params = $this->fillCollegeFormFields([
+            'programmes' => []
+        ]);
+
+        $this->withExceptionHandling()
+            ->post('/colleges', $params)
+            ->assertSessionHasErrorsIn('programmes');
 
         $this->assertEquals(0, College::count());
     }
@@ -139,16 +123,13 @@ class CreateCollegeTest extends TestCase
     {
         $this->signIn();
 
-        try {
-            $this->withoutExceptionHandling()
-            ->post('/colleges', [
-            'code' => 'DU-KMV-21',
-            'name' => 'Keshav Mahavidyalya',
-            'programmes' => '[25]',
-            ]);
-        } catch (ValidationException $e) {
-            $this->assertArrayHasKey('programmes', $e->errors());
-        }
+        $params = $this->fillCollegeFormFields([
+            'programmes' => [123432, 321323]
+        ]);
+
+        $this->withExceptionHandling()
+            ->post('/colleges', $params)
+            ->assertSessionHasErrorsIn('programmes');
 
         $this->assertEquals(0, College::count());
     }

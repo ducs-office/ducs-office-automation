@@ -30,4 +30,14 @@ abstract class TestCase extends BaseTestCase
 
         return $user;
     }
+
+    public function mergeFormFields($data, $overrides)
+    {
+        return array_map(function ($value) {
+            if (is_callable($value)) {
+                return $value();
+            }
+            return $value;
+        }, array_merge($data, $overrides));
+    }
 }

@@ -3,9 +3,7 @@
 namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-use App\User;
 use App\College;
 use App\Programme;
 
@@ -19,9 +17,8 @@ class UpdateCollegeTest extends TestCase
         $college = create(College::class);
 
         $this->withExceptionHandling()
-            ->patch('/colleges/'. $college->id, ['code' => 'code1'])
+            ->patch('/colleges/' . $college->id, ['code' => 'code1'])
             ->assertRedirect('/login');
-
 
         $this->assertEquals($college->code, $college->fresh()->code);
     }
@@ -63,21 +60,28 @@ class UpdateCollegeTest extends TestCase
         $this->signIn();
 
         $college = create(College::class);
-        $programmes = create(Programme::class, 5);
+        $related_programmes = create(Programme::class, 3);
+        $college->programmes()->attach($related_programmes->pluck('id')->toArray());
 
-        $college->programmes()->attach([$programmes[0]->id, $programmes[1]->id, $programmes[2]->id]);
+        $other_programmes = create(Programme::class, 2);
+        $new_programme_ids = [
+            $related_programmes[0]->id,
+            $other_programmes[0]->id,
+            $other_programmes[1]->id,
+        ];
 
         $this->withoutExceptionHandling()
             ->patch('/colleges/'. $college->id, [
-                'programmes' => $new_programmes = [$programmes[3]->id, $programmes[4]->id]
-                ])
+                'programmes' => $new_programme_ids,
+            ])
             ->assertRedirect('/colleges')
+            ->assertSessionHasNoErrors()
             ->assertSessionHasFlash('success', 'College updated successfully');
 
         $this->assertEquals(1, College::count());
 
-        $college_programmes = $college->fresh()->programmes()->pluck('id')->toArray();
-        $this->assertSame($college_programmes, $new_programmes);
+        $college_programmes = $college->fresh()->programmes->pluck('id')->toArray();
+        $this->assertSame($college_programmes, $new_programme_ids);
     }
 
     /** @test */
@@ -94,7 +98,6 @@ class UpdateCollegeTest extends TestCase
         ])->assertRedirect('/colleges')
         ->assertSessionHasNoErrors()
         ->assertSessionHasFlash('success', 'College updated successfully!');
-
 
         $this->assertEquals(1, College::count());
         $this->assertEquals($newName, $college->fresh()->name);
@@ -114,7 +117,6 @@ class UpdateCollegeTest extends TestCase
         ])->assertRedirect('/colleges')
         ->assertSessionHasNoErrors()
         ->assertSessionHasFlash('success', 'College updated successfully!');
-
 
         $this->assertEquals(1, College::count());
         $this->assertEquals($new_code, $college->fresh()->code);
