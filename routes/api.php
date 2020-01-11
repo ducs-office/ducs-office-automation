@@ -7,3 +7,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/users', 'UsersController@index');
     Route::get('/users/{user}', 'UsersController@show');
 });
+
+Route::middleware('auth')->group(function () {
+    Route::get('/courses', 'CoursesController@index');
+    Route::get('/courses/{course}', 'CoursesController@show');
+});

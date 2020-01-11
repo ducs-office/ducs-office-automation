@@ -16,7 +16,6 @@
     @can('update', App\Programme::class)
     @include('programmes.modals.edit', [
         'modalName' => 'edit-programme-modal',
-        'courses' => $courses
     ])
     @endcan
     @foreach ($programmes as $programme)
@@ -35,7 +34,8 @@
                 @can('update', App\Programme::class)
                 <button class="p-1 hover:text-blue-500 mr-1" @click.prevent="
                     $modal.show('edit-programme-modal', {
-                        programme: {{ $programme->toJson() }}
+                        programme: {{ $programme->toJson() }},
+                        programme_courses: {{ $programme->courses->map->id->toJson() }} 
                     })">
                     <feather-icon class="h-current" name="edit">Edit</feather-icon>
                 </button>

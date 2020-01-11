@@ -36,15 +36,20 @@
                 </select>
             </div>
             <div class="mb-2">
-                <label for="programme_course" class="w-full form-label">Add Courses</label>
-                <div class="overflow-y-auto overflow-x-hidden h-32 border">
-                    @foreach ($courses as $course)
-                    <div class="flex justify-between mt-1 px-3 py-1">
-                        <label for="course-{{ $course->id }}">{{ $course->name }} ({{ $course->code }})</label>
-                        <input id="course-{{ $course->id }}" type="checkbox" name="courses[]" value="{{ $course->id }}" />
-                    </div>
-                    @endforeach
-                </div>
+                <label for="courses[]" class="w-full form-label">Add Courses</label>
+                <v-multi-typeahead
+                    class="{{ $errors->has('courses') ? 'border-red-600' : ''}}"
+                    name="courses[]"
+                    source="/api/courses"
+                    find-source="/api/courses/{value}"
+                    limit="5"
+                    value="{{ old('course_id')}}"
+                    placeholder="Courses"
+                    >
+                </v-multi-typeahead>
+                @if($errors->has('courses'))
+                    <p class="mt-1 text-red-600">{{$errors->first('courses')}}</p>
+                @endif
             </div>
             <div class="mb-2">
                 <button type="submit" class="btn btn-magenta">Create</button>

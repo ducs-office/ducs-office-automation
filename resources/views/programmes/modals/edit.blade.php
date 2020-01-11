@@ -36,25 +36,16 @@
                 </div>
                 <div class="mb-2">
                     <label for="programme_course" class="w-full form-label">Courses</label>
-                    <div class="overflow-y-auto overflow-x-hidden h-32 border">
-                        @foreach ($courses as $course)
-                        <div class="flex justify-between mt-1 px-3 py-1">
-                            <label for="course-{{ $course->id }}">{{ $course->name }} ({{ $course->code }}) </label>
-                            <input id="course-{{ $course->id }}" type="checkbox" name="courses[]" :value="{{ $course->id }}"/>
-                        </div>
-                        @endforeach
-
-                        <div class="flex justify-between mt-1 px-3 py-1"
-                            v-for="course in data('programme.courses', [])"
-                            :key="course.id">
-                            <label :for="`course-${ course.id }`">
-                                @verbatim
-                                {{ course.name }} ({{ course.code }})
-                                @endverbatim
-                            </label>
-                            <input :id="`course-${ course.id }`" type="checkbox" name="courses[]" :value=course.id checked/>
-                        </div>
-                    </div>
+                    <v-multi-typeahead
+                        class="{{ $errors->has('courses') ? 'border-red-600' : ''}}"
+                        name="courses[]"    
+                        source="/api/courses"
+                        find-source="/api/courses/{value}"
+                        limit="5"
+                        :value=data('programme_courses')
+                        placeholder="Courses"
+                    >
+                </v-multi-typeahead>
                 </div>
                 <div class="mt-5">
                     <button type="submit" class="btn btn-magenta">Update</button>

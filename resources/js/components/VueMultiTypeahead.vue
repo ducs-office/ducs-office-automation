@@ -37,8 +37,8 @@
                 </li>
             </ul>
             <p v-else class="text-xs text-gray-600 px-3">
-              <span v-if="query.length > 0">No users found.</span>
-              <span v-else>Start typing to search user...</span>
+              <span v-if="query.length > 0">No result found.</span>
+              <span v-else>Start typing to search ...</span>
             </p>
           </div>
         </transition>
