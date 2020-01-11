@@ -37,11 +37,12 @@ class CourseController extends Controller
         $request->validate([
             'code' => ['required', 'min:3', 'max:60', 'unique:courses'],
             'name' => ['required', 'min:3', 'max:190'],
+            'type' => ['required', 'in:Core,Open Elective,General Elective'],
             'attachments' => ['nullable', 'array', 'max:5'],
             'attachments.*' => ['file', 'max:200', 'mimes:jpeg,jpg,png,pdf'],
         ]);
         
-        $course = Course::create($request->only(['code', 'name']));
+        $course = Course::create($request->only(['code', 'name', 'type']));
 
         if ($request->hasFile('attachments')) {
             $course->attachments()->createMany(
@@ -74,11 +75,12 @@ class CourseController extends Controller
                 Rule::unique('courses')->ignore($course)
             ],
             'name' => ['sometimes', 'required', 'min:3', 'max:190'],
+            'type' => ['sometimes', 'required', 'in:Core,Open Elective,General Elective'],
             'attachments' => ['nullable', 'array', 'max:5'],
             'attachments.*' => ['file', 'mimes:jpeg,jpg,png,pdf', 'max:200'],
         ]);
 
-        $course->update($request->only(['code', 'name']));
+        $course->update($request->only(['code', 'name', 'type']));
         if ($request->hasFile('attachments')) {
             $course->attachments()->createMany(
                 array_map(function ($attachedFile) {

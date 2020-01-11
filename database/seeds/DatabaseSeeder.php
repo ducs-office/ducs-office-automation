@@ -39,10 +39,9 @@ class DatabaseSeeder extends Seeder
             ]);
         });
 
-        factory(Programme::class, 3)->create()->each(function ($programme) {
-            factory(Course::class, 10)->create(['programme_id' => $programme->id]);
-        });
+        factory(Programme::class, 3)->create();
 
+        factory(Course::class, 3)->create();
 
         factory(College::class)->create([
             'code' => 'DU-ANDC-001',

@@ -28,10 +28,10 @@
                         class="h-current text-red-500 text-lg">*</span></label>
                 <select class="w-full form-input" name="type" required>
                     <option value="Under Graduate(U.G.)"
-                        {{ old('type', 'Under Graduate(U.G.') === 'Under Graduate(U.G.)' ? 'selected' : ''}}>Under
+                        {{ old('type', 'Under Graduate(U.G.)') === 'Under Graduate(U.G.)' ? 'selected' : ''}}>Under
                         Graduate(U.G.)</option>
                     <option value="Post Graduate(P.G.)"
-                        {{ old('type', 'Post Graduate(P.G.') === 'Post Graduate(P.G.)' ? 'selected' : ''}}>Post
+                        {{ old('type', 'Post Graduate(P.G.)') === 'Post Graduate(P.G.)' ? 'selected' : ''}}>Post
                         Graduate(P.G.)</option>
                 </select>
             </div>

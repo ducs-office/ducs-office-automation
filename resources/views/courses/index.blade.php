@@ -20,11 +20,14 @@
         <div>
             @foreach ($courses as $course)
                 <div class="px-6 py-2 hover:bg-gray-100 border-b flex justify-between">
-                    <div class="flex items-baseline">
+                    <div class="flex items-baseline justify-center">
+                        <span class="px-2 py-1 rounded text-xs uppercase text-white bg-black mr-2 font-bold w-18">
+                            {{ $course->type === 'Core' ? 'Core' : ($course->type === 'General Elective' ? 'G E ' : 'O E ') }}
+                        </span>
                         <h4 class="font-bold text-sm text-gray-600 w-24">{{ $course->code }}</h4>
                         <h3 class="font-bold text-lg capitalize mr-2">{{ $course->name }}</h3>
-                        @if ($course->programme_id != null)
-                            <p class="text-gray-500 truncate">{{ $course->programme->code }}</p>
+                        @if ($course->programmes->count() > 0)
+                            <p class="text-gray-500 truncate">{{ $course->programmes->pluck('code')->implode(', ')}}</p>
                         @endif
                         <div class="flex flex-wrap mx-2">
                             @foreach ($course->attachments as $attachment)

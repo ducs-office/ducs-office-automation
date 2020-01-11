@@ -14,6 +14,21 @@
                 placeholder="e.g. Artificial Intelligence">
         </div>
         <div class="mb-2">
+            <label for="course_type" class="w-full form-label">Type<span
+                    class="h-current text-red-500 text-lg">*</span></label>
+            <select class="w-full form-input" name="type" required>
+                <option value="Core"
+                    {{ old('type', 'Core') === 'Core' ? 'selected' : ''}}>Core
+                </option>
+                <option value="General Elective"
+                    {{ old('type', 'General Elective') === 'General Elective' ? 'selected' : ''}}>General Elective
+                </option>
+                <option value="Open Elective"
+                    {{ old('type', 'Open Elective') === 'Open Elective' ? 'selected' : ''}}>Open Elective
+                </option>
+            </select>
+        </div>
+        <div class="mb-2">
             <label for="file" class="w-full form-label mb-1">Upload Syllabus</label>
             <input type="file" name="attachments[]" accept="application/pdf, image/*" class="w-full" multiple>
         </div>

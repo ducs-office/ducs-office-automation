@@ -17,6 +17,7 @@ class CreateCoursesTable extends Migration
             $table->bigIncrements('id');
             $table->string('code', 60)->unique();
             $table->string('name');
+            $table->enum('type', ['Core', 'Open Elective', 'General Elective']);
             $table->timestamps();
         });
     }
