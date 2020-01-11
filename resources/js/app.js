@@ -10,9 +10,7 @@ import VueMultiTypeahead from './components/VueMultiTypeahead.vue';
 import TabbedPane from './components/TabbedPane.vue';
 import FileInput from './components/FileInput.vue';
 import DynamicModal from './components/DynamicModal.vue';
-import LettersSearchFilters from './components/LettersSearchFilters.vue';
-import SidebarNav from './components/SidebarNav.vue';
-import SidebarNavButton from './components/SidebarNavButton.vue';
+import ToggleVisibility from './components/ToggleVisibility';
 
 Vue.use(VueJsModal);
 
@@ -26,13 +24,14 @@ Vue.component('v-multi-typeahead', VueMultiTypeahead);
 Vue.component("v-tabbed-pane", TabbedPane);
 Vue.component("v-file-input", FileInput);
 
-Vue.component('letter-search-filters', LettersSearchFilters);
-Vue.component("sidebar-nav", SidebarNav);
-Vue.component("sidebar-nav-button", SidebarNavButton);
+Vue.component('toggle-visibility', ToggleVisibility);
 
 Vue.mixin({
+    computed: {
+        $window: () => window
+    },
     methods: {
-        route: route
+        route: route,
     }
 });
 

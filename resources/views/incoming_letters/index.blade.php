@@ -8,14 +8,15 @@
                     New
                 </a>
             @endcan
-            <letter-search-filters class="ml-auto"
-                :filters="{{ json_encode([
-                [ 'field' => 'date', 'label' => 'Before Date', 'type' => 'date', 'operator' => 'greater_than' ],
-                [ 'field' => 'date', 'label' => 'After Date', 'type' => 'date', 'operator' => 'less_than' ],
-                [ 'field' => 'priority', 'label' => 'Priority', 'type' => 'select', 'operator' => 'equals', 'options' => $priorities->toArray() ],
-                [ 'field' => 'recipient_id', 'label' => 'Recipient', 'type' => 'select', 'operator' => 'equals', 'options' => $recipients->toArray() ],
-                [ 'field' => 'sender', 'label' => 'Sender', 'type' => 'select', 'operator' => 'equals', 'options' => $senders->toArray() ],
-            ]) }}"></letter-search-filters>
+            @include('partials.letter-filters', [
+                'filters' => [
+                    [ 'field' => 'date', 'label' => 'Before Date', 'type' => 'date', 'operator' => 'greater_than' ],
+                    [ 'field' => 'date', 'label' => 'After Date', 'type' => 'date', 'operator' => 'less_than' ],
+                    [ 'field' => 'priority', 'label' => 'Priority', 'type' => 'select', 'operator' => 'equals', 'options' => $priorities->toArray() ],
+                    [ 'field' => 'recipient_id', 'label' => 'Recipient', 'type' => 'select', 'operator' => 'equals', 'options' => $recipients->toArray() ],
+                    [ 'field' => 'sender', 'label' => 'Sender', 'type' => 'select', 'operator' => 'equals', 'options' => $senders->toArray() ],
+                ]
+            ])
         </div>
         @forelse($incoming_letters as $letter)
             @include('incoming_letters.partials.letter', compact('letter'))
