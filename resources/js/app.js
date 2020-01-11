@@ -12,6 +12,8 @@ import FileInput from './components/FileInput.vue';
 import DynamicModal from './components/DynamicModal.vue';
 import ToggleVisibility from './components/ToggleVisibility';
 
+import ClickOutside from './click-outside.js';
+
 Vue.use(VueJsModal);
 
 window.Events = new Vue();
@@ -30,6 +32,7 @@ Vue.mixin({
     computed: {
         $window: () => window
     },
+    directives: { ClickOutside },
     methods: {
         route: route,
     }
