@@ -39,7 +39,7 @@ class DatabaseSeeder extends Seeder
             ]);
         });
 
-        factory(Programme::class, 3)->create()->each(function ($programme) {
+        $programmes = factory(Programme::class, 3)->create()->each(function ($programme) {
             factory(Course::class, 10)->create(['programme_id' => $programme->id]);
         });
 
@@ -47,12 +47,12 @@ class DatabaseSeeder extends Seeder
         factory(College::class)->create([
             'code' => 'DU-ANDC-001',
             'name' => 'Acharya Narendra Dev College'
-            ]);
+        ])->programmes()->sync($programmes->pluck('id')->toArray());
 
         factory(College::class)->create([
             'code'=> 'DU-KMV-002' ,
             'name' => 'Keshav Mahavidyalaya'
-        ]);
+        ])->programmes()->sync($programmes->pluck('id')->toArray());
 
         factory(College::class, 5)->create();
     }

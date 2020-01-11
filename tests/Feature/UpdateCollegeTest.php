@@ -48,10 +48,101 @@ class UpdateCollegeTest extends TestCase
         $this->withoutExceptionHandling()
             ->patch('/colleges/'. $college->id, ['name' => $new_name = 'new name'])
             ->assertRedirect('/colleges')
+            ->assertSessionHasNoErrors()
             ->assertSessionHasFlash('success', 'College updated successfully');
 
         $this->assertEquals(1, College::count());
         $this->assertEquals($new_name, $college->fresh()->name);
+    }
+
+    /** @test */
+    public function colleges_principal_name_can_be_updated()
+    {
+        $this->signIn();
+
+        $college = create(College::class);
+
+        $this->withoutExceptionHandling()
+            ->patch('/colleges/' . $college->id, [
+                'principal_name' => $new_principal = 'New Principal'
+            ])
+            ->assertRedirect('/colleges')
+            ->assertSessionHasNoErrors()
+            ->assertSessionHasFlash('success', 'College updated successfully');
+
+        $this->assertEquals($new_principal, $college->fresh()->principal_name);
+    }
+
+    /** @test */
+    public function colleges_principal_phones_can_be_updated()
+    {
+        $this->signIn();
+
+        $college = create(College::class);
+
+        $this->withoutExceptionHandling()
+            ->patch('/colleges/' . $college->id, [
+                'principal_phones' => $new_phones = ['9876543210']
+            ])
+            ->assertRedirect('/colleges')
+            ->assertSessionHasNoErrors()
+            ->assertSessionHasFlash('success', 'College updated successfully');
+
+        $this->assertSame($new_phones, $college->fresh()->principal_phones);
+    }
+
+    /** @test */
+    public function colleges_principal_emails_can_be_updated()
+    {
+        $this->signIn();
+
+        $college = create(College::class);
+
+        $this->withoutExceptionHandling()
+            ->patch('/colleges/' . $college->id, [
+                'principal_emails' => $new_emails = ['princy@somecollege.com']
+            ])
+            ->assertRedirect('/colleges')
+            ->assertSessionHasNoErrors()
+            ->assertSessionHasFlash('success', 'College updated successfully');
+
+        $this->assertSame($new_emails, $college->fresh()->principal_emails);
+    }
+
+    /** @test */
+    public function colleges_address_can_be_updated()
+    {
+        $this->signIn();
+
+        $college = create(College::class);
+
+        $this->withoutExceptionHandling()
+            ->patch('/colleges/' . $college->id, [
+                'address' => $new_address = 'Arts Faculty, Delhi University, Delhi - 110007'
+            ])
+            ->assertRedirect('/colleges')
+            ->assertSessionHasNoErrors()
+            ->assertSessionHasFlash('success', 'College updated successfully');
+
+        $this->assertEquals($new_address, $college->fresh()->address);
+    }
+
+    /** @test */
+    public function colleges_website_can_be_updated()
+    {
+        $this->signIn();
+
+        $college = create(College::class);
+
+        $this->withoutExceptionHandling()
+            ->patch('/colleges/' . $college->id, [
+                'website' => $new_website = 'https://new-website.com'
+            ])
+            ->assertRedirect('/colleges')
+            ->assertSessionHasNoErrors()
+            ->assertSessionHasFlash('success', 'College updated successfully');
+
+        $this->assertEquals($new_website, $college->fresh()->website);
     }
 
     /** @test */
@@ -80,8 +171,13 @@ class UpdateCollegeTest extends TestCase
 
         $this->assertEquals(1, College::count());
 
-        $college_programmes = $college->fresh()->programmes->pluck('id')->toArray();
-        $this->assertSame($college_programmes, $new_programme_ids);
+        $college_programme_ids = $college->fresh()->programmes->pluck('id')->toArray();
+
+        $this->assertSame(
+            $new_programme_ids,
+            $college_programme_ids,
+            'all programmes were not updated'
+        );
     }
 
     /** @test */
@@ -120,5 +216,22 @@ class UpdateCollegeTest extends TestCase
 
         $this->assertEquals(1, College::count());
         $this->assertEquals($new_code, $college->fresh()->code);
+    }
+
+
+    /** @test */
+    public function colleges_principal_name_cannot_be_updated_to_null()
+    {
+        $this->signIn();
+
+        $college = create(College::class);
+
+        $this->withExceptionHandling()
+            ->post('/colleges', [
+                'principal_name' => ''
+            ])
+            ->assertSessionHasErrorsIn('principal_name');
+
+        $this->assertEquals($college->principal_name, $college->fresh()->principal_name);
     }
 }
