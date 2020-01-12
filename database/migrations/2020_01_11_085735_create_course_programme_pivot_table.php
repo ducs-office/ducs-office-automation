@@ -19,6 +19,7 @@ class CreateCourseProgrammePivotTable extends Migration
             $table->bigInteger('programme_id')->unsigned()->index();
             $table->foreign('programme_id')->references('id')->on('programmes')->onDelete('cascade');
             $table->primary(['course_id', 'programme_id']);
+            $table->unsignedTinyInteger('semester');
         });
     }
 
