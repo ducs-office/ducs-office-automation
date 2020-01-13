@@ -10,16 +10,18 @@ class CoursesController extends Controller
 {
     public function index(Request $request)
     {
-        if (!$request->has('q') || $request->q == '') {
-            return [];
+        $query = Course::query();
+        
+        if ($request->has('q')) {
+            $query->where('code', 'like', "%{$request->q}%")
+                ->orWhere('name', 'like', "%{$request->q}%");
         }
 
-        $query = Course::where('code', 'like', $request->q)
-                ->orWhere('name', 'like', "%{$request->q}%")
-                ->limit($request->limit)
-                ->get();
-            
-        return $query;
+        if ($request->has('without_programme')) {
+            $query->whereDoesntHave('programmes');
+        }
+        
+        return $query->limit($request->limit)->get();
     }
 
     public function show(Course $course)

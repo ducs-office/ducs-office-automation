@@ -1,31 +1,4 @@
-<template>
-    <div class="relative">
-        <div class="mb-2">
-            <label for="programme_duration" class="w-full form-label">Duration (years)<span
-                    class="h-current text-red-500 text-lg">*</span></label>
-            <input id="programme_duration" type="number" name="duration" class="w-full form-input" v-model="years">
-        </div>
-        <transition name="flip">
-            <div class="flex flex-wrap mb-2 -mx-2" v-if="semesters > 0">
-                <div v-for="(semester,index) in semesters" :key="index"
-                class="w-1/2 px-2 py-1">
-                    <label :for="`semsester_courses_${index}`" class="w-full form-label">Semester {{semester}}: Courses</label>
-                    <v-multi-typeahead
-                        :id="`semester_courses_${index}`"
-                        :name="`semester_courses[${index}][]`"
-                        source="/api/courses"
-                        find-source="/api/courses/{value}"
-                        limit="5"
-                        :value="semester in courses ? courses[semester] : []"
-                        placeholder="Courses"
-                        >
-                    </v-multi-typeahead>
-                </div>
-            </div>
-        </transition>
-    </div>
-</template> 
-<script>
+ <script>
 export default {
     props: {
         duration: {default: 3},

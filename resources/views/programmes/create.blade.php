@@ -31,9 +31,32 @@
                     Graduate(P.G.)</option>
             </select>
         </div>
-        <div class="mb-2">
-            <course-sections></course-sections>
-        </div>
+        <course-sections inline-template>
+            <div class="relative mb-2">
+                <div class="mb-2">
+                    <label for="programme_duration" class="w-full form-label">Duration (years)<span
+                            class="h-current text-red-500 text-lg">*</span></label>
+                    <input id="programme_duration" type="number" name="duration" class="w-full form-input" v-model="years">
+                </div>
+                <transition name="flip">
+                    <div class="flex flex-wrap mb-2 -mx-2" v-if="semesters > 0">
+                        <div v-for="(semester,index) in semesters" :key="index"
+                        class="w-1/2 px-2 py-1">
+                            <label class="w-full form-label">Semester @{{semester}}: Courses</label>
+                            <v-multi-typeahead
+                                :name="`semester_courses[${index}][]`"
+                                source="/api/courses"
+                                find-source="/api/courses/{value}"
+                                limit="5"
+                                :value="semester in courses ? courses[semester] : []"
+                                placeholder="Courses"
+                                >
+                            </v-multi-typeahead>
+                        </div>
+                    </div>
+                </transition>
+            </div>
+        </course-sections>
         <div class="mb-2">
             <button type="submit" class="btn btn-magenta">Create</button>
         </div>
