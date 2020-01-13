@@ -8,9 +8,9 @@ class Course extends Model
 {
     protected $guarded = [];
 
-    public function programme()
+    public function programmes()
     {
-        return $this->belongsTo(Programme::class, 'programme_id');
+        return $this->belongsToMany(Programme::class);
     }
 
     public function attachments()

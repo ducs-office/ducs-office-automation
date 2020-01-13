@@ -49,7 +49,9 @@ Route::patch('/reminders/{reminder}', 'RemindersController@update')->middleware(
 
 
 Route::get('/programmes', 'ProgrammesController@index')->middleware('auth')->name('programmes.index');
+Route::get('/programmes/create', 'ProgrammesController@create')->middleware('auth')->name('programmes.create');
 Route::post('/programmes', 'ProgrammesController@store')->middleware('auth')->name('programmes.store');
+Route::get('/programmes/{programme}/edit', 'ProgrammesController@edit')->middleware('auth')->name('programmes.edit');
 Route::patch('/programmes/{programme}', 'ProgrammesController@update')->middleware('auth')->name('programmes.update');
 Route::delete('/programmes/{programme}', 'ProgrammesController@destroy')->middleware('auth')->name('programmes.destroy');
 

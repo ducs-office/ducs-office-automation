@@ -11,6 +11,7 @@ import TabbedPane from './components/TabbedPane.vue';
 import FileInput from './components/FileInput.vue';
 import DynamicModal from './components/DynamicModal.vue';
 import ToggleVisibility from './components/ToggleVisibility';
+import CourseSections from'./components/CourseSections.vue';
 
 import ClickOutside from './click-outside.js';
 
@@ -27,6 +28,7 @@ Vue.component("v-tabbed-pane", TabbedPane);
 Vue.component("v-file-input", FileInput);
 
 Vue.component('toggle-visibility', ToggleVisibility);
+Vue.component('course-sections', CourseSections);
 
 Vue.mixin({
     computed: {

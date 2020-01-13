@@ -15,6 +15,15 @@
                     <input id="course_name" type="text" name="name" class="w-full form-input" :value="data('course.name')">
                 </div>
                 <div class="mb-2">
+                    <label for="course_type" class="w-full form-label">Type<span
+                            class="h-current text-red-500 text-lg">*</span></label>
+                    <select class="w-full form-input" name="type" required :value="data('course.type')">
+                        <option value="Core">Core</option>
+                        <option value="General Elective">General Elective</option>
+                        <option value="Open Elective">Open Elective</option>
+                    </select>
+                </div>
+                <div class="mb-2">
                     <label for="file" class="w-full form-label mb-1">Upload Syllabus</label>
                     <input type="file" name="attachments[]" accept="application/pdf, image/*" class="w-full" multiple>
                 </div>

@@ -39,10 +39,21 @@ class DatabaseSeeder extends Seeder
             ]);
         });
 
-        $programmes = factory(Programme::class, 3)->create()->each(function ($programme) {
-            factory(Course::class, 10)->create(['programme_id' => $programme->id]);
-        });
+        $programmes = collect([
+            factory(Programme::class)->create(['name' => 'B.Sc. (H) Computer Science', 'type' => 'Under Graduate(U.G.)']),
+            factory(Programme::class)->create(['name' => 'B.Sc. (Prog) Computer Science', 'type' => 'Under Graduate(U.G.)']),
+            factory(Programme::class)->create(['name' => 'MCA', 'type' => 'Post Graduate(P.G.)']),
+        ]);
 
+        factory(Course::class)->create(['name' => 'Design and Analysis of Algorithms']);
+        factory(Course::class)->create(['name' => 'Artificial Intelligence']);
+        factory(Course::class)->create(['name' => 'Compiler Design']);
+        factory(Course::class)->create(['name' => 'Data Mining']);
+        factory(Course::class)->create(['name' => 'Machine Learning']);
+        factory(Course::class)->create(['name' => 'Internet Technology']);
+        factory(Course::class)->create(['name' => 'Android Programming']);
+        factory(Course::class)->create(['name' => 'PHP Programming']);
+        factory(Course::class)->create(['name' => 'Data Structures']);
 
         factory(College::class)->create([
             'code' => 'DU-ANDC-001',
@@ -54,6 +65,9 @@ class DatabaseSeeder extends Seeder
             'name' => 'Keshav Mahavidyalaya'
         ])->programmes()->sync($programmes->pluck('id')->toArray());
 
-        factory(College::class, 5)->create();
+        factory(College::class)->create([
+            'code'=> 'DU-HRC-003' ,
+            'name' => 'Hansraj College'
+        ])->programmes()->sync($programmes->pluck('id')->toArray());
     }
 }

@@ -22,8 +22,16 @@ class ProgrammesController extends Controller
     public function index()
     {
         $programmes = Programme::latest()->with(['courses'])->get();
-        $courses = Course::where('programme_id', null)->get();
-        return view('programmes.index', compact('programmes', 'courses'));
+        $grouped_courses = $programmes->map(function ($programme) {
+            return $programme->courses->groupBy('pivot.semester');
+        });
+
+        return view('programmes.index', compact('programmes', 'grouped_courses'));
+    }
+
+    public function create()
+    {
+        return view('programmes.create');
     }
 
     public function store(Request $request)
@@ -33,8 +41,10 @@ class ProgrammesController extends Controller
             'wef' => ['required', 'date'],
             'name' => ['required', 'min:3', 'max:190'],
             'type' => ['required', 'in:Under Graduate(U.G.),Post Graduate(P.G.)'],
-            'courses' => ['nullable', 'array', 'min:1'],
-            'courses.*' => ['required', 'integer', 'exists:courses,id,programme_id,NULL'],
+            'duration' => ['required', 'integer'],
+            'semester_courses' => ['required', 'array', 'size:'.($request->duration * 2) ],
+            'semester_courses.*' => ['required', 'array', 'min:1'],
+            'semester_courses.*.*' => ['numeric', 'exists:courses,id', 'unique:course_programme,course_id']
         ]);
 
         $programme = Programme::create([
@@ -42,15 +52,21 @@ class ProgrammesController extends Controller
             'wef' => $data['wef'],
             'name' => $data['name'],
             'type' => $data['type'],
+            'duration' => $data['duration']
         ]);
-        
-        if ($request->has('courses')) {
-            Course::whereIn('id', $data['courses'])->update(['programme_id' => $programme->id]);
+
+        foreach ($request->semester_courses as $index => $courses) {
+            $programme->courses()->attach($courses, ['semester' => $index + 1]);
         }
-        
+
         flash('Programme created successfully!', 'success');
 
         return redirect('/programmes');
+    }
+
+    public function edit(Programme $programme)
+    {
+        return view('programmes.edit', compact('programme'));
     }
 
     public function update(Request $request, Programme $programme)
@@ -63,20 +79,30 @@ class ProgrammesController extends Controller
             'wef' => ['sometimes', 'required', 'date'],
             'name' => ['sometimes', 'required', 'min:3', 'max:190'],
             'type' => ['sometimes', 'required', 'in:Under Graduate(U.G.),Post Graduate(P.G.)'],
-            'courses' => ['nullable', 'array', 'min:1'],
-            'courses.*' => ['sometimes', 'required', 'integer',
-                             Rule::exists('courses', 'id')->where(function ($query) use ($programme) {
-                                 $query->whereNull('programme_id')->orwhere('programme_id', $programme->id);
-                             })
-                            ],
+            'duration' => ['sometimes', 'required', 'integer'],
+            'semester_courses' => [
+                'sometimes', 'required', 'array',
+                'size:'.(($request->duration ?? $programme->duration) * 2)
+            ],
+            'semester_courses.*' => ['required', 'array', 'min:1'],
+            'semester_courses.*.*' => ['numeric', 'exists:courses,id',
+                Rule::unique('course_programme', 'course_id')->ignore($programme->id, 'programme_id'),
+            ],
         ]);
 
-        $programme->update($request->only(['code', 'wef', 'name', 'type']));
-        Course::where('programme_id', $programme->id)->update(['programme_id' => null]);
-        
-        if ($request->has('courses')) {
-            Course::whereIn('id', $data['courses'])->update(['programme_id' => $programme->id]);
-        }
+        $programme->update($request->only(['code', 'wef', 'name', 'type', 'duration']));
+
+        $semester_courses = collect($request->semester_courses)
+            ->map(function ($courses, $index) {
+                return array_map(function ($course) use ($index) {
+                    return [$course, $index + 1];
+                }, $courses);
+            })->flatten(1)->pluck('1', '0')
+            ->map(function ($value) {
+                return ['semester' => $value];
+            })->toArray();
+
+        $programme->courses()->sync($semester_courses);
 
         flash('Programme updated successfully!', 'success');
 

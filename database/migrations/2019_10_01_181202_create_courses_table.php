@@ -17,10 +17,8 @@ class CreateCoursesTable extends Migration
             $table->bigIncrements('id');
             $table->string('code', 60)->unique();
             $table->string('name');
-            $table->unsignedBigInteger('programme_id')->nullable();
+            $table->enum('type', ['Core', 'Open Elective', 'General Elective']);
             $table->timestamps();
-            
-            $table->foreign('programme_id')->references('id')->on('programmes')->onDelete('SET NULL');
         });
     }
 

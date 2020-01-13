@@ -66,4 +66,21 @@ class UpdateCourseTest extends TestCase
         $this->assertEquals(1, Course::count());
         $this->assertEquals($newName, $course->fresh()->name);
     }
+
+    /** @test */
+    public function admin_can_update_type_of_course()
+    {
+        $this->withoutExceptionHandling()
+            ->signIn();
+
+        $course = create(Course::class, 1, ['type' => 'Core']);
+        
+        $this->patch('/courses/' . $course->id, [
+            'type' => $newType = 'Open Elective'
+        ])->assertRedirect('/courses')
+        ->assertSessionHasFlash('success', 'Course updated successfully!');
+
+        $this->assertEquals(1, Course::count());
+        $this->assertEquals($newType, $course->fresh()->type);
+    }
 }
