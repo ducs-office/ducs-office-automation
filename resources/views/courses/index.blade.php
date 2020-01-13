@@ -26,9 +26,6 @@
                         </span>
                         <h4 class="font-bold text-sm text-gray-600 w-24">{{ $course->code }}</h4>
                         <h3 class="font-bold text-lg capitalize mr-2">{{ $course->name }}</h3>
-                        @if ($course->programmes->count() > 0)
-                            <p class="text-gray-500 truncate">{{ $course->programmes->pluck('code')->implode(', ')}}</p>
-                        @endif
                         <div class="flex flex-wrap mx-2">
                             @foreach ($course->attachments as $attachment)
                                 <div class="inline-flex items-center px-2 rounded border hover:bg-gray-300 text-gray-600 mx-2">
