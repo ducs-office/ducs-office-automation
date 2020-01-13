@@ -2,7 +2,7 @@
 @section('body')
     <div class="m-6 page-card">
         <div class="flex items-baseline px-6 pb-4 border-b">
-            <h1 class="page-header mb-0 px-0 mr-4">Programme Courses</h1>
+            <h1 class="page-header mb-0 px-0 mr-4">Courses</h1>
             @can('create', App\Course::class)
             <button class="btn btn-magenta is-sm shadow-inset" @click="$modal.show('create-courses-modal')">
                 New

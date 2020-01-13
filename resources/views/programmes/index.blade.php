@@ -2,7 +2,7 @@
 @section('body')
 <div class="m-6 pb-0">
     <div class="flex items-baseline px-6 pb-4 border-b">
-        <h1 class="page-header mb-0 px-0 mr-4">Academic Programmes</h1>
+        <h1 class="page-header mb-0 px-0 mr-4">Programmes</h1>
         @can('create', App\Programme::class)
         <a href="{{route('programmes.create')}}" class="btn btn-magenta is-sm shadow-inset">
             New
@@ -42,7 +42,7 @@
             <p class="mb-1"><span class="italic font-bold">Date (w.e.f) :</span> {{ $programme->wef }}</p>
             <div class="mt-2">
                 <details class="bg-gray-100 rounded-t border overflow-hidden">
-                    <summary class="p-2 bg-gray-200 cursor-pointer outline-none"> 
+                    <summary class="p-2 bg-gray-200 cursor-pointer outline-none">
                         Courses
                     </summary>
                     <div class="flex flex-wrap -mx-2">
