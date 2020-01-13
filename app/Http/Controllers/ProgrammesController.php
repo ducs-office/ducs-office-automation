@@ -54,11 +54,11 @@ class ProgrammesController extends Controller
             'type' => $data['type'],
             'duration' => $data['duration']
         ]);
-        
+
         foreach ($request->semester_courses as $index => $courses) {
             $programme->courses()->attach($courses, ['semester' => $index + 1]);
         }
-        
+
         flash('Programme created successfully!', 'success');
 
         return redirect('/programmes');
@@ -80,7 +80,10 @@ class ProgrammesController extends Controller
             'name' => ['sometimes', 'required', 'min:3', 'max:190'],
             'type' => ['sometimes', 'required', 'in:Under Graduate(U.G.),Post Graduate(P.G.)'],
             'duration' => ['sometimes', 'required', 'integer'],
-            'semester_courses' => ['sometimes', 'required', 'array', 'size:'.($request->duration * 2) ],
+            'semester_courses' => [
+                'sometimes', 'required', 'array',
+                'size:'.(($request->duration ?? $programme->duration) * 2)
+            ],
             'semester_courses.*' => ['required', 'array', 'min:1'],
             'semester_courses.*.*' => ['numeric', 'exists:courses,id',
                 Rule::unique('course_programme', 'course_id')->ignore($programme->id, 'programme_id'),

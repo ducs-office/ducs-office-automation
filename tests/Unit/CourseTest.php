@@ -19,7 +19,7 @@ class CourseTest extends TestCase
     {
         $programme = create(Programme::class);
         $course = create(Course::class);
-        $course->programmes()->attach([$programme->id]);
+        $course->programmes()->attach([$programme->id], ['semester' => 1]);
 
         $this->assertInstanceOf(BelongsToMany::class, $course->programmes());
         $this->assertInstanceOf(Programme::class, $course->programmes()->first());
