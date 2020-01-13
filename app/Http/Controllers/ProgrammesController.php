@@ -22,7 +22,11 @@ class ProgrammesController extends Controller
     public function index()
     {
         $programmes = Programme::latest()->with(['courses'])->get();
-        return view('programmes.index', compact('programmes'));
+        $grouped_courses = $programmes->map(function ($programme) {
+            return $programme->courses->groupBy('pivot.semester');
+        });
+
+        return view('programmes.index', compact('programmes', 'grouped_courses'));
     }
 
     public function create()
