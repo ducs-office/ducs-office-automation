@@ -14,17 +14,19 @@ class CollegeController extends Controller
         $this->authorizeResource(College::class, 'college');
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         $colleges = College::all();
         $programmes = Programme::all();
 
         return view('colleges.index', compact('colleges', 'programmes'));
+    }
+
+    public function create()
+    {
+        $programmes = Programme::all();
+
+        return view('colleges.create', compact('programmes'));
     }
 
     public function store(Request $request)
@@ -52,6 +54,11 @@ class CollegeController extends Controller
         return redirect('/colleges');
     }
 
+    public function edit(College $college)
+    {
+        $programmes = Programme::all();
+        return view('colleges.edit', compact('college', 'programmes'));
+    }
 
     public function update(Request $request, College $college)
     {

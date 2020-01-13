@@ -4,20 +4,16 @@
     <div class="flex items-baseline px-6">
         <h1 class="page-header mb-0 px-0 mr-4">Colleges</h1>
         @can('create', App\College::class)
-        <button class="btn btn-magenta is-sm shadow-inset" @click.prevent = "$modal.show('create-college-modal')">
-        New
-        </button>
-        @include('colleges.modals.create', [
-            'modalName' => 'create-college-modal'
-        ])
+        <a class="inline-block btn btn-magenta is-sm shadow-inset"
+            href="{{ route('colleges.create') }}">New</a>
         @endcan
     </div>
 
     @can('update', App\College::class)
-    @include('colleges.modals.edit', [
+    {{-- @include('colleges.modals.edit', [
         'modalName' => 'edit-college-modal',
         'programmes' => $programmes
-    ])
+    ]) --}}
     @endcan
     <div class="bg-gray-200 px-6 py-4">
         @foreach($colleges as $college)

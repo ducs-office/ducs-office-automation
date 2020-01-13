@@ -60,6 +60,8 @@ Route::delete('/courses/{course}', 'CourseController@destroy')->middleware('auth
 
 Route::get('/colleges', 'CollegeController@index')->middleware('auth')->name('colleges.index');
 Route::post('/colleges', 'CollegeController@store')->middleware('auth')->name('colleges.store');
+Route::get('/colleges/create', 'CollegeController@create')->middleware('auth')->name('colleges.create');
+Route::get('/colleges/{college}/edit', 'CollegeController@edit')->middleware('auth')->name('colleges.edit');
 Route::patch('/colleges/{college}', 'CollegeController@update')->middleware('auth')->name('colleges.update');
 Route::delete('/colleges/{college}', 'CollegeController@destroy')->middleware('auth')->name('colleges.destroy');
 
