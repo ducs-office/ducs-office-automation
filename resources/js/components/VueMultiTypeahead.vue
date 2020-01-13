@@ -24,7 +24,7 @@
           @keydown.down.prevent="moveDown">
         <feather-icon v-if="loading" name="loader" class="absolute right-0 mr-1 absolute-y-center h-current"></feather-icon>
         <transition name="flip">
-          <div class="absolute inset-x-0 top-100 mt-1 bg-white py-2 border rounded shadow-md" v-if="isOpen">
+          <div class="absolute z-20 inset-x-0 top-100 mt-1 bg-white py-2 border rounded shadow-md" v-if="isOpen">
             <ul v-if="options.length > 0">
                 <li v-for="(option, index) in options" :key="index"
                   @click="toggleItem(index)"
@@ -192,7 +192,7 @@ export default {
             .map(id => axios.get(this.findSource.replace('{value}', id)));
 
         const responses = await Promise.all(requests);
-        console.log(responses);
+        
         this.loading = false;
         this.selectedItems = responses.map(res => res.data)
         this.updateOptions(this.selectedItems);

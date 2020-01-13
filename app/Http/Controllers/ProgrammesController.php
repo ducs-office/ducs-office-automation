@@ -22,8 +22,12 @@ class ProgrammesController extends Controller
     public function index()
     {
         $programmes = Programme::latest()->with(['courses'])->get();
-        $courses = Course::doesntHave('programmes')->get();
-        return view('programmes.index', compact('programmes', 'courses'));
+        return view('programmes.index', compact('programmes'));
+    }
+
+    public function create()
+    {
+        return view('programmes.create');
     }
 
     public function store(Request $request)
@@ -33,9 +37,10 @@ class ProgrammesController extends Controller
             'wef' => ['required', 'date'],
             'name' => ['required', 'min:3', 'max:190'],
             'type' => ['required', 'in:Under Graduate(U.G.),Post Graduate(P.G.)'],
-            'courses' => ['nullable', 'array', 'min:1'],
-            'courses.*' => ['required', 'integer', 'exists:courses,id', 'unique:course_programme,course_id'],
             'duration' => ['required', 'integer'],
+            'semester_courses' => ['required', 'array', 'size:'.($request->duration * 2) ],
+            'semester_courses.*' => ['required', 'array', 'min:1'],
+            'semester_courses.*.*' => ['numeric', 'exists:courses,id', 'unique:course_programme,course_id']
         ]);
 
         $programme = Programme::create([
@@ -46,13 +51,18 @@ class ProgrammesController extends Controller
             'duration' => $data['duration']
         ]);
         
-        if ($request->has('courses')) {
-            $programme->courses()->attach($data['courses']);
+        foreach ($request->semester_courses as $index => $courses) {
+            $programme->courses()->attach($courses, ['semester' => $index + 1]);
         }
         
         flash('Programme created successfully!', 'success');
 
         return redirect('/programmes');
+    }
+
+    public function edit(Programme $programme)
+    {
+        return view('programmes.edit', compact('programme'));
     }
 
     public function update(Request $request, Programme $programme)
@@ -65,18 +75,27 @@ class ProgrammesController extends Controller
             'wef' => ['sometimes', 'required', 'date'],
             'name' => ['sometimes', 'required', 'min:3', 'max:190'],
             'type' => ['sometimes', 'required', 'in:Under Graduate(U.G.),Post Graduate(P.G.)'],
-            'courses' => ['nullable', 'array', 'min:1'],
-            'courses.*' => ['sometimes', 'required', 'integer', 'exists:courses,id',
-                             Rule::unique('course_programme', 'course_id')->ignore($programme->id, 'programme_id'),
-                        ],
             'duration' => ['sometimes', 'required', 'integer'],
+            'semester_courses' => ['sometimes', 'required', 'array', 'size:'.($request->duration * 2) ],
+            'semester_courses.*' => ['required', 'array', 'min:1'],
+            'semester_courses.*.*' => ['numeric', 'exists:courses,id',
+                Rule::unique('course_programme', 'course_id')->ignore($programme->id, 'programme_id'),
+            ],
         ]);
 
         $programme->update($request->only(['code', 'wef', 'name', 'type', 'duration']));
 
-        if ($request->has('courses')) {
-            $programme->courses()->sync($data['courses']);
-        }
+        $semester_courses = collect($request->semester_courses)
+            ->map(function ($courses, $index) {
+                return array_map(function ($course) use ($index) {
+                    return [$course, $index + 1];
+                }, $courses);
+            })->flatten(1)->pluck('1', '0')
+            ->map(function ($value) {
+                return ['semester' => $value];
+            })->toArray();
+
+        $programme->courses()->sync($semester_courses);
 
         flash('Programme updated successfully!', 'success');
 

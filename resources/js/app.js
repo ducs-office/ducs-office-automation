@@ -13,6 +13,7 @@ import DynamicModal from './components/DynamicModal.vue';
 import LettersSearchFilters from './components/LettersSearchFilters.vue';
 import SidebarNav from './components/SidebarNav.vue';
 import SidebarNavButton from './components/SidebarNavButton.vue';
+import CourseSections from'./components/CourseSections.vue';
 
 Vue.use(VueJsModal);
 
@@ -29,6 +30,7 @@ Vue.component("v-file-input", FileInput);
 Vue.component('letter-search-filters', LettersSearchFilters);
 Vue.component("sidebar-nav", SidebarNav);
 Vue.component("sidebar-nav-button", SidebarNavButton);
+Vue.component('course-sections', CourseSections);
 
 Vue.mixin({
     methods: {
