@@ -21,7 +21,11 @@ class ProgrammesController extends Controller
      */
     public function index()
     {
-        $programmes = Programme::latest()->with(['courses'])->get();
+        $programmes = Programme::latest()->with([
+            'courses' => function ($q) {
+                return $q->orderBy('semester');
+            }
+        ])->get();
         $grouped_courses = $programmes->map(function ($programme) {
             return $programme->courses->groupBy('pivot.semester');
         });
