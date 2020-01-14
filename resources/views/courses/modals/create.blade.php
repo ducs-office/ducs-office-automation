@@ -17,14 +17,14 @@
             <label for="course_type" class="w-full form-label">Type<span
                     class="h-current text-red-500 text-lg">*</span></label>
             <select class="w-full form-input" name="type" required>
-                <option value="Core"
-                    {{ old('type', 'Core') === 'Core' ? 'selected' : ''}}>Core
+                <option value="CORE"
+                    {{ old('type', 'CORE') === 'CORE' ? 'selected' : ''}}>Core
                 </option>
-                <option value="General Elective"
-                    {{ old('type', 'General Elective') === 'General Elective' ? 'selected' : ''}}>General Elective
+                <option value="G E"
+                    {{ old('type', 'G E') === 'G E' ? 'selected' : ''}}>General Elective
                 </option>
-                <option value="Open Elective"
-                    {{ old('type', 'Open Elective') === 'Open Elective' ? 'selected' : ''}}>Open Elective
+                <option value="O E"
+                    {{ old('type', 'O E') === 'O E' ? 'selected' : ''}}>Open Elective
                 </option>
             </select>
         </div>

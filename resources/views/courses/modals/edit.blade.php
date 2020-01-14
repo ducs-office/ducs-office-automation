@@ -18,9 +18,15 @@
                     <label for="course_type" class="w-full form-label">Type<span
                             class="h-current text-red-500 text-lg">*</span></label>
                     <select class="w-full form-input" name="type" required :value="data('course.type')">
-                        <option value="Core">Core</option>
-                        <option value="General Elective">General Elective</option>
-                        <option value="Open Elective">Open Elective</option>
+                        <option value="CORE"
+                            {{ old('type', 'CORE') === 'CORE' ? 'selected' : ''}}>Core
+                        </option>
+                        <option value="G E"
+                            {{ old('type', 'G E') === 'G E' ? 'selected' : ''}}>General Elective
+                        </option>
+                        <option value="O E"
+                            {{ old('type', 'O E') === 'O E' ? 'selected' : ''}}>Open Elective
+                        </option>
                     </select>
                 </div>
                 <div class="mb-2">

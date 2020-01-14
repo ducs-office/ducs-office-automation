@@ -33,15 +33,17 @@ class CourseController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $type = implode(',', config('course.type'));
+
+        $validData = $request->validate([
             'code' => ['required', 'min:3', 'max:60', 'unique:courses'],
             'name' => ['required', 'min:3', 'max:190'],
-            'type' => ['required', 'in:Core,Open Elective,General Elective'],
+            'type' => ['required', 'in:'.$type],
             'attachments' => ['nullable', 'array', 'max:5'],
             'attachments.*' => ['file', 'max:200', 'mimes:jpeg,jpg,png,pdf'],
         ]);
         
-        $course = Course::create($request->only(['code', 'name', 'type']));
+        $course = Course::create($validData);
 
         if ($request->hasFile('attachments')) {
             $course->attachments()->createMany(
@@ -68,18 +70,21 @@ class CourseController extends Controller
      */
     public function update(Request $request, Course $course)
     {
-        $data = $request->validate([
+        $type = implode(',', config('course.type'));
+
+        $validData = $request->validate([
             'code' => [
                 'sometimes', 'required', 'min:3', 'max:60',
                 Rule::unique('courses')->ignore($course)
             ],
             'name' => ['sometimes', 'required', 'min:3', 'max:190'],
-            'type' => ['sometimes', 'required', 'in:Core,Open Elective,General Elective'],
+            'type' => ['sometimes', 'required', 'in:'.$type],
             'attachments' => ['nullable', 'array', 'max:5'],
             'attachments.*' => ['file', 'mimes:jpeg,jpg,png,pdf', 'max:200'],
         ]);
 
-        $course->update($request->only(['code', 'name', 'type']));
+        $course->update($validData);
+
         if ($request->hasFile('attachments')) {
             $course->attachments()->createMany(
                 array_map(function ($attachedFile) {
@@ -87,7 +92,7 @@ class CourseController extends Controller
                         'path' => $attachedFile->store('/course_attachments'),
                         'original_name' => $attachedFile->getClientOriginalName(),
                     ];
-                }, $data['attachments'])
+                }, $validData['attachments'])
             );
         }
 

@@ -21,10 +21,12 @@
             @foreach ($courses as $course)
                 <div class="px-6 py-2 hover:bg-gray-100 border-b flex justify-between">
                     <div class="flex items-baseline justify-center">
-                        <span class="px-2 py-1 rounded text-xs uppercase text-white bg-black mr-2 font-bold w-18">
-                            {{ $course->type === 'Core' ? 'Core' : ($course->type === 'General Elective' ? 'G E ' : 'O E ') }}
-                        </span>
-                        <h4 class="font-bold text-sm text-gray-600 w-24">{{ $course->code }}</h4>
+                        <div class="w-20">
+                            <span class="px-2 py-1 rounded text-xs uppercase text-white bg-black font-bold w-18">
+                                {{ $course->type === 'CORE' ? 'CORE' : ($course->type === 'G E' ? 'G E ' : 'O E ') }}
+                            </span>
+                        </div>
+                        <h4 class="font-bold text-sm text-gray-600 w-24 mr-2">{{ $course->code }}</h4>
                         <h3 class="font-bold text-lg capitalize mr-2">{{ $course->name }}</h3>
                         <div class="flex flex-wrap mx-2">
                             @foreach ($course->attachments as $attachment)
