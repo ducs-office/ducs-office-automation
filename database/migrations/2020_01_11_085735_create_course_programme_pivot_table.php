@@ -14,12 +14,13 @@ class CreateCourseProgrammePivotTable extends Migration
     public function up()
     {
         Schema::create('course_programme', function (Blueprint $table) {
+            $table->bigIncrements('id');
             $table->bigInteger('course_id')->unsigned()->index();
             $table->foreign('course_id')->references('id')->on('courses')->onDelete('cascade');
             $table->bigInteger('programme_id')->unsigned()->index();
             $table->foreign('programme_id')->references('id')->on('programmes')->onDelete('cascade');
-            $table->primary(['course_id', 'programme_id']);
             $table->unsignedTinyInteger('semester');
+            $table->date('revised_on')->nullable();
         });
     }
 
