@@ -23,7 +23,7 @@
                     <div class="flex items-baseline justify-center">
                         <div class="w-20">
                             <span class="px-2 py-1 rounded text-xs uppercase text-white bg-black font-bold w-18">
-                                {{ $course->type === 'CORE' ? 'CORE' : ($course->type === 'G E' ? 'G E ' : 'O E ') }}
+                                {{ $course->type === 'CORE' ? 'CORE' : ($course->type === 'GE' ? 'GE ' : 'OE ') }}
                             </span>
                         </div>
                         <h4 class="font-bold text-sm text-gray-600 w-24 mr-2">{{ $course->code }}</h4>

@@ -153,10 +153,10 @@ class UpdateProgrammeTest extends TestCase
         $this->withoutExceptionHandling()
             ->signIn();
 
-        $programme = create(Programme::class, 1, ['type'=>'Under Graduate(U.G.)']);
+        $programme = create(Programme::class, 1, ['type'=>'UG']);
 
         $response = $this->patch('/programmes/'.$programme->id, [
-            'type' => $newType = 'Post Graduate(P.G.)'
+            'type' => $newType = 'PG'
         ])->assertRedirect('/programmes')
         ->assertSessionHasFlash('success', 'Programme updated successfully!');
 

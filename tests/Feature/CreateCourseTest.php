@@ -24,7 +24,7 @@ class CreateCourseTest extends TestCase
         $this->post('/courses', $course = [
             'code' => 'MCS-102',
             'name' => 'Design and Analysis of Algorithms',
-            'type' => 'Open Elective',
+            'type' => 'OE',
             'attachments' =>  $attachment = [UploadedFile::fake()->create('document.pdf')]
         ])->assertRedirect('/courses')
         ->assertSessionHasFlash('success', 'Course created successfully!');
@@ -54,7 +54,7 @@ class CreateCourseTest extends TestCase
         $this->post('/courses', $course = [
             'code' => 'MCS-102',
             'name' => 'Design and Analysis of Algorithms',
-            'type' => 'General Elective',
+            'type' => 'GE',
         ])->assertRedirect('/courses')
         ->assertSessionHasFlash('success', 'Course created successfully!');
 

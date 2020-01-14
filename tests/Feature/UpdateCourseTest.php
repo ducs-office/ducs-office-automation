@@ -73,10 +73,10 @@ class UpdateCourseTest extends TestCase
         $this->withoutExceptionHandling()
             ->signIn();
 
-        $course = create(Course::class, 1, ['type' => 'Core']);
+        $course = create(Course::class, 1, ['type' => 'CORE']);
         
         $this->patch('/courses/' . $course->id, [
-            'type' => $newType = 'Open Elective'
+            'type' => $newType = 'OE'
         ])->assertRedirect('/courses')
         ->assertSessionHasFlash('success', 'Course updated successfully!');
 

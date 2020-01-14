@@ -21,11 +21,11 @@
                         <option value="CORE"
                             {{ old('type', 'CORE') === 'CORE' ? 'selected' : ''}}>Core
                         </option>
-                        <option value="G E"
-                            {{ old('type', 'G E') === 'G E' ? 'selected' : ''}}>General Elective
+                        <option value="GE"
+                            {{ old('type', 'GE') === 'GE' ? 'selected' : ''}}>General Elective
                         </option>
-                        <option value="O E"
-                            {{ old('type', 'O E') === 'O E' ? 'selected' : ''}}>Open Elective
+                        <option value="OE"
+                            {{ old('type', 'OE') === 'OE' ? 'selected' : ''}}>Open Elective
                         </option>
                     </select>
                 </div>

@@ -24,7 +24,7 @@ class CreateProgrammeTest extends TestCase
             'code' => 'MCS',
             'wef' => '2019-08-12',
             'name' => 'M.Sc. Computer Science',
-            'type' => 'Under Graduate(U.G.)',
+            'type' => 'UG',
             'duration' => 1,
             'semester_courses' => [
                 [create(Course::class)->id],
@@ -53,7 +53,7 @@ class CreateProgrammeTest extends TestCase
                     'code' => 'MCS',
                     'wef' => '2020-01-01',
                     'name' => 'M.C.A. Computer Science',
-                    'type' => 'Under Graduate(U.G.)',
+                    'type' => 'UG',
                     'duration' => 1,
                     'semester_courses' => [
                         [$assignedCourse->id],
@@ -73,7 +73,7 @@ class CreateProgrammeTest extends TestCase
                 'code' => 'MCS',
                 'wef' => '2020-01-01',
                 'name' => 'M.C.A. Computer Science',
-                'type' => 'Under Graduate(U.G.)',
+                'type' => 'UG',
                 'duration' => 1,
                 'semester_courses' => [
                     [$anotherUnassignedCourse->id],
