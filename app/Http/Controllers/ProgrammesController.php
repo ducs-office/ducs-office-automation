@@ -40,24 +40,20 @@ class ProgrammesController extends Controller
 
     public function store(Request $request)
     {
+        $type = implode(',', config('programme.type'));
+        
         $data = $request->validate([
             'code' => ['required', 'min:3', 'max:60', 'unique:programmes,code'],
             'wef' => ['required', 'date'],
             'name' => ['required', 'min:3', 'max:190'],
-            'type' => ['required', 'in:Under Graduate(U.G.),Post Graduate(P.G.)'],
+            'type' => ['required', 'in:'.$type],
             'duration' => ['required', 'integer'],
             'semester_courses' => ['required', 'array', 'size:'.($request->duration * 2) ],
             'semester_courses.*' => ['required', 'array', 'min:1'],
             'semester_courses.*.*' => ['numeric', 'exists:courses,id', 'unique:course_programme,course_id']
         ]);
 
-        $programme = Programme::create([
-            'code' => $data['code'],
-            'wef' => $data['wef'],
-            'name' => $data['name'],
-            'type' => $data['type'],
-            'duration' => $data['duration']
-        ]);
+        $programme = Programme::create($data);
 
         foreach ($request->semester_courses as $index => $courses) {
             $programme->courses()->attach($courses, ['semester' => $index + 1]);
@@ -75,6 +71,8 @@ class ProgrammesController extends Controller
 
     public function update(Request $request, Programme $programme)
     {
+        $type = implode(',', config('programme.type'));
+       
         $data = $request->validate([
             'code' => [
                 'sometimes', 'required', 'min:3', 'max:60',
@@ -82,7 +80,7 @@ class ProgrammesController extends Controller
             ],
             'wef' => ['sometimes', 'required', 'date'],
             'name' => ['sometimes', 'required', 'min:3', 'max:190'],
-            'type' => ['sometimes', 'required', 'in:Under Graduate(U.G.),Post Graduate(P.G.)'],
+            'type' => ['sometimes', 'required', 'in:'.$type],
             'duration' => ['sometimes', 'required', 'integer'],
             'semester_courses' => [
                 'sometimes', 'required', 'array',
@@ -94,7 +92,7 @@ class ProgrammesController extends Controller
             ],
         ]);
 
-        $programme->update($request->only(['code', 'wef', 'name', 'type', 'duration']));
+        $programme->update($data);
 
         $semester_courses = collect($request->semester_courses)
             ->map(function ($courses, $index) {

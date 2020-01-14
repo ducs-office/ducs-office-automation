@@ -40,9 +40,9 @@ class DatabaseSeeder extends Seeder
         });
 
         $programmes = collect([
-            factory(Programme::class)->create(['name' => 'B.Sc. (H) Computer Science', 'type' => 'Under Graduate(U.G.)']),
-            factory(Programme::class)->create(['name' => 'B.Sc. (Prog) Computer Science', 'type' => 'Under Graduate(U.G.)']),
-            factory(Programme::class)->create(['name' => 'MCA', 'type' => 'Post Graduate(P.G.)']),
+            factory(Programme::class)->create(['name' => 'B.Sc. (H) Computer Science', 'type' => 'UG']),
+            factory(Programme::class)->create(['name' => 'B.Sc. (Prog) Computer Science', 'type' => 'UG']),
+            factory(Programme::class)->create(['name' => 'MCA', 'type' => 'PG']),
         ]);
 
         factory(Course::class)->create(['name' => 'Design and Analysis of Algorithms']);

@@ -19,7 +19,7 @@ class CreateProgrammesTable extends Migration
             $table->string('name');
             $table->date('wef');
             $table->unsignedTinyInteger('duration');
-            $table->enum('type', ['Under Graduate(U.G.)', 'Post Graduate(P.G.)']);
+            $table->enum('type', config('programme.type'));
             $table->timestamps();
         });
     }

@@ -23,12 +23,12 @@
             <label for="programme_type" class="w-full form-label">Type<span
                     class="h-current text-red-500 text-lg">*</span></label>
             <select class="w-full form-input" name="type" required>
-                <option value="Under Graduate(U.G.)"
-                    {{ old('type', $programme->type) === 'Under Graduate(U.G.)' ? 'selected' : ''}}>Under
-                    Graduate(U.G.)</option>
-                <option value="Post Graduate(P.G.)"
-                    {{ old('type', $programme->type) === 'Post Graduate(P.G.)' ? 'selected' : ''}}>Post
-                    Graduate(P.G.)</option>
+                <option value="UG"
+                    {{ old('type', $programme->type) === 'UG' ? 'selected' : ''}}>Under Graduate(U.G.)
+                </option>
+                <option value="PG"
+                    {{ old('type', $programme->type) === 'PG' ? 'selected' : ''}}>Post Graduate(P.G.)
+                </option>
             </select>
         </div>
         <course-sections inline-template

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Programme extends Model
 {
-    protected $guarded = [];
+    protected $fillable = ['code', 'wef', 'name', 'type', 'duration'];
 
     public function colleges()
     {

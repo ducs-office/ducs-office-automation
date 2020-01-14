@@ -36,7 +36,7 @@
                 </div>
             </div>
             <h3 class="py-1 italic mb-2" >
-                    {{ $programme->type === 'Under Graduate(U.G.)' ? 'Under Graduate' : 'Post Graduate' }}
+                    {{ $programme->type === 'UG' ? 'Under Graduate' : 'Post Graduate' }}
             </h3>
             <p class="mb-1"><span class="italic font-bold">Duration:</span> {{ $programme->duration }} year(s)</p>
             <p class="mb-1"><span class="italic font-bold">Date (w.e.f) :</span> {{ $programme->wef }}</p>
