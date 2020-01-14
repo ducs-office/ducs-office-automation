@@ -35,26 +35,35 @@
                     @endcan
                 </div>
             </div>
-            <h3 class="py-1 italic mb-2" >
+            <h3 class="italic mb-4">
                     {{ $programme->type === 'UG' ? 'Under Graduate' : 'Post Graduate' }}
             </h3>
-            <p class="mb-1"><span class="italic font-bold">Duration:</span> {{ $programme->duration }} year(s)</p>
-            <p class="mb-1"><span class="italic font-bold">Date (w.e.f) :</span> {{ $programme->wef }}</p>
-            <div class="mt-2">
+            <p><strong class="italic">Duration:</strong> {{ $programme->duration }} year(s)</p>
+            <p><strong class="italic">Date (w.e.f) :</strong> {{ $programme->wef }}</p>
+            <div class="mt-4">
                 <details class="bg-gray-100 rounded-t border overflow-hidden">
                     <summary class="p-2 bg-gray-200 cursor-pointer outline-none">
                         Courses
                     </summary>
-                    <div class="flex flex-wrap -mx-2">
-                        @foreach($grouped_courses[$index] as $semester => $courses)
-                            <div class="p-2 w-1/2">
-                                <ul class="font-bold mb-2 p-2"> Semester - {{$semester}}
-                                    @foreach ($courses as $course)
-                                        <li class="font-normal">{{$course->name}}</li>
-                                    @endforeach
+                    <div class="flex flex-wrap p-2">
+                        @forelse($grouped_courses[$index] as $semester => $courses)
+                            <div class="w-1/2 border-t border-r border-gray-900 {{ $semester % 2 == 1 ? 'border-l' : '' }}{{ $semester > ($programme->duration-1) * 2 ? ' border-b' : ''}}">
+                                <div class="px-4 py-2 text-center border-b border-gray-900 bg-gray-300">
+                                    <h5 class="font-bold">Semester {{ $semester }}</h5>
+                                </div>
+                                <ul class="ml-6 p-4 list-disc">
+                                    @forelse ($courses as $course)
+                                        <li class="mb-1">{{$course->name}}</li>
+                                    @empty
+                                    <p class="px-2 py-1 text-gray-700 font-bold">No Course in this semester.</p>
+                                    @endforelse
                                 </ul>
                             </div>
-                        @endforeach
+                        @empty
+                            <p class="px-6 py-4 flex-1 text-gray-700 font-bold">
+                                No course in any semester yet.
+                            </p>
+                        @endforelse
                     </div>
                 </details>
             </div>
