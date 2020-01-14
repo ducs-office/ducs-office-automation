@@ -86,8 +86,10 @@ class EditUserTest extends TestCase
     /** @test */
     public function admin_can_update_users_category()
     {
+        $categories = array_keys(config('options.users.categories'));
+
         $facultyRole = Role::firstOrCreate(['name' => 'faculty']);
-        $john = create(User::class, 1, ['category' => 'College Teacher']);
+        $john = create(User::class, 1, ['category' => $categories[0]]);
         $john->assignRole($facultyRole);
 
         $this->signIn(create(User::class), 'admin');
@@ -95,12 +97,12 @@ class EditUserTest extends TestCase
         $this->withoutExceptionHandling()
             ->from('/users')
             ->patch('/users/' . $john->id, [
-                'category' => $correctCategory = 'Faculty Teacher'
+                'category' => $newCategory = $categories[1]
             ])->assertRedirect('/users')
             ->assertSessionHasFlash('success', 'User updated successfully!');
 
-        tap($john->fresh(), function ($updated) use ($john, $correctCategory) {
-            $this->assertEquals($correctCategory, $updated->category);
+        tap($john->fresh(), function ($updated) use ($john, $newCategory) {
+            $this->assertEquals($newCategory, $updated->category);
             $this->assertEquals($john->email, $updated->email);
             $this->assertEquals($john->name, $updated->name);
         });
@@ -120,7 +122,7 @@ class EditUserTest extends TestCase
             ->patch('/users/'.$user->id, [
             'email' => $user->email,
             'name' => $newName = 'New name',
-            'category' => $newCategory = 'HOD'
+            'category' => $newCategory = 'hod'
         ])->assertRedirect('/users')
         ->assertSessionHasNoErrors()
         ->assertSessionHasFlash('success', 'User updated successfully!');

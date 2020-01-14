@@ -11,6 +11,6 @@ $factory->define(Programme::class, function (Faker $faker) {
         'name' => $faker->words(3, true),
         'wef' => $faker->date('Y-m-d'),
         'duration' => $faker->numberBetween(2, 4),
-        'type' => $faker->randomElement(config('programme.type')),
+        'type' => $faker->randomElement(array_keys(config('options.programmes.types'))),
     ];
 });

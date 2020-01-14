@@ -20,7 +20,7 @@ class UserController extends Controller
     public function index()
     {
         $roles = Role::all();
-        $categories = config('user.categories');
+        $categories = config('options.users.categories');
         $users = User::with('roles')->get();
 
         return view('users.index', compact('users', 'roles', 'categories'));
@@ -28,7 +28,7 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        $categories = implode(",", config('user.categories'));
+        $categories = implode(",", array_keys(config('options.users.categories')));
 
         $request->validate([
             'name' => ['required', 'string', 'min:3', 'max:190'],
@@ -52,13 +52,14 @@ class UserController extends Controller
         Mail::to($user)->send(new UserRegisteredMail($user, $plain_password));
 
         flash('User created successfully!')->success();
-        
+
         return redirect()->back();
     }
 
     public function update(Request $request, User $user)
     {
-        $categories = implode(",", config('user.categories'));
+        $categories = implode(",", array_keys(config('options.users.categories')));
+
         $data = $request->validate([
             'name' => ['sometimes', 'required', 'string', 'min:3', 'max:190'],
             'email' => [
@@ -77,7 +78,7 @@ class UserController extends Controller
         }
 
         flash('User updated successfully!')->success();
-        
+
         return redirect()->back();
     }
 

@@ -34,9 +34,9 @@
                             class="h-current text-red-500 text-lg">*</span></label>
                     <select name="category" id="category" class="w-full form-input" required>
                         <option value="" selected disabled>Select a category for the user</option>
-                        @foreach ($categories as $category)
-                        <option value="{{ $category }}"
-                            :selected="data('user.category') == '{{ $category }}'">
+                        @foreach ($categories as $key => $category)
+                        <option value="{{ $key }}"
+                            :selected="data('user.category') == '{{ $key }}'">
                             {{ $category }}
                         </option>
                         @endforeach

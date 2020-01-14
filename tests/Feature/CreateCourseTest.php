@@ -28,9 +28,9 @@ class CreateCourseTest extends TestCase
             'attachments' =>  $attachment = [UploadedFile::fake()->create('document.pdf')]
         ])->assertRedirect('/courses')
         ->assertSessionHasFlash('success', 'Course created successfully!');
-           
+
         $this->assertEquals(1, Course::count());
-        
+
         $this->assertEquals(Course::first()->attachments[0]->path, 'course_attachments/'.$attachment[0]->hashName());
         $this->assertEquals(Course::first()->code, $course['code']);
     }

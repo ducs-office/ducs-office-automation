@@ -34,7 +34,9 @@
                 @endforeach
             </div>
             <div class="px-2 flex flex-wrap items-center">
-                <span class="mx-1 bg-green-500 text-white p-1 rounded text-xs font-bold tracking-wide">{{$user->category}}</span>
+                <span class="mx-1 bg-green-500 text-white p-1 rounded text-xs font-bold tracking-wide">
+                    {{ $categories[$user->category] }}
+                </span>
             </div>
             <div class="ml-auto px-2 flex items-center">
                 @can('update', App\User::class)

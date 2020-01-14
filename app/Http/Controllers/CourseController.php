@@ -22,7 +22,9 @@ class CourseController extends Controller
     public function index()
     {
         $courses = Course::latest()->get();
-        return view('courses.index', compact('courses'));
+        $course_types = config('options.courses.types');
+
+        return view('courses.index', compact('courses', 'course_types'));
     }
 
     /**
@@ -33,16 +35,16 @@ class CourseController extends Controller
      */
     public function store(Request $request)
     {
-        $type = implode(',', config('course.type'));
+        $types = implode(',', array_keys(config('options.courses.types')));
 
         $validData = $request->validate([
             'code' => ['required', 'min:3', 'max:60', 'unique:courses'],
             'name' => ['required', 'min:3', 'max:190'],
-            'type' => ['required', 'in:'.$type],
+            'type' => ['required', 'in:'.$types],
             'attachments' => ['nullable', 'array', 'max:5'],
             'attachments.*' => ['file', 'max:200', 'mimes:jpeg,jpg,png,pdf'],
         ]);
-        
+
         $course = Course::create($validData);
 
         if ($request->hasFile('attachments')) {
@@ -70,7 +72,7 @@ class CourseController extends Controller
      */
     public function update(Request $request, Course $course)
     {
-        $type = implode(',', config('course.type'));
+        $types = implode(',', array_keys(config('options.courses.types')));
 
         $validData = $request->validate([
             'code' => [
@@ -78,7 +80,7 @@ class CourseController extends Controller
                 Rule::unique('courses')->ignore($course)
             ],
             'name' => ['sometimes', 'required', 'min:3', 'max:190'],
-            'type' => ['sometimes', 'required', 'in:'.$type],
+            'type' => ['sometimes', 'required', 'in:'.$types],
             'attachments' => ['nullable', 'array', 'max:5'],
             'attachments.*' => ['file', 'mimes:jpeg,jpg,png,pdf', 'max:200'],
         ]);

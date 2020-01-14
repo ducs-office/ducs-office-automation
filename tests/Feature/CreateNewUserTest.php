@@ -6,6 +6,7 @@ use App\Mail\UserRegisteredMail;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\ValidationException;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
@@ -27,10 +28,11 @@ class CreateNewUserTest extends TestCase
             ->post('/users', [
                 'name' => $name = 'HOD Faculty',
                 'email' => $email = 'hod@uni.ac.in',
-                'category' => 'HOD',
+                'category' => 'hod',
                 'roles' => [$teacherRole->id]
             ])->assertRedirect('/')
             ->assertSessionHasFlash('success', 'User created successfully!');
+
         $user = User::whereEmail($email)->first();
 
         $this->assertNotNull($user, 'User was not created.');
@@ -53,7 +55,7 @@ class CreateNewUserTest extends TestCase
             ->post('/users', [
                 'name' => $name = 'HOD Faculty',
                 'email' => $email = 'hod@uni.ac.in',
-                'category' => 'HOD',
+                'category' => 'hod',
                 'roles' => [$facultyRole->id, $hodRole->id]
             ])->assertRedirect('/')
             ->assertSessionHasFlash('success', 'User created successfully!');
@@ -78,7 +80,7 @@ class CreateNewUserTest extends TestCase
             ->post('/users', [
                 'name' => 'college teacher',
                 'email' => 'contact@teacher.me',
-                'category' => 'College Teacher',
+                'category' => 'college_teacher',
                 'roles' => [$teacherRole->id]
             ])->assertRedirect('/')
             ->assertSessionHasFlash('success', 'User created successfully!');
@@ -92,15 +94,15 @@ class CreateNewUserTest extends TestCase
     public function request_validates_name_field_is_not_null()
     {
         $this->signIn();
-    
+
         $teacherRole = Role::firstOrcreate(['name' => 'college teacher']);
-            
+
         try {
             $this->withoutExceptionHandling()
                 ->post('/users', [
                     'name' => '',
                     'email' => 'hod@uni.ac.in',
-                    'category' => 'HOD',
+                    'category' => 'hod',
                     'roles' => [$teacherRole->id]
                 ]);
         } catch (ValidationException $e) {
@@ -108,20 +110,20 @@ class CreateNewUserTest extends TestCase
         }
         $this->assertEquals(1, User::count());
     }
-    
+
     /** @test */
     public function request_validates_email_field_is_not_null()
     {
         $this->signIn();
-    
+
         $teacherRole = Role::firstOrcreate(['name' => 'college teacher']);
-            
+
         try {
             $this->withoutExceptionHandling()
                 ->post('/users', [
                     'name' => 'HOD Faculty',
                     'email' => '',
-                    'category' => 'HOD',
+                    'category' => 'hod',
                     'roles' => [$teacherRole->id]
                 ]);
         } catch (ValidationException $e) {
@@ -137,13 +139,13 @@ class CreateNewUserTest extends TestCase
 
         $user = create(User::class);
         $teacherRole = Role::firstOrcreate(['name' => 'college teacher']);
-            
+
         try {
             $this->withoutExceptionHandling()
                 ->post('/users', [
                     'name' => 'HOD Faculty',
                     'email' => $user->email,
-                    'category' => 'HOD',
+                    'category' => 'hod',
                     'roles' => [$teacherRole->id]
                 ]);
         } catch (ValidationException $e) {
@@ -151,14 +153,14 @@ class CreateNewUserTest extends TestCase
         }
         $this->assertEquals(2, User::count());
     }
-    
+
     /** @test */
     public function request_validates_category_field_is_not_null()
     {
         $this->signIn();
-    
+
         $teacherRole = Role::firstOrcreate(['name' => 'college teacher']);
-            
+
         try {
             $this->withoutExceptionHandling()
                 ->post('/users', [
@@ -172,14 +174,14 @@ class CreateNewUserTest extends TestCase
         }
         $this->assertEquals(1, User::count());
     }
-    
+
     /** @test */
     public function request_validates_category_field_is_a_valid_value()
     {
         $this->signIn();
-    
+
         $teacherRole = Role::firstOrcreate(['name' => 'college teacher']);
-            
+
         try {
             $this->withoutExceptionHandling()
                 ->post('/users', [
@@ -193,20 +195,20 @@ class CreateNewUserTest extends TestCase
         }
         $this->assertEquals(1, User::count());
     }
-    
+
     /** @test */
     public function request_validates_roles_field_is_not_null()
     {
         $this->signIn();
-    
+
         $teacherRole = Role::firstOrcreate(['name' => 'college teacher']);
-            
+
         try {
             $this->withoutExceptionHandling()
                 ->post('/users', [
                     'name' => 'HOD Faculty',
                     'email' => 'hod@uni.ac.in',
-                    'category' => 'HOD',
+                    'category' => 'hod',
                     'roles' => ''
                 ]);
         } catch (ValidationException $e) {

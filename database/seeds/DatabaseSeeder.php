@@ -45,7 +45,7 @@ class DatabaseSeeder extends Seeder
             factory(Programme::class)->create(['name' => 'MCA', 'type' => 'PG']),
         ]);
 
-        factory(Course::class)->create(['name' => 'Design and Analysis of Algorithms']);
+        factory(Course::class)->create(['name' => 'Design and Analysis of Algorithms', 'type' => 'C']);
         factory(Course::class)->create(['name' => 'Artificial Intelligence']);
         factory(Course::class)->create(['name' => 'Compiler Design']);
         factory(Course::class)->create(['name' => 'Data Mining']);

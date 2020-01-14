@@ -19,7 +19,7 @@ class CreateProgrammesTable extends Migration
             $table->string('name');
             $table->date('wef');
             $table->unsignedTinyInteger('duration');
-            $table->enum('type', config('programme.type'));
+            $table->enum('type', array_keys(config('options.programmes.types')));
             $table->timestamps();
         });
     }

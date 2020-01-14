@@ -17,7 +17,7 @@ class CreateCoursesTable extends Migration
             $table->bigIncrements('id');
             $table->string('code', 60)->unique();
             $table->string('name');
-            $table->enum('type', config('course.type'));
+            $table->enum('type', array_keys(config('options.courses.types')));
             $table->timestamps();
         });
     }

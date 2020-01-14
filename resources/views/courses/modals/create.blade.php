@@ -17,15 +17,12 @@
             <label for="course_type" class="w-full form-label">Type<span
                     class="h-current text-red-500 text-lg">*</span></label>
             <select class="w-full form-input" name="type" required>
-                <option value="CORE"
-                    {{ old('type', 'CORE') === 'CORE' ? 'selected' : ''}}>Core
+                @foreach ($course_types as $key => $type)
+                <option value="{{ $key }}"
+                    {{ old('type', 'C') === $key ? 'selected' : ''}}>
+                    {{ $type }}
                 </option>
-                <option value="GE"
-                    {{ old('type', 'GE') === 'GE' ? 'selected' : ''}}>General Elective
-                </option>
-                <option value="OE"
-                    {{ old('type', 'OE') === 'OE' ? 'selected' : ''}}>Open Elective
-                </option>
+                @endforeach
             </select>
         </div>
         <div class="mb-2">

@@ -26,6 +26,7 @@ class ProgrammesController extends Controller
                 return $q->orderBy('semester');
             }
         ])->get();
+
         $grouped_courses = $programmes->map(function ($programme) {
             return $programme->courses->groupBy('pivot.semester');
         });
@@ -35,18 +36,20 @@ class ProgrammesController extends Controller
 
     public function create()
     {
-        return view('programmes.create');
+        return view('programmes.create', [
+            'types' => config('options.programmes.types')
+        ]);
     }
 
     public function store(Request $request)
     {
-        $type = implode(',', config('programme.type'));
-        
+        $types = implode(',', array_keys(config('options.programmes.types')));
+
         $data = $request->validate([
             'code' => ['required', 'min:3', 'max:60', 'unique:programmes,code'],
             'wef' => ['required', 'date'],
             'name' => ['required', 'min:3', 'max:190'],
-            'type' => ['required', 'in:'.$type],
+            'type' => ['required', 'in:'.$types],
             'duration' => ['required', 'integer'],
             'semester_courses' => ['required', 'array', 'size:'.($request->duration * 2) ],
             'semester_courses.*' => ['required', 'array', 'min:1'],
@@ -66,13 +69,15 @@ class ProgrammesController extends Controller
 
     public function edit(Programme $programme)
     {
-        return view('programmes.edit', compact('programme'));
+        $types = config('options.programmes.types');
+
+        return view('programmes.edit', compact('programme', 'types'));
     }
 
     public function update(Request $request, Programme $programme)
     {
-        $type = implode(',', config('programme.type'));
-       
+        $types = implode(',', array_keys(config('options.programmes.types')));
+
         $data = $request->validate([
             'code' => [
                 'sometimes', 'required', 'min:3', 'max:60',
@@ -80,7 +85,7 @@ class ProgrammesController extends Controller
             ],
             'wef' => ['sometimes', 'required', 'date'],
             'name' => ['sometimes', 'required', 'min:3', 'max:190'],
-            'type' => ['sometimes', 'required', 'in:'.$type],
+            'type' => ['sometimes', 'required', 'in:'.$types],
             'duration' => ['sometimes', 'required', 'integer'],
             'semester_courses' => [
                 'sometimes', 'required', 'array',

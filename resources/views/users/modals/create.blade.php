@@ -29,8 +29,8 @@
                         class="h-current text-red-500 text-lg">*</span></label>
                 <select name="category" id="category" class="w-full form-input" required>
                     <option value="" selected disabled>Select a Category:</option>
-                    @foreach ($categories as $category)
-                    <option value="{{ $category }}"> {{ $category }} </option>
+                    @foreach ($categories as $key => $category)
+                        <option value="{{ $key }}"> {{ $category }} </option>
                     @endforeach
                 </select>
             </div>

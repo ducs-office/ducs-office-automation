@@ -10,6 +10,6 @@ $factory->define(Course::class, function (Faker $faker) {
     return [
         'code' => $faker->unique()->regexify('[A-Z0-9]{3}[0-9\-][0-9]{6}'),
         'name' => $faker->words(3, true),
-        'type' => $faker->randomElement(config('course.type')),
+        'type' => $faker->randomElement(array_keys(config('options.courses.types'))),
     ];
 });

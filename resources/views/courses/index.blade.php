@@ -9,12 +9,14 @@
             </button>
             @include('courses.modals.create', [
                 'modalName' => 'create-college-modal',
+                'course_types' => $course_types,
             ])
             @endcan
         </div>
         @can('update', App\Course::class)
         @include('courses.modals.edit', [
-            'modalName' => 'edit-course-modal'
+            'modalName' => 'edit-course-modal',
+            'course_types' => $course_types,
         ])
         @endcan
         <div>
@@ -23,7 +25,7 @@
                     <div class="flex items-baseline justify-center">
                         <div class="w-20">
                             <span class="px-2 py-1 rounded text-xs uppercase text-white bg-black font-bold w-18">
-                                {{ $course->type === 'CORE' ? 'CORE' : ($course->type === 'GE' ? 'GE ' : 'OE ') }}
+                                {{ $course->type }}
                             </span>
                         </div>
                         <h4 class="font-bold text-sm text-gray-600 w-24 mr-2">{{ $course->code }}</h4>
@@ -68,6 +70,5 @@
                 </div>
             @endforeach
         </div>
-
     </div>
 @endsection
