@@ -42,10 +42,10 @@ class UpdateProgrammeTest extends TestCase
         $programme = create(Programme::class);
         $course = create(Course::class);
 
-        $programme->courses()->attach($course, ['semester' => 1, 'revised_on' => now()->format('y-m-d')]);
+        $programme->courses()->attach($course, ['semester' => 1, 'revised_on' => '2019-09-09']);
 
         $response = $this->patch('/programmes/'.$programme->id, [
-            'wef' => $newDate = now()->addYear(1)->format('y-m-d')
+            'wef' => $newDate = '2020-09-09'
         ])->assertRedirect('/programmes')
         ->assertSessionHasFlash('success', 'Programme updated successfully!');
 

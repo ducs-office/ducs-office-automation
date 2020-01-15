@@ -28,6 +28,13 @@ class ProgrammesController extends Controller
             }
         ])->get();
 
+        $programmes->map(function ($programme) {
+            $programme->courses =  $programme->courses->filter(function ($programme_course) use ($programme) {
+                return ($programme_course['pivot']['revised_on'] == $programme->wef);
+            });
+            return $programme;
+        });
+
         $grouped_courses = $programmes->map(function ($programme) {
             return $programme->courses->groupBy('pivot.semester');
         });
@@ -50,7 +57,7 @@ class ProgrammesController extends Controller
             'duration' => ['required', 'integer'],
             'semester_courses' => ['required', 'array', 'size:'.($request->duration * 2) ],
             'semester_courses.*' => ['required', 'array', 'min:1'],
-            'semester_courses.*.*' => ['numeric', 'exists:courses,id', 'unique:course_programme,course_id']
+            'semester_courses.*.*' => ['numeric', 'distinct', 'exists:courses,id', 'unique:course_programme,course_id']
         ]);
 
         $programme = Programme::create([
@@ -81,13 +88,14 @@ class ProgrammesController extends Controller
     {
         $lastRevision = Cache::get($programme->code.'lastRevision');
         
+        if ($lastRevision == null) {
+            $lastRevision = '0000-00-00';
+        }
+        
         $data = $request->validate([
             'code' => ['sometimes', 'required', 'min:3', 'max:60',
                         Rule::unique('programmes')->ignore($programme)],
-            'wef' => ['sometimes' , 'required', 'date',
-                        function ($input) use ($lastRevision) {
-                            return($lastRevision == null || $input > $lastRevision);
-                        }],
+            'wef' => ['sometimes' , 'required', 'date', 'after:'.$lastRevision],
             'type' => ['sometimes', 'required', 'in:Under Graduate(U.G.),Post Graduate(P.G.)'],
             'name' => ['sometimes', 'required', 'min:3', 'max:190'],
         ]);
@@ -101,7 +109,8 @@ class ProgrammesController extends Controller
 
     public function upgrade(Programme $programme)
     {
-        return view('programmes.upgrade', compact('programme'));
+        $semester_courses = $programme->courses->where('pivot.revised_on', $programme->wef)->groupBy('pivot.semester');
+        return view('programmes.upgrade', compact('programme', 'semester_courses'));
     }
 
     public function revision(Programme $programme, Request $request)

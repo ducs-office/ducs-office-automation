@@ -23,6 +23,7 @@ class UpgradeProgrammeTest extends TestCase
             ->get("/programmes/$programme->id/upgrade")
             ->assertSuccessful()
             ->assertViewIs('programmes.upgrade')
+            ->assertViewHas('semester_courses')
             ->assertViewHas('programme');
     }
 

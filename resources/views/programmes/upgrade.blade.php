@@ -19,7 +19,7 @@
         </div>
         <course-sections inline-template
             :duration="{{ $programme->duration }}"
-            :semester-courses="{{ $programme->courses->groupBy('pivot.semester')->map->pluck('id')->toJson() }}">
+            :semester-courses="{{ $semester_courses->map->pluck('id')->toJson() }}">
             <div class="relative mb-2">
                 <transition name="flip">
                     <div class="flex flex-wrap mb-2 -mx-2" v-if="semesters > 0">
