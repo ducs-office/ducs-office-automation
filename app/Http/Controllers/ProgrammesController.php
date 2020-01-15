@@ -81,7 +81,7 @@ class ProgrammesController extends Controller
 
     public function show(Programme $programme)
     {
-        $programmeAllVersionCourses  = $programme->courses->sortByDesc('pivot.revised_on')->groupBy('pivot.revised_on')->map->groupBy('pivot.semester');
+        $programmeAllVersionCourses  = $programme->courses->sortByDesc('pivot.revised_on')->groupBy('pivot.revised_on')->map->sortBy('pivot.semester')->map->groupBy('pivot.semester');
         
         return view('programmes.show', compact('programme', 'programmeAllVersionCourses'));
     }
@@ -125,7 +125,7 @@ class ProgrammesController extends Controller
         return view('programmes.upgrade', compact('programme', 'semester_courses'));
     }
 
-    public function revision(Programme $programme, Request $request)
+    public function revise(Programme $programme, Request $request)
     {
         $data = $request->validate([
             'revised_on' => ['required', 'date', 'after:'.$programme->wef],
