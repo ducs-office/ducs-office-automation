@@ -30,22 +30,26 @@
                         </div>
                         <h4 class="font-bold text-sm text-gray-600 w-24 mr-2">{{ $course->code }}</h4>
                         <h3 class="font-bold text-lg capitalize mr-2">{{ $course->name }}</h3>
+                        @if($course->revisions->count())
                         <div class="flex flex-wrap mx-2">
-                            @foreach ($course->attachments as $attachment)
-                                <div class="inline-flex items-center px-2 rounded border hover:bg-gray-300 text-gray-600 mx-2">
+                            @foreach ($course->revisions->first()->attachments as $attachment)
+                                <div class="inline-flex items-center py-1 px-2 rounded border hover:bg-gray-300 text-gray-600 mx-2">
                                     <a href="{{ route('attachments.show', $attachment) }}" target="__blank" class="inline-flex items-center mr-1">
                                         <feather-icon name="paperclip" class="h-4 mr-2" stroke-width="2">View Syllabus</feather-icon>
                                         <span>{{ $attachment->original_name }}</span>
                                     </a>
+                                    @can('delete', $attachment)
                                     <form action="{{ route('attachments.destroy', $attachment) }}" method="POST" onsubmit= "return confirm('Do you really want to delete attachment?'); ">
                                         @csrf_token @method('DELETE')
                                         <button type="submit" class="p-1 rounded hover:bg-red-500 hover:text-white">
                                             <feather-icon name="x" class="h-4" stroke-width="2">Delete Attachment</feather-icon>
                                         </button>
                                     </form>
+                                    @endcan
                                 </div>
                             @endforeach
                         </div>
+                        @endif
                     </div>
                     <div class="flex items-center">
                         @can('update', App\Course::class)

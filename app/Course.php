@@ -13,8 +13,8 @@ class Course extends Model
         return $this->belongsToMany(Programme::class);
     }
 
-    public function attachments()
+    public function revisions()
     {
-        return $this->morphMany(Attachment::class, 'attachable');
+        return $this->hasMany(CourseRevision::class);
     }
 }

@@ -33,9 +33,6 @@ class AttachmentPolicy
     public function delete(User $user, Attachment $attachment)
     {
         return $user->can('update', $attachment->attachable)
-            && (
-                $attachment->attachable_type === Course::class
-                || $attachment->attachable->attachments()->count() > 1
-            );
+            && $attachment->attachable->attachments()->count() > 1;
     }
 }

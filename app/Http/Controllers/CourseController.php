@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Programme;
 use App\Course;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
 class CourseController extends Controller
@@ -21,7 +22,10 @@ class CourseController extends Controller
      */
     public function index()
     {
-        $courses = Course::latest()->get();
+        $courses = Course::with(['revisions' => function ($q) {
+            return $q->orderBy('revised_at', 'desc');
+        }, 'revisions.attachments'])->latest()->get();
+
         $course_types = config('options.courses.types');
 
         return view('courses.index', compact('courses', 'course_types'));
@@ -41,14 +45,20 @@ class CourseController extends Controller
             'code' => ['required', 'min:3', 'max:60', 'unique:courses'],
             'name' => ['required', 'min:3', 'max:190'],
             'type' => ['required', 'in:'.$types],
-            'attachments' => ['nullable', 'array', 'max:5'],
+            'date' => ['required', 'date', 'before_or_equal:now'],
+            'attachments' => ['required', 'array', 'max:5'],
             'attachments.*' => ['file', 'max:200', 'mimes:jpeg,jpg,png,pdf'],
         ]);
 
+        DB::beginTransaction();
+
         $course = Course::create($validData);
+        $revision = $course->revisions()->create([
+            'revised_at' => $request->date
+        ]);
 
         if ($request->hasFile('attachments')) {
-            $course->attachments()->createMany(
+            $revision->attachments()->createMany(
                 array_map(function ($attachedFile) {
                     return [
                         'path' => $attachedFile->store('/course_attachments'),
@@ -57,6 +67,8 @@ class CourseController extends Controller
                 }, $request-> attachments)
             );
         }
+
+        DB::commit();
 
         flash('Course created successfully!', 'success');
 

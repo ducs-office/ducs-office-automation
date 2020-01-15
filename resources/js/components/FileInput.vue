@@ -1,8 +1,8 @@
 <template>
     <label :for="id">
-        <input :id="id" type="file" 
+        <input v-bind="$attrs" :id="id" type="file"
             @input="fileSelected"
-            :name="name" 
+            :name="name"
             :accept="accept" style="height: 0; width: 0;">
         <slot :label="label"></slot>
     </label>
@@ -17,17 +17,17 @@ export default {
     },
     data() {
         return {
-            file: null
+            files: []
         }
     },
     methods: {
         fileSelected(evt) {
-            this.file = evt.target.files[0];
+            this.files = Array.from(evt.target.files);
         }
     },
     computed: {
         label() {
-            return this.file ? this.file.name : this.placeholder;
+            return this.files.length ? this.files.map(file => file.name).join(', ') : this.placeholder;
         }
     }
 }

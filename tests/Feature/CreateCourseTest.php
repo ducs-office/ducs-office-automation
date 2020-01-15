@@ -4,8 +4,9 @@ namespace Tests\Feature;
 
 use App\Programme;
 use App\Course;
+use App\CourseRevision;
 use App\User;
-use Dotenv\Exception\ValidationException;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -15,24 +16,48 @@ class CreateCourseTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function fillCoursesForm($overrides = [])
+    {
+        return $this->mergeFormFields([
+            'code' => 'MCS-102',
+            'name' => 'Design and Analysis of Algorithms',
+            'type' => 'C', // Core
+            'date' => now()->format('Y-m-d'),
+            'attachments' => [
+                UploadedFile::fake()->create('syllabus.pdf'),
+                UploadedFile::fake()->create('guidelines.pdf'),
+                UploadedFile::fake()->image('snapshot.jpg')
+            ]
+        ], $overrides);
+    }
+
     /** @test */
     public function admin_can_create_new_course()
     {
         $this->withoutExceptionHandling()
             ->signIn(create(User::class));
 
-        $this->post('/courses', $course = [
-            'code' => 'MCS-102',
-            'name' => 'Design and Analysis of Algorithms',
-            'type' => 'OE',
-            'attachments' =>  $attachment = [UploadedFile::fake()->create('document.pdf')]
-        ])->assertRedirect('/courses')
-        ->assertSessionHasFlash('success', 'Course created successfully!');
+        $course = $this->fillCoursesForm();
+
+        $this->post('/courses', $course)
+            ->assertRedirect('/courses')
+            ->assertSessionHasFlash('success', 'Course created successfully!');
 
         $this->assertEquals(1, Course::count());
 
-        $this->assertEquals(Course::first()->attachments[0]->path, 'course_attachments/'.$attachment[0]->hashName());
-        $this->assertEquals(Course::first()->code, $course['code']);
+
+        $newCourse = Course::first();
+        $this->assertEquals($course['code'], $newCourse->code);
+        $this->assertEquals($course['type'], $newCourse->type);
+        $this->assertEquals($course['name'], $newCourse->name);
+
+        $this->assertNotNull(CourseRevision::class, $revision = $newCourse->revisions->first());
+        foreach ($course['attachments'] as $index => $attachment) {
+            $this->assertEquals(
+                'course_attachments/' . $attachment->hashName(),
+                $revision->attachments[$index]->path
+            );
+        }
     }
 
     /** @test */
@@ -41,23 +66,44 @@ class CreateCourseTest extends TestCase
         $this->signIn();
 
         try {
-            $this->post('/courses', $course = [
-            'code' => 'MCS-102',
-            'name' => 'Design and Analysis of Algorithms',
-            'type' => 'some random type'
-            ]);
+            $course = $this->fillCoursesForm(['type' => 'random_type']);
+            $this->withoutExceptionHandling()
+                ->post('/courses', $course);
         } catch (ValidationException $e) {
-            $this->assertArrayHasKey('type', $e->errors);
+            $this->assertArrayHasKey('type', $e->errors());
         }
         $this->assertEquals(Course::count(), 0);
+    }
 
-        $this->post('/courses', $course = [
-            'code' => 'MCS-102',
-            'name' => 'Design and Analysis of Algorithms',
-            'type' => 'GE',
-        ])->assertRedirect('/courses')
-        ->assertSessionHasFlash('success', 'Course created successfully!');
+    /** @test */
+    public function course_requires_atleast_one_document_file()
+    {
+        $this->signIn();
 
-        $this->assertEquals(Course::count(), 1);
+        try {
+            $this->post('/courses', $this->fillCoursesForm([
+                'attachments' => [], // no document uploaded
+            ]));
+        } catch (ValidationException $e) {
+            $this->assertArrayHasKey('attachments', $e->errors);
+        }
+
+        $this->assertEquals(0, Course::count());
+    }
+
+    /** @test */
+    public function course_requires_a_valid_file()
+    {
+        $this->signIn();
+
+        try {
+            $this->post('/courses', $this->fillCoursesForm([
+                'attachments' => ['not a file but string'], // no document uploaded
+            ]));
+        } catch (ValidationException $e) {
+            $this->assertArrayHasKey('attachments', $e->errors);
+        }
+
+        $this->assertEquals(0, Course::count());
     }
 }
