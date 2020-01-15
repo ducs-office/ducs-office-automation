@@ -55,7 +55,7 @@ Route::get('/programmes/{programme}/edit', 'ProgrammesController@edit')->middlew
 Route::patch('/programmes/{programme}', 'ProgrammesController@update')->middleware('auth')->name('programmes.update');
 Route::delete('/programmes/{programme}', 'ProgrammesController@destroy')->middleware('auth')->name('programmes.destroy');
 Route::get('/programmes/{programme}/upgrade', 'ProgrammesController@upgrade')->middleware('auth')->name('programmes.upgrade');
-Route::patch('/programmes/{programme}/revision', 'ProgrammesController@revision')->middleware('auth')->name('programmes.revision');
+Route::patch('/programmes/{programme}/revise', 'ProgrammesController@revise')->middleware('auth')->name('programmes.revise');
 Route::get('/programmes/{programme}', 'ProgrammesController@show')->middleware('auth')->name('programmes.show');
 
 Route::get('/courses', 'CourseController@index')->middleware('auth')->name('courses.index');

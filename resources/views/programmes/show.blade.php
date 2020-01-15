@@ -11,7 +11,7 @@
             </div>
         </div>
         <div class="mt-4 px-4 ml-2">
-            @foreach ($programmeAllVersionCourses as $date => $item)
+            @foreach ($programmeAllVersionCourses as $date => $semesterCourses)
                 <div class="relative z-10 -ml-8 my-4">
                     <h5 class="relative z-20 pl-8 pr-4 py-2 inline-block font-bold bg-magenta-700 text-white shadow">Date :  {{ $date }}</h5>
                     <svg class="absolute left-0 w-2 text-magenta-900" viewBox="0 0 10 10">
@@ -19,7 +19,7 @@
                     </svg>
                 </div>
                 <div class="flex flex-wrap mb-8">
-                    @forelse ($item as $semester => $courses)
+                    @forelse ($semesterCourses as $semester => $courses)
                         <div class="w-1/2 border-t border-r border-gray-900 {{ $semester % 2 == 1 ? 'border-l': ''}} {{ $semester > ($programme->duration-1) * 2 ? 'border-b': '' }}">
                             <div class="px-4 py-2 text-center border-b border-gray-900 bg-gray-300">
                                 <h5 class="font-bold"> Semester {{ $semester }}</h5>

@@ -24,7 +24,6 @@
                     <span class="ml-2 py-1 rounded bg-black font-bold font-mono text-sm text-white mr-2 w-24 text-center">{{ $programme->code }}</span>
                 </div>
                 <div class="flex">
-                    <a href="{{ route('programmes.show', $programme) }}" class="btn btn-magenta is-sm shadow-inset mr-2">Show Versions</a>
                     @can('update', $programme)
                     <button class="p-1 hover:text-blue-500 mr-1" 
                     @click.prevent="$modal.show('edit-programme-modal',{
@@ -48,11 +47,14 @@
                     {{ $programme->type === 'Under Graduate(U.G.)' ? 'Under Graduate' : 'Post Graduate' }}
             </h3>
             <p class="mb-1"><span class="italic font-bold">Duration:</span> {{ $programme->duration }} year(s)</p>
-            <p class="mb-1"><span class="italic font-bold">Date (w.e.f) :</span> {{ $programme->wef }}</p>
+            <div class="flex">
+                <p class="mb-1"><span class="italic font-bold">Date (w.e.f) :</span> {{ $programme->wef }}</p>
+                <div class="ml-auto">
+                    <a href="{{ route('programmes.upgrade', $programme) }}" class="btn btn-magenta is-sm shadow-inset mr-2"> Revise </a>
+                    <a href="{{ route('programmes.show', $programme) }}" class="btn btn-magenta is-sm shadow-inset mr-2">Show Versions</a>
+                </div>            
+            </div>
             <div class="mt-3">
-                <div class="flex mb-2">
-                    <a href="{{ route('programmes.upgrade', $programme) }}" class="btn btn-magenta is-sm shadow-inset"> Revise Programme </a>
-                </div>
                 <details class="bg-gray-100 rounded-t border overflow-hidden">
                     <summary class="p-2 bg-gray-200 cursor-pointer outline-none">
                         Courses

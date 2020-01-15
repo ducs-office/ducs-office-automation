@@ -29,7 +29,7 @@ class ReviseProgrammeTest extends TestCase
        
         $revised_on = '2000-02-01';
 
-        $this->patch("/programmes/$programme->id/revision", ['revised_on' => $revised_on, 'semester_courses' => [[$semester_courses[0]->id], [$semester_courses[1]->id]]])
+        $this->patch("/programmes/$programme->id/revise", ['revised_on' => $revised_on, 'semester_courses' => [[$semester_courses[0]->id], [$semester_courses[1]->id]]])
             ->assertRedirect('/programmes')
             ->assertSessionHasFlash('success', 'Programme revised successfully!');
        
@@ -52,7 +52,7 @@ class ReviseProgrammeTest extends TestCase
         try {
             $this->withoutExceptionHandling()
                 ->patch(
-                    "programmes/$programme->id/revision",
+                    "programmes/$programme->id/revise",
                     [
                         'semester_courses' => [[$courses[0]->id], [$courses[1]->id]]
                     ]
@@ -78,7 +78,7 @@ class ReviseProgrammeTest extends TestCase
 
         try {
             $this->withoutExceptionHandling()
-                ->patch("programmes/$programme->id/revision", [
+                ->patch("programmes/$programme->id/revise", [
                         'revised_on' => 'some random string',
                         'semester_courses' => [[$courses[0]->id], [$courses[1]->id]]
                     ]);
@@ -91,7 +91,7 @@ class ReviseProgrammeTest extends TestCase
         $revised_on = "2019-09-08";
 
         $this->withoutExceptionHandling()
-        ->patch("programmes/$programme->id/revision", [
+        ->patch("programmes/$programme->id/revise", [
             'revised_on' => $revised_on,
             'semester_courses' => [[$courses[0]->id], [$courses[1]->id]],
         ]);
@@ -115,7 +115,7 @@ class ReviseProgrammeTest extends TestCase
 
         try {
             $this->withoutExceptionHandling()
-                ->patch("programmes/$programme->id/revision", [
+                ->patch("programmes/$programme->id/revise", [
                         'revised_on' => $revised_on,
                         'semester_courses' => [[$courses[0]->id], [$courses[1]->id]]
                     ]);
@@ -128,7 +128,7 @@ class ReviseProgrammeTest extends TestCase
         $revised_on = "2019-09-08";
 
         $this->withoutExceptionHandling()
-            ->patch("programmes/$programme->id/revision", [
+            ->patch("programmes/$programme->id/revise", [
                 'revised_on' => $revised_on,
                 'semester_courses' => [[$courses[0]->id], [$courses[1]->id]],
             ]);
@@ -151,7 +151,7 @@ class ReviseProgrammeTest extends TestCase
         $revised_on = "2019-09-08";
 
         $this->withoutExceptionHandling()
-        ->patch("programmes/$programme->id/revision", [
+        ->patch("programmes/$programme->id/revise", [
             'revised_on' => $revised_on,
             'semester_courses' => [[$courses[0]->id], [$courses[1]->id]],
         ]);
@@ -174,7 +174,7 @@ class ReviseProgrammeTest extends TestCase
 
         try {
             $this->withoutExceptionHandling()
-                ->patch('/programmes/'. $programme->id.'/revision', [
+                ->patch('/programmes/'. $programme->id.'/revise', [
                     'revised_on' => $revised_on,
                     'semester_courses' => [
                         [$assignedCourse->id],
@@ -188,7 +188,7 @@ class ReviseProgrammeTest extends TestCase
         $this->assertEquals(0, $programme->fresh()->courses()->count());
 
         $this->withoutExceptionHandling()
-            ->patch('/programmes/'.$programme->id.'/revision', [
+            ->patch('/programmes/'.$programme->id.'/revise', [
                 'revised_on' => $revised_on,
                 'semester_courses' => [
                     [$unassignedCourses[0]->id],
@@ -211,7 +211,7 @@ class ReviseProgrammeTest extends TestCase
         $programme->courses()->attach($courses, ['semester' => 1, 'revised_on' => $programme->wef]);
 
         $this->withoutExceptionHandling()
-            ->patch('/programmes/'.$programme->id.'/revision', [
+            ->patch('/programmes/'.$programme->id.'/revise', [
                 'revised_on' => '2019-09-09',
                 'semester_courses' => [
                     [$courses[0]->id, $courses[1]->id],
@@ -241,7 +241,7 @@ class ReviseProgrammeTest extends TestCase
 
         try {
             $this->withoutExceptionHandling()
-            ->patch("programmes/$programme->id/revision", [
+            ->patch("programmes/$programme->id/revise", [
                 'revised_on' => $revised_on,
                 'semester_courses' => [[$courses[0]->id], [$courses[1]->id, $courses[0]->id]],
             ]);
