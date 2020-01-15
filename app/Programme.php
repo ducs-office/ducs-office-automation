@@ -17,6 +17,6 @@ class Programme extends Model
 
     public function courses()
     {
-        return $this->belongsToMany(Course::class)->withPivot(['semester', 'revised_on']);
+        return $this->belongsToMany(Course::class)->withPivot(['semester','revised_on']);
     }
 }

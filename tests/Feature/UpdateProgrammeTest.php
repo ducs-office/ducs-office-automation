@@ -39,9 +39,12 @@ class UpdateProgrammeTest extends TestCase
             ->signIn();
 
         $programme = create(Programme::class);
+        $course = create(Course::class);
+
+        $programme->courses()->attach($course, ['semester' => 1, 'revised_on' => now()->format('y-m-d')]);
 
         $response = $this->patch('/programmes/'.$programme->id, [
-            'wef' => $newDate = '2014-05-10'
+            'wef' => $newDate = now()->addYear(1)->format('y-m-d')
         ])->assertRedirect('/programmes')
         ->assertSessionHasFlash('success', 'Programme updated successfully!');
 
@@ -49,6 +52,31 @@ class UpdateProgrammeTest extends TestCase
         $this->assertEquals($newDate, $programme->fresh()->wef);
     }
 
+    /** @test */
+    public function request_validates_wef_is_greater_than_the_latest_revision()
+    {
+        $this->signIn();
+        $programme = create(Programme::class);
+        $courses = create(Course::class, 2);
+
+        $programme->courses()->attach($courses[0], ['semester' => 1, 'revised_on' => now()->format('y-m-d')]);
+        $programme->courses()->attach($courses[1], ['semester' => 1, 'revised_on' => now()->addYear(1)->format('y-m-d')]);
+
+        try {
+            $this->patch('/programmes/'.$programme->id, [
+                'wef' => now()->format('y-m-d')
+            ]);
+        } catch (ValidationException $e) {
+            $this->assertArrayHasKey('wef', $e->errors());
+        }
+
+        $this->withoutExceptionHandling()
+            ->patch('/programmes/'.$programme->id, [
+                'wef' => now()->addYear(2)->format('Y-m-d')
+            ])->assertRedirect('/programmes');
+
+        $this->assertEquals(1, Programme::count());
+    }
     /** @test */
     public function admin_can_update_programme_name()
     {
@@ -100,22 +128,5 @@ class UpdateProgrammeTest extends TestCase
 
         $this->assertEquals(1, Programme::count());
         $this->assertEquals($newType, $programme->fresh()->type);
-    }
-
-    /** @test */
-    public function admin_can_update_duration_field()
-    {
-        $this->withoutExceptionHandling()
-            ->signIn();
-
-        $programme = create(Programme::class, 1, ['duration'=> 2]);
-
-        $response = $this->patch('/programmes/'.$programme->id, [
-            'duration' => $newDuration = 3
-        ])->assertRedirect('/programmes')
-        ->assertSessionHasFlash('success', 'Programme updated successfully!');
-
-        $this->assertEquals(1, Programme::count());
-        $this->assertEquals($newDuration, $programme->fresh()->duration);
     }
 }

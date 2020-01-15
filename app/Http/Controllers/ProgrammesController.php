@@ -6,6 +6,7 @@ use App\Programme;
 use App\Course;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Cache;
 
 class ProgrammesController extends Controller
 {
@@ -26,6 +27,7 @@ class ProgrammesController extends Controller
                 return $q->orderBy('semester');
             }
         ])->get();
+
         $grouped_courses = $programmes->map(function ($programme) {
             return $programme->courses->groupBy('pivot.semester');
         });
@@ -60,8 +62,10 @@ class ProgrammesController extends Controller
         ]);
 
         foreach ($request->semester_courses as $index => $courses) {
-            $programme->courses()->attach($courses, ['semester' => $index + 1, 'revised_on' => $programme->wef]);
+            $programme->courses()->attach($courses, ['semester' => $index + 1, 'revised_on' => $data['wef']]);
         }
+
+        Cache::put($programme->code .'lastRevision', $programme->wef);
 
         flash('Programme created successfully!', 'success');
 
@@ -75,23 +79,16 @@ class ProgrammesController extends Controller
 
     public function update(Request $request, Programme $programme)
     {
+        $lastRevision = Cache::get($programme->code . 'lastRevision');
+        
         $data = $request->validate([
             'code' => [
                 'sometimes', 'required', 'min:3', 'max:60',
                 Rule::unique('programmes')->ignore($programme)
             ],
-            'wef' => ['sometimes', 'required', 'date'],
+            'wef' => ['sometimes', 'required', 'date', 'after_or_equal:'.$lastRevision],
             'name' => ['sometimes', 'required', 'min:3', 'max:190'],
             'type' => ['sometimes', 'required', 'in:Under Graduate(U.G.),Post Graduate(P.G.)'],
-            'duration' => ['sometimes', 'required', 'integer'],
-            'semester_courses' => [
-                'sometimes', 'required', 'array',
-                'size:'.(($request->duration ?? $programme->duration) * 2)
-            ],
-            'semester_courses.*' => ['required', 'array', 'min:1'],
-            'semester_courses.*.*' => ['numeric', 'exists:courses,id',
-                Rule::unique('course_programme', 'course_id')->ignore($programme->id, 'programme_id'),
-            ],
         ]);
 
         $programme->update($request->only(['code', 'wef', 'name', 'type', 'duration']));
@@ -102,8 +99,8 @@ class ProgrammesController extends Controller
                     return [$course, $index + 1];
                 }, $courses);
             })->flatten(1)->pluck('1', '0')
-            ->map(function ($value) {
-                return ['semester' => $value];
+            ->map(function ($value) use ($data) {
+                return ['semester' => $value, 'revised_on' => $data['wef']];
             })->toArray();
 
         $programme->courses()->sync($semester_courses);
