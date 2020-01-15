@@ -10,6 +10,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
+use Illuminate\Validation\ValidationException;
 
 class UpdateProgrammeTest extends TestCase
 {

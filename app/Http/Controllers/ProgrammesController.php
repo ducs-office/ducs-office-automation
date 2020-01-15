@@ -65,7 +65,7 @@ class ProgrammesController extends Controller
             $programme->courses()->attach($courses, ['semester' => $index + 1, 'revised_on' => $data['wef']]);
         }
 
-        Cache::put($programme->code .'lastRevision', $programme->wef);
+        Cache::put($programme->code.'lastRevision', 'Null');
 
         flash('Programme created successfully!', 'success');
 
@@ -79,31 +79,20 @@ class ProgrammesController extends Controller
 
     public function update(Request $request, Programme $programme)
     {
-        $lastRevision = Cache::get($programme->code . 'lastRevision');
+        $lastRevision = Cache::get($programme->code.'lastRevision');
         
         $data = $request->validate([
-            'code' => [
-                'sometimes', 'required', 'min:3', 'max:60',
-                Rule::unique('programmes')->ignore($programme)
-            ],
-            'wef' => ['sometimes', 'required', 'date', 'after_or_equal:'.$lastRevision],
-            'name' => ['sometimes', 'required', 'min:3', 'max:190'],
+            'code' => ['sometimes', 'required', 'min:3', 'max:60',
+                        Rule::unique('programmes')->ignore($programme)],
+            'wef' => ['sometimes' , 'required', 'date',
+                        function ($input) use ($lastRevision) {
+                            return($lastRevision == null || $input > $lastRevision);
+                        }],
             'type' => ['sometimes', 'required', 'in:Under Graduate(U.G.),Post Graduate(P.G.)'],
+            'name' => ['sometimes', 'required', 'min:3', 'max:190'],
         ]);
 
-        $programme->update($request->only(['code', 'wef', 'name', 'type', 'duration']));
-
-        $semester_courses = collect($request->semester_courses)
-            ->map(function ($courses, $index) {
-                return array_map(function ($course) use ($index) {
-                    return [$course, $index + 1];
-                }, $courses);
-            })->flatten(1)->pluck('1', '0')
-            ->map(function ($value) use ($data) {
-                return ['semester' => $value, 'revised_on' => $data['wef']];
-            })->toArray();
-
-        $programme->courses()->sync($semester_courses);
+        $programme->update($request->only(['code', 'wef', 'name', 'type']));
 
         flash('Programme updated successfully!', 'success');
 
@@ -128,7 +117,9 @@ class ProgrammesController extends Controller
                 Rule::unique('course_programme', 'course_id')->ignore($programme->id, 'programme_id'),
             ],
         ]);
-
+        
+        Cache::put($programme->code.'lastRevision', $programme->wef);
+       
         $revised_on = $data['revised_on'];
 
         $semester_courses = collect($request->semester_courses)
