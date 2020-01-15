@@ -72,11 +72,18 @@ class ProgrammesController extends Controller
             $programme->courses()->attach($courses, ['semester' => $index + 1, 'revised_on' => $data['wef']]);
         }
 
-        Cache::put($programme->code.'lastRevision', 'Null');
+        Cache::put($programme->code.'lastRevision', null);
 
         flash('Programme created successfully!', 'success');
 
         return redirect('/programmes');
+    }
+
+    public function show(Programme $programme)
+    {
+        $programmeAllVersionCourses  = $programme->courses->groupBy('pivot.revised_on')->map->groupBy('pivot.semester')->reverse();
+        
+        return view('programmes.show', compact('programme', 'programmeAllVersionCourses'));
     }
 
     public function edit(Programme $programme)
