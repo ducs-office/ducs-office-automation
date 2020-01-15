@@ -40,17 +40,20 @@
             </h3>
             <p class="mb-1"><span class="italic font-bold">Duration:</span> {{ $programme->duration }} year(s)</p>
             <p class="mb-1"><span class="italic font-bold">Date (w.e.f) :</span> {{ $programme->wef }}</p>
-            <div class="mt-2">
+            <div class="mt-3">
+                <div class="flex mb-2">
+                    <a href="{{ route('programmes.upgrade', $programme) }}" class="btn btn-magenta is-sm shadow-inset"> Upgrade Programme </a>
+                </div>
                 <details class="bg-gray-100 rounded-t border overflow-hidden">
                     <summary class="p-2 bg-gray-200 cursor-pointer outline-none">
                         Courses
                     </summary>
-                    <div class="flex flex-wrap -mx-2">
+                    <div class="flex flex-wrap mx-2">
                         @foreach($grouped_courses[$index] as $semester => $courses)
                             <div class="p-2 w-1/2">
                                 <ul class="font-bold mb-2 p-2"> Semester - {{$semester}}
                                     @foreach ($courses as $course)
-                                        <li class="font-normal">{{$course->name}}</li>
+                                        <li class="mx-5 font-normal list-disc">{{$course->name}}</li>
                                     @endforeach
                                 </ul>
                             </div>

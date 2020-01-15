@@ -44,7 +44,7 @@ class CreateProgrammeTest extends TestCase
         $programme = create(Programme::class);
         $assignedCourse = create(Course::class);
         $unassignedCourse = create(Course::class);
-        $assignedCourse->programmes()->attach([$programme->id], ['semester' => 1]);
+        $assignedCourse->programmes()->attach([$programme->id], ['semester' => 1, 'revised_on' => $programme->wef]);
 
 
         try {

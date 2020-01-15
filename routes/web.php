@@ -54,6 +54,8 @@ Route::post('/programmes', 'ProgrammesController@store')->middleware('auth')->na
 Route::get('/programmes/{programme}/edit', 'ProgrammesController@edit')->middleware('auth')->name('programmes.edit');
 Route::patch('/programmes/{programme}', 'ProgrammesController@update')->middleware('auth')->name('programmes.update');
 Route::delete('/programmes/{programme}', 'ProgrammesController@destroy')->middleware('auth')->name('programmes.destroy');
+Route::get('/programmes/{programme}/upgrade', 'ProgrammesController@upgrade')->middleware('auth')->name('programmes.upgrade');
+Route::patch('/programmes/{programme}/revision', 'ProgrammesController@revision')->middleware('auth')->name('programmes.revision');
 
 Route::get('/courses', 'CourseController@index')->middleware('auth')->name('courses.index');
 Route::post('/courses', 'CourseController@store')->middleware('auth')->name('courses.store');

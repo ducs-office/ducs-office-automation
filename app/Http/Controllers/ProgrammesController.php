@@ -60,7 +60,7 @@ class ProgrammesController extends Controller
         ]);
 
         foreach ($request->semester_courses as $index => $courses) {
-            $programme->courses()->attach($courses, ['semester' => $index + 1]);
+            $programme->courses()->attach($courses, ['semester' => $index + 1, 'revised_on' => $programme->wef]);
         }
 
         flash('Programme created successfully!', 'success');
@@ -109,6 +109,45 @@ class ProgrammesController extends Controller
         $programme->courses()->sync($semester_courses);
 
         flash('Programme updated successfully!', 'success');
+
+        return redirect('/programmes');
+    }
+
+    public function upgrade(Programme $programme)
+    {
+        return view('programmes.upgrade', compact('programme'));
+    }
+
+    public function revision(Programme $programme, Request $request)
+    {
+        $data = $request->validate([
+            'revised_on' => ['required', 'date', 'after:'.$programme->wef],
+            'semester_courses' => [
+                'sometimes', 'required', 'array',
+                'size:'.(($programme->duration) * 2),
+            ],
+            'semester_courses.*' => ['required', 'array', 'min:1'],
+            'semester_courses.*.*' => ['numeric', 'distinct', 'exists:courses,id',
+                Rule::unique('course_programme', 'course_id')->ignore($programme->id, 'programme_id'),
+            ],
+        ]);
+
+        $revised_on = $data['revised_on'];
+
+        $semester_courses = collect($request->semester_courses)
+        ->map(function ($courses, $index) {
+            return array_map(function ($course) use ($index) {
+                return [$course, $index + 1];
+            }, $courses);
+        })->flatten(1)->pluck('1', '0')
+        ->map(function ($value) use ($revised_on) {
+            return ['semester' => $value, 'revised_on' => $revised_on];
+        })->toArray();
+
+        $programme->update(['wef' => $data['revised_on']]);
+        $programme->courses()->attach($semester_courses);
+
+        flash('Programme revised successfully!', 'success');
 
         return redirect('/programmes');
     }
