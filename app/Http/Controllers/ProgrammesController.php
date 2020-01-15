@@ -108,8 +108,7 @@ class ProgrammesController extends Controller
         ]);
         
         if (isset($data['wef'])) {
-            $courses = $programme->courses->where('pivot.revised_on', $programme->wef)->pluck('id');
-            $programme->courses()->updateExistingPivot($courses, ['revised_on' => $data['wef']]);
+            $programme->courses()->wherePivot('revised_on', $programme->wef)->update(['revised_on' => $data['wef']]);
         }
             
         $programme->update($request->only(['code', 'wef', 'name', 'type']));
