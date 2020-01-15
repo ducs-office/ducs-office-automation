@@ -106,6 +106,9 @@ class ProgrammesController extends Controller
             'type' => ['sometimes', 'required', 'in:Under Graduate(U.G.),Post Graduate(P.G.)'],
             'name' => ['sometimes', 'required', 'min:3', 'max:190'],
         ]);
+        
+        $courses = $programme->courses->where('pivot.revised_on', $programme->wef)->pluck('id');
+        $programme->courses()->updateExistingPivot($courses, ['revised_on' => $data['wef']]);
 
         $programme->update($request->only(['code', 'wef', 'name', 'type']));
 
