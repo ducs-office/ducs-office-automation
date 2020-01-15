@@ -9,6 +9,11 @@
         </a>
         @endcan
     </div>
+    @can('update', App\Programme::class)
+    @include('programmes.modals.edit',[
+        'modalName' => 'edit-programme-modal'
+    ])
+    @endcan
     @foreach ($programmes as $index => $programme)
         <div class="p-6 page-card mb-2 hover:bg-gray-100">
             <div class="flex items-baseline justify-between">
@@ -20,9 +25,12 @@
                 </div>
                 <div class="flex">
                     @can('update', $programme)
-                    <a class="p-1 hover:text-blue-500 mr-1" href="{{ route('programmes.edit', $programme) }}">
+                    <button class="p-1 hover:text-blue-500 mr-1" 
+                    @click.prevent="$modal.show('edit-programme-modal',{
+                        programme: {{ $programme->toJson()}}
+                    })">
                         <feather-icon class="h-current" name="edit">Edit</feather-icon>
-                    </a>
+                    </button>
                     @endcan
                     @can('delete', App\Programme::class)
                     <form action="{{ route('programmes.destroy', $programme) }}" method="POST"
