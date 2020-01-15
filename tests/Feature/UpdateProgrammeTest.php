@@ -65,7 +65,7 @@ class UpdateProgrammeTest extends TestCase
 
         try {
             $this->patch('/programmes/'.$programme->id, [
-                'wef' => now()->format('y-m-d')
+                'wef' => now()->subMonth(1)->format('y-m-d')
             ]);
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('wef', $e->errors());
@@ -73,7 +73,7 @@ class UpdateProgrammeTest extends TestCase
 
         $this->withoutExceptionHandling()
             ->patch('/programmes/'.$programme->id, [
-                'wef' => now()->addYear(2)->format('Y-m-d')
+                'wef' => now()->addMonth(1)->format('Y-m-d')
             ])->assertRedirect('/programmes');
 
         $this->assertEquals(1, Programme::count());

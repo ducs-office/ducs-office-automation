@@ -81,7 +81,7 @@ class ProgrammesController extends Controller
 
     public function show(Programme $programme)
     {
-        $programmeAllVersionCourses  = $programme->courses->groupBy('pivot.revised_on')->map->groupBy('pivot.semester')->reverse();
+        $programmeAllVersionCourses  = $programme->courses->sortByDesc('pivot.revised_on')->groupBy('pivot.revised_on')->map->groupBy('pivot.semester');
         
         return view('programmes.show', compact('programme', 'programmeAllVersionCourses'));
     }
@@ -107,9 +107,11 @@ class ProgrammesController extends Controller
             'name' => ['sometimes', 'required', 'min:3', 'max:190'],
         ]);
         
-        $courses = $programme->courses->where('pivot.revised_on', $programme->wef)->pluck('id');
-        $programme->courses()->updateExistingPivot($courses, ['revised_on' => $data['wef']]);
-
+        if (isset($data['wef'])) {
+            $courses = $programme->courses->where('pivot.revised_on', $programme->wef)->pluck('id');
+            $programme->courses()->updateExistingPivot($courses, ['revised_on' => $data['wef']]);
+        }
+            
         $programme->update($request->only(['code', 'wef', 'name', 'type']));
 
         flash('Programme updated successfully!', 'success');
