@@ -59,6 +59,8 @@ Route::get('/courses', 'CourseController@index')->middleware('auth')->name('cour
 Route::post('/courses', 'CourseController@store')->middleware('auth')->name('courses.store');
 Route::patch('/courses/{course}', 'CourseController@update')->middleware('auth')->name('courses.update');
 Route::delete('/courses/{course}', 'CourseController@destroy')->middleware('auth')->name('courses.destroy');
+Route::post('/courses/{course}/revisions', 'CourseRevisionController@store')->middleware('auth')->name('courses.revisions.store');
+Route::delete('/courses/{course}/revisions/{courseRevision}', 'CourseRevisionController@destroy')->middleware('auth')->name('courses.revisions.destroy');
 
 Route::get('/colleges', 'CollegeController@index')->middleware('auth')->name('colleges.index');
 Route::post('/colleges', 'CollegeController@store')->middleware('auth')->name('colleges.store');

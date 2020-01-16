@@ -5,6 +5,7 @@ use App\OutgoingLetter;
 use App\Course;
 use App\User;
 use App\College;
+use App\CourseRevision;
 use App\IncomingLetter;
 use App\LetterReminder;
 use App\Remark;
@@ -45,15 +46,21 @@ class DatabaseSeeder extends Seeder
             factory(Programme::class)->create(['name' => 'MCA', 'type' => 'PG']),
         ]);
 
-        factory(Course::class)->create(['name' => 'Design and Analysis of Algorithms', 'type' => 'C']);
-        factory(Course::class)->create(['name' => 'Artificial Intelligence']);
-        factory(Course::class)->create(['name' => 'Compiler Design']);
-        factory(Course::class)->create(['name' => 'Data Mining']);
-        factory(Course::class)->create(['name' => 'Machine Learning']);
-        factory(Course::class)->create(['name' => 'Internet Technology']);
-        factory(Course::class)->create(['name' => 'Android Programming']);
-        factory(Course::class)->create(['name' => 'PHP Programming']);
-        factory(Course::class)->create(['name' => 'Data Structures']);
+        $courses = collect([
+            factory(Course::class)->create(['name' => 'Design and Analysis of Algorithms', 'type' => 'C']),
+            factory(Course::class)->create(['name' => 'Artificial Intelligence']),
+            factory(Course::class)->create(['name' => 'Compiler Design']),
+            factory(Course::class)->create(['name' => 'Data Mining']),
+            factory(Course::class)->create(['name' => 'Machine Learning']),
+            factory(Course::class)->create(['name' => 'Internet Technology']),
+            factory(Course::class)->create(['name' => 'Android Programming']),
+            factory(Course::class)->create(['name' => 'PHP Programming']),
+            factory(Course::class)->create(['name' => 'Data Structures']),
+        ]);
+
+        $courses->each(function ($course) {
+            factory(CourseRevision::class, 3)->create(['course_id' => $course->id]);
+        });
 
         factory(College::class)->create([
             'code' => 'DU-ANDC-001',
