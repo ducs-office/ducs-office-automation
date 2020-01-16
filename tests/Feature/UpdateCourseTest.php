@@ -7,6 +7,8 @@ use App\Course;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class UpdateCourseTest extends TestCase
@@ -82,5 +84,48 @@ class UpdateCourseTest extends TestCase
 
         $this->assertEquals(1, Course::count());
         $this->assertEquals($newType, $course->fresh()->type);
+    }
+
+    /** @test */
+    public function uploading_attachments_when_updating_course_attaches_to_the_latest_course_revision()
+    {
+        Storage::fake();
+
+        $this->withoutExceptionHandling()
+            ->signIn();
+
+        $course = create(Course::class, 1, ['type' => 'C']);
+
+        $oldRevision = $course->revisions()->create([
+            'revised_at' => now()->subYears(2)
+        ]);
+
+        $oldRevision->attachments()->create([
+            'original_name' => 'old_syllabus.pdf',
+            'path' => UploadedFile::fake()->create('old_syllabus.pdf')->store('course_attachments')
+        ]);
+
+        $newRevision = $course->revisions()->create([
+            'revised_at' => now()->subYears(1)
+        ]);
+
+        $newRevision->attachments()->create([
+            'original_name' => 'new_syllabus.pdf',
+            'path' => UploadedFile::fake()->create('new_syllabus.pdf')->store('courses_attachments')
+        ]);
+
+        $this->patch('/courses/' . $course->id, [
+            'attachments' => [
+                $newDoc = UploadedFile::fake()->create('newFile.pdf')
+            ]
+        ])->assertRedirect('/courses')
+        ->assertSessionHasFlash('success', 'Course updated successfully!');
+
+        $this->assertCount(1, $oldRevision->fresh()->attachments);
+        $this->assertCount(2, $newRevision->fresh()->attachments);
+        $this->assertEquals(
+            $newDoc->getClientOriginalName(),
+            $newRevision->fresh()->attachments[1]->original_name
+        );
     }
 }

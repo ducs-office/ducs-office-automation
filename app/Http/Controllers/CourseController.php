@@ -99,8 +99,11 @@ class CourseController extends Controller
 
         $course->update($validData);
 
+
         if ($request->hasFile('attachments')) {
-            $course->attachments()->createMany(
+            $revision = $course->revisions()->orderBy('revised_at', 'desc')->first();
+
+            $revision->attachments()->createMany(
                 array_map(function ($attachedFile) {
                     return [
                         'path' => $attachedFile->store('/course_attachments'),
