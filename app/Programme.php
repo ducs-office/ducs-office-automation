@@ -15,8 +15,8 @@ class Programme extends Model
         return $this->belongsToMany(College::class, 'colleges_programmes', 'programe_id', 'college_id');
     }
 
-    public function courses()
+    public function revisions()
     {
-        return $this->belongsToMany(Course::class)->withPivot(['semester','revised_on']);
+        return $this->hasMany(ProgrammeRevision::class);
     }
 }
