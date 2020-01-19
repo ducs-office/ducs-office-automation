@@ -1,6 +1,7 @@
 <?php
 
 use App\Programme;
+use App\ProgrammeRevision;
 use App\OutgoingLetter;
 use App\Course;
 use App\User;
@@ -44,6 +45,10 @@ class DatabaseSeeder extends Seeder
             factory(Programme::class)->create(['name' => 'B.Sc. (Prog) Computer Science', 'type' => 'Under Graduate(U.G.)']),
             factory(Programme::class)->create(['name' => 'MCA', 'type' => 'Post Graduate(P.G.)']),
         ]);
+
+        $programmes->each(function ($programme) {
+            factory(ProgrammeRevision::class)->create(['programme_id' => $programme->id]);
+        });
 
         factory(Course::class)->create(['name' => 'Design and Analysis of Algorithms']);
         factory(Course::class)->create(['name' => 'Artificial Intelligence']);
