@@ -106,48 +106,6 @@ class ProgrammesController extends Controller
         return redirect('/programmes');
     }
 
-    public function upgrade(Programme $programme)
-    {
-        $semester_courses = $programme->courses->where('pivot.revised_on', $programme->wef)->groupBy('pivot.semester');
-        return view('programmes.upgrade', compact('programme', 'semester_courses'));
-    }
-
-    public function revise(Programme $programme, Request $request)
-    {
-        $data = $request->validate([
-            'revised_on' => ['required', 'date', 'after:'.$programme->wef],
-            'semester_courses' => [
-                'sometimes', 'required', 'array',
-                'size:'.(($programme->duration) * 2),
-            ],
-            'semester_courses.*' => ['required', 'array', 'min:1'],
-            'semester_courses.*.*' => ['numeric', 'distinct', 'exists:courses,id',
-                Rule::unique('course_programme', 'course_id')->ignore($programme->id, 'programme_id'),
-            ],
-        ]);
-        
-        Cache::put($programme->code.'lastRevision', $programme->wef);
-       
-        $revised_on = $data['revised_on'];
-
-        $semester_courses = collect($request->semester_courses)
-        ->map(function ($courses, $index) {
-            return array_map(function ($course) use ($index) {
-                return [$course, $index + 1];
-            }, $courses);
-        })->flatten(1)->pluck('1', '0')
-        ->map(function ($value) use ($revised_on) {
-            return ['semester' => $value, 'revised_on' => $revised_on];
-        })->toArray();
-
-        $programme->update(['wef' => $data['revised_on']]);
-        $programme->courses()->attach($semester_courses);
-
-        flash('Programme revised successfully!', 'success');
-
-        return redirect('/programmes');
-    }
-
     public function destroy(Programme $programme)
     {
         $programme->delete();

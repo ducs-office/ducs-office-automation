@@ -2,7 +2,7 @@
 @section('body')
 <div class="page-card max-w-xl my-4 mx-auto">
     <div class="page-header px-6">
-        <h2 class="mb-1">Upgrade Programme</h2>
+        <h2 class="mb-1">Edit Programme Revision</h2>
         <div class="flex mt-3">
             <h2 class="text-lg font-bold">
                 {{ ucwords($programme->name) }}
@@ -10,12 +10,12 @@
             <span class="ml-2 py-1 rounded bg-black font-bold font-mono text-sm text-white mr-2 w-24 text-center">{{ $programme->code }}</span>
         </div>
     </div>
-    <form action="{{ route('programmes.revise', $programme) }}" method="POST" class="px-6">
+    <form action="{{ route('programme_revision.update', $programme) }}" method="POST" class="px-6">
         @csrf_token @method('PATCH')
         <div class="mb-2">
-            <label for="revised_on" class="w-full form-label">Revised On<span
+            <label for="revised_at" class="w-full form-label">Revised At<span
                     class="h-current text-red-500 text-lg">*</span></label>
-            <input id="revised_on" type="date" name="revised_on" class="w-full form-input" value="{{ old('wef', $programme->wef) }}">
+            <input id="revised_at" type="date" name="revised_at" class="w-full form-input" value="{{ old('wef', $programme->wef) }}">
         </div>
         <course-sections inline-template
             :duration="{{ $programme->duration }}"
@@ -41,7 +41,7 @@
             </div>
         </course-sections>
         <div class="mb-2">
-            <button type="submit" class="btn btn-magenta">Upgrade</button>
+            <button type="submit" class="btn btn-magenta">Update</button>
         </div>
     </form>
 </div>
