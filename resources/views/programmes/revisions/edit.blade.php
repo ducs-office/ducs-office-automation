@@ -15,7 +15,7 @@
         <div class="mb-2">
             <label for="revised_at" class="w-full form-label">Revised At<span
                     class="h-current text-red-500 text-lg">*</span></label>
-            <input id="revised_at" type="date" name="revised_at" class="w-full form-input" value="{{ old('wef', $programme->wef) }}">
+            <input id="revised_at" type="date" name="revised_at" class="w-full form-input" value="{{ old('wef', $programme_revision->revised_at->format('Y-m-d')) }}">
         </div>
         <course-sections inline-template
             :duration="{{ $programme->duration }}"

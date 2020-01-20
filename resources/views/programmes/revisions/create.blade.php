@@ -15,10 +15,11 @@
         <div class="mb-2">
             <label for="revised_at" class="w-full form-label">Revised At<span
                     class="h-current text-red-500 text-lg">*</span></label>
-            <input id="revised_at" type="date" name="revised_at" class="w-full form-input" value="{{ old('wef', $programme->wef) }}">
+            <input id="revised_at" type="date" name="revised_at" class="w-full form-input" value="{{ old('wef', $programme->wef->format('Y-m-d')) }}">
         </div>
         <course-sections inline-template
             :duration="{{ $programme->duration }}"
+            :semester-courses="{{ json_encode($semester_courses) }}">
             <div class="relative mb-2">
                 <transition name="flip">
                     <div class="flex flex-wrap mb-2 -mx-2" v-if="semesters > 0">

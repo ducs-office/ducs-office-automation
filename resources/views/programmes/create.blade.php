@@ -12,7 +12,7 @@
         <div class="mb-2">
             <label for="programme_wef" class="w-full form-label">Date (w.e.f)<span
                     class="h-current text-red-500 text-lg">*</span></label>
-            <input id="programme_wef" type="date" name="wef" class="w-full form-input">
+            <input id="programme_wef" type="date" name="wef" class="w-full form-input" value="<?php echo now()->format('Y-m-d') ?>">
         </div>
         <div class="mb-2">
             <label for="programme_name" class="w-full form-label">Name<span

@@ -14,14 +14,17 @@
             <div class="page-card w-1/2 m-auto border-b mb-4 p-6">
                 <div class="flex items-baseline">
                     <div class="relative z-10 -ml-8 my-4">
-                        <h5 class="relative z-20 pl-8 pr-4 py-2 inline-block font-bold bg-magenta-700 text-white shadow">Date :  {{ $programmeRevision->revised_at }}</h5>
+                        <h5 class="relative z-20 pl-8 pr-4 py-2 inline-block font-bold bg-magenta-700 text-white shadow">Year (w.e.f)  :  {{ $programmeRevision->revised_at->format('Y') }}</h5>
                         <svg class="absolute left-0 w-2 text-magenta-900" viewBox="0 0 10 10">
                             <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
                         </svg>
                     </div>
-                    <div class="ml-auto">
-                        <a href="{{ route('programme_revision.edit', [$programme, $programmeRevision]) }}">Edit Programme</a>
-                        <form action="{{  route('programme_revisions.destroy', [$programme, $programmeRevision]) }}" method="POST"
+                    <div class="ml-auto flex">
+                        <a href="{{ route('programme_revision.edit', [$programme, $programmeRevision]) }}"
+                            class="p-1 text-gray-700 hover:text-blue-600 hover:bg-gray-200 rounded mr-3" title="Edit">
+                            <feather-icon name="edit-3" stroke-width="2.5" class="h-current">Edit</feather-icon>
+                        </a>
+                        <form action="{{  route('programme_revision.destroy', [$programme, $programmeRevision]) }}" method="POST"
                             onsubmit="return confirm('Do you really want to delete programme revision?');">
                             @csrf_token @method('delete')
                             <button type="submit" class="p-1 hover:text-red-700">
