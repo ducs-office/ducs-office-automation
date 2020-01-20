@@ -10,7 +10,7 @@
             <span class="ml-2 py-1 rounded bg-black font-bold font-mono text-sm text-white mr-2 w-24 text-center">{{ $programme->code }}</span>
         </div>
     </div>
-    <form action="{{ route('programme_revision.update', $programme) }}" method="POST" class="px-6">
+    <form action="{{ route('programme_revision.update', [$programme, $programme_revision]) }}" method="POST" class="px-6">
         @csrf_token @method('PATCH')
         <div class="mb-2">
             <label for="revised_at" class="w-full form-label">Revised At<span
@@ -19,7 +19,7 @@
         </div>
         <course-sections inline-template
             :duration="{{ $programme->duration }}"
-            :semester-courses="{{ $semester_courses->map->pluck('id')->toJson() }}">
+            :semester-courses="{{ json_encode($semester_courses) }}">
             <div class="relative mb-2">
                 <transition name="flip">
                     <div class="flex flex-wrap mb-2 -mx-2" v-if="semesters > 0">
@@ -31,7 +31,7 @@
                                 source="/api/courses"
                                 find-source="/api/courses/{value}"
                                 limit="5"
-                                :value="semester in courses ? courses[semester] : []"
+                                :value="semester in courses ? courses[semester]: []"
                                 placeholder="Courses"
                                 >
                             </v-multi-typeahead>

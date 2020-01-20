@@ -20,6 +20,7 @@
                         </svg>
                     </div>
                     <div class="ml-auto">
+                        <a href="{{ route('programme_revision.edit', [$programme, $programmeRevision]) }}">Edit Programme</a>
                         <form action="{{  route('programme_revisions.destroy', [$programme, $programmeRevision]) }}" method="POST"
                             onsubmit="return confirm('Do you really want to delete programme revision?');">
                             @csrf_token @method('delete')
