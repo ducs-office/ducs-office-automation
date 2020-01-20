@@ -48,10 +48,10 @@
             </h3>
             <p class="mb-1"><span class="italic font-bold">Duration:</span> {{ $programme->duration }} year(s)</p>
             <div class="flex">
-                <p class="mb-1"><span class="italic font-bold">Date (w.e.f) :</span> {{ $programme->wef }}</p>
+                <p class="mb-1"><span class="italic font-bold">Date (w.e.f) :</span> {{ $programme->wef}}</p>
                 <div class="ml-auto">
                     <a href="{{ route('programmes.upgrade', $programme) }}" class="btn btn-magenta is-sm shadow-inset mr-2"> Revise </a>
-                    <a href="{{ route('programmes.show', $programme) }}" class="btn btn-magenta is-sm shadow-inset mr-2">Show Versions</a>
+                    <a href="{{ route('programme_revisions.show', $programme) }}" class="btn btn-magenta is-sm shadow-inset mr-2">Show Versions</a>
                 </div>            
             </div>
             <div class="mt-3">
