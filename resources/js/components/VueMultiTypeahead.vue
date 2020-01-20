@@ -11,7 +11,7 @@
                 </button>
             </div>
         </div>
-        <input class="flex-1 bg-transparent"
+        <input class="w-full bg-transparent"
           autocomplete="off"
           :placeholder="placeholder"
           :value="query"
@@ -19,6 +19,7 @@
           @focus.prevent="onFocus"
           @keydown.esc.prevent="cancel"
           @keydown.tab="cancel"
+          @blur="cancel"
           @keydown.enter.prevent="toggleItem(highlightedItemIndex)"
           @keydown.up.prevent="moveUp"
           @keydown.down.prevent="moveDown">
@@ -153,7 +154,7 @@ export default {
     },
 
     updateOptions(data) {
-        if(!this.isOpen) {
+        if(!this.isOpen & this.query != '') {
             this.open();
         }
 
@@ -192,7 +193,7 @@ export default {
             .map(id => axios.get(this.findSource.replace('{value}', id)));
 
         const responses = await Promise.all(requests);
-        
+
         this.loading = false;
         this.selectedItems = responses.map(res => res.data)
         this.updateOptions(this.selectedItems);
