@@ -60,7 +60,6 @@ Route::get('/programmes/{programme}/revision/create', 'ProgrammeRevisionControll
 Route::post('/programmes/{programme}/revision', 'ProgrammeRevisionController@store')->middleware('auth')->name('programme_revision.store');
 Route::get('/programmes/{programme}/revision/{programme_revision}/edit', 'ProgrammeRevisionController@edit')->middleware('auth')->name('programme_revision.edit');
 Route::patch('/programmes/{programme}/revision/{programme_revision}', 'ProgrammeRevisionController@update')->middleware('auth')->name('programme_revision.update');
-Route::get('/programmes/{programme}', 'ProgrammeRevisionController@index')->middleware('auth')->name('programmes_revision.show');
 Route::delete('/programme/{programme}/revisions/{programmeRevision}', 'ProgrammeRevisionController@destroy')->middleware('auth')->name('programme_revisions.destroy');
 
 Route::get('/courses', 'CourseController@index')->middleware('auth')->name('courses.index');

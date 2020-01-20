@@ -6,6 +6,7 @@ use App\Programme;
 use App\Course;
 use App\Events\ProgrammeCreated;
 use App\ProgrammeRevision;
+use App\CourseProgrammeRevision;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Cache;
@@ -59,7 +60,16 @@ class ProgrammesController extends Controller
             'duration' => ['required', 'integer'],
             'semester_courses' => ['required', 'array', 'size:'.($request->duration * 2) ],
             'semester_courses.*' => ['required', 'array', 'min:1'],
-            'semester_courses.*.*' => ['numeric', 'distinct', 'exists:courses,id', ]
+            'semester_courses.*.*' => ['numeric', 'distinct', 'exists:courses,id',
+                function ($attribute, $value, $fail) {
+                    $courses = CourseProgrammeRevision::all();
+                    foreach ($courses as $course) {
+                        if ($value == $course->course_id) {
+                            $fail($attribute.'is invalid');
+                        }
+                    }
+                },
+            ]
         ]);
 
         $programme = Programme::create([

@@ -36,7 +36,7 @@ class StoreProgrammeRevisionTest extends TestCase
 
         $this->assertEquals(1, Programme::count());
         $this->assertEquals(2, $programme->fresh()->revisions->count());
-        $this->assertEquals($revised_at, $programme->fresh()->revisions()->find(2)->revised_at);
+        $this->assertEquals($revised_at, $programme->fresh()->revisions()->find(2)->revised_at->format('Y-m-d'));
     }
 
     /** @test */
@@ -65,7 +65,7 @@ class StoreProgrammeRevisionTest extends TestCase
         }
 
         $this->assertEquals(1, ProgrammeRevision::count());
-        $this->assertEquals('2000-01-09', $revision->fresh()->revised_at);
+        $this->assertEquals('2000-01-09', $revision->fresh()->revised_at->format('Y-m-d'));
     }
 
     /** @test */
@@ -122,7 +122,7 @@ class StoreProgrammeRevisionTest extends TestCase
         }
 
         $this->assertEquals(1, ProgrammeRevision::count());
-        $this->assertEquals($programme->wef, Programme::find(1)->revisions()->max('revised_at'));
+        $this->assertEquals($programme->wef, date('Y-m-d', strtotime(Programme::find(1)->revisions()->max('revised_at'))));
 
         $revised_at = "2019-09-08";
 
@@ -132,7 +132,7 @@ class StoreProgrammeRevisionTest extends TestCase
             'semester_courses' => [[$courses[0]->id], [$courses[1]->id]],
         ]);
     
-        $this->assertEquals($revised_at, Programme::find(1)->revisions()->max('revised_at'));
+        $this->assertEquals($revised_at, date('Y-m-d', strtotime(Programme::find(1)->revisions()->max('revised_at'))));
     }
 
     /** @test */
@@ -191,7 +191,7 @@ class StoreProgrammeRevisionTest extends TestCase
         }
 
         $this->assertEquals(1, $programme2->fresh()->revisions->count());
-        $this->assertEquals('2000-09-08', $programme2->fresh()->revisions()->first()->revised_at);
+        $this->assertEquals('2000-09-08', $programme2->fresh()->revisions()->first()->revised_at->format('Y-m-d'));
     }
 
     /** @test */

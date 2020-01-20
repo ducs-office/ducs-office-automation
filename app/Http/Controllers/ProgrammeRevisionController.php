@@ -32,7 +32,16 @@ class ProgrammeRevisionController extends Controller
     public function store(Programme $programme, Request $request)
     {
         $data = $request->validate([
-            'revised_at' => ['required', 'date', 'unique:programme_revisions,revised_at'],
+            'revised_at' => ['required', 'date',
+                function ($attribute, $value, $fail) use ($programme) {
+                    $revisions = $programme->revisions;
+                    foreach ($revisions as $revision) {
+                        if ($revision->programme_id == $programme->id && $revision->revised_at->format('Y-m-d') == $value) {
+                            $fail($attribute.'is in valid');
+                        }
+                    }
+                },
+            ],
             'semester_courses' => [
                 'sometimes', 'required', 'array',
                 'size:'.(($programme->duration) * 2),
@@ -70,8 +79,8 @@ class ProgrammeRevisionController extends Controller
     public function edit(Programme $programme, ProgrammeRevision $programme_revision)
     {
         if ($programme_revision->programme_id == $programme->id) {
-            $semester_courses = $programme_revision->courses()->groupBy('pivot.semester');
-            return view('programmes.revisions.edit', compact('programme', 'semester_courses'));
+            $semester_courses = $programme_revision->courses->groupBy('pivot.semester')->map->pluck('id');
+            return view('programmes.revisions.edit', compact('programme', 'programme_revision', 'semester_courses'));
         } else {
             return redirect('/programmes');
         }
@@ -81,7 +90,14 @@ class ProgrammeRevisionController extends Controller
     {
         $data = $request->validate([
             'revised_at' => ['sometimes', 'required', 'date',
-                Rule::unique('programme_revisions', 'revised_at')->ignore($programme_revision->id),
+                function ($attribute, $value, $fail) use ($programme, $programme_revision) {
+                    $revisions = $programme->revisions;
+                    foreach ($revisions as $revision) {
+                        if ($revision->id != $programme_revision->id && $revision->revised_at->format('Y-m-d') == $value) {
+                            $fail($attribute.'is in valid');
+                        }
+                    }
+                },
             ],
             'semester_courses' => [
                 'sometimes', 'required', 'array',
@@ -146,5 +162,4 @@ class ProgrammeRevisionController extends Controller
         
         return redirect("/programme/{$programme->id}/revisions");
     }
-
 }

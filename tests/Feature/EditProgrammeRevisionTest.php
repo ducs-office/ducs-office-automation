@@ -10,7 +10,7 @@ use App\Programme;
 use App\ProgrammeRevision;
 use App\Course;
 
-class EditrogrammeRevision extends TestCase
+class EditprogrammeRevision extends TestCase
 {
     use RefreshDatabase;
 
@@ -32,6 +32,7 @@ class EditrogrammeRevision extends TestCase
             ->assertSuccessful()
             ->assertViewIs('programmes.revisions.edit')
             ->assertViewHas('semester_courses')
+            ->assertViewHas('programme_revision')
             ->assertViewHas('programme');
     }
 
