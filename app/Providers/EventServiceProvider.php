@@ -18,6 +18,9 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+        'App\Events\ProgrammeCreated' => [
+            'App\Listeners\AddCoursesToProgramme'
+        ]
     ];
 
     /**
@@ -29,6 +32,6 @@ class EventServiceProvider extends ServiceProvider
     {
         parent::boot();
 
-        //
+        Event::listen('ProgrammeCreated', 'AddCoursesToProgramme');
     }
 }

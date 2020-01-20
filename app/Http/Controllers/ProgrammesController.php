@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Programme;
 use App\Course;
+use App\Events\ProgrammeCreated;
+use App\ProgrammeRevision;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Cache;
@@ -23,20 +25,20 @@ class ProgrammesController extends Controller
     public function index()
     {
         $programmes = Programme::latest()->with([
-            'courses' => function ($q) {
-                return $q->orderBy('semester');
+            'revisions' => function ($q) {
+                return $q->orderBy('revised_at');
             }
         ])->get();
-
+        
         $programmes->map(function ($programme) {
-            $programme->courses =  $programme->courses->filter(function ($programme_course) use ($programme) {
-                return ($programme_course['pivot']['revised_on'] == $programme->wef);
+            $programme->revision =  $programme->revisions->first(function ($programme_revision) use ($programme) {
+                return ($programme_revision['revised_at'] == $programme->wef);
             });
             return $programme;
         });
 
         $grouped_courses = $programmes->map(function ($programme) {
-            return $programme->courses->groupBy('pivot.semester');
+            return $programme->revision->courses->groupBy('pivot.semester');
         });
 
         return view('programmes.index', compact('programmes', 'grouped_courses'));
@@ -57,7 +59,7 @@ class ProgrammesController extends Controller
             'duration' => ['required', 'integer'],
             'semester_courses' => ['required', 'array', 'size:'.($request->duration * 2) ],
             'semester_courses.*' => ['required', 'array', 'min:1'],
-            'semester_courses.*.*' => ['numeric', 'distinct', 'exists:courses,id', 'unique:course_programme,course_id']
+            'semester_courses.*.*' => ['numeric', 'distinct', 'exists:courses,id', ]
         ]);
 
         $programme = Programme::create([
@@ -68,22 +70,11 @@ class ProgrammesController extends Controller
             'duration' => $data['duration']
         ]);
 
-        foreach ($request->semester_courses as $index => $courses) {
-            $programme->courses()->attach($courses, ['semester' => $index + 1, 'revised_on' => $data['wef']]);
-        }
-
-        Cache::put($programme->code.'lastRevision', null);
+        event(new ProgrammeCreated($programme, $request->semester_courses));
 
         flash('Programme created successfully!', 'success');
 
         return redirect('/programmes');
-    }
-
-    public function show(Programme $programme)
-    {
-        $programmeAllVersionCourses  = $programme->courses->sortByDesc('pivot.revised_on')->groupBy('pivot.revised_on')->map->sortBy('pivot.semester')->map->groupBy('pivot.semester');
-        
-        return view('programmes.show', compact('programme', 'programmeAllVersionCourses'));
     }
 
     public function edit(Programme $programme)
@@ -93,25 +84,22 @@ class ProgrammesController extends Controller
 
     public function update(Request $request, Programme $programme)
     {
-        $lastRevision = Cache::get($programme->code.'lastRevision');
-        
-        if ($lastRevision == null) {
-            $lastRevision = '0000-00-00';
-        }
-        
         $data = $request->validate([
             'code' => ['sometimes', 'required', 'min:3', 'max:60',
                         Rule::unique('programmes')->ignore($programme)],
-            'wef' => ['sometimes' , 'required', 'date', 'after:'.$lastRevision],
+            'wef' => ['sometimes' , 'required', 'date'],
             'type' => ['sometimes', 'required', 'in:Under Graduate(U.G.),Post Graduate(P.G.)'],
             'name' => ['sometimes', 'required', 'min:3', 'max:190'],
         ]);
         
         if (isset($data['wef'])) {
-            $programme->courses()->wherePivot('revised_on', $programme->wef)->update(['revised_on' => $data['wef']]);
+            $programme->revisions()->where('revised_at', $programme->wef)->update(['revised_at' => $data['wef']]);
+            
+            $latestRevision = $programme->revisions->max('revised_at');
+            $programme->update(['wef' => $latestRevision]);
         }
             
-        $programme->update($request->only(['code', 'wef', 'name', 'type']));
+        $programme->update($request->only(['code', 'name', 'type']));
 
         flash('Programme updated successfully!', 'success');
 
