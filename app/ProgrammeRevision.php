@@ -1,4 +1,3 @@
-
 <?php
 
 namespace App;
@@ -10,6 +9,8 @@ use Illuminate\Database\Eloquent\Model;
 class ProgrammeRevision extends Model
 {
     protected $fillable = ['revised_at'];
+
+    protected $dates = ['revised_at'];
 
     public function courses()
     {

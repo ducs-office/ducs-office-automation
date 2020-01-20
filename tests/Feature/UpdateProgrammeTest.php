@@ -17,7 +17,7 @@ class UpdateProgrammeTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function admin_can_update_programme_code()
+    public function programme_code_can_be_updates()
     {
         $this->withoutExceptionHandling()
             ->signIn(create(User::class), 'admin');
@@ -34,7 +34,7 @@ class UpdateProgrammeTest extends TestCase
     }
 
     /** @test */
-    public function admin_can_update_programme_date_wef()
+    public function programme_date_wef_can_be_updated()
     {
         $this->withoutExceptionHandling()
             ->signIn();
@@ -42,57 +42,16 @@ class UpdateProgrammeTest extends TestCase
         $programme = create(Programme::class);
         $course = create(Course::class);
 
-        $programme->courses()->attach($course, ['semester' => 1, 'revised_on' => '2019-09-09']);
+        $programmeRevision = $programme->revisions()->create(['revised_at' => $programme->wef]);
+        $programmeRevision->courses()->attach($course, ['semester' => 1]);
 
         $response = $this->patch('/programmes/'.$programme->id, [
-            'wef' => $newDate = '2020-09-09'
+            'wef' => $newDate = now()->format('Y-m-d H:i:s')
         ])->assertRedirect('/programmes')
         ->assertSessionHasFlash('success', 'Programme updated successfully!');
 
         $this->assertEquals(1, Programme::count());
         $this->assertEquals($newDate, $programme->fresh()->wef);
-    }
-
-    /** @test */
-    public function request_validates_wef_is_greater_than_the_latest_revision()
-    {
-        $this->signIn();
-        $programme = create(Programme::class);
-        $courses = create(Course::class, 2);
-
-        $programme->courses()->attach($courses[0], ['semester' => 1, 'revised_on' => now()->format('y-m-d')]);
-        $programme->courses()->attach($courses[1], ['semester' => 1, 'revised_on' => now()->addYear(1)->format('y-m-d')]);
-
-        try {
-            $this->patch('/programmes/'.$programme->id, [
-                'wef' => now()->subMonth(1)->format('y-m-d')
-            ]);
-        } catch (ValidationException $e) {
-            $this->assertArrayHasKey('wef', $e->errors());
-        }
-
-        $this->withoutExceptionHandling()
-            ->patch('/programmes/'.$programme->id, [
-                'wef' => now()->addMonth(1)->format('Y-m-d')
-            ])->assertRedirect('/programmes');
-
-        $this->assertEquals(1, Programme::count());
-    }
-    /** @test */
-    public function admin_can_update_programme_name()
-    {
-        $this->withoutExceptionHandling()
-            ->signIn();
-
-        $programme = create(Programme::class);
-
-        $response = $this->patch('/programmes/'.$programme->id, [
-            'name' => $newName = 'New Programme'
-        ])->assertRedirect('/programmes')
-        ->assertSessionHasFlash('success', 'Programme updated successfully!');
-
-        $this->assertEquals(1, Programme::count());
-        $this->assertEquals($newName, $programme->fresh()->name);
     }
 
     /** @test */
@@ -115,7 +74,7 @@ class UpdateProgrammeTest extends TestCase
     }
 
     /** @test */
-    public function admin_can_update_type_field()
+    public function type_field_can_be_updated()
     {
         $this->withoutExceptionHandling()
             ->signIn();

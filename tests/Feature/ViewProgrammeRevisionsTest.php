@@ -16,14 +16,31 @@ class ViewProgrammeRevisionsTest extends TestCase
         $programme = create('App\Programme');
 
         $this->withExceptionHandling()
-            ->get("/programmes/{$programme}")
+            ->get("/programme/{$programme->id}/revisions")
             ->assertRedirect('/login');
     }
 
     /** @test*/
     public function programme_revisions_can_be_viewed()
     {
+        $this->signIn();
         $programme = create('App\Programme');
-        $programme->revisions()->attach(['revised_at' => now()])->courses()->attach($course, ['semester' => 1]);
+        $courses = create('App\Course', 2);
+        $revisions = $programme->revisions()->createMany([
+            ['revised_at' => now()],
+            ['revised_at' => now()->addYear(1)->format('Y-m-d')],
+        ]);
+
+        $revisions[0]->courses()->attach($courses[0], ['semester' => 1]);
+        $revisions[1]->courses()->attach($courses[1], ['semester' => 1]);
+
+        $programmeRevisions = $this->withoutExceptionHandling()
+            ->get("/programme/{$programme->id}/revisions")
+            ->assertSuccessful()
+            ->assertViewIs('programmes.revisions.index')
+            ->assertViewHasAll(['programme','programmeRevisions','groupedRevisionCourses'])
+            ->viewData('programmeRevisions');
+        
+        $this->assertCount(2, $programmeRevisions);
     }
 }
