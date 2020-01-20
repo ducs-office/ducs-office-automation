@@ -16,7 +16,7 @@ class ViewProgrammeRevisionsTest extends TestCase
         $programme = create('App\Programme');
 
         $this->withExceptionHandling()
-            ->get("/programme/{$programme->id}/revisions")
+            ->get("/programme/{$programme->id}/revision")
             ->assertRedirect('/login');
     }
 
@@ -35,7 +35,7 @@ class ViewProgrammeRevisionsTest extends TestCase
         $revisions[1]->courses()->attach($courses[1], ['semester' => 1]);
 
         $programmeRevisions = $this->withoutExceptionHandling()
-            ->get("/programme/{$programme->id}/revisions")
+            ->get("/programme/{$programme->id}/revision")
             ->assertSuccessful()
             ->assertViewIs('programmes.revisions.index')
             ->assertViewHasAll(['programme','programmeRevisions','groupedRevisionCourses'])

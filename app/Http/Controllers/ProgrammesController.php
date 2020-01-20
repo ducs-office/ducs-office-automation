@@ -27,7 +27,7 @@ class ProgrammesController extends Controller
     {
         $programmes = Programme::latest()->with([
             'revisions' => function ($q) {
-                return $q->orderBy('revised_at');
+                return $q->orderBy('revised_at', 'desc');
             }
         ])->get();
         
@@ -39,7 +39,7 @@ class ProgrammesController extends Controller
         });
 
         $grouped_courses = $programmes->map(function ($programme) {
-            return $programme->revision->courses->groupBy('pivot.semester');
+            return $programme->revision->courses->sortBy('pivot.semester')->groupBy('pivot.semester');
         });
 
         return view('programmes.index', compact('programmes', 'grouped_courses'));
@@ -118,6 +118,8 @@ class ProgrammesController extends Controller
 
     public function destroy(Programme $programme)
     {
+        $programme->revisions->each->delete();
+
         $programme->delete();
 
         flash('Programme deleted successfully!', 'success');

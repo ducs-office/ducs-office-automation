@@ -80,13 +80,13 @@ class StoreProgrammeRevisionTest extends TestCase
         foreach ($semester_courses as $index => $course) {
             $course->programme_revisions()->attach($revision, ['semester' => $index + 1]);
         }
-
+        
         try {
             $this->withoutExceptionHandling()
                 ->post(
                     "programmes/$programme->id/revision",
                     [
-                        'revised_at' => $programme->wef,
+                        'revised_at' => $programme->wef->format('Y-m-d'),
                         'semester_courses' => [[$semester_courses[0]->id], [$semester_courses[1]->id]]
                     ]
                 );
@@ -122,7 +122,7 @@ class StoreProgrammeRevisionTest extends TestCase
         }
 
         $this->assertEquals(1, ProgrammeRevision::count());
-        $this->assertEquals($programme->wef, date('Y-m-d', strtotime(Programme::find(1)->revisions()->max('revised_at'))));
+        $this->assertEquals($programme->wef, Programme::find(1)->revisions->max('revised_at'));
 
         $revised_at = "2019-09-08";
 
@@ -157,7 +157,7 @@ class StoreProgrammeRevisionTest extends TestCase
             'semester_courses' => [[$courses[0]->id], [$courses[1]->id]],
         ]);
     
-        $this->assertEquals($revised_at, Programme::find(1)->wef);
+        $this->assertEquals($revised_at, Programme::find(1)->wef->format('Y-m-d'));
     }
 
     /** @test */

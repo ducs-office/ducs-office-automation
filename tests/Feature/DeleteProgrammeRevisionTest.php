@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Programme;
 use App\ProgrammeRevision;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -18,7 +19,7 @@ class DeleteProgrammeRevisionTest extends TestCase
         $revision = $programme->revisions()->create(['revised_at' => now()]);
 
         $this->withExceptionHandling()
-            ->delete("/programme/{$programme->id}/revisions/{$revision->id}")
+            ->delete("/programme/{$programme->id}/revision/{$revision->id}")
             ->assertRedirect('/login');
     }
 
@@ -34,10 +35,40 @@ class DeleteProgrammeRevisionTest extends TestCase
         $revision->courses()->attach($course, ['semester' => 1]);
 
         $this->withExceptionHandling()
-            ->delete("/programme/{$programme->id}/revisions/{$revision->id}")
-            ->assertRedirect("/programme/{$programme->id}/revisions");
+            ->delete("/programme/{$programme->id}/revision/{$revision->id}")
+            ->assertRedirect("/programmes");
 
         $this->assertEquals(0, $revision->courses->count());
         $this->assertEquals(0, ProgrammeRevision::count());
+    }
+
+    /** @test */
+    public function programme_is_deleted_if_all_its_revisions_have_been_deleted()
+    {
+        $this->signIn();
+
+        $programme = create('App\Programme');
+        $courses = create('App\Course', 2);
+
+        $revisions = $programme->revisions()->createMany([
+            ['revised_at' => $programme->wef],
+            ['revised_at' => $programme->wef->addYear()]
+        ]);
+
+        foreach ($revisions as $index => $revision) {
+            $revision->courses()->attach($courses[$index], ['semester' => 1]);
+        }
+
+        $this->withExceptionHandling()
+            ->delete("/programme/{$programme->id}/revision/{$revisions[0]->id}")
+            ->assertRedirect("/programme/{$programme->id}/revision");
+        
+        $this->withExceptionHandling()
+            ->delete("/programme/{$programme->id}/revision/{$revisions[1]->id}")
+            ->assertRedirect("/programmes");
+
+        $this->assertEquals(0, $revision->courses->count());
+        $this->assertEquals(0, ProgrammeRevision::count());
+        $this->assertEquals(0, Programme::count());
     }
 }

@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Model;
 class Programme extends Model
 {
     protected $guarded = [];
+
+    protected $dates = ['wef'];
     
     public function colleges()
     {

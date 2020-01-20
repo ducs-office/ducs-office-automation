@@ -32,7 +32,7 @@ class UpdateProgrammeRevisionTest extends TestCase
         $revised_at = '2000-02-01'; //now('Y-m-d H:i:s')
         
         $this->patch("/programmes/$programme->id/revision/$revision->id", ['revised_at' => $revised_at, 'semester_courses' => [[$semester_courses[1]->id], [$semester_courses[0]->id]]])
-            ->assertRedirect('/programmes')
+            ->assertRedirect("/programme/{$programme->id}/revision")
             ->assertSessionHasFlash('success', "Programme's revision edited successfully!");
 
         $this->assertEquals(1, Programme::count());
@@ -89,7 +89,7 @@ class UpdateProgrammeRevisionTest extends TestCase
                 ->patch(
                     "programmes/$programme->id/revision/$revision2->id",
                     [
-                        'revised_at' => $programme->wef,
+                        'revised_at' => $programme->wef->format('Y-m-d'),
                         'semester_courses' => [[$semester_courses[0]->id], [$semester_courses[1]->id]]
                     ]
                 );
@@ -124,7 +124,7 @@ class UpdateProgrammeRevisionTest extends TestCase
             $this->assertArrayHasKey('revised_at', $e->errors());
         }
 
-        $this->assertEquals($programme->wef, $revision->fresh()->revised_at->format('Y-m-d'));
+        $this->assertEquals($programme->wef, $revision->fresh()->revised_at);
 
         $revised_at = "2019-09-08";
 
@@ -150,7 +150,6 @@ class UpdateProgrammeRevisionTest extends TestCase
             $course->programme_revisions()->attach($revision, ['semester' => $index + 1]);
         }
 
-
         $revised_at = "2019-09-08";
 
         $this->withoutExceptionHandling()
@@ -159,7 +158,7 @@ class UpdateProgrammeRevisionTest extends TestCase
             'semester_courses' => [[$courses[0]->id], [$courses[1]->id]],
         ]);
     
-        $this->assertEquals($revised_at, Programme::find(1)->wef);
+        $this->assertEquals($revised_at, Programme::find(1)->wef->format('Y-m-d'));
     }
 
     /** @test */
@@ -214,7 +213,7 @@ class UpdateProgrammeRevisionTest extends TestCase
                     [$courses[0]->id, $courses[1]->id],
                     [$courses[2]->id],
                 ]
-            ])->assertRedirect('/programmes')
+            ])->assertRedirect("/programme/{$programme->id}/revision")
             ->assertSessionHasNoErrors()
             ->assertSessionHasFlash('success', "Programme's revision edited successfully!");
 

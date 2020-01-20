@@ -7,6 +7,7 @@ use App\Course;
 use App\ProgrammeRevision;
 use App\CourseProgrammeRevision;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 use Illuminate\Validation\Rule;
 
 class ProgrammeRevisionController extends Controller
@@ -16,7 +17,7 @@ class ProgrammeRevisionController extends Controller
         $programmeRevisions = $programme->revisions->sortByDesc('revised_at');
 
         $groupedRevisionCourses = $programmeRevisions->map(function ($programmeRevision) {
-            return $programmeRevision->courses->groupBy('pivot.semester');
+            return $programmeRevision->courses->sortBy('pivot.semester')->groupBy('pivot.semester');
         });
         
         return view('programmes.revisions.index', compact('programme', 'programmeRevisions', 'groupedRevisionCourses'));
@@ -25,7 +26,7 @@ class ProgrammeRevisionController extends Controller
     public function create(Programme $programme)
     {
         $programme_revision = $programme->revisions()->where('revised_at', $programme->wef)->first();
-        $semester_courses = $programme_revision->courses()->groupBy('pivot.semester');
+        $semester_courses = $programme_revision->courses->groupBy('pivot.semester')->map->pluck('id');
         return view('programmes.revisions.create', compact('programme', 'semester_courses'));
     }
 
@@ -36,8 +37,8 @@ class ProgrammeRevisionController extends Controller
                 function ($attribute, $value, $fail) use ($programme) {
                     $revisions = $programme->revisions;
                     foreach ($revisions as $revision) {
-                        if ($revision->programme_id == $programme->id && $revision->revised_at->format('Y-m-d') == $value) {
-                            $fail($attribute.'is in valid');
+                        if ($revision->revised_at->format('Y-m-d') == $value) {
+                            $fail($attribute.' is invalid');
                         }
                     }
                 },
@@ -52,7 +53,7 @@ class ProgrammeRevisionController extends Controller
                     $courses = CourseProgrammeRevision::all();
                     foreach ($courses as $course) {
                         if ($value == $course->course_id && Course::find($course->course_id)->programme_revisions()->first()->programme_id != $programme->id) {
-                            $fail($attribute.'is invalid');
+                            $fail($attribute.' is invalid');
                         }
                     }
                 },
@@ -93,8 +94,8 @@ class ProgrammeRevisionController extends Controller
                 function ($attribute, $value, $fail) use ($programme, $programme_revision) {
                     $revisions = $programme->revisions;
                     foreach ($revisions as $revision) {
-                        if ($revision->id != $programme_revision->id && $revision->revised_at->format('Y-m-d') == $value) {
-                            $fail($attribute.'is in valid');
+                        if ($revision->revised_at->format('Y-m-d') == $value) {
+                            $fail($attribute.' is invalid');
                         }
                     }
                 },
@@ -115,9 +116,9 @@ class ProgrammeRevisionController extends Controller
                 },
             ],
         ]);
-
+        
         $programme_revision->update($data);
-
+        
         $semester_courses = collect($request->semester_courses)
             ->map(function ($courses, $index) {
                 return array_map(function ($course) use ($index) {
@@ -127,39 +128,29 @@ class ProgrammeRevisionController extends Controller
             ->map(function ($value) {
                 return ['semester' => $value];
             })->toArray();
-        
+
         $programme_revision->courses()->sync($semester_courses);
 
-        if ($programme->wef < $data['revised_at']) {
+        if ($programme->wef->format('Y-m-d') < $data['revised_at']) {
             $programme->update(['wef' => $data['revised_at']]);
         }
 
-        // $revised_on = $data['revised_on'];
-
-        // $semester_courses = collect($request->semester_courses)
-        // ->map(function ($courses, $index) {
-        //     return array_map(function ($course) use ($index) {
-        //         return [$course, $index + 1];
-        //     }, $courses);
-        // })->flatten(1)->pluck('1', '0')
-        // ->map(function ($value) use ($revised_on) {
-        //     return ['semester' => $value, 'revised_on' => $revised_on];
-        // })->toArray();
-
-        // $programme->update(['wef' => $data['revised_on']]);
-        // $programme->courses()->attach($semester_courses);
-
-
-
         flash("Programme's revision edited successfully!", 'success');
 
-        return redirect('/programmes');
+        return redirect("/programme/$programme->id/revision");
     }
 
     public function destroy(Programme $programme, ProgrammeRevision $programmeRevision)
     {
         $programmeRevision->delete();
         
-        return redirect("/programme/{$programme->id}/revisions");
+        if ($programme->revisions->count() == 0) {
+            $programme->delete();
+            return redirect("/programmes");
+        } else {
+            $lastRevision = $programme->revisions->max('revised_at');
+            $programme->update(['wef' => $lastRevision]);
+            return redirect("/programme/{$programme->id}/revision");
+        }
     }
 }

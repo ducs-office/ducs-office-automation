@@ -55,12 +55,12 @@ Route::get('/programmes/{programme}/edit', 'ProgrammesController@edit')->middlew
 Route::patch('/programmes/{programme}', 'ProgrammesController@update')->middleware('auth')->name('programmes.update');
 Route::delete('/programmes/{programme}', 'ProgrammesController@destroy')->middleware('auth')->name('programmes.destroy');
 
-Route::get('/programme/{programme}/revisions', 'ProgrammeRevisionController@index')->middleware('auth')->name('programme_revisions.show');
+Route::get('/programme/{programme}/revision', 'ProgrammeRevisionController@index')->middleware('auth')->name('programme_revision.show');
 Route::get('/programmes/{programme}/revision/create', 'ProgrammeRevisionController@create')->middleware('auth')->name('programme_revision.create');
 Route::post('/programmes/{programme}/revision', 'ProgrammeRevisionController@store')->middleware('auth')->name('programme_revision.store');
 Route::get('/programmes/{programme}/revision/{programme_revision}/edit', 'ProgrammeRevisionController@edit')->middleware('auth')->name('programme_revision.edit');
 Route::patch('/programmes/{programme}/revision/{programme_revision}', 'ProgrammeRevisionController@update')->middleware('auth')->name('programme_revision.update');
-Route::delete('/programme/{programme}/revisions/{programmeRevision}', 'ProgrammeRevisionController@destroy')->middleware('auth')->name('programme_revisions.destroy');
+Route::delete('/programme/{programme}/revision/{programmeRevision}', 'ProgrammeRevisionController@destroy')->middleware('auth')->name('programme_revision.destroy');
 
 Route::get('/courses', 'CourseController@index')->middleware('auth')->name('courses.index');
 Route::post('/courses', 'CourseController@store')->middleware('auth')->name('courses.store');
