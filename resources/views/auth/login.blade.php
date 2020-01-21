@@ -5,6 +5,24 @@
     <form action="{{ route('login') }}" method="POST" class="px-6">
         @csrf_token
         <div class="mb-2">
+            <label class="form-label mb-1" >Login As</label>
+            <div class="flex">
+                <div class="inline-flex items-center mr-3">
+                    <input type="radio" name="type" id="web" value="web"
+                        {{ old('type', 'web') == 'web' ? 'checked' : '' }}>
+                    <label for="web" class="form-label ml-1">Faculty/Staff</label>
+                </div>
+                <div class="inline-flex items-center ml-3">
+                    <input type="radio" name="type" id="college_teachers" value="college_teachers"
+                        {{ old('type', 'web') == 'college_teachers' ? 'checked' : '' }}>
+                    <label for="college_teachers" class="form-label ml-1">College Teacher</label>
+                </div>
+            </div>
+            @if($errors->has('type'))
+                <p class="text-red-600 mt-1">{{ $errors->first('type') }}</p>
+            @endif
+        </div>
+        <div class="mb-2">
             <label class="w-full form-label mb-1" for="email">Email</label>
             <input type="text"
                 name="email"

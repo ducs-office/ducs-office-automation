@@ -6,6 +6,7 @@ use App\OutgoingLetter;
 use App\Course;
 use App\User;
 use App\College;
+use App\CollegeTeacher;
 use App\CourseRevision;
 use App\IncomingLetter;
 use App\LetterReminder;
@@ -28,6 +29,12 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@cs.du.ac.in',
             'password' => bcrypt('password'),
             'category' => 'Admin'
+        ]);
+
+        $teacher = factory(CollegeTeacher::class)->create([
+            'first_name' => 'Sharanjit',
+            'last_name' => 'Kaur',
+            'email' => 'kaur.sharanjit@andc.du.ac.in',
         ]);
 
         $admin->assignRole(Role::firstOrCreate(['name' => 'admin']));

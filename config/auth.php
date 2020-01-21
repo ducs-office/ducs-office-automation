@@ -39,6 +39,13 @@ return [
         'web' => [
             'driver' => 'session',
             'provider' => 'users',
+            'home' => '/',
+        ],
+
+        'college_teachers' => [
+            'driver' => 'session',
+            'provider' => 'college_teachers',
+            'home' => '/college_teachers',
         ],
 
         'api' => [
@@ -71,6 +78,10 @@ return [
             'model' => App\User::class,
         ],
 
+        'college_teachers' => [
+            'driver' => 'eloquent',
+            'model' => App\CollegeTeacher::class,
+        ]
         // 'users' => [
         //     'driver' => 'database',
         //     'table' => 'users',

@@ -16,9 +16,13 @@ Route::get('/', function () {
     return view('dashboard');
 })->middleware('auth')->name('dashboard');
 
-Route::get('/login', 'Auth\LoginController@showLoginForm')->middleware('guest')->name('login');
-Route::post('/login', 'Auth\LoginController@login')->middleware('guest')->name('login');
-Route::post('/logout', 'Auth\LoginController@logout')->middleware('auth')->name('logout');
+Route::get('/college_teachers', function () {
+    return view('college_teachers.dashboard');
+})->middleware('auth:college_teachers')->name('college_teachers.dashboard');
+
+Route::get('/login', 'Auth\LoginController@showLoginForm')->middleware(['guest', 'guest:college_teachers'])->name('login');
+Route::post('/login', 'Auth\LoginController@login')->middleware(['guest', 'guest:college_teachers'])->name('login');
+Route::post('/logout', 'Auth\LoginController@logout')->middleware('auth:web,college_teachers')->name('logout');
 
 Route::post('/account/change_password', 'AccountController@change_password')->middleware('auth')->name('account.change_password');
 

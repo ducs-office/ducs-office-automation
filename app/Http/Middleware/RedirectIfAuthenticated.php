@@ -17,10 +17,9 @@ class RedirectIfAuthenticated
      */
     public function handle($request, Closure $next, $guard = null)
     {
+        $guards = config('auth.guards');
         if (Auth::guard($guard)->check()) {
-            $roles = $request->user()->getRoleNames();
-
-            return redirect('/');
+            return redirect($guards[$guard ?? 'web']['home']);
         }
 
         return $next($request);

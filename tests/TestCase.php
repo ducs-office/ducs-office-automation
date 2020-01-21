@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use App\CollegeTeacher;
 use App\User;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Support\Facades\Session;
@@ -18,7 +19,7 @@ abstract class TestCase extends BaseTestCase
         $this->app->make(\Spatie\Permission\PermissionRegistrar::class)->registerPermissions();
     }
 
-    public function signIn($user = null, $role = 'admin')
+    public function signIn($user = null, $role = 'admin', $guard = 'web')
     {
         if (!$user) {
             $user = create(User::class);
@@ -26,9 +27,20 @@ abstract class TestCase extends BaseTestCase
 
         $user->assignRole(Role::firstOrCreate(['name' => $role]));
 
-        $this->be($user);
+        $this->be($user, $guard);
 
         return $user;
+    }
+
+    public function signInCollegeTeacher($teacher = null)
+    {
+        if (!$teacher) {
+            $teacher = create(CollegeTeacher::class);
+        }
+
+        $this->be($teacher, 'college_teachers');
+
+        return $this;
     }
 
     public function mergeFormFields($data, $overrides)
