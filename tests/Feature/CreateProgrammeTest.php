@@ -16,7 +16,7 @@ class CreateProgrammeTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function admin_can_create_new_programme()
+    public function new_programme_can_be_created()
     {
         $this->signIn();
         $this->withoutExceptionHandling();
@@ -34,7 +34,7 @@ class CreateProgrammeTest extends TestCase
         ->assertSessionHasFlash('success', 'Programme created successfully');
 
         $this->assertEquals(1, Programme::count());
-        $this->assertEquals(2, Programme::first()->courses()->count());
+        $this->assertEquals(2, Programme::first()->revisions()->first()->courses->count());
     }
 
     /** @test */
@@ -44,9 +44,10 @@ class CreateProgrammeTest extends TestCase
         $programme = create(Programme::class);
         $assignedCourse = create(Course::class);
         $unassignedCourse = create(Course::class);
-        $assignedCourse->programmes()->attach([$programme->id], ['semester' => 1]);
 
-
+        $programmeRevision = $programme->revisions()->create(['revised_at' => $programme->wef]);
+        $programmeRevision->courses()->attach($assignedCourse, ['semester' => 1]);
+        
         try {
             $this->withoutExceptionHandling()
                 ->post('/programmes', [
@@ -63,7 +64,7 @@ class CreateProgrammeTest extends TestCase
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('semester_courses.0.0', $e->errors());
         }
-
+        
         $this->assertEquals(1, Programme::count());
 
         $anotherUnassignedCourse = create(Course::class);

@@ -17,7 +17,7 @@ class UpdateProgrammeTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function admin_can_update_programme_code()
+    public function programme_code_can_be_updates()
     {
         $this->withoutExceptionHandling()
             ->signIn(create(User::class), 'admin');
@@ -34,37 +34,24 @@ class UpdateProgrammeTest extends TestCase
     }
 
     /** @test */
-    public function admin_can_update_programme_date_wef()
+    public function programme_date_wef_can_be_updated()
     {
         $this->withoutExceptionHandling()
             ->signIn();
 
         $programme = create(Programme::class);
+        $course = create(Course::class);
+
+        $programmeRevision = $programme->revisions()->create(['revised_at' => $programme->wef]);
+        $programmeRevision->courses()->attach($course, ['semester' => 1]);
 
         $response = $this->patch('/programmes/'.$programme->id, [
-            'wef' => $newDate = '2014-05-10'
+            'wef' => $newDate = now()->format('Y-m-d H:i:s')
         ])->assertRedirect('/programmes')
         ->assertSessionHasFlash('success', 'Programme updated successfully!');
 
         $this->assertEquals(1, Programme::count());
         $this->assertEquals($newDate, $programme->fresh()->wef);
-    }
-
-    /** @test */
-    public function admin_can_update_programme_name()
-    {
-        $this->withoutExceptionHandling()
-            ->signIn();
-
-        $programme = create(Programme::class);
-
-        $response = $this->patch('/programmes/'.$programme->id, [
-            'name' => $newName = 'New Programme'
-        ])->assertRedirect('/programmes')
-        ->assertSessionHasFlash('success', 'Programme updated successfully!');
-
-        $this->assertEquals(1, Programme::count());
-        $this->assertEquals($newName, $programme->fresh()->name);
     }
 
     /** @test */
@@ -87,68 +74,7 @@ class UpdateProgrammeTest extends TestCase
     }
 
     /** @test */
-    public function admin_can_add_only_non_assigned_courses_to_the_programme()
-    {
-        $this->signIn();
-
-        $assignedCourse = create(Course::class);
-        $assignedCourse->programmes()->attach([create(Programme::class)->id], ['semester' => 1]);
-        $unassignedCourses = create(Course::class, 2);
-
-        $programme = create(Programme::class, 1, ['duration' => 1]);
-
-        try {
-            $this->withoutExceptionHandling()
-                ->patch('/programmes/'. $programme->id, [
-                    'semester_courses' => [
-                        [$assignedCourse->id],
-                        [$unassignedCourses[0]->id]
-                    ],
-                ]);
-        } catch (ValidationException $e) {
-            $this->assertArrayHasKey('semester_courses.0.0', $e->errors());
-        }
-
-        $this->assertEquals(0, $programme->fresh()->courses()->count());
-
-        $this->withoutExceptionHandling()
-            ->patch('/programmes/'.$programme->id, [
-                'semester_courses' => [
-                    [$unassignedCourses[0]->id],
-                    [$unassignedCourses[1]->id]
-                ],
-            ])->assertRedirect('/programmes')
-            ->assertSessionHasNoErrors()
-            ->assertSessionHasFlash('success', 'Programme updated successfully!');
-
-        $this->assertEquals(2, $programme->fresh()->courses()->count());
-    }
-
-    /** @test */
-    public function admin_can_move_assigned_courses_to_the_other_semester_of_programme()
-    {
-        $this->signIn();
-
-        $programme = create(Programme::class, 1, ['duration' => 1]);
-        $courses = create(Course::class, 3);
-        $programme->courses()->attach($courses, ['semester' => 1]);
-
-        $this->withoutExceptionHandling()
-            ->patch('/programmes/'.$programme->id, [
-                'semester_courses' => [
-                    [$courses[0]->id, $courses[1]->id],
-                    [$courses[2]->id],
-                ]
-            ])->assertRedirect('/programmes')
-            ->assertSessionHasNoErrors()
-            ->assertSessionHasFlash('success', 'Programme updated successfully!');
-
-        $this->assertEquals(2, $programme->fresh()->courses()->wherePivot('semester', 1)->count());
-        $this->assertEquals(1, $programme->fresh()->courses()->wherePivot('semester', 2)->count());
-    }
-
-    /** @test */
-    public function admin_can_update_type_field()
+    public function type_field_can_be_updated()
     {
         $this->withoutExceptionHandling()
             ->signIn();
@@ -162,22 +88,5 @@ class UpdateProgrammeTest extends TestCase
 
         $this->assertEquals(1, Programme::count());
         $this->assertEquals($newType, $programme->fresh()->type);
-    }
-
-    /** @test */
-    public function admin_can_update_duration_field()
-    {
-        $this->withoutExceptionHandling()
-            ->signIn();
-
-        $programme = create(Programme::class, 1, ['duration'=> 2]);
-
-        $response = $this->patch('/programmes/'.$programme->id, [
-            'duration' => $newDuration = 3
-        ])->assertRedirect('/programmes')
-        ->assertSessionHasFlash('success', 'Programme updated successfully!');
-
-        $this->assertEquals(1, Programme::count());
-        $this->assertEquals($newDuration, $programme->fresh()->duration);
     }
 }

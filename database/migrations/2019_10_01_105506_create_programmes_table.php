@@ -17,7 +17,7 @@ class CreateProgrammesTable extends Migration
             $table->bigIncrements('id');
             $table->string('code', 60)->unique();
             $table->string('name');
-            $table->date('wef');
+            $table->timestamp('wef');
             $table->unsignedTinyInteger('duration');
             $table->enum('type', array_keys(config('options.programmes.types')));
             $table->timestamps();

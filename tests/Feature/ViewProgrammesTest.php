@@ -26,16 +26,22 @@ class ViewProgrammesTest extends TestCase
     {
         $this->signIn();
 
-        
         $programmes = create('App\Programme', 3);
-        
+        $courses = create('App\Course', 3);
+
+        foreach ($programmes as $index => $programme) {
+            $programmeRevision = $programme->revisions()->create(['revised_at' => $programme->wef]);
+            $programmeRevision->courses()->attach($courses[$index], ['semester' => 1]);
+        }
+    
         $this->withoutExceptionHandling();
 
         $viewData = $this->get('/programmes')->assertViewIs('programmes.index')
-            ->assertViewHas('programmes')
+            ->assertViewHasAll(['programmes', 'grouped_courses'])
             ->viewData('programmes');
             
         $this->assertCount(3, $viewData);
+
         $this->assertEquals(
             $programmes->sortByDesc('created_at')->first()->id,
             $viewData->first()->id

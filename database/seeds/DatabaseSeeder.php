@@ -1,6 +1,7 @@
 <?php
 
 use App\Programme;
+use App\ProgrammeRevision;
 use App\OutgoingLetter;
 use App\Course;
 use App\User;
@@ -60,6 +61,9 @@ class DatabaseSeeder extends Seeder
 
         $courses->each(function ($course) {
             factory(CourseRevision::class, 3)->create(['course_id' => $course->id]);
+        });
+        $programmes->each(function ($programme) {
+            factory(ProgrammeRevision::class)->create(['programme_id' => $programme->id]);
         });
 
         factory(College::class)->create([

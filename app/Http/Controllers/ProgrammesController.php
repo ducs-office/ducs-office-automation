@@ -4,8 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Programme;
 use App\Course;
+use App\Events\ProgrammeCreated;
+use App\ProgrammeRevision;
+use App\CourseProgrammeRevision;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Cache;
 
 class ProgrammesController extends Controller
 {
@@ -21,14 +25,10 @@ class ProgrammesController extends Controller
      */
     public function index()
     {
-        $programmes = Programme::latest()->with([
-            'courses' => function ($q) {
-                return $q->orderBy('semester');
-            }
-        ])->get();
+        $programmes = Programme::withLatestRevision()->latest()->get();
 
         $grouped_courses = $programmes->map(function ($programme) {
-            return $programme->courses->groupBy('pivot.semester');
+            return $programme->latestRevision->courses->sortBy('pivot.semester')->groupBy('pivot.semester');
         });
 
         return view('programmes.index', compact('programmes', 'grouped_courses'));
@@ -53,14 +53,21 @@ class ProgrammesController extends Controller
             'duration' => ['required', 'integer'],
             'semester_courses' => ['required', 'array', 'size:'.($request->duration * 2) ],
             'semester_courses.*' => ['required', 'array', 'min:1'],
-            'semester_courses.*.*' => ['numeric', 'exists:courses,id', 'unique:course_programme,course_id']
+            'semester_courses.*.*' => ['numeric', 'distinct', 'exists:courses,id',
+                function ($attribute, $value, $fail) {
+                    $courses = CourseProgrammeRevision::all();
+                    foreach ($courses as $course) {
+                        if ($value == $course->course_id) {
+                            $fail($attribute.'is invalid');
+                        }
+                    }
+                },
+            ]
         ]);
 
         $programme = Programme::create($data);
 
-        foreach ($request->semester_courses as $index => $courses) {
-            $programme->courses()->attach($courses, ['semester' => $index + 1]);
-        }
+        event(new ProgrammeCreated($programme, $request->semester_courses));
 
         flash('Programme created successfully!', 'success');
 
@@ -79,37 +86,21 @@ class ProgrammesController extends Controller
         $types = implode(',', array_keys(config('options.programmes.types')));
 
         $data = $request->validate([
-            'code' => [
-                'sometimes', 'required', 'min:3', 'max:60',
-                Rule::unique('programmes')->ignore($programme)
-            ],
-            'wef' => ['sometimes', 'required', 'date'],
-            'name' => ['sometimes', 'required', 'min:3', 'max:190'],
+            'code' => ['sometimes', 'required', 'min:3', 'max:60',
+                        Rule::unique('programmes')->ignore($programme)],
+            'wef' => ['sometimes' , 'required', 'date'],
             'type' => ['sometimes', 'required', 'in:'.$types],
-            'duration' => ['sometimes', 'required', 'integer'],
-            'semester_courses' => [
-                'sometimes', 'required', 'array',
-                'size:'.(($request->duration ?? $programme->duration) * 2)
-            ],
-            'semester_courses.*' => ['required', 'array', 'min:1'],
-            'semester_courses.*.*' => ['numeric', 'exists:courses,id',
-                Rule::unique('course_programme', 'course_id')->ignore($programme->id, 'programme_id'),
-            ],
+            'name' => ['sometimes', 'required', 'min:3', 'max:190'],
         ]);
 
-        $programme->update($data);
+        if (isset($data['wef'])) {
+            $programme->revisions()->where('revised_at', $programme->wef)->update(['revised_at' => $data['wef']]);
 
-        $semester_courses = collect($request->semester_courses)
-            ->map(function ($courses, $index) {
-                return array_map(function ($course) use ($index) {
-                    return [$course, $index + 1];
-                }, $courses);
-            })->flatten(1)->pluck('1', '0')
-            ->map(function ($value) {
-                return ['semester' => $value];
-            })->toArray();
+            $latestRevision = $programme->revisions->max('revised_at');
+            $programme->update(['wef' => $latestRevision]);
+        }
 
-        $programme->courses()->sync($semester_courses);
+        $programme->update($request->only(['code', 'name', 'type']));
 
         flash('Programme updated successfully!', 'success');
 
@@ -118,6 +109,8 @@ class ProgrammesController extends Controller
 
     public function destroy(Programme $programme)
     {
+        $programme->revisions->each->delete();
+
         $programme->delete();
 
         flash('Programme deleted successfully!', 'success');
