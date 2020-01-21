@@ -19,7 +19,7 @@ class ProgrammeRevisionController extends Controller
         $groupedRevisionCourses = $programmeRevisions->map(function ($programmeRevision) {
             return $programmeRevision->courses->sortBy('pivot.semester')->groupBy('pivot.semester');
         });
-        
+
         return view('programmes.revisions.index', compact('programme', 'programmeRevisions', 'groupedRevisionCourses'));
     }
 
@@ -35,11 +35,9 @@ class ProgrammeRevisionController extends Controller
         $data = $request->validate([
             'revised_at' => ['required', 'date',
                 function ($attribute, $value, $fail) use ($programme) {
-                    $revisions = $programme->revisions;
-                    foreach ($revisions as $revision) {
-                        if ($revision->revised_at->format('Y-m-d') == $value) {
-                            $fail($attribute.' is invalid');
-                        }
+                    $revisions = $programme->revisions->map->toArray();
+                    if ($revisions->contains('revised_at', $value)) {
+                        $fail($attribute.' is invalid');
                     }
                 },
             ],
@@ -61,7 +59,7 @@ class ProgrammeRevisionController extends Controller
         ]);
 
         $revision = create(ProgrammeRevision::class, 1, ['revised_at' => $data['revised_at'], 'programme_id' => $programme->id]);
-        
+
         foreach ($data['semester_courses'] as $semester => $courses) {
             foreach ($courses as $course) {
                 Course::find($course)->programme_revisions()->attach($revision, ['semester' => $semester + 1]);
@@ -92,11 +90,13 @@ class ProgrammeRevisionController extends Controller
         $data = $request->validate([
             'revised_at' => ['sometimes', 'required', 'date',
                 function ($attribute, $value, $fail) use ($programme, $programme_revision) {
-                    $revisions = $programme->revisions;
-                    foreach ($revisions as $revision) {
-                        if ($revision->revised_at->format('Y-m-d') == $value) {
-                            $fail($attribute.' is invalid');
-                        }
+                    $revisions = $programme->revisions
+                        ->filter(function ($revision) use ($programme_revision) {
+                            return $revision->id != $programme_revision->id;
+                        })
+                        ->map->toArray();
+                    if ($revisions->contains('revised_at', $value)) {
+                        $fail($attribute.' is invalid');
                     }
                 },
             ],
@@ -116,9 +116,9 @@ class ProgrammeRevisionController extends Controller
                 },
             ],
         ]);
-        
+
         $programme_revision->update($data);
-        
+
         $semester_courses = collect($request->semester_courses)
             ->map(function ($courses, $index) {
                 return array_map(function ($course) use ($index) {
@@ -143,7 +143,7 @@ class ProgrammeRevisionController extends Controller
     public function destroy(Programme $programme, ProgrammeRevision $programmeRevision)
     {
         $programmeRevision->delete();
-        
+
         if ($programme->revisions->count() == 0) {
             $programme->delete();
             return redirect("/programmes");

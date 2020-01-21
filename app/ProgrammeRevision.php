@@ -12,6 +12,10 @@ class ProgrammeRevision extends Model
 
     protected $dates = ['revised_at'];
 
+    protected $casts = [
+        'revised_at' => 'date:Y-m-d'
+    ];
+
     public function courses()
     {
         return $this->belongsToMany(Course::class)->withPivot(['semester']);
