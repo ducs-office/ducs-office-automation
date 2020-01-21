@@ -11,6 +11,11 @@ class Programme extends Model
     protected $guarded = [];
 
     protected $dates = ['wef'];
+
+    protected $casts = [
+        'wef' => 'date:Y-m-d'
+    ];
+
     
     public function colleges()
     {
