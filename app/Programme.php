@@ -26,4 +26,18 @@ class Programme extends Model
     {
         return $this->hasMany(ProgrammeRevision::class);
     }
+
+    public function latestRevision()
+    {
+        return $this->hasOne(ProgrammeRevision::class);
+    }
+
+    public function scopeWithLatestRevision($query)
+    {
+        return $query->addSelect([
+            'latest_revision_id' => ProgrammeRevision::select('id')
+                ->whereColumn('programme_id', 'programmes.id')
+                ->orderBy('revised_at', 'desc')->limit(1)
+        ])->with(['latestRevision']);
+    }
 }

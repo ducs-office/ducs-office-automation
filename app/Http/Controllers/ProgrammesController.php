@@ -25,21 +25,10 @@ class ProgrammesController extends Controller
      */
     public function index()
     {
-        $programmes = Programme::latest()->with([
-            'revisions' => function ($q) {
-                return $q->orderBy('revised_at', 'desc');
-            }
-        ])->get();
-        
-        $programmes->map(function ($programme) {
-            $programme->revision =  $programme->revisions->first(function ($programme_revision) use ($programme) {
-                return ($programme_revision['revised_at'] == $programme->wef);
-            });
-            return $programme;
-        });
+        $programmes = Programme::withLatestRevision()->latest()->get();
 
         $grouped_courses = $programmes->map(function ($programme) {
-            return $programme->revision->courses->sortBy('pivot.semester')->groupBy('pivot.semester');
+            return $programme->latestRevision->courses->sortBy('pivot.semester')->groupBy('pivot.semester');
         });
 
         return view('programmes.index', compact('programmes', 'grouped_courses'));
