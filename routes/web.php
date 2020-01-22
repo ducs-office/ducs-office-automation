@@ -92,3 +92,8 @@ Route::delete('/roles/{role}', 'RoleController@destroy')->middleware('auth')->na
 
 Route::get('/attachments/{attachment}', 'AttachmentController@show')->middleware('auth')->name('attachments.show');
 Route::delete('/attachments/{attachment}', 'AttachmentController@destroy')->middleware('auth')->name('attachments.destroy');
+
+Route::get('/college-teachers', 'CollegeTeacherController@index')->middleware('auth')->name('college_teachers.index');
+Route::post('/college-teachers', 'CollegeTeacherController@store')->middleware('auth')->name('college_teachers.store');
+Route::patch('/college-teachers/{collegeTeacher}', 'CollegeTeacherController@update')->middleware('auth')->name('college_teachers.update');
+Route::delete('/college-teachers/{collegeTeacher}', 'CollegeTeacherController@destroy')->middleware('auth')->name('college_teachers.destroy');

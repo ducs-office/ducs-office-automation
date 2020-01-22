@@ -6,7 +6,9 @@ use Illuminate\Foundation\Auth\User;
 
 class CollegeTeacher extends User
 {
-    protected $guarded = [];
+    protected $fillable = ['first_name', 'last_name', 'email', 'password'];
+
+    protected $hidden = ['password'];
 
     public function getNameAttribute()
     {
