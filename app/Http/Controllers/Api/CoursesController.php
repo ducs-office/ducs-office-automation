@@ -1,5 +1,5 @@
 <?php
-    
+
 namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
@@ -11,17 +11,16 @@ class CoursesController extends Controller
     public function index(Request $request)
     {
         $query = Course::query();
-        
+
         if ($request->has('q')) {
-            $query->where('code', 'like', "%{$request->q}%")
-                ->orWhere('name', 'like', "%{$request->q}%");
+            $query->where('code', 'like', "{$request->q}%");
         }
 
         if ($request->has('without_programme')) {
             $query->whereDoesntHave('programmes');
         }
-        
-        return $query->limit($request->limit)->get();
+
+        return $query->get();
     }
 
     public function show(Course $course)

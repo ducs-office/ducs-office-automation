@@ -156,6 +156,12 @@ select {
 .translate-y-100 {
     transform: translateY(100%);
 }
+.translate-y-n50 {
+    transform: translateY(-50%);
+}
+.translate-y-50 {
+    transform: translateY(50%);
+}
 .translate-y-0 {
     transform: translateY(0%);
 }
@@ -180,6 +186,9 @@ select {
 
 .transform-top-left {
     transform-origin: 0% 0%;
+}
+transform-center {
+    transform-origin: center;
 }
 .transform-bottom-right {
     transform-origin: 100% 100%;

@@ -15,11 +15,12 @@
                 </slot>
             </div>
         </div>
-        <input
+        <input v-if="search"
             class="w-full form-input my-2"
             autocomplete="off"
             :placeholder="placeholder"
             v-model="query"
+            @blur="onBlur"
             @keydown.esc.prevent="clear"
             @keydown.tab="clear"
             @keydown.enter.prevent="toggleItem(highlightedItemIndex)"
@@ -27,13 +28,18 @@
             @keydown.down.prevent="moveDown"
         />
         <div v-if="options.length > 0" class="bg-white py-2 border rounded shadow-md">
-            <ul ref="optionsList" class="max-h-40 overflow-y-auto">
+            <ul ref="optionsList" class="max-h-40 overflow-y-auto"
+                @mouseout="highlightedItemIndex = -1"
+                @keydown.enter.prevent="toggleItem(highlightedItemIndex)"
+                @keydown.up.prevent="moveUp"
+                @keydown.down.prevent="moveDown"
+                @blur="onBlur">
                 <li
                     v-for="(option, index) in options"
                     :key="index"
                     @click="toggleItem(index)"
                     @mouseover="highlightItem(index)"
-                    class="px-3 py-1"
+                    class="px-3 py-1 focus:bg-magenta-800 focus:text-white"
                     :class="{'bg-gray-200': isOptionSelected(index), 'bg-magenta-800 text-white': highlightedItemIndex == index}"
                 >
                     <slot :option="option">
@@ -54,9 +60,10 @@ export default {
         name: { required: true },
         value: { default: null },
         data: { default: () => [] },
-        multiple: { default: true },
+        multiple: { default: false },
         dataKey: { default: null },
         dataSearchIndices: { default: null },
+        search: {default: true},
         placeholder: { default: "" }
     },
 
@@ -85,7 +92,7 @@ export default {
             query: "", // search query
             isOpen: false,
             selectedItems: [], // stores whole option
-            highlightedItemIndex: 0 // just for visual highlight
+            highlightedItemIndex: -1 // just for visual highlight
         };
     },
 
@@ -94,7 +101,7 @@ export default {
             return this.data.filter(
                 item => ! this.selectedItems.find(sItem => this.itemEquals(item, sItem))
             ).filter(
-                item => this.getSearchIndexValues(item).some(this.matchQuery)
+                item => this.search ? this.getSearchIndexValues(item).some(this.matchQuery) : true
             );
         },
         hasSelected() {
@@ -103,6 +110,11 @@ export default {
     },
 
     methods: {
+        onBlur() {
+            this.clear();
+            this.highlightedItemIndex = -1;
+        },
+
         clear() {
             this.query = "";
         },
@@ -178,6 +190,10 @@ export default {
         matchQuery(itemField) {
             if (Number.isInteger(itemField)) {
                 return this.query == itemField;
+            }
+
+            if(typeof(itemField) == 'string') {
+                return itemField.match(new RegExp(this.query, 'ig'));
             }
 
             return itemField.includes(this.query);
