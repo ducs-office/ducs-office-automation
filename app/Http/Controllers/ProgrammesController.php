@@ -31,12 +31,12 @@ class ProgrammesController extends Controller
             return $programme->latestRevision->courses->sortBy('pivot.semester')->groupBy('pivot.semester');
         });
 
-        return view('programmes.index', compact('programmes', 'grouped_courses'));
+        return view('staff.programmes.index', compact('programmes', 'grouped_courses'));
     }
 
     public function create()
     {
-        return view('programmes.create', [
+        return view('staff.programmes.create', [
             'types' => config('options.programmes.types')
         ]);
     }
@@ -78,7 +78,7 @@ class ProgrammesController extends Controller
     {
         $types = config('options.programmes.types');
 
-        return view('programmes.edit', compact('programme', 'types'));
+        return view('staff.programmes.edit', compact('programme', 'types'));
     }
 
     public function update(Request $request, Programme $programme)

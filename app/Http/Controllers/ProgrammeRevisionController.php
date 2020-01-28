@@ -20,14 +20,14 @@ class ProgrammeRevisionController extends Controller
             return $programmeRevision->courses->sortBy('pivot.semester')->groupBy('pivot.semester');
         });
 
-        return view('programmes.revisions.index', compact('programme', 'programmeRevisions', 'groupedRevisionCourses'));
+        return view('staff.programmes.revisions.index', compact('programme', 'programmeRevisions', 'groupedRevisionCourses'));
     }
 
     public function create(Programme $programme)
     {
         $programme_revision = $programme->revisions()->where('revised_at', $programme->wef)->first();
         $semester_courses = $programme_revision->courses->groupBy('pivot.semester')->map->pluck('id');
-        return view('programmes.revisions.create', compact('programme', 'semester_courses'));
+        return view('staff.programmes.revisions.create', compact('programme', 'semester_courses'));
     }
 
     public function store(Programme $programme, Request $request)
@@ -79,7 +79,7 @@ class ProgrammeRevisionController extends Controller
     {
         if ($programme_revision->programme_id == $programme->id) {
             $semester_courses = $programme_revision->courses->groupBy('pivot.semester')->map->pluck('id');
-            return view('programmes.revisions.edit', compact('programme', 'programme_revision', 'semester_courses'));
+            return view('staff.programmes.revisions.edit', compact('programme', 'programme_revision', 'semester_courses'));
         } else {
             return redirect('/programmes');
         }

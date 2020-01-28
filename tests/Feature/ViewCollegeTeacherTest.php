@@ -25,12 +25,12 @@ class ViewCollegeTeacherTest extends TestCase
     public function college_teachers_can_be_viewed()
     {
         $this->signIn();
-       
+
         create(CollegeTeacher::class, 4);
 
         $viewData = $this->withoutExceptionHandling()
             ->get('/college-teachers')
-            ->assertViewIs('college_teachers.index')
+            ->assertViewIs('staff.college_teachers.index')
             ->assertViewHas('collegeTeachers')
             ->viewData('collegeTeachers');
 

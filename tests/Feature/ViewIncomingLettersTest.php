@@ -34,7 +34,7 @@ class ViewIncomingLettersTest extends TestCase
         $viewIncomingLetters = $this->withoutExceptionHandling()
                     ->get('/incoming-letters')
                     ->assertSuccessful()
-                    ->assertViewIs('incoming_letters.index')
+                    ->assertViewIs('staff.incoming_letters.index')
                     ->assertViewHas('incoming_letters')
                     ->viewData('incoming_letters');
 
@@ -51,7 +51,7 @@ class ViewIncomingLettersTest extends TestCase
         $viewData = $this->withExceptionHandling()
                     ->get('incoming-letters')
                     ->assertSuccessful()
-                    ->assertViewIs('incoming_letters.index')
+                    ->assertViewIs('staff.incoming_letters.index')
                     ->assertViewHas('incoming_letters')
                     ->viewData('incoming_letters');
 
@@ -73,7 +73,7 @@ class ViewIncomingLettersTest extends TestCase
         $recipients = $this->withExceptionHandling()
                 ->get('/incoming-letters')
                 ->assertSuccessful()
-                ->assertViewIs('incoming_letters.index')
+                ->assertViewIs('staff.incoming_letters.index')
                 ->assertViewHas('recipients')
                 ->viewData('recipients');
 
@@ -95,7 +95,7 @@ class ViewIncomingLettersTest extends TestCase
         $senders = $this->withExceptionHandling()
                     ->get('/incoming-letters')
                     ->assertSuccessful()
-                    ->assertViewIs('incoming_letters.index')
+                    ->assertViewIs('staff.incoming_letters.index')
                     ->assertViewHas('senders')
                     ->viewData('senders');
 
@@ -118,7 +118,7 @@ class ViewIncomingLettersTest extends TestCase
         $priorities = $this->withoutExceptionHandling()
                         ->get('/incoming-letters')
                         ->assertSuccessful()
-                        ->assertViewIs('incoming_letters.index')
+                        ->assertViewIs('staff.incoming_letters.index')
                         ->assertViewHas('priorities')
                         ->viewData('priorities');
 

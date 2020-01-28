@@ -43,7 +43,7 @@ class IncomingLettersController extends Controller
         $priorities[2] = 'Medium';
         $priorities[3] = 'Low';
 
-        return view('incoming_letters.index', compact(
+        return view('staff.incoming_letters.index', compact(
             'incoming_letters',
             'recipients',
             'senders',
@@ -53,7 +53,7 @@ class IncomingLettersController extends Controller
 
     public function create()
     {
-        return view('incoming_letters.create');
+        return view('staff.incoming_letters.create');
     }
 
     public function store()
@@ -92,7 +92,7 @@ class IncomingLettersController extends Controller
 
     public function edit(IncomingLetter $incoming_letter)
     {
-        return view('incoming_letters.edit', compact('incoming_letter'));
+        return view('staff.incoming_letters.edit', compact('incoming_letter'));
     }
 
     public function update(IncomingLetter $incoming_letter, Request $request)

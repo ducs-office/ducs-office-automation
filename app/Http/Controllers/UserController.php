@@ -23,7 +23,7 @@ class UserController extends Controller
         $categories = config('options.users.categories');
         $users = User::with('roles')->get();
 
-        return view('users.index', compact('users', 'roles', 'categories'));
+        return view('staff.users.index', compact('users', 'roles', 'categories'));
     }
 
     public function store(Request $request)

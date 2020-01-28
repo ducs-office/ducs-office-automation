@@ -27,7 +27,7 @@ class EditOutgoingLettersTest extends TestCase
         $this->withoutExceptionHandling()
             ->get("/outgoing-letters/$letter->id/edit")
             ->assertSuccessful()
-            ->assertViewIs('outgoing_letters.edit')
+            ->assertViewIs('staff.outgoing_letters.edit')
             ->assertViewHas('outgoing_letter');
     }
 
@@ -52,9 +52,9 @@ class EditOutgoingLettersTest extends TestCase
         $letter = create(OutgoingLetter::class, 1, [
             'subject' => $oldSubject = 'old subject'
         ]);
-        
+
         $role->revokePermissionTo($permission);
-        
+
         $this->signIn($user, $role->name);
 
         $this->withExceptionHandling()
@@ -79,9 +79,9 @@ class EditOutgoingLettersTest extends TestCase
             'subject' => $oldSubject = 'old subject',
             'creator_id' => create(User::class)->id
         ]);
-        
+
         $role->givePermissionTo($permission);
-        
+
         $this->signIn($user, $role->name);
 
         $this->withExceptionHandling()

@@ -30,14 +30,14 @@ class ViewOutgoingLettersTest extends TestCase
         $permission = Permission::firstOrCreate(['name' => 'view outgoing letters']);
 
         $role->revokePermissionTo($permission);
-        
+
         $this->signIn($user, $role->name);
 
         $this->withExceptionHandling()
             ->get('/outgoing-letters')
             ->assertForbidden();
     }
-    
+
     /** @test */
     public function user_can_view_outgoing_letters()
     {
@@ -47,7 +47,7 @@ class ViewOutgoingLettersTest extends TestCase
         $viewOutgoingLetters = $this->withoutExceptionHandling()
             ->get('/outgoing-letters')
             ->assertSuccessful()
-            ->assertViewIs('outgoing_letters.index')
+            ->assertViewIs('staff.outgoing_letters.index')
             ->assertViewHas('outgoing_letters')
             ->viewData('outgoing_letters');
 
@@ -64,7 +64,7 @@ class ViewOutgoingLettersTest extends TestCase
         $viewData = $this->withExceptionHandling()
             ->get('/outgoing-letters')
             ->assertSuccessful()
-            ->assertViewIs('outgoing_letters.index')
+            ->assertViewIs('staff.outgoing_letters.index')
             ->assertViewHas('outgoing_letters')
             ->viewData('outgoing_letters');
 
@@ -87,10 +87,10 @@ class ViewOutgoingLettersTest extends TestCase
         $recipients = $this->withExceptionHandling()
                 ->get('/outgoing-letters')
                 ->assertSuccessful()
-                ->assertViewIs('outgoing_letters.index')
+                ->assertViewIs('staff.outgoing_letters.index')
                 ->assertViewHas('recipients')
                 ->viewData('recipients');
-        
+
         $this->assertCount(3, $recipients);
         $this->assertSame(
             OutgoingLetter::all()->pluck('recipient', 'recipient')->toArray(),
@@ -110,10 +110,10 @@ class ViewOutgoingLettersTest extends TestCase
         $types = $this->withExceptionHandling()
                 ->get('/outgoing-letters')
                 ->assertSuccessful()
-                ->assertViewIs('outgoing_letters.index')
+                ->assertViewIs('staff.outgoing_letters.index')
                 ->assertViewHas('types')
                 ->viewData('types');
-        
+
         $this->assertCount(3, $types);
         $this->assertSame(
             OutgoingLetter::all()->pluck('type', 'type')->toArray(),
@@ -133,10 +133,10 @@ class ViewOutgoingLettersTest extends TestCase
         $senders = $this->withExceptionHandling()
                 ->get('/outgoing-letters')
                 ->assertSuccessful()
-                ->assertViewIs('outgoing_letters.index')
+                ->assertViewIs('staff.outgoing_letters.index')
                 ->assertViewHas('senders')
                 ->viewData('senders');
-        
+
         $this->assertCount(3, $senders);
         $this->assertSame(
             OutgoingLetter::with('sender')->get()->pluck('sender.name', 'sender_id')->toArray(),
@@ -156,10 +156,10 @@ class ViewOutgoingLettersTest extends TestCase
         $creators = $this->withExceptionHandling()
                 ->get('/outgoing-letters')
                 ->assertSuccessful()
-                ->assertViewIs('outgoing_letters.index')
+                ->assertViewIs('staff.outgoing_letters.index')
                 ->assertViewHas('creators')
                 ->viewData('creators');
-        
+
         $this->assertCount(3, $creators);
         $this->assertSame(
             OutgoingLetter::with('creator')->get()->pluck('creator.name', 'creator_id')->toArray(),

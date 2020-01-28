@@ -15,10 +15,10 @@ class CollegeTeacherController extends Controller
     {
         $collegeTeachers = CollegeTeacher::all();
 
-        return view('college_teachers.index', compact('collegeTeachers'));
+        return view('staff.college_teachers.index', compact('collegeTeachers'));
     }
 
-    
+
     public function store(Request $request)
     {
         $validData = $request->validate([
@@ -30,7 +30,7 @@ class CollegeTeacherController extends Controller
         $plainPassword = strtoupper(Str::random(8));
 
         $collegeTeacher = CollegeTeacher::create($validData + ['password' => bcrypt($plainPassword)]);
-        
+
         Mail::to($collegeTeacher)->send(new UserRegisteredMail($collegeTeacher, $plainPassword));
 
         flash('College Teacher created successfully!')->success();

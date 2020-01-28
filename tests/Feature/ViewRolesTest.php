@@ -19,7 +19,7 @@ class ViewRolesTest extends TestCase
 
         $response = $this->get('/roles')
             ->assertSuccessful()
-            ->assertViewIs('roles.index')
+            ->assertViewIs('staff.roles.index')
             ->assertViewHasAll(['roles', 'permissions']);
 
         $viewRoles = $response->viewData('roles');

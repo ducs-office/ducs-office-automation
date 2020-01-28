@@ -22,7 +22,7 @@ class ViewUsersTest extends TestCase
         $response = $this->withoutExceptionHandling()
             ->get('/users')
             ->assertSuccessful()
-            ->assertViewIs('users.index')
+            ->assertViewIs('staff.users.index')
             ->assertViewHasAll(['users', 'roles','categories']);
 
         $this->assertCount(User::count(), $response->viewData('users'));

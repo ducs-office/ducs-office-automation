@@ -16,7 +16,7 @@ class RoleController extends Controller
 
     public function index()
     {
-        return view('roles.index', [
+        return view('staff.roles.index', [
             'roles' => Role::all(),
             'permissions' => Permission::all()->groupBy(function ($p) {
                 return ucwords(explode(':', $p->name, 2)[0]);

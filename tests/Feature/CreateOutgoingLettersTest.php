@@ -18,7 +18,7 @@ class CreateOutgoingLettersTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        
+
         Storage::fake();
     }
 
@@ -30,7 +30,7 @@ class CreateOutgoingLettersTest extends TestCase
         $this->withoutExceptionHandling()
             ->get('/outgoing-letters/create')
             ->assertSuccessful()
-            ->assertViewIs('outgoing_letters.create');
+            ->assertViewIs('staff.outgoing_letters.create');
     }
 
     /** @test */
@@ -51,7 +51,7 @@ class CreateOutgoingLettersTest extends TestCase
         ]);
 
         $role->revokePermissionTo($permission);
-        
+
         $this->signIn($user, $role->name);
 
         $this->withExceptionHandling()

@@ -37,7 +37,7 @@ class ViewCollegesTest extends TestCase
 
         $viewData = $this->withoutExceptionHandling()
                     ->get('/colleges')
-                    ->assertViewIs('colleges.index')
+                    ->assertViewIs('staff.colleges.index')
                     ->assertViewHas('colleges')
                     ->viewData('colleges');
 

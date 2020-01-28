@@ -19,14 +19,14 @@ class CollegeController extends Controller
         $colleges = College::all();
         $programmes = Programme::all();
 
-        return view('colleges.index', compact('colleges', 'programmes'));
+        return view('staff.colleges.index', compact('colleges', 'programmes'));
     }
 
     public function create()
     {
         $programmes = Programme::all();
 
-        return view('colleges.create', compact('programmes'));
+        return view('staff.colleges.create', compact('programmes'));
     }
 
     public function store(Request $request)
@@ -57,7 +57,7 @@ class CollegeController extends Controller
     public function edit(College $college)
     {
         $programmes = Programme::all();
-        return view('colleges.edit', compact('college', 'programmes'));
+        return view('staff.colleges.edit', compact('college', 'programmes'));
     }
 
     public function update(Request $request, College $college)

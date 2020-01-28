@@ -28,7 +28,7 @@ class CourseController extends Controller
 
         $course_types = config('options.courses.types');
 
-        return view('courses.index', compact('courses', 'course_types'));
+        return view('staff.courses.index', compact('courses', 'course_types'));
     }
 
     /**

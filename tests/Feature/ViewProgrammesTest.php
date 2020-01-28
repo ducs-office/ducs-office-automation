@@ -20,7 +20,7 @@ class ViewProgrammesTest extends TestCase
 
         $this->get('/programmes')->assertRedirect('/login');
     }
-    
+
     /** @test */
     public function admin_can_view_all_programmes()
     {
@@ -33,13 +33,13 @@ class ViewProgrammesTest extends TestCase
             $programmeRevision = $programme->revisions()->create(['revised_at' => $programme->wef]);
             $programmeRevision->courses()->attach($courses[$index], ['semester' => 1]);
         }
-    
+
         $this->withoutExceptionHandling();
 
-        $viewData = $this->get('/programmes')->assertViewIs('programmes.index')
+        $viewData = $this->get('/programmes')->assertViewIs('staff.programmes.index')
             ->assertViewHasAll(['programmes', 'grouped_courses'])
             ->viewData('programmes');
-            
+
         $this->assertCount(3, $viewData);
 
         $this->assertEquals(

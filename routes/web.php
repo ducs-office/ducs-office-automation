@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+
 /*
 |---4-----------------------------------------------------------------------
 | Web Routes
@@ -13,12 +15,12 @@
 
 
 Route::get('/', function () {
-    return view('dashboard');
+    return view('staff.dashboard');
 })->middleware('auth')->name('dashboard');
 
-Route::get('/college_teachers', function () {
-    return view('college_teachers.dashboard');
-})->middleware('auth:college_teachers')->name('college_teachers.dashboard');
+Route::get('/teachers', function () {
+    return view('teachers.dashboard');
+})->middleware('auth:college_teachers')->name('teachers.dashboard');
 
 Route::get('/login', 'Auth\LoginController@showLoginForm')->middleware(['guest', 'guest:college_teachers'])->name('login');
 Route::post('/login', 'Auth\LoginController@login')->middleware(['guest', 'guest:college_teachers'])->name('login');

@@ -17,7 +17,7 @@ class CollegeTeachersDashboardTest extends TestCase
         $this->signInCollegeTeacher($teacher = create(CollegeTeacher::class));
 
         $response = $this->withoutExceptionHandling()
-            ->get('/college_teachers')
+            ->get('/teachers')
             ->assertSuccessful()
             ->assertSee($teacher->name);
     }

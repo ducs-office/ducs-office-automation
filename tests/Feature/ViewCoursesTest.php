@@ -23,7 +23,7 @@ class ViewCoursesTest extends TestCase
 
         $viewCourses = $this->withoutExceptionHandling()->get('/courses')
             ->assertSuccessful()
-            ->assertViewIs('courses.index')
+            ->assertViewIs('staff.courses.index')
             ->assertViewHas('courses')
             ->viewData('courses');
 

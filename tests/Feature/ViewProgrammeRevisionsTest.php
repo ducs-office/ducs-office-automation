@@ -37,10 +37,10 @@ class ViewProgrammeRevisionsTest extends TestCase
         $programmeRevisions = $this->withoutExceptionHandling()
             ->get("/programme/{$programme->id}/revision")
             ->assertSuccessful()
-            ->assertViewIs('programmes.revisions.index')
+            ->assertViewIs('staff.programmes.revisions.index')
             ->assertViewHasAll(['programme','programmeRevisions','groupedRevisionCourses'])
             ->viewData('programmeRevisions');
-        
+
         $this->assertCount(2, $programmeRevisions);
     }
 }

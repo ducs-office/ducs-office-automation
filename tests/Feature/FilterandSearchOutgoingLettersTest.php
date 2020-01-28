@@ -28,7 +28,7 @@ class FilterOutgoingLettersTest extends TestCase
         $viewOutgoingLetters = $this->withoutExceptionHandling()
             ->get('/outgoing-letters?filters[date][less_than]=' . $beforeFilter)
             ->assertSuccessful()
-            ->assertViewIs('outgoing_letters.index')
+            ->assertViewIs('staff.outgoing_letters.index')
             ->assertViewHas('outgoing_letters')
             ->viewData('outgoing_letters');
 
@@ -56,7 +56,7 @@ class FilterOutgoingLettersTest extends TestCase
         $viewOutgoingLetters = $this->withoutExceptionHandling()
             ->get('/outgoing-letters?filters[date][greater_than]=' . $afterFilter)
             ->assertSuccessful()
-            ->assertViewIs('outgoing_letters.index')
+            ->assertViewIs('staff.outgoing_letters.index')
             ->assertViewHas('outgoing_letters')
             ->viewData('outgoing_letters');
 
@@ -86,7 +86,7 @@ class FilterOutgoingLettersTest extends TestCase
         $viewOutgoingLetters = $this->withoutExceptionHandling()
             ->get('/outgoing-letters?filters[date][greater_than]=' . $afterFilter . '&filters[date][less_than]='. $beforeFilter)
             ->assertSuccessful()
-            ->assertViewIs('outgoing_letters.index')
+            ->assertViewIs('staff.outgoing_letters.index')
             ->assertViewHas('outgoing_letters')
             ->viewData('outgoing_letters');
 
@@ -112,7 +112,7 @@ class FilterOutgoingLettersTest extends TestCase
         $viewLetters = $this -> withoutExceptionHandling()
             ->get('/outgoing-letters?filters[date][greater_than]='.$after_date)
             ->assertSuccessful()
-            ->assertViewIs('outgoing_letters.index')
+            ->assertViewIs('staff.outgoing_letters.index')
             ->assertViewHas('outgoing_letters')
             ->viewData('outgoing_letters');
 
@@ -130,7 +130,7 @@ class FilterOutgoingLettersTest extends TestCase
         $viewLetters = $this -> withoutExceptionHandling()
             ->get('/outgoing-letters?before='.$before_date)
             ->assertSuccessful()
-            ->assertViewIs('outgoing_letters.index')
+            ->assertViewIs('staff.outgoing_letters.index')
             ->assertViewHas('outgoing_letters')
             ->viewData('outgoing_letters');
 
@@ -149,7 +149,7 @@ class FilterOutgoingLettersTest extends TestCase
         $viewLetters = $this -> withoutExceptionHandling()
             ->get('/outgoing-letters?filters[date][greater_than]='.$after_date.'&filters[date][less_than]='.$before_date)
             ->assertSuccessful()
-            ->assertViewIs('outgoing_letters.index')
+            ->assertViewIs('staff.outgoing_letters.index')
             ->assertViewHas('outgoing_letters')
             ->viewData('outgoing_letters');
 
@@ -168,7 +168,7 @@ class FilterOutgoingLettersTest extends TestCase
         $viewLetters = $this -> withoutExceptionHandling()
             ->get('/outgoing-letters?filters[type][equals]=Bill')
             ->assertSuccessful()
-            ->assertViewIs('outgoing_letters.index')
+            ->assertViewIs('staff.outgoing_letters.index')
             ->assertViewHas('outgoing_letters')
             ->viewData('outgoing_letters');
 
@@ -189,7 +189,7 @@ class FilterOutgoingLettersTest extends TestCase
         $viewLetters = $this -> withoutExceptionHandling()
             ->get('/outgoing-letters?filters[recipient][equals]=DUCC')
             ->assertSuccessful()
-            ->assertViewIs('outgoing_letters.index')
+            ->assertViewIs('staff.outgoing_letters.index')
             ->assertViewHas('outgoing_letters')
             ->viewData('outgoing_letters');
 
@@ -210,7 +210,7 @@ class FilterOutgoingLettersTest extends TestCase
         $viewLetters = $this -> withoutExceptionHandling()
             ->get('/outgoing-letters?filters[creator_id][equals]=1')
             ->assertSuccessful()
-            ->assertViewIs('outgoing_letters.index')
+            ->assertViewIs('staff.outgoing_letters.index')
             ->assertViewHas('outgoing_letters')
             ->viewData('outgoing_letters');
 
@@ -231,7 +231,7 @@ class FilterOutgoingLettersTest extends TestCase
         $viewLetters = $this -> withoutExceptionHandling()
             ->get('/outgoing-letters?filters[sender_id][equals]=1')
             ->assertSuccessful()
-            ->assertViewIs('outgoing_letters.index')
+            ->assertViewIs('staff.outgoing_letters.index')
             ->assertViewHas('outgoing_letters')
             ->viewData('outgoing_letters');
 
@@ -252,7 +252,7 @@ class FilterOutgoingLettersTest extends TestCase
         $viewLetters = $this->withoutExceptionHandling()
                             ->get('/outgoing-letters?search=def')
                             ->assertSuccessful()
-                            ->assertViewIs('outgoing_letters.index')
+                            ->assertViewIs('staff.outgoing_letters.index')
                             ->assertViewHas('outgoing_letters')
                             ->viewData('outgoing_letters');
 

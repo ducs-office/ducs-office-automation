@@ -37,7 +37,7 @@ class OutgoingLettersController extends Controller
         $creators = User::select('id', 'name')->whereIn('id', OutgoingLetter::selectRaw('DISTINCT(creator_id)'))->get()->pluck('name', 'id');
 
 
-        return view('outgoing_letters.index', compact(
+        return view('staff.outgoing_letters.index', compact(
             'outgoing_letters',
             'types',
             'recipients',
@@ -48,7 +48,7 @@ class OutgoingLettersController extends Controller
 
     public function create()
     {
-        return view('outgoing_letters.create');
+        return view('staff.outgoing_letters.create');
     }
 
     protected function store(Request $request)
@@ -81,7 +81,7 @@ class OutgoingLettersController extends Controller
 
     public function edit(OutgoingLetter $outgoing_letter)
     {
-        return view('outgoing_letters.edit', compact('outgoing_letter'));
+        return view('staff.outgoing_letters.edit', compact('outgoing_letter'));
     }
 
     public function update(OutgoingLetter $outgoing_letter, Request $request)

@@ -11,7 +11,7 @@ use Tests\TestCase;
 class CreateIncomingLettersTest extends TestCase
 {
     use RefreshDatabase;
-    
+
     /** @test */
     public function guest_cannot_create_letters()
     {
@@ -28,6 +28,6 @@ class CreateIncomingLettersTest extends TestCase
         $this->withoutExceptionHandling()
             ->get('/incoming-letters/create')
             ->assertSuccessful()
-            ->assertViewIs('incoming_letters.create');
+            ->assertViewIs('staff.incoming_letters.create');
     }
 }

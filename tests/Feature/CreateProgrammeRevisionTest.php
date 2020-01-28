@@ -30,7 +30,7 @@ class CreateProgrammeRevision extends TestCase
         $this->withoutExceptionHandling()
             ->get("/programmes/$programme->id/revision/create")
             ->assertSuccessful()
-            ->assertViewIs('programmes.revisions.create')
+            ->assertViewIs('staff.programmes.revisions.create')
             ->assertViewHas('semester_courses')
             ->assertViewHas('programme');
     }
