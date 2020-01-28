@@ -1,5 +1,5 @@
 <header class="bg-white text-gray-900 py-2 h-16 px-4 flex items-center w-full flex-shrink-0">
-    @auth('college_teachers')
+    @auth('teachers')
     <button class="p-3 text-gray-700 mr-3 btn flex-shrink-0" @click="sidebar.toggle">
         <feather-icon :name="sidebar.isVisible ? 'arrow-left' : 'menu'" class="h-current" stroke-width="3">
             Toggle Menu
@@ -11,7 +11,7 @@
     </form>
     @include('teachers.partials.users_menu')
     @endauth
-    @guest('college_teachers')
+    @guest('teachers')
     <a class="bg-white text-gray-900 px-3 py-1 rounded font-bold" href="{{ route('login') }}">Login</a>
     @endguest
 </header>

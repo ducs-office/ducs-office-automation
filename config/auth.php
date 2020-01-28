@@ -42,10 +42,10 @@ return [
             'home' => '/',
         ],
 
-        'college_teachers' => [
+        'teachers' => [
             'driver' => 'session',
-            'provider' => 'college_teachers',
-            'home' => '/college_teachers',
+            'provider' => 'teachers',
+            'home' => '/teachers/profile',
         ],
 
         'api' => [
@@ -78,9 +78,9 @@ return [
             'model' => App\User::class,
         ],
 
-        'college_teachers' => [
+        'teachers' => [
             'driver' => 'eloquent',
-            'model' => App\CollegeTeacher::class,
+            'model' => App\Teacher::class,
         ]
         // 'users' => [
         //     'driver' => 'database',

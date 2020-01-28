@@ -2,7 +2,7 @@
 
 namespace Tests;
 
-use App\CollegeTeacher;
+use App\Teacher;
 use App\User;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Support\Facades\Session;
@@ -32,13 +32,13 @@ abstract class TestCase extends BaseTestCase
         return $user;
     }
 
-    public function signInCollegeTeacher($teacher = null)
+    public function signInTeacher($teacher = null)
     {
         if (!$teacher) {
-            $teacher = create(CollegeTeacher::class);
+            $teacher = create(Teacher::class);
         }
 
-        $this->be($teacher, 'college_teachers');
+        $this->be($teacher, 'teachers');
 
         return $this;
     }

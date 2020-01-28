@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\CollegeTeacher;
+use App\Teacher;
 use App\User;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -41,25 +41,25 @@ class LoginTest extends TestCase
     }
 
     /** @test */
-    public function college_teachers_can_login()
+    public function teachers_can_login()
     {
-        $teacher = create(CollegeTeacher::class, 1, [
+        $teacher = create(Teacher::class, 1, [
             'password' => bcrypt($plainPassword = 'secret')
         ]);
 
         $this->withoutExceptionHandling()->post('/login', [
             'email' => $teacher->email,
             'password' => $plainPassword,
-            'type' => 'college_teachers'
-        ])->assertRedirect('/college_teachers');
+            'type' => 'teachers'
+        ])->assertRedirect('/teachers/profile');
 
-        $this->assertTrue(Auth::guard('college_teachers')->check());
+        $this->assertTrue(Auth::guard('teachers')->check());
     }
 
     /** @test */
-    public function college_teachers_cannot_login_on_invalid_guard()
+    public function teachers_cannot_login_on_invalid_guard()
     {
-        $teacher = create(CollegeTeacher::class, 1, [
+        $teacher = create(Teacher::class, 1, [
             'password' => bcrypt($plainPassword = 'secret')
         ]);
 
@@ -72,7 +72,7 @@ class LoginTest extends TestCase
             ])->assertRedirect('/login')
             ->assertSessionHasErrors('type');
 
-        $this->assertFalse(Auth::guard('college_teachers')->check());
+        $this->assertFalse(Auth::guard('teachers')->check());
     }
 
     /** @test */
@@ -98,14 +98,14 @@ class LoginTest extends TestCase
     }
 
     /** @test */
-    public function logged_in_college_teacher_can_logout()
+    public function logged_in_teacher_can_logout()
     {
-        $this->signInCollegeTeacher();
+        $this->signInTeacher();
 
         $this->withoutExceptionHandling()
-            ->post('/logout', ['type' => 'college_teachers'])
+            ->post('/logout', ['type' => 'teachers'])
             ->assertRedirect('/');
 
-        $this->assertFalse(Auth::guard('college_teachers')->check(), 'User was expected to be logged out, but was not logged out!');
+        $this->assertFalse(Auth::guard('teachers')->check(), 'User was expected to be logged out, but was not logged out!');
     }
 }

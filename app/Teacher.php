@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Foundation\Auth\User;
 
-class CollegeTeacher extends User
+class Teacher extends User
 {
     protected $fillable = ['first_name', 'last_name', 'email', 'password'];
 

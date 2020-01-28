@@ -95,7 +95,7 @@ return [
             'courses' => ['view', 'create', 'edit', 'delete'],
             'roles' => ['view', 'create', 'edit', 'delete'],
             'users' => ['view', 'create', 'edit', 'delete'],
-            'college teachers' => ['view', 'create', 'edit', 'delete'],
+            'teachers' => ['view', 'create', 'edit', 'delete'],
         ],
 
         'roles' => [
@@ -109,7 +109,7 @@ return [
                 'courses' => ['view', 'create', 'edit', 'delete'],
                 'roles' => ['view', 'create', 'edit', 'delete'],
                 'users' => ['view', 'create', 'edit', 'delete'],
-                'college teachers' => ['view', 'create', 'edit', 'delete'],
+                'teachers' => ['view', 'create', 'edit', 'delete'],
             ],
         ]
     ],

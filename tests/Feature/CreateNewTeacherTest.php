@@ -7,70 +7,70 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
-use App\CollegeTeacher;
+use App\Teacher;
 use App\Mail\UserRegisteredMail;
 
-class CreateCollegeTeacherTest extends TestCase
+class CreateTeacherTest extends TestCase
 {
     use RefreshDatabase;
 
     /** @test */
-    public function guest_can_not_store_a_college_teacher()
+    public function guest_can_not_store_a_teacher()
     {
         $this->withExceptionHandling()
-            ->post('/college-teachers', [
+            ->post('/teachers', [
                 'first_name' => 'Sharanjit',
                 'last_name' =>  'Kaur',
                 'email' =>  'kaur.sharanjit@andc.du.ac.in'
             ])
             ->assertRedirect('/login');
 
-        $this->assertEquals(0, CollegeTeacher::count());
+        $this->assertEquals(0, Teacher::count());
     }
 
     /** @test */
-    public function new_college_teacher_can_be_created()
+    public function new_teacher_can_be_created()
     {
         $this->signIn();
 
         $this->withoutExceptionHandling()
-            ->post('/college-teachers', [
+            ->post('/teachers', [
                 'first_name' => $firstName = 'Sharanjit',
                 'last_name' => $lastName = 'Kaur',
                 'email' => $email = 'kaur.sharanjit@andc.du.ac.in'
             ])
-            ->assertRedirect('/college-teachers')
+            ->assertRedirect('/teachers')
             ->assertSessionHasFlash('success', 'College Teacher created successfully!');
 
-        $collegeTeacher = CollegeTeacher::first();
+        $Teacher = Teacher::first();
 
-        $this->assertEquals($firstName, $collegeTeacher->first_name);
-        $this->assertEquals($lastName, $collegeTeacher->last_name);
-        $this->assertEquals($email, $collegeTeacher->email);
+        $this->assertEquals($firstName, $Teacher->first_name);
+        $this->assertEquals($lastName, $Teacher->last_name);
+        $this->assertEquals($email, $Teacher->email);
         
-        $this->assertEquals(1, CollegeTeacher::count());
+        $this->assertEquals(1, Teacher::count());
     }
 
     /** @test */
-    public function credentials_are_sent_via_email_when_a_college_teacher_is_created()
+    public function credentials_are_sent_via_email_when_a_teacher_is_created()
     {
         Mail::fake();
 
         $this->signIn();
 
         $this->withoutExceptionHandling()
-            ->post('/college-teachers', [
+            ->post('/teachers', [
                 'first_name' => 'Sharanjit',
                 'last_name' => 'Kaur',
                 'email' => 'kaur.sharanjit@andc.du.ac.in'
             ])
-            ->assertRedirect('/college-teachers')
+            ->assertRedirect('/teachers')
             ->assertSessionHasFlash('success', 'College Teacher created successfully!');
             
-        $collegeTeacher = CollegeTeacher::first();
+        $Teacher = Teacher::first();
 
-        Mail::assertQueued(UserRegisteredMail::class, function ($mail) use ($collegeTeacher) {
-            return $mail->user && $mail->user->id == $collegeTeacher->id && $mail->password;
+        Mail::assertQueued(UserRegisteredMail::class, function ($mail) use ($Teacher) {
+            return $mail->user && $mail->user->id == $Teacher->id && $mail->password;
         });
     }
 
@@ -81,7 +81,7 @@ class CreateCollegeTeacherTest extends TestCase
 
         try {
             $this->withoutExceptionHandling()
-                ->post('/college-teachers', [
+                ->post('/teachers', [
                     'first_name' => '',
                     'last_name' => 'Kaur',
                     'email' => 'kaur.sharanjit@andc.du.ac.in'
@@ -90,7 +90,7 @@ class CreateCollegeTeacherTest extends TestCase
             $this->assertArrayHasKey('first_name', $e->errors());
         }
 
-        $this->assertEquals(0, CollegeTeacher::count());
+        $this->assertEquals(0, Teacher::count());
     }
 
     /** @test */
@@ -100,7 +100,7 @@ class CreateCollegeTeacherTest extends TestCase
 
         try {
             $this->withoutExceptionHandling()
-                ->post('/college-teachers', [
+                ->post('/teachers', [
                     'first_name' => 'Sharanjit',
                     'last_name' => '',
                     'email' => 'kaur.sharanjit@andc.du.ac.in'
@@ -109,7 +109,7 @@ class CreateCollegeTeacherTest extends TestCase
             $this->assertArrayHasKey('last_name', $e->errors());
         }
 
-        $this->assertEquals(0, CollegeTeacher::count());
+        $this->assertEquals(0, Teacher::count());
     }
 
     /** @test */
@@ -119,7 +119,7 @@ class CreateCollegeTeacherTest extends TestCase
 
         try {
             $this->withoutExceptionHandling()
-                ->post('/college-teachers', [
+                ->post('/teachers', [
                     'first_name' => 'Sharanjit',
                     'last_name' => 'Kaur',
                     'email' => ''
@@ -128,7 +128,7 @@ class CreateCollegeTeacherTest extends TestCase
             $this->assertArrayHasKey('email', $e->errors());
         }
 
-        $this->assertEquals(0, CollegeTeacher::count());
+        $this->assertEquals(0, Teacher::count());
     }
 
     /** @test */
@@ -136,19 +136,19 @@ class CreateCollegeTeacherTest extends TestCase
     {
         $this->signIn();
 
-        $collegeTeacher = create(CollegeTeacher::class);
+        $Teacher = create(Teacher::class);
 
         try {
             $this->withoutExceptionHandling()
-                ->post('/college-teachers', [
+                ->post('/teachers', [
                     'first_name' => 'Sharanjit',
                     'last_name' => 'Kaur',
-                    'email' => $collegeTeacher->email
+                    'email' => $Teacher->email
                 ]);
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('email', $e->errors());
         }
 
-        $this->assertEquals(1, CollegeTeacher::count());
+        $this->assertEquals(1, Teacher::count());
     }
 }

@@ -18,13 +18,11 @@ Route::get('/', function () {
     return view('staff.dashboard');
 })->middleware('auth')->name('dashboard');
 
-Route::get('/teachers', function () {
-    return view('teachers.dashboard');
-})->middleware('auth:college_teachers')->name('teachers.dashboard');
+Route::get('/teachers/profile', 'TeacherProfileController@index')->middleware('auth:teachers')->name('teachers.dashboard');
 
-Route::get('/login', 'Auth\LoginController@showLoginForm')->middleware(['guest', 'guest:college_teachers'])->name('login');
-Route::post('/login', 'Auth\LoginController@login')->middleware(['guest', 'guest:college_teachers'])->name('login');
-Route::post('/logout', 'Auth\LoginController@logout')->middleware('auth:web,college_teachers')->name('logout');
+Route::get('/login', 'Auth\LoginController@showLoginForm')->middleware(['guest', 'guest:teachers'])->name('login');
+Route::post('/login', 'Auth\LoginController@login')->middleware(['guest', 'guest:teachers'])->name('login');
+Route::post('/logout', 'Auth\LoginController@logout')->middleware('auth:web,teachers')->name('logout');
 
 Route::post('/account/change_password', 'AccountController@change_password')->middleware('auth')->name('account.change_password');
 
@@ -95,7 +93,7 @@ Route::delete('/roles/{role}', 'RoleController@destroy')->middleware('auth')->na
 Route::get('/attachments/{attachment}', 'AttachmentController@show')->middleware('auth')->name('attachments.show');
 Route::delete('/attachments/{attachment}', 'AttachmentController@destroy')->middleware('auth')->name('attachments.destroy');
 
-Route::get('/college-teachers', 'CollegeTeacherController@index')->middleware('auth')->name('college_teachers.index');
-Route::post('/college-teachers', 'CollegeTeacherController@store')->middleware('auth')->name('college_teachers.store');
-Route::patch('/college-teachers/{collegeTeacher}', 'CollegeTeacherController@update')->middleware('auth')->name('college_teachers.update');
-Route::delete('/college-teachers/{collegeTeacher}', 'CollegeTeacherController@destroy')->middleware('auth')->name('college_teachers.destroy');
+Route::get('/teachers', 'TeacherController@index')->middleware('auth')->name('teachers.index');
+Route::post('/teachers', 'TeacherController@store')->middleware('auth')->name('teachers.store');
+Route::patch('/teachers/{Teacher}', 'TeacherController@update')->middleware('auth')->name('teachers.update');
+Route::delete('/teachers/{Teacher}', 'TeacherController@destroy')->middleware('auth')->name('teachers.destroy');

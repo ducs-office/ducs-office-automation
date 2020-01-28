@@ -20,7 +20,7 @@ class CreateNewUserTest extends TestCase
     {
         Mail::fake();
 
-        $teacherRole = Role::firstOrcreate(['name' => 'college teacher']);
+        $teacherRole = Role::firstOrcreate(['name' => 'teacher']);
 
         $this->signIn(create(User::class), 'admin');
 
@@ -74,13 +74,13 @@ class CreateNewUserTest extends TestCase
 
         $this->signIn(create(User::class), 'admin');
 
-        $teacherRole = Role::firstOrCreate(['name' => 'college teacher']);
+        $teacherRole = Role::firstOrCreate(['name' => 'teacher']);
 
         $this->withoutExceptionHandling()
             ->post('/users', [
-                'name' => 'college teacher',
+                'name' => 'teacher',
                 'email' => 'contact@teacher.me',
-                'category' => 'college_teacher',
+                'category' => 'teacher',
                 'roles' => [$teacherRole->id]
             ])->assertRedirect('/')
             ->assertSessionHasFlash('success', 'User created successfully!');
@@ -95,7 +95,7 @@ class CreateNewUserTest extends TestCase
     {
         $this->signIn();
 
-        $teacherRole = Role::firstOrcreate(['name' => 'college teacher']);
+        $teacherRole = Role::firstOrcreate(['name' => 'teacher']);
 
         try {
             $this->withoutExceptionHandling()
@@ -116,7 +116,7 @@ class CreateNewUserTest extends TestCase
     {
         $this->signIn();
 
-        $teacherRole = Role::firstOrcreate(['name' => 'college teacher']);
+        $teacherRole = Role::firstOrcreate(['name' => 'teacher']);
 
         try {
             $this->withoutExceptionHandling()
@@ -138,7 +138,7 @@ class CreateNewUserTest extends TestCase
         $this->signIn();
 
         $user = create(User::class);
-        $teacherRole = Role::firstOrcreate(['name' => 'college teacher']);
+        $teacherRole = Role::firstOrcreate(['name' => 'teacher']);
 
         try {
             $this->withoutExceptionHandling()
@@ -159,7 +159,7 @@ class CreateNewUserTest extends TestCase
     {
         $this->signIn();
 
-        $teacherRole = Role::firstOrcreate(['name' => 'college teacher']);
+        $teacherRole = Role::firstOrcreate(['name' => 'teacher']);
 
         try {
             $this->withoutExceptionHandling()
@@ -180,7 +180,7 @@ class CreateNewUserTest extends TestCase
     {
         $this->signIn();
 
-        $teacherRole = Role::firstOrcreate(['name' => 'college teacher']);
+        $teacherRole = Role::firstOrcreate(['name' => 'teacher']);
 
         try {
             $this->withoutExceptionHandling()
@@ -201,7 +201,7 @@ class CreateNewUserTest extends TestCase
     {
         $this->signIn();
 
-        $teacherRole = Role::firstOrcreate(['name' => 'college teacher']);
+        $teacherRole = Role::firstOrcreate(['name' => 'teacher']);
 
         try {
             $this->withoutExceptionHandling()

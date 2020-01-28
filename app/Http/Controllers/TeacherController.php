@@ -2,20 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\CollegeTeacher;
+use App\Teacher;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use App\Mail\UserRegisteredMail;
 
-class CollegeTeacherController extends Controller
+class TeacherController extends Controller
 {
     public function index()
     {
-        $collegeTeachers = CollegeTeacher::all();
+        $Teachers = Teacher::all();
 
-        return view('staff.college_teachers.index', compact('collegeTeachers'));
+        return view('staff.teachers.index', compact('Teachers'));
     }
 
 
@@ -24,40 +24,40 @@ class CollegeTeacherController extends Controller
         $validData = $request->validate([
             'first_name' => 'required| string| min:3| max:50',
             'last_name' => 'required| string| min:3| max:50',
-            'email' => 'required| email| unique:college_teachers| min:3| max:190',
+            'email' => 'required| email| unique:teachers| min:3| max:190',
         ]);
 
         $plainPassword = strtoupper(Str::random(8));
 
-        $collegeTeacher = CollegeTeacher::create($validData + ['password' => bcrypt($plainPassword)]);
+        $Teacher = Teacher::create($validData + ['password' => bcrypt($plainPassword)]);
 
-        Mail::to($collegeTeacher)->send(new UserRegisteredMail($collegeTeacher, $plainPassword));
+        Mail::to($Teacher)->send(new UserRegisteredMail($Teacher, $plainPassword));
 
         flash('College Teacher created successfully!')->success();
 
-        return redirect('/college-teachers');
+        return redirect('/teachers');
     }
 
-    public function update(Request $request, CollegeTeacher $collegeTeacher)
+    public function update(Request $request, Teacher $Teacher)
     {
         $data = $request->validate([
             'first_name' => ['sometimes', 'required', 'string', 'min:3', 'max:50'],
             'last_name' => ['sometimes', 'required', 'string', 'min:3', 'max:50'],
             'email' => ['sometimes', 'required', 'min:3', 'max:190', 'email',
-                        Rule::unique('college_teachers')->ignore($collegeTeacher)
+                        Rule::unique('teachers')->ignore($Teacher)
             ]
         ]);
 
-        $collegeTeacher->update($data);
+        $Teacher->update($data);
 
         flash('College teacher updated successfully')->success();
 
         return redirect()->back();
     }
 
-    public function destroy(CollegeTeacher $collegeTeacher)
+    public function destroy(Teacher $Teacher)
     {
-        $collegeTeacher->delete();
+        $Teacher->delete();
 
         flash('College teacher deleted successfully')->success();
 

@@ -28,7 +28,7 @@
 </toggle-visibility>
 <form id="logout-form" class="h-0 w-0 pointer-events-none">
     @csrf_token
-    <input type="hidden" name="type" value="college_teachers">
+    <input type="hidden" name="type" value="teachers">
 </form>
 <v-modal name="change_password_modal" height="auto">
     <div class="p-6">

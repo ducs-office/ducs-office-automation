@@ -2,14 +2,14 @@
 
 namespace Tests\Unit;
 
-use App\CollegeTeacher;
+use App\Teacher;
 use PHPUnit\Framework\TestCase;
 
-class CollegeTeacherTest extends TestCase
+class TeacherTest extends TestCase
 {
     public function test_it_gives_full_name()
     {
-        $teacher = new CollegeTeacher();
+        $teacher = new Teacher();
         $teacher->first_name = 'John';
         $teacher->last_name = 'Doe';
 

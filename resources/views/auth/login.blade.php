@@ -13,9 +13,9 @@
                     <label for="web" class="form-label ml-1">Faculty/Staff</label>
                 </div>
                 <div class="inline-flex items-center ml-3">
-                    <input type="radio" name="type" id="college_teachers" value="college_teachers"
-                        {{ old('type', 'web') == 'college_teachers' ? 'checked' : '' }}>
-                    <label for="college_teachers" class="form-label ml-1">College Teacher</label>
+                    <input type="radio" name="type" id="teachers" value="teachers"
+                        {{ old('type', 'web') == 'teachers' ? 'checked' : '' }}>
+                    <label for="teachers" class="form-label ml-1">College Teacher</label>
                 </div>
             </div>
             @if($errors->has('type'))

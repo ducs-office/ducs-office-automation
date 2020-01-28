@@ -7,7 +7,7 @@ return [
             'hod' => 'HOD',
             'office_staff' => 'Office Staff',
             'faculty_teacher' => 'Faculty Teacher',
-            'college_teacher' => 'College Teacher'
+            'teacher' => 'College Teacher'
         ],
     ],
     'programmes' => [
