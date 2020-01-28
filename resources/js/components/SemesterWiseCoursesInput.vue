@@ -64,15 +64,20 @@ export default {
         }
     },
     created() {
+        this.courses = this.dataCourses;
+
         for(let sem=1; sem<=this.count; sem++) {
             if(this.value && sem in this.value) {
-                this.semesterWiseCourses[sem] = this.value[sem];
+                this.semesterWiseCourses[sem] = this.value[sem].map(
+                    value => {
+                        const index = this.courses.findIndex(course => course.id == value);
+                        return this.courses.splice(index, 1)[0];
+                    }
+                );
             } else {
                 this.semesterWiseCourses[sem] = new Array();
             }
         }
-
-        this.courses = this.dataCourses;
     }
 }
 </script>
