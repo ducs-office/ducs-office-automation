@@ -2,7 +2,7 @@
 @section('body')
 <div class="page-card max-w-xl my-4 mx-auto">
     <h2 class="page-header px-6">New Outgoing Letter</h2>
-    <form action="{{ route('outgoing_letters.store') }}" method="POST" class="px-6" enctype="multipart/form-data">
+    <form action="{{ route('staff.outgoing_letters.store') }}" method="POST" class="px-6" enctype="multipart/form-data">
         @csrf_token
         <div class="mb-2">
             <label for="date" class="w-full form-label mb-1">

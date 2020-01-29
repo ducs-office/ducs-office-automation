@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Staff;
 
+use App\Http\Controllers\Controller;
 use App\College;
 use App\Programme;
 use Illuminate\Http\Request;
@@ -51,7 +52,7 @@ class CollegeController extends Controller
 
         flash('College created successfully!', 'success');
 
-        return redirect('/colleges');
+        return redirect(route('staff.colleges.index'));
     }
 
     public function edit(College $college)
@@ -90,7 +91,7 @@ class CollegeController extends Controller
 
         flash('College updated successfully!', 'success');
 
-        return redirect('/colleges');
+        return redirect(route('staff.colleges.index'));
     }
 
     public function destroy(College $college)
@@ -99,6 +100,6 @@ class CollegeController extends Controller
 
         flash('College deleted successfully!', 'success');
 
-        return redirect('/colleges');
+        return redirect(route('staff.colleges.index'));
     }
 }

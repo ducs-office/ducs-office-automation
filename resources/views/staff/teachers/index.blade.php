@@ -42,7 +42,7 @@
                 </button>
                 @endcan
                 @can('delete', $Teacher)
-                <form action="{{ route('teachers.destroy', $Teacher) }}" method="POST"
+                <form action="{{ route('staff.teachers.destroy', $Teacher) }}" method="POST"
                     onsubmit="return confirm('Do you really want to delete teacher \'{{ $Teacher->getNameAttribute() }}\'?');">
                     @csrf_token @method('delete')
                     <button type="submit" class="p-1 hover:text-red-700">

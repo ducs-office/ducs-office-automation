@@ -23,7 +23,7 @@ class ChangePasswordTest extends TestCase
             'password' => Hash::make($curr_pass)
         ]));
 
-        $this->withoutExceptionHandling()->post('/account/change_password', [
+        $this->withoutExceptionHandling()->post(route('staff.account.change_password'), [
             'password' => $curr_pass,
             'new_password' => $new_pass,
             'new_password_confirmation' => $new_pass,
@@ -40,7 +40,7 @@ class ChangePasswordTest extends TestCase
             'password' => Hash::make('old_password')
         ]));
 
-        $this->post('/account/change_password', [
+        $this->post(route('staff.account.change_password'), [
                 'password' => 'incorrect_password',
                 'new_password' => 'new_pass',
                 'new_password_confirmation' => 'new_pass',

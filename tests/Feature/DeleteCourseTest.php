@@ -20,8 +20,8 @@ class DeleteCourseTest extends TestCase
         $course = create(Course::class);
 
         $this->withoutExceptionHandling()
-            ->delete('/courses/'.$course->id)
-            ->assertRedirect('/courses')
+            ->delete(route('staff.courses.destroy', $course))
+            ->assertRedirect()
             ->assertSessionHasFlash('success', 'Course deleted successfully!');
 
         $this->assertNull($course->fresh(), 'Course was not deleted!');

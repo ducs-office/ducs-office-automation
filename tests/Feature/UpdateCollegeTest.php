@@ -17,8 +17,8 @@ class UpdateCollegeTest extends TestCase
         $college = create(College::class);
 
         $this->withExceptionHandling()
-            ->patch('/colleges/' . $college->id, ['code' => 'code1'])
-            ->assertRedirect('/login');
+            ->patch(route('staff.colleges.update', $college), ['code' => 'code1'])
+            ->assertRedirect();
 
         $this->assertEquals($college->code, $college->fresh()->code);
     }
@@ -30,8 +30,8 @@ class UpdateCollegeTest extends TestCase
         $college = create(College::class);
 
         $this->withoutExceptionHandling()
-            ->patch('/colleges/'. $college->id, ['code' => $new_code = 'code1'])
-            ->assertRedirect('/colleges')
+            ->patch(route('staff.colleges.update', $college), ['code' => $new_code = 'code1'])
+            ->assertRedirect()
             ->assertSessionHasFlash('success', 'College updated successfully');
 
         $this->assertEquals(1, College::count());
@@ -46,8 +46,8 @@ class UpdateCollegeTest extends TestCase
         $college = create(College::class);
 
         $this->withoutExceptionHandling()
-            ->patch('/colleges/'. $college->id, ['name' => $new_name = 'new name'])
-            ->assertRedirect('/colleges')
+            ->patch(route('staff.colleges.update', $college), ['name' => $new_name = 'new name'])
+            ->assertRedirect()
             ->assertSessionHasNoErrors()
             ->assertSessionHasFlash('success', 'College updated successfully');
 
@@ -63,10 +63,10 @@ class UpdateCollegeTest extends TestCase
         $college = create(College::class);
 
         $this->withoutExceptionHandling()
-            ->patch('/colleges/' . $college->id, [
+            ->patch(route('staff.colleges.update', $college), [
                 'principal_name' => $new_principal = 'New Principal'
             ])
-            ->assertRedirect('/colleges')
+            ->assertRedirect()
             ->assertSessionHasNoErrors()
             ->assertSessionHasFlash('success', 'College updated successfully');
 
@@ -81,10 +81,10 @@ class UpdateCollegeTest extends TestCase
         $college = create(College::class);
 
         $this->withoutExceptionHandling()
-            ->patch('/colleges/' . $college->id, [
+            ->patch(route('staff.colleges.update', $college->id), [
                 'principal_phones' => $new_phones = ['9876543210']
             ])
-            ->assertRedirect('/colleges')
+            ->assertRedirect()
             ->assertSessionHasNoErrors()
             ->assertSessionHasFlash('success', 'College updated successfully');
 
@@ -99,10 +99,10 @@ class UpdateCollegeTest extends TestCase
         $college = create(College::class);
 
         $this->withoutExceptionHandling()
-            ->patch('/colleges/' . $college->id, [
+            ->patch(route('staff.colleges.update', $college), [
                 'principal_emails' => $new_emails = ['princy@somecollege.com']
             ])
-            ->assertRedirect('/colleges')
+            ->assertRedirect()
             ->assertSessionHasNoErrors()
             ->assertSessionHasFlash('success', 'College updated successfully');
 
@@ -117,10 +117,10 @@ class UpdateCollegeTest extends TestCase
         $college = create(College::class);
 
         $this->withoutExceptionHandling()
-            ->patch('/colleges/' . $college->id, [
+            ->patch(route('staff.colleges.update', $college), [
                 'address' => $new_address = 'Arts Faculty, Delhi University, Delhi - 110007'
             ])
-            ->assertRedirect('/colleges')
+            ->assertRedirect()
             ->assertSessionHasNoErrors()
             ->assertSessionHasFlash('success', 'College updated successfully');
 
@@ -135,10 +135,10 @@ class UpdateCollegeTest extends TestCase
         $college = create(College::class);
 
         $this->withoutExceptionHandling()
-            ->patch('/colleges/' . $college->id, [
+            ->patch(route('staff.colleges.update', $college), [
                 'website' => $new_website = 'https://new-website.com'
             ])
-            ->assertRedirect('/colleges')
+            ->assertRedirect()
             ->assertSessionHasNoErrors()
             ->assertSessionHasFlash('success', 'College updated successfully');
 
@@ -162,10 +162,10 @@ class UpdateCollegeTest extends TestCase
         ];
 
         $this->withoutExceptionHandling()
-            ->patch('/colleges/'. $college->id, [
+            ->patch(route('staff.colleges.update', $college), [
                 'programmes' => $new_programme_ids,
             ])
-            ->assertRedirect('/colleges')
+            ->assertRedirect()
             ->assertSessionHasNoErrors()
             ->assertSessionHasFlash('success', 'College updated successfully');
 
@@ -188,10 +188,10 @@ class UpdateCollegeTest extends TestCase
 
         $college = create(College::class);
 
-        $response = $this->patch('/colleges/'.$college->id, [
+        $response = $this->patch(route('staff.colleges.update', $college), [
             'code' => $college->code,
             'name' => $newName = 'New college'
-        ])->assertRedirect('/colleges')
+        ])->assertRedirect()
         ->assertSessionHasNoErrors()
         ->assertSessionHasFlash('success', 'College updated successfully!');
 
@@ -207,10 +207,10 @@ class UpdateCollegeTest extends TestCase
 
         $college = create(College::class);
 
-        $response = $this->patch('/colleges/'.$college->id, [
+        $response = $this->patch(route('staff.colleges.update', $college), [
             'code' => $new_code = 'new_code123',
             'name' => $college->name
-        ])->assertRedirect('/colleges')
+        ])->assertRedirect()
         ->assertSessionHasNoErrors()
         ->assertSessionHasFlash('success', 'College updated successfully!');
 
@@ -227,7 +227,7 @@ class UpdateCollegeTest extends TestCase
         $college = create(College::class);
 
         $this->withExceptionHandling()
-            ->post('/colleges', [
+            ->patch(route('staff.colleges.update', $college), [
                 'principal_name' => ''
             ])
             ->assertSessionHasErrorsIn('principal_name');

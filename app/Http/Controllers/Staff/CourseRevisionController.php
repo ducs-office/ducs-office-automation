@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Staff;
 
+use App\Http\Controllers\Controller;
 use App\Course;
 use App\CourseRevision;
 use Illuminate\Http\Request;
@@ -57,49 +58,15 @@ class CourseRevisionController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\CourseRevision  $courseRevision
-     * @return \Illuminate\Http\Response
-     */
-    public function show(CourseRevision $courseRevision)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\CourseRevision  $courseRevision
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(CourseRevision $courseRevision)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\CourseRevision  $courseRevision
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, CourseRevision $courseRevision)
-    {
-        //
-    }
-
-    /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\CourseRevision  $courseRevision
+     * @param  \App\CourseRevision  $course_revision
      * @return \Illuminate\Http\Response
      */
-    public function destroy($course, CourseRevision $courseRevision)
+    public function destroy($course, CourseRevision $course_revision)
     {
-        $courseRevision->attachments()->delete();
-        $courseRevision->delete();
+        $course_revision->attachments()->delete();
+        $course_revision->delete();
 
         flash('Course Revision deleted!')->success();
 

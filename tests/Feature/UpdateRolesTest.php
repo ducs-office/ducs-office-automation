@@ -25,11 +25,10 @@ class UpdateRolesTest extends TestCase
         $role->givePermissionTo([$firstPermission, $secondPermission]);
 
         $this->withoutExceptionHandling()
-            ->from('/roles')
-            ->patch('/roles/' . $role->id, [
+            ->patch(route('staff.roles.update', $role), [
                 'name' => 'existing role updated',
                 'permissions' => [$firstPermission->id, $thirdPermission->id]
-            ])->assertRedirect('/roles')
+            ])->assertRedirect()
             ->assertSessionHasFlash('success', 'Role updated');
 
         tap($role->fresh(), function ($role) use (

@@ -2,7 +2,7 @@
     <template v-slot="{ data }">
         <div class="p-6">
             <h2 class="text-lg font-bold mb-8">Update College Teacher</h2>
-            <form :action="route('teachers.update', data('Teacher', ''))" method="POST">
+            <form :action="route('staff.teachers.update', data('Teacher', ''))" method="POST">
                 @csrf_token @method('PATCH')
                 <div class="mb-2">
                     <label for="first_name" class="w-full form-label mb-1">

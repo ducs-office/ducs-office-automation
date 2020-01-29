@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Staff;
 
 use Illuminate\Http\Request;
 
@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Cache;
 // use lluminate\Contracts\Routing\ResponseFactory;
 use App\LetterReminder;
+use App\Http\Controllers\Controller;
 
 class RemindersController extends Controller
 {

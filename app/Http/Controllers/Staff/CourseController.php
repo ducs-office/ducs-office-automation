@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Staff;
 
+use App\Http\Controllers\Controller;
 use App\Programme;
 use App\Course;
 use Illuminate\Http\Request;
@@ -72,7 +73,7 @@ class CourseController extends Controller
 
         flash('Course created successfully!', 'success');
 
-        return redirect('/courses');
+        return redirect(route('staff.courses.index'));
     }
 
     /**
@@ -115,7 +116,7 @@ class CourseController extends Controller
 
         flash('Course updated successfully!', 'success');
 
-        return redirect('/courses');
+        return redirect(route('staff.courses.index'));
     }
 
     /**
@@ -130,6 +131,6 @@ class CourseController extends Controller
 
         flash('Course deleted successfully!', 'success');
 
-        return redirect('/courses');
+        return redirect(route('staff.courses.index'));
     }
 }

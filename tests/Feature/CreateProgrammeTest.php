@@ -5,7 +5,6 @@ namespace Tests\Feature;
 use App\Programme;
 use App\Course;
 use App\User;
-// use Dotenv\Exception\ValidationException;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -20,7 +19,7 @@ class CreateProgrammeTest extends TestCase
     {
         $this->signIn();
         $this->withoutExceptionHandling();
-        $this->post('/programmes', [
+        $this->post(route('staff.programmes.store'), [
             'code' => 'MCS',
             'wef' => '2019-08-12',
             'name' => 'M.Sc. Computer Science',
@@ -30,7 +29,7 @@ class CreateProgrammeTest extends TestCase
                 [create(Course::class)->id],
                 [create(Course::class)->id]
             ]
-        ])->assertRedirect('/programmes')
+        ])->assertRedirect()
         ->assertSessionHasFlash('success', 'Programme created successfully');
 
         $this->assertEquals(1, Programme::count());
@@ -47,10 +46,10 @@ class CreateProgrammeTest extends TestCase
 
         $programmeRevision = $programme->revisions()->create(['revised_at' => $programme->wef]);
         $programmeRevision->courses()->attach($assignedCourse, ['semester' => 1]);
-        
+
         try {
             $this->withoutExceptionHandling()
-                ->post('/programmes', [
+                ->post(route('staff.programmes.store'), [
                     'code' => 'MCS',
                     'wef' => '2020-01-01',
                     'name' => 'M.C.A. Computer Science',
@@ -64,13 +63,13 @@ class CreateProgrammeTest extends TestCase
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('semester_courses.0.0', $e->errors());
         }
-        
+
         $this->assertEquals(1, Programme::count());
 
         $anotherUnassignedCourse = create(Course::class);
 
         $this->withoutExceptionHandling()
-            ->post('/programmes', [
+            ->post(route('staff.programmes.store'), [
                 'code' => 'MCS',
                 'wef' => '2020-01-01',
                 'name' => 'M.C.A. Computer Science',
@@ -80,7 +79,7 @@ class CreateProgrammeTest extends TestCase
                     [$anotherUnassignedCourse->id],
                     [$unassignedCourse->id]
                 ],
-            ])->assertRedirect('/programmes')
+            ])->assertRedirect()
             ->assertSessionHasFlash('success', 'Programme created successfully');
 
         $this->assertEquals(2, Programme::count());
@@ -92,7 +91,7 @@ class CreateProgrammeTest extends TestCase
         $this->signIn();
 
         try {
-            $this->withoutExceptionHandling()->post('/programmes', [
+            $this->withoutExceptionHandling()->post(route('staff.programmes.store'), [
                 'code' => 'MCS',
                 'wef' => '2020-01-01',
                 'name' => 'M.C.A. Computer Science',
@@ -114,7 +113,7 @@ class CreateProgrammeTest extends TestCase
 
         try {
             $this->withoutExceptionHandling()
-                ->post('/programmes', [
+                ->post(route('staff.programmes.store'), [
                 'code' => 'MCS',
                 'wef' => '2020-01-01',
                 'name' => 'M.C.A. Computer Science',

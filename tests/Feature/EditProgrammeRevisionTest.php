@@ -28,7 +28,10 @@ class EditprogrammeRevision extends TestCase
         }
 
         $this->withoutExceptionHandling()
-            ->get("/programmes/$programme->id/revision/$revision->id/edit")
+            ->get(route('staff.programmes.revisions.edit', [
+                'programme' => $programme,
+                'programme_revision' => $revision,
+            ]))
             ->assertSuccessful()
             ->assertViewIs('staff.programmes.revisions.edit')
             ->assertViewHas('semester_courses')
@@ -45,7 +48,10 @@ class EditprogrammeRevision extends TestCase
         $revision = create(ProgrammeRevision::class, 1, ['revised_at' => $programme->wef, 'programme_id' => $programme->id]);
 
         $this->withoutExceptionHandling()
-            ->get("/programmes/$programme->id/revision/$revision->id/edit");
+            ->get(route('staff.programmes.revisions.edit', [
+                'programme' => $programme,
+                'programme_revision' => $revision,
+            ]));
     }
 
     /** @test */
@@ -60,7 +66,10 @@ class EditprogrammeRevision extends TestCase
         $revision2 = create(ProgrammeRevision::class, 1, ['revised_at' => $programme2->wef, 'programme_id' => $programme2->id]);
 
         $this->withoutExceptionHandling()
-            ->get("/programmes/$programme1->id/revision/$revision2->id/edit")
-            ->assertRedirect('/programmes');
+            ->get(route('staff.programmes.revisions.edit', [
+                'programme' => $programme1,
+                'programme_revision' => $revision2,
+            ]))
+            ->assertRedirect();
     }
 }

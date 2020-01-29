@@ -33,7 +33,7 @@
                     <div class="leading-none my-4">
                         <div class="flex items-center mb-1">
                             <h5 class="font-medium">Latest Revision w.e.f <strong>{{ $latestRevision->revised_at->format('M, Y') }}</strong></h5>
-                            <form method="POST" action="{{ route('courses.revisions.destroy', [
+                            <form method="POST" action="{{ route('staff.courses.revisions.destroy', [
                                 'course' => $course,
                                 'courseRevision' => $latestRevision
                             ]) }}" class="ml-2">
@@ -46,12 +46,12 @@
                         <div class="flex flex-wrap -mx-2 -my-1">
                             @foreach ($latestRevision->attachments as $attachment)
                             <div class="inline-flex items-center p-2 rounded border hover:bg-gray-300 text-gray-600 mx-2 my-1">
-                                <a href="{{ route('attachments.show', $attachment) }}" target="__blank" class="inline-flex items-center mr-1">
+                                <a href="{{ route('staff.attachments.show', $attachment) }}" target="__blank" class="inline-flex items-center mr-1">
                                     <feather-icon name="paperclip" class="h-4 mr-2" stroke-width="2">View Attachment</feather-icon>
                                     <span>{{ $attachment->original_name }}</span>
                                 </a>
                                 @can('delete', $attachment)
-                                <button type="submit" form="remove-attachment" formaction="{{ route('attachments.destroy', $attachment) }}"
+                                <button type="submit" form="remove-attachment" formaction="{{ route('staff.attachments.destroy', $attachment) }}"
                                     class="p-1 rounded hover:bg-red-500 hover:text-white">
                                     <feather-icon name="x" class="h-4" stroke-width="2">Delete Attachment</feather-icon>
                                 </button>
@@ -65,7 +65,7 @@
                         <summary class="p-2 bg-gray-200 cursor-pointer outline-none">
                             <span class="mr-2">Add New Revision</span>
                         </summary>
-                        <form action="{{ route('courses.revisions.store', $course) }}"
+                        <form action="{{ route('staff.courses.revisions.store', $course) }}"
                             method="POST" class="px-4"
                             enctype="multipart/form-data">
                             @csrf_token
@@ -105,7 +105,7 @@
                             <li>
                                 <div class="flex items-center mb-1">
                                     <h5 class="font-medium">Revision w.e.f <strong>{{ $courseRevision->revised_at->format('M, Y') }}</strong></h5>
-                                    <form method="POST" action="{{ route('courses.revisions.destroy', compact('course', 'courseRevision')) }}"
+                                    <form method="POST" action="{{ route('staff.courses.revisions.destroy', compact('course', 'courseRevision')) }}"
                                         class="ml-2">
                                         @csrf_token @method('DELETE')
                                         <button type="submit" class="p-2 text-gray-700 hover:text-red-600 hover:bg-gray-300 rounded">
@@ -116,12 +116,12 @@
                                 <div class="flex flex-wrap -mx-2">
                                     @foreach ($courseRevision->attachments as $attachment)
                                         <div class="inline-flex items-center p-2 rounded border hover:bg-gray-300 text-gray-600 mx-2 my-1">
-                                            <a href="{{ route('attachments.show', $attachment) }}" target="__blank" class="inline-flex items-center mr-1">
+                                            <a href="{{ route('staff.attachments.show', $attachment) }}" target="__blank" class="inline-flex items-center mr-1">
                                                 <feather-icon name="paperclip" class="h-4 mr-2" stroke-width="2">View Attachment</feather-icon>
                                                 <span>{{ $attachment->original_name }}</span>
                                             </a>
                                             @can('delete', $attachment)
-                                            <button type="submit" form="remove-attachment" formaction="{{ route('attachments.destroy', $attachment) }}"
+                                            <button type="submit" form="remove-attachment" formaction="{{ route('staff.attachments.destroy', $attachment) }}"
                                                 class="p-1 rounded hover:bg-red-500 hover:text-white">
                                                 <feather-icon name="x" class="h-4" stroke-width="2">Delete Attachment</feather-icon>
                                             </button>
@@ -145,7 +145,7 @@
                         </button>
                         @endcan
                         @can('delete', App\Course::class)
-                        <form action="{{ route('courses.destroy', $course) }}" method="POST"
+                        <form action="{{ route('staff.courses.destroy', $course) }}" method="POST"
                             onsubmit="return confirm('Do you really want to delete course?');">
                             @csrf_token
                             @method('DELETE')

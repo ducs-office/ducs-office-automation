@@ -13,87 +13,92 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-
-Route::get('/', function () {
-    return view('staff.dashboard');
-})->middleware('auth')->name('dashboard');
-
-Route::get('/teachers/profile', 'TeacherProfileController@index')->middleware('auth:teachers')->name('teachers.dashboard');
-
 Route::get('/login', 'Auth\LoginController@showLoginForm')->middleware(['guest', 'guest:teachers'])->name('login');
 Route::post('/login', 'Auth\LoginController@login')->middleware(['guest', 'guest:teachers'])->name('login');
 Route::post('/logout', 'Auth\LoginController@logout')->middleware('auth:web,teachers')->name('logout');
 
-Route::post('/account/change_password', 'AccountController@change_password')->middleware('auth')->name('account.change_password');
+Route::get('/teachers/profile', 'TeacherProfileController@index')->middleware('auth:teachers')->name('teachers.dashboard');
 
-Route::get('/outgoing-letters/create', 'OutgoingLettersController@create')->middleware('auth')->name('outgoing_letters.create');
-Route::post('/outgoing-letters', 'OutgoingLettersController@store')->middleware('auth')->name('outgoing_letters.store');
-Route::get('/outgoing-letters/{outgoing_letter}/edit', 'OutgoingLettersController@edit')->middleware('auth')->name('outgoing_letters.edit');
-Route::get('/outgoing-letters', 'OutgoingLettersController@index')->middleware('auth')->name('outgoing_letters.index');
-Route::patch('/outgoing-letters/{outgoing_letter}', 'OutgoingLettersController@update')->middleware('auth')->name('outgoing_letters.update');
-Route::delete('/outgoing-letters/{outgoing_letter}', 'OutgoingLettersController@destroy')->middleware('auth')->name('outgoing_letters.destroy');
+Route::middleware('auth:web')
+    ->prefix('/staff')
+    ->namespace('Staff')
+    ->as('staff.')
+    ->group(function () {
+        Route::get('/', function () {
+            return view('staff.dashboard');
+        })->name('dashboard');
 
-Route::get('/incoming-letters/create', 'IncomingLettersController@create')->middleware('auth')->name('incoming_letters.create');
-Route::post('/incoming-letters', 'IncomingLettersController@store')->middleware('auth')->name('incoming_letters.store');
-Route::delete('/incoming-letters/{incoming_letter}', 'IncomingLettersController@destroy')->middleware('auth')->name('incoming_letters.destroy');
-Route::get('/incoming-letters', 'IncomingLettersController@index')->middleware('auth')->name('incoming_letters.index');
-Route::get('/incoming-letters/{incoming_letter}/edit', 'IncomingLettersController@edit')->middleware('auth')->name('incoming_letters.edit');
-Route::patch('/incoming-letters/{incoming_letter}', 'IncomingLettersController@update')->middleware('auth')->name('incoming_letters.update');
+        Route::post('/account/change_password', 'AccountController@change_password')->name('account.change_password');
 
-Route::post('/outgoing-letters/{outgoing_letter}/remarks', 'OutgoingLettersController@storeRemark')->middleware('auth')->name('outgoing_letters.remarks.store');
-Route::post('/incoming-letters/{incoming_letter}/remarks', 'IncomingLettersController@storeRemark')->middleware('auth')->name('incoming_letters.remarks.store');
+        Route::get('/outgoing-letters/create', 'OutgoingLettersController@create')->name('outgoing_letters.create');
+        Route::post('/outgoing-letters', 'OutgoingLettersController@store')->name('outgoing_letters.store');
+        Route::get('/outgoing-letters/{outgoing_letter}/edit', 'OutgoingLettersController@edit')->name('outgoing_letters.edit');
+        Route::get('/outgoing-letters', 'OutgoingLettersController@index')->name('outgoing_letters.index');
+        Route::patch('/outgoing-letters/{outgoing_letter}', 'OutgoingLettersController@update')->name('outgoing_letters.update');
+        Route::delete('/outgoing-letters/{outgoing_letter}', 'OutgoingLettersController@destroy')->name('outgoing_letters.destroy');
 
-Route::post('/outgoing_letters/{letter}/reminders', 'OutgoingLetterRemindersController@store')->middleware('auth')->name('outgoing_letters.reminders.store');
+        Route::get('/incoming-letters/create', 'IncomingLettersController@create')->name('incoming_letters.create');
+        Route::post('/incoming-letters', 'IncomingLettersController@store')->name('incoming_letters.store');
+        Route::delete('/incoming-letters/{incoming_letter}', 'IncomingLettersController@destroy')->name('incoming_letters.destroy');
+        Route::get('/incoming-letters', 'IncomingLettersController@index')->name('incoming_letters.index');
+        Route::get('/incoming-letters/{incoming_letter}/edit', 'IncomingLettersController@edit')->name('incoming_letters.edit');
+        Route::patch('/incoming-letters/{incoming_letter}', 'IncomingLettersController@update')->name('incoming_letters.update');
 
-Route::patch('/remarks/{remark}', 'RemarksController@update')->middleware('auth')->name('remarks.update');
-Route::delete('/remarks/{remark}', 'RemarksController@destroy')->middleware('auth')->name('remarks.destroy');
+        Route::post('/outgoing-letters/{outgoing_letter}/remarks', 'OutgoingLettersController@storeRemark')->name('outgoing_letters.remarks.store');
+        Route::post('/incoming-letters/{incoming_letter}/remarks', 'IncomingLettersController@storeRemark')->name('incoming_letters.remarks.store');
 
-Route::delete('/reminders/{reminder}', 'RemindersController@destroy')->middleware('auth')->name('reminders.destroy');
-Route::patch('/reminders/{reminder}', 'RemindersController@update')->middleware('auth')->name('reminders.update');
+        Route::post('/outgoing_letters/{letter}/reminders', 'OutgoingLetterRemindersController@store')->name('outgoing_letters.reminders.store');
+
+        Route::patch('/remarks/{remark}', 'RemarksController@update')->name('remarks.update');
+        Route::delete('/remarks/{remark}', 'RemarksController@destroy')->name('remarks.destroy');
+
+        Route::delete('/reminders/{reminder}', 'RemindersController@destroy')->name('reminders.destroy');
+        Route::patch('/reminders/{reminder}', 'RemindersController@update')->name('reminders.update');
 
 
-Route::get('/programmes', 'ProgrammesController@index')->middleware('auth')->name('programmes.index');
-Route::get('/programmes/create', 'ProgrammesController@create')->middleware('auth')->name('programmes.create');
-Route::post('/programmes', 'ProgrammesController@store')->middleware('auth')->name('programmes.store');
-Route::get('/programmes/{programme}/edit', 'ProgrammesController@edit')->middleware('auth')->name('programmes.edit');
-Route::patch('/programmes/{programme}', 'ProgrammesController@update')->middleware('auth')->name('programmes.update');
-Route::delete('/programmes/{programme}', 'ProgrammesController@destroy')->middleware('auth')->name('programmes.destroy');
+        Route::get('/programmes', 'ProgrammesController@index')->name('programmes.index');
+        Route::get('/programmes/create', 'ProgrammesController@create')->name('programmes.create');
+        Route::post('/programmes', 'ProgrammesController@store')->name('programmes.store');
+        Route::get('/programmes/{programme}/edit', 'ProgrammesController@edit')->name('programmes.edit');
+        Route::patch('/programmes/{programme}', 'ProgrammesController@update')->name('programmes.update');
+        Route::delete('/programmes/{programme}', 'ProgrammesController@destroy')->name('programmes.destroy');
 
-Route::get('/programme/{programme}/revision', 'ProgrammeRevisionController@index')->middleware('auth')->name('programme_revision.show');
-Route::get('/programmes/{programme}/revision/create', 'ProgrammeRevisionController@create')->middleware('auth')->name('programme_revision.create');
-Route::post('/programmes/{programme}/revision', 'ProgrammeRevisionController@store')->middleware('auth')->name('programme_revision.store');
-Route::get('/programmes/{programme}/revision/{programme_revision}/edit', 'ProgrammeRevisionController@edit')->middleware('auth')->name('programme_revision.edit');
-Route::patch('/programmes/{programme}/revision/{programme_revision}', 'ProgrammeRevisionController@update')->middleware('auth')->name('programme_revision.update');
-Route::delete('/programme/{programme}/revision/{programmeRevision}', 'ProgrammeRevisionController@destroy')->middleware('auth')->name('programme_revision.destroy');
+        Route::get('/programme/{programme}/revisions', 'ProgrammeRevisionController@index')->name('programmes.revisions.show');
+        Route::get('/programmes/{programme}/revisions/create', 'ProgrammeRevisionController@create')->name('programmes.revisions.create');
+        Route::post('/programmes/{programme}/revisions', 'ProgrammeRevisionController@store')->name('programmes.revisions.store');
+        Route::get('/programmes/{programme}/revisions/{programme_revision}/edit', 'ProgrammeRevisionController@edit')->name('programmes.revisions.edit');
+        Route::patch('/programmes/{programme}/revisions/{programme_revision}', 'ProgrammeRevisionController@update')->name('programmes.revisions.update');
+        Route::delete('/programme/{programme}/revisions/{programmeRevision}', 'ProgrammeRevisionController@destroy')->name('programmes.revisions.destroy');
 
-Route::get('/courses', 'CourseController@index')->middleware('auth')->name('courses.index');
-Route::post('/courses', 'CourseController@store')->middleware('auth')->name('courses.store');
-Route::patch('/courses/{course}', 'CourseController@update')->middleware('auth')->name('courses.update');
-Route::delete('/courses/{course}', 'CourseController@destroy')->middleware('auth')->name('courses.destroy');
-Route::post('/courses/{course}/revisions', 'CourseRevisionController@store')->middleware('auth')->name('courses.revisions.store');
-Route::delete('/courses/{course}/revisions/{courseRevision}', 'CourseRevisionController@destroy')->middleware('auth')->name('courses.revisions.destroy');
+        Route::get('/courses', 'CourseController@index')->name('courses.index');
+        Route::post('/courses', 'CourseController@store')->name('courses.store');
+        Route::patch('/courses/{course}', 'CourseController@update')->name('courses.update');
+        Route::delete('/courses/{course}', 'CourseController@destroy')->name('courses.destroy');
+        Route::post('/courses/{course}/revisions', 'CourseRevisionController@store')->name('courses.revisions.store');
+        Route::delete('/courses/{course}/revisions/{course_revision}', 'CourseRevisionController@destroy')->name('courses.revisions.destroy');
 
-Route::get('/colleges', 'CollegeController@index')->middleware('auth')->name('colleges.index');
-Route::post('/colleges', 'CollegeController@store')->middleware('auth')->name('colleges.store');
-Route::get('/colleges/create', 'CollegeController@create')->middleware('auth')->name('colleges.create');
-Route::get('/colleges/{college}/edit', 'CollegeController@edit')->middleware('auth')->name('colleges.edit');
-Route::patch('/colleges/{college}', 'CollegeController@update')->middleware('auth')->name('colleges.update');
-Route::delete('/colleges/{college}', 'CollegeController@destroy')->middleware('auth')->name('colleges.destroy');
+        Route::get('/colleges', 'CollegeController@index')->name('colleges.index');
+        Route::post('/colleges', 'CollegeController@store')->name('colleges.store');
+        Route::get('/colleges/create', 'CollegeController@create')->name('colleges.create');
+        Route::get('/colleges/{college}/edit', 'CollegeController@edit')->name('colleges.edit');
+        Route::patch('/colleges/{college}', 'CollegeController@update')->name('colleges.update');
+        Route::delete('/colleges/{college}', 'CollegeController@destroy')->name('colleges.destroy');
 
-Route::get('/users', 'UserController@index')->middleware('auth')->name('users.index');
-Route::post('/users', 'UserController@store')->middleware('auth')->name('users.store');
-Route::patch('/users/{user}', 'UserController@update')->middleware('auth')->name('users.update');
-Route::delete('/users/{user}', 'UserController@destroy')->middleware('auth')->name('users.destroy');
+        Route::get('/users', 'UserController@index')->name('users.index');
+        Route::post('/users', 'UserController@store')->name('users.store');
+        Route::patch('/users/{user}', 'UserController@update')->name('users.update');
+        Route::delete('/users/{user}', 'UserController@destroy')->name('users.destroy');
 
-Route::get('/roles', 'RoleController@index')->middleware('auth')->name('roles.index');
-Route::post('/roles', 'RoleController@store')->middleware('auth')->name('roles.store');
-Route::patch('/roles/{role}', 'RoleController@update')->middleware('auth')->name('roles.update');
-Route::delete('/roles/{role}', 'RoleController@destroy')->middleware('auth')->name('roles.destroy');
+        Route::get('/roles', 'RoleController@index')->name('roles.index');
+        Route::post('/roles', 'RoleController@store')->name('roles.store');
+        Route::patch('/roles/{role}', 'RoleController@update')->name('roles.update');
+        Route::delete('/roles/{role}', 'RoleController@destroy')->name('roles.destroy');
 
-Route::get('/attachments/{attachment}', 'AttachmentController@show')->middleware('auth')->name('attachments.show');
-Route::delete('/attachments/{attachment}', 'AttachmentController@destroy')->middleware('auth')->name('attachments.destroy');
+        Route::get('/attachments/{attachment}', 'AttachmentController@show')->name('attachments.show');
+        Route::delete('/attachments/{attachment}', 'AttachmentController@destroy')->name('attachments.destroy');
 
-Route::get('/teachers', 'TeacherController@index')->middleware('auth')->name('teachers.index');
-Route::post('/teachers', 'TeacherController@store')->middleware('auth')->name('teachers.store');
-Route::patch('/teachers/{Teacher}', 'TeacherController@update')->middleware('auth')->name('teachers.update');
-Route::delete('/teachers/{Teacher}', 'TeacherController@destroy')->middleware('auth')->name('teachers.destroy');
+        Route::get('/teachers', 'TeacherController@index')->name('teachers.index');
+        Route::post('/teachers', 'TeacherController@store')->name('teachers.store');
+        Route::patch('/teachers/{Teacher}', 'TeacherController@update')->name('teachers.update');
+        Route::delete('/teachers/{Teacher}', 'TeacherController@destroy')->name('teachers.destroy');
+    });

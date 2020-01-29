@@ -18,9 +18,9 @@ class DeleteIncomingLettersTest extends TestCase
         $letter = create(IncomingLetter::class);
 
         $this->withExceptionHandling()
-            ->delete("/incoming-letters/$letter->id")
+            ->delete(route('staff.incoming_letters.destroy', $letter))
             ->assertRedirect('/login');
-        
+
         $this->assertEquals(IncomingLetter::count(), 1);
     }
 
@@ -32,9 +32,9 @@ class DeleteIncomingLettersTest extends TestCase
         $letter = create(IncomingLetter::class, 1, ['creator_id' => auth()->id()]);
 
         $this->withoutExceptionHandling()
-         ->delete("/incoming-letters/$letter->id")
-         ->assertRedirect('/incoming-letters');
-         
+         ->delete(route('staff.incoming_letters.destroy', $letter))
+         ->assertRedirect();
+
         $this->assertEquals(IncomingLetter::count(), 0);
     }
 }

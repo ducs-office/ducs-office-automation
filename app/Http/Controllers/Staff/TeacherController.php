@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Staff;
 
 use App\Teacher;
 use Illuminate\Http\Request;
@@ -8,6 +8,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use App\Mail\UserRegisteredMail;
+use App\Http\Controllers\Controller;
 
 class TeacherController extends Controller
 {
@@ -35,7 +36,7 @@ class TeacherController extends Controller
 
         flash('College Teacher created successfully!')->success();
 
-        return redirect('/teachers');
+        return redirect(route('staff.teachers.index'));
     }
 
     public function update(Request $request, Teacher $Teacher)

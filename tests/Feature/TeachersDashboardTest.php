@@ -17,7 +17,7 @@ class TeachersDashboardTest extends TestCase
         $this->signInTeacher($teacher = create(Teacher::class));
 
         $response = $this->withoutExceptionHandling()
-            ->get('/teachers/profile')
+            ->get(route('teachers.dashboard'))
             ->assertSuccessful()
             ->assertSee($teacher->name);
     }

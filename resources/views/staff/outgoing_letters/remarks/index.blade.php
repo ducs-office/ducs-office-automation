@@ -6,7 +6,7 @@
     @endif
     <div class="border-b px-6 py-2">
         @can('create', App\Remark::class)
-        <form action="{{ route('outgoing_letters.remarks.store', $letter) }}" method="POST">
+        <form action="{{ route('staff.outgoing_letters.remarks.store', $letter) }}" method="POST">
             @csrf_token
             <div class="flex items-start">
                 <img src="https://gravatar.com/avatar/{{ md5(strtolower(trim(Auth::user()->email))) }}?s=48&d=identicon"
@@ -52,7 +52,7 @@
             </button>
             @endcan
             @can('delete', $remark)
-            <form action="{{ route('remarks.destroy', $remark) }}" method="POST"
+            <form action="{{ route('staff.remarks.destroy', $remark) }}" method="POST"
                 onsubmit="return confirm('Do you really want to delete remark?');">
                 @csrf_token @method('DELETE')
                 <button class="p-1 hover:bg-gray-200 text-red-700 rounded">

@@ -26,7 +26,7 @@ class StoreOutgoingLettersTest extends TestCase
     public function guest_cannot_store_outgoing_letters()
     {
         $this->withExceptionHandling()
-            ->post('/outgoing-letters')
+            ->post(route('staff.outgoing_letters.store'))
             ->assertRedirect('/login');
 
         $this->assertEquals(0, OutgoingLetter::count());
@@ -51,8 +51,8 @@ class StoreOutgoingLettersTest extends TestCase
         ];
 
         $this->withoutExceptionHandling()
-            ->post('/outgoing-letters', $outgoing_letter)
-            ->assertRedirect('/outgoing-letters');
+            ->post(route('staff.outgoing_letters.store'), $outgoing_letter)
+            ->assertRedirect();
 
         $this->assertEquals(1, OutgoingLetter::count());
 
@@ -82,7 +82,7 @@ class StoreOutgoingLettersTest extends TestCase
             ];
 
             $this->withoutExceptionHandling()
-                ->post('/outgoing-letters', $letter);
+                ->post(route('staff.outgoing_letters.store'), $letter);
 
             $this->fail('Empty date field was not validated.');
         } catch (ValidationException $e) {
@@ -123,7 +123,7 @@ class StoreOutgoingLettersTest extends TestCase
             try {
                 $letter['date'] = $date;
                 $this->withoutExceptionHandling()
-                    ->post('/outgoing-letters', $letter);
+                    ->post(route('staff.outgoing_letters.store'), $letter);
                 $this->fail("Invalid date '{$date}' was not validated");
             } catch (ValidationException $e) {
                 $this->assertArrayHasKey('date', $e->errors());
@@ -134,8 +134,8 @@ class StoreOutgoingLettersTest extends TestCase
         foreach ($validDates as $date) {
             $letter['date'] = $date;
             $this->withoutExceptionHandling()
-                ->post('/outgoing-letters', $letter)
-                ->assertRedirect('/outgoing-letters');
+                ->post(route('staff.outgoing_letters.store'), $letter)
+                ->assertRedirect();
             $this->assertEquals(1, OutgoingLetter::count());
             OutgoingLetter::truncate();
         }
@@ -158,7 +158,7 @@ class StoreOutgoingLettersTest extends TestCase
 
         try {
             $this->withoutExceptionHandling()
-                ->post('/outgoing-letters', $letter);
+                ->post(route('staff.outgoing_letters.store'), $letter);
 
             $this->fail("Future date '{$letter['date']}' was not validated");
         } catch (ValidationException $e) {
@@ -171,8 +171,8 @@ class StoreOutgoingLettersTest extends TestCase
         $letter['date'] = now()->subMonth(1)->format('Y-m-d');
 
         $this->withoutExceptionHandling()
-            ->post('/outgoing-letters', $letter)
-            ->assertRedirect('/outgoing-letters');
+            ->post(route('staff.outgoing_letters.store'), $letter)
+            ->assertRedirect();
 
         $this->assertEquals(1, OutgoingLetter::count());
     }
@@ -194,7 +194,7 @@ class StoreOutgoingLettersTest extends TestCase
             ];
 
             $this->withoutExceptionHandling()
-                ->post('/outgoing-letters', $letter);
+                ->post(route('staff.outgoing_letters.store'), $letter);
 
             $this->fail('Empty \'type\' field was not validated.');
         } catch (ValidationException $e) {
@@ -222,7 +222,7 @@ class StoreOutgoingLettersTest extends TestCase
             ];
 
             $this->withoutExceptionHandling()
-                ->post('/outgoing-letters', $letter);
+                ->post(route('staff.outgoing_letters.store'), $letter);
 
             $this->fail('Empty \'subject\' field was not validated.');
         } catch (ValidationException $e) {
@@ -248,7 +248,7 @@ class StoreOutgoingLettersTest extends TestCase
             ];
 
             $this->withoutExceptionHandling()
-                ->post('/outgoing-letters', $letter);
+                ->post(route('staff.outgoing_letters.store'), $letter);
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('subject', $e->errors());
         }
@@ -272,7 +272,7 @@ class StoreOutgoingLettersTest extends TestCase
             ];
 
             $this->withoutExceptionHandling()
-                ->post('/outgoing-letters', $letter);
+                ->post(route('staff.outgoing_letters.store'), $letter);
 
             $this->fail('Empty \'recipient\' field was not validated.');
         } catch (ValidationException $e) {
@@ -299,7 +299,7 @@ class StoreOutgoingLettersTest extends TestCase
             ];
 
             $this->withoutExceptionHandling()
-                ->post('/outgoing-letters', $letter);
+                ->post(route('staff.outgoing_letters.store'), $letter);
 
             $this->fail('Empty \'sender_id\' field was not validated.');
         } catch (ValidationException $e) {
@@ -326,7 +326,7 @@ class StoreOutgoingLettersTest extends TestCase
             ];
 
             $this->withoutExceptionHandling()
-                ->post('/outgoing-letters', $letter);
+                ->post(route('staff.outgoing_letters.store'), $letter);
 
             $this->fail('Failed to validate \'sender_id\' is a valid existing user id');
         } catch (ValidationException $e) {
@@ -354,8 +354,8 @@ class StoreOutgoingLettersTest extends TestCase
         ];
 
         $this->withoutExceptionHandling()
-            ->post('/outgoing-letters', $letter)
-            ->assertRedirect('/outgoing-letters');
+            ->post(route('staff.outgoing_letters.store'), $letter)
+            ->assertRedirect();
 
         $this->assertEquals(1, OutgoingLetter::count());
     }
@@ -376,8 +376,8 @@ class StoreOutgoingLettersTest extends TestCase
         ];
 
         $this->withoutExceptionHandling()
-            ->post('/outgoing-letters', $letter)
-            ->assertRedirect('/outgoing-letters');
+            ->post(route('staff.outgoing_letters.store'), $letter)
+            ->assertRedirect();
 
         $this->assertEquals(1, OutgoingLetter::count());
     }
@@ -399,7 +399,7 @@ class StoreOutgoingLettersTest extends TestCase
             ];
 
             $this->withoutExceptionHandling()
-                        ->post('/outgoing-letters', $letter);
+                        ->post(route('staff.outgoing_letters.store'), $letter);
 
             $this->fail('Failed to validate \'amount\' cannot be a string value');
         } catch (ValidationException $e) {

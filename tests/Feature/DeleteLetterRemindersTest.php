@@ -27,7 +27,7 @@ class DeleteLetterRemindersTest extends TestCase
         $reminder = create(LetterReminder::class);
 
         $this->withExceptionHandling()
-            ->delete("/reminders/{$reminder->id}")
+            ->delete(route('staff.reminders.destroy', $reminder))
             ->assertRedirect('/login');
 
         $this->assertEquals(1, LetterReminder::count());
@@ -47,7 +47,7 @@ class DeleteLetterRemindersTest extends TestCase
         ]);
 
         $this->withoutExceptionHandling()
-            ->delete("/reminders/$reminder->id");
+            ->delete(route('staff.reminders.destroy', $reminder));
 
         Storage::assertMissing($reminder->scan);
         Storage::assertMissing($reminder->pdf);

@@ -25,7 +25,7 @@ class EditOutgoingLettersTest extends TestCase
         ]);
 
         $this->withoutExceptionHandling()
-            ->get("/outgoing-letters/$letter->id/edit")
+            ->get(route('staff.outgoing_letters.edit', $letter))
             ->assertSuccessful()
             ->assertViewIs('staff.outgoing_letters.edit')
             ->assertViewHas('outgoing_letter');
@@ -39,7 +39,7 @@ class EditOutgoingLettersTest extends TestCase
         $letter = create(OutgoingLetter::class);
 
         $this->withoutExceptionHandling()
-            ->get("/outgoing-letters/$letter->id/edit");
+            ->get(route('staff.outgoing_letters.edit', $letter));
     }
 
     /** @test */
@@ -58,11 +58,11 @@ class EditOutgoingLettersTest extends TestCase
         $this->signIn($user, $role->name);
 
         $this->withExceptionHandling()
-            ->get('/outgoing-letters/' . $letter->id . '/edit')
+            ->get(route('staff.outgoing_letters.edit', $letter))
             ->assertForbidden();
 
         $this->withExceptionHandling()
-            ->patch('/outgoing-letters/' . $letter->id, ['subject' => 'new subject'])
+            ->patch(route('staff.outgoing_letters.update', $letter), ['subject' => 'new subject'])
             ->assertForbidden();
 
         $this->assertEquals($oldSubject, $letter->fresh()->subject);
@@ -85,11 +85,11 @@ class EditOutgoingLettersTest extends TestCase
         $this->signIn($user, $role->name);
 
         $this->withExceptionHandling()
-            ->get('/outgoing-letters/' . $letter->id . '/edit')
+            ->get(route('staff.outgoing_letters.edit', $letter))
             ->assertForbidden();
 
         $this->withExceptionHandling()
-            ->patch('/outgoing-letters/' . $letter->id, ['subject' => 'new subject'])
+            ->patch(route('staff.outgoing_letters.update', $letter), ['subject' => 'new subject'])
             ->assertForbidden();
 
         $this->assertEquals($oldSubject, $letter->fresh()->subject);

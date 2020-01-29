@@ -24,11 +24,10 @@ class CreateRolesTest extends TestCase
         $anotherPermssion = Permission::create(['name' => 'another permission']);
 
         $this->withoutExceptionHandling()
-            ->from('/roles')
-            ->post('/roles', [
+            ->post(route('staff.roles.store'), [
                 'name' => 'special_role',
                 'permissions' => [$permission->id, $anotherPermssion->id],
-            ])->assertRedirect('/roles')
+            ])->assertRedirect()
             ->assertSessionHasFlash('success', 'Role created successfully!');
 
         $this->assertEquals($countRoles + 1, Role::count());

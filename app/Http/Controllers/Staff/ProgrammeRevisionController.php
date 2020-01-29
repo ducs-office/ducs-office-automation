@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Staff;
 
+use App\Http\Controllers\Controller;
 use App\Programme;
 use App\Course;
 use App\ProgrammeRevision;
@@ -72,7 +73,7 @@ class ProgrammeRevisionController extends Controller
 
         flash("Programme's revision created successfully!", 'success');
 
-        return redirect('/programmes');
+        return redirect(route('staff.programmes.index'));
     }
 
     public function edit(Programme $programme, ProgrammeRevision $programme_revision)
@@ -81,7 +82,7 @@ class ProgrammeRevisionController extends Controller
             $semester_courses = $programme_revision->courses->groupBy('pivot.semester')->map->pluck('id');
             return view('staff.programmes.revisions.edit', compact('programme', 'programme_revision', 'semester_courses'));
         } else {
-            return redirect('/programmes');
+            return redirect(route('staff.programmes.index'));
         }
     }
 
@@ -137,7 +138,7 @@ class ProgrammeRevisionController extends Controller
 
         flash("Programme's revision edited successfully!", 'success');
 
-        return redirect("/programme/$programme->id/revision");
+        return redirect(route('staff.programmes.revisions.show', $programme));
     }
 
     public function destroy(Programme $programme, ProgrammeRevision $programmeRevision)
@@ -146,11 +147,11 @@ class ProgrammeRevisionController extends Controller
 
         if ($programme->revisions->count() == 0) {
             $programme->delete();
-            return redirect("/programmes");
+            return redirect(route('staff.programmes.index'));
         } else {
             $lastRevision = $programme->revisions->max('revised_at');
             $programme->update(['wef' => $lastRevision]);
-            return redirect("/programme/{$programme->id}/revision");
+            return redirect(route('staff.programmes.revisions.show', $programme));
         }
     }
 }

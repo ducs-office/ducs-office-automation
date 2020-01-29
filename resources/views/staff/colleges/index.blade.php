@@ -5,7 +5,7 @@
         <h1 class="page-header mb-0 px-0 mr-4">Colleges</h1>
         @can('create', App\College::class)
         <a class="inline-block btn btn-magenta is-sm shadow-inset"
-            href="{{ route('colleges.create') }}">New</a>
+            href="{{ route('staff.colleges.create') }}">New</a>
         @endcan
     </div>
 
@@ -73,7 +73,7 @@
                     </button>
                     @endcan
                     @can('delete', App\College::class)
-                    <form action="{{ route('colleges.destroy', $college) }}" method="POST"
+                    <form action="{{ route('staff.colleges.destroy', $college) }}" method="POST"
                         onsubmit="return confirm('Do you really want to delete College?');">
                         @csrf_token @method('delete')
                         <button type="submit" class="p-1 hover:text-red-700">

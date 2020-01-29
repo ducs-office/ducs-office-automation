@@ -19,8 +19,11 @@ class DeleteProgrammeRevisionTest extends TestCase
         $revision = $programme->revisions()->create(['revised_at' => now()]);
 
         $this->withExceptionHandling()
-            ->delete("/programme/{$programme->id}/revision/{$revision->id}")
-            ->assertRedirect('/login');
+            ->delete(route('staff.programmes.revisions.destroy', [
+                'programme' => $programme,
+                'programmeRevision' => $revision,
+            ]))
+            ->assertRedirect();
     }
 
     /** @test */
@@ -35,8 +38,11 @@ class DeleteProgrammeRevisionTest extends TestCase
         $revision->courses()->attach($course, ['semester' => 1]);
 
         $this->withExceptionHandling()
-            ->delete("/programme/{$programme->id}/revision/{$revision->id}")
-            ->assertRedirect("/programmes");
+            ->delete(route('staff.programmes.revisions.destroy', [
+                    'programme' => $programme,
+                    'programmeRevision' => $revision
+                ]))
+            ->assertRedirect();
 
         $this->assertEquals(0, $revision->courses->count());
         $this->assertEquals(0, ProgrammeRevision::count());
@@ -60,12 +66,18 @@ class DeleteProgrammeRevisionTest extends TestCase
         }
 
         $this->withExceptionHandling()
-            ->delete("/programme/{$programme->id}/revision/{$revisions[0]->id}")
-            ->assertRedirect("/programme/{$programme->id}/revision");
-        
+            ->delete(route('staff.programmes.revisions.destroy', [
+                'programme' => $programme,
+                'programmeRevision' => $revisions[0],
+            ]))
+            ->assertRedirect();
+
         $this->withExceptionHandling()
-            ->delete("/programme/{$programme->id}/revision/{$revisions[1]->id}")
-            ->assertRedirect("/programmes");
+        ->delete(route('staff.programmes.revisions.destroy', [
+            'programme' => $programme,
+            'programmeRevision' => $revision
+        ]))
+        ->assertRedirect();
 
         $this->assertEquals(0, $revision->courses->count());
         $this->assertEquals(0, ProgrammeRevision::count());

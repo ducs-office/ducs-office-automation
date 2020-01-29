@@ -27,8 +27,8 @@ class UpdateRemarkTest extends TestCase
         $remark = create(Remark::class, 1, ['description'=>'Received by University']);
 
         $this->withExceptionHandling()
-        ->patch("remarks/$remark->id", ['description'=>'Not received by University'])
-        ->assertRedirect('/login');
+        ->patch(route('staff.remarks.update', $remark), ['description'=>'Not received by University'])
+        ->assertRedirect();
 
         $this->assertEquals($remark->description, $remark->fresh()->description);
     }
@@ -44,7 +44,7 @@ class UpdateRemarkTest extends TestCase
         ]);
 
         $this->withoutExceptionHandling()
-            ->patch("remarks/$remark->id", [
+            ->patch(route('staff.remarks.update', $remark), [
                 'description'=> $newDesc = 'Not received by University'
             ]);
 
@@ -65,7 +65,7 @@ class UpdateRemarkTest extends TestCase
 
         try {
             $this->withoutExceptionHandling()
-            ->patch("/remarks/{$remark->id}", $new_remark)
+            ->patch(route('staff.remarks.update', $remark), $new_remark)
             ->assertSuccessful();
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('description', $e->errors());
@@ -88,7 +88,7 @@ class UpdateRemarkTest extends TestCase
 
         try {
             $this->withoutExceptionHandling()
-            ->patch("remarks/$remark->id", $new_remark);
+            ->patch(route('staff.remarks.update', $remark), $new_remark);
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('description', $e->errors());
         }
@@ -110,7 +110,7 @@ class UpdateRemarkTest extends TestCase
 
         try {
             $this->withoutExceptionHandling()
-            ->patch("remarks/$remark->id", $new_remark);
+            ->patch(route('staff.remarks.update', $remark), $new_remark);
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('description', $e->errors());
         }

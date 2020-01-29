@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Staff;
 
 use Auth;
 use App\OutgoingLetter;
 use App\Remark;
 use App\User;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Carbon;
@@ -76,7 +77,7 @@ class OutgoingLettersController extends Controller
             }, $request->file('attachments'))
         );
 
-        return redirect('/outgoing-letters');
+        return redirect(route('staff.outgoing_letters.index'));
     }
 
     public function edit(OutgoingLetter $outgoing_letter)
@@ -118,7 +119,7 @@ class OutgoingLettersController extends Controller
             );
         }
 
-        return redirect('/outgoing-letters');
+        return redirect(route('staff.outgoing_letters.index'));
     }
 
     public function destroy(OutgoingLetter $outgoing_letter)
@@ -129,7 +130,7 @@ class OutgoingLettersController extends Controller
 
         $outgoing_letter->delete();
 
-        return redirect('/outgoing-letters');
+        return redirect(route('staff.outgoing_letters.index'));
     }
 
     public function storeRemark(OutgoingLetter $outgoing_letter)

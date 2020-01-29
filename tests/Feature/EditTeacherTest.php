@@ -19,13 +19,12 @@ class EditTeacherTest extends TestCase
 
         $email = 'abc@xyz.com';
         $teacher = create(Teacher::class, 1, ['email' => $email]);
-    
+
         $this->withoutExceptionHandling()
-            ->from('/teachers')
-            ->patch("/teachers/$teacher->id", [
+            ->patch(route('staff.teachers.update', $teacher), [
                 'email' => $newEmail = 'pqrs@wxy.com'
             ])
-            ->assertRedirect('/teachers')
+            ->assertRedirect()
             ->assertSessionHasFlash('success', 'College teacher updated successfully');
 
         $this->assertEquals($newEmail, $teacher->fresh()->email);
@@ -40,10 +39,10 @@ class EditTeacherTest extends TestCase
         $teacher1 = create(Teacher::class, 1, ['email' => $email1]);
         $email2 = 'email2@two.com';
         $teacher2 = create(Teacher::class, 1, ['email' => $email2]);
-    
+
         try {
             $this->withoutExceptionHandling()
-                ->patch("/teachers/$teacher2->id", [
+                ->patch(route('staff.teachers.update', $teacher1), [
                     'email' => $email1
                 ]);
         } catch (ValidationException $e) {
@@ -60,13 +59,12 @@ class EditTeacherTest extends TestCase
 
         $firstName = 'Bob';
         $teacher = create(Teacher::class, 1, ['first_name' => $firstName]);
-    
+
         $this->withoutExceptionHandling()
-            ->from('/teachers')
-            ->patch("/teachers/$teacher->id", [
+            ->patch(route('staff.teachers.update', $teacher), [
                 'first_name' => $newFirstName = 'Joe'
             ])
-            ->assertRedirect('/teachers')
+            ->assertRedirect()
             ->assertSessionHasFlash('success', 'College teacher updated successfully');
 
         $this->assertEquals($newFirstName, $teacher->fresh()->first_name);
@@ -79,13 +77,12 @@ class EditTeacherTest extends TestCase
 
         $lastName = 'abc';
         $teacher = create(Teacher::class, 1, ['last_name' => $lastName]);
-    
+
         $this->withoutExceptionHandling()
-            ->from('/teachers')
-            ->patch("/teachers/$teacher->id", [
+            ->patch(route('staff.teachers.update', $teacher), [
                 'last_name' => $newLastName = 'xyz'
             ])
-            ->assertRedirect('/teachers')
+            ->assertRedirect()
             ->assertSessionHasFlash('success', 'College teacher updated successfully');
 
         $this->assertEquals($newLastName, $teacher->fresh()->last_name);
@@ -98,15 +95,14 @@ class EditTeacherTest extends TestCase
 
         $firstName = 'Bob';
         $teacher = create(Teacher::class, 1, ['first_name' => $firstName]);
-    
+
         $this->withoutExceptionHandling()
-            ->from('/teachers')
-            ->patch("/teachers/$teacher->id", [
+            ->patch(route('staff.teachers.update', $teacher), [
                 'first_name' => $newFirstName = 'Joe',
                 'last_name' => $teacher->last_name,
                 'email' => $teacher->email
             ])
-            ->assertRedirect('/teachers')
+            ->assertRedirect()
             ->assertSessionHasFlash('success', 'College teacher updated successfully');
 
         $this->assertEquals($newFirstName, $teacher->fresh()->first_name);

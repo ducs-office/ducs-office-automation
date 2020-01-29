@@ -60,7 +60,7 @@
             </button>
             @endcan
             @can('delete', $role)
-            <form action="{{ route('roles.destroy', $role) }}" method="POST"
+            <form action="{{ route('staff.roles.destroy', $role) }}" method="POST"
                 onsubmit="return confirm('Do you really want to delete role?');">
                 @csrf_token @method('delete')
                 <button type="submit" class="p-1 hover:text-red-700">

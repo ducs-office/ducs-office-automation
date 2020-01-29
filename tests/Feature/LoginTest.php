@@ -16,7 +16,7 @@ class LoginTest extends TestCase
     /** @test */
     public function login_form_test()
     {
-        $response = $this->withoutExceptionHandling()->get('/login');
+        $response = $this->withoutExceptionHandling()->get(route('login'));
         $response->assertStatus(200);
     }
 
@@ -31,11 +31,11 @@ class LoginTest extends TestCase
 
         $this->withoutExceptionHandling();
 
-        $this->post('/login', [
+        $this->post(route('login'), [
             'email' => $adminStaff->email,
             'password' => $password,
             'type' => 'web'
-        ])->assertRedirect('/');
+        ])->assertRedirect();
 
         $this->assertTrue(Auth::guard('web')->check(), 'User was expected to login but was not.');
     }
@@ -47,11 +47,11 @@ class LoginTest extends TestCase
             'password' => bcrypt($plainPassword = 'secret')
         ]);
 
-        $this->withoutExceptionHandling()->post('/login', [
+        $this->withoutExceptionHandling()->post(route('login'), [
             'email' => $teacher->email,
             'password' => $plainPassword,
             'type' => 'teachers'
-        ])->assertRedirect('/teachers/profile');
+        ])->assertRedirect();
 
         $this->assertTrue(Auth::guard('teachers')->check());
     }
@@ -64,12 +64,12 @@ class LoginTest extends TestCase
         ]);
 
         $this->withExceptionHandling()
-            ->from('/login')
-            ->post('/login', [
+            
+            ->post(route('login'), [
                 'email' => $teacher->email,
                 'password' => $plainPassword,
                 'type' => 'dsadasfm' // random
-            ])->assertRedirect('/login')
+            ])->assertRedirect()
             ->assertSessionHasErrors('type');
 
         $this->assertFalse(Auth::guard('teachers')->check());
@@ -80,8 +80,8 @@ class LoginTest extends TestCase
     {
         $this->signIn();
         $this->withoutExceptionHandling();
-        $this->get('/login')->assertRedirect('/');
-        $this->post('/login')->assertRedirect('/');
+        $this->get(route('login'))->assertRedirect();
+        $this->post(route('login'))->assertRedirect();
     }
 
 
@@ -91,8 +91,8 @@ class LoginTest extends TestCase
         $this->signIn();
 
         $this->withoutExceptionHandling()
-            ->post('/logout')
-            ->assertRedirect('/');
+            ->post(route('logout'))
+            ->assertRedirect();
 
         $this->assertFalse(auth()->check(), 'User was expected to be logged out, but was not logged out!');
     }
@@ -103,8 +103,8 @@ class LoginTest extends TestCase
         $this->signInTeacher();
 
         $this->withoutExceptionHandling()
-            ->post('/logout', ['type' => 'teachers'])
-            ->assertRedirect('/');
+            ->post(route('logout'), ['type' => 'teachers'])
+            ->assertRedirect();
 
         $this->assertFalse(Auth::guard('teachers')->check(), 'User was expected to be logged out, but was not logged out!');
     }

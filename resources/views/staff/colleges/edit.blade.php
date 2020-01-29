@@ -2,7 +2,7 @@
 @section('body')
 <div class="page-card p-6 my-4 mx-auto lg:w-2/3">
     <h2 class="page-header px-0">Update College</h2>
-    <form action="{{ route('colleges.update', $college) }}" method="POST">
+    <form action="{{ route('staff.colleges.update', $college) }}" method="POST">
         @csrf_token @method('PATCH')
         <div class="flex items-end mb-2">
             <div class="w-32 mr-1">

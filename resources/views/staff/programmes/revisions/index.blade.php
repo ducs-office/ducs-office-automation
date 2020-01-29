@@ -21,11 +21,11 @@
                             </svg>
                         </div>
                         <div class="ml-auto flex">
-                            <a href="{{ route('programme_revision.edit', [$programme, $programmeRevision]) }}"
+                            <a href="{{ route('staff.programmes.revisions.edit', [$programme, $programmeRevision]) }}"
                                 class="p-1 text-gray-700 hover:text-blue-600 hover:bg-gray-200 rounded mr-3" title="Edit">
                                 <feather-icon name="edit-3" stroke-width="2.5" class="h-current">Edit</feather-icon>
                             </a>
-                            <form action="{{  route('programme_revision.destroy', [$programme, $programmeRevision]) }}" method="POST"
+                            <form action="{{  route('staff.programmes.revisions.destroy', [$programme, $programmeRevision]) }}" method="POST"
                                 onsubmit="return confirm('Do you really want to delete programme revision?');">
                                 @csrf_token @method('delete')
                                 <button type="submit" class="p-1 hover:text-red-700">

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Staff;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Handover;
 use App\IncomingLetter;
@@ -87,7 +88,7 @@ class IncomingLettersController extends Controller
             }, request()->file('attachments'))
         );
 
-        return redirect('/incoming-letters');
+        return redirect(route('staff.incoming_letters.index'));
     }
 
     public function edit(IncomingLetter $incoming_letter)
@@ -136,7 +137,7 @@ class IncomingLettersController extends Controller
             );
         }
 
-        return redirect('/incoming-letters');
+        return redirect(route('staff.incoming_letters.index'));
     }
 
     public function destroy(IncomingLetter $incoming_letter)
@@ -146,7 +147,7 @@ class IncomingLettersController extends Controller
 
         $incoming_letter->delete();
 
-        return redirect('/incoming-letters');
+        return redirect(route('staff.incoming_letters.index'));
     }
 
     public function storeRemark(IncomingLetter $incoming_letter)

@@ -2,7 +2,7 @@
     <template v-slot="{data}">
         <div class="page-card max-w-xl my-4 mx-auto">
             <h2 class="page-header px-6">Update Programme</h2>
-            <form :action="route('programmes.update', data('programme',''))" method="POST" class="px-6">
+            <form :action="route('staff.programmes.update', data('programme',''))" method="POST" class="px-6">
                 @csrf_token @method('PATCH')
                 <div class="mb-2">
                     <label for="programme_code" class="w-full form-label">Code<span

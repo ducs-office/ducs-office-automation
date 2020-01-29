@@ -24,8 +24,8 @@ class ViewCollegesTest extends TestCase
         create(College::class, 3);
 
         $this->withExceptionHandling()
-            ->get('/colleges')
-            ->assertRedirect('/login');
+            ->get(route('staff.colleges.index'))
+            ->assertRedirect();
     }
 
     /** @test */
@@ -36,7 +36,7 @@ class ViewCollegesTest extends TestCase
         create(College::class, 3);
 
         $viewData = $this->withoutExceptionHandling()
-                    ->get('/colleges')
+                    ->get(route('staff.colleges.index'))
                     ->assertViewIs('staff.colleges.index')
                     ->assertViewHas('colleges')
                     ->viewData('colleges');

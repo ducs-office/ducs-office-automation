@@ -8,9 +8,9 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\User;
-use Dotenv\Exception\ValidationException;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Validation\ValidationException;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -29,8 +29,8 @@ class StoreLetterRemindersTest extends TestCase
         $letter = create(OutgoingLetter::class);
 
         $this->withExceptionHandling()
-            ->post("/outgoing_letters/{$letter->id}/reminders")
-            ->assertRedirect('login');
+            ->post(route('staff.outgoing_letters.reminders.store', $letter))
+            ->assertRedirect();
 
         $this->assertEquals(0, LetterReminder::count());
     }
@@ -56,7 +56,7 @@ class StoreLetterRemindersTest extends TestCase
         ];
 
         $this->withOutExceptionHandling()
-            ->post("/outgoing_letters/{$letter->id}/reminders", $reminder);
+            ->post(route('staff.outgoing_letters.reminders.store', $letter), $reminder);
 
         $this->assertEquals(1, LetterReminder::count());
         $reminder = LetterReminder::first();
@@ -89,7 +89,7 @@ class StoreLetterRemindersTest extends TestCase
 
         try {
             $this->withExceptionHandling()
-                ->post("/outgoing_letters/{$letter->id}/reminders", $reminder);
+                ->post(route('staff.outgoing_letters.reminders.store', $letter));
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('attachments', $e->errors());
         }

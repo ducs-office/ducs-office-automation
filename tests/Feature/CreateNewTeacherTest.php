@@ -18,7 +18,7 @@ class CreateTeacherTest extends TestCase
     public function guest_can_not_store_a_teacher()
     {
         $this->withExceptionHandling()
-            ->post('/teachers', [
+            ->post(route('staff.teachers.store'), [
                 'first_name' => 'Sharanjit',
                 'last_name' =>  'Kaur',
                 'email' =>  'kaur.sharanjit@andc.du.ac.in'
@@ -34,12 +34,12 @@ class CreateTeacherTest extends TestCase
         $this->signIn();
 
         $this->withoutExceptionHandling()
-            ->post('/teachers', [
+            ->post(route('staff.teachers.store'), [
                 'first_name' => $firstName = 'Sharanjit',
                 'last_name' => $lastName = 'Kaur',
                 'email' => $email = 'kaur.sharanjit@andc.du.ac.in'
             ])
-            ->assertRedirect('/teachers')
+            ->assertRedirect()
             ->assertSessionHasFlash('success', 'College Teacher created successfully!');
 
         $Teacher = Teacher::first();
@@ -47,7 +47,7 @@ class CreateTeacherTest extends TestCase
         $this->assertEquals($firstName, $Teacher->first_name);
         $this->assertEquals($lastName, $Teacher->last_name);
         $this->assertEquals($email, $Teacher->email);
-        
+
         $this->assertEquals(1, Teacher::count());
     }
 
@@ -59,14 +59,14 @@ class CreateTeacherTest extends TestCase
         $this->signIn();
 
         $this->withoutExceptionHandling()
-            ->post('/teachers', [
+            ->post(route('staff.teachers.store'), [
                 'first_name' => 'Sharanjit',
                 'last_name' => 'Kaur',
                 'email' => 'kaur.sharanjit@andc.du.ac.in'
             ])
-            ->assertRedirect('/teachers')
+            ->assertRedirect()
             ->assertSessionHasFlash('success', 'College Teacher created successfully!');
-            
+
         $Teacher = Teacher::first();
 
         Mail::assertQueued(UserRegisteredMail::class, function ($mail) use ($Teacher) {
@@ -81,7 +81,7 @@ class CreateTeacherTest extends TestCase
 
         try {
             $this->withoutExceptionHandling()
-                ->post('/teachers', [
+                ->post(route('staff.teachers.store'), [
                     'first_name' => '',
                     'last_name' => 'Kaur',
                     'email' => 'kaur.sharanjit@andc.du.ac.in'
@@ -100,7 +100,7 @@ class CreateTeacherTest extends TestCase
 
         try {
             $this->withoutExceptionHandling()
-                ->post('/teachers', [
+                ->post(route('staff.teachers.store'), [
                     'first_name' => 'Sharanjit',
                     'last_name' => '',
                     'email' => 'kaur.sharanjit@andc.du.ac.in'
@@ -119,7 +119,7 @@ class CreateTeacherTest extends TestCase
 
         try {
             $this->withoutExceptionHandling()
-                ->post('/teachers', [
+                ->post(route('staff.teachers.store'), [
                     'first_name' => 'Sharanjit',
                     'last_name' => 'Kaur',
                     'email' => ''
@@ -140,7 +140,7 @@ class CreateTeacherTest extends TestCase
 
         try {
             $this->withoutExceptionHandling()
-                ->post('/teachers', [
+                ->post(route('staff.teachers.store'), [
                     'first_name' => 'Sharanjit',
                     'last_name' => 'Kaur',
                     'email' => $Teacher->email

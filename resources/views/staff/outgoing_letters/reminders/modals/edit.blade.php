@@ -2,7 +2,7 @@
     <template v-slot="{ data }">
         <div class="p-6">
             <h3 class="font-bold text-lg mb-2">Upload Letter Reminder</h3>
-            <form :action="route('reminders.update', data('reminder', ''))" method="POST" enctype="multipart/form-data">
+            <form :action="route('staff.reminders.update', data('reminder', ''))" method="POST" enctype="multipart/form-data">
                 @csrf_token @method('PATCH')
                 <div class="my-4 -mx-2 flex">
                     <div class="mx-2">

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Staff;
 
 use App\Programme;
 use App\Course;
@@ -10,6 +10,7 @@ use App\CourseProgrammeRevision;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Cache;
+use App\Http\Controllers\Controller;
 
 class ProgrammesController extends Controller
 {
@@ -71,7 +72,7 @@ class ProgrammesController extends Controller
 
         flash('Programme created successfully!', 'success');
 
-        return redirect('/programmes');
+        return redirect(route('staff.programmes.index'));
     }
 
     public function edit(Programme $programme)
@@ -104,7 +105,7 @@ class ProgrammesController extends Controller
 
         flash('Programme updated successfully!', 'success');
 
-        return redirect('/programmes');
+        return redirect(route('staff.programmes.index'));
     }
 
     public function destroy(Programme $programme)
@@ -115,6 +116,6 @@ class ProgrammesController extends Controller
 
         flash('Programme deleted successfully!', 'success');
 
-        return redirect('/programmes');
+        return redirect(route('staff.programmes.index'));
     }
 }

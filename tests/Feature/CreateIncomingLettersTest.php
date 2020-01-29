@@ -16,7 +16,7 @@ class CreateIncomingLettersTest extends TestCase
     public function guest_cannot_create_letters()
     {
         $this->withExceptionHandling()
-            ->get('/incoming-letters/create')
+            ->get(route('staff.incoming_letters.create'))
             ->assertRedirect('/login');
     }
 
@@ -26,7 +26,7 @@ class CreateIncomingLettersTest extends TestCase
         $this->signIn();
 
         $this->withoutExceptionHandling()
-            ->get('/incoming-letters/create')
+            ->get(route('staff.incoming_letters.create'))
             ->assertSuccessful()
             ->assertViewIs('staff.incoming_letters.create');
     }

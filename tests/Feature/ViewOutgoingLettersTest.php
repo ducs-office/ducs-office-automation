@@ -18,8 +18,8 @@ class ViewOutgoingLettersTest extends TestCase
     /** @test */
     public function guest_cannot_view_outgoing_letters()
     {
-        $this->get('/outgoing-letters')
-            ->assertRedirect('/login');
+        $this->get(route('staff.outgoing_letters.index'))
+            ->assertRedirect();
     }
 
     /** @test */
@@ -34,7 +34,7 @@ class ViewOutgoingLettersTest extends TestCase
         $this->signIn($user, $role->name);
 
         $this->withExceptionHandling()
-            ->get('/outgoing-letters')
+            ->get(route('staff.outgoing_letters.index'))
             ->assertForbidden();
     }
 
@@ -45,7 +45,7 @@ class ViewOutgoingLettersTest extends TestCase
         create(OutgoingLetter::class, 3);
 
         $viewOutgoingLetters = $this->withoutExceptionHandling()
-            ->get('/outgoing-letters')
+            ->get(route('staff.outgoing_letters.index'))
             ->assertSuccessful()
             ->assertViewIs('staff.outgoing_letters.index')
             ->assertViewHas('outgoing_letters')
@@ -62,7 +62,7 @@ class ViewOutgoingLettersTest extends TestCase
         $letters = create(OutgoingLetter::class, 3);
 
         $viewData = $this->withExceptionHandling()
-            ->get('/outgoing-letters')
+            ->get(route('staff.outgoing_letters.index'))
             ->assertSuccessful()
             ->assertViewIs('staff.outgoing_letters.index')
             ->assertViewHas('outgoing_letters')
@@ -85,7 +85,7 @@ class ViewOutgoingLettersTest extends TestCase
         create(OutgoingLetter::class);
 
         $recipients = $this->withExceptionHandling()
-                ->get('/outgoing-letters')
+                ->get(route('staff.outgoing_letters.index'))
                 ->assertSuccessful()
                 ->assertViewIs('staff.outgoing_letters.index')
                 ->assertViewHas('recipients')
@@ -108,7 +108,7 @@ class ViewOutgoingLettersTest extends TestCase
         create(OutgoingLetter::class, 1, ['type' => 'General']);
 
         $types = $this->withExceptionHandling()
-                ->get('/outgoing-letters')
+                ->get(route('staff.outgoing_letters.index'))
                 ->assertSuccessful()
                 ->assertViewIs('staff.outgoing_letters.index')
                 ->assertViewHas('types')
@@ -131,7 +131,7 @@ class ViewOutgoingLettersTest extends TestCase
         create(OutgoingLetter::class);
 
         $senders = $this->withExceptionHandling()
-                ->get('/outgoing-letters')
+                ->get(route('staff.outgoing_letters.index'))
                 ->assertSuccessful()
                 ->assertViewIs('staff.outgoing_letters.index')
                 ->assertViewHas('senders')
@@ -154,7 +154,7 @@ class ViewOutgoingLettersTest extends TestCase
         create(OutgoingLetter::class);
 
         $creators = $this->withExceptionHandling()
-                ->get('/outgoing-letters')
+                ->get(route('staff.outgoing_letters.index'))
                 ->assertSuccessful()
                 ->assertViewIs('staff.outgoing_letters.index')
                 ->assertViewHas('creators')

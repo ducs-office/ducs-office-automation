@@ -28,7 +28,7 @@ class CreateOutgoingLettersTest extends TestCase
         $this->signIn();
 
         $this->withoutExceptionHandling()
-            ->get('/outgoing-letters/create')
+            ->get(route('staff.outgoing_letters.create'))
             ->assertSuccessful()
             ->assertViewIs('staff.outgoing_letters.create');
     }
@@ -37,7 +37,7 @@ class CreateOutgoingLettersTest extends TestCase
     public function guest_cannot_fill_outgoing_letters_form()
     {
         $this->withExceptionHandling()
-            ->get('/outgoing-letters/create')
+            ->get(route('staff.outgoing_letters.create'))
             ->assertRedirect('login');
     }
 
@@ -55,11 +55,11 @@ class CreateOutgoingLettersTest extends TestCase
         $this->signIn($user, $role->name);
 
         $this->withExceptionHandling()
-            ->get('/outgoing-letters/create')
+            ->get(route('staff.outgoing_letters.create'))
             ->assertForbidden();
 
         $this->withExceptionHandling()
-            ->post('/outgoing-letters')
+            ->post(route('staff.outgoing_letters.store'))
             ->assertForbidden();
     }
 }

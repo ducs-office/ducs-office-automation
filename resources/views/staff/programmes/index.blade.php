@@ -4,7 +4,7 @@
     <div class="flex items-baseline px-6 pb-4 border-b">
         <h1 class="page-header mb-0 px-0 mr-4">Programmes</h1>
         @can('create', App\Programme::class)
-        <a href="{{route('programmes.create')}}" class="btn btn-magenta is-sm shadow-inset">
+        <a href="{{route('staff.programmes.create')}}" class="btn btn-magenta is-sm shadow-inset">
             New
         </a>
         @endcan
@@ -33,7 +33,7 @@
                     </button>
                     @endcan
                     @can('delete', App\Programme::class)
-                    <form action="{{ route('programmes.destroy', $programme) }}" method="POST"
+                    <form action="{{ route('staff.programmes.destroy', $programme) }}" method="POST"
                         onsubmit="return confirm('Do you really want to delete programme?');">
                         @csrf_token @method('delete')
                         <button type="submit" class="p-1 hover:text-red-700">
@@ -57,7 +57,7 @@
                     </svg>
                 </div>
                 <div class="ml-auto">
-                    <a href="{{ route('programme_revision.create', $programme) }}" class="btn btn-magenta is-sm shadow-inset mr-2"> New Revision </a>
+                    <a href="{{ route('staff.programmes.revisions.create', $programme )}}" class="btn btn-magenta is-sm shadow-inset mr-2"> New Revision </a>
                 </div>
             </div>
             <details class="bg-gray-100 rounded-t border overflow-hidden mt-3">
@@ -77,7 +77,7 @@
                 </div>
             </details>
             <div class="mt-2">
-                <a href="{{ route('programme_revision.show', $programme) }}" class=" text-magenta-600 underline">Show all revisions</a>
+                <a href="{{ route('staff.programmes.revisions.show', $programme) }}" class=" text-magenta-600 underline">Show all revisions</a>
             </div>
         </div>
     @endforeach

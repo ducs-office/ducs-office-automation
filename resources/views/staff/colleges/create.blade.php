@@ -2,7 +2,7 @@
 @section('body')
 <div class="page-card my-4 mx-auto lg:w-2/3 p-6">
     <h2 class="page-header px-0">New College</h2>
-    <form action="{{ route('colleges.index') }}" method="POST" class="items-end">
+    <form action="{{ route('staff.colleges.index') }}" method="POST" class="items-end">
         @csrf_token
         <div class="flex items-end mb-2">
             <div class="w-32 mr-1">

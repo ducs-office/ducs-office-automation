@@ -33,8 +33,8 @@ class UpdateOutgoingLettersTest extends TestCase
     {
         $letter = create(OutgoingLetter::class);
         $this->withExceptionHandling()
-            ->patch("/outgoing-letters/{$letter->id}", ['date' => '2018-08-9'])
-            ->assertRedirect('/login');
+            ->patch(route('staff.outgoing_letters.update', $letter), ['date' => '2018-08-9'])
+            ->assertRedirect();
 
         $this->assertEquals($letter->date, $letter->fresh()->date);
     }
@@ -60,9 +60,9 @@ class UpdateOutgoingLettersTest extends TestCase
 
         $this->withoutExceptionHandling()
             ->patch(
-                "/outgoing-letters/{$letter->id}",
+                route('staff.outgoing_letters.update', $letter),
                 $new_outgoing_letter
-            )->assertRedirect('/outgoing-letters');
+            )->assertRedirect();
 
         $letter = $letter->fresh();
         $this->assertEquals($new_outgoing_letter['description'], $letter->description);
@@ -86,9 +86,9 @@ class UpdateOutgoingLettersTest extends TestCase
 
         $this->withoutExceptionHandling()
             ->patch(
-                "/outgoing-letters/{$letter->id}",
+                route('staff.outgoing_letters.update', $letter),
                 ['creator_id' => create(User::class)->id]
-            )->assertRedirect('/outgoing-letters');
+            )->assertRedirect();
 
         $this->assertEquals($letter->creator_id, $letter->fresh()->creator_id);
     }
@@ -104,7 +104,7 @@ class UpdateOutgoingLettersTest extends TestCase
             ]);
 
             $this->withoutExceptionHandling()
-                ->patch("/outgoing-letters/{$letter->id}", ['date'=>'']);
+                ->patch(route('staff.outgoing_letters.update', $letter), ['date'=>'']);
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('date', $e->errors());
         }
@@ -138,7 +138,7 @@ class UpdateOutgoingLettersTest extends TestCase
         foreach ($invalidDates as $date) {
             try {
                 $this->withoutExceptionHandling()
-                    ->patch("/outgoing-letters/{$letter->id}", ['date'=>$date]);
+                    ->patch(route('staff.outgoing_letters.update', $letter), ['date'=>$date]);
 
                 $this->fail("Invalid date '{$date}' was not validated");
             } catch (ValidationException $e) {
@@ -149,8 +149,8 @@ class UpdateOutgoingLettersTest extends TestCase
 
         foreach ($validDates as $date) {
             $this->withoutExceptionHandling()
-                ->patch("/outgoing-letters/{$letter->id}", ['date'=>$date,])
-                ->assertRedirect('/outgoing-letters');
+                ->patch(route('staff.outgoing_letters.update', $letter), ['date'=>$date,])
+                ->assertRedirect();
 
             $this->assertEquals($date, $letter->fresh()->date->format('Y-m-d'));
         }
@@ -167,7 +167,7 @@ class UpdateOutgoingLettersTest extends TestCase
 
         try {
             $this->withoutExceptionHandling()
-                ->patch("/outgoing-letters/{$letter->id}", ['date' => $date = now()->addMonth(1)->format('Y-m-d')]);
+                ->patch(route('staff.outgoing_letters.update', $letter), ['date' => $date = now()->addMonth(1)->format('Y-m-d')]);
 
             $this->fail("Future date '{$date}' was not validated");
         } catch (ValidationException $e) {
@@ -179,8 +179,8 @@ class UpdateOutgoingLettersTest extends TestCase
 
         $date = now()->subMonth(1)->format('Y-m-d');
         $this->withoutExceptionHandling()
-            ->patch("/outgoing-letters/{$letter->id}", ['date'=>$date])
-                ->assertRedirect('/outgoing-letters');
+            ->patch(route('staff.outgoing_letters.update', $letter), ['date'=>$date])
+                ->assertRedirect();
 
         $this->assertEquals($date, $letter->fresh()->date->format('Y-m-d'));
     }
@@ -194,7 +194,7 @@ class UpdateOutgoingLettersTest extends TestCase
                 'creator_id' => Auth::id()
             ]);
             $this->withoutExceptionHandling()
-                ->patch("/outgoing-letters/{$letter->id}", ['sender_id'=>'']);
+                ->patch(route('staff.outgoing_letters.update', $letter), ['sender_id'=>'']);
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('sender_id', $e->errors());
         }
@@ -213,7 +213,7 @@ class UpdateOutgoingLettersTest extends TestCase
             ]);
 
             $this->withoutExceptionHandling()
-                ->patch("/outgoing-letters/{$letter->id}", ['sender_id' => 4]);
+                ->patch(route('staff.outgoing_letters.update', $letter), ['sender_id' => 4]);
 
             $this->fail('Failed to validate \'sender_id\' is a valid existing user id');
         } catch (ValidationException $e) {
@@ -232,7 +232,7 @@ class UpdateOutgoingLettersTest extends TestCase
             ]);
 
             $this->withoutExceptionHandling()
-                ->patch("/outgoing-letters/{$letter->id}", ['subject' => '']);
+                ->patch(route('staff.outgoing_letters.update', $letter), ['subject' => '']);
 
             $this->fail('Empty \'subject\' field cannot be empty.');
         } catch (ValidationException $e) {
@@ -252,7 +252,7 @@ class UpdateOutgoingLettersTest extends TestCase
             ]);
 
             $this->withoutExceptionHandling()
-                ->patch("/outgoing-letters/{$letter->id}", ['subject' => Str::random(101)]);
+                ->patch(route('staff.outgoing_letters.update', $letter), ['subject' => Str::random(101)]);
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('subject', $e->errors());
         }
@@ -269,8 +269,8 @@ class UpdateOutgoingLettersTest extends TestCase
         ]);
 
         $this->withoutExceptionHandling()
-            ->patch("/outgoing-letters/{$letter->id}", ['description' => ''])
-            ->assertRedirect('/outgoing-letters');
+            ->patch(route('staff.outgoing_letters.update', $letter), ['description' => ''])
+            ->assertRedirect();
 
         $this->assertNull($letter->fresh()->description);
     }
@@ -285,8 +285,8 @@ class UpdateOutgoingLettersTest extends TestCase
 
         try {
             $this->withoutExceptionHandling()
-                ->patch("/outgoing-letters/{$letter->id}", ['description' => Str::random(401)])
-                ->assertRedirect('/outgoing-letters');
+                ->patch(route('staff.outgoing_letters.update', $letter), ['description' => Str::random(401)])
+                ->assertRedirect();
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('description', $e->errors());
         }
@@ -304,8 +304,8 @@ class UpdateOutgoingLettersTest extends TestCase
         ]);
 
         $this->withoutExceptionHandling()
-            ->patch("/outgoing-letters/{$letter->id}", ['amount'=>''])
-            ->assertRedirect('/outgoing-letters');
+            ->patch(route('staff.outgoing_letters.update', $letter), ['amount'=>''])
+            ->assertRedirect();
         $this->assertNull($letter->fresh()->amount);
     }
 
@@ -320,7 +320,7 @@ class UpdateOutgoingLettersTest extends TestCase
             ]);
 
             $this->withoutExceptionHandling()
-                ->patch("/outgoing-letters/{$letter->id}", ['amount' => 'some string']);
+                ->patch(route('staff.outgoing_letters.update', $letter), ['amount' => 'some string']);
 
             $this->fail('Failed to validate \'amount\' cannot be a string value');
         } catch (ValidationException $e) {
@@ -339,7 +339,7 @@ class UpdateOutgoingLettersTest extends TestCase
         ]);
 
         $this->withoutExceptionHandling()
-            ->patch("/outgoing-letters/{$letter->id}", ['type'=> 'Notesheet']);
+            ->patch(route('staff.outgoing_letters.update', $letter), ['type'=> 'Notesheet']);
 
         $this->assertEquals($letter->type, $letter->fresh()->type);
     }
@@ -353,7 +353,7 @@ class UpdateOutgoingLettersTest extends TestCase
                 'creator_id' => Auth::id()
             ]);
             $this->withoutExceptionHandling()
-                ->patch("/outgoing-letters/{$letter->id}", ['recipient'=>'']);
+                ->patch(route('staff.outgoing_letters.update', $letter), ['recipient'=>'']);
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('recipient', $e->errors());
         }

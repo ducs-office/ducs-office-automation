@@ -28,7 +28,7 @@ class CreateProgrammeRevision extends TestCase
         }
 
         $this->withoutExceptionHandling()
-            ->get("/programmes/$programme->id/revision/create")
+            ->get(route('staff.programmes.revisions.create', $programme))
             ->assertSuccessful()
             ->assertViewIs('staff.programmes.revisions.create')
             ->assertViewHas('semester_courses')
@@ -43,6 +43,6 @@ class CreateProgrammeRevision extends TestCase
         $programme = create(Programme::class);
 
         $this->withoutExceptionHandling()
-            ->get("/programmes/$programme->id/revision/create");
+            ->get(route('staff.programmes.revisions.create', $programme));
     }
 }

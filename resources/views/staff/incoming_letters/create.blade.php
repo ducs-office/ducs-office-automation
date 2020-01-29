@@ -2,7 +2,7 @@
 @section('body')
     <div class="page-card max-w-xl my-4 mx-auto">
         <h2 class="page-header">New Incoming Letter</h2>
-        <form action="{{ route('incoming_letters.store') }}"
+        <form action="{{ route('staff.incoming_letters.store') }}"
             method="POST"
             class="px-6"
             enctype="multipart/form-data">

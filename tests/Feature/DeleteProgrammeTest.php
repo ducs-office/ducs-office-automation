@@ -18,8 +18,8 @@ class DeleteProgrammeTest extends TestCase
         $programme = create(Programme::class);
         $this->signIn();
 
-        $this->delete('/programmes/'.$programme->id)
-            ->assertRedirect('programmes')
+        $this->delete(route('staff.programmes.destroy', $programme))
+            ->assertRedirect()
             ->assertSessionHasFlash('success', 'Programme deleted successfully!');
 
         $this->assertNull($programme->fresh(), 'Programme still exists in database.');

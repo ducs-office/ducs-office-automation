@@ -33,7 +33,7 @@
 <v-modal name="change_password_modal" height="auto">
     <div class="p-6">
         <h2 class="text-lg font-bold mb-6">Change Password</h2>
-        <form action="{{ route('account.change_password') }}" method="POST">
+        <form action="{{ route('staff.account.change_password') }}" method="POST">
             @csrf_token
             <div class="mb-3">
                 <label for="current_password" class="w-full form-label mb-1">Current Password</label>

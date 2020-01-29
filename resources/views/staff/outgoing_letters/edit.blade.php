@@ -17,7 +17,7 @@ $colors = [
             {{ $outgoing_letter->type }}
         </span>
     </div>
-    <form action="{{ route('outgoing_letters.update', $outgoing_letter) }}" method="POST" class="px-6" enctype="multipart/form-data">
+    <form action="{{ route('staff.outgoing_letters.update', $outgoing_letter) }}" method="POST" class="px-6" enctype="multipart/form-data">
         @csrf_token
         @method('PATCH')
         <div class="mb-2">
@@ -105,13 +105,13 @@ $colors = [
             <div class="flex flex-wrap -mx-2 mb-2">
                 @foreach ($outgoing_letter->attachments as $attachment)
                 <div class="inline-flex items-center p-2 rounded border hover:bg-gray-300 text-gray-600 mx-2 my-1">
-                    <a href="{{ route('attachments.show', $attachment) }}" target="__blank"
+                    <a href="{{ route('staff.attachments.show', $attachment) }}" target="__blank"
                         class="inline-flex items-center mr-1">
                         <feather-icon name="paperclip" class="h-4 mr-2" stroke-width="2">View Attachment</feather-icon>
                         <span>{{ $attachment->original_name }}</span>
                     </a>
                     @can('delete', $attachment)
-                    <button type="submit" form="remove-attachment" formaction="{{ route('attachments.destroy', $attachment) }}"
+                    <button type="submit" form="remove-attachment" formaction="{{ route('staff.attachments.destroy', $attachment) }}"
                         class="p-1 rounded hover:bg-red-500 hover:text-white">
                         <feather-icon name="x" class="h-4" stroke-width="2">Delete Attachment</feather-icon>
                     </button>

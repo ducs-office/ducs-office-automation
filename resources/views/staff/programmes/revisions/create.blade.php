@@ -10,7 +10,7 @@
             <span class="ml-2 py-1 rounded bg-black font-bold font-mono text-sm text-white mr-2 w-24 text-center">{{ $programme->code }}</span>
         </div>
     </div>
-    <form action="{{ route('programme_revision.store', $programme) }}" method="POST" class="px-6">
+    <form action="{{ route('staff.programmes.revisions.store', $programme) }}" method="POST" class="px-6">
         @csrf_token
         <div class="mb-2">
             <label for="revised_at" class="w-full form-label">Revised At<span

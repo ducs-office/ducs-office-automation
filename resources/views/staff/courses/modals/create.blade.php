@@ -1,5 +1,5 @@
 <v-modal name="create-courses-modal" height="auto">
-    <form action="{{ route('courses.index') }}" method="POST" class="p-6" enctype="multipart/form-data">
+    <form action="{{ route('staff.courses.index') }}" method="POST" class="p-6" enctype="multipart/form-data">
         <h2 class="mb-8 font-bold text-lg">Create New Course</h2>
         @csrf_token
         <div class="mb-2">

@@ -18,7 +18,7 @@ class ViewProgrammesTest extends TestCase
 
         $this->withExceptionHandling();
 
-        $this->get('/programmes')->assertRedirect('/login');
+        $this->get(route('staff.programmes.index'))->assertRedirect();
     }
 
     /** @test */
@@ -36,7 +36,8 @@ class ViewProgrammesTest extends TestCase
 
         $this->withoutExceptionHandling();
 
-        $viewData = $this->get('/programmes')->assertViewIs('staff.programmes.index')
+        $viewData = $this->get(route('staff.programmes.index'))
+            ->assertViewIs('staff.programmes.index')
             ->assertViewHasAll(['programmes', 'grouped_courses'])
             ->viewData('programmes');
 
