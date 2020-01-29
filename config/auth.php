@@ -39,7 +39,7 @@ return [
         'web' => [
             'driver' => 'session',
             'provider' => 'users',
-            'home' => '/',
+            'home' => '/staff',
         ],
 
         'teachers' => [

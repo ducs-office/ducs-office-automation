@@ -16,7 +16,7 @@ class LoginTest extends TestCase
     /** @test */
     public function login_form_test()
     {
-        $response = $this->withoutExceptionHandling()->get(route('login'));
+        $response = $this->withoutExceptionHandling()->get(route('login_form'));
         $response->assertStatus(200);
     }
 
@@ -80,7 +80,7 @@ class LoginTest extends TestCase
     {
         $this->signIn();
         $this->withoutExceptionHandling();
-        $this->get(route('login'))->assertRedirect();
+        $this->get(route('login_form'))->assertRedirect();
         $this->post(route('login'))->assertRedirect();
     }
 
@@ -92,7 +92,7 @@ class LoginTest extends TestCase
 
         $this->withoutExceptionHandling()
             ->post(route('logout'))
-            ->assertRedirect();
+            ->assertRedirect(route('login_form'));
 
         $this->assertFalse(auth()->check(), 'User was expected to be logged out, but was not logged out!');
     }

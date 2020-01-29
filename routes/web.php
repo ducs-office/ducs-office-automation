@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/login', 'Auth\LoginController@showLoginForm')->middleware(['guest', 'guest:teachers'])->name('login');
+Route::get('/', 'Auth\LoginController@showLoginForm')->middleware(['guest', 'guest:teachers'])->name('login_form');
 Route::post('/login', 'Auth\LoginController@login')->middleware(['guest', 'guest:teachers'])->name('login');
 Route::post('/logout', 'Auth\LoginController@logout')->middleware('auth:web,teachers')->name('logout');
 

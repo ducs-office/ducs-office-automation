@@ -34,4 +34,9 @@ class LoginController extends Controller
             'type' => 'required|in:'.$guards,
         ]);
     }
+
+    protected function loggedOut()
+    {
+        return redirect(route('login_form'));
+    }
 }
