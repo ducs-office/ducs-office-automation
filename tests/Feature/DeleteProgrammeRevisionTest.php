@@ -65,7 +65,7 @@ class DeleteProgrammeRevisionTest extends TestCase
             $revision->courses()->attach($courses[$index], ['semester' => 1]);
         }
 
-        $this->withExceptionHandling()
+        $this->withoutExceptionHandling()
             ->delete(route('staff.programmes.revisions.destroy', [
                 'programme' => $programme,
                 'programmeRevision' => $revisions[0],
@@ -75,7 +75,7 @@ class DeleteProgrammeRevisionTest extends TestCase
         $this->withExceptionHandling()
         ->delete(route('staff.programmes.revisions.destroy', [
             'programme' => $programme,
-            'programmeRevision' => $revision
+            'programmeRevision' => $revisions[1]
         ]))
         ->assertRedirect();
 
