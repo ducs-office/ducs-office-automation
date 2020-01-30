@@ -13,4 +13,11 @@ class ProfileController extends Controller
             'teacher' => auth()->user()
         ]);
     }
+
+    public function edit()
+    {
+        return view('teachers.edit', [
+            'teacher' => auth()->user()
+        ]);
+    }
 }

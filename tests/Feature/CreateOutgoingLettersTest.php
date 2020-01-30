@@ -38,7 +38,7 @@ class CreateOutgoingLettersTest extends TestCase
     {
         $this->withExceptionHandling()
             ->get(route('staff.outgoing_letters.create'))
-            ->assertRedirect('login');
+            ->assertRedirect(route('login_form'));
     }
 
     /** @test */

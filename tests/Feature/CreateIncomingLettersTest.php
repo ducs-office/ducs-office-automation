@@ -17,7 +17,7 @@ class CreateIncomingLettersTest extends TestCase
     {
         $this->withExceptionHandling()
             ->get(route('staff.incoming_letters.create'))
-            ->assertRedirect('/login');
+            ->assertRedirect(route('login_form'));
     }
 
     /** @test */

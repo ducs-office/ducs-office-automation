@@ -23,4 +23,5 @@ Route::prefix('/teachers')
     ->as('teachers.')
     ->group(function () {
         Route::get('/', 'ProfileController@index')->name('profile');
+        Route::get('/profile/edit', 'ProfileController@edit')->name('profile.edit');
     });

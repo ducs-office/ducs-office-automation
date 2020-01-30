@@ -23,7 +23,7 @@ class CreateTeacherTest extends TestCase
                 'last_name' =>  'Kaur',
                 'email' =>  'kaur.sharanjit@andc.du.ac.in'
             ])
-            ->assertRedirect('/login');
+            ->assertRedirect(route('login_form'));
 
         $this->assertEquals(0, Teacher::count());
     }

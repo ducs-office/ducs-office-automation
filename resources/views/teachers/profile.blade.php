@@ -7,6 +7,9 @@
                 <h3 class="text-2xl font-bold">{{ $teacher->name }}</h3>
                 <h5 class="text-xl text-gray-700 font-medium">Professor</h5>
             </div>
+            <div class="ml-auto self-start">
+                <a href="{{ route('teachers.profile.edit') }}" class="btn btn-magenta">Edit</a>
+            </div>
         </div>
         <p>
             <b>College:</b> Acharya Narendra Dev College
