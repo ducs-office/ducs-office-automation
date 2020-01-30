@@ -1,4 +1,4 @@
-<toggle-visibility class="relative mr-3">
+<toggle-visibility class="relative ml-auto mr-3">
     <template v-slot="userMenu">
         <button class="flex items-center btn" @click.stop="userMenu.toggle">
             <img src="https://gravatar.com/avatar/{{ md5(strtolower(trim(Auth::user()->email))) }}?s=48&d=identicon"

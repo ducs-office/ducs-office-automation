@@ -45,7 +45,7 @@ return [
         'teachers' => [
             'driver' => 'session',
             'provider' => 'teachers',
-            'home' => '/teachers/profile',
+            'home' => '/teachers',
         ],
 
         'api' => [
