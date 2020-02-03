@@ -20,8 +20,5 @@ $factory->define(TeacherProfile::class, function (Faker $faker) {
         'college_id' => function () {
             return factory(College::class)->create()->id;
         },
-        'teacher_id' => function () {
-            return factory(Teacher::class)->create()->id;
-        },
     ];
 });

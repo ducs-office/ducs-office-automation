@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class TeacherProfile extends Model
 {
+    protected $primaryKey = 'teacher_id';
+
     protected $fillable = [
         'phone_no',
         'address',
@@ -32,7 +34,7 @@ class TeacherProfile extends Model
     
     public function teaching_details()
     {
-        return $this->belongsToMany(CourseProgrammeRevision::class, 'teaching_details', 'teachers_profile_id', 'course_programme_revision_id');
+        return $this->belongsToMany(CourseProgrammeRevision::class, 'teaching_details', 'teacher_id', 'course_programme_revision_id');
     }
 
     public function profile_picture()

@@ -60,12 +60,8 @@ class ProfileController extends Controller
             'profile_picture' => ['nullable', 'file', 'image'],
         ]);
         
-        if ($teacher->profile()->exists()) {
-            $teacherProfile = $teacher->profile;
-            $teacherProfile->update($validData);
-        } else {
-            $teacherProfile = TeacherProfile::create($validData + ['teacher_id' => $teacher->id]);
-        }
+        $teacherProfile = $teacher->profile;
+        $teacherProfile->update($validData);
 
         if (isset($validData['teaching_details'])) {
             $teaching_details = $validData['teaching_details'];
@@ -74,12 +70,13 @@ class ProfileController extends Controller
                 return CourseProgrammeRevision::where('programme_revision_id', $teaching_detail['programme'])
                             ->where('course_id', $teaching_detail['course'])->first()->id;
             }, $teaching_details);
-
+            
             $teacher->profile->teaching_details()->sync($programmeCoursesTaught);
         }
 
+
         if (isset($validData['profile_picture'])) {
-            $teacherProfile->profile_picture()->create([
+            $teacher->profile->profile_picture()->create([
                 'original_name' => $validData['profile_picture']->getClientOriginalName(),
                 'path' => $validData['profile_picture']->store('/teacher_attachments/profile_picture'),
             ]);

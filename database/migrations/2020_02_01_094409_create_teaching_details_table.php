@@ -17,9 +17,9 @@ class CreateTeachingDetailsTable extends Migration
         Schema::create('teaching_details', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('course_programme_revision_id');
-            $table->unsignedBigInteger('teachers_profile_id');
+            $table->unsignedBigInteger('teacher_id');
 
-            $table->foreign('teachers_profile_id')->references('id')->on('teachers_profile')->onDelete('cascade');
+            $table->foreign('teacher_id')->references('teacher_id')->on('teachers_profile')->onDelete('cascade');
             $table->foreign('course_programme_revision_id')->references('id')->on('course_programme_revision')->onDelete('cascade');
         });
     }
