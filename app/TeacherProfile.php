@@ -34,4 +34,9 @@ class TeacherProfile extends Model
     {
         return $this->belongsToMany(CourseProgrammeRevision::class, 'teaching_details', 'teachers_profile_id', 'course_programme_revision_id');
     }
+
+    public function profile_picture()
+    {
+        return $this->morphOne(Attachment::class, 'attachable');
+    }
 }

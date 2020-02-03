@@ -10,6 +10,8 @@ use Tests\TestCase;
 use App\TeacherProfile;
 use App\Teacher;
 use App\College;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 
 class EditTeacherProfileTest extends TestCase
@@ -23,6 +25,7 @@ class EditTeacherProfileTest extends TestCase
 
         create(TeacherProfile::class, 1, ['teacher_id' => $teacher->id]);
 
+        $college = create(College::class);
         $programme = create(Programme::class);
         $courses = create(Course::class, 2);
         $revision = $programme->revisions()->create(['revised_at' => $programme->wef]);
@@ -30,7 +33,7 @@ class EditTeacherProfileTest extends TestCase
         foreach ($courses as $course) {
             $revision->courses()->attach($course, ['semester' => 1]);
         }
-
+        
         $update = [
             'phone_no' => '9876543210',
             'address' => 'new address, New Delhi',
@@ -39,11 +42,12 @@ class EditTeacherProfileTest extends TestCase
             'account_no' => '12234567890',
             'bank_name' => 'Punjab National Bank',
             'bank_branch' => 'Rejender Nagar, New Delhi',
-            'college_id' => 1,
+            'college_id' => $college->id,
             'teaching_details' => [
-                [$programme->id, $courses[0]->id],
-                [$programme->id, $courses[1]->id]
+                ['programme' => $programme->id, 'course' => $courses[0]->id],
+                ['programme' => $programme->id, 'course' => $courses[1]->id]
             ],
+            'profile_picture' => $profilePicture = UploadedFile::fake()->image('picture.jpeg'),
         ];
       
         $this->withoutExceptionHandling()
@@ -67,6 +71,9 @@ class EditTeacherProfileTest extends TestCase
         $this->assertEquals($teacher->profile->teaching_details[1]->programme_revision_id, $revision->id);
         $this->assertEquals($teacher->profile->teaching_details[0]->course_id, $courses[0]->id);
         $this->assertEquals($teacher->profile->teaching_details[1]->course_id, $courses[1]->id);
+
+        $this->assertEquals('teacher_attachments/profile_picture/'.$profilePicture->hashName(), $teacher->profile->fresh()->profile_picture->path);
+        Storage::assertExists('teacher_attachments/profile_picture/'.$profilePicture->hashName());
     }
 
     /** @test */
@@ -86,8 +93,8 @@ class EditTeacherProfileTest extends TestCase
 
         $update = [
             'teaching_details' => [
-                [$programme->id, $courses[0]->id],
-                [$programme->id, $courses[1]->id]
+                ['programme' => $programme->id, 'course' => $courses[0]->id],
+                ['programme' => $programme->id, 'course' => $courses[1]->id]
             ],
         ];
       
@@ -97,7 +104,7 @@ class EditTeacherProfileTest extends TestCase
                 ->assertRedirect()
                 ->assertSessionHasFlash('success', 'Profile Updated Successfully!');
         } catch (ValidationException $e) {
-            $this->assertArrayHasKey('teaching_details.0.0', $e->errors());
+            $this->assertArrayHasKey('teaching_details.0.programme', $e->errors());
         }
        
         $this->assertEquals($teacher->profile->teaching_details->count(), 0);
@@ -119,7 +126,7 @@ class EditTeacherProfileTest extends TestCase
 
         $update = [
             'teaching_details' => [
-                [$programme->id, $unassignedCourse->id]
+                ['programme' => $programme->id, 'course' => $unassignedCourse->id]
             ],
         ];
       
@@ -152,7 +159,7 @@ class EditTeacherProfileTest extends TestCase
 
         $update = [
             'teaching_details' => [
-                [$programme->id],
+                ['programme' => $programme->id],
             ],
         ];
       
@@ -175,6 +182,7 @@ class EditTeacherProfileTest extends TestCase
     {
         $this->signInTeacher($teacher = create(Teacher::class));
 
+        $college = create(College::class);
         $programme = create(Programme::class, 1, ['wef' => now()]);
         $courses = create(Course::class, 2);
         $revision = $programme->revisions()->create(['revised_at' => $programme->wef]);
@@ -191,9 +199,10 @@ class EditTeacherProfileTest extends TestCase
             'account_no' => '12234567890',
             'bank_name' => 'Punjab National Bank',
             'bank_branch' => 'Rejender Nagar, New Delhi',
+            'college_id' => $college->id,
             'teaching_details' => [
-                [$programme->id, $courses[0]->id],
-                [$programme->id, $courses[1]->id]
+                ['programme' => $programme->id, 'course' => $courses[0]->id],
+                ['programme' => $programme->id, 'course' => $courses[1]->id]
             ],
         ];
       
@@ -204,7 +213,7 @@ class EditTeacherProfileTest extends TestCase
                 ->assertSessionHasFlash('success', 'Profile Updated Successfully!');
         
         $this->assertEquals(1, TeacherProfile::count());
-        $teacherProfile = TeacherProfile::find(1);
+        $teacherProfile = TeacherProfile::find(1)->fresh();
 
         $this->assertEquals($teacherProfile->teacher_id, $teacher->id);
         $this->assertEquals($teacherProfile->phone_no, $update['phone_no']);
@@ -271,8 +280,8 @@ class EditTeacherProfileTest extends TestCase
 
         $update = [
             'teaching_details' => [
-                [$programme->id, $courses[0]->id],
-                [$programme->id, $courses[1]->id]
+                ['programme' => $programme->id, 'course' => $courses[0]->id],
+                ['programme' => $programme->id, 'course' => $courses[1]->id]
             ],
         ];
 
@@ -304,6 +313,7 @@ class EditTeacherProfileTest extends TestCase
             'bank_name' => '',
             'bank_branch' => '',
             'course_id' => '',
+            'college_id' => '',
             'teaching_details' =>'',
         ];
       
