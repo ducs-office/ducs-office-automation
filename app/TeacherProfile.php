@@ -39,4 +39,9 @@ class TeacherProfile extends Model
     {
         return $this->morphOne(Attachment::class, 'attachable');
     }
+
+    public function past_profiles()
+    {
+        return $this->hasMany(PastTeachersProfile::class, 'teacher_id');
+    }
 }
