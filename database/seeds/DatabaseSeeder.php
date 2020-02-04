@@ -12,6 +12,7 @@ use App\IncomingLetter;
 use App\LetterReminder;
 use App\Remark;
 use App\Handover;
+use App\TeacherProfile;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 
@@ -31,11 +32,6 @@ class DatabaseSeeder extends Seeder
             'category' => 'Admin'
         ]);
 
-        $teacher = factory(Teacher::class)->create([
-            'first_name' => 'Sharanjit',
-            'last_name' => 'Kaur',
-            'email' => 'kaur.sharanjit@andc.du.ac.in',
-        ]);
 
         $admin->assignRole(Role::firstOrCreate(['name' => 'admin']));
 
@@ -73,10 +69,11 @@ class DatabaseSeeder extends Seeder
             factory(ProgrammeRevision::class)->create(['programme_id' => $programme->id]);
         });
 
-        factory(College::class)->create([
+        $andc = factory(College::class)->create([
             'code' => 'DU-ANDC-001',
             'name' => 'Acharya Narendra Dev College'
-        ])->programmes()->sync($programmes->pluck('id')->toArray());
+        ]);
+        $andc->programmes()->sync($programmes->pluck('id')->toArray());
 
         factory(College::class)->create([
             'code'=> 'DU-KMV-002' ,
@@ -87,5 +84,16 @@ class DatabaseSeeder extends Seeder
             'code'=> 'DU-HRC-003' ,
             'name' => 'Hansraj College'
         ])->programmes()->sync($programmes->pluck('id')->toArray());
+
+        $teacher = factory(Teacher::class)->create([
+            'first_name' => 'Sharanjit',
+            'last_name' => 'Kaur',
+            'email' => 'kaur.sharanjit@andc.du.ac.in',
+        ]);
+
+        $profile = factory(TeacherProfile::class)->create([
+            'teacher_id' => $teacher->id,
+            'college_id' => $andc->id
+        ]);
     }
 }

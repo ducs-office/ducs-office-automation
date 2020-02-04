@@ -33,7 +33,7 @@ class EditTeacherProfileTest extends TestCase
         foreach ($courses as $course) {
             $revision->courses()->attach($course, ['semester' => 1]);
         }
-        
+
         $update = [
             'phone_no' => '9876543210',
             'address' => 'new address, New Delhi',
@@ -49,14 +49,14 @@ class EditTeacherProfileTest extends TestCase
             ],
             'profile_picture' => $profilePicture = UploadedFile::fake()->image('picture.jpeg'),
         ];
-      
+
         $this->withoutExceptionHandling()
                 ->patch(route('teachers.profile.update'), $update)
                 ->assertRedirect()
                 ->assertSessionHasFlash('success', 'Profile Updated Successfully!');
 
         $this->assertEquals(1, TeacherProfile::count());
-        
+
         $this->assertEquals($update['phone_no'], $teacher->profile->fresh()->phone_no);
         $this->assertEquals($update['address'], $teacher->profile->fresh()->address);
         $this->assertEquals($update['designation'], $teacher->profile->fresh()->designation);
@@ -65,7 +65,7 @@ class EditTeacherProfileTest extends TestCase
         $this->assertEquals($update['bank_name'], $teacher->profile->fresh()->bank_name);
         $this->assertEquals($update['bank_branch'], $teacher->profile->fresh()->bank_branch);
         $this->assertEquals($update['college_id'], $teacher->profile->fresh()->college_id);
-        
+
         $this->assertEquals($teacher->profile->teaching_details->count(), 2);
         $this->assertEquals($teacher->profile->teaching_details[0]->programme_revision_id, $revision->id);
         $this->assertEquals($teacher->profile->teaching_details[1]->programme_revision_id, $revision->id);
@@ -76,39 +76,6 @@ class EditTeacherProfileTest extends TestCase
         Storage::assertExists('teacher_attachments/profile_picture/'.$profilePicture->hashName());
     }
 
-    /** @test */
-    public function request_validates_programme_is_latest_revision()
-    {
-        $this->signInTeacher($teacher = create(Teacher::class));
-
-        create(TeacherProfile::class, 1, ['teacher_id' => $teacher->id]);
-        
-        $programme = create(Programme::class, 1, ['wef' => now()]);
-        $courses = create(Course::class, 2);
-        $revision1 = $programme->revisions()->create(['revised_at' => $programme->wef]);
-        $revision2 = $programme->revisions()->create(['revised_at' => now()->addYear(1)]);
-
-        $revision1->courses()->attach($courses[0], ['semester' => 1]);
-        $revision2->courses()->attach($courses[1], ['semester' => 1]);
-
-        $update = [
-            'teaching_details' => [
-                ['programme' => $programme->id, 'course' => $courses[0]->id],
-                ['programme' => $programme->id, 'course' => $courses[1]->id]
-            ],
-        ];
-      
-        try {
-            $this->withoutExceptionHandling()
-                ->patch(route('teachers.profile.update'), $update)
-                ->assertRedirect()
-                ->assertSessionHasFlash('success', 'Profile Updated Successfully!');
-        } catch (ValidationException $e) {
-            $this->assertArrayHasKey('teaching_details.0.programme', $e->errors());
-        }
-       
-        $this->assertEquals($teacher->profile->teaching_details->count(), 0);
-    }
 
     /** @test */
     public function request_validates_teaching_details_course_belongs_to_programme()
@@ -116,12 +83,12 @@ class EditTeacherProfileTest extends TestCase
         $this->signInTeacher($teacher = create(Teacher::class));
 
         create(TeacherProfile::class, 1, ['teacher_id' => $teacher->id]);
-        
+
         $programme = create(Programme::class, 1, ['wef' => now()]);
         $assignedCourse = create(Course::class);
         $unassignedCourse = create(Course::class);
         $revision = $programme->revisions()->create(['revised_at' => $programme->wef]);
-        
+
         $revision->courses()->attach($assignedCourse, ['semester' => 1]);
 
         $update = [
@@ -129,7 +96,7 @@ class EditTeacherProfileTest extends TestCase
                 ['programme' => $programme->id, 'course' => $unassignedCourse->id]
             ],
         ];
-      
+
         try {
             $this->withoutExceptionHandling()
                 ->patch(route('teachers.profile.update'), $update)
@@ -138,12 +105,12 @@ class EditTeacherProfileTest extends TestCase
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('teaching_details.0', $e->errors());
         }
-       
+
         $this->assertEquals($teacher->profile->teaching_details->count(), 0);
     }
 
     /** @test */
-    public function request_validates_size_of_each_teaching_details_is_2()
+    public function teaching_details_are_not_updated_when_either_programme_or_course_not_provided()
     {
         $this->signInTeacher($teacher = create(Teacher::class));
 
@@ -159,21 +126,21 @@ class EditTeacherProfileTest extends TestCase
 
         $update = [
             'teaching_details' => [
-                ['programme' => $programme->id],
+                ['programme' => $revision->id],
             ],
         ];
-      
+
         try {
             $this->withoutExceptionHandling()
                 ->patch(route('teachers.profile.update'), $update)
                 ->assertRedirect()
                 ->assertSessionHasFlash('success', 'Profile Updated Successfully!');
         } catch (ValidationException $e) {
-            $this->assertArrayHasKey('teaching_details.0', $e->errors());
+            dd($e->errors());
         }
 
         $this->assertEquals(1, TeacherProfile::count());
-        
+
         $this->assertEquals($teacher->profile->teaching_details->count(), 0);
     }
 
@@ -205,13 +172,13 @@ class EditTeacherProfileTest extends TestCase
                 ['programme' => $programme->id, 'course' => $courses[1]->id]
             ],
         ];
-      
-    
+
+
         $this->withoutExceptionHandling()
                 ->patch(route('teachers.profile.update'), $update)
                 ->assertRedirect()
                 ->assertSessionHasFlash('success', 'Profile Updated Successfully!');
-        
+
         $this->assertEquals(1, TeacherProfile::count());
         $teacherProfile = TeacherProfile::find(1)->fresh();
 
@@ -242,12 +209,12 @@ class EditTeacherProfileTest extends TestCase
             'college_id' => '',
             'teaching_details' =>'',
         ];
-      
+
 
         foreach ($courses as $course) {
             $revision->courses()->attach($course, ['semester' => 1]);
         }
-        
+
         $this->withoutExceptionHandling()
                 ->patch(route('teachers.profile.update'), $update)
                 ->assertRedirect()
@@ -289,11 +256,11 @@ class EditTeacherProfileTest extends TestCase
                 ->patch(route('teachers.profile.update'), $update)
                 ->assertRedirect()
                 ->assertSessionHasFlash('success', 'Profile Updated Successfully!');
-        
+
         $this->assertEquals(1, TeacherProfile::count());
         $this->assertEquals($teacher->profile->teaching_details->count(), 2);
     }
-    
+
 
     /** @test */
     public function request_validates_teacher_profile_is_created_even_if_all_fields_are_null_and_profile_does_not_exist()
@@ -316,12 +283,12 @@ class EditTeacherProfileTest extends TestCase
             'college_id' => '',
             'teaching_details' =>'',
         ];
-      
+
 
         foreach ($courses as $course) {
             $revision->courses()->attach($course, ['semester' => 1]);
         }
-        
+
         $this->withoutExceptionHandling()
                 ->patch(route('teachers.profile.update'), $update)
                 ->assertRedirect()

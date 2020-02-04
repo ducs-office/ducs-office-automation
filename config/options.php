@@ -24,7 +24,7 @@ return [
         ]
     ],
     'teachers' => [
-        'designation' => [
+        'designations' => [
             'P' => 'Permanent',
             'G' => 'Guest',
             'A' => 'Ad-Hoc',

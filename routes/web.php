@@ -25,4 +25,5 @@ Route::prefix('/teachers')
         Route::get('/', 'ProfileController@index')->name('profile');
         Route::get('/profile/edit', 'ProfileController@edit')->name('profile.edit');
         Route::patch('/profile', 'ProfileController@update')->name('profile.update');
+        Route::get('/profile/avatar', 'ProfileController@avatar')->name('profile.avatar');
     });

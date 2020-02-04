@@ -29,7 +29,7 @@ class TeacherProfile extends Model
     {
         return $this->belongsTo('App\College');
     }
-    
+
     public function teaching_details()
     {
         return $this->belongsToMany(CourseProgrammeRevision::class, 'teaching_details', 'teachers_profile_id', 'course_programme_revision_id');
@@ -38,5 +38,10 @@ class TeacherProfile extends Model
     public function profile_picture()
     {
         return $this->morphOne(Attachment::class, 'attachable');
+    }
+
+    public function getDesignation()
+    {
+        return config('options.teachers.designations')[$this->designation] ?? 'Unknown';
     }
 }

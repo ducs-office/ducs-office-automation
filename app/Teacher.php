@@ -17,6 +17,6 @@ class Teacher extends User
 
     public function profile()
     {
-        return $this->hasOne('App\TeacherProfile');
+        return $this->hasOne(TeacherProfile::class);
     }
 }

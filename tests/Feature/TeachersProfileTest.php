@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Teacher;
+use App\TeacherProfile;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -15,6 +16,8 @@ class TeachersProfileTest extends TestCase
     public function teacher_can_view_their_profiles()
     {
         $this->signInTeacher($teacher = create(Teacher::class));
+
+        create(TeacherProfile::class, 1, ['teacher_id' => $teacher]);
 
         $response = $this->withoutExceptionHandling()
             ->get(route('teachers.profile'))
