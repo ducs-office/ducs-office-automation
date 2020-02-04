@@ -25,9 +25,10 @@ class ProgrammeRevisionController extends Controller
 
     public function create(Programme $programme)
     {
-        $programme_revision = $programme->revisions()->where('revised_at', $programme->wef)->first();
-        $semester_courses = $programme_revision->courses->groupBy('pivot.semester')->map->pluck('id');
-        return view('programmes.revisions.create', compact('programme', 'semester_courses'));
+        $revision = $programme->revisions()->with('courses')->where('revised_at', $programme->wef)->first();
+        $semester_courses = $revision->courses->groupBy('pivot.semester')->map->pluck('id');
+        $courses = Course::where('code', 'like', "{$programme->code}%")->get();
+        return view('programmes.revisions.create', compact('programme', 'revision', 'semester_courses', 'courses'));
     }
 
     public function store(Programme $programme, Request $request)
@@ -77,12 +78,14 @@ class ProgrammeRevisionController extends Controller
 
     public function edit(Programme $programme, ProgrammeRevision $programme_revision)
     {
-        if ($programme_revision->programme_id == $programme->id) {
-            $semester_courses = $programme_revision->courses->groupBy('pivot.semester')->map->pluck('id');
-            return view('programmes.revisions.edit', compact('programme', 'programme_revision', 'semester_courses'));
-        } else {
+        if ($programme_revision->programme_id != $programme->id) {
             return redirect('/programmes');
         }
+
+        $semester_courses = $programme_revision->courses->groupBy('pivot.semester')->map->pluck('id');
+        $courses = Course::where('code', 'like', "{$programme->code}%")->get();
+
+        return view('programmes.revisions.edit', compact('programme', 'programme_revision', 'semester_courses', 'courses'));
     }
 
     public function update(Programme $programme, ProgrammeRevision $programme_revision, Request $request)

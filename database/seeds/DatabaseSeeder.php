@@ -49,22 +49,47 @@ class DatabaseSeeder extends Seeder
         });
 
         $programmes = collect([
-            factory(Programme::class)->create(['name' => 'B.Sc. (H) Computer Science', 'type' => 'UG']),
-            factory(Programme::class)->create(['name' => 'B.Sc. (Prog) Computer Science', 'type' => 'UG']),
-            factory(Programme::class)->create(['name' => 'MCA', 'type' => 'PG']),
+            factory(Programme::class)->create(['code' => 'BSCH', 'name' => 'B.Sc. (H) Computer Science', 'duration' => '3', 'type' => 'UG']),
+            factory(Programme::class)->create(['code' => 'BSCP', 'name' => 'B.Sc. (Prog) Computer Science', 'duration' => '3', 'type' => 'UG']),
+            factory(Programme::class)->create(['code' => 'MCA', 'name' => 'Masters in Computer Application', 'name' => 'MCA', 'duration' => '3', 'type' => 'PG']),
+            factory(Programme::class)->create(['code' => 'MCS', 'name' => 'M.Sc. Computer Science', 'duration' => '3', 'type' => 'PG']),
         ]);
 
+        $programme_revisions = $programmes->map(function ($programme) {
+            return factory(ProgrammeRevision::class)->create([
+                'revised_at' => $programme->wef,
+                'programme_id' => $programme->id
+            ]);
+        });
+
         $courses = collect([
-            factory(Course::class)->create(['name' => 'Design and Analysis of Algorithms', 'type' => 'C']),
-            factory(Course::class)->create(['name' => 'Artificial Intelligence']),
-            factory(Course::class)->create(['name' => 'Compiler Design']),
-            factory(Course::class)->create(['name' => 'Data Mining']),
-            factory(Course::class)->create(['name' => 'Machine Learning']),
-            factory(Course::class)->create(['name' => 'Internet Technology']),
-            factory(Course::class)->create(['name' => 'Android Programming']),
-            factory(Course::class)->create(['name' => 'PHP Programming']),
-            factory(Course::class)->create(['name' => 'Data Structures']),
+            factory(Course::class)->create(['code' => 'MCS101', 'name' => 'Design and Analysis of Algorithms', 'type' => 'C']),
+            factory(Course::class)->create(['code' => 'MCS102', 'name' => 'Artificial Intelligence']),
+            factory(Course::class)->create(['code' => 'MCS203', 'name' => 'Compiler Design']),
+            factory(Course::class)->create(['code' => 'MCS204', 'name' => 'Data Mining']),
+            factory(Course::class)->create(['code' => 'MCS301', 'name' => 'Machine Learning']),
+            factory(Course::class)->create(['code' => 'MCA101', 'name' => 'System Programming']),
+            factory(Course::class)->create(['code' => 'MCA201', 'name' => 'Computer Graphics']),
+            factory(Course::class)->create(['code' => 'BSCPC101', 'name' => 'Programming Fundamentals in C++']),
+            factory(Course::class)->create(['code' => 'BSCHC101', 'name' => 'Computer System Architecture']),
+            factory(Course::class)->create(['code' => 'BSCHC201', 'name' => 'Java Programming']),
+            factory(Course::class)->create(['code' => 'BSCHC202', 'name' => 'Data Structures']),
+            factory(Course::class)->create(['code' => 'BSCHC301', 'name' => 'Internet Technology']),
+            factory(Course::class)->create(['code' => 'BSCHSEC301', 'name' => 'PHP Programming']),
+            factory(Course::class)->create(['code' => 'BSCHSEC401', 'name' => 'Android Programming']),
         ]);
+
+        $programme_revisions->each(function ($revision) use ($courses) {
+            return $courses->filter(function ($course) use ($revision) {
+                return starts_with($course->code, $revision->programme->code);
+            })->each(function ($course) use ($revision) {
+                $matches = [];
+                preg_match('/([1-9])[0-9]*$/', $course->code, $matches);
+                return $revision->courses()->attach($course, [
+                    'semester' => $matches[1],
+                ]);
+            });
+        });
 
         $courses->each(function ($course) {
             factory(CourseRevision::class, 3)->create(['course_id' => $course->id]);

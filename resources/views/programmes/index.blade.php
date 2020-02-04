@@ -17,11 +17,11 @@
     @foreach ($programmes as $index => $programme)
         <div class="p-6 page-card mb-2 hover:bg-gray-100">
             <div class="flex items-baseline justify-between">
-                <div class="flex">
+                <div class="flex items-center">
                     <h2 class="text-lg font-bold">
                         {{ ucwords($programme->name) }}
                     </h2>
-                    <span class="ml-2 py-1 rounded bg-black font-bold font-mono text-sm text-white mr-2 w-24 text-center">{{ $programme->code }}</span>
+                    <span class="ml-2 px-3 py-1 rounded bg-black font-bold font-mono text-sm text-white mr-2 text-center">{{ $programme->code }}</span>
                 </div>
                 <div class="flex">
                     @can('update', $programme)

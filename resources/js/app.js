@@ -6,12 +6,14 @@ import VueJsModal from 'vue-js-modal';
 import Flash from './components/Flash.vue';
 import FeatherIcon from './components/FeatherIcon.vue';
 import VueTypeahead from './components/VueTypeahead.vue';
-import VueMultiTypeahead from './components/VueMultiTypeahead.vue';
+import VueMultiTypeahead from "./components/VueMultiTypeahead.vue";
+import VueSelect from './components/VueSelect.vue';
 import TabbedPane from './components/TabbedPane.vue';
 import FileInput from './components/FileInput.vue';
 import DynamicModal from './components/DynamicModal.vue';
 import ToggleVisibility from './components/ToggleVisibility';
-import CourseSections from'./components/CourseSections.vue';
+import ProgrammeForm from'./components/ProgrammeForm.js';
+import SemesterWiseCourseInput from './components/SemesterWiseCoursesInput.vue';
 
 import ClickOutside from './click-outside.js';
 
@@ -23,12 +25,15 @@ Vue.component('v-flash', Flash);
 Vue.component('v-modal', DynamicModal);
 Vue.component('feather-icon', FeatherIcon);
 Vue.component('vue-typeahead', VueTypeahead);
-Vue.component('v-multi-typeahead', VueMultiTypeahead);
+Vue.component("v-multi-typeahead", VueMultiTypeahead);
+Vue.component('v-select', VueSelect);
 Vue.component("v-tabbed-pane", TabbedPane);
 Vue.component("v-file-input", FileInput);
 
 Vue.component('toggle-visibility', ToggleVisibility);
-Vue.component('course-sections', CourseSections);
+Vue.component('programme-form', ProgrammeForm);
+Vue.component("semester-wise-courses-input", SemesterWiseCourseInput);
+
 
 Vue.mixin({
     computed: {
