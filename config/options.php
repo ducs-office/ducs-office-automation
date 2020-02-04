@@ -22,5 +22,13 @@ return [
             'GE' => 'General Elective',
             'OE' => 'Open Elective',
         ]
+    ],
+    'teachers' => [
+        'designations' => [
+            'P' => 'Permanent',
+            'G' => 'Guest',
+            'A' => 'Ad-Hoc',
+            'T' => 'Temporary',
+        ]
     ]
 ];

@@ -1,17 +1,16 @@
-<header class="bg-white text-gray-900 py-2 h-16 px-4 flex items-center w-full flex-shrink-0">
-    @auth('teachers')
-    <button class="p-3 text-gray-700 mr-3 btn flex-shrink-0" @click="sidebar.toggle">
-        <feather-icon :name="sidebar.isVisible ? 'arrow-left' : 'menu'" class="h-current" stroke-width="3">
-            Toggle Menu
-        </feather-icon>
-    </button>
-    <form action="" method="GET" class="relative flex-1 mr-4">
-        <input type="text" class="w-full form-input pl-8" placeholder="Search..." >
-        <feather-icon name="search" class="absolute left-0 ml-2 absolute-y-center text-gray-600 h-5"></feather-icon>
-    </form>
-    @include('teachers.partials.users_menu')
-    @endauth
-    @guest('teachers')
-    <a class="bg-white text-gray-900 px-3 py-1 rounded font-bold" href="{{ route('login') }}">Login</a>
-    @endguest
+<header class="bg-white text-gray-900 py-2">
+    <div class="container px-4 mx-auto flex items-center">
+        <div class="flex items-center px-4">
+            <img src="{{ asset('images/university-logo.png') }}" alt="DU Logo" class="h-12 mr-3">
+            <a href="{{ route('teachers.profile') }}" class="inline-block logo leading-tight max-w-sm mr-4">
+                <h1 class="text-lg font-bold">Department of <br> Computer Science</h1>
+            </a>
+        </div>
+        @auth('teachers')
+        @include('teachers.partials.users_menu')
+        @endauth
+        @guest('teachers')
+        <a class="bg-white text-gray-900 px-3 py-1 rounded font-bold" href="{{ route('login') }}">Login</a>
+        @endguest
+    </div>
 </header>

@@ -16,23 +16,13 @@
     </style>
 </head>
 
-<body class="font-sans leading-tight bg-gray-200 overflow-y-hidden">
-    <div id="app">
-        <toggle-visibility :shown="$window.innerWidth > 768" class="flex h-screen">
-            <template v-slot="sidebar">
-                <transition enter-class="translate-x-back-100" leave-to-class="translate-x-back-100"
-                    enter-active-class="transition-transform" leave-active-class="transition-transform">
-                    <div v-show="sidebar.isVisible" class="bg-magenta-800 text-white w-80 flex flex-col flex-shrink-0">
-                        @auth @include('teachers.partials.sidebar') @endauth
-                    </div>
-                </transition>
-                <main class="flex-1 overflow-x-hidden overflow-y-auto">
-                    @include('teachers.partials.header')
-                    @yield('body')
-                </main>
-                @include('flash::message')
-            </template>
-        </toggle-visibility>
+<body class="font-sans leading-tight bg-gray-200">
+    <div id="app" class="min-h-screen flex flex-col">
+        @include('teachers.partials.header')
+        <main class="flex-1 h-full p-4">
+            @yield('body')
+        </main>
+        @include('flash::message')
     </div>
     <script src="{{ asset('js/app.js') }}"></script>
 </body>

@@ -22,7 +22,7 @@ class EditTeacherTest extends TestCase
 
         $this->withoutExceptionHandling()
             ->patch(route('staff.teachers.update', $teacher), [
-                'email' => $newEmail = 'pqrs@wxy.com'
+                'email' => $newEmail = 'pqrs@wxy.com',
             ])
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'College teacher updated successfully');

@@ -9,7 +9,8 @@ import VueTypeahead from './components/VueTypeahead.vue';
 import VueMultiTypeahead from "./components/VueMultiTypeahead.vue";
 import VueSelect from './components/VueSelect.vue';
 import TabbedPane from './components/TabbedPane.vue';
-import FileInput from './components/FileInput.vue';
+import FileInput from "./components/FileInput.vue";
+import ImageUploadInput from './components/ImageUploadInput.vue';
 import DynamicModal from './components/DynamicModal.vue';
 import ToggleVisibility from './components/ToggleVisibility';
 import ProgrammeForm from'./components/ProgrammeForm.js';
@@ -29,6 +30,7 @@ Vue.component("v-multi-typeahead", VueMultiTypeahead);
 Vue.component('v-select', VueSelect);
 Vue.component("v-tabbed-pane", TabbedPane);
 Vue.component("v-file-input", FileInput);
+Vue.component("image-upload-input", ImageUploadInput);
 
 Vue.component('toggle-visibility', ToggleVisibility);
 Vue.component('programme-form', ProgrammeForm);

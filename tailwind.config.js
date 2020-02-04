@@ -75,7 +75,9 @@ module.exports = {
         }
     },
     variants: {
-        textColor: ["responsive", "focus", "hover", "group-hover"]
+        textColor: ["responsive", "focus", "hover", "group-hover"],
+        backgroundColor: ["responsive", "focus", "hover", "group-hover"],
+        display: ["responsive", "focus", "hover", "group-hover"]
     },
     plugins: []
 };

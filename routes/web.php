@@ -17,4 +17,13 @@ Route::get('/', 'Auth\LoginController@showLoginForm')->middleware(['guest', 'gue
 Route::post('/login', 'Auth\LoginController@login')->middleware(['guest', 'guest:teachers'])->name('login');
 Route::post('/logout', 'Auth\LoginController@logout')->middleware('auth:web,teachers')->name('logout');
 
-Route::get('/teachers/profile', 'TeacherProfileController@index')->middleware('auth:teachers')->name('teachers.dashboard');
+Route::prefix('/teachers')
+    ->middleware('auth:teachers')
+    ->namespace('Teachers')
+    ->as('teachers.')
+    ->group(function () {
+        Route::get('/', 'ProfileController@index')->name('profile');
+        Route::get('/profile/edit', 'ProfileController@edit')->name('profile.edit');
+        Route::patch('/profile', 'ProfileController@update')->name('profile.update');
+        Route::get('/profile/avatar', 'ProfileController@avatar')->name('profile.avatar');
+    });

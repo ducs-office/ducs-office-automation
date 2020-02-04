@@ -15,11 +15,10 @@ class DeleteTeacherTest extends TestCase
     public function teacher_can_be_deleted()
     {
         $teacher = create(Teacher::class);
-
+        
         $this->signIn();
 
         $this->withoutExceptionHandling()
-            
             ->delete(route('staff.teachers.destroy', $teacher))
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'College teacher deleted successfully');

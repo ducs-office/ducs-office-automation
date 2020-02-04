@@ -39,7 +39,7 @@ class UpdateIncomingLettersTest extends TestCase
 
         $this->withoutExceptionHandling()
             ->patch(route('staff.incoming_letters.update', $letter), ['date' => '2017-01-8'])
-            ->assertRedirect('/login');
+            ->assertRedirect(route('login_form'));
 
         $this->assertEquals($letter->date, $letter->fresh()->date);
     }
