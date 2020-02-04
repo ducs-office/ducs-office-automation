@@ -14,7 +14,7 @@ class CreateTeachersProfileTable extends Migration
     public function up()
     {
         Schema::create('teachers_profile', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->unsignedBigInteger('teacher_id')->primary();
             $table->string('phone_no')->nullable();
             $table->text('address', 251)->nullable();
             $table->enum('designation', array_keys(config('options.teachers.designations')))->nullable();
@@ -23,11 +23,10 @@ class CreateTeachersProfileTable extends Migration
             $table->string('bank_name')->nullable();
             $table->text('bank_branch', 251)->nullable();
             $table->unsignedBigInteger('college_id')->nullable();
-            $table->unsignedBigInteger('teacher_id');
             $table->timestamps();
 
-            $table->foreign('college_id')->references('id')->on('colleges')->onDelete('set null');
             $table->foreign('teacher_id')->references('id')->on('teachers')->onDelete('cascade');
+            $table->foreign('college_id')->references('id')->on('colleges')->onDelete('set null');
         });
     }
 

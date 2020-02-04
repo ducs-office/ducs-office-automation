@@ -23,8 +23,6 @@ class EditTeacherProfileTest extends TestCase
     {
         $this->signInTeacher($teacher = create(Teacher::class));
 
-        create(TeacherProfile::class, 1, ['teacher_id' => $teacher->id]);
-
         $college = create(College::class);
         $programme = create(Programme::class);
         $courses = create(Course::class, 2);
@@ -81,9 +79,7 @@ class EditTeacherProfileTest extends TestCase
     public function request_validates_teaching_details_course_belongs_to_programme()
     {
         $this->signInTeacher($teacher = create(Teacher::class));
-
-        create(TeacherProfile::class, 1, ['teacher_id' => $teacher->id]);
-
+        
         $programme = create(Programme::class, 1, ['wef' => now()]);
         $assignedCourse = create(Course::class);
         $unassignedCourse = create(Course::class);
@@ -114,8 +110,6 @@ class EditTeacherProfileTest extends TestCase
     {
         $this->signInTeacher($teacher = create(Teacher::class));
 
-        create(TeacherProfile::class, 1, ['teacher_id' => $teacher->id]);
-
         $programme = create(Programme::class, 1, ['wef' => now()]);
         $courses = create(Course::class, 2);
         $revision = $programme->revisions()->create(['revised_at' => $programme->wef]);
@@ -145,54 +139,9 @@ class EditTeacherProfileTest extends TestCase
     }
 
     /** @test */
-    public function teacher_profile_is_created_if_it_does_not_exist()
-    {
-        $this->signInTeacher($teacher = create(Teacher::class));
-
-        $college = create(College::class);
-        $programme = create(Programme::class, 1, ['wef' => now()]);
-        $courses = create(Course::class, 2);
-        $revision = $programme->revisions()->create(['revised_at' => $programme->wef]);
-
-        foreach ($courses as $course) {
-            $revision->courses()->attach($course, ['semester' => 1]);
-        }
-
-        $update = [
-            'phone_no' => '9876543210',
-            'address' => 'new address, New Delhi',
-            'designation' => 'G',
-            'ifsc' => 'PNB098765498',
-            'account_no' => '12234567890',
-            'bank_name' => 'Punjab National Bank',
-            'bank_branch' => 'Rejender Nagar, New Delhi',
-            'college_id' => $college->id,
-            'teaching_details' => [
-                ['programme' => $programme->id, 'course' => $courses[0]->id],
-                ['programme' => $programme->id, 'course' => $courses[1]->id]
-            ],
-        ];
-
-
-        $this->withoutExceptionHandling()
-                ->patch(route('teachers.profile.update'), $update)
-                ->assertRedirect()
-                ->assertSessionHasFlash('success', 'Profile Updated Successfully!');
-
-        $this->assertEquals(1, TeacherProfile::count());
-        $teacherProfile = TeacherProfile::find(1)->fresh();
-
-        $this->assertEquals($teacherProfile->teacher_id, $teacher->id);
-        $this->assertEquals($teacherProfile->phone_no, $update['phone_no']);
-        $this->assertEquals($teacher->profile->teaching_details->count(), 2);
-    }
-
-    /** @test */
     public function request_validates_teacher_can_update_all_fields_to_empty()
     {
         $this->signInTeacher($teacher = create(Teacher::class));
-
-        create(TeacherProfile::class, 1, ['teacher_id' => $teacher->id]);
 
         $programme = create(Programme::class, 1, ['wef' => now()]);
         $courses = create(Course::class, 2);
@@ -259,53 +208,5 @@ class EditTeacherProfileTest extends TestCase
 
         $this->assertEquals(1, TeacherProfile::count());
         $this->assertEquals($teacher->profile->teaching_details->count(), 2);
-    }
-
-
-    /** @test */
-    public function request_validates_teacher_profile_is_created_even_if_all_fields_are_null_and_profile_does_not_exist()
-    {
-        $this->signInTeacher($teacher = create(Teacher::class));
-
-        $programme = create(Programme::class, 1, ['wef' => now()]);
-        $courses = create(Course::class, 2);
-        $revision = $programme->revisions()->create(['revised_at' => $programme->wef]);
-
-        $update = [
-            'phone_no' => '',
-            'address' => '',
-            'designation' => '',
-            'ifsc' => '',
-            'account_no' => '',
-            'bank_name' => '',
-            'bank_branch' => '',
-            'course_id' => '',
-            'college_id' => '',
-            'teaching_details' =>'',
-        ];
-
-
-        foreach ($courses as $course) {
-            $revision->courses()->attach($course, ['semester' => 1]);
-        }
-
-        $this->withoutExceptionHandling()
-                ->patch(route('teachers.profile.update'), $update)
-                ->assertRedirect()
-                ->assertSessionHasFlash('success', 'Profile Updated Successfully!');
-
-        $this->assertEquals(TeacherProfile::count(), 1);
-        $this->assertEquals(TeacherProfile::find(1)->teacher_id, $teacher->id);
-
-        $this->assertEquals('', $teacher->profile->fresh()->phone_no);
-        $this->assertEquals('', $teacher->profile->fresh()->address);
-        $this->assertEquals('', $teacher->profile->fresh()->designation);
-        $this->assertEquals('', $teacher->profile->fresh()->ifsc);
-        $this->assertEquals('', $teacher->profile->fresh()->account_no);
-        $this->assertEquals('', $teacher->profile->fresh()->bank_name);
-        $this->assertEquals('', $teacher->profile->fresh()->bank_branch);
-        $this->assertEquals('', $teacher->profile->fresh()->college_id);
-
-        $this->assertEquals($teacher->profile->teaching_details->count(), 0);
     }
 }

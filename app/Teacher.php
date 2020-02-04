@@ -10,6 +10,16 @@ class Teacher extends User
 
     protected $hidden = ['password'];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function (Teacher $teacher) {
+            $teacher->profile()->create();
+
+            return $teacher;
+        });
+    }
     public function getNameAttribute()
     {
         return $this->first_name . ' ' . $this->last_name;
@@ -17,6 +27,6 @@ class Teacher extends User
 
     public function profile()
     {
-        return $this->hasOne(TeacherProfile::class);
+        return $this->hasOne(TeacherProfile::class, 'teacher_id');
     }
 }

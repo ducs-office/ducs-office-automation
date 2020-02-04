@@ -17,8 +17,6 @@ class TeachersProfileTest extends TestCase
     {
         $this->signInTeacher($teacher = create(Teacher::class));
 
-        create(TeacherProfile::class, 1, ['teacher_id' => $teacher]);
-
         $response = $this->withoutExceptionHandling()
             ->get(route('teachers.profile'))
             ->assertSuccessful()

@@ -48,6 +48,9 @@ class CreateTeacherTest extends TestCase
         $this->assertEquals($lastName, $Teacher->last_name);
         $this->assertEquals($email, $Teacher->email);
 
+        $this->assertTrue($Teacher->profile()->exists());
+        $this->assertEquals($Teacher->id, $Teacher->profile->teacher_id);
+
         $this->assertEquals(1, Teacher::count());
     }
 

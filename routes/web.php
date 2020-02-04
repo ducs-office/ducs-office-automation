@@ -26,4 +26,5 @@ Route::prefix('/teachers')
         Route::get('/profile/edit', 'ProfileController@edit')->name('profile.edit');
         Route::patch('/profile', 'ProfileController@update')->name('profile.update');
         Route::get('/profile/avatar', 'ProfileController@avatar')->name('profile.avatar');
+        Route::post('/profile/submit', 'PastTeachersProfilesController@store')->name('profile.submit');
     });

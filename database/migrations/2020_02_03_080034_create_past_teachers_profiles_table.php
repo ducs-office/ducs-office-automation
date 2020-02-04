@@ -1,11 +1,10 @@
 <?php
 
-use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTeachingDetailsTable extends Migration
+class CreatePastTeachersProfilesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,13 +13,14 @@ class CreateTeachingDetailsTable extends Migration
      */
     public function up()
     {
-        Schema::create('teaching_details', function (Blueprint $table) {
+        Schema::create('past_teachers_profiles', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('course_programme_revision_id');
+            $table->string('designation', 5);
+            $table->unsignedBigInteger('college_id');
             $table->unsignedBigInteger('teacher_id');
+            $table->timestamps();
 
             $table->foreign('teacher_id')->references('teacher_id')->on('teachers_profile')->onDelete('cascade');
-            $table->foreign('course_programme_revision_id')->references('id')->on('course_programme_revision')->onDelete('cascade');
         });
     }
 
@@ -31,6 +31,6 @@ class CreateTeachingDetailsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('teaching_details');
+        Schema::dropIfExists('past_teachers_profiles');
     }
 }
