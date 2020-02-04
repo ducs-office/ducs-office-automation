@@ -26,11 +26,13 @@ class FilterAndSearchIncomingLettersTest extends TestCase
         $this->signIn();
 
         $viewIncomingLetters = $this->withoutExceptionHandling()
-                                ->get('/incoming-letters?filters[date][less_than]='. $beforeFilter)
-                                ->assertSuccessful()
-                                ->assertViewIs('incoming_letters.index')
-                                ->assertViewHas('incoming_letters')
-                                ->viewdata('incoming_letters');
+            ->get(route('staff.incoming_letters.index', [
+                'filters' => ['date' => ['less_than' => $beforeFilter]]
+            ]))
+            ->assertSuccessful()
+            ->assertViewIs('staff.incoming_letters.index')
+            ->assertViewHas('incoming_letters')
+            ->viewdata('incoming_letters');
 
         $this->assertInstanceOf(Collection::class, $viewIncomingLetters);
         $this->assertCount(2, $viewIncomingLetters, 'Only 2 letters were expected but :actual letters were returned');
@@ -54,9 +56,11 @@ class FilterAndSearchIncomingLettersTest extends TestCase
         $this->signIn();
 
         $viewIncomingLetters = $this->withoutExceptionHandling()
-            ->get('/incoming-letters?filters[date][greater_than]=' . $afterFilter)
+            ->get(route('staff.incoming_letters.index', [
+                'filters' => ['date' => ['greater_than' => $afterFilter]]
+            ]))
             ->assertSuccessful()
-            ->assertViewIs('incoming_letters.index')
+            ->assertViewIs('staff.incoming_letters.index')
             ->assertViewHas('incoming_letters')
             ->viewData('incoming_letters');
 
@@ -84,9 +88,16 @@ class FilterAndSearchIncomingLettersTest extends TestCase
         $this->signIn();
 
         $viewIncomingLetters = $this->withoutExceptionHandling()
-            ->get('/incoming-letters?filters[date][greater_than]=' . $afterFilter . '&filters[date][less_than]='. $beforeFilter)
+            ->get(route('staff.incoming_letters.index', [
+                'filters' => [
+                    'date' => [
+                        'greater_than' => $afterFilter,
+                        'less_than' => $beforeFilter
+                    ]
+                ]
+            ]))
             ->assertSuccessful()
-            ->assertViewIs('incoming_letters.index')
+            ->assertViewIs('staff.incoming_letters.index')
             ->assertViewHas('incoming_letters')
             ->viewData('incoming_letters');
 
@@ -109,9 +120,11 @@ class FilterAndSearchIncomingLettersTest extends TestCase
         $after_date = '';
 
         $viewIncomingLetters = $this -> withoutExceptionHandling()
-            ->get('/incoming-letters?filters[date][greater_than]='.$after_date)
+            ->get(route('staff.incoming_letters.index', [
+                'filters' => ['date' => ['greater_than' => $after_date]]
+            ]))
             ->assertSuccessful()
-            ->assertViewIs('incoming_letters.index')
+            ->assertViewIs('staff.incoming_letters.index')
             ->assertViewHas('incoming_letters')
             ->viewData('incoming_letters');
 
@@ -126,9 +139,11 @@ class FilterAndSearchIncomingLettersTest extends TestCase
         $before_date = '';
 
         $viewIncomingLetters = $this -> withoutExceptionHandling()
-            ->get('/incoming-letters?before='.$before_date)
+            ->get(route('staff.incoming_letters.index', [
+                'filters' => ['date' => ['less_than' => $before_date]]
+            ]))
             ->assertSuccessful()
-            ->assertViewIs('incoming_letters.index')
+            ->assertViewIs('staff.incoming_letters.index')
             ->assertViewHas('incoming_letters')
             ->viewData('incoming_letters');
 
@@ -144,9 +159,16 @@ class FilterAndSearchIncomingLettersTest extends TestCase
         $before_date = '';
 
         $viewIncomingLetters = $this -> withoutExceptionHandling()
-            ->get('/incoming-letters?filters[date][greater_than]='.$after_date.'&filters[date][less_than]='.$before_date)
+            ->get(route('staff.incoming_letters.index', [
+                'filters' => [
+                    'date' => [
+                        'greater_than' => $after_date,
+                        'less_than' => $before_date
+                    ]
+                ]
+            ]))
             ->assertSuccessful()
-            ->assertViewIs('incoming_letters.index')
+            ->assertViewIs('staff.incoming_letters.index')
             ->assertViewHas('incoming_letters')
             ->viewData('incoming_letters');
 
@@ -163,9 +185,11 @@ class FilterAndSearchIncomingLettersTest extends TestCase
         $this->signIn();
 
         $viewIncomingLetters = $this->withoutExceptionHandling()
-                                ->get('/incoming-letters?filters[priority][equals]=1')
+                                ->get(route('staff.incoming_letters.index', [
+                                    'filters' => ['priority' => ['equals' => 1]]
+                                ]))
                                 ->assertSuccessful()
-                                ->assertViewIs('incoming_letters.index')
+                                ->assertViewIs('staff.incoming_letters.index')
                                 ->AssertViewHas('incoming_letters')
                                 ->viewData('incoming_letters');
 
@@ -185,9 +209,11 @@ class FilterAndSearchIncomingLettersTest extends TestCase
         $this->signIn();
 
         $viewIncomingLetters = $this -> withoutExceptionHandling()
-                                ->get('/incoming-letters?filters[recipient_id][equals]=1')
+                                ->get(route('staff.incoming_letters.index', [
+                                    'filters' => ['recipient_id' => ['equals' => 1]]
+                                ]))
                                 ->assertSuccessful()
-                                ->assertViewIs('incoming_letters.index')
+                                ->assertViewIs('staff.incoming_letters.index')
                                 ->assertViewHas('incoming_letters')
                                 ->viewData('incoming_letters');
 
@@ -206,11 +232,13 @@ class FilterAndSearchIncomingLettersTest extends TestCase
         $this->signIn();
 
         $viewIncomingLetters = $this -> withoutExceptionHandling()
-                                ->get('/incoming-letters?filters[sender][equals]=University Office')
-                                ->assertSuccessful()
-                                ->assertViewIs('incoming_letters.index')
-                                ->assertViewHas('incoming_letters')
-                                ->viewData('incoming_letters');
+            ->get(route('staff.incoming_letters.index', [
+                'filters' => ['sender' => ['equals' => 'University Office']]
+            ]))
+            ->assertSuccessful()
+            ->assertViewIs('staff.incoming_letters.index')
+            ->assertViewHas('incoming_letters')
+            ->viewData('incoming_letters');
 
         $this->assertCount(2, $viewIncomingLetters);
         $this->assertTrue($viewIncomingLetters->pluck('id')->contains($sentBy[0]->id));
@@ -227,11 +255,11 @@ class FilterAndSearchIncomingLettersTest extends TestCase
         $this->signIn();
 
         $viewIncomingLetters = $this->withoutExceptionHandling()
-                            ->get('/incoming-letters?search=def')
-                            ->assertSuccessful()
-                            ->assertViewIs('incoming_letters.index')
-                            ->assertViewHas('incoming_letters')
-                            ->viewData('incoming_letters');
+            ->get(route('staff.incoming_letters.index', ['search' => 'def']))
+            ->assertSuccessful()
+            ->assertViewIs('staff.incoming_letters.index')
+            ->assertViewHas('incoming_letters')
+            ->viewData('incoming_letters');
 
         $this->assertCount(2, $viewIncomingLetters);
         $this->assertTrue($viewIncomingLetters->pluck('id')->contains($sender1->id));

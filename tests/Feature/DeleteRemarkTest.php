@@ -25,8 +25,8 @@ class DeleteRemarkTest extends TestCase
         $remark = create(Remark::class);
 
         $this->withExceptionHandling()
-            ->delete("/remarks/$remark->id")
-            ->assertRedirect('/login');
+            ->delete(route('staff.remarks.destroy', $remark))
+            ->assertRedirect();
 
         $this->assertEquals(1, Remark::count());
     }
@@ -41,7 +41,7 @@ class DeleteRemarkTest extends TestCase
         ]);
 
         $this->withoutExceptionHandling()
-            ->delete("/remarks/$remark->id");
+            ->delete(route('staff.remarks.destroy', $remark));
 
         $this->assertEquals(0, Remark::count());
     }
@@ -58,7 +58,7 @@ class DeleteRemarkTest extends TestCase
         $remark = create(Remark::class);
 
         $this->withExceptionHandling()
-            ->delete("/remarks/$remark->id")
+            ->delete(route('staff.remarks.destroy', $remark))
             ->assertForbidden();
 
         $this->assertEquals(1, Remark::count());
@@ -78,7 +78,7 @@ class DeleteRemarkTest extends TestCase
         ]);
 
         $this->withExceptionHandling()
-            ->delete("/remarks/$remark->id")
+            ->delete(route('staff.remarks.destroy', $remark))
             ->assertForbidden();
 
         $this->assertEquals(1, Remark::count());

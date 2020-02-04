@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\CollegeTeacher;
+use App\Teacher;
 use App\User;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -16,7 +16,7 @@ class LoginTest extends TestCase
     /** @test */
     public function login_form_test()
     {
-        $response = $this->withoutExceptionHandling()->get('/login');
+        $response = $this->withoutExceptionHandling()->get(route('login_form'));
         $response->assertStatus(200);
     }
 
@@ -31,48 +31,48 @@ class LoginTest extends TestCase
 
         $this->withoutExceptionHandling();
 
-        $this->post('/login', [
+        $this->post(route('login'), [
             'email' => $adminStaff->email,
             'password' => $password,
             'type' => 'web'
-        ])->assertRedirect('/');
+        ])->assertRedirect();
 
         $this->assertTrue(Auth::guard('web')->check(), 'User was expected to login but was not.');
     }
 
     /** @test */
-    public function college_teachers_can_login()
+    public function teachers_can_login()
     {
-        $teacher = create(CollegeTeacher::class, 1, [
+        $teacher = create(Teacher::class, 1, [
             'password' => bcrypt($plainPassword = 'secret')
         ]);
 
-        $this->withoutExceptionHandling()->post('/login', [
+        $this->withoutExceptionHandling()->post(route('login'), [
             'email' => $teacher->email,
             'password' => $plainPassword,
-            'type' => 'college_teachers'
-        ])->assertRedirect('/college_teachers');
+            'type' => 'teachers'
+        ])->assertRedirect();
 
-        $this->assertTrue(Auth::guard('college_teachers')->check());
+        $this->assertTrue(Auth::guard('teachers')->check());
     }
 
     /** @test */
-    public function college_teachers_cannot_login_on_invalid_guard()
+    public function teachers_cannot_login_on_invalid_guard()
     {
-        $teacher = create(CollegeTeacher::class, 1, [
+        $teacher = create(Teacher::class, 1, [
             'password' => bcrypt($plainPassword = 'secret')
         ]);
 
         $this->withExceptionHandling()
-            ->from('/login')
-            ->post('/login', [
+            
+            ->post(route('login'), [
                 'email' => $teacher->email,
                 'password' => $plainPassword,
                 'type' => 'dsadasfm' // random
-            ])->assertRedirect('/login')
+            ])->assertRedirect()
             ->assertSessionHasErrors('type');
 
-        $this->assertFalse(Auth::guard('college_teachers')->check());
+        $this->assertFalse(Auth::guard('teachers')->check());
     }
 
     /** @test */
@@ -80,8 +80,8 @@ class LoginTest extends TestCase
     {
         $this->signIn();
         $this->withoutExceptionHandling();
-        $this->get('/login')->assertRedirect('/');
-        $this->post('/login')->assertRedirect('/');
+        $this->get(route('login_form'))->assertRedirect();
+        $this->post(route('login'))->assertRedirect();
     }
 
 
@@ -91,21 +91,21 @@ class LoginTest extends TestCase
         $this->signIn();
 
         $this->withoutExceptionHandling()
-            ->post('/logout')
-            ->assertRedirect('/');
+            ->post(route('logout'))
+            ->assertRedirect(route('login_form'));
 
         $this->assertFalse(auth()->check(), 'User was expected to be logged out, but was not logged out!');
     }
 
     /** @test */
-    public function logged_in_college_teacher_can_logout()
+    public function logged_in_teacher_can_logout()
     {
-        $this->signInCollegeTeacher();
+        $this->signInTeacher();
 
         $this->withoutExceptionHandling()
-            ->post('/logout', ['type' => 'college_teachers'])
-            ->assertRedirect('/');
+            ->post(route('logout'), ['type' => 'teachers'])
+            ->assertRedirect();
 
-        $this->assertFalse(Auth::guard('college_teachers')->check(), 'User was expected to be logged out, but was not logged out!');
+        $this->assertFalse(Auth::guard('teachers')->check(), 'User was expected to be logged out, but was not logged out!');
     }
 }

@@ -20,12 +20,12 @@ class CreateNewUserTest extends TestCase
     {
         Mail::fake();
 
-        $teacherRole = Role::firstOrcreate(['name' => 'college teacher']);
+        $teacherRole = Role::firstOrcreate(['name' => 'teacher']);
 
         $this->signIn(create(User::class), 'admin');
 
         $this->withoutExceptionHandling()
-            ->post('/users', [
+            ->post(route('staff.users.store'), [
                 'name' => $name = 'HOD Faculty',
                 'email' => $email = 'hod@uni.ac.in',
                 'category' => 'hod',
@@ -52,7 +52,7 @@ class CreateNewUserTest extends TestCase
         $this->signIn(create(User::class), 'admin');
 
         $this->withoutExceptionHandling()
-            ->post('/users', [
+            ->post(route('staff.users.store'), [
                 'name' => $name = 'HOD Faculty',
                 'email' => $email = 'hod@uni.ac.in',
                 'category' => 'hod',
@@ -74,13 +74,13 @@ class CreateNewUserTest extends TestCase
 
         $this->signIn(create(User::class), 'admin');
 
-        $teacherRole = Role::firstOrCreate(['name' => 'college teacher']);
+        $teacherRole = Role::firstOrCreate(['name' => 'teacher']);
 
         $this->withoutExceptionHandling()
-            ->post('/users', [
-                'name' => 'college teacher',
+            ->post(route('staff.users.store'), [
+                'name' => 'teacher',
                 'email' => 'contact@teacher.me',
-                'category' => 'college_teacher',
+                'category' => 'teacher',
                 'roles' => [$teacherRole->id]
             ])->assertRedirect('/')
             ->assertSessionHasFlash('success', 'User created successfully!');
@@ -95,11 +95,11 @@ class CreateNewUserTest extends TestCase
     {
         $this->signIn();
 
-        $teacherRole = Role::firstOrcreate(['name' => 'college teacher']);
+        $teacherRole = Role::firstOrcreate(['name' => 'teacher']);
 
         try {
             $this->withoutExceptionHandling()
-                ->post('/users', [
+                ->post(route('staff.users.store'), [
                     'name' => '',
                     'email' => 'hod@uni.ac.in',
                     'category' => 'hod',
@@ -116,11 +116,11 @@ class CreateNewUserTest extends TestCase
     {
         $this->signIn();
 
-        $teacherRole = Role::firstOrcreate(['name' => 'college teacher']);
+        $teacherRole = Role::firstOrcreate(['name' => 'teacher']);
 
         try {
             $this->withoutExceptionHandling()
-                ->post('/users', [
+                ->post(route('staff.users.store'), [
                     'name' => 'HOD Faculty',
                     'email' => '',
                     'category' => 'hod',
@@ -138,11 +138,11 @@ class CreateNewUserTest extends TestCase
         $this->signIn();
 
         $user = create(User::class);
-        $teacherRole = Role::firstOrcreate(['name' => 'college teacher']);
+        $teacherRole = Role::firstOrcreate(['name' => 'teacher']);
 
         try {
             $this->withoutExceptionHandling()
-                ->post('/users', [
+                ->post(route('staff.users.store'), [
                     'name' => 'HOD Faculty',
                     'email' => $user->email,
                     'category' => 'hod',
@@ -159,11 +159,11 @@ class CreateNewUserTest extends TestCase
     {
         $this->signIn();
 
-        $teacherRole = Role::firstOrcreate(['name' => 'college teacher']);
+        $teacherRole = Role::firstOrcreate(['name' => 'teacher']);
 
         try {
             $this->withoutExceptionHandling()
-                ->post('/users', [
+                ->post(route('staff.users.store'), [
                     'name' => 'HOD Faculty',
                     'email' => 'hod@uni.ac.in',
                     'category' => '',
@@ -180,11 +180,11 @@ class CreateNewUserTest extends TestCase
     {
         $this->signIn();
 
-        $teacherRole = Role::firstOrcreate(['name' => 'college teacher']);
+        $teacherRole = Role::firstOrcreate(['name' => 'teacher']);
 
         try {
             $this->withoutExceptionHandling()
-                ->post('/users', [
+                ->post(route('staff.users.store'), [
                     'name' => 'HOD Faculty',
                     'email' => 'hod@uni.ac.in',
                     'category' => 'InvalidCategory123',
@@ -201,11 +201,11 @@ class CreateNewUserTest extends TestCase
     {
         $this->signIn();
 
-        $teacherRole = Role::firstOrcreate(['name' => 'college teacher']);
+        $teacherRole = Role::firstOrcreate(['name' => 'teacher']);
 
         try {
             $this->withoutExceptionHandling()
-                ->post('/users', [
+                ->post(route('staff.users.store'), [
                     'name' => 'HOD Faculty',
                     'email' => 'hod@uni.ac.in',
                     'category' => 'hod',

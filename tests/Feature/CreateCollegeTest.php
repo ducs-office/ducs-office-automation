@@ -43,9 +43,8 @@ class CreateCollegeTest extends TestCase
         $params = $this->fillCollegeFormFields();
 
         $this->withoutExceptionHandling()
-            ->from('/colleges')
-            ->post('/colleges', $params)
-            ->assertRedirect('/colleges')
+            ->post(route('staff.colleges.store'), $params)
+            ->assertRedirect()
             ->assertSessionHasNoErrors()
             ->assertSessionHasFlash('success', 'College created successfully!');
 
@@ -68,7 +67,7 @@ class CreateCollegeTest extends TestCase
         $params = $this->fillCollegeFormFields(['code' => '']);
 
         $this->withExceptionHandling()
-            ->post('/colleges', $params)
+            ->post(route('staff.colleges.store'), $params)
             ->assertSessionHasErrorsIn('code');
 
         $this->assertEquals(0, College::count());
@@ -83,7 +82,7 @@ class CreateCollegeTest extends TestCase
         $params = $this->fillCollegeFormFields(['code' => $existing_college_code]);
 
         $this->withExceptionHandling()
-            ->post('/colleges', $params)
+            ->post(route('staff.colleges.store'), $params)
             ->assertSessionHasErrorsIn('code');
 
         $this->assertEquals(1, College::count());
@@ -97,7 +96,7 @@ class CreateCollegeTest extends TestCase
         $params = $this->fillCollegeFormFields(['name' => '']);
 
         $this->withExceptionHandling()
-            ->post('/colleges', $params)
+            ->post(route('staff.colleges.store'), $params)
             ->assertSessionHasErrorsIn('name');
 
         $this->assertEquals(0, College::count());
@@ -112,7 +111,7 @@ class CreateCollegeTest extends TestCase
         $params = $this->fillCollegeFormFields(['name' => $existing_college_name]);
 
         $this->withExceptionHandling()
-            ->post('/colleges', $params)
+            ->post(route('staff.colleges.store'), $params)
             ->assertSessionHasErrorsIn('name');
 
         $this->assertEquals(1, College::count());
@@ -128,7 +127,7 @@ class CreateCollegeTest extends TestCase
         ]);
 
         $this->withExceptionHandling()
-            ->post('/colleges', $params)
+            ->post(route('staff.colleges.store'), $params)
             ->assertSessionHasErrorsIn('programmes');
 
         $this->assertEquals(0, College::count());
@@ -144,7 +143,7 @@ class CreateCollegeTest extends TestCase
         ]);
 
         $this->withExceptionHandling()
-            ->post('/colleges', $params)
+            ->post(route('staff.colleges.store'), $params)
             ->assertSessionHasErrorsIn('programmes');
 
         $this->assertEquals(0, College::count());
@@ -160,7 +159,7 @@ class CreateCollegeTest extends TestCase
         ]);
 
         $this->withExceptionHandling()
-            ->post('/colleges', $params)
+            ->post(route('staff.colleges.store'), $params)
             ->assertSessionHasErrorsIn('principal_name');
 
         $this->assertEquals(0, College::count());
@@ -176,7 +175,7 @@ class CreateCollegeTest extends TestCase
         ]);
 
         $this->withExceptionHandling()
-            ->post('/colleges', $params)
+            ->post(route('staff.colleges.store'), $params)
             ->assertSessionHasErrorsIn('principal_phones');
 
         $this->assertEquals(0, College::count());
@@ -192,7 +191,7 @@ class CreateCollegeTest extends TestCase
         ]);
 
         $this->withExceptionHandling()
-            ->post('/colleges', $params)
+            ->post(route('staff.colleges.store'), $params)
             ->assertSessionHasErrorsIn('principal_phones');
 
         $this->assertEquals(0, College::count());
@@ -208,7 +207,7 @@ class CreateCollegeTest extends TestCase
         ]);
 
         $this->withExceptionHandling()
-            ->post('/colleges', $params)
+            ->post(route('staff.colleges.store'), $params)
             ->assertSessionHasErrorsIn('principal_phones');
 
         $this->assertEquals(0, College::count());
@@ -224,7 +223,7 @@ class CreateCollegeTest extends TestCase
         ]);
 
         $this->withExceptionHandling()
-            ->post('/colleges', $params)
+            ->post(route('staff.colleges.store'), $params)
             ->assertSessionHasErrorsIn('principal_emails');
 
         $this->assertEquals(0, College::count());
@@ -240,7 +239,7 @@ class CreateCollegeTest extends TestCase
         ]);
 
         $this->withExceptionHandling()
-            ->post('/colleges', $params)
+            ->post(route('staff.colleges.store'), $params)
             ->assertSessionHasErrorsIn('principal_emails');
 
         $this->assertEquals(0, College::count());
@@ -256,7 +255,7 @@ class CreateCollegeTest extends TestCase
         ]);
 
         $this->withExceptionHandling()
-            ->post('/colleges', $params)
+            ->post(route('staff.colleges.store'), $params)
             ->assertSessionHasErrorsIn('principal_emails');
 
         $this->assertEquals(0, College::count());
@@ -272,7 +271,7 @@ class CreateCollegeTest extends TestCase
         ]);
 
         $this->withExceptionHandling()
-            ->post('/colleges', $params)
+            ->post(route('staff.colleges.store'), $params)
             ->assertSessionHasErrorsIn('address');
 
         $this->assertEquals(0, College::count());
@@ -288,7 +287,7 @@ class CreateCollegeTest extends TestCase
         ]);
 
         $this->withExceptionHandling()
-            ->post('/colleges', $params)
+            ->post(route('staff.colleges.store'), $params)
             ->assertSessionHasErrorsIn('address');
 
         $this->assertEquals(0, College::count());
@@ -304,7 +303,7 @@ class CreateCollegeTest extends TestCase
         ]);
 
         $this->withExceptionHandling()
-            ->post('/colleges', $params)
+            ->post(route('staff.colleges.store'), $params)
             ->assertSessionHasErrorsIn('website');
 
         $this->assertEquals(0, College::count());
@@ -321,7 +320,7 @@ class CreateCollegeTest extends TestCase
         ]);
 
         $this->withExceptionHandling()
-            ->post('/colleges', $params)
+            ->post(route('staff.colleges.store'), $params)
             ->assertSessionHasErrorsIn('website');
 
         $this->assertEquals(0, College::count());

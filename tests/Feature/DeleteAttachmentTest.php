@@ -37,9 +37,8 @@ class DeleteAttachmentTest extends TestCase
 
 
         $this->withoutExceptionHandling()
-            ->from('/outgoing_letters')
-            ->delete('/attachments/' . $attachments[0]->id)
-            ->assertRedirect('/outgoing_letters');
+            ->delete(route('staff.attachments.destroy', $attachments[0]))
+            ->assertRedirect();
 
         Storage::assertMissing($attachments[0]->path);
         $this->assertNull($attachments[0]->fresh());
@@ -59,8 +58,8 @@ class DeleteAttachmentTest extends TestCase
         $this->signIn();
 
         $this->withExceptionHandling()
-            ->from('/outgoing_letters')
-            ->delete('/attachments/' . $attachment->id)
+            
+            ->delete(route('staff.attachments.destroy', $attachment))
             ->assertForbidden();
 
         Storage::assertExists($attachment->path);

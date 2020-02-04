@@ -39,8 +39,8 @@ class CreateCourseTest extends TestCase
 
         $course = $this->fillCoursesForm();
 
-        $this->post('/courses', $course)
-            ->assertRedirect('/courses')
+        $this->post(route('staff.courses.store'), $course)
+            ->assertRedirect()
             ->assertSessionHasFlash('success', 'Course created successfully!');
 
         $this->assertEquals(1, Course::count());
@@ -68,7 +68,7 @@ class CreateCourseTest extends TestCase
         try {
             $course = $this->fillCoursesForm(['type' => 'random_type']);
             $this->withoutExceptionHandling()
-                ->post('/courses', $course);
+                ->post(route('staff.courses.store'), $course);
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('type', $e->errors());
         }
@@ -81,7 +81,7 @@ class CreateCourseTest extends TestCase
         $this->signIn();
 
         try {
-            $this->post('/courses', $this->fillCoursesForm([
+            $this->post(route('staff.courses.store'), $this->fillCoursesForm([
                 'attachments' => [], // no document uploaded
             ]));
         } catch (ValidationException $e) {
@@ -97,7 +97,7 @@ class CreateCourseTest extends TestCase
         $this->signIn();
 
         try {
-            $this->post('/courses', $this->fillCoursesForm([
+            $this->post(route('staff.courses.store'), $this->fillCoursesForm([
                 'attachments' => ['not a file but string'], // no document uploaded
             ]));
         } catch (ValidationException $e) {

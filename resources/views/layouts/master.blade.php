@@ -23,11 +23,11 @@
                         leave-active-class="transition-transform">
                         <div v-show="sidebar.isVisible"
                             class="bg-magenta-800 text-white w-80 flex flex-col flex-shrink-0">
-                            @auth @include('partials.sidebar') @endauth
+                            @auth @include('staff.partials.sidebar') @endauth
                         </div>
                     </transition>
                     <main class="flex-1 overflow-x-hidden overflow-y-auto">
-                        @include('partials.header')
+                        @include('staff.partials.header')
                         @yield('body')
                     </main>
                     @include('flash::message')

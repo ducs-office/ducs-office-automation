@@ -21,8 +21,8 @@ class ViewIncomingLettersTest extends TestCase
         $this->expectException(AuthenticationException::class);
 
         $this->withoutExceptionHandling()
-            ->get('/incoming-letters')
-            ->assertRedirect('/login');
+            ->get(route('staff.incoming_letters.index'))
+            ->assertRedirect();
     }
 
     /** @test */
@@ -32,9 +32,9 @@ class ViewIncomingLettersTest extends TestCase
         create(IncomingLetter::class, 2);
 
         $viewIncomingLetters = $this->withoutExceptionHandling()
-                    ->get('/incoming-letters')
+                    ->get(route('staff.incoming_letters.index'))
                     ->assertSuccessful()
-                    ->assertViewIs('incoming_letters.index')
+                    ->assertViewIs('staff.incoming_letters.index')
                     ->assertViewHas('incoming_letters')
                     ->viewData('incoming_letters');
 
@@ -49,9 +49,9 @@ class ViewIncomingLettersTest extends TestCase
         $letters = create(IncomingLetter::class, 3);
 
         $viewData = $this->withExceptionHandling()
-                    ->get('incoming-letters')
+                    ->get(route('staff.incoming_letters.index'))
                     ->assertSuccessful()
-                    ->assertViewIs('incoming_letters.index')
+                    ->assertViewIs('staff.incoming_letters.index')
                     ->assertViewHas('incoming_letters')
                     ->viewData('incoming_letters');
 
@@ -71,9 +71,9 @@ class ViewIncomingLettersTest extends TestCase
         create(IncomingLetter::class);
 
         $recipients = $this->withExceptionHandling()
-                ->get('/incoming-letters')
+                ->get(route('staff.incoming_letters.index'))
                 ->assertSuccessful()
-                ->assertViewIs('incoming_letters.index')
+                ->assertViewIs('staff.incoming_letters.index')
                 ->assertViewHas('recipients')
                 ->viewData('recipients');
 
@@ -93,9 +93,9 @@ class ViewIncomingLettersTest extends TestCase
         create(IncomingLetter::class);
 
         $senders = $this->withExceptionHandling()
-                    ->get('/incoming-letters')
+                    ->get(route('staff.incoming_letters.index'))
                     ->assertSuccessful()
-                    ->assertViewIs('incoming_letters.index')
+                    ->assertViewIs('staff.incoming_letters.index')
                     ->assertViewHas('senders')
                     ->viewData('senders');
 
@@ -116,9 +116,9 @@ class ViewIncomingLettersTest extends TestCase
         create(IncomingLetter::class, 1, ['priority' => 3]);
 
         $priorities = $this->withoutExceptionHandling()
-                        ->get('/incoming-letters')
+                        ->get(route('staff.incoming_letters.index'))
                         ->assertSuccessful()
-                        ->assertViewIs('incoming_letters.index')
+                        ->assertViewIs('staff.incoming_letters.index')
                         ->assertViewHas('priorities')
                         ->viewData('priorities');
 

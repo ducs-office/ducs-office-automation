@@ -20,9 +20,9 @@ class ViewUsersTest extends TestCase
         $this->signIn($users[0], 'admin');
 
         $response = $this->withoutExceptionHandling()
-            ->get('/users')
+            ->get(route('staff.users.index'))
             ->assertSuccessful()
-            ->assertViewIs('users.index')
+            ->assertViewIs('staff.users.index')
             ->assertViewHasAll(['users', 'roles','categories']);
 
         $this->assertCount(User::count(), $response->viewData('users'));

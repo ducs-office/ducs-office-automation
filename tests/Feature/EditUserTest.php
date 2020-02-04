@@ -21,10 +21,9 @@ class EditUserTest extends TestCase
         $this->signIn(create(User::class), 'admin');
 
         $this->withoutExceptionHandling()
-            ->from('/users')
-            ->patch('/users/' . $john->id, [
+            ->patch(route('staff.users.update', $john), [
                 'email' => $correctEmail = 'john@gmail.com'
-            ])->assertRedirect('/users')
+            ])->assertRedirect()
             ->assertSessionHasFlash('success', 'User updated successfully!');
 
         tap($john->fresh(), function ($updated) use ($john, $correctEmail) {
@@ -46,10 +45,9 @@ class EditUserTest extends TestCase
         $this->signIn(create(User::class), 'admin');
 
         $this->withoutExceptionHandling()
-            ->from('/users')
-            ->patch('/users/' . $john->id, [
+            ->patch(route('staff.users.update', $john), [
                 'name' => $correctName = 'John Doe'
-            ])->assertRedirect('/users')
+            ])->assertRedirect()
             ->assertSessionHasFlash('success', 'User updated successfully!');
 
         tap($john->fresh(), function ($updated) use ($john, $correctName) {
@@ -73,10 +71,9 @@ class EditUserTest extends TestCase
         $this->signIn(create(User::class), 'admin');
 
         $this->withoutExceptionHandling()
-            ->from('/users')
-            ->patch('/users/' . $john->id, [
+            ->patch(route('staff.users.update', $john), [
                 'roles' => [ $adminRole->id ]
-            ])->assertRedirect('/users')
+            ])->assertRedirect()
             ->assertSessionHasFlash('success', 'User updated successfully!');
 
         $this->assertTrue($john->fresh()->getRoleNames()->contains($adminRole->name));
@@ -95,10 +92,9 @@ class EditUserTest extends TestCase
         $this->signIn(create(User::class), 'admin');
 
         $this->withoutExceptionHandling()
-            ->from('/users')
-            ->patch('/users/' . $john->id, [
+            ->patch(route('staff.users.update', $john), [
                 'category' => $newCategory = $categories[1]
-            ])->assertRedirect('/users')
+            ])->assertRedirect()
             ->assertSessionHasFlash('success', 'User updated successfully!');
 
         tap($john->fresh(), function ($updated) use ($john, $newCategory) {
@@ -118,12 +114,11 @@ class EditUserTest extends TestCase
         $user = create(User::class);
 
         $this->withoutExceptionHandling()
-            ->from('/users')
-            ->patch('/users/'.$user->id, [
+            ->patch(route('staff.users.update', $user), [
             'email' => $user->email,
             'name' => $newName = 'New name',
             'category' => $newCategory = 'hod'
-        ])->assertRedirect('/users')
+        ])->assertRedirect()
         ->assertSessionHasNoErrors()
         ->assertSessionHasFlash('success', 'User updated successfully!');
 

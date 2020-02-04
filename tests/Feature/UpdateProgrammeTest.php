@@ -24,9 +24,9 @@ class UpdateProgrammeTest extends TestCase
 
         $programme = create(Programme::class);
 
-        $response = $this->patch('/programmes/'.$programme->id, [
+        $response = $this->patch(route('staff.programmes.update', $programme), [
             'code' => $newCode = 'New123'
-        ])->assertRedirect('/programmes')
+        ])->assertRedirect()
         ->assertSessionHasFlash('success', 'Programme updated successfully!');
 
         $this->assertEquals(1, Programme::count());
@@ -45,9 +45,9 @@ class UpdateProgrammeTest extends TestCase
         $programmeRevision = $programme->revisions()->create(['revised_at' => $programme->wef]);
         $programmeRevision->courses()->attach($course, ['semester' => 1]);
 
-        $response = $this->patch('/programmes/'.$programme->id, [
+        $response = $this->patch(route('staff.programmes.update', $programme), [
             'wef' => $newDate = now()->format('Y-m-d H:i:s')
-        ])->assertRedirect('/programmes')
+        ])->assertRedirect()
         ->assertSessionHasFlash('success', 'Programme updated successfully!');
 
         $this->assertEquals(1, Programme::count());
@@ -62,10 +62,10 @@ class UpdateProgrammeTest extends TestCase
 
         $programme = create(Programme::class);
 
-        $response = $this->patch('/programmes/'.$programme->id, [
+        $response = $this->patch(route('staff.programmes.update', $programme), [
             'code' => $programme->code,
             'name' => $newName = 'New Programme'
-        ])->assertRedirect('/programmes')
+        ])->assertRedirect()
         ->assertSessionHasNoErrors()
         ->assertSessionHasFlash('success', 'Programme updated successfully!');
 
@@ -81,9 +81,9 @@ class UpdateProgrammeTest extends TestCase
 
         $programme = create(Programme::class, 1, ['type'=>'UG']);
 
-        $response = $this->patch('/programmes/'.$programme->id, [
+        $response = $this->patch(route('staff.programmes.update', $programme), [
             'type' => $newType = 'PG'
-        ])->assertRedirect('/programmes')
+        ])->assertRedirect()
         ->assertSessionHasFlash('success', 'Programme updated successfully!');
 
         $this->assertEquals(1, Programme::count());

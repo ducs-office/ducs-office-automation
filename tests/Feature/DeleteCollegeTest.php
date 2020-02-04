@@ -17,7 +17,7 @@ class DeleteCollegeTest extends TestCase
     {
         $college = create(College::class);
 
-        $this->delete('/colleges/'. $college->id)
+        $this->delete(route('staff.colleges.destroy', $college))
             ->assertRedirect('/login');
 
         $this->assertEquals($college->code, $college->fresh()->code);
@@ -31,8 +31,8 @@ class DeleteCollegeTest extends TestCase
         $college = create(College::class);
 
         $this->withoutExceptionHandling()
-            ->delete('/colleges/'.$college->id)
-            ->assertRedirect('/colleges')
+            ->delete(route('staff.colleges.destroy', $college))
+            ->assertRedirect()
             ->assertSessionHasFlash('success', 'College deleted successfully!');
 
         $this->assertNull($college->fresh(), "College still exists in database");

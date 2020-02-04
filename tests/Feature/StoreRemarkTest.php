@@ -25,8 +25,10 @@ class StoreRemarkTest extends TestCase
     /** @test */
     public function guest_cannot_store_remark()
     {
+        $letter = create(OutgoingLetter::class);
+
         $this->withExceptionHandling()
-            ->post('/outgoing-letters/1/remarks')
+            ->post(route('staff.outgoing_letters.remarks.store', $letter))
             ->assertRedirect('/login');
 
         $this->assertEquals(0, Remark::count());
@@ -43,7 +45,7 @@ class StoreRemarkTest extends TestCase
         $letter = create(OutgoingLetter::class);
 
         $this->withExceptionHandling()
-            ->post("/outgoing-letters/{$letter->id}/remarks")
+            ->post(route('staff.outgoing_letters.remarks.store', $letter))
             ->assertForbidden();
     }
 
@@ -55,7 +57,7 @@ class StoreRemarkTest extends TestCase
         $letter = create(OutgoingLetter::class);
 
         $this->withoutExceptionHandling()
-            ->post("/outgoing-letters/{$letter->id}/remarks", [
+            ->post(route('staff.outgoing_letters.remarks.store', $letter), [
                 'description'=>'Not received by University'
             ]);
 
@@ -72,7 +74,7 @@ class StoreRemarkTest extends TestCase
 
         try {
             $this->withoutExceptionHandling()
-                ->post("/outgoing-letters/{$letter->id}/remarks", $remark);
+                ->post(route('staff.outgoing_letters.remarks.store', $letter), $remark);
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('description', $e->errors());
         }
@@ -90,7 +92,7 @@ class StoreRemarkTest extends TestCase
 
         try {
             $this->withoutExceptionHandling()
-                ->post("/outgoing-letters/{$letter->id}/remarks", $remark);
+                ->post(route('staff.outgoing_letters.remarks.store', $letter), $remark);
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('description', $e->errors());
         }
@@ -108,7 +110,7 @@ class StoreRemarkTest extends TestCase
 
         try {
             $this->withoutExceptionHandling()
-                ->post("/outgoing-letters/{$letter->id}/remarks", $remark);
+                ->post(route('staff.outgoing_letters.remarks.store', $letter), $remark);
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('description', $e->errors());
         }

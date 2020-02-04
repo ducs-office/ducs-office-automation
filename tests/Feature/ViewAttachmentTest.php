@@ -18,7 +18,7 @@ class ViewAttachmentTest extends TestCase
     public function guest_can_not_view_an_attachment()
     {
         Storage::fake();
-        
+
         $letter = create(OutgoingLetter::class);
         $documentPath = UploadedFile::fake()->create('document.pdf', 50)->store('random/location');
 
@@ -26,17 +26,17 @@ class ViewAttachmentTest extends TestCase
             'original_name' => 'My Document',
             'path' => $documentPath
         ]);
-        
+
         $this->withExceptionHandling()
-            ->get('/attachments/' . $attachment->id)
-            ->assertRedirect('login');
+            ->get(route('staff.attachments.show', $attachment))
+            ->assertRedirect();
     }
 
     /** @test */
     public function user_can_view_an_attachmemt()
     {
         Storage::fake();
-        
+
         $letter = create(OutgoingLetter::class);
         $documentPath = UploadedFile::fake()->create('document.pdf', 50)->store('random/location');
 
@@ -44,11 +44,11 @@ class ViewAttachmentTest extends TestCase
             'original_name' => 'My Document',
             'path' => $documentPath
         ]);
-        
+
         $this->signIn();
 
         $this->withoutExceptionHandling()
-            ->get('/attachments/' . $attachment->id)
+            ->get(route('staff.attachments.show', $attachment))
             ->assertSuccessful();
     }
 }

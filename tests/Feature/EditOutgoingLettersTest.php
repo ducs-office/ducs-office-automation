@@ -25,9 +25,9 @@ class EditOutgoingLettersTest extends TestCase
         ]);
 
         $this->withoutExceptionHandling()
-            ->get("/outgoing-letters/$letter->id/edit")
+            ->get(route('staff.outgoing_letters.edit', $letter))
             ->assertSuccessful()
-            ->assertViewIs('outgoing_letters.edit')
+            ->assertViewIs('staff.outgoing_letters.edit')
             ->assertViewHas('outgoing_letter');
     }
 
@@ -39,7 +39,7 @@ class EditOutgoingLettersTest extends TestCase
         $letter = create(OutgoingLetter::class);
 
         $this->withoutExceptionHandling()
-            ->get("/outgoing-letters/$letter->id/edit");
+            ->get(route('staff.outgoing_letters.edit', $letter));
     }
 
     /** @test */
@@ -52,17 +52,17 @@ class EditOutgoingLettersTest extends TestCase
         $letter = create(OutgoingLetter::class, 1, [
             'subject' => $oldSubject = 'old subject'
         ]);
-        
+
         $role->revokePermissionTo($permission);
-        
+
         $this->signIn($user, $role->name);
 
         $this->withExceptionHandling()
-            ->get('/outgoing-letters/' . $letter->id . '/edit')
+            ->get(route('staff.outgoing_letters.edit', $letter))
             ->assertForbidden();
 
         $this->withExceptionHandling()
-            ->patch('/outgoing-letters/' . $letter->id, ['subject' => 'new subject'])
+            ->patch(route('staff.outgoing_letters.update', $letter), ['subject' => 'new subject'])
             ->assertForbidden();
 
         $this->assertEquals($oldSubject, $letter->fresh()->subject);
@@ -79,17 +79,17 @@ class EditOutgoingLettersTest extends TestCase
             'subject' => $oldSubject = 'old subject',
             'creator_id' => create(User::class)->id
         ]);
-        
+
         $role->givePermissionTo($permission);
-        
+
         $this->signIn($user, $role->name);
 
         $this->withExceptionHandling()
-            ->get('/outgoing-letters/' . $letter->id . '/edit')
+            ->get(route('staff.outgoing_letters.edit', $letter))
             ->assertForbidden();
 
         $this->withExceptionHandling()
-            ->patch('/outgoing-letters/' . $letter->id, ['subject' => 'new subject'])
+            ->patch(route('staff.outgoing_letters.update', $letter), ['subject' => 'new subject'])
             ->assertForbidden();
 
         $this->assertEquals($oldSubject, $letter->fresh()->subject);

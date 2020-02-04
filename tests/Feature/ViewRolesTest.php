@@ -17,9 +17,9 @@ class ViewRolesTest extends TestCase
     {
         $this->signIn();
 
-        $response = $this->get('/roles')
+        $response = $this->get(route('staff.roles.index'))
             ->assertSuccessful()
-            ->assertViewIs('roles.index')
+            ->assertViewIs('staff.roles.index')
             ->assertViewHasAll(['roles', 'permissions']);
 
         $viewRoles = $response->viewData('roles');

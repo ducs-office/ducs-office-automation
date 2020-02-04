@@ -28,15 +28,23 @@ class UpdateProgrammeRevisionTest extends TestCase
         foreach ($semester_courses as $index => $course) {
             $course->programme_revisions()->attach($revision, ['semester' => $index + 1]);
         }
-       
+
         $revised_at = '2000-02-01'; //now('Y-m-d H:i:s')
-        
-        $this->patch("/programmes/$programme->id/revision/$revision->id", ['revised_at' => $revised_at, 'semester_courses' => [[$semester_courses[1]->id], [$semester_courses[0]->id]]])
-            ->assertRedirect("/programme/{$programme->id}/revision")
+
+        $this->patch(
+            route('staff.programmes.revisions.update', [
+                'programme' => $programme,
+                'programme_revision' => $revision
+            ]),
+            [
+                'revised_at' => $revised_at,
+                'semester_courses' => [[$semester_courses[1]->id], [$semester_courses[0]->id]]
+            ]
+        )
+            ->assertRedirect()
             ->assertSessionHasFlash('success', "Programme's revision edited successfully!");
 
-        $this->assertEquals(1, Programme::count());
-        $this->assertEquals(1, $programme->fresh()->revisions->count());
+        $this->assertEquals(1, ProgrammeRevision::count());
         $this->assertEquals($revised_at, $programme->fresh()->revisions()->find(1)->revised_at->format('Y-m-d'));
     }
 
@@ -56,7 +64,10 @@ class UpdateProgrammeRevisionTest extends TestCase
         try {
             $this->withoutExceptionHandling()
                 ->patch(
-                    "programmes/$programme->id/revision/$revision->id",
+                    route('staff.programmes.revisions.update', [
+                        'programme' => $programme,
+                        'programme_revision' => $revision
+                    ]),
                     [
                         'revised_at' => '',
                         'semester_courses' => [[$semester_courses[0]->id], [$semester_courses[1]->id]]
@@ -87,7 +98,10 @@ class UpdateProgrammeRevisionTest extends TestCase
         try {
             $this->withoutExceptionHandling()
                 ->patch(
-                    "programmes/$programme->id/revision/$revision2->id",
+                    route('staff.programmes.revisions.update', [
+                        'programme' => $programme,
+                        'programme_revision' => $revision2
+                    ]),
                     [
                         'revised_at' => $programme->wef->format('Y-m-d'),
                         'semester_courses' => [[$semester_courses[0]->id], [$semester_courses[1]->id]]
@@ -116,7 +130,10 @@ class UpdateProgrammeRevisionTest extends TestCase
 
         try {
             $this->withoutExceptionHandling()
-                ->patch("programmes/$programme->id/revision/$revision->id", [
+                ->patch(route('staff.programmes.revisions.update', [
+                    'programme' => $programme,
+                    'programme_revision' => $revision
+                ]), [
                         'revised_at' => 'some random string',
                         'semester_courses' => [[$courses[0]->id], [$courses[1]->id]]
                     ]);
@@ -129,11 +146,14 @@ class UpdateProgrammeRevisionTest extends TestCase
         $revised_at = "2019-09-08";
 
         $this->withoutExceptionHandling()
-        ->patch("programmes/$programme->id/revision/$revision->id", [
+        ->patch(route('staff.programmes.revisions.update', [
+            'programme' => $programme,
+            'programme_revision' => $revision
+        ]), [
             'revised_at' => $revised_at,
             'semester_courses' => [[$courses[0]->id], [$courses[1]->id]],
         ]);
-    
+
         $this->assertEquals($revised_at, $revision->fresh()->revised_at->format('Y-m-d'));
     }
 
@@ -153,11 +173,14 @@ class UpdateProgrammeRevisionTest extends TestCase
         $revised_at = "2019-09-08";
 
         $this->withoutExceptionHandling()
-        ->patch("programmes/$programme->id/revision/$revision->id", [
+        ->patch(route('staff.programmes.revisions.update', [
+            'programme' => $programme,
+            'programme_revision' => $revision
+        ]), [
             'revised_at' => $revised_at,
             'semester_courses' => [[$courses[0]->id], [$courses[1]->id]],
         ]);
-    
+
         $this->assertEquals($revised_at, Programme::find(1)->wef->format('Y-m-d'));
     }
 
@@ -177,10 +200,13 @@ class UpdateProgrammeRevisionTest extends TestCase
         foreach ($unassignedCourses as $index => $course) {
             $course->programme_revisions()->attach($revision2, ['semester' => $index + 1]);
         }
-        
+
         try {
             $this->withoutExceptionHandling()
-                ->patch("/programmes/$programme2->id/revision/$revision2->id", [
+                ->patch(route('staff.programmes.revisions.update', [
+                    'programme' => $programme2,
+                    'programme_revision' => $revision2,
+                ]), [
                     'revised_at' => $revised_at = "2021-09-08",
                     'semester_courses' => [
                         [$assignedCourse->id],
@@ -207,13 +233,16 @@ class UpdateProgrammeRevisionTest extends TestCase
         $courses[1]->programme_revisions()->attach($revision, ['semester' => 1]);
 
         $this->withoutExceptionHandling()
-            ->patch("/programmes/$programme->id/revision/$revision->id", [
+            ->patch(route('staff.programmes.revisions.update', [
+                'programme' => $programme,
+                'programme_revision' => $revision
+            ]), [
                 'revised_at' => '2019-09-09',
                 'semester_courses' => [
                     [$courses[0]->id, $courses[1]->id],
                     [$courses[2]->id],
                 ]
-            ])->assertRedirect("/programme/{$programme->id}/revision")
+            ])->assertRedirect()
             ->assertSessionHasNoErrors()
             ->assertSessionHasFlash('success', "Programme's revision edited successfully!");
 
@@ -228,7 +257,7 @@ class UpdateProgrammeRevisionTest extends TestCase
         $programme = create(Programme::class, 1, ['wef' => '2000-09-09', 'duration' => '1']);
         $courses = create(course::class, 2);
         $revision = create(ProgrammeRevision::class, 1, ['revised_at' => $programme->wef, 'programme_id' => $programme->id]);
-       
+
         foreach ($courses as $index => $course) {
             $course->programme_revisions()->attach($revision, ['semester' => $index + 1]);
         }
@@ -237,14 +266,17 @@ class UpdateProgrammeRevisionTest extends TestCase
 
         try {
             $this->withoutExceptionHandling()
-            ->patch("programmes/$programme->id/revision/$revision->id", [
+            ->patch(route('staff.programmes.revisions.update', [
+                'programme' => $programme,
+                'programme_revision' => $revision,
+            ]), [
                 'revised_at' => $revised_at,
                 'semester_courses' => [[$courses[0]->id], [$courses[1]->id, $courses[0]->id]],
             ]);
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('semester_courses.1.1', $e->errors());
         }
-        
+
         $this->assertEquals(1, $programme->fresh()->revisions()->find(1)->courses()->wherePivot('semester', 2)->count());
     }
 }

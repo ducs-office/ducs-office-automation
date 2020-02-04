@@ -6,7 +6,7 @@ use App\OutgoingLetter;
 use App\Course;
 use App\User;
 use App\College;
-use App\CollegeTeacher;
+use App\Teacher;
 use App\CourseRevision;
 use App\IncomingLetter;
 use App\LetterReminder;
@@ -31,7 +31,7 @@ class DatabaseSeeder extends Seeder
             'category' => 'Admin'
         ]);
 
-        $teacher = factory(CollegeTeacher::class)->create([
+        $teacher = factory(Teacher::class)->create([
             'first_name' => 'Sharanjit',
             'last_name' => 'Kaur',
             'email' => 'kaur.sharanjit@andc.du.ac.in',

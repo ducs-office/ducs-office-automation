@@ -21,9 +21,9 @@ class ViewCoursesTest extends TestCase
 
         $courses = create(Course::class, 3);
 
-        $viewCourses = $this->withoutExceptionHandling()->get('/courses')
+        $viewCourses = $this->withoutExceptionHandling()->get(route('staff.courses.index'))
             ->assertSuccessful()
-            ->assertViewIs('courses.index')
+            ->assertViewIs('staff.courses.index')
             ->assertViewHas('courses')
             ->viewData('courses');
 

@@ -19,7 +19,7 @@ class DeleteOutgoingLettersTest extends TestCase
     {
         $letter = create(OutgoingLetter::class);
 
-        $this->delete("/outgoing-letters/$letter->id")
+        $this->delete(route('staff.outgoing_letters.destroy', $letter))
             ->assertRedirect('/login');
 
         $this -> assertEquals(1, OutgoingLetter::count());
@@ -35,8 +35,8 @@ class DeleteOutgoingLettersTest extends TestCase
         ]);
 
         $this->withoutExceptionHandling()
-            ->delete("/outgoing-letters/$letter->id")
-            ->assertRedirect('/outgoing-letters');
+            ->delete(route('staff.outgoing_letters.destroy', $letter))
+            ->assertRedirect();
 
         $this->assertEquals(0, OutgoingLetter::count());
     }
@@ -55,7 +55,7 @@ class DeleteOutgoingLettersTest extends TestCase
         $this->signIn($user, $role->name);
 
         $this->withExceptionHandling()
-            ->delete('/outgoing-letters/' . $letter->id)
+            ->delete(route('staff.outgoing_letters.destroy', $letter))
             ->assertForbidden();
 
         $this->assertNotNull($letter->fresh());
@@ -79,7 +79,7 @@ class DeleteOutgoingLettersTest extends TestCase
         $this->signIn($user, $role->name);
 
         $this->withExceptionHandling()
-            ->delete('/outgoing-letters/' . $letter->id)
+            ->delete(route('staff.outgoing_letters.destroy', $letter))
             ->assertForbidden();
 
         $this->assertNotNull($letter->fresh());

@@ -30,7 +30,7 @@ class AddNewCourseRevisionTest extends TestCase
         ]);
 
         $this->withoutExceptionHandling()
-            ->post('/courses/' . $course->id . '/revisions', $revision = [
+            ->post(route('staff.courses.revisions.store', $course), $revision = [
                 'revised_at' => now()->subMonth(12)->format('Y-m-d'),
                 'attachments' => [
                     UploadedFile::fake()->create('New Doc.pdf')

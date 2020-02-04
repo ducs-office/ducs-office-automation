@@ -23,9 +23,9 @@ class UpdateCourseTest extends TestCase
 
         $course = create(Course::class);
 
-        $response = $this->patch('/courses/'.$course->id, [
+        $response = $this->patch(route('staff.courses.update', $course), [
             'code' => $newCode = 'New123'
-        ])->assertRedirect('/courses')
+        ])->assertRedirect()
         ->assertSessionHasFlash('success', 'Course updated successfully!');
 
         $this->assertEquals(1, Course::count());
@@ -40,9 +40,9 @@ class UpdateCourseTest extends TestCase
 
         $course = create(Course::class);
 
-        $response = $this->patch('/courses/' . $course->id, [
+        $response = $this->patch(route('staff.courses.update', $course), [
             'name' => $newName = 'New course'
-        ])->assertRedirect('/courses')
+        ])->assertRedirect()
         ->assertSessionHasFlash('success', 'Course updated successfully!');
 
         $this->assertEquals(1, Course::count());
@@ -57,10 +57,10 @@ class UpdateCourseTest extends TestCase
 
         $course = create(Course::class);
 
-        $response = $this->patch('/courses/'.$course->id, [
+        $response = $this->patch(route('staff.courses.update', $course), [
             'code' => $course->code,
             'name' => $newName = 'New course'
-        ])->assertRedirect('/courses')
+        ])->assertRedirect()
         ->assertSessionHasNoErrors()
         ->assertSessionHasFlash('success', 'Course updated successfully!');
 
@@ -77,9 +77,9 @@ class UpdateCourseTest extends TestCase
 
         $course = create(Course::class, 1, ['type' => 'C']);
 
-        $this->patch('/courses/' . $course->id, [
+        $this->patch(route('staff.courses.update', $course), [
             'type' => $newType = 'OE'
-        ])->assertRedirect('/courses')
+        ])->assertRedirect()
         ->assertSessionHasFlash('success', 'Course updated successfully!');
 
         $this->assertEquals(1, Course::count());
@@ -114,11 +114,11 @@ class UpdateCourseTest extends TestCase
             'path' => UploadedFile::fake()->create('new_syllabus.pdf')->store('courses_attachments')
         ]);
 
-        $this->patch('/courses/' . $course->id, [
+        $this->patch(route('staff.courses.update', $course), [
             'attachments' => [
                 $newDoc = UploadedFile::fake()->create('newFile.pdf')
             ]
-        ])->assertRedirect('/courses')
+        ])->assertRedirect()
         ->assertSessionHasFlash('success', 'Course updated successfully!');
 
         $this->assertCount(1, $oldRevision->fresh()->attachments);

@@ -19,7 +19,7 @@ class StoreIncomingLetters extends TestCase
     public function guest_cannot_store_incoming_letters()
     {
         $this->withExceptionHandling()
-            ->post('/incoming-letters')
+            ->post(route('staff.incoming_letters.store'))
             ->assertRedirect('/login');
 
         $this->assertEquals(IncomingLetter::count(), 0);
@@ -46,8 +46,8 @@ class StoreIncomingLetters extends TestCase
         ];
 
         $this->withoutExceptionHandling()
-            ->post('/incoming-letters', $letter)
-            ->assertRedirect('/incoming-letters');
+            ->post(route('staff.incoming_letters.store'), $letter)
+            ->assertRedirect();
 
         $this->assertEquals(IncomingLetter::count(), 1);
 
@@ -76,7 +76,7 @@ class StoreIncomingLetters extends TestCase
             ];
 
             $this->withoutExceptionHandling()
-                ->post('/incoming-letters', $letter);
+                ->post(route('staff.incoming_letters.store'), $letter);
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('date', $e->errors());
         }
@@ -115,7 +115,7 @@ class StoreIncomingLetters extends TestCase
                 $letter['date'] = $date;
 
                 $this->withoutExceptionHandling()
-                    ->post('/incoming-letters', $letter);
+                    ->post(route('staff.incoming_letters.store'), $letter);
             } catch (ValidationException $e) {
                 $this->assertArrayHasKey('date', $e->errors());
             }
@@ -127,8 +127,8 @@ class StoreIncomingLetters extends TestCase
             $letter['date'] = $date;
 
             $this->withoutExceptionHandling()
-                ->post('/incoming-letters', $letter)
-                ->assertRedirect('/incoming-letters');
+                ->post(route('staff.incoming_letters.store'), $letter)
+                ->assertRedirect();
 
             $this->assertEquals(IncomingLetter::count(), 1);
 
@@ -154,7 +154,7 @@ class StoreIncomingLetters extends TestCase
             ];
 
             $this->withoutExceptionHandling()
-                ->post('/incoming-letters', $letter);
+                ->post(route('staff.incoming_letters.store'), $letter);
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('date', $e->errors());
         }
@@ -180,7 +180,7 @@ class StoreIncomingLetters extends TestCase
             ];
 
             $this->withoutExceptionHandling()
-                ->post('/incoming-letters', $letter);
+                ->post(route('staff.incoming_letters.store'), $letter);
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('received_id', $e->errors());
         }
@@ -206,7 +206,7 @@ class StoreIncomingLetters extends TestCase
             ];
 
             $this->withoutExceptionHandling()
-                ->post('/incoming-letters', $letter);
+                ->post(route('staff.incoming_letters.store'), $letter);
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('sender', $e->errors());
         }
@@ -232,7 +232,7 @@ class StoreIncomingLetters extends TestCase
             ];
 
             $this->withoutExceptionHandling()
-                ->post('/incoming-letters', $letter);
+                ->post(route('staff.incoming_letters.store'), $letter);
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('sender', $e->errors());
         }
@@ -258,7 +258,7 @@ class StoreIncomingLetters extends TestCase
             ];
 
             $this->withoutExceptionHandling()
-                ->post('/incoming-letters', $letter);
+                ->post(route('staff.incoming_letters.store'), $letter);
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('recipient_id', $e->errors());
         }
@@ -284,7 +284,7 @@ class StoreIncomingLetters extends TestCase
             ];
 
             $this->withoutExceptionHandling()
-                ->post('/incoming-letters', $letter);
+                ->post(route('staff.incoming_letters.store'), $letter);
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('recipient_id', $e->errors());
         }
@@ -309,8 +309,8 @@ class StoreIncomingLetters extends TestCase
         ];
 
         $this->withoutExceptionHandling()
-            ->post('/incoming-letters', $letter)
-            ->assertRedirect('/incoming-letters');
+            ->post(route('staff.incoming_letters.store'), $letter)
+            ->assertRedirect();
 
         $this->assertEquals(IncomingLetter::count(), 1);
     }
@@ -333,7 +333,7 @@ class StoreIncomingLetters extends TestCase
             ];
 
             $this->withoutExceptionHandling()
-                ->post('/incoming-letters', $letter);
+                ->post(route('staff.incoming_letters.store'), $letter);
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('handovers.0', $e->errors());
         }
@@ -358,8 +358,8 @@ class StoreIncomingLetters extends TestCase
         ];
 
         $this->withoutExceptionHandling()
-            ->post('/incoming-letters', $letter)
-            ->assertRedirect('/incoming-letters');
+            ->post(route('staff.incoming_letters.store'), $letter)
+            ->assertRedirect();
 
         $this->assertEquals(IncomingLetter::count(), 1);
     }
@@ -382,7 +382,7 @@ class StoreIncomingLetters extends TestCase
             ];
 
             $this->withoutExceptionHandling()
-                ->post('/incoming-letters', $letter);
+                ->post(route('staff.incoming_letters.store'), $letter);
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('priority', $e->errors());
         }
@@ -408,7 +408,7 @@ class StoreIncomingLetters extends TestCase
             ];
 
             $this->withoutExceptionHandling()
-                ->post('/incoming-letters', $letter);
+                ->post(route('staff.incoming_letters.store'), $letter);
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('subject', $e->errors());
         }
@@ -434,7 +434,7 @@ class StoreIncomingLetters extends TestCase
             ];
 
             $this->withoutExceptionHandling()
-                ->post('/incoming-letters', $letter);
+                ->post(route('staff.incoming_letters.store'), $letter);
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('subject', $e->errors());
         }
@@ -459,8 +459,8 @@ class StoreIncomingLetters extends TestCase
         ];
 
         $this->withoutExceptionHandling()
-            ->post('/incoming-letters', $letter)
-            ->assertRedirect('/incoming-letters');
+            ->post(route('staff.incoming_letters.store'), $letter)
+            ->assertRedirect();
 
         $this->assertEquals(IncomingLetter::count(), 1);
     }
@@ -483,7 +483,7 @@ class StoreIncomingLetters extends TestCase
             ];
 
             $this->withoutExceptionHandling()
-                ->post('/incoming-letters', $letter);
+                ->post(route('staff.incoming_letters.store'), $letter);
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('description', $e->errors());
         }

@@ -23,8 +23,8 @@ class EditIncomingLettersTest extends TestCase
         $letter= create(IncomingLetter::class);
 
         $this->withoutExceptionHandling()
-            ->get("incoming-letters/$letter->id/edit")
-            ->assertRedirect('/login');
+            ->get(route('staff.incoming_letters.edit', $letter))
+            ->assertRedirect();
     }
 
     /** @test */
@@ -37,17 +37,17 @@ class EditIncomingLettersTest extends TestCase
         $letter = create(IncomingLetter::class, 1, [
             'subject' => $oldSubject = 'old subject'
         ]);
-        
+
         $role->revokePermissionTo($permission);
-        
+
         $this->signIn($user, $role->name);
 
         $this->withExceptionHandling()
-            ->get('/incoming-letters/' . $letter->id . '/edit')
+            ->get(route('staff.incoming_letters.edit', $letter))
             ->assertForbidden();
 
         $this->withExceptionHandling()
-            ->patch('/incoming-letters/' . $letter->id, ['subject' => 'new subject'])
+            ->patch(route('staff.incoming_letters.update', $letter), ['subject' => 'new subject'])
             ->assertForbidden();
 
         $this->assertEquals($oldSubject, $letter->fresh()->subject);
@@ -64,17 +64,17 @@ class EditIncomingLettersTest extends TestCase
             'subject' => $oldSubject = 'old subject',
             'creator_id' => create(User::class)->id
         ]);
-        
+
         $role->givePermissionTo($permission);
-        
+
         $this->signIn($user, $role->name);
 
         $this->withExceptionHandling()
-            ->get('/incoming-letters/' . $letter->id . '/edit')
+            ->get(route('staff.incoming_letters.edit', $letter))
             ->assertForbidden();
 
         $this->withExceptionHandling()
-            ->patch('/incoming-letters/' . $letter->id, ['subject' => 'new subject'])
+            ->patch(route('staff.incoming_letters.update', $letter), ['subject' => 'new subject'])
             ->assertForbidden();
 
         $this->assertEquals($oldSubject, $letter->fresh()->subject);
