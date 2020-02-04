@@ -115,10 +115,5 @@ class DatabaseSeeder extends Seeder
             'last_name' => 'Kaur',
             'email' => 'kaur.sharanjit@andc.du.ac.in',
         ]);
-
-        $profile = factory(TeacherProfile::class)->create([
-            'teacher_id' => $teacher->id,
-            'college_id' => $andc->id
-        ]);
     }
 }

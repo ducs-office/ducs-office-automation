@@ -69,14 +69,14 @@ class ProfileController extends Controller
             'bank_branch' => ['nullable', 'string'],
             'college_id' => ['nullable', 'numeric', 'exists:colleges,id'],
             'teaching_details' => ['nullable' , 'array'],
-            'teaching_details.*.programme' => ['nullable', 'numeric', 'exists:programme_revisions,id'],
+            'teaching_details.*.programme_revision' => ['nullable', 'numeric', 'exists:programme_revisions,id'],
             'teaching_details.*.course' => ['nullable', 'numeric', 'exists:courses,id'],
             'teaching_details.*' => ['bail', 'nullable', 'array',
                 function ($attribute, $value, $fail) {
                     if (! isset($value['course'])) {
                         return true;
                     }
-                    $revision = ProgrammeRevision::find($value['programme']);
+                    $revision = ProgrammeRevision::find($value['programme_revision']);
                     if ($revision->courses->pluck('id')->contains($value['course']) == false) {
                         $fail($attribute. ' is invalid.');
                     }
@@ -92,11 +92,11 @@ class ProfileController extends Controller
 
             $programmeCoursesTaught = collect($teaching_details)
                 ->filter(function ($teaching_detail) {
-                    return isset($teaching_detail['programme'], $teaching_detail['course']);
+                    return isset($teaching_detail['programme_revision'], $teaching_detail['course']);
                 })->map(function ($teaching_detail) {
                     return CourseProgrammeRevision::where(
                         'programme_revision_id',
-                        $teaching_detail['programme']
+                        $teaching_detail['programme_revision']
                     )->where('course_id', $teaching_detail['course'])
                     ->first()->id;
                 })->toArray();

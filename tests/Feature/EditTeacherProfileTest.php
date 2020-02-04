@@ -10,6 +10,7 @@ use Tests\TestCase;
 use App\TeacherProfile;
 use App\Teacher;
 use App\College;
+use App\ProgrammeRevision;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
@@ -26,6 +27,7 @@ class EditTeacherProfileTest extends TestCase
         $college = create(College::class);
         $programme = create(Programme::class);
         $courses = create(Course::class, 2);
+        create(ProgrammeRevision::class, 2);
         $revision = $programme->revisions()->create(['revised_at' => $programme->wef]);
 
         foreach ($courses as $course) {
@@ -42,8 +44,8 @@ class EditTeacherProfileTest extends TestCase
             'bank_branch' => 'Rejender Nagar, New Delhi',
             'college_id' => $college->id,
             'teaching_details' => [
-                ['programme' => $programme->id, 'course' => $courses[0]->id],
-                ['programme' => $programme->id, 'course' => $courses[1]->id]
+                ['programme_revision' => $revision->id, 'course' => $courses[0]->id],
+                ['programme_revision' => $revision->id, 'course' => $courses[1]->id]
             ],
             'profile_picture' => $profilePicture = UploadedFile::fake()->image('picture.jpeg'),
         ];
@@ -89,7 +91,7 @@ class EditTeacherProfileTest extends TestCase
 
         $update = [
             'teaching_details' => [
-                ['programme' => $programme->id, 'course' => $unassignedCourse->id]
+                ['programme_revision' => $revision->id, 'course' => $unassignedCourse->id]
             ],
         ];
 
@@ -120,7 +122,7 @@ class EditTeacherProfileTest extends TestCase
 
         $update = [
             'teaching_details' => [
-                ['programme' => $revision->id],
+                ['programme_revision' => $revision->id],
             ],
         ];
 
@@ -196,8 +198,8 @@ class EditTeacherProfileTest extends TestCase
 
         $update = [
             'teaching_details' => [
-                ['programme' => $programme->id, 'course' => $courses[0]->id],
-                ['programme' => $programme->id, 'course' => $courses[1]->id]
+                ['programme_revision' => $revision->id, 'course' => $courses[0]->id],
+                ['programme_revision' => $revision->id, 'course' => $courses[1]->id]
             ],
         ];
 

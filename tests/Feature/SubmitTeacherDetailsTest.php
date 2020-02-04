@@ -40,7 +40,7 @@ class SubmitTeacherDetailsTest extends TestCase
             $revision = $programme->revisions()->create(['revised_at' => $programme->wef]);
             $revision->courses()->attach($course, ['semester' => 1]);
             return [
-                ['programme' => $programme->id, 'course' => $course->id]
+                ['programme_revision' => $revision->id, 'course' => $course->id]
             ];
         }
 
