@@ -25,7 +25,7 @@ class TeacherPolicy
      * Determine whether the user can view the teacher.
      *
      * @param  \App\User  $user
-     * @param  \App\Teacher  $Teacher
+     * @param  \App\Teacher  $teacher
      * @return mixed
      */
     public function view(User $user)
@@ -48,7 +48,7 @@ class TeacherPolicy
      * Determine whether the user can update the teacher.
      *
      * @param  \App\User  $user
-     * @param  \App\Teacher  $Teacher
+     * @param  \App\Teacher  $teacher
      * @return mixed
      */
     public function update(User $user)
@@ -60,7 +60,7 @@ class TeacherPolicy
      * Determine whether the user can delete the teacher.
      *
      * @param  \App\User  $user
-     * @param  \App\Teacher  $Teacher
+     * @param  \App\Teacher  $teacher
      * @return mixed
      */
     public function delete(User $user)

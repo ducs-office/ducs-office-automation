@@ -18,13 +18,13 @@
         'modalName' => 'edit-teacher-modal',
     ])
     @endcan
-    @forelse($Teachers as $Teacher)
+    @forelse($Teachers as $teacher)
         <div class="px-4 py-2 hover:bg-gray-100 border-b flex">
             <div class="px-2 w-64">
                 <h3 class="text-lg font-bold mr-2">
-                    {{ ucwords($Teacher->getNameAttribute()) }}
+                    {{ ucwords($teacher->getNameAttribute()) }}
                 </h3>
-                <h4 class="text-sm font-semibold text-gray-600 mr-2">{{ $Teacher->email }}</h4>
+                <h4 class="text-sm font-semibold text-gray-600 mr-2">{{ $teacher->email }}</h4>
             </div>
             <div class="ml-auto px-2 flex items-center">
                 @can('update', App\Teacher::class)
@@ -32,18 +32,18 @@
                     @click="
                         $modal.show('edit-teacher-modal', {
                             Teacher: {
-                                id: {{ $Teacher->id }},
-                                first_name: {{ json_encode($Teacher->first_name) }},
-                                last_name: {{ json_encode($Teacher->last_name) }},
-                                email: {{ json_encode($Teacher->email) }},
+                                id: {{ $teacher->id }},
+                                first_name: {{ json_encode($teacher->first_name) }},
+                                last_name: {{ json_encode($teacher->last_name) }},
+                                email: {{ json_encode($teacher->email) }},
                             },
                         })">
                     <feather-icon class="h-current" name="edit">Edit</feather-icon>
                 </button>
                 @endcan
-                @can('delete', $Teacher)
-                <form action="{{ route('staff.teachers.destroy', $Teacher) }}" method="POST"
-                    onsubmit="return confirm('Do you really want to delete teacher \'{{ $Teacher->getNameAttribute() }}\'?');">
+                @can('delete', $teacher)
+                <form action="{{ route('staff.teachers.destroy', $teacher) }}" method="POST"
+                    onsubmit="return confirm('Do you really want to delete teacher \'{{ $teacher->getNameAttribute() }}\'?');">
                     @csrf_token @method('delete')
                     <button type="submit" class="p-1 hover:text-red-700">
                         <feather-icon class="h-current" name="trash-2">Trash</feather-icon>

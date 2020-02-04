@@ -30,35 +30,35 @@ class TeacherController extends Controller
 
         $plainPassword = strtoupper(Str::random(8));
 
-        $Teacher = Teacher::create($validData + ['password' => bcrypt($plainPassword)]);
+        $teacher = Teacher::create($validData + ['password' => bcrypt($plainPassword)]);
 
-        Mail::to($Teacher)->send(new UserRegisteredMail($Teacher, $plainPassword));
+        Mail::to($teacher)->send(new UserRegisteredMail($teacher, $plainPassword));
 
         flash('College Teacher created successfully!')->success();
 
         return redirect(route('staff.teachers.index'));
     }
 
-    public function update(Request $request, Teacher $Teacher)
+    public function update(Request $request, Teacher $teacher)
     {
         $data = $request->validate([
             'first_name' => ['sometimes', 'required', 'string', 'min:3', 'max:50'],
             'last_name' => ['sometimes', 'required', 'string', 'min:3', 'max:50'],
             'email' => ['sometimes', 'required', 'min:3', 'max:190', 'email',
-                        Rule::unique('teachers')->ignore($Teacher)
+                        Rule::unique('teachers')->ignore($teacher)
             ]
         ]);
 
-        $Teacher->update($data);
+        $teacher->update($data);
 
         flash('College teacher updated successfully')->success();
 
         return redirect()->back();
     }
 
-    public function destroy(Teacher $Teacher)
+    public function destroy(Teacher $teacher)
     {
-        $Teacher->delete();
+        $teacher->delete();
 
         flash('College teacher deleted successfully')->success();
 
