@@ -34,28 +34,6 @@
 
             <div class="relative z-10 -ml-8 my-4">
                 <h5 class="relative z-20 pl-8 pr-4 py-2 inline-block font-bold bg-magenta-700 text-white shadow">
-                    Bank Details
-                </h5>
-                <svg class="absolute left-0 w-2 text-magenta-900" viewBox="0 0 10 10">
-                    <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
-                </svg>
-            </div>
-            <p>
-                <b>Bank:</b> {{ $teacher->profile->bank_name }}
-            </p>
-            <p>
-                <b>Account Number:</b> {{ $teacher->profile->account_no }}
-            </p>
-            <p>
-                <b>Branch:</b> {{ $teacher->profile->bank_branch }}
-            </p>
-            <p>
-                <b>IFS Code:</b> {{ $teacher->profile->ifsc }}
-            </p>
-
-
-            <div class="relative z-10 -ml-8 my-4">
-                <h5 class="relative z-20 pl-8 pr-4 py-2 inline-block font-bold bg-magenta-700 text-white shadow">
                     Teaching Details
                 </h5>
                 <svg class="absolute left-0 w-2 text-magenta-900" viewBox="0 0 10 10">

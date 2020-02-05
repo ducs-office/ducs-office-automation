@@ -12,10 +12,6 @@ class TeacherProfile extends Model
         'phone_no',
         'address',
         'designation',
-        'ifsc',
-        'account_no',
-        'bank_name',
-        'bank_branch',
         'college_id',
         'teacher_id',
     ];

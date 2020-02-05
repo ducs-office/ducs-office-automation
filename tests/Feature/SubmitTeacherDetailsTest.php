@@ -24,10 +24,6 @@ class SubmitTeacherDetailsTest extends TestCase
         'phone_no' => $this->faker->phoneNumber,
         'address' => $this->faker->address,
         'designation' => $this->faker->randomElement(array_keys(config('options.teachers.designations'))),
-        'ifsc' => $this->faker->text(12),
-        'account_no' => $this->faker->bankAccountNumber,
-        'bank_name' => $this->faker->name,
-        'bank_branch' => $this->faker->address,
         'college_id' => function () {
             return factory(College::class)->create()->id;
         },
