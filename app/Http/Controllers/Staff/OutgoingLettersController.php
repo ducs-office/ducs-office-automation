@@ -8,9 +8,8 @@ use App\Remark;
 use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Carbon;
+use App\Http\Requests\Staff\StoreOutgoingLetterRequest;
+use App\Http\Requests\Staff\UpdateOutgoingLetterRequest;
 
 class OutgoingLettersController extends Controller
 {
@@ -44,21 +43,11 @@ class OutgoingLettersController extends Controller
         return view('staff.outgoing_letters.create');
     }
 
-    protected function store(Request $request)
+    public function store(StoreOutgoingLetterRequest $request)
     {
-        $validData = $request->validate([
-            'date' => 'required|date|before_or_equal:today',
-            'type' => 'required|in:Bill,Notesheet,General',
-            'recipient' => 'required|min:5|max:100',
-            'sender_id' => 'required|integer|exists:users,id',
-            'subject' => 'required|string|min:5|max:100',
-            'description' => 'nullable|string|max:400',
-            'amount' => 'nullable|numeric',
-            'attachments' => 'required|array|min:1|max:2',
-            'attachments.*' => 'file|max:200|mimes:jpeg,jpg,png,pdf'
-        ]);
+        $data = $request->validated();
 
-        $letter = OutgoingLetter::create($validData + ['creator_id' => Auth::id()]);
+        $letter = OutgoingLetter::create($data + ['creator_id' => $request->user()->id]);
 
         $letter->attachments()->createMany(
             array_map(function ($attachedFile) {
@@ -79,28 +68,9 @@ class OutgoingLettersController extends Controller
         ]);
     }
 
-    public function update(OutgoingLetter $outgoing_letter, Request $request)
+    public function update(UpdateOutgoingLetterRequest $request, OutgoingLetter $outgoing_letter)
     {
-        $rules = [
-            'date' => ['sometimes', 'required', 'date', 'before_or_equal:today'],
-            'recipient' => ['sometimes', 'required', 'min:5', 'max:100'],
-            'subject' => ['sometimes', 'required', 'string', 'min:5', 'max:100'],
-            'description' => ['nullable', 'string', 'max:400'],
-            'amount' => ['nullable', 'numeric'],
-            'sender_id' => ['sometimes', 'required', 'integer', 'exists:users,id'],
-            'attachments' => ['required', 'array', 'max:2'],
-            'attachments.*' => ['file', 'max:200', 'mimes:jpeg,jpg,png,pdf'],
-        ];
-
-        if ($outgoing_letter->attachments()->count() < 1) {
-            array_push($rules['attachments'], 'min:1');
-        } else {
-            array_unshift($rules['attachments'], 'sometimes');
-        }
-
-        $validData = $request->validate($rules);
-
-        $outgoing_letter->update($validData);
+        $outgoing_letter->update($request->validated());
 
         if ($request->hasFile('attachments')) {
             $outgoing_letter->attachments()->createMany(

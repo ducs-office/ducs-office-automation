@@ -4,13 +4,10 @@ namespace App\Http\Controllers\Staff;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Handover;
+use App\Http\Requests\Staff\StoreIncomingLetterRequest;
+use App\Http\Requests\Staff\UpdateIncomingLettersRequest;
 use App\IncomingLetter;
-use App\OutgoingLetter;
-use Auth;
 use App\User;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Carbon;
 
 class IncomingLettersController extends Controller
 {
@@ -52,38 +49,15 @@ class IncomingLettersController extends Controller
         ]);
     }
 
-    public function store()
+    public function store(StoreIncomingLetterRequest $request)
     {
-        $priorities = implode(',', array_keys(config('options.incoming_letters.priorities')));
+        $letter = IncomingLetter::create($request->validated());
 
-        $data = request()->validate([
-            'date' => 'required|date|before_or_equal:today',
-            'received_id' => 'required|string|min:3|max:190',
-            'sender' => 'required|string|min:5|max:100',
-            'recipient_id' => 'required|exists:users,id',
-            'handovers' => 'nullable|array',
-            'handovers.*' => 'integer|exists:users,id',
-            'priority' => 'nullable|in:'. $priorities,
-            'subject' => 'required|string|min:5|max:100',
-            'description' => 'nullable|string|min:4|max:400',
-            'attachments' => 'required|array|min:1|max:2',
-            'attachments.*' => 'file|max:200|mimes:jpeg,jpg,png,pdf'
-        ]);
-
-        $letter = IncomingLetter::create($data);
-
-        if (isset($data['handovers'])) {
-            $letter->handovers()->attach($data['handovers']);
+        if ($request->has('handovers')) {
+            $letter->handovers()->attach($request->handovers);
         }
 
-        $letter->attachments()->createMany(
-            array_map(function ($attachedFile) {
-                return [
-                    'original_name' => $attachedFile->getClientOriginalName(),
-                    'path' => $attachedFile->store('/letter_attachments/incoming')
-                ];
-            }, request()->file('attachments'))
-        );
+        $letter->attachments()->createMany($request->attachmentFiles());
 
         return redirect(route('staff.incoming_letters.index'));
     }
@@ -96,48 +70,15 @@ class IncomingLettersController extends Controller
         ]);
     }
 
-    public function update(IncomingLetter $incoming_letter, Request $request)
+    public function update(UpdateIncomingLettersRequest $request, IncomingLetter $incoming_letter)
     {
-        $priorities = implode(',', array_keys(config('options.incoming_letters.priorities')));
+        $incoming_letter->update($request->validated());
 
-        $rules = [
-            'date' => ['sometimes', 'required', 'date', 'before_or_equal:today'],
-            'received_id' => ['sometimes', 'required', 'string', 'min:3', 'max:190'],
-            'sender' => ['sometimes', 'required', 'string', 'min:5', 'max:100'],
-            'recipient_id' => ['sometimes', 'required', 'exists:users,id'],
-            'handovers' => ['sometimes', 'nullable', 'array'],
-            'handovers.*' => ['integer', 'exists:users,id'],
-            'priority' => ['nullable', 'in:'. $priorities],
-            'subject' => ['sometimes', 'required', 'string', 'min:5', 'max:100'],
-            'description' => ['nullable', 'string', 'max:400'],
-            'attachments' => ['required', 'array', 'max:2'],
-            'attachments.*' => ['file', 'max:200', 'mimes:jpeg,jpg,png,pdf'],
-        ];
+        $incoming_letter->handovers()->sync($request->handovers ?? []);
 
-        if ($incoming_letter->attachments()->count() < 1) {
-            array_push($rules['attachments'], 'min:1');
-        } else {
-            array_unshift($rules['attachments'], 'sometimes');
-        }
-
-        $validData = $request->validate($rules);
-
-        $incoming_letter->update($validData);
-
-        if ($request->has('handovers')) {
-            $incoming_letter->handovers()->sync($validData['handovers']);
-        }
-
-        if ($request->hasFile('attachments')) {
-            $incoming_letter->attachments()->createMany(
-                array_map(function ($attachedFile) {
-                    return [
-                        'original_name' => $attachedFile->getClientOriginalName(),
-                        'path' => $attachedFile->store('/letter_attachments/incoming')
-                    ];
-                }, $request->file('attachments'))
-            );
-        }
+        $incoming_letter->attachments()->createMany(
+            $request->attachmentFiles()
+        );
 
         return redirect(route('staff.incoming_letters.index'));
     }
@@ -152,13 +93,13 @@ class IncomingLettersController extends Controller
         return redirect(route('staff.incoming_letters.index'));
     }
 
-    public function storeRemark(IncomingLetter $incoming_letter)
+    public function storeRemark(Request $request, IncomingLetter $incoming_letter)
     {
-        $data = request()->validate([
+        $data = $request->validate([
             'description'=>'required|string|min:2|max:190',
         ]);
 
-        $incoming_letter->remarks()->create($data + ['user_id' => Auth::id()]);
+        $incoming_letter->remarks()->create($data + ['user_id' => $request->user()->id]);
 
         return back();
     }

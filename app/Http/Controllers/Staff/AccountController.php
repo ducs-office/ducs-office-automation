@@ -5,9 +5,7 @@ namespace App\Http\Controllers\Staff;
 use App\Http\Controllers\Controller;
 use App\Rules\MatchesCurrentPassword;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rule;
 
 class AccountController extends Controller
 {
@@ -18,7 +16,7 @@ class AccountController extends Controller
             'new_password' => ['required', 'string', 'min:8', 'confirmed']
         ]);
 
-        Auth::user()->update([
+        $request->user()->update([
             'password' => Hash::make($request->new_password)
         ]);
 

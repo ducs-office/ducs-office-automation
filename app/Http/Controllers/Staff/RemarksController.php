@@ -2,11 +2,7 @@
 
 namespace App\Http\Controllers\Staff;
 
-use App\IncomingLetter;
-use Illuminate\Http\Request;
-use App\OutgoingLetter;
 use App\Remark;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 
 class RemarksController extends Controller

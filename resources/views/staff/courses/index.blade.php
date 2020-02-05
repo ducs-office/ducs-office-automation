@@ -35,7 +35,7 @@
                             <h5 class="font-medium">Latest Revision w.e.f <strong>{{ $latestRevision->revised_at->format('M, Y') }}</strong></h5>
                             <form method="POST" action="{{ route('staff.courses.revisions.destroy', [
                                 'course' => $course,
-                                'courseRevision' => $latestRevision
+                                'course_revision' => $latestRevision
                             ]) }}" class="ml-2">
                                 @csrf_token @method('DELETE')
                                 <button type="submit" class="p-2 text-sm text-gray-700 hover:text-red-600 hover:bg-gray-300 rounded">

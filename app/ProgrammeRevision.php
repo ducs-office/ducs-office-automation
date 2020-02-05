@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProgrammeRevision extends Model
 {
-    protected $fillable = ['revised_at'];
+    protected $fillable = ['revised_at', 'programme_id'];
 
     protected $dates = ['revised_at'];
 

@@ -215,8 +215,8 @@ class StoreProgrammeRevisionTest extends TestCase
             ->post(route('staff.programmes.revisions.store', $programme), [
                 'revised_at' => '2019-09-09',
                 'semester_courses' => [
-                    [$courses[0]->id, $courses[1]->id],
-                    [$courses[2]->id],
+                    1 => [$courses[0]->id, $courses[1]->id],
+                    2 => [$courses[2]->id],
                 ]
             ])->assertRedirect()
             ->assertSessionHasNoErrors()

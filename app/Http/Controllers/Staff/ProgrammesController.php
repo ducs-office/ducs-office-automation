@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Staff\StoreProgrammeRequest;
 
 class ProgrammesController extends Controller
 {
@@ -47,31 +48,9 @@ class ProgrammesController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(StoreProgrammeRequest $request)
     {
-        $types = implode(',', array_keys(config('options.programmes.types')));
-
-        $data = $request->validate([
-            'code' => ['required', 'min:3', 'max:60', 'unique:programmes,code'],
-            'wef' => ['required', 'date'],
-            'name' => ['required', 'min:3', 'max:190'],
-            'type' => ['required', 'in:'.$types],
-            'duration' => ['required', 'integer'],
-            'semester_courses' => ['required', 'array', 'size:'.($request->duration * 2) ],
-            'semester_courses.*' => ['required', 'array', 'min:1'],
-            'semester_courses.*.*' => ['numeric', 'distinct', 'exists:courses,id',
-                function ($attribute, $value, $fail) {
-                    $courses = CourseProgrammeRevision::all();
-                    foreach ($courses as $course) {
-                        if ($value == $course->course_id) {
-                            $fail($attribute.'is invalid');
-                        }
-                    }
-                },
-            ]
-        ]);
-
-        $programme = Programme::create($data);
+        $programme = Programme::create($request->validated());
 
         event(new ProgrammeCreated($programme, $request->semester_courses));
 
