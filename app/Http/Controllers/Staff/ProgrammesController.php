@@ -27,12 +27,17 @@ class ProgrammesController extends Controller
     public function index()
     {
         $programmes = Programme::withLatestRevision()->latest()->get();
-
         $grouped_courses = $programmes->map(function ($programme) {
-            return $programme->latestRevision->courses->sortBy('pivot.semester')->groupBy('pivot.semester');
+            return $programme->latestRevision
+                ->courses
+                ->sortBy('pivot.semester')
+                ->groupBy('pivot.semester');
         });
 
-        return view('staff.programmes.index', compact('programmes', 'grouped_courses'));
+        return view('staff.programmes.index', [
+            'programmes' => $programmes,
+            'grouped_courses' => $grouped_courses,
+        ]);
     }
 
     public function create()
@@ -77,9 +82,10 @@ class ProgrammesController extends Controller
 
     public function edit(Programme $programme)
     {
-        $types = config('options.programmes.types');
-
-        return view('staff.programmes.edit', compact('programme', 'types'));
+        return view('staff.programmes.edit', [
+            'programme' => $programme,
+            'types' => config('options.programmes.types'),
+        ]);
     }
 
     public function update(Request $request, Programme $programme)
@@ -97,7 +103,7 @@ class ProgrammesController extends Controller
         if (isset($data['wef'])) {
             $programme->revisions()->where('revised_at', $programme->wef)->update(['revised_at' => $data['wef']]);
 
-            $latestRevision = $programme->revisions->max('revised_at');
+            $latestRevision = $programme->revisions()->max('revised_at');
             $programme->update(['wef' => $latestRevision]);
         }
 

@@ -18,7 +18,7 @@
         'modalName' => 'edit-teacher-modal',
     ])
     @endcan
-    @forelse($Teachers as $teacher)
+    @forelse($teachers as $teacher)
         <div class="px-4 py-2 hover:bg-gray-100 border-b flex">
             <div class="px-2 w-64">
                 <h3 class="text-lg font-bold mr-2">

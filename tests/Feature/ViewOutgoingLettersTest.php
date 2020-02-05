@@ -61,7 +61,7 @@ class ViewOutgoingLettersTest extends TestCase
         $this->signIn();
         $letters = create(OutgoingLetter::class, 3);
 
-        $viewData = $this->withExceptionHandling()
+        $view_data = $this->withExceptionHandling()
             ->get(route('staff.outgoing_letters.index'))
             ->assertSuccessful()
             ->assertViewIs('staff.outgoing_letters.index')
@@ -70,8 +70,8 @@ class ViewOutgoingLettersTest extends TestCase
 
         $letters = $letters->sortByDesc('date');
         $sorted_letters_ids = $letters->pluck('id')->toArray();
-        $viewData_ids = $viewData->pluck('id')->toArray();
-        $this->assertSame($sorted_letters_ids, $viewData_ids);
+        $view_data_ids = $view_data->pluck('id')->toArray();
+        $this->assertSame($sorted_letters_ids, $view_data_ids);
     }
 
     /** @test */

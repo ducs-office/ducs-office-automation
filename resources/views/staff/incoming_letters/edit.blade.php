@@ -107,10 +107,13 @@
                 <label for="priority" class="w-full form-label mb-1">Letter Priority</label>
                 @php($priority = old('priority', $incoming_letter->priority))
                 <select class="w-full form-input" name="priority">
-                    <option value="">None</option>
-                    <option value="1" {{ $priority == '1' ? 'selected' : ''}} >High</option>
-                    <option value="2" {{ $priority == '2' ? 'selected' : ''}}>Medium</option>
-                    <option value="3" {{ $priority == '3' ? 'selected' : ''}}>Low</option>
+                    <option value="" >None</option>
+                    @foreach ($priorities as $value => $name)
+                        <option value="{{ $value }}"
+                            {{ $priority == $value ? 'selected' : ''}}>
+                            $name
+                        </option>
+                    @endforeach
                 </select>
                 @if($errors->has('priority'))
                     <p class="mt-1 text-red-600">{{ $errors->first('priority') }}</p>

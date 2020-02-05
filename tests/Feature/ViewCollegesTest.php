@@ -35,12 +35,12 @@ class ViewCollegesTest extends TestCase
 
         create(College::class, 3);
 
-        $viewData = $this->withoutExceptionHandling()
+        $view_data = $this->withoutExceptionHandling()
                     ->get(route('staff.colleges.index'))
                     ->assertViewIs('staff.colleges.index')
                     ->assertViewHas('colleges')
                     ->viewData('colleges');
 
-        $this->assertCount(3, $viewData);
+        $this->assertCount(3, $view_data);
     }
 }

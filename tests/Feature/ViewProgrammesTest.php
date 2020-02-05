@@ -36,16 +36,16 @@ class ViewProgrammesTest extends TestCase
 
         $this->withoutExceptionHandling();
 
-        $viewData = $this->get(route('staff.programmes.index'))
+        $view_data = $this->get(route('staff.programmes.index'))
             ->assertViewIs('staff.programmes.index')
             ->assertViewHasAll(['programmes', 'grouped_courses'])
             ->viewData('programmes');
 
-        $this->assertCount(3, $viewData);
+        $this->assertCount(3, $view_data);
 
         $this->assertEquals(
             $programmes->sortByDesc('created_at')->first()->id,
-            $viewData->first()->id
+            $view_data->first()->id
         ); //first created is at last
     }
 }

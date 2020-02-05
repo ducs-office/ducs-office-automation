@@ -28,12 +28,12 @@ class ViewTeacherTest extends TestCase
 
         create(Teacher::class, 4);
 
-        $viewData = $this->withoutExceptionHandling()
+        $view_data = $this->withoutExceptionHandling()
             ->get(route('staff.teachers.index'))
             ->assertViewIs('staff.teachers.index')
-            ->assertViewHas('Teachers')
-            ->viewData('Teachers');
+            ->assertViewHas('teachers')
+            ->viewData('teachers');
 
-        $this->assertEquals(Teacher::count(), count($viewData));
+        $this->assertEquals(Teacher::count(), count($view_data));
     }
 }

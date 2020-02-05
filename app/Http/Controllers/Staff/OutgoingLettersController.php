@@ -30,21 +30,13 @@ class OutgoingLettersController extends Controller
                 ->orWhere('description', 'like', '%'.request('search').'%');
         }
 
-        $outgoing_letters = $query->orderBy('date', 'DESC')->get();
-
-        $recipients = OutgoingLetter::selectRaw('DISTINCT(recipient)')->get()->pluck('recipient', 'recipient');
-        $types = OutgoingLetter::selectRaw('DISTINCT(type)')->get()->pluck('type', 'type');
-        $senders = User::select('id', 'name')->whereIn('id', OutgoingLetter::selectRaw('DISTINCT(sender_id)'))->get()->pluck('name', 'id');
-        $creators = User::select('id', 'name')->whereIn('id', OutgoingLetter::selectRaw('DISTINCT(creator_id)'))->get()->pluck('name', 'id');
-
-
-        return view('staff.outgoing_letters.index', compact(
-            'outgoing_letters',
-            'types',
-            'recipients',
-            'creators',
-            'senders'
-        ));
+        return view('staff.outgoing_letters.index', [
+            'outgoing_letters' => $query->orderBy('date', 'DESC')->get(),
+            'types' => OutgoingLetter::selectRaw('DISTINCT(type)')->get()->pluck('type', 'type'),
+            'recipients' => OutgoingLetter::selectRaw('DISTINCT(recipient)')->get()->pluck('recipient', 'recipient'),
+            'creators' => User::select('id', 'name')->whereIn('id', OutgoingLetter::selectRaw('DISTINCT(creator_id)'))->get()->pluck('name', 'id'),
+            'senders' => User::select('id', 'name')->whereIn('id', OutgoingLetter::selectRaw('DISTINCT(sender_id)'))->get()->pluck('name', 'id'),
+        ]);
     }
 
     public function create()
@@ -82,7 +74,9 @@ class OutgoingLettersController extends Controller
 
     public function edit(OutgoingLetter $outgoing_letter)
     {
-        return view('staff.outgoing_letters.edit', compact('outgoing_letter'));
+        return view('staff.outgoing_letters.edit', [
+            'outgoing_letter' => $outgoing_letter,
+        ]);
     }
 
     public function update(OutgoingLetter $outgoing_letter, Request $request)

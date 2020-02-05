@@ -20,11 +20,11 @@ class UserController extends Controller
 
     public function index()
     {
-        $roles = Role::all();
-        $categories = config('options.users.categories');
-        $users = User::with('roles')->get();
-
-        return view('staff.users.index', compact('users', 'roles', 'categories'));
+        return view('staff.users.index', [
+            'users' => User::with('roles')->get(),
+            'roles' => Role::all(),
+            'categories' => config('options.users.categories'),
+        ]);
     }
 
     public function store(Request $request)
@@ -61,7 +61,7 @@ class UserController extends Controller
     {
         $categories = implode(",", array_keys(config('options.users.categories')));
 
-        $data = $request->validate([
+        $request->validate([
             'name' => ['sometimes', 'required', 'string', 'min:3', 'max:190'],
             'email' => [
                 'sometimes', 'required', 'string', 'min:3', 'max:190', 'email',

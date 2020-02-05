@@ -23,13 +23,17 @@ class CourseController extends Controller
      */
     public function index()
     {
-        $courses = Course::with(['revisions' => function ($q) {
-            return $q->orderBy('revised_at', 'desc');
-        }, 'revisions.attachments'])->latest()->get();
+        $courses = Course::with([
+            'revisions' => function ($q) {
+                return $q->orderBy('revised_at', 'desc');
+            },
+            'revisions.attachments'
+        ])->latest()->get();
 
-        $course_types = config('options.courses.types');
-
-        return view('staff.courses.index', compact('courses', 'course_types'));
+        return view('staff.courses.index', [
+            'courses' => $courses,
+            'course_types' => config('options.courses.types')
+        ]);
     }
 
     /**
@@ -87,7 +91,7 @@ class CourseController extends Controller
     {
         $types = implode(',', array_keys(config('options.courses.types')));
 
-        $validData = $request->validate([
+        $valid_data = $request->validate([
             'code' => [
                 'sometimes', 'required', 'min:3', 'max:60',
                 Rule::unique('courses')->ignore($course)
@@ -98,7 +102,7 @@ class CourseController extends Controller
             'attachments.*' => ['file', 'mimes:jpeg,jpg,png,pdf', 'max:200'],
         ]);
 
-        $course->update($validData);
+        $course->update($valid_data);
 
 
         if ($request->hasFile('attachments')) {
@@ -110,7 +114,7 @@ class CourseController extends Controller
                         'path' => $attachedFile->store('/course_attachments'),
                         'original_name' => $attachedFile->getClientOriginalName(),
                     ];
-                }, $validData['attachments'])
+                }, $valid_data['attachments'])
             );
         }
 

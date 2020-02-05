@@ -16,7 +16,7 @@ class Programme extends Model
         'wef' => 'date:Y-m-d'
     ];
 
-    
+
     public function colleges()
     {
         return $this->belongsToMany(College::class, 'colleges_programmes', 'programe_id', 'college_id');

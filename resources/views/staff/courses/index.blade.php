@@ -101,11 +101,11 @@
                             <span class="mr-2">Older Revisions</span>
                         </summary>
                         <ul class="p-4 list-disc ml-4">
-                            @forelse($course->revisions as $courseRevision)
+                            @forelse($course->revisions as $course_revision)
                             <li>
                                 <div class="flex items-center mb-1">
-                                    <h5 class="font-medium">Revision w.e.f <strong>{{ $courseRevision->revised_at->format('M, Y') }}</strong></h5>
-                                    <form method="POST" action="{{ route('staff.courses.revisions.destroy', compact('course', 'courseRevision')) }}"
+                                    <h5 class="font-medium">Revision w.e.f <strong>{{ $course_revision->revised_at->format('M, Y') }}</strong></h5>
+                                    <form method="POST" action="{{ route('staff.courses.revisions.destroy', compact('course', 'course_revision')) }}"
                                         class="ml-2">
                                         @csrf_token @method('DELETE')
                                         <button type="submit" class="p-2 text-gray-700 hover:text-red-600 hover:bg-gray-300 rounded">
@@ -114,7 +114,7 @@
                                     </form>
                                 </div>
                                 <div class="flex flex-wrap -mx-2">
-                                    @foreach ($courseRevision->attachments as $attachment)
+                                    @foreach ($course_revision->attachments as $attachment)
                                         <div class="inline-flex items-center p-2 rounded border hover:bg-gray-300 text-gray-600 mx-2 my-1">
                                             <a href="{{ route('staff.attachments.show', $attachment) }}" target="__blank" class="inline-flex items-center mr-1">
                                                 <feather-icon name="paperclip" class="h-4 mr-2" stroke-width="2">View Attachment</feather-icon>

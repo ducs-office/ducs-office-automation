@@ -14,25 +14,25 @@ class TeacherController extends Controller
 {
     public function index()
     {
-        $Teachers = Teacher::all();
-
-        return view('staff.teachers.index', compact('Teachers'));
+        return view('staff.teachers.index', [
+            'teachers' => Teacher::all()
+        ]);
     }
 
 
     public function store(Request $request)
     {
-        $validData = $request->validate([
+        $valid_data = $request->validate([
             'first_name' => 'required| string| min:3| max:50',
             'last_name' => 'required| string| min:3| max:50',
             'email' => 'required| email| unique:teachers| min:3| max:190',
         ]);
 
-        $plainPassword = strtoupper(Str::random(8));
+        $plain_password = strtoupper(Str::random(8));
 
-        $teacher = Teacher::create($validData + ['password' => bcrypt($plainPassword)]);
+        $teacher = Teacher::create($valid_data + ['password' => bcrypt($plain_password)]);
 
-        Mail::to($teacher)->send(new UserRegisteredMail($teacher, $plainPassword));
+        Mail::to($teacher)->send(new UserRegisteredMail($teacher, $plain_password));
 
         flash('College Teacher created successfully!')->success();
 
@@ -41,7 +41,7 @@ class TeacherController extends Controller
 
     public function update(Request $request, Teacher $teacher)
     {
-        $data = $request->validate([
+        $valid_data = $request->validate([
             'first_name' => ['sometimes', 'required', 'string', 'min:3', 'max:50'],
             'last_name' => ['sometimes', 'required', 'string', 'min:3', 'max:50'],
             'email' => ['sometimes', 'required', 'min:3', 'max:190', 'email',
@@ -49,7 +49,7 @@ class TeacherController extends Controller
             ]
         ]);
 
-        $teacher->update($data);
+        $teacher->update($valid_data);
 
         flash('College teacher updated successfully')->success();
 

@@ -12,14 +12,18 @@
                 'filters' => [
                     [ 'field' => 'date', 'label' => 'Before Date', 'type' => 'date', 'operator' => 'greater_than' ],
                     [ 'field' => 'date', 'label' => 'After Date', 'type' => 'date', 'operator' => 'less_than' ],
-                    [ 'field' => 'priority', 'label' => 'Priority', 'type' => 'select', 'operator' => 'equals', 'options' => $priorities->toArray() ],
+                    [ 'field' => 'priority', 'label' => 'Priority', 'type' => 'select', 'operator' => 'equals', 'options' => $priorities ],
                     [ 'field' => 'recipient_id', 'label' => 'Recipient', 'type' => 'select', 'operator' => 'equals', 'options' => $recipients->toArray() ],
                     [ 'field' => 'sender', 'label' => 'Sender', 'type' => 'select', 'operator' => 'equals', 'options' => $senders->toArray() ],
                 ]
             ])
         </div>
         @forelse($incoming_letters as $letter)
-            @include('staff.incoming_letters.partials.letter', compact('letter'))
+            @include('staff.incoming_letters.partials.letter',[
+                'letter' => $letter,
+                'priorities' => $priorities,
+                'priority_colors' => $priority_colors,
+            ])
         @empty
             <div class="py-8 flex flex-col items-center justify-center text-gray-500">
                 <feather-icon name="frown" class="h-16"></feather-icon>

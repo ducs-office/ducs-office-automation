@@ -22,6 +22,7 @@ class IncomingLettersController extends Controller
     public function index(Request $request)
     {
         $filters = $request->query('filters');
+
         $query = IncomingLetter::applyFilter($filters)->with(['remarks.user', 'handovers']);
 
         if ($request->has('search') && $request['search']!= '') {
@@ -29,36 +30,32 @@ class IncomingLettersController extends Controller
                     ->orWhere('description', 'like', '%'.$request['search'].'%');
         }
 
-        $incoming_letters = $query->orderBy('date', 'DESC')->get();
-
         $recipients = User::select('id', 'name')->whereIn(
             'id',
             IncomingLetter::selectRaw('DISTINCT(recipient_id)')
         )->get()->pluck('name', 'id');
 
-        $senders = IncomingLetter::selectRaw('DISTINCT(sender)')->get()->pluck('sender', 'sender');
-
-        $priorities = IncomingLetter::selectRaw('DISTINCT(priority)')->get()->pluck('priority', 'priority');
-
-        $priorities[1] = 'High';
-        $priorities[2] = 'Medium';
-        $priorities[3] = 'Low';
-
-        return view('staff.incoming_letters.index', compact(
-            'incoming_letters',
-            'recipients',
-            'senders',
-            'priorities'
-        ));
+        return view('staff.incoming_letters.index', [
+            'incoming_letters' => $query->orderBy('date', 'DESC')->get(),
+            'recipients' => $recipients,
+            'senders' => IncomingLetter::selectRaw('DISTINCT(sender)')->get()->pluck('sender', 'sender'),
+            'priorities' => config('options.incoming_letters.priorities'),
+            'priority_colors' => config('options.incoming_letters.priority_colors')
+        ]);
     }
 
     public function create()
     {
-        return view('staff.incoming_letters.create');
+        return view('staff.incoming_letters.create', [
+            'priorities' => config('options.incoming_letters.priorities'),
+            'priority_colors' => config('options.incoming_letters.priority_colors')
+        ]);
     }
 
     public function store()
     {
+        $priorities = implode(',', array_keys(config('options.incoming_letters.priorities')));
+
         $data = request()->validate([
             'date' => 'required|date|before_or_equal:today',
             'received_id' => 'required|string|min:3|max:190',
@@ -66,7 +63,7 @@ class IncomingLettersController extends Controller
             'recipient_id' => 'required|exists:users,id',
             'handovers' => 'nullable|array',
             'handovers.*' => 'integer|exists:users,id',
-            'priority' => 'nullable|in:1,2,3',
+            'priority' => 'nullable|in:'. $priorities,
             'subject' => 'required|string|min:5|max:100',
             'description' => 'nullable|string|min:4|max:400',
             'attachments' => 'required|array|min:1|max:2',
@@ -93,11 +90,16 @@ class IncomingLettersController extends Controller
 
     public function edit(IncomingLetter $incoming_letter)
     {
-        return view('staff.incoming_letters.edit', compact('incoming_letter'));
+        return view('staff.incoming_letters.edit', [
+            'incoming_letter' => $incoming_letter,
+            'priorities' => config('options.incoming_letters.priorities'),
+        ]);
     }
 
     public function update(IncomingLetter $incoming_letter, Request $request)
     {
+        $priorities = implode(',', array_keys(config('options.incoming_letters.priorities')));
+
         $rules = [
             'date' => ['sometimes', 'required', 'date', 'before_or_equal:today'],
             'received_id' => ['sometimes', 'required', 'string', 'min:3', 'max:190'],
@@ -105,7 +107,7 @@ class IncomingLettersController extends Controller
             'recipient_id' => ['sometimes', 'required', 'exists:users,id'],
             'handovers' => ['sometimes', 'nullable', 'array'],
             'handovers.*' => ['integer', 'exists:users,id'],
-            'priority' => ['nullable', 'in:1,2,3'],
+            'priority' => ['nullable', 'in:'. $priorities],
             'subject' => ['sometimes', 'required', 'string', 'min:5', 'max:100'],
             'description' => ['nullable', 'string', 'max:400'],
             'attachments' => ['required', 'array', 'max:2'],
