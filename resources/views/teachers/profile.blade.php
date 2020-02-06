@@ -45,7 +45,6 @@
             <ul>
                 @foreach($teacher->profile->teaching_details as $detail)
                 <li>
-                    {{-- @php(dd($detail->programme_revision)) --}}
                     {{ $detail->programme_revision->programme->name }} -
                     {{ $detail->course->name }}</li>
                 @endforeach
@@ -53,6 +52,37 @@
             @else
             <p class="text-gray-600 font-bold">Nothing to show here.</p>
             @endif
+            <a href = "{{ route('teachers.profile.submit') }}" class="btn btn-magenta mt-6"> Submit Details </a>
+        </div>
+
+        <div class="bg-white p-6 h-full rounded shadow-md mt-4">
+            <div> 
+                <h3 class="font-bold text-2xl underline">Past Teaching Details</h3>
+                @foreach ($teacher->past_profiles as $past_profile)
+                    <div class="mt-2 p-6">
+                        <h4 class="font-bold">{{ $past_profile->valid_from }}</h4>
+                        <div class="flex items-baseline p-6">
+                            <div>
+                                <h5 class="font-bold"> Designation </h5>
+                                <h5 class="text-l font-medium">{{ $past_profile->getDesignation() }}</h5>
+                            </div>
+                            <div class="ml-5">
+                                <h5 class="font-bold"> College </h5>
+                                <h5 class="text-l font-medium">{{ $past_profile->college->name }}</h5>
+                            </div>
+                        </div>
+                        <h4 class="font-bold px-6"> Programme-Courses Taught</h4>
+                        @forelse ($past_profile->past_teaching_details as $index => $past_teaching_detail)
+                        @php
+                            $programme_course_set = json_encode($past_teaching_detail->course_programme_revision->programme_course_set());
+                        @endphp 
+                            {{ $programme_course_set }}
+                        @empty
+                            Nothing to show
+                        @endforelse
+                    </div>
+                @endforeach
+            </div>
         </div>
     </div>
 @endsection

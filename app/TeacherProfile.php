@@ -42,9 +42,4 @@ class TeacherProfile extends Model
     {
         return config('options.teachers.designations')[$this->designation] ?? 'Unknown';
     }
-    
-    public function past_profiles()
-    {
-        return $this->hasMany(PastTeachersProfile::class, 'teacher_id');
-    }
 }

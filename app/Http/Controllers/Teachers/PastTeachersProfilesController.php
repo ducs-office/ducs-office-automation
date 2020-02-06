@@ -9,7 +9,8 @@ class PastTeachersProfilesController extends Controller
 {
     public function store()
     {
-        $teacherProfile = auth()->user()->profile;
+        $teacher = auth()->user();
+        $teacherProfile = $teacher->profile;
 
         if (! $teacherProfile->designation
             || ! $teacherProfile->college_id
@@ -19,7 +20,7 @@ class PastTeachersProfilesController extends Controller
             return redirect()->back();
         }
 
-        $pastProfile = $teacherProfile->past_profiles()->create(
+        $pastProfile = $teacher->past_profiles()->create(
             [
                 'designation' => $teacherProfile->designation,
                 'college_id' => $teacherProfile->college_id,

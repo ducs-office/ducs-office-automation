@@ -29,4 +29,9 @@ class Teacher extends User
     {
         return $this->hasOne(TeacherProfile::class, 'teacher_id');
     }
+
+    public function past_profiles()
+    {
+        return $this->hasMany(PastTeachersProfile::class, 'teacher_id');
+    }
 }

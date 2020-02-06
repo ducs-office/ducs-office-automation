@@ -15,4 +15,10 @@ class CourseProgrammeRevision extends Pivot
     {
         return $this->belongsTo(Course::class, 'course_id');
     }
+
+
+    public function programme_course_set()
+    {
+        return [$this->programme_revision->programme, $this->course];
+    }
 }
