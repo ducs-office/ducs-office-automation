@@ -23,6 +23,7 @@ class PastTeachersProfilesController extends Controller
             [
                 'designation' => $teacherProfile->designation,
                 'college_id' => $teacherProfile->college_id,
+                'valid_from' => now()->format('d-m-Y'),
             ]
         );
 
