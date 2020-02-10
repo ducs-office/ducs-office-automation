@@ -9,12 +9,19 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use App\Mail\UserRegisteredMail;
 use App\Http\Controllers\Controller;
+use Illuminate\Database\Eloquent\Builder;
 
 class TeacherController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $Teachers = Teacher::all();
+        $filters = $request->query('filters');
+        $query = Teacher::applyFilter($filters)->with([
+            'past_profiles',
+            'past_profiles.past_teaching_details.course_programme_revision.course'
+        ]);
+        
+        $Teachers = $query->orderBy('id')->get();
 
         return view('staff.teachers.index', compact('Teachers'));
     }
