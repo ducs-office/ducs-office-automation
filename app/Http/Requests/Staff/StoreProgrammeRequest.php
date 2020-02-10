@@ -5,6 +5,7 @@ namespace App\Http\Requests\Staff;
 use App\CourseProgrammeRevision;
 use App\Programme;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreProgrammeRequest extends FormRequest
 {
@@ -36,14 +37,7 @@ class StoreProgrammeRequest extends FormRequest
             'semester_courses' => ['required', 'array', 'size:'.($this->duration * 2) ],
             'semester_courses.*' => ['required', 'array', 'min:1'],
             'semester_courses.*.*' => ['numeric', 'distinct', 'exists:courses,id',
-                function ($attribute, $value, $fail) {
-                    $courses = CourseProgrammeRevision::all();
-                    foreach ($courses as $course) {
-                        if ($value == $course->course_id) {
-                            $fail($attribute.'is invalid');
-                        }
-                    }
-                },
+                Rule::unique(CourseProgrammeRevision::class, 'course_id')
             ]
         ];
     }

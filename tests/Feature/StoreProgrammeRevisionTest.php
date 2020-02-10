@@ -96,6 +96,7 @@ class StoreProgrammeRevisionTest extends TestCase
                         'semester_courses' => [[$semester_courses[0]->id], [$semester_courses[1]->id]]
                     ]
                 );
+            $this->fail('no validation error occured');
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('revised_at', $e->errors());
         }
@@ -192,6 +193,7 @@ class StoreProgrammeRevisionTest extends TestCase
                         [$unassignedCourses[0]->id]
                     ],
                 ]);
+            $this->fail('no validation error occured');
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('semester_courses.0.0', $e->errors());
         }

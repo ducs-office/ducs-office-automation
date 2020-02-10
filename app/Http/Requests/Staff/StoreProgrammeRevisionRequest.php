@@ -2,10 +2,9 @@
 
 namespace App\Http\Requests\Staff;
 
-use App\Course;
 use App\CourseProgrammeRevision;
-use App\ProgrammeRevision;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreProgrammeRevisionRequest extends FormRequest
 {
@@ -27,30 +26,24 @@ class StoreProgrammeRevisionRequest extends FormRequest
     public function rules()
     {
         $programme = $this->route('programme');
+        $revision_dates = $programme->revisions
+            ->pluck('revised_at')
+            ->map->format('Y-m-d')
+            ->toArray();
 
         return [
-            'revised_at' => ['required', 'date',
-                function ($attribute, $value, $fail) use ($programme) {
-                    $revisions = $programme->revisions->map->toArray();
-                    if ($revisions->contains('revised_at', $value)) {
-                        $fail($attribute.' is invalid');
-                    }
-                },
-            ],
+            'revised_at' => ['required', 'date', Rule::notIn($revision_dates) ],
             'semester_courses' => [
-                'sometimes', 'required', 'array',
-                'size:'.($programme->duration * 2),
+                'sometimes', 'required', 'array', 'size:'.($programme->duration * 2),
             ],
             'semester_courses.*' => ['required', 'array', 'min:1'],
-            'semester_courses.*.*' => ['numeric', 'distinct', 'exists:courses,id',
-                function ($attribute, $value, $fail) use ($programme) {
-                    $courses = CourseProgrammeRevision::all();
-                    foreach ($courses as $course) {
-                        if ($value == $course->course_id && Course::find($course->course_id)->programme_revisions()->first()->programme_id != $programme->id) {
-                            $fail($attribute.' is invalid');
-                        }
-                    }
-                },
+            'semester_courses.*.*' => [
+                'numeric', 'distinct', 'exists:courses,id',
+                Rule::unique(CourseProgrammeRevision::class, 'course_id')
+                    ->whereNotIn(
+                        'programme_revision_id',
+                        $programme->revisions->pluck('id')->toArray()
+                    )
             ],
         ];
     }
