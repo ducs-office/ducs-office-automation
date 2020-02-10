@@ -15,6 +15,9 @@ $factory->define(PastTeachersProfile::class, function (Faker $faker) {
         'college_id' => function () {
             return factory(College::class)->create()->id;
         },
-        'valid_from' => $faker->date(),
+        'teacher_id' => function () {
+            return factory(Teacher::class)->create()->id;
+        },
+        'valid_from' => $faker->date('Y-m-d'),
     ];
 });

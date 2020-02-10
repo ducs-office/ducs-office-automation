@@ -46,21 +46,25 @@
                 @foreach($teacher->profile->teaching_details as $detail)
                 <li>
                     {{ $detail->programme_revision->programme->name }} -
-                    {{ $detail->course->name }}</li>
+                    {{ $detail->course->name }}
+                </li>
                 @endforeach
             </ul>
             @else
             <p class="text-gray-600 font-bold">Nothing to show here.</p>
             @endif
-            <a href = "{{ route('teachers.profile.submit') }}" class="btn btn-magenta mt-6"> Submit Details </a>
+            <form action="{{ route('teachers.profile.submit') }}" method="POST">
+                @csrf_token
+                <button type="submitc" class="btn btn-magenta mt-6"> Submit Details </button>
+            </form>
         </div>
 
         <div class="bg-white p-6 h-full rounded shadow-md mt-4">
             <div> 
                 <h3 class="font-bold text-2xl underline">Past Teaching Details</h3>
                 @foreach ($teacher->past_profiles as $past_profile)
-                    <div class="mt-2 p-6">
-                        <h4 class="font-bold">{{ $past_profile->valid_from }}</h4>
+                    <details class="mt-6"> 
+                        <summary class="font-bold cursor-pointer outline-none"> {{ $past_profile->valid_from->format('M-Y')}} </summary>
                         <div class="flex items-baseline p-6">
                             <div>
                                 <h5 class="font-bold"> Designation </h5>
@@ -72,15 +76,19 @@
                             </div>
                         </div>
                         <h4 class="font-bold px-6"> Programme-Courses Taught</h4>
-                        @forelse ($past_profile->past_teaching_details as $index => $past_teaching_detail)
-                        @php
-                            $programme_course_set = json_encode($past_teaching_detail->course_programme_revision->programme_course_set());
-                        @endphp 
-                            {{ $programme_course_set }}
-                        @empty
-                            Nothing to show
-                        @endforelse
-                    </div>
+                        <div class="px-6 mt-2">
+                            @foreach ($past_profile->past_teaching_details as $index => $past_teaching_detail)
+                                <?php
+                                    $programme = $past_teaching_detail->course_programme_revision->programme_course_set()['programme'];
+                                    $course = $past_teaching_detail->course_programme_revision->programme_course_set()['course'];
+                                ?> 
+                                <div class="bg-gray-300 flex w-1/2 border-l border-r border-t border-black {{ $loop->last ? 'border-b' : '' }}">
+                                    <p class="w-1/2 p-2"> {{ $programme['name']}} </p>  
+                                    <p class="border-l border-black p-2">{{ $course['name']}} </p>
+                                </div>   
+                            @endforeach
+                        </div>
+                    </details>
                 @endforeach
             </div>
         </div>

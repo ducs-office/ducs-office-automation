@@ -19,6 +19,9 @@ class CourseProgrammeRevision extends Pivot
 
     public function programme_course_set()
     {
-        return [$this->programme_revision->programme, $this->course];
+        return [
+            'programme' => $this->programme_revision->programme, 
+            'course' => $this->course
+        ];
     }
 }
