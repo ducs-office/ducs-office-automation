@@ -29,7 +29,7 @@ class FilterTeachersTest extends TestCase
             $revision = $programme->revisions()->create(['revised_at' => $programme->wef]);
             $courses[$index]->programme_revisions()->attach($revision, ['semester' => 1]);
         }
-        
+
         for ($index = 0; $index < 2; $index++) {             // add a past profile to each teacher
             $teachers[$index]->past_profiles()->create([
                 'valid_from' => now()->subYear($index + 1),
@@ -57,11 +57,11 @@ class FilterTeachersTest extends TestCase
                             ->assertViewIs('staff.teachers.index')
                             ->assertViewHas('Teachers')
                             ->viewData('Teachers');
-                            
+
         $this->assertEquals(2, $viewTeachers->count());
         $this->assertSame($viewTeachers->pluck('id')->toArray(), [1,3]);
     }
-    
+
     /** @test */
     public function teachers_who_taught_after_given_date_can_be_filterd()
     {
@@ -105,7 +105,7 @@ class FilterTeachersTest extends TestCase
 
         $view_teachers = $this->withoutExceptionHandling()
                 ->get(route('staff.teachers.index', [
-                    'filters' => ['valid_from' => ['greater_than' => $x]]
+                    'filters' => ['valid_from' => $x]
                 ]))
                 ->assertSuccessful()
                 ->assertViewIs('staff.teachers.index')

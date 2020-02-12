@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Staff;
 
+use App\Course;
 use App\Teacher;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -10,6 +11,8 @@ use Illuminate\Support\Str;
 use App\Mail\UserRegisteredMail;
 use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Storage;
 
 class TeacherController extends Controller
 {
@@ -18,14 +21,47 @@ class TeacherController extends Controller
         $filters = $request->query('filters');
         $query = Teacher::applyFilter($filters)->with([
             'past_profiles',
-            'past_profiles.past_teaching_details.course'
+            'past_profiles.past_teaching_details.course',
+            'past_profiles.past_teaching_details.programme_revision.programme',
         ]);
-        
-        $Teachers = $query->orderBy('id')->get();
 
-        return view('staff.teachers.index', compact('Teachers'));
+        $Teachers = $query->orderBy('id')->get();
+        $courses = Course::select('id', 'code', 'name')->get()
+            ->map(function ($course) {
+                return [
+                    'id' => $course->id,
+                    'name' => $course->code . ' - ' . $course->name,
+                ];
+            })->pluck('name', 'id');
+
+        return view('staff.teachers.index', compact('Teachers', 'courses'));
     }
 
+    public function show(Request $request, Teacher $teacher)
+    {
+        $past_profiles = $teacher->past_profiles()->with([
+            'past_teaching_details.course',
+            'past_teaching_details.programme_revision.programme',
+        ]);
+
+        return view('staff.teachers.show', compact('teacher', 'past_profiles'));
+    }
+
+    public function avatar(Teacher $teacher)
+    {
+        $attachmentPicture = $teacher->profile->profile_picture;
+
+        if ($attachmentPicture && Storage::exists($attachmentPicture->path)) {
+            return Response::file(Storage::path($attachmentPicture->path));
+        }
+
+        $gravatarHash = md5(strtolower(trim(auth()->user()->email)));
+        $avatar = file_get_contents('https://gravatar.com/avatar/' . $gravatarHash . '?s=200&d=identicon');
+
+        return Response::make($avatar, 200, [
+            'Content-Type' => 'image/jpg'
+        ]);
+    }
 
     public function store(Request $request)
     {

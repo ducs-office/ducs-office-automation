@@ -46,7 +46,7 @@ class Teacher extends User
 
         if (isset($filters['valid_from'])) {
             $query->whereHas('past_profiles', function (Builder $q) use ($filters) {
-                $q->where('valid_from', '>=', $filters['valid_from']['greater_than']);
+                $q->where('valid_from', '>=', $filters['valid_from']);
             });
         }
     }
