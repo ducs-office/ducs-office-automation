@@ -64,7 +64,7 @@ class SubmitTeacherDetailsTest extends TestCase
         $this->assertEquals($teacher->profile->fresh()->college_id, PastTeachersProfile::first()->college_id);
         $this->assertEquals($teacher->profile->fresh()->designation, PastTeachersProfile::first()->designation);
         $this->assertEquals($teacher->profile->fresh()->teaching_details->count(), PastTeachersProfile::first()->past_teaching_details->count());
-        $this->assertEquals($teacher->profile->fresh()->teaching_details->first()->id, PastTeachersProfile::first()->past_teaching_details->first()->course_programme_revision_id);
+        $this->assertEquals($teacher->profile->fresh()->teaching_details->first()->id, PastTeachersProfile::first()->past_teaching_details->first()->id);
         $this->assertEquals($teacher->profile->fresh()->teacher_id, PastTeachersProfile::first()->teacher_id);
     }
 

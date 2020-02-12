@@ -37,9 +37,9 @@ class FilterTeachersTest extends TestCase
                 'designation' => $this->faker->randomElement(array_keys(config('options.teachers.designations'))),
             ]);
 
-            $teachers[$index]->past_profiles[0]->past_teaching_details()->create([
-                'course_programme_revision_id' => $index + 1,
-            ]);
+            $teachers[$index]->past_profiles[0]
+                ->past_teaching_details()
+                ->attach([ $index + 1 ]);
         }
 
         $teachers[2]->past_profiles()->create([
@@ -48,11 +48,9 @@ class FilterTeachersTest extends TestCase
             'designation' => $this->faker->randomElement(array_keys(config('options.teachers.designations'))),
         ]);
 
-        $teachers[2]->past_profiles[0]->past_teaching_details()->create([
-            'course_programme_revision_id' => 1,
-        ]);
+        $teachers[2]->past_profiles[0]->past_teaching_details()->attach([1]);
 
-        $viewTeachers = $this->withExceptionHandling()
+        $viewTeachers = $this->withoutExceptionHandling()
                         ->get(route('staff.teachers.index', [
                             'filters' => ['course_id' => [ $courses[0]->id ] ],
                         ]))->assertSuccessful()

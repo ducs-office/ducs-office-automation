@@ -39,7 +39,7 @@ class Teacher extends User
     public function scopeApplyFilter($query, $filters)
     {
         if (isset($filters['course_id'])) {
-            $query->whereHas('past_profiles.past_teaching_details.course_programme_revision.course', function (Builder $q) use ($filters) {
+            $query->whereHas('past_profiles.past_teaching_details.course', function (Builder $q) use ($filters) {
                 $q->where('id', $filters['course_id']);
             });
         }

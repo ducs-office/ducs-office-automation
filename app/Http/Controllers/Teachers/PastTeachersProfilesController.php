@@ -28,11 +28,8 @@ class PastTeachersProfilesController extends Controller
             ]
         );
 
-        $pastProfile->past_teaching_details()->createMany(
-            array_map(function ($teaching_detail) {
-                return ['course_programme_revision_id' => $teaching_detail['id']];
-            }, $teacherProfile->teaching_details->toArray())
-        );
+        $pastProfile->past_teaching_details()
+            ->attach($teacherProfile->teaching_details->pluck('id')->toArray());
 
         flash('Details submitted successfully!', 'success');
         return redirect()->back();

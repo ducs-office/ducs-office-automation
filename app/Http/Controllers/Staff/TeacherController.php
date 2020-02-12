@@ -18,7 +18,7 @@ class TeacherController extends Controller
         $filters = $request->query('filters');
         $query = Teacher::applyFilter($filters)->with([
             'past_profiles',
-            'past_profiles.past_teaching_details.course_programme_revision.course'
+            'past_profiles.past_teaching_details.course'
         ]);
         
         $Teachers = $query->orderBy('id')->get();

@@ -79,8 +79,8 @@
                         <div class="px-6 mt-2">
                             @foreach ($past_profile->past_teaching_details as $index => $past_teaching_detail)
                                 <?php
-                                    $programme = $past_teaching_detail->course_programme_revision->programme_course_set()['programme'];
-                                    $course = $past_teaching_detail->course_programme_revision->programme_course_set()['course'];
+                                    $programme = $past_teaching_detail->programme_course_set()['programme'];
+                                    $course = $past_teaching_detail->programme_course_set()['course'];
                                 ?> 
                                 <div class="bg-gray-300 flex w-1/2 border-l border-r border-t border-black {{ $loop->last ? 'border-b' : '' }}">
                                     <p class="w-1/2 p-2"> {{ $programme['name']}} </p>  

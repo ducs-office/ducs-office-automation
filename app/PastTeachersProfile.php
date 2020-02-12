@@ -13,7 +13,7 @@ class PastTeachersProfile extends Model
 
     public function past_teaching_details()
     {
-        return $this->hasMany(PastTeachingDetail::class, 'past_teachers_profile_id');
+        return $this->belongsToMany(CourseProgrammeRevision::class, 'past_teaching_details', 'past_teachers_profile_id', 'course_programme_revision_id');
     }
 
     public function college()

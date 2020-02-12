@@ -22,15 +22,9 @@ class ProfileController extends Controller
             'profile.college',
             'profile.teaching_details',
             'profile.profile_picture',
+            'past_profiles.past_teaching_details'
         ]);
-
-        $teacher->past_profiles->map(function ($past_profile) {
-            $past_profile->past_teaching_details
-                ->map->course_programme_revision
-                ->map->programme_course_set();
-            return $past_profile;
-        });
-
+        
         return view('teachers.profile', [
             'teacher' => $teacher,
             'designations' => config('options.teachers.designations'),

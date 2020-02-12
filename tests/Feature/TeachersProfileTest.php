@@ -66,18 +66,10 @@ class TeachersProfileTest extends TestCase
             ]);
         }
 
-        $teacher->past_profiles[0]->past_teaching_details()->createMany([
-            [
-                'course_programme_revision_id' => 1,
-            ],
-            [
-                'course_programme_revision_id' => 2,
-            ]
-        ]);
+        $teacher->past_profiles[0]->past_teaching_details()
+            ->attach([ 1, 2 ]);
 
-        $teacher->past_profiles[1]->past_teaching_details()->create([
-            'course_programme_revision_id' => 3,
-        ]);
+        $teacher->past_profiles[1]->past_teaching_details()->attach(3);
 
         $view_profile = $this->withoutExceptionHandling()
             ->get(route('teachers.profile'))
