@@ -11,7 +11,7 @@
             </div>
         </div>
         <div class="flex flex-wrap w-full px-6">
-            @foreach ($programmeRevisions as $index => $programmeRevision)
+            @foreach ($programme->revisions as $index => $programmeRevision)
                 <div class="page-card w-5/12 border-b mb-4 p-6 {{ $loop->index % 2 == 1 ? 'ml-10': ''}}">
                     <div class="flex items-baseline">
                         <div class="relative z-10 -ml-8 my-4">

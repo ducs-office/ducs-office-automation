@@ -8,23 +8,21 @@ use App\Course;
 use App\ProgrammeRevision;
 use App\Http\Requests\Staff\StoreProgrammeRevisionRequest;
 use App\Http\Requests\Staff\UpdateProgrammeRevisionRequest;
+use Illuminate\Support\Facades\DB;
 
 class ProgrammeRevisionController extends Controller
 {
     public function index(Programme $programme)
     {
-        $programme_revisions = $programme->revisions->sortByDesc('revised_at');
+        $programme->load(['revisions.courses']);
 
-        $grouped_revision_courses = $programme_revisions
-            ->map(function ($revisions) {
-                return $revisions->courses
-                    ->sortBy('pivot.semester')
-                    ->groupBy('pivot.semester');
+        $grouped_revision_courses = $programme->revisions
+            ->map(function ($revision) {
+                return $revision->courses->groupBy('pivot.semester');
             });
 
         return view('staff.programmes.revisions.index', [
             'programme' => $programme,
-            'programmeRevisions' => $programme_revisions,
             'groupedRevisionCourses' => $grouped_revision_courses,
         ]);
     }
@@ -37,13 +35,11 @@ class ProgrammeRevisionController extends Controller
             ->where('revised_at', $programme->wef)
             ->first();
 
-
         $semester_courses = (! $revision) ? [] : $revision
             ->courses
             ->groupBy('pivot.semester')
             ->map
             ->pluck('id');
-
 
         return view('staff.programmes.revisions.create', [
             'programme' => $programme,
@@ -62,15 +58,7 @@ class ProgrammeRevisionController extends Controller
             'programme_id' => $programme->id
         ]);
 
-        $semester_courses = collect($request->semester_courses)
-            ->map(function ($courses, $semester) {
-                return array_map(function ($course) use ($semester) {
-                    return ['id' => $course, 'pivot' => ['semester' => $semester]];
-                }, $courses);
-            })->flatten(1)->pluck('pivot', 'id')
-            ->toArray();
-
-        $revision->courses()->sync($semester_courses);
+        $revision->courses()->sync($request->getSemesterCourses());
 
         if ($programme->wef < $data['revised_at']) {
             $programme->update(['wef' => $data['revised_at']]);
@@ -88,9 +76,10 @@ class ProgrammeRevisionController extends Controller
         }
 
         $semester_courses = $programme_revision->courses
-                                ->groupBy('pivot.semester')
-                                ->map
-                                ->pluck('id');
+            ->groupBy('pivot.semester')
+            ->map
+            ->pluck('id');
+
         return view('staff.programmes.revisions.edit', [
             'programme' => $programme,
             'programme_revision' => $programme_revision,
@@ -101,17 +90,12 @@ class ProgrammeRevisionController extends Controller
 
     public function update(UpdateProgrammeRevisionRequest $request, Programme $programme, ProgrammeRevision $programme_revision)
     {
+        DB::beginTransaction();
+
         $programme_revision->update($request->validated());
+        $programme_revision->courses()->sync($request->getSemesterCourses());
 
-        $semester_courses = collect($request->semester_courses)
-            ->map(function ($courses, $semester) {
-                return array_map(function ($course) use ($semester) {
-                    return ['id' => $course, 'pivot' => ['semester' => $semester]];
-                }, $courses);
-            })->flatten(1)->pluck('pivot', 'id')
-            ->toArray();
-
-        $programme_revision->courses()->sync($semester_courses);
+        DB::commit();
 
         if ($programme->wef->format('Y-m-d') < $request->revised_at) {
             $programme->update(['wef' => $request->revised_at]);

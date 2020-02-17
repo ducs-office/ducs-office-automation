@@ -38,9 +38,9 @@ class ViewProgrammeRevisionsTest extends TestCase
             ->get(route('staff.programmes.revisions.show', $programme))
             ->assertSuccessful()
             ->assertViewIs('staff.programmes.revisions.index')
-            ->assertViewHasAll(['programme','programmeRevisions','groupedRevisionCourses'])
-            ->viewData('programmeRevisions');
+            ->assertViewHasAll(['programme','groupedRevisionCourses'])
+            ->viewData('programme');
 
-        $this->assertCount(2, $programmeRevisions);
+        $this->assertCount(2, $programme->revisions);
     }
 }

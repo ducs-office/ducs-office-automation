@@ -18,7 +18,9 @@ class ProgrammeRevision extends Model
 
     public function courses()
     {
-        return $this->belongsToMany(Course::class)->withPivot(['semester']);
+        return $this->belongsToMany(Course::class)
+            ->withPivot(['semester'])
+            ->orderBy('semester');
     }
 
     public function programme()

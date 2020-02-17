@@ -24,7 +24,8 @@ class Programme extends Model
 
     public function revisions()
     {
-        return $this->hasMany(ProgrammeRevision::class);
+        return $this->hasMany(ProgrammeRevision::class)
+            ->orderBy('revised_at', 'desc');
     }
 
     public function latestRevision()
