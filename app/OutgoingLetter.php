@@ -29,38 +29,28 @@ class OutgoingLetter extends Model
         parent::boot();
 
         static::creating(function ($outgoing_letter) {
-            $prefixes = [
-                'Bill' => 'TR/',
-                'Notesheet' => 'NTS/',
-                'General' => ''
-            ];
-
-            $year = $outgoing_letter->date->format('Y');
-            $serial_no = "CS/{$prefixes[$outgoing_letter->type]}{$year}";
-            $cache_key = "letter_seq_{$serial_no}";
-            $number_sequence = str_pad(Cache::increment($cache_key), 4, '0', STR_PAD_LEFT);
-
-            $outgoing_letter->serial_no = "$serial_no/$number_sequence";
-
-            return $outgoing_letter;
+            $outgoing_letter->assignSerialNumber();
         });
 
         static::updating(function ($outgoing_letter) {
-            $prefixes = [
-                'Bill' => 'TR/',
-                'Notesheet' => 'NTS/',
-                'General' => ''
-            ];
-
-            $year = $outgoing_letter->date->format('Y');
-            $serial_no = "CS/{$prefixes[$outgoing_letter->type]}{$year}";
-            $cache_key = "letter_seq_{$serial_no}";
-            $number_sequence = str_pad(Cache::increment($cache_key), 4, '0', STR_PAD_LEFT);
-
-            $outgoing_letter->serial_no = "$serial_no/$number_sequence";
-
-            return $outgoing_letter;
+            $outgoing_letter->assignSerialNumber();
         });
+    }
+
+    public function assignSerialNumber()
+    {
+        $prefixes = [
+            'Bill' => 'TR/',
+            'Notesheet' => 'NTS/',
+            'General' => '',
+        ];
+
+        $serial_no = "CS/" . $prefixes[$this->type] . $this->date->format('Y');
+        $number_sequence = Cache::increment("letter_seq_{$serial_no}");
+
+        $this->serial_no = $serial_no . '/' . str_pad($number_sequence, 4, '0', STR_PAD_LEFT);
+
+        return $this->serial_no;
     }
 
     public function sender()
