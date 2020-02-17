@@ -3,15 +3,10 @@
 namespace App\Http\Controllers\Staff;
 
 use App\Programme;
-use App\Course;
 use App\Events\ProgrammeCreated;
-use App\ProgrammeRevision;
-use App\CourseProgrammeRevision;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\Cache;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Staff\StoreProgrammeRequest;
+use App\Http\Requests\Staff\UpdateProgrammeRequest;
 
 class ProgrammesController extends Controller
 {
@@ -67,20 +62,15 @@ class ProgrammesController extends Controller
         ]);
     }
 
-    public function update(Request $request, Programme $programme)
+    public function update(UpdateProgrammeRequest $request, Programme $programme)
     {
-        $types = implode(',', array_keys(config('options.programmes.types')));
+        $data = $request->validated();
 
-        $data = $request->validate([
-            'code' => ['sometimes', 'required', 'min:3', 'max:60',
-                        Rule::unique('programmes')->ignore($programme)],
-            'wef' => ['sometimes' , 'required', 'date'],
-            'type' => ['sometimes', 'required', 'in:'.$types],
-            'name' => ['sometimes', 'required', 'min:3', 'max:190'],
-        ]);
-
-        if (isset($data['wef'])) {
-            $programme->revisions()->where('revised_at', $programme->wef)->update(['revised_at' => $data['wef']]);
+        if ($request->has('wef')) {
+            // @todo: Discuss the need
+            $programme->revisions()
+                ->where('revised_at', $programme->wef)
+                ->update(['revised_at' => $request->wef]);
 
             $latestRevision = $programme->revisions()->max('revised_at');
             $programme->update(['wef' => $latestRevision]);

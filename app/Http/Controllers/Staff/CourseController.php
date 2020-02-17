@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Staff;
 use App\Http\Controllers\Controller;
 use App\Programme;
 use App\Course;
+use App\Http\Requests\Staff\StoreCourseRequest;
+use App\Http\Requests\Staff\UpdateCourseRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
@@ -39,39 +41,20 @@ class CourseController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\Staff\StoreCourseRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreCourseRequest $request)
     {
-        $types = implode(',', array_keys(config('options.courses.types')));
-
-        $validData = $request->validate([
-            'code' => ['required', 'min:3', 'max:60', 'unique:courses'],
-            'name' => ['required', 'min:3', 'max:190'],
-            'type' => ['required', 'in:'.$types],
-            'date' => ['required', 'date', 'before_or_equal:now'],
-            'attachments' => ['required', 'array', 'max:5'],
-            'attachments.*' => ['file', 'max:200', 'mimes:jpeg,jpg,png,pdf'],
-        ]);
-
         DB::beginTransaction();
 
-        $course = Course::create($validData);
-        $revision = $course->revisions()->create([
-            'revised_at' => $request->date
-        ]);
-
-        if ($request->hasFile('attachments')) {
-            $revision->attachments()->createMany(
-                array_map(function ($attachedFile) {
-                    return [
-                        'path' => $attachedFile->store('/course_attachments'),
-                        'original_name' => $attachedFile->getClientOriginalName(),
-                    ];
-                }, $request-> attachments)
-            );
-        }
+        Course::create($request->validated())
+            ->revisions()
+            ->create([
+                'revised_at' => $request->date
+            ])
+            ->attachments()
+            ->createMany($request->storeAttachments());
 
         DB::commit();
 
@@ -83,40 +66,22 @@ class CourseController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\Staff\UpdateCourseRequest  $request
      * @param  \App\Course  $course
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Course $course)
+    public function update(UpdateCourseRequest $request, Course $course)
     {
-        $types = implode(',', array_keys(config('options.courses.types')));
+        DB::beginTransaction();
 
-        $valid_data = $request->validate([
-            'code' => [
-                'sometimes', 'required', 'min:3', 'max:60',
-                Rule::unique('courses')->ignore($course)
-            ],
-            'name' => ['sometimes', 'required', 'min:3', 'max:190'],
-            'type' => ['sometimes', 'required', 'in:'.$types],
-            'attachments' => ['nullable', 'array', 'max:5'],
-            'attachments.*' => ['file', 'mimes:jpeg,jpg,png,pdf', 'max:200'],
-        ]);
+        $course->update($request->validated());
 
-        $course->update($valid_data);
-
-
-        if ($request->hasFile('attachments')) {
+        if ($attachments = $request->storeAttachments()) {
             $revision = $course->revisions()->orderBy('revised_at', 'desc')->first();
-
-            $revision->attachments()->createMany(
-                array_map(function ($attachedFile) {
-                    return [
-                        'path' => $attachedFile->store('/course_attachments'),
-                        'original_name' => $attachedFile->getClientOriginalName(),
-                    ];
-                }, $valid_data['attachments'])
-            );
+            $revision->attachments()->createMany($attachments);
         }
+
+        DB::commit();
 
         flash('Course updated successfully!', 'success');
 
