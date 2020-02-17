@@ -2,13 +2,13 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
 use App\Course;
 use App\Programme;
 use App\ProgrammeRevision;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Validation\ValidationException;
+use Tests\TestCase;
 
 class UpdateProgrammeRevisionTest extends TestCase
 {
@@ -34,11 +34,11 @@ class UpdateProgrammeRevisionTest extends TestCase
         $this->patch(
             route('staff.programmes.revisions.update', [
                 'programme' => $programme,
-                'programme_revision' => $revision
+                'programme_revision' => $revision,
             ]),
             [
                 'revised_at' => $revised_at,
-                'semester_courses' => [[$semester_courses[1]->id], [$semester_courses[0]->id]]
+                'semester_courses' => [[$semester_courses[1]->id], [$semester_courses[0]->id]],
             ]
         )
             ->assertRedirect()
@@ -53,7 +53,7 @@ class UpdateProgrammeRevisionTest extends TestCase
     {
         $this->signIn();
 
-        $programme = create(Programme::class, 1, ['duration' => 1, 'wef' => "2000-01-09"]);
+        $programme = create(Programme::class, 1, ['duration' => 1, 'wef' => '2000-01-09']);
         $revision = create(ProgrammeRevision::class, 1, ['revised_at' => $programme->wef, 'programme_id' => $programme->id]);
         $semester_courses = create(Course::class, 2);
 
@@ -66,11 +66,11 @@ class UpdateProgrammeRevisionTest extends TestCase
                 ->patch(
                     route('staff.programmes.revisions.update', [
                         'programme' => $programme,
-                        'programme_revision' => $revision
+                        'programme_revision' => $revision,
                     ]),
                     [
                         'revised_at' => '',
-                        'semester_courses' => [[$semester_courses[0]->id], [$semester_courses[1]->id]]
+                        'semester_courses' => [[$semester_courses[0]->id], [$semester_courses[1]->id]],
                     ]
                 );
         } catch (ValidationException $e) {
@@ -86,9 +86,9 @@ class UpdateProgrammeRevisionTest extends TestCase
     {
         $this->signIn();
 
-        $programme = create(Programme::class, 1, ['duration' => 1, 'wef' => "2000-01-09"]);
+        $programme = create(Programme::class, 1, ['duration' => 1, 'wef' => '2000-01-09']);
         $revision1 = create(ProgrammeRevision::class, 1, ['revised_at' => $programme->wef, 'programme_id' => $programme->id]);
-        $revision2 = create(ProgrammeRevision::class, 1, ['revised_at' => "2019-09-09", 'programme_id' => $programme->id]);
+        $revision2 = create(ProgrammeRevision::class, 1, ['revised_at' => '2019-09-09', 'programme_id' => $programme->id]);
         $semester_courses = create(Course::class, 2);
 
         foreach ($semester_courses as $index => $course) {
@@ -100,11 +100,11 @@ class UpdateProgrammeRevisionTest extends TestCase
                 ->patch(
                     route('staff.programmes.revisions.update', [
                         'programme' => $programme,
-                        'programme_revision' => $revision2
+                        'programme_revision' => $revision2,
                     ]),
                     [
                         'revised_at' => $programme->wef->format('Y-m-d'),
-                        'semester_courses' => [[$semester_courses[0]->id], [$semester_courses[1]->id]]
+                        'semester_courses' => [[$semester_courses[0]->id], [$semester_courses[1]->id]],
                     ]
                 );
             $this->fail('No validation error occured.');
@@ -121,7 +121,7 @@ class UpdateProgrammeRevisionTest extends TestCase
     {
         $this->signIn();
 
-        $programme = create(Programme::class, 1, ['duration' => 1, 'wef' => "2000-01-09"]);
+        $programme = create(Programme::class, 1, ['duration' => 1, 'wef' => '2000-01-09']);
         $revision = create(ProgrammeRevision::class, 1, ['revised_at' => $programme->wef, 'programme_id' => $programme->id]);
         $courses = create(Course::class, 2);
 
@@ -133,23 +133,23 @@ class UpdateProgrammeRevisionTest extends TestCase
             $this->withoutExceptionHandling()
                 ->patch(route('staff.programmes.revisions.update', [
                     'programme' => $programme,
-                    'programme_revision' => $revision
+                    'programme_revision' => $revision,
                 ]), [
-                        'revised_at' => 'some random string',
-                        'semester_courses' => [[$courses[0]->id], [$courses[1]->id]]
-                    ]);
+                    'revised_at' => 'some random string',
+                    'semester_courses' => [[$courses[0]->id], [$courses[1]->id]],
+                ]);
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('revised_at', $e->errors());
         }
 
         $this->assertEquals($programme->wef, $revision->fresh()->revised_at);
 
-        $revised_at = "2019-09-08";
+        $revised_at = '2019-09-08';
 
         $this->withoutExceptionHandling()
         ->patch(route('staff.programmes.revisions.update', [
             'programme' => $programme,
-            'programme_revision' => $revision
+            'programme_revision' => $revision,
         ]), [
             'revised_at' => $revised_at,
             'semester_courses' => [[$courses[0]->id], [$courses[1]->id]],
@@ -163,7 +163,7 @@ class UpdateProgrammeRevisionTest extends TestCase
     {
         $this->signIn();
 
-        $programme = create(Programme::class, 1, ['duration' => 1, 'wef' => "2000-01-09"]);
+        $programme = create(Programme::class, 1, ['duration' => 1, 'wef' => '2000-01-09']);
         $revision = create(ProgrammeRevision::class, 1, ['revised_at' => $programme->wef, 'programme_id' => $programme->id]);
         $courses = create(Course::class, 2);
 
@@ -171,12 +171,12 @@ class UpdateProgrammeRevisionTest extends TestCase
             $course->programme_revisions()->attach($revision, ['semester' => $index + 1]);
         }
 
-        $revised_at = "2019-09-08";
+        $revised_at = '2019-09-08';
 
         $this->withoutExceptionHandling()
         ->patch(route('staff.programmes.revisions.update', [
             'programme' => $programme,
-            'programme_revision' => $revision
+            'programme_revision' => $revision,
         ]), [
             'revised_at' => $revised_at,
             'semester_courses' => [[$courses[0]->id], [$courses[1]->id]],
@@ -208,10 +208,10 @@ class UpdateProgrammeRevisionTest extends TestCase
                     'programme' => $programme2,
                     'programme_revision' => $revision2,
                 ]), [
-                    'revised_at' => $revised_at = "2021-09-08",
+                    'revised_at' => $revised_at = '2021-09-08',
                     'semester_courses' => [
                         [$assignedCourse->id],
-                        [$unassignedCourses[0]->id]
+                        [$unassignedCourses[0]->id],
                     ],
                 ]);
             $this->fail('No validation exception occured.');
@@ -237,13 +237,13 @@ class UpdateProgrammeRevisionTest extends TestCase
         $this->withoutExceptionHandling()
             ->patch(route('staff.programmes.revisions.update', [
                 'programme' => $programme,
-                'programme_revision' => $revision
+                'programme_revision' => $revision,
             ]), [
                 'revised_at' => '2019-09-09',
                 'semester_courses' => [
                     1 => [$courses[0]->id, $courses[1]->id],
                     2 => [$courses[2]->id],
-                ]
+                ],
             ])->assertRedirect()
             ->assertSessionHasNoErrors()
             ->assertSessionHasFlash('success', "Programme's revision edited successfully!");
@@ -264,7 +264,7 @@ class UpdateProgrammeRevisionTest extends TestCase
             $course->programme_revisions()->attach($revision, ['semester' => $index + 1]);
         }
 
-        $revised_at = "2019-09-08";
+        $revised_at = '2019-09-08';
 
         try {
             $this->withoutExceptionHandling()

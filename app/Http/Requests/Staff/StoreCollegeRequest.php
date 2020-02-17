@@ -25,17 +25,17 @@ class StoreCollegeRequest extends FormRequest
     public function rules()
     {
         return [
-            'code' => ['required','min:3','max:20','unique:colleges,code'],
-            'name' => ['required','min:3','max:100','unique:colleges,name'],
+            'code' => ['required', 'min:3', 'max:20', 'unique:colleges,code'],
+            'name' => ['required', 'min:3', 'max:100', 'unique:colleges,name'],
             'principal_name' => ['required', 'min:3', 'max:190'],
             'principal_phones' => ['required', 'array', 'min:1', 'max:3'],
             'principal_phones.*' => ['nullable', 'numeric', 'digits:10'],
             'principal_emails' => ['required', 'array', 'min:1', 'max:3'],
-            'principal_emails.*' => ['nullable','string', 'email'],
+            'principal_emails.*' => ['nullable', 'string', 'email'],
             'address' => ['required', 'min:10', 'max:250'],
             'website' => ['required', 'url'],
             'programmes' => ['required', 'array', 'min:1'],
-            'programmes.*' => ['required', 'integer', 'exists:programmes,id']
+            'programmes.*' => ['required', 'integer', 'exists:programmes,id'],
         ];
     }
 }

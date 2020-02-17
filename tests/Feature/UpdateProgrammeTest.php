@@ -2,15 +2,15 @@
 
 namespace Tests\Feature;
 
-use App\Programme;
 use App\Course;
+use App\Programme;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Validation\ValidationException;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
-use Illuminate\Validation\ValidationException;
 
 class UpdateProgrammeTest extends TestCase
 {
@@ -25,7 +25,7 @@ class UpdateProgrammeTest extends TestCase
         $programme = create(Programme::class);
 
         $response = $this->patch(route('staff.programmes.update', $programme), [
-            'code' => $newCode = 'New123'
+            'code' => $newCode = 'New123',
         ])->assertRedirect()
         ->assertSessionHasFlash('success', 'Programme updated successfully!');
 
@@ -46,7 +46,7 @@ class UpdateProgrammeTest extends TestCase
         $programmeRevision->courses()->attach($course, ['semester' => 1]);
 
         $response = $this->patch(route('staff.programmes.update', $programme), [
-            'wef' => $newDate = now()->format('Y-m-d H:i:s')
+            'wef' => $newDate = now()->format('Y-m-d H:i:s'),
         ])->assertRedirect()
         ->assertSessionHasFlash('success', 'Programme updated successfully!');
 
@@ -64,7 +64,7 @@ class UpdateProgrammeTest extends TestCase
 
         $response = $this->patch(route('staff.programmes.update', $programme), [
             'code' => $programme->code,
-            'name' => $newName = 'New Programme'
+            'name' => $newName = 'New Programme',
         ])->assertRedirect()
         ->assertSessionHasNoErrors()
         ->assertSessionHasFlash('success', 'Programme updated successfully!');
@@ -79,10 +79,10 @@ class UpdateProgrammeTest extends TestCase
         $this->withoutExceptionHandling()
             ->signIn();
 
-        $programme = create(Programme::class, 1, ['type'=>'UG']);
+        $programme = create(Programme::class, 1, ['type' => 'UG']);
 
         $response = $this->patch(route('staff.programmes.update', $programme), [
-            'type' => $newType = 'PG'
+            'type' => $newType = 'PG',
         ])->assertRedirect()
         ->assertSessionHasFlash('success', 'Programme updated successfully!');
 

@@ -2,10 +2,10 @@
 
 namespace Tests\Feature;
 
+use App\Teacher;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-use App\Teacher;
 
 class ViewTeacherTest extends TestCase
 {

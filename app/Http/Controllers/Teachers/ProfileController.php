@@ -6,11 +6,11 @@ use App\College;
 use App\Course;
 use App\CourseProgrammeRevision;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Programme;
 use App\ProgrammeRevision;
 use App\Teacher;
 use App\TeacherProfile;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 
@@ -22,7 +22,7 @@ class ProfileController extends Controller
             'teacher' => auth()->user()->load([
                 'profile.college',
                 'profile.teaching_details',
-                'profile.profile_picture'
+                'profile.profile_picture',
             ]),
             'designations' => config('options.teachers.designations'),
         ]);
@@ -34,7 +34,7 @@ class ProfileController extends Controller
             'teacher' => auth()->user()->load([
                 'profile.college',
                 'profile.teaching_details',
-                'profile.profile_picture'
+                'profile.profile_picture',
             ]),
             'colleges' => College::all()->pluck('name', 'id'),
             'programmes' => Programme::withLatestRevision()->get()->map(function ($programme) {
@@ -62,13 +62,13 @@ class ProfileController extends Controller
         $validData = $request->validate([
             'phone_no' => ['nullable', 'string'],
             'address' => ['nullable', 'string'],
-            'designation' => ['nullable', 'string','in:'.$designations],
+            'designation' => ['nullable', 'string', 'in:' . $designations],
             'ifsc' => ['nullable', 'string'],
             'account_no' => ['nullable', 'string'],
             'bank_name' => ['nullable', 'string'],
             'bank_branch' => ['nullable', 'string'],
             'college_id' => ['nullable', 'numeric', 'exists:colleges,id'],
-            'teaching_details' => ['nullable' , 'array'],
+            'teaching_details' => ['nullable', 'array'],
             'teaching_details.*.programme_revision' => ['nullable', 'numeric', 'exists:programme_revisions,id'],
             'teaching_details.*.course' => ['nullable', 'numeric', 'exists:courses,id'],
             'teaching_details.*' => ['bail', 'nullable', 'array',
@@ -78,13 +78,13 @@ class ProfileController extends Controller
                     }
                     $revision = ProgrammeRevision::find($value['programme_revision']);
                     if ($revision->courses->pluck('id')->contains($value['course']) == false) {
-                        $fail($attribute. ' is invalid.');
+                        $fail($attribute . ' is invalid.');
                     }
-                }
+                },
             ],
             'profile_picture' => ['nullable', 'file', 'image'],
         ]);
-        
+
         $teacher->profile->update($validData);
 
         if (isset($validData['teaching_details'])) {
@@ -97,13 +97,13 @@ class ProfileController extends Controller
                     return CourseProgrammeRevision::where(
                         'programme_revision_id',
                         $teaching_detail['programme_revision']
-                    )->where('course_id', $teaching_detail['course'])
-                    ->first()->id;
+                    )
+                        ->where('course_id', $teaching_detail['course'])
+                        ->first()->id;
                 })->toArray();
 
             $teacher->profile->teaching_details()->sync($programmeCoursesTaught);
         }
-
 
         if (isset($validData['profile_picture'])) {
             $teacher->profile->profile_picture()->create([
@@ -129,7 +129,7 @@ class ProfileController extends Controller
         $avatar = file_get_contents('https://gravatar.com/avatar/' . $gravatarHash . '?s=200&d=identicon');
 
         return Response::make($avatar, 200, [
-            'Content-Type' => 'image/jpg'
+            'Content-Type' => 'image/jpg',
         ]);
     }
 }

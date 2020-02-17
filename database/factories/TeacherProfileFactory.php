@@ -1,9 +1,8 @@
 <?php
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
-
-use App\Model;
 use App\College;
+use App\Model;
 use App\Teacher;
 use App\TeacherProfile;
 use Faker\Generator as Faker;

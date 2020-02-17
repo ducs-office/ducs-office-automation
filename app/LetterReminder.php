@@ -12,19 +12,19 @@ class LetterReminder extends Model
     protected static function boot()
     {
         parent::boot();
-        
+
         static::creating(function ($letter_reminder) {
             $prefixes = [
                 'Bill' => 'TR/',
                 'Notesheet' => 'NTS/',
-                'General' => ''
+                'General' => '',
             ];
 
             $year = now()->year;
             $serial_no = "CS/{$prefixes[$letter_reminder->letter->type]}RM/{$year}";
             $cache_key = "letter_seq_{$serial_no}";
             $number_sequence = str_pad(Cache::increment($cache_key), 4, '0', STR_PAD_LEFT);
-            
+
             $letter_reminder->serial_no = "$serial_no/$number_sequence";
 
             return $letter_reminder;
@@ -34,7 +34,7 @@ class LetterReminder extends Model
             $letter_reminder->attachments->each->delete();
         });
     }
-    
+
     public function letter()
     {
         return $this->belongsTo(OutgoingLetter::class, 'letter_id');

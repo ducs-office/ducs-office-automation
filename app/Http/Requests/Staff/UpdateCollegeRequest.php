@@ -28,17 +28,17 @@ class UpdateCollegeRequest extends FormRequest
         return [
             'code' => [
                 'sometimes', 'required', 'min:3', 'max:60',
-                Rule::unique('colleges')->ignore($this->route('college'))
+                Rule::unique('colleges')->ignore($this->route('college')),
             ],
-            'name'=>[
+            'name' => [
                 'sometimes', 'required', 'min:3', 'max:100',
-                Rule::unique('colleges')->ignore($this->route('college'))
+                Rule::unique('colleges')->ignore($this->route('college')),
             ],
             'principal_name' => ['sometimes', 'required', 'min:3', 'max:190'],
             'principal_phones' => ['sometimes', 'required', 'array', 'min:1', 'max:3'],
             'principal_phones.*' => ['nullable', 'numeric', 'digits:10'],
             'principal_emails' => ['sometimes', 'required', 'array', 'min:1', 'max:3'],
-            'principal_emails.*' => ['nullable','string', 'email'],
+            'principal_emails.*' => ['nullable', 'string', 'email'],
             'address' => ['sometimes', 'required', 'min:10', 'max:250'],
             'website' => ['sometimes', 'required', 'url'],
             'programmes' => ['sometimes', 'required', 'array', 'min:1'],

@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Staff;
 
-use App\Programme;
 use App\Events\ProgrammeCreated;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Staff\StoreProgrammeRequest;
 use App\Http\Requests\Staff\UpdateProgrammeRequest;
+use App\Programme;
 
 class ProgrammesController extends Controller
 {
@@ -39,7 +39,7 @@ class ProgrammesController extends Controller
     public function create()
     {
         return view('staff.programmes.create', [
-            'types' => config('options.programmes.types')
+            'types' => config('options.programmes.types'),
         ]);
     }
 

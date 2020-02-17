@@ -39,9 +39,9 @@ class DeleteProgrammeRevisionTest extends TestCase
 
         $this->withExceptionHandling()
             ->delete(route('staff.programmes.revisions.destroy', [
-                    'programme' => $programme,
-                    'programmeRevision' => $revision
-                ]))
+                'programme' => $programme,
+                'programmeRevision' => $revision,
+            ]))
             ->assertRedirect();
 
         $this->assertEquals(0, $revision->courses->count());
@@ -58,7 +58,7 @@ class DeleteProgrammeRevisionTest extends TestCase
 
         $revisions = $programme->revisions()->createMany([
             ['revised_at' => $programme->wef],
-            ['revised_at' => $programme->wef->addYear()]
+            ['revised_at' => $programme->wef->addYear()],
         ]);
 
         foreach ($revisions as $index => $revision) {
@@ -75,7 +75,7 @@ class DeleteProgrammeRevisionTest extends TestCase
         $this->withExceptionHandling()
         ->delete(route('staff.programmes.revisions.destroy', [
             'programme' => $programme,
-            'programmeRevision' => $revisions[1]
+            'programmeRevision' => $revisions[1],
         ]))
         ->assertRedirect();
 

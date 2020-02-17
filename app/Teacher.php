@@ -20,6 +20,7 @@ class Teacher extends User
             return $teacher;
         });
     }
+
     public function getNameAttribute()
     {
         return $this->first_name . ' ' . $this->last_name;

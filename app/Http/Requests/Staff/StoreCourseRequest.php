@@ -29,7 +29,7 @@ class StoreCourseRequest extends FormRequest
         return [
             'code' => ['required', 'min:3', 'max:60', 'unique:courses'],
             'name' => ['required', 'min:3', 'max:190'],
-            'type' => ['required', 'in:'.$types],
+            'type' => ['required', 'in:' . $types],
             'date' => ['required', 'date', 'before_or_equal:now'],
             'attachments' => ['required', 'array', 'max:5'],
             'attachments.*' => ['file', 'max:200', 'mimes:jpeg,jpg,png,pdf'],

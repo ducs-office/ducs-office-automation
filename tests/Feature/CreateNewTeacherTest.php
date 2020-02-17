@@ -2,13 +2,13 @@
 
 namespace Tests\Feature;
 
+use App\Mail\UserRegisteredMail;
+use App\Teacher;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Validation\ValidationException;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
-use App\Teacher;
-use App\Mail\UserRegisteredMail;
 
 class CreateTeacherTest extends TestCase
 {
@@ -20,8 +20,8 @@ class CreateTeacherTest extends TestCase
         $this->withExceptionHandling()
             ->post(route('staff.teachers.store'), [
                 'first_name' => 'Sharanjit',
-                'last_name' =>  'Kaur',
-                'email' =>  'kaur.sharanjit@andc.du.ac.in'
+                'last_name' => 'Kaur',
+                'email' => 'kaur.sharanjit@andc.du.ac.in',
             ])
             ->assertRedirect(route('login_form'));
 
@@ -37,7 +37,7 @@ class CreateTeacherTest extends TestCase
             ->post(route('staff.teachers.store'), [
                 'first_name' => $firstName = 'Sharanjit',
                 'last_name' => $lastName = 'Kaur',
-                'email' => $email = 'kaur.sharanjit@andc.du.ac.in'
+                'email' => $email = 'kaur.sharanjit@andc.du.ac.in',
             ])
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'College Teacher created successfully!');
@@ -65,7 +65,7 @@ class CreateTeacherTest extends TestCase
             ->post(route('staff.teachers.store'), [
                 'first_name' => 'Sharanjit',
                 'last_name' => 'Kaur',
-                'email' => 'kaur.sharanjit@andc.du.ac.in'
+                'email' => 'kaur.sharanjit@andc.du.ac.in',
             ])
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'College Teacher created successfully!');
@@ -87,7 +87,7 @@ class CreateTeacherTest extends TestCase
                 ->post(route('staff.teachers.store'), [
                     'first_name' => '',
                     'last_name' => 'Kaur',
-                    'email' => 'kaur.sharanjit@andc.du.ac.in'
+                    'email' => 'kaur.sharanjit@andc.du.ac.in',
                 ]);
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('first_name', $e->errors());
@@ -106,7 +106,7 @@ class CreateTeacherTest extends TestCase
                 ->post(route('staff.teachers.store'), [
                     'first_name' => 'Sharanjit',
                     'last_name' => '',
-                    'email' => 'kaur.sharanjit@andc.du.ac.in'
+                    'email' => 'kaur.sharanjit@andc.du.ac.in',
                 ]);
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('last_name', $e->errors());
@@ -125,7 +125,7 @@ class CreateTeacherTest extends TestCase
                 ->post(route('staff.teachers.store'), [
                     'first_name' => 'Sharanjit',
                     'last_name' => 'Kaur',
-                    'email' => ''
+                    'email' => '',
                 ]);
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('email', $e->errors());
@@ -146,7 +146,7 @@ class CreateTeacherTest extends TestCase
                 ->post(route('staff.teachers.store'), [
                     'first_name' => 'Sharanjit',
                     'last_name' => 'Kaur',
-                    'email' => $teacher->email
+                    'email' => $teacher->email,
                 ]);
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('email', $e->errors());

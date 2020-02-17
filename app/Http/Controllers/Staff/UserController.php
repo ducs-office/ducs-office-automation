@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers\Staff;
 
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Staff\StoreUserRequest;
 use App\Mail\UserRegisteredMail;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
-use Spatie\Permission\Models\Role;
 use Illuminate\Validation\Rule;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\Staff\StoreUserRequest;
-use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {

@@ -5,12 +5,12 @@ namespace Tests\Feature;
 use App\Remark;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Validation\ValidationException;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use Tests\TestCase;
 
 class UpdateRemarkTest extends TestCase
 {
@@ -24,10 +24,10 @@ class UpdateRemarkTest extends TestCase
     /** @test */
     public function guest_cannot_update_remark()
     {
-        $remark = create(Remark::class, 1, ['description'=>'Received by University']);
+        $remark = create(Remark::class, 1, ['description' => 'Received by University']);
 
         $this->withExceptionHandling()
-        ->patch(route('staff.remarks.update', $remark), ['description'=>'Not received by University'])
+        ->patch(route('staff.remarks.update', $remark), ['description' => 'Not received by University'])
         ->assertRedirect();
 
         $this->assertEquals($remark->description, $remark->fresh()->description);
@@ -39,13 +39,13 @@ class UpdateRemarkTest extends TestCase
         $this->signIn(create(User::class), 'admin');
 
         $remark = create(Remark::class, 1, [
-            'description'=>'Received by University',
-            'user_id' => auth()->id()
+            'description' => 'Received by University',
+            'user_id' => auth()->id(),
         ]);
 
         $this->withoutExceptionHandling()
             ->patch(route('staff.remarks.update', $remark), [
-                'description'=> $newDesc = 'Not received by University'
+                'description' => $newDesc = 'Not received by University',
             ]);
 
         $this->assertEquals($newDesc, $remark->fresh()->description);
@@ -58,10 +58,10 @@ class UpdateRemarkTest extends TestCase
 
         $remark = create(Remark::class, 1, [
             'description' => 'Received by University',
-            'user_id' => auth()->id()
+            'user_id' => auth()->id(),
         ]);
 
-        $new_remark = ['description'=> ''];
+        $new_remark = ['description' => ''];
 
         try {
             $this->withoutExceptionHandling()
@@ -80,11 +80,11 @@ class UpdateRemarkTest extends TestCase
         $this->signIn(create(User::class), 'admin');
 
         $remark = create(Remark::class, 1, [
-            'description'=>'Received by University',
-            'user_id' => auth()->id()
+            'description' => 'Received by University',
+            'user_id' => auth()->id(),
         ]);
 
-        $new_remark = ['description'=>Str::random(1)];
+        $new_remark = ['description' => Str::random(1)];
 
         try {
             $this->withoutExceptionHandling()
@@ -102,11 +102,11 @@ class UpdateRemarkTest extends TestCase
         $this->signIn(create(User::class), 'admin');
 
         $remark = create(Remark::class, 1, [
-            'description'=>'Received by University',
-            'user_id' => auth()->id()
+            'description' => 'Received by University',
+            'user_id' => auth()->id(),
         ]);
 
-        $new_remark = ['description'=>Str::random(256)];
+        $new_remark = ['description' => Str::random(256)];
 
         try {
             $this->withoutExceptionHandling()

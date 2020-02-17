@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -31,7 +32,6 @@ Route::delete('/remarks/{remark}', 'RemarksController@destroy')->name('remarks.d
 
 Route::delete('/reminders/{reminder}', 'RemindersController@destroy')->name('reminders.destroy');
 Route::patch('/reminders/{reminder}', 'RemindersController@update')->name('reminders.update');
-
 
 Route::get('/programmes', 'ProgrammesController@index')->name('programmes.index');
 Route::get('/programmes/create', 'ProgrammesController@create')->name('programmes.create');

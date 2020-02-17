@@ -16,8 +16,8 @@ class AddHeadersTest extends TestCase
     public function testExample()
     {
         $this->get('/')
-            ->assertHeader("X-Frame-Options", "SAMEORIGIN")
-            ->assertHeader("X-XSS-Protection", "1; mode=block")
-            ->assertHeader("X-Content-Type-Options", "nosniff");
+            ->assertHeader('X-Frame-Options', 'SAMEORIGIN')
+            ->assertHeader('X-XSS-Protection', '1; mode=block')
+            ->assertHeader('X-Content-Type-Options', 'nosniff');
     }
 }

@@ -2,16 +2,16 @@
 
 namespace App;
 
-use Illuminate\Support\Facades\Cache;
 use App\Model;
 use App\Remark;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 class IncomingLetter extends Model
 {
     protected $fillable = [
         'date', 'received_id', 'sender', 'description', 'subject', 'priority',
-        'recipient_id', 'creator_id'
+        'recipient_id', 'creator_id',
     ];
 
     protected $dates = ['date'];

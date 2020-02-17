@@ -13,11 +13,11 @@ class AccountController extends Controller
     {
         $request->validate([
             'password' => ['required', 'string', new MatchesCurrentPassword()],
-            'new_password' => ['required', 'string', 'min:8', 'confirmed']
+            'new_password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
 
         $request->user()->update([
-            'password' => Hash::make($request->new_password)
+            'password' => Hash::make($request->new_password),
         ]);
 
         flash('password changed!')->success();

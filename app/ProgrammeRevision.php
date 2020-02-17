@@ -3,7 +3,6 @@
 namespace App;
 
 use App\Course;
-
 use Illuminate\Database\Eloquent\Model;
 
 class ProgrammeRevision extends Model
@@ -13,7 +12,7 @@ class ProgrammeRevision extends Model
     protected $dates = ['revised_at'];
 
     protected $casts = [
-        'revised_at' => 'date:Y-m-d'
+        'revised_at' => 'date:Y-m-d',
     ];
 
     public function courses()

@@ -31,7 +31,7 @@ class StoreUserRequest extends FormRequest
             'email' => ['required', 'string', 'min:3', 'max:190', 'email', 'unique:users'],
             'roles' => ['required', 'array', 'min:1'],
             'roles.*' => ['required', 'integer', 'exists:roles,id'],
-            'category' => ['required', 'in:'.$categories]
+            'category' => ['required', 'in:' . $categories],
         ];
     }
 }

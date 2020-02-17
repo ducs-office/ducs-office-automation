@@ -2,10 +2,10 @@
 
 namespace Tests\Feature;
 
+use App\Teacher;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-use App\Teacher;
 
 class DeleteTeacherTest extends TestCase
 {
@@ -15,7 +15,7 @@ class DeleteTeacherTest extends TestCase
     public function teacher_can_be_deleted()
     {
         $teacher = create(Teacher::class);
-        
+
         $this->signIn();
 
         $this->withoutExceptionHandling()

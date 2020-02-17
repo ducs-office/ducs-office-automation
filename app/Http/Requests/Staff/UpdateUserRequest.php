@@ -30,11 +30,11 @@ class UpdateUserRequest extends FormRequest
             'name' => ['sometimes', 'required', 'string', 'min:3', 'max:190'],
             'email' => [
                 'sometimes', 'required', 'string', 'min:3', 'max:190', 'email',
-                Rule::unique('users')->ignore($this->route('user'))
+                Rule::unique('users')->ignore($this->route('user')),
             ],
             'roles' => ['sometimes', 'required', 'array', 'min:1'],
             'roles.*' => ['sometimes', 'required', 'integer', 'exists:roles,id'],
-            'category' => ['sometimes', 'in:'.$categories]
+            'category' => ['sometimes', 'in:' . $categories],
         ];
     }
 }

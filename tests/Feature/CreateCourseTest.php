@@ -2,14 +2,14 @@
 
 namespace Tests\Feature;
 
-use App\Programme;
 use App\Course;
 use App\CourseRevision;
+use App\Programme;
 use App\User;
-use Illuminate\Validation\ValidationException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
 
 class CreateCourseTest extends TestCase
@@ -26,8 +26,8 @@ class CreateCourseTest extends TestCase
             'attachments' => [
                 UploadedFile::fake()->create('syllabus.pdf'),
                 UploadedFile::fake()->create('guidelines.pdf'),
-                UploadedFile::fake()->image('snapshot.jpg')
-            ]
+                UploadedFile::fake()->image('snapshot.jpg'),
+            ],
         ], $overrides);
     }
 
@@ -44,7 +44,6 @@ class CreateCourseTest extends TestCase
             ->assertSessionHasFlash('success', 'Course created successfully!');
 
         $this->assertEquals(1, Course::count());
-
 
         $newCourse = Course::first();
         $this->assertEquals($course['code'], $newCourse->code);

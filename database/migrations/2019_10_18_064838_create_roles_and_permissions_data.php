@@ -31,7 +31,7 @@ class CreateRolesAndPermissionsData extends Migration
                 $role = DB::table(config('permission.table_names.roles'))
                     ->where('name', $role)->first();
 
-                if (!$role) {
+                if (! $role) {
                     return false;
                 }
 
@@ -41,7 +41,7 @@ class CreateRolesAndPermissionsData extends Migration
                             ->whereName("$resource:$operation")
                             ->first();
 
-                        if (!$permission) {
+                        if (! $permission) {
                             return false;
                         }
 

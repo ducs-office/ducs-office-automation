@@ -5,12 +5,12 @@ namespace Tests\Feature;
 use App\OutgoingLetter;
 use App\Remark;
 use App\User;
-use Illuminate\Validation\ValidationException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
 use Illuminate\Support\str;
+use Illuminate\Validation\ValidationException;
 use Spatie\Permission\Models\Role;
+use Tests\TestCase;
 
 class StoreRemarkTest extends TestCase
 {
@@ -19,7 +19,6 @@ class StoreRemarkTest extends TestCase
      *
      * @return void
      */
-
     use RefreshDatabase;
 
     /** @test */
@@ -41,7 +40,6 @@ class StoreRemarkTest extends TestCase
         $role->revokePermissionTo('remarks:create');
         $this->signIn(create(User::class), $role->name);
 
-
         $letter = create(OutgoingLetter::class);
 
         $this->withExceptionHandling()
@@ -58,7 +56,7 @@ class StoreRemarkTest extends TestCase
 
         $this->withoutExceptionHandling()
             ->post(route('staff.outgoing_letters.remarks.store', $letter), [
-                'description'=>'Not received by University'
+                'description' => 'Not received by University',
             ]);
 
         $this->assertEquals(1, Remark::count());
@@ -70,7 +68,7 @@ class StoreRemarkTest extends TestCase
         $this->signIn(create(User::class), 'admin');
 
         $letter = create(OutgoingLetter::class);
-        $remark = ['description'=>''];
+        $remark = ['description' => ''];
 
         try {
             $this->withoutExceptionHandling()
@@ -88,7 +86,7 @@ class StoreRemarkTest extends TestCase
         $this->signIn(create(User::class), 'admin');
 
         $letter = create(OutgoingLetter::class);
-        $remark = ['description'=>Str::random(1)];
+        $remark = ['description' => Str::random(1)];
 
         try {
             $this->withoutExceptionHandling()

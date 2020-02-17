@@ -21,7 +21,7 @@ abstract class TestCase extends BaseTestCase
 
     public function signIn($user = null, $role = 'admin', $guard = 'web')
     {
-        if (!$user) {
+        if (! $user) {
             $user = create(User::class);
         }
 
@@ -34,7 +34,7 @@ abstract class TestCase extends BaseTestCase
 
     public function signInTeacher($teacher = null)
     {
-        if (!$teacher) {
+        if (! $teacher) {
             $teacher = create(Teacher::class);
         }
 

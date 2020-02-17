@@ -1,9 +1,8 @@
 <?php
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
-
-use App\User;
 use App\IncomingLetter;
+use App\User;
 use Faker\Generator as Faker;
 
 $factory->define(IncomingLetter::class, function (Faker $faker) {
@@ -17,8 +16,8 @@ $factory->define(IncomingLetter::class, function (Faker $faker) {
         'creator_id' => function () {
             return factory(User::class)->create()->id;
         },
-        'priority' => $faker->randomElement([1,2,3]),
+        'priority' => $faker->randomElement([1, 2, 3]),
         'subject' => $faker->sentence,
-        'description' => $faker->paragraph
+        'description' => $faker->paragraph,
     ];
 });

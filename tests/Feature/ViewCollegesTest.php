@@ -2,8 +2,8 @@
 
 namespace Tests\Feature;
 
-use App\User;
 use App\College;
+use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -15,7 +15,6 @@ class ViewCollegesTest extends TestCase
      *
      * @return void
      */
-
     use RefreshDatabase;
 
     /** @test */

@@ -1,9 +1,9 @@
 <?php
+
 namespace App\Concerns;
 
 trait Filterable
 {
-    
     /**
      * variable controls filters
      *

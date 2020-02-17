@@ -1,18 +1,18 @@
 <?php
 
-use App\Programme;
-use App\ProgrammeRevision;
-use App\OutgoingLetter;
-use App\Course;
-use App\User;
 use App\College;
-use App\Teacher;
+use App\Course;
 use App\CourseRevision;
+use App\Handover;
 use App\IncomingLetter;
 use App\LetterReminder;
+use App\OutgoingLetter;
+use App\Programme;
+use App\ProgrammeRevision;
 use App\Remark;
-use App\Handover;
+use App\Teacher;
 use App\TeacherProfile;
+use App\User;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 
@@ -29,9 +29,8 @@ class DatabaseSeeder extends Seeder
             'name' => 'Administrator',
             'email' => 'admin@cs.du.ac.in',
             'password' => bcrypt('password'),
-            'category' => 'Admin'
+            'category' => 'Admin',
         ]);
-
 
         $admin->assignRole(Role::firstOrCreate(['name' => 'admin']));
 
@@ -40,7 +39,7 @@ class DatabaseSeeder extends Seeder
         $outgoing->each(function ($letter) {
             factory(IncomingLetter::class)->create([
                 'recipient_id' => $letter->sender_id,
-                'creator_id' => $letter->creator_id
+                'creator_id' => $letter->creator_id,
             ]);
         });
 
@@ -54,7 +53,7 @@ class DatabaseSeeder extends Seeder
         $programme_revisions = $programmes->map(function ($programme) {
             return factory(ProgrammeRevision::class)->create([
                 'revised_at' => $programme->wef,
-                'programme_id' => $programme->id
+                'programme_id' => $programme->id,
             ]);
         });
 
@@ -96,18 +95,18 @@ class DatabaseSeeder extends Seeder
 
         $andc = factory(College::class)->create([
             'code' => 'DU-ANDC-001',
-            'name' => 'Acharya Narendra Dev College'
+            'name' => 'Acharya Narendra Dev College',
         ]);
         $andc->programmes()->sync($programmes->pluck('id')->toArray());
 
         factory(College::class)->create([
-            'code'=> 'DU-KMV-002' ,
-            'name' => 'Keshav Mahavidyalaya'
+            'code' => 'DU-KMV-002',
+            'name' => 'Keshav Mahavidyalaya',
         ])->programmes()->sync($programmes->pluck('id')->toArray());
 
         factory(College::class)->create([
-            'code'=> 'DU-HRC-003' ,
-            'name' => 'Hansraj College'
+            'code' => 'DU-HRC-003',
+            'name' => 'Hansraj College',
         ])->programmes()->sync($programmes->pluck('id')->toArray());
 
         $teacher = factory(Teacher::class)->create([

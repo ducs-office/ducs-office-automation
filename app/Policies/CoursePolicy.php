@@ -13,6 +13,7 @@ class CoursePolicy
      * Determine whether the user can view any courses.
      *
      * @param  \App\User  $user
+     *
      * @return mixed
      */
     public function viewAny(User $user)
@@ -24,6 +25,7 @@ class CoursePolicy
      * Determine whether the user can view the course.
      *
      * @param  \App\User  $user
+     *
      * @return mixed
      */
     public function view(User $user)
@@ -35,6 +37,7 @@ class CoursePolicy
      * Determine whether the user can create courses.
      *
      * @param  \App\User  $user
+     *
      * @return mixed
      */
     public function create(User $user)
@@ -46,6 +49,7 @@ class CoursePolicy
      * Determine whether the user can update the course.
      *
      * @param  \App\User  $user
+     *
      * @return mixed
      */
     public function update(User $user)
@@ -57,6 +61,7 @@ class CoursePolicy
      * Determine whether the user can delete the course.
      *
      * @param  \App\User  $user
+     *
      * @return mixed
      */
     public function delete(User $user)

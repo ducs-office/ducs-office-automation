@@ -37,7 +37,7 @@ class DeleteRemarkTest extends TestCase
         $this->signIn(create(User::class), 'admin');
 
         $remark = create(Remark::class, 1, [
-            'user_id' => auth()->id()
+            'user_id' => auth()->id(),
         ]);
 
         $this->withoutExceptionHandling()
@@ -74,7 +74,7 @@ class DeleteRemarkTest extends TestCase
         $this->signIn(create(User::class), $role->name);
 
         $remark = create(Remark::class, 1, [
-            'user_id' => auth()->id()
+            'user_id' => auth()->id(),
         ]);
 
         $this->withExceptionHandling()

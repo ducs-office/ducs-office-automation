@@ -33,11 +33,11 @@ class StoreIncomingLetterRequest extends FormRequest
             'recipient_id' => 'required|exists:users,id',
             'handovers' => 'nullable|array',
             'handovers.*' => 'integer|exists:users,id',
-            'priority' => 'nullable|in:'. $priorities,
+            'priority' => 'nullable|in:' . $priorities,
             'subject' => 'required|string|min:5|max:100',
             'description' => 'nullable|string|min:4|max:400',
             'attachments' => 'required|array|min:1|max:2',
-            'attachments.*' => 'file|max:200|mimes:jpeg,jpg,png,pdf'
+            'attachments.*' => 'file|max:200|mimes:jpeg,jpg,png,pdf',
         ];
     }
 
@@ -46,7 +46,7 @@ class StoreIncomingLetterRequest extends FormRequest
         return array_map(function ($attachedFile) {
             return [
                 'original_name' => $attachedFile->getClientOriginalName(),
-                'path' => $attachedFile->store('/letter_attachments/incoming')
+                'path' => $attachedFile->store('/letter_attachments/incoming'),
             ];
         }, $this->file('attachments') ?? []);
     }

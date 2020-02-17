@@ -2,13 +2,13 @@
 
 namespace Tests\Feature;
 
-use App\Programme;
 use App\Course;
+use App\Programme;
 use App\User;
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Validation\ValidationException;
+use Tests\TestCase;
 
 class CreateProgrammeTest extends TestCase
 {
@@ -27,8 +27,8 @@ class CreateProgrammeTest extends TestCase
             'duration' => 1,
             'semester_courses' => [
                 [create(Course::class)->id],
-                [create(Course::class)->id]
-            ]
+                [create(Course::class)->id],
+            ],
         ])->assertRedirect()
         ->assertSessionHasFlash('success', 'Programme created successfully');
 
@@ -57,7 +57,7 @@ class CreateProgrammeTest extends TestCase
                     'duration' => 1,
                     'semester_courses' => [
                         [$assignedCourse->id],
-                        [$unassignedCourse->id]
+                        [$unassignedCourse->id],
                     ],
                 ]);
         } catch (ValidationException $e) {
@@ -77,7 +77,7 @@ class CreateProgrammeTest extends TestCase
                 'duration' => 1,
                 'semester_courses' => [
                     [$anotherUnassignedCourse->id],
-                    [$unassignedCourse->id]
+                    [$unassignedCourse->id],
                 ],
             ])->assertRedirect()
             ->assertSessionHasFlash('success', 'Programme created successfully');
@@ -97,7 +97,7 @@ class CreateProgrammeTest extends TestCase
                 'name' => 'M.C.A. Computer Science',
                 'type' => 'some random type',
                 'duration' => 2,
-                'courses' => ''
+                'courses' => '',
             ]);
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('type', $e->errors());
@@ -114,13 +114,13 @@ class CreateProgrammeTest extends TestCase
         try {
             $this->withoutExceptionHandling()
                 ->post(route('staff.programmes.store'), [
-                'code' => 'MCS',
-                'wef' => '2020-01-01',
-                'name' => 'M.C.A. Computer Science',
-                'type' => 'some random type',
-                'duration' => '',
-                'courses' => ''
-            ]);
+                    'code' => 'MCS',
+                    'wef' => '2020-01-01',
+                    'name' => 'M.C.A. Computer Science',
+                    'type' => 'some random type',
+                    'duration' => '',
+                    'courses' => '',
+                ]);
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('duration', $e->errors());
         }

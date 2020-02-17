@@ -2,16 +2,16 @@
 
 namespace Tests\Feature;
 
+use App\College;
+use App\Course;
 use App\PastTeachersProfile;
+use App\Programme;
+use App\Teacher;
 use App\TeacherProfile;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
-use App\Teacher;
-use App\Course;
-use App\Programme;
-use App\College;
 use Illuminate\Validation\ValidationException;
+use Tests\TestCase;
 
 class SubmitTeacherDetailsTest extends TestCase
 {
@@ -21,45 +21,46 @@ class SubmitTeacherDetailsTest extends TestCase
     protected function fillTeacherProfileFormFields($overrides = [])
     {
         return $this->mergeFormFields([
-        'phone_no' => $this->faker->phoneNumber,
-        'address' => $this->faker->address,
-        'designation' => $this->faker->randomElement(array_keys(config('options.teachers.designations'))),
-        'ifsc' => $this->faker->text(12),
-        'account_no' => $this->faker->bankAccountNumber,
-        'bank_name' => $this->faker->name,
-        'bank_branch' => $this->faker->address,
-        'college_id' => function () {
-            return factory(College::class)->create()->id;
-        },
-        'teacher_id' => function () {
-            return factory(Teacher::class)->create()->id;
-        },
-        'teaching_details' => function () {
-            $programme = create(Programme::class, 1, ['wef' => now()]);
-            $course = create(Course::class);
-            $revision = $programme->revisions()->create(['revised_at' => $programme->wef]);
-            $revision->courses()->attach($course, ['semester' => 1]);
-            return [
-                ['programme_revision' => $revision->id, 'course' => $course->id]
-            ];
-        }
-
-    ], $overrides);
+            'phone_no' => $this->faker->phoneNumber,
+            'address' => $this->faker->address,
+            'designation' => $this->faker->randomElement(array_keys(config('options.teachers.designations'))),
+            'ifsc' => $this->faker->text(12),
+            'account_no' => $this->faker->bankAccountNumber,
+            'bank_name' => $this->faker->name,
+            'bank_branch' => $this->faker->address,
+            'college_id' => function () {
+                return factory(College::class)->create()->id;
+            },
+            'teacher_id' => function () {
+                return factory(Teacher::class)->create()->id;
+            },
+            'teaching_details' => function () {
+                $programme = create(Programme::class, 1, ['wef' => now()]);
+                $course = create(Course::class);
+                $revision = $programme->revisions()->create(['revised_at' => $programme->wef]);
+                $revision->courses()->attach($course, ['semester' => 1]);
+                return [
+                    ['programme_revision' => $revision->id, 'course' => $course->id],
+                ];
+            },
+        ], $overrides);
     }
+
     /**
      * A basic feature test example.
      *
      * @return void
      */
+
     /** @test */
     public function details_of_teacher_can_be_submitted()
     {
         $this->signInTeacher($teacher = create(Teacher::class));
 
         $profile_form = $this->fillTeacherProfileFormFields(['teacher_id' => $teacher->id]);
-      
+
         $this->patch(route('teachers.profile.update'), $profile_form);
-       
+
         $this->withoutExceptionHandling()
             ->post(route('teachers.profile.submit'))
             ->assertSessionHasFlash('success', 'Details submitted successfully!');
@@ -77,7 +78,7 @@ class SubmitTeacherDetailsTest extends TestCase
     {
         $this->signInTeacher($teacher = create(Teacher::class));
 
-        $profile_form = $this->fillTeacherProfileFormFields(['teacher_id' => $teacher->id, 'college_id' =>'']);
+        $profile_form = $this->fillTeacherProfileFormFields(['teacher_id' => $teacher->id, 'college_id' => '']);
 
         $this->patch(route('teachers.profile.update'), $profile_form);
 
@@ -93,7 +94,7 @@ class SubmitTeacherDetailsTest extends TestCase
     {
         $this->signInTeacher($teacher = create(Teacher::class));
 
-        $profile_form = $this->fillTeacherProfileFormFields(['teacher_id' => $teacher->id, 'designation' =>'']);
+        $profile_form = $this->fillTeacherProfileFormFields(['teacher_id' => $teacher->id, 'designation' => '']);
 
         $this->patch(route('teachers.profile.update'), $profile_form);
 
@@ -109,7 +110,7 @@ class SubmitTeacherDetailsTest extends TestCase
     {
         $this->signInTeacher($teacher = create(Teacher::class));
 
-        $profile_form = $this->fillTeacherProfileFormFields(['teacher_id' => $teacher->id, 'teaching_details' =>'']);
+        $profile_form = $this->fillTeacherProfileFormFields(['teacher_id' => $teacher->id, 'teaching_details' => '']);
 
         $this->patch(route('teachers.profile.update'), $profile_form);
 

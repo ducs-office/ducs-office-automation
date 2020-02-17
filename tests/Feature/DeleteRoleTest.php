@@ -20,7 +20,7 @@ class DeleteRoleTest extends TestCase
         $this->signIn(create(User::class), 'admin');
 
         $this->withoutExceptionHandling()
-            
+
             ->delete(route('staff.roles.destroy', $role))
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'Role deleted');
@@ -36,7 +36,7 @@ class DeleteRoleTest extends TestCase
         $this->signIn(create(User::class), 'my role');
 
         $this->withExceptionHandling()
-            
+
             ->delete(route('staff.roles.destroy', $role))
             ->assertForbidden();
 

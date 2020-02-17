@@ -29,10 +29,10 @@ class UpdateCourseRequest extends FormRequest
         return [
             'code' => [
                 'sometimes', 'required', 'min:3', 'max:60',
-                Rule::unique('courses')->ignore($this->route('course'))
+                Rule::unique('courses')->ignore($this->route('course')),
             ],
             'name' => ['sometimes', 'required', 'min:3', 'max:190'],
-            'type' => ['sometimes', 'required', 'in:'.$types],
+            'type' => ['sometimes', 'required', 'in:' . $types],
             'attachments' => ['nullable', 'array', 'max:5'],
             'attachments.*' => ['file', 'mimes:jpeg,jpg,png,pdf', 'max:200'],
         ];

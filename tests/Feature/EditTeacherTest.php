@@ -2,11 +2,11 @@
 
 namespace Tests\Feature;
 
+use App\Teacher;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
-use App\Teacher;
 use Illuminate\Validation\ValidationException;
+use Tests\TestCase;
 
 class EditTeacherTest extends TestCase
 {
@@ -43,7 +43,7 @@ class EditTeacherTest extends TestCase
         try {
             $this->withoutExceptionHandling()
                 ->patch(route('staff.teachers.update', $teacher1), [
-                    'email' => $email1
+                    'email' => $email1,
                 ]);
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('email', $e->errors());
@@ -62,7 +62,7 @@ class EditTeacherTest extends TestCase
 
         $this->withoutExceptionHandling()
             ->patch(route('staff.teachers.update', $teacher), [
-                'first_name' => $newFirstName = 'Joe'
+                'first_name' => $newFirstName = 'Joe',
             ])
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'College teacher updated successfully');
@@ -80,7 +80,7 @@ class EditTeacherTest extends TestCase
 
         $this->withoutExceptionHandling()
             ->patch(route('staff.teachers.update', $teacher), [
-                'last_name' => $newLastName = 'xyz'
+                'last_name' => $newLastName = 'xyz',
             ])
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'College teacher updated successfully');
@@ -100,7 +100,7 @@ class EditTeacherTest extends TestCase
             ->patch(route('staff.teachers.update', $teacher), [
                 'first_name' => $newFirstName = 'Joe',
                 'last_name' => $teacher->last_name,
-                'email' => $teacher->email
+                'email' => $teacher->email,
             ])
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'College teacher updated successfully');

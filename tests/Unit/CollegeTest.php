@@ -12,7 +12,7 @@ class CollegeTest extends TestCase
     public function colleges_principal_phones_stores_array_of_phone_numbers_seperated_by_pipe()
     {
         $college = new College();
-        $phones = [ '9876543210', '8765432109' ];
+        $phones = ['9876543210', '8765432109'];
         $college->principal_phones = $phones;
 
         $this->assertEquals(
@@ -25,7 +25,7 @@ class CollegeTest extends TestCase
     public function colleges_principal_phones_seperated_by_pipe_are_returned_as_array()
     {
         $college = new College();
-        $phones = [ '9876543210', '8765432109' ];
+        $phones = ['9876543210', '8765432109'];
         $college->principal_phones = implode('|', $phones);
 
         $this->assertSame($phones, $college->principal_phones);
@@ -48,7 +48,7 @@ class CollegeTest extends TestCase
     public function colleges_principal_emails_seperated_by_pipe_are_returned_as_array()
     {
         $college = new College();
-        $phones = [ '9876543210', '8765432109' ];
+        $phones = ['9876543210', '8765432109'];
         $college->principal_phones = implode('|', $phones);
 
         $this->assertSame($phones, $college->principal_phones);

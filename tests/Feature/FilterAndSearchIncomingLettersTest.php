@@ -27,7 +27,7 @@ class FilterAndSearchIncomingLettersTest extends TestCase
 
         $viewIncomingLetters = $this->withoutExceptionHandling()
             ->get(route('staff.incoming_letters.index', [
-                'filters' => ['date' => ['less_than' => $beforeFilter]]
+                'filters' => ['date' => ['less_than' => $beforeFilter]],
             ]))
             ->assertSuccessful()
             ->assertViewIs('staff.incoming_letters.index')
@@ -57,7 +57,7 @@ class FilterAndSearchIncomingLettersTest extends TestCase
 
         $viewIncomingLetters = $this->withoutExceptionHandling()
             ->get(route('staff.incoming_letters.index', [
-                'filters' => ['date' => ['greater_than' => $afterFilter]]
+                'filters' => ['date' => ['greater_than' => $afterFilter]],
             ]))
             ->assertSuccessful()
             ->assertViewIs('staff.incoming_letters.index')
@@ -92,9 +92,9 @@ class FilterAndSearchIncomingLettersTest extends TestCase
                 'filters' => [
                     'date' => [
                         'greater_than' => $afterFilter,
-                        'less_than' => $beforeFilter
-                    ]
-                ]
+                        'less_than' => $beforeFilter,
+                    ],
+                ],
             ]))
             ->assertSuccessful()
             ->assertViewIs('staff.incoming_letters.index')
@@ -119,35 +119,35 @@ class FilterAndSearchIncomingLettersTest extends TestCase
         $this->signIn();
         $after_date = '';
 
-        $viewIncomingLetters = $this -> withoutExceptionHandling()
+        $viewIncomingLetters = $this->withoutExceptionHandling()
             ->get(route('staff.incoming_letters.index', [
-                'filters' => ['date' => ['greater_than' => $after_date]]
+                'filters' => ['date' => ['greater_than' => $after_date]],
             ]))
             ->assertSuccessful()
             ->assertViewIs('staff.incoming_letters.index')
             ->assertViewHas('incoming_letters')
             ->viewData('incoming_letters');
 
-        $this -> assertCount(1, $viewIncomingLetters);
+        $this->assertCount(1, $viewIncomingLetters);
     }
 
     /** @test */
     public function user_can_view_filtered_letters_even_if_before_date_not_given()
     {
         create(IncomingLetter::class, 1, ['date' => '1997-07-15']);
-        $this ->signIn();
+        $this->signIn();
         $before_date = '';
 
-        $viewIncomingLetters = $this -> withoutExceptionHandling()
+        $viewIncomingLetters = $this->withoutExceptionHandling()
             ->get(route('staff.incoming_letters.index', [
-                'filters' => ['date' => ['less_than' => $before_date]]
+                'filters' => ['date' => ['less_than' => $before_date]],
             ]))
             ->assertSuccessful()
             ->assertViewIs('staff.incoming_letters.index')
             ->assertViewHas('incoming_letters')
             ->viewData('incoming_letters');
 
-        $this -> assertCount(1, $viewIncomingLetters);
+        $this->assertCount(1, $viewIncomingLetters);
     }
 
     /** @test */
@@ -158,21 +158,21 @@ class FilterAndSearchIncomingLettersTest extends TestCase
         $after_date = '';
         $before_date = '';
 
-        $viewIncomingLetters = $this -> withoutExceptionHandling()
+        $viewIncomingLetters = $this->withoutExceptionHandling()
             ->get(route('staff.incoming_letters.index', [
                 'filters' => [
                     'date' => [
                         'greater_than' => $after_date,
-                        'less_than' => $before_date
-                    ]
-                ]
+                        'less_than' => $before_date,
+                    ],
+                ],
             ]))
             ->assertSuccessful()
             ->assertViewIs('staff.incoming_letters.index')
             ->assertViewHas('incoming_letters')
             ->viewData('incoming_letters');
 
-        $this -> assertCount(1, $viewIncomingLetters);
+        $this->assertCount(1, $viewIncomingLetters);
     }
 
     /** @test */
@@ -186,7 +186,7 @@ class FilterAndSearchIncomingLettersTest extends TestCase
 
         $viewIncomingLetters = $this->withoutExceptionHandling()
                                 ->get(route('staff.incoming_letters.index', [
-                                    'filters' => ['priority' => ['equals' => 1]]
+                                    'filters' => ['priority' => ['equals' => 1]],
                                 ]))
                                 ->assertSuccessful()
                                 ->assertViewIs('staff.incoming_letters.index')
@@ -208,9 +208,9 @@ class FilterAndSearchIncomingLettersTest extends TestCase
 
         $this->signIn();
 
-        $viewIncomingLetters = $this -> withoutExceptionHandling()
+        $viewIncomingLetters = $this->withoutExceptionHandling()
                                 ->get(route('staff.incoming_letters.index', [
-                                    'filters' => ['recipient_id' => ['equals' => 1]]
+                                    'filters' => ['recipient_id' => ['equals' => 1]],
                                 ]))
                                 ->assertSuccessful()
                                 ->assertViewIs('staff.incoming_letters.index')
@@ -231,9 +231,9 @@ class FilterAndSearchIncomingLettersTest extends TestCase
 
         $this->signIn();
 
-        $viewIncomingLetters = $this -> withoutExceptionHandling()
+        $viewIncomingLetters = $this->withoutExceptionHandling()
             ->get(route('staff.incoming_letters.index', [
-                'filters' => ['sender' => ['equals' => 'University Office']]
+                'filters' => ['sender' => ['equals' => 'University Office']],
             ]))
             ->assertSuccessful()
             ->assertViewIs('staff.incoming_letters.index')
@@ -248,9 +248,9 @@ class FilterAndSearchIncomingLettersTest extends TestCase
     /** @test */
     public function user_can_search_letters_based_on_subject_and_description()
     {
-        $sender1 = create(IncomingLetter::class, 1, ['subject' => 'abc def ghi' , 'description' => 'abc jkl ghi']);
-        $sender2 = create(IncomingLetter::class, 1, ['subject'=>'jkl abc ghi' , 'description'=>'ghi def jkl']);
-        create(IncomingLetter::class, 1, ['subject'=>'abc ghi jkl' , 'description'=>'ghi abc jkl xyz']);
+        $sender1 = create(IncomingLetter::class, 1, ['subject' => 'abc def ghi', 'description' => 'abc jkl ghi']);
+        $sender2 = create(IncomingLetter::class, 1, ['subject' => 'jkl abc ghi', 'description' => 'ghi def jkl']);
+        create(IncomingLetter::class, 1, ['subject' => 'abc ghi jkl', 'description' => 'ghi abc jkl xyz']);
 
         $this->signIn();
 

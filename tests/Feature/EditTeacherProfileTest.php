@@ -2,18 +2,18 @@
 
 namespace Tests\Feature;
 
-use App\Programme;
+use App\College;
 use App\Course;
+use App\Programme;
+use App\ProgrammeRevision;
+use App\Teacher;
+use App\TeacherProfile;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
-use App\TeacherProfile;
-use App\Teacher;
-use App\College;
-use App\ProgrammeRevision;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
+use Tests\TestCase;
 
 class EditTeacherProfileTest extends TestCase
 {
@@ -45,7 +45,7 @@ class EditTeacherProfileTest extends TestCase
             'college_id' => $college->id,
             'teaching_details' => [
                 ['programme_revision' => $revision->id, 'course' => $courses[0]->id],
-                ['programme_revision' => $revision->id, 'course' => $courses[1]->id]
+                ['programme_revision' => $revision->id, 'course' => $courses[1]->id],
             ],
             'profile_picture' => $profilePicture = UploadedFile::fake()->image('picture.jpeg'),
         ];
@@ -72,16 +72,15 @@ class EditTeacherProfileTest extends TestCase
         $this->assertEquals($teacher->profile->teaching_details[0]->course_id, $courses[0]->id);
         $this->assertEquals($teacher->profile->teaching_details[1]->course_id, $courses[1]->id);
 
-        $this->assertEquals('teacher_attachments/profile_picture/'.$profilePicture->hashName(), $teacher->profile->fresh()->profile_picture->path);
-        Storage::assertExists('teacher_attachments/profile_picture/'.$profilePicture->hashName());
+        $this->assertEquals('teacher_attachments/profile_picture/' . $profilePicture->hashName(), $teacher->profile->fresh()->profile_picture->path);
+        Storage::assertExists('teacher_attachments/profile_picture/' . $profilePicture->hashName());
     }
-
 
     /** @test */
     public function request_validates_teaching_details_course_belongs_to_programme()
     {
         $this->signInTeacher($teacher = create(Teacher::class));
-        
+
         $programme = create(Programme::class, 1, ['wef' => now()]);
         $assignedCourse = create(Course::class);
         $unassignedCourse = create(Course::class);
@@ -91,7 +90,7 @@ class EditTeacherProfileTest extends TestCase
 
         $update = [
             'teaching_details' => [
-                ['programme_revision' => $revision->id, 'course' => $unassignedCourse->id]
+                ['programme_revision' => $revision->id, 'course' => $unassignedCourse->id],
             ],
         ];
 
@@ -158,9 +157,8 @@ class EditTeacherProfileTest extends TestCase
             'bank_name' => '',
             'bank_branch' => '',
             'college_id' => '',
-            'teaching_details' =>'',
+            'teaching_details' => '',
         ];
-
 
         foreach ($courses as $course) {
             $revision->courses()->attach($course, ['semester' => 1]);
@@ -199,7 +197,7 @@ class EditTeacherProfileTest extends TestCase
         $update = [
             'teaching_details' => [
                 ['programme_revision' => $revision->id, 'course' => $courses[0]->id],
-                ['programme_revision' => $revision->id, 'course' => $courses[1]->id]
+                ['programme_revision' => $revision->id, 'course' => $courses[1]->id],
             ],
         ];
 

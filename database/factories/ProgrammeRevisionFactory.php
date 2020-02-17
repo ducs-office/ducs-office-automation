@@ -1,11 +1,10 @@
 <?php
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
-
 use App\Model;
+use App\Programme;
 use App\ProgrammeRevision;
 use Faker\Generator as Faker;
-use App\Programme;
 
 $factory->define(ProgrammeRevision::class, function (Faker $faker) {
     return [

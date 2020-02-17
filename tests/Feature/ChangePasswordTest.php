@@ -20,7 +20,7 @@ class ChangePasswordTest extends TestCase
         $new_pass = 'new_password';
 
         $this->signIn($user = create(User::class, 1, [
-            'password' => Hash::make($curr_pass)
+            'password' => Hash::make($curr_pass),
         ]));
 
         $this->withoutExceptionHandling()->post(route('staff.account.change_password'), [
@@ -37,14 +37,14 @@ class ChangePasswordTest extends TestCase
     public function authenticated_user_cannot_change_their_password_if_incorrect_password_is_given()
     {
         $this->signIn($user = create(User::class, 1, [
-            'password' => Hash::make('old_password')
+            'password' => Hash::make('old_password'),
         ]));
 
         $this->post(route('staff.account.change_password'), [
-                'password' => 'incorrect_password',
-                'new_password' => 'new_pass',
-                'new_password_confirmation' => 'new_pass',
-            ])->assertRedirect()
+            'password' => 'incorrect_password',
+            'new_password' => 'new_pass',
+            'new_password_confirmation' => 'new_pass',
+        ])->assertRedirect()
             ->assertSessionHasErrors('password');
 
         $this->assertEquals($user->password, $user->fresh()->password, 'password was changed, with incorrect password');

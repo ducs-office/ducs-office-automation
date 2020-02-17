@@ -32,9 +32,9 @@ class StoreProgrammeRevisionRequest extends FormRequest
             ->toArray();
 
         return [
-            'revised_at' => ['required', 'date', Rule::notIn($revision_dates) ],
+            'revised_at' => ['required', 'date', Rule::notIn($revision_dates)],
             'semester_courses' => [
-                'sometimes', 'required', 'array', 'size:'.($programme->duration * 2),
+                'sometimes', 'required', 'array', 'size:' . ($programme->duration * 2),
             ],
             'semester_courses.*' => ['required', 'array', 'min:1'],
             'semester_courses.*.*' => [
@@ -43,7 +43,7 @@ class StoreProgrammeRevisionRequest extends FormRequest
                     ->whereNotIn(
                         'programme_revision_id',
                         $programme->revisions->pluck('id')->toArray()
-                    )
+                    ),
             ],
         ];
     }

@@ -4,12 +4,12 @@ namespace Tests\Feature;
 
 use App\OutgoingLetter;
 use App\User;
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use Tests\TestCase;
 
 class ViewOutgoingLettersTest extends TestCase
 {
@@ -75,7 +75,6 @@ class ViewOutgoingLettersTest extends TestCase
     }
 
     /** @test */
-
     public function view_has_a_unique_list_of_recipients()
     {
         $this->signIn();

@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Staff;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Http\Requests\Staff\StoreIncomingLetterRequest;
 use App\Http\Requests\Staff\UpdateIncomingLettersRequest;
 use App\IncomingLetter;
 use App\User;
+use Illuminate\Http\Request;
 
 class IncomingLettersController extends Controller
 {
@@ -22,9 +22,9 @@ class IncomingLettersController extends Controller
 
         $query = IncomingLetter::applyFilter($filters)->with(['remarks.user', 'handovers']);
 
-        if ($request->has('search') && $request['search']!= '') {
-            $query->where('subject', 'like', '%'.$request['search'].'%')
-                    ->orWhere('description', 'like', '%'.$request['search'].'%');
+        if ($request->has('search') && $request['search'] != '') {
+            $query->where('subject', 'like', '%' . $request['search'] . '%')
+                ->orWhere('description', 'like', '%' . $request['search'] . '%');
         }
 
         $recipients = User::select('id', 'name')->whereIn(
@@ -37,7 +37,7 @@ class IncomingLettersController extends Controller
             'recipients' => $recipients,
             'senders' => IncomingLetter::selectRaw('DISTINCT(sender)')->get()->pluck('sender', 'sender'),
             'priorities' => config('options.incoming_letters.priorities'),
-            'priority_colors' => config('options.incoming_letters.priority_colors')
+            'priority_colors' => config('options.incoming_letters.priority_colors'),
         ]);
     }
 
@@ -45,7 +45,7 @@ class IncomingLettersController extends Controller
     {
         return view('staff.incoming_letters.create', [
             'priorities' => config('options.incoming_letters.priorities'),
-            'priority_colors' => config('options.incoming_letters.priority_colors')
+            'priority_colors' => config('options.incoming_letters.priority_colors'),
         ]);
     }
 
@@ -96,7 +96,7 @@ class IncomingLettersController extends Controller
     public function storeRemark(Request $request, IncomingLetter $incoming_letter)
     {
         $data = $request->validate([
-            'description'=>'required|string|min:2|max:190',
+            'description' => 'required|string|min:2|max:190',
         ]);
 
         $incoming_letter->remarks()->create($data + ['user_id' => $request->user()->id]);

@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Staff;
 
-use App\Http\Controllers\Controller;
-use App\Programme;
 use App\Course;
-use App\ProgrammeRevision;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\Staff\StoreProgrammeRevisionRequest;
 use App\Http\Requests\Staff\UpdateProgrammeRevisionRequest;
+use App\Programme;
+use App\ProgrammeRevision;
 use Illuminate\Support\Facades\DB;
 
 class ProgrammeRevisionController extends Controller
@@ -44,8 +44,8 @@ class ProgrammeRevisionController extends Controller
         return view('staff.programmes.revisions.create', [
             'programme' => $programme,
             'revision' => $revision,
-            'semester_courses' =>  $semester_courses,
-            'courses' => $courses
+            'semester_courses' => $semester_courses,
+            'courses' => $courses,
         ]);
     }
 
@@ -55,7 +55,7 @@ class ProgrammeRevisionController extends Controller
 
         $revision = ProgrammeRevision::create([
             'revised_at' => $data['revised_at'],
-            'programme_id' => $programme->id
+            'programme_id' => $programme->id,
         ]);
 
         $revision->courses()->sync($request->getSemesterCourses());

@@ -1,7 +1,6 @@
 <?php
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
-
 use App\College;
 use App\Programme;
 use Faker\Generator as Faker;
@@ -14,6 +13,6 @@ $factory->define(College::class, function (Faker $faker) {
         'principal_phones' => [$faker->regexify('[9876][0-9]{9}'), $faker->regexify('[9876][0-9]{9}')],
         'principal_emails' => [$faker->safeEmail, $faker->safeEmail],
         'address' => $faker->address,
-        'website' => $faker->url
+        'website' => $faker->url,
     ];
 });

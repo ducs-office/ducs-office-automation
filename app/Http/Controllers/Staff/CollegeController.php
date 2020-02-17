@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Staff;
 
-use App\Http\Controllers\Controller;
 use App\College;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\Staff\StoreCollegeRequest;
 use App\Http\Requests\Staff\UpdateCollegeRequest;
 use App\Programme;
@@ -19,14 +19,14 @@ class CollegeController extends Controller
     {
         return view('staff.colleges.index', [
             'colleges' => College::all(),
-            'programmes' => Programme::all()
+            'programmes' => Programme::all(),
         ]);
     }
 
     public function create()
     {
         return view('staff.colleges.create', [
-            'programmes' => Programme::all()
+            'programmes' => Programme::all(),
         ]);
     }
 

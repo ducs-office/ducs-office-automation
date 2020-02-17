@@ -1,7 +1,6 @@
 <?php
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
-
 use App\OutgoingLetter;
 use App\User;
 use Faker\Generator as Faker;

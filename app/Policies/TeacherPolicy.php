@@ -14,6 +14,7 @@ class TeacherPolicy
      * Determine whether the user can view any teachers.
      *
      * @param  \App\User  $user
+     *
      * @return mixed
      */
     public function viewAny(User $user)
@@ -26,6 +27,7 @@ class TeacherPolicy
      *
      * @param  \App\User  $user
      * @param  \App\Teacher  $teacher
+     *
      * @return mixed
      */
     public function view(User $user)
@@ -37,6 +39,7 @@ class TeacherPolicy
      * Determine whether the user can create teachers.
      *
      * @param  \App\User  $user
+     *
      * @return mixed
      */
     public function create(User $user)
@@ -49,6 +52,7 @@ class TeacherPolicy
      *
      * @param  \App\User  $user
      * @param  \App\Teacher  $teacher
+     *
      * @return mixed
      */
     public function update(User $user)
@@ -61,6 +65,7 @@ class TeacherPolicy
      *
      * @param  \App\User  $user
      * @param  \App\Teacher  $teacher
+     *
      * @return mixed
      */
     public function delete(User $user)

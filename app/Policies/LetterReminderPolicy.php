@@ -15,6 +15,7 @@ class LetterReminderPolicy
      * Determine whether the user can view any letter reminders.
      *
      * @param  \App\User  $user
+     *
      * @return mixed
      */
     public function viewAny(User $user)
@@ -27,6 +28,7 @@ class LetterReminderPolicy
      *
      * @param  \App\User  $user
      * @param  \App\LetterReminder  $letterReminder
+     *
      * @return mixed
      */
     public function view(User $user, LetterReminder $letterReminder)
@@ -38,6 +40,7 @@ class LetterReminderPolicy
      * Determine whether the user can create letter reminders.
      *
      * @param  \App\User  $user
+     *
      * @return mixed
      */
     public function create(User $user, OutgoingLetter $letter)
@@ -51,6 +54,7 @@ class LetterReminderPolicy
      *
      * @param  \App\User  $user
      * @param  \App\LetterReminder  $letterReminder
+     *
      * @return mixed
      */
     public function update(User $user, LetterReminder $letterReminder)
@@ -64,6 +68,7 @@ class LetterReminderPolicy
      *
      * @param  \App\User  $user
      * @param  \App\LetterReminder  $letterReminder
+     *
      * @return mixed
      */
     public function delete(User $user, LetterReminder $letterReminder)

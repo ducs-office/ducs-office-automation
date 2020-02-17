@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Staff;
 
-use App\Http\Controllers\Controller;
-use App\Programme;
 use App\Course;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\Staff\StoreCourseRequest;
 use App\Http\Requests\Staff\UpdateCourseRequest;
+use App\Programme;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
@@ -29,12 +29,12 @@ class CourseController extends Controller
             'revisions' => function ($q) {
                 return $q->orderBy('revised_at', 'desc');
             },
-            'revisions.attachments'
+            'revisions.attachments',
         ])->latest()->get();
 
         return view('staff.courses.index', [
             'courses' => $courses,
-            'course_types' => config('options.courses.types')
+            'course_types' => config('options.courses.types'),
         ]);
     }
 
@@ -42,6 +42,7 @@ class CourseController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \App\Http\Requests\Staff\StoreCourseRequest  $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(StoreCourseRequest $request)
@@ -51,7 +52,7 @@ class CourseController extends Controller
         Course::create($request->validated())
             ->revisions()
             ->create([
-                'revised_at' => $request->date
+                'revised_at' => $request->date,
             ])
             ->attachments()
             ->createMany($request->storeAttachments());
@@ -68,6 +69,7 @@ class CourseController extends Controller
      *
      * @param  \App\Http\Requests\Staff\UpdateCourseRequest  $request
      * @param  \App\Course  $course
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(UpdateCourseRequest $request, Course $course)
@@ -92,6 +94,7 @@ class CourseController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  \App\Course  $course
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy(Course $course)

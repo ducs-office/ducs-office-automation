@@ -3,9 +3,7 @@
 namespace App;
 
 use App\Programme;
-
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class College extends Model
 {
@@ -16,7 +14,12 @@ class College extends Model
 
     public function programmes()
     {
-        return $this->belongsToMany(Programme::class, 'colleges_programmes', 'college_id', 'programme_id');
+        return $this->belongsToMany(
+            Programme::class,
+            'colleges_programmes',
+            'college_id',
+            'programme_id'
+        );
     }
 
     public function setPrincipalPhonesAttribute($value)
@@ -41,6 +44,7 @@ class College extends Model
             $this->attributes['principal_emails'] = $value;
         }
     }
+
     public function getPrincipalEmailsAttribute($value)
     {
         return explode('|', $value);

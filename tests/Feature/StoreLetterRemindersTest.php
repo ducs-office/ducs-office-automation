@@ -4,15 +4,15 @@ namespace Tests\Feature;
 
 use App\LetterReminder;
 use App\OutgoingLetter;
+use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
-use App\User;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use Tests\TestCase;
 
 class StoreLetterRemindersTest extends TestCase
 {
@@ -43,7 +43,7 @@ class StoreLetterRemindersTest extends TestCase
         $this->signIn(create(User::class), 'admin');
 
         $letter = create(OutgoingLetter::class, 1, [
-            'creator_id' => auth()->id()
+            'creator_id' => auth()->id(),
         ]);
 
         $reminder = [
@@ -51,7 +51,7 @@ class StoreLetterRemindersTest extends TestCase
             'letter_id' => $letter->id,
             'attachments' => [
                 $photo = UploadedFile::fake()->image('Scanned.jpg'),
-                $document = UploadedFile::fake()->create('Document.pdf')
+                $document = UploadedFile::fake()->create('Document.pdf'),
             ],
         ];
 
@@ -73,7 +73,6 @@ class StoreLetterRemindersTest extends TestCase
         Storage::assertExists($reminder->attachments->first()->path);
         Storage::assertExists($reminder->attachments->last()->path);
     }
-
 
     /** @test */
     public function request_validates_atleast_on_attachment_is_uploaded()

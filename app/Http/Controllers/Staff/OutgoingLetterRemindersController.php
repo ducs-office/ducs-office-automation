@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Staff;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\LetterReminder;
 use App\OutgoingLetter;
+use Illuminate\Http\Request;
 
 class OutgoingLetterRemindersController extends Controller
 {
@@ -15,7 +15,7 @@ class OutgoingLetterRemindersController extends Controller
 
         $validData = request()->validate([
             'attachments' => 'required|array|min:1|max:2',
-            'attachments.*' => 'file|max:200|mimes:jpeg,jpg,png,pdf'
+            'attachments.*' => 'file|max:200|mimes:jpeg,jpg,png,pdf',
         ]);
 
         $letter_reminder = $letter->reminders()->create($validData);
@@ -24,7 +24,7 @@ class OutgoingLetterRemindersController extends Controller
             array_map(function ($attachedFile) {
                 return [
                     'original_name' => $attachedFile->getClientOriginalName(),
-                    'path' => $attachedFile->store('/letter_attachments/outgoing/reminders')
+                    'path' => $attachedFile->store('/letter_attachments/outgoing/reminders'),
                 ];
             }, $request->file('attachments'))
         );

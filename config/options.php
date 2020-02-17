@@ -10,7 +10,7 @@ return [
         'priority_colors' => [
             '1' => 'text-red-600',
             '2' => 'text-blue-600',
-            '3' => 'text-yellow-800'
+            '3' => 'text-yellow-800',
         ],
     ],
     'users' => [
@@ -19,21 +19,21 @@ return [
             'hod' => 'HOD',
             'office_staff' => 'Office Staff',
             'faculty_teacher' => 'Faculty Teacher',
-            'teacher' => 'College Teacher'
+            'teacher' => 'College Teacher',
         ],
     ],
     'programmes' => [
         'types' => [
             'UG' => 'Under Graduate',
-            'PG' => 'Post Graduate'
-        ]
+            'PG' => 'Post Graduate',
+        ],
     ],
     'courses' => [
         'types' => [
             'C' => 'Core',
             'GE' => 'General Elective',
             'OE' => 'Open Elective',
-        ]
+        ],
     ],
     'teachers' => [
         'designations' => [
@@ -41,6 +41,6 @@ return [
             'G' => 'Guest',
             'A' => 'Ad-Hoc',
             'T' => 'Temporary',
-        ]
-    ]
+        ],
+    ],
 ];

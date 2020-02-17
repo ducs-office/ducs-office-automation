@@ -19,7 +19,7 @@ class DeleteUserTest extends TestCase
         $this->signIn();
 
         $this->withoutExceptionHandling()
-            
+
             ->delete(route('staff.users.destroy', $anotherUser))
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'User deleted successfully!');

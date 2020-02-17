@@ -14,6 +14,7 @@ class OutgoingLetterPolicy
      * Determine whether the user can view any outgoing letters.
      *
      * @param  \App\User  $user
+     *
      * @return mixed
      */
     public function viewAny(User $user)
@@ -26,6 +27,7 @@ class OutgoingLetterPolicy
      *
      * @param  \App\User  $user
      * @param  \App\OutgoingLetter  $outgoingLetter
+     *
      * @return mixed
      */
     public function view(User $user, OutgoingLetter $outgoingLetter)
@@ -37,6 +39,7 @@ class OutgoingLetterPolicy
      * Determine whether the user can create outgoing letters.
      *
      * @param  \App\User  $user
+     *
      * @return mixed
      */
     public function create(User $user)
@@ -49,6 +52,7 @@ class OutgoingLetterPolicy
      *
      * @param  \App\User  $user
      * @param  \App\OutgoingLetter  $outgoingLetter
+     *
      * @return mixed
      */
     public function update(User $user, OutgoingLetter $outgoingLetter)
@@ -62,6 +66,7 @@ class OutgoingLetterPolicy
      *
      * @param  \App\User  $user
      * @param  \App\OutgoingLetter  $outgoingLetter
+     *
      * @return mixed
      */
     public function delete(User $user, OutgoingLetter $outgoingLetter)

@@ -33,7 +33,7 @@ class UpdateIncomingLettersRequest extends FormRequest
             'recipient_id' => ['sometimes', 'required', 'exists:users,id'],
             'handovers' => ['sometimes', 'nullable', 'array'],
             'handovers.*' => ['integer', 'exists:users,id'],
-            'priority' => ['nullable', 'in:'. $priorities],
+            'priority' => ['nullable', 'in:' . $priorities],
             'subject' => ['sometimes', 'required', 'string', 'min:5', 'max:100'],
             'description' => ['nullable', 'string', 'max:400'],
             'attachments' => ['required', 'array', 'max:2'],
@@ -54,7 +54,7 @@ class UpdateIncomingLettersRequest extends FormRequest
         return array_map(function ($attachedFile) {
             return [
                 'original_name' => $attachedFile->getClientOriginalName(),
-                'path' => $attachedFile->store('/letter_attachments/incoming')
+                'path' => $attachedFile->store('/letter_attachments/incoming'),
             ];
         }, $this->file('attachments') ?? []);
     }

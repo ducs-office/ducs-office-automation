@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\Staff;
 
-use Auth;
-use App\OutgoingLetter;
-use App\Remark;
-use App\User;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Staff\StoreOutgoingLetterRequest;
 use App\Http\Requests\Staff\UpdateOutgoingLetterRequest;
+use App\OutgoingLetter;
+use App\Remark;
+use App\User;
+use Auth;
+use Illuminate\Http\Request;
 
 class OutgoingLettersController extends Controller
 {
@@ -24,9 +24,9 @@ class OutgoingLettersController extends Controller
 
         $query = OutgoingLetter::applyFilter($filters)->with(['remarks.user', 'reminders']);
 
-        if ($request->has('search') && request('search')!= '') {
-            $query->where('subject', 'like', '%'.request('search').'%')
-                ->orWhere('description', 'like', '%'.request('search').'%');
+        if ($request->has('search') && request('search') != '') {
+            $query->where('subject', 'like', '%' . request('search') . '%')
+                ->orWhere('description', 'like', '%' . request('search') . '%');
         }
 
         return view('staff.outgoing_letters.index', [
@@ -53,7 +53,7 @@ class OutgoingLettersController extends Controller
             array_map(function ($attachedFile) {
                 return [
                     'original_name' => $attachedFile->getClientOriginalName(),
-                    'path' => $attachedFile->store('/letter_attachments/outgoing')
+                    'path' => $attachedFile->store('/letter_attachments/outgoing'),
                 ];
             }, $request->file('attachments'))
         );
@@ -77,7 +77,7 @@ class OutgoingLettersController extends Controller
                 array_map(function ($attachedFile) {
                     return [
                         'original_name' => $attachedFile->getClientOriginalName(),
-                        'path' => $attachedFile->store('/letter_attachments/outgoing')
+                        'path' => $attachedFile->store('/letter_attachments/outgoing'),
                     ];
                 }, $request->file('attachments'))
             );
@@ -102,7 +102,7 @@ class OutgoingLettersController extends Controller
         $this->authorize('create', Remark::class, $outgoing_letter);
 
         $data = request()->validate([
-            'description'=>'required|string|min:2|max:190',
+            'description' => 'required|string|min:2|max:190',
         ]);
 
         $outgoing_letter->remarks()->create($data + ['user_id' => Auth::id()]);

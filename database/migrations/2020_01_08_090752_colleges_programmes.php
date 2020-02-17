@@ -16,7 +16,7 @@ class CollegesProgrammes extends Migration
         Schema::create('colleges_programmes', function (Blueprint $table) {
             $table->unsignedBigInteger('college_id');
             $table->unsignedBigInteger('programme_id');
-            
+
             $table->primary(['college_id', 'programme_id']);
             $table->foreign('college_id')->references('id')->on('colleges')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('programme_id')->references('id')->on('programmes')->onDelete('cascade')->onUpdate('cascade');

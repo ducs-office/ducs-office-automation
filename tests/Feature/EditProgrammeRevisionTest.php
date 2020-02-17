@@ -2,13 +2,13 @@
 
 namespace Tests\Feature;
 
+use App\Course;
+use App\Programme;
+use App\ProgrammeRevision;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-use Illuminate\Auth\AuthenticationException;
-use App\Programme;
-use App\ProgrammeRevision;
-use App\Course;
 
 class EditprogrammeRevision extends TestCase
 {

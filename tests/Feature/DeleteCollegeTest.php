@@ -2,11 +2,11 @@
 
 namespace Tests\Feature;
 
+use App\College;
+use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-use App\College;
-use App\User;
 
 class DeleteCollegeTest extends TestCase
 {
@@ -35,6 +35,6 @@ class DeleteCollegeTest extends TestCase
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'College deleted successfully!');
 
-        $this->assertNull($college->fresh(), "College still exists in database");
+        $this->assertNull($college->fresh(), 'College still exists in database');
     }
 }

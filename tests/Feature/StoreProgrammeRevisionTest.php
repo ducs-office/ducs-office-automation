@@ -2,13 +2,13 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
 use App\Course;
 use App\Programme;
 use App\ProgrammeRevision;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Validation\ValidationException;
+use Tests\TestCase;
 
 class StoreProgrammeRevisionTest extends TestCase
 {
@@ -34,8 +34,8 @@ class StoreProgrammeRevisionTest extends TestCase
             'revised_at' => $revised_at,
             'semester_courses' => [
                 [$semester_courses[0]->id],
-                [$semester_courses[1]->id]
-            ]
+                [$semester_courses[1]->id],
+            ],
         ])
         ->assertRedirect()
         ->assertSessionHasFlash('success', "Programme's revision created successfully!");
@@ -50,7 +50,7 @@ class StoreProgrammeRevisionTest extends TestCase
     {
         $this->signIn();
 
-        $programme = create(Programme::class, 1, ['duration' => 1, 'wef' => "2000-01-09"]);
+        $programme = create(Programme::class, 1, ['duration' => 1, 'wef' => '2000-01-09']);
         $revision = create(ProgrammeRevision::class, 1, ['revised_at' => $programme->wef, 'programme_id' => $programme->id]);
         $semester_courses = create(Course::class, 2);
 
@@ -61,9 +61,9 @@ class StoreProgrammeRevisionTest extends TestCase
         try {
             $this->withoutExceptionHandling()
                 ->post(
-                    route("staff.programmes.revisions.store", $programme),
+                    route('staff.programmes.revisions.store', $programme),
                     [
-                        'semester_courses' => [[$semester_courses[0]->id], [$semester_courses[1]->id]]
+                        'semester_courses' => [[$semester_courses[0]->id], [$semester_courses[1]->id]],
                     ]
                 );
         } catch (ValidationException $e) {
@@ -79,7 +79,7 @@ class StoreProgrammeRevisionTest extends TestCase
     {
         $this->signIn();
 
-        $programme = create(Programme::class, 1, ['duration' => 1, 'wef' => "2000-01-09"]);
+        $programme = create(Programme::class, 1, ['duration' => 1, 'wef' => '2000-01-09']);
         $revision = create(ProgrammeRevision::class, 1, ['revised_at' => $programme->wef, 'programme_id' => $programme->id]);
         $semester_courses = create(Course::class, 3);
 
@@ -90,10 +90,10 @@ class StoreProgrammeRevisionTest extends TestCase
         try {
             $this->withoutExceptionHandling()
                 ->post(
-                    route("staff.programmes.revisions.store", $programme),
+                    route('staff.programmes.revisions.store', $programme),
                     [
                         'revised_at' => $programme->wef->format('Y-m-d'),
-                        'semester_courses' => [[$semester_courses[0]->id], [$semester_courses[1]->id]]
+                        'semester_courses' => [[$semester_courses[0]->id], [$semester_courses[1]->id]],
                     ]
                 );
             $this->fail('no validation error occured');
@@ -110,7 +110,7 @@ class StoreProgrammeRevisionTest extends TestCase
     {
         $this->signIn();
 
-        $programme = create(Programme::class, 1, ['duration' => 1, 'wef' => "2000-01-09"]);
+        $programme = create(Programme::class, 1, ['duration' => 1, 'wef' => '2000-01-09']);
         $revision = create(ProgrammeRevision::class, 1, ['revised_at' => $programme->wef, 'programme_id' => $programme->id]);
         $courses = create(Course::class, 2);
 
@@ -120,10 +120,10 @@ class StoreProgrammeRevisionTest extends TestCase
 
         try {
             $this->withoutExceptionHandling()
-                ->post(route("staff.programmes.revisions.store", $programme), [
-                        'revised_at' => 'some random string',
-                        'semester_courses' => [[$courses[0]->id], [$courses[1]->id]]
-                    ]);
+                ->post(route('staff.programmes.revisions.store', $programme), [
+                    'revised_at' => 'some random string',
+                    'semester_courses' => [[$courses[0]->id], [$courses[1]->id]],
+                ]);
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('revised_at', $e->errors());
         }
@@ -131,10 +131,10 @@ class StoreProgrammeRevisionTest extends TestCase
         $this->assertEquals(1, ProgrammeRevision::count());
         $this->assertEquals($programme->wef, Programme::find(1)->revisions->max('revised_at'));
 
-        $revised_at = "2019-09-08";
+        $revised_at = '2019-09-08';
 
         $this->withoutExceptionHandling()
-        ->post(route("staff.programmes.revisions.store", $programme), [
+        ->post(route('staff.programmes.revisions.store', $programme), [
             'revised_at' => $revised_at,
             'semester_courses' => [[$courses[0]->id], [$courses[1]->id]],
         ]);
@@ -147,7 +147,7 @@ class StoreProgrammeRevisionTest extends TestCase
     {
         $this->signIn();
 
-        $programme = create(Programme::class, 1, ['duration' => 1, 'wef' => "2000-01-09"]);
+        $programme = create(Programme::class, 1, ['duration' => 1, 'wef' => '2000-01-09']);
         $revision = create(ProgrammeRevision::class, 1, ['revised_at' => $programme->wef, 'programme_id' => $programme->id]);
         $courses = create(Course::class, 2);
 
@@ -155,11 +155,10 @@ class StoreProgrammeRevisionTest extends TestCase
             $course->programme_revisions()->attach($revision, ['semester' => $index + 1]);
         }
 
-
-        $revised_at = "2019-09-08";
+        $revised_at = '2019-09-08';
 
         $this->withoutExceptionHandling()
-        ->post(route("staff.programmes.revisions.store", $programme), [
+        ->post(route('staff.programmes.revisions.store', $programme), [
             'revised_at' => $revised_at,
             'semester_courses' => [[$courses[0]->id], [$courses[1]->id]],
         ]);
@@ -187,10 +186,10 @@ class StoreProgrammeRevisionTest extends TestCase
         try {
             $this->withoutExceptionHandling()
                 ->post(route('staff.programmes.revisions.store', $programme2), [
-                    'revised_at' => $revised_at = "2021-09-08",
+                    'revised_at' => $revised_at = '2021-09-08',
                     'semester_courses' => [
                         [$assignedCourse->id],
-                        [$unassignedCourses[0]->id]
+                        [$unassignedCourses[0]->id],
                     ],
                 ]);
             $this->fail('no validation error occured');
@@ -219,7 +218,7 @@ class StoreProgrammeRevisionTest extends TestCase
                 'semester_courses' => [
                     1 => [$courses[0]->id, $courses[1]->id],
                     2 => [$courses[2]->id],
-                ]
+                ],
             ])->assertRedirect()
             ->assertSessionHasNoErrors()
             ->assertSessionHasFlash('success', "Programme's revision created successfully!");
@@ -241,11 +240,11 @@ class StoreProgrammeRevisionTest extends TestCase
             $course->programme_revisions()->attach($revision, ['semester' => $index + 1]);
         }
 
-        $revised_at = "2019-09-08";
+        $revised_at = '2019-09-08';
 
         try {
             $this->withoutExceptionHandling()
-            ->post(route("staff.programmes.revisions.store", $programme), [
+            ->post(route('staff.programmes.revisions.store', $programme), [
                 'revised_at' => $revised_at,
                 'semester_courses' => [[$courses[0]->id], [$courses[1]->id, $courses[0]->id]],
             ]);

@@ -25,7 +25,6 @@ class CreateRemarksTable extends Migration
         });
     }
 
-
     /**
      * Reverse the migrations.
      *

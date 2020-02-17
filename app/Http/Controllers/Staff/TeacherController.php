@@ -2,23 +2,22 @@
 
 namespace App\Http\Controllers\Staff;
 
+use App\Http\Controllers\Controller;
+use App\Mail\UserRegisteredMail;
 use App\Teacher;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
-use App\Mail\UserRegisteredMail;
-use App\Http\Controllers\Controller;
+use Illuminate\Validation\Rule;
 
 class TeacherController extends Controller
 {
     public function index()
     {
         return view('staff.teachers.index', [
-            'teachers' => Teacher::all()
+            'teachers' => Teacher::all(),
         ]);
     }
-
 
     public function store(Request $request)
     {
@@ -45,8 +44,8 @@ class TeacherController extends Controller
             'first_name' => ['sometimes', 'required', 'string', 'min:3', 'max:50'],
             'last_name' => ['sometimes', 'required', 'string', 'min:3', 'max:50'],
             'email' => ['sometimes', 'required', 'min:3', 'max:190', 'email',
-                        Rule::unique('teachers')->ignore($teacher)
-            ]
+                Rule::unique('teachers')->ignore($teacher),
+            ],
         ]);
 
         $teacher->update($valid_data);

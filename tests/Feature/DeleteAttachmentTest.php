@@ -27,14 +27,13 @@ class DeleteAttachmentTest extends TestCase
         $attachments = $letter->attachments()->createMany([
             [
                 'original_name' => 'Some random file.jpg',
-                'path' => UploadedFile::fake()->image('random_image.jpg')->store('random/location')
+                'path' => UploadedFile::fake()->image('random_image.jpg')->store('random/location'),
             ],
             [
                 'original_name' => 'Some other random file.jpg',
-                'path' => UploadedFile::fake()->image('random_image.jpg')->store('random/location')
-            ]
+                'path' => UploadedFile::fake()->image('random_image.jpg')->store('random/location'),
+            ],
         ]);
-
 
         $this->withoutExceptionHandling()
             ->delete(route('staff.attachments.destroy', $attachments[0]))
@@ -52,13 +51,13 @@ class DeleteAttachmentTest extends TestCase
         $letter = create(OutgoingLetter::class);
         $attachment = $letter->attachments()->create([
             'original_name' => 'Some random file.jpg',
-            'path' => UploadedFile::fake()->image('random_image.jpg')->store('random/location')
+            'path' => UploadedFile::fake()->image('random_image.jpg')->store('random/location'),
         ]);
 
         $this->signIn();
 
         $this->withExceptionHandling()
-            
+
             ->delete(route('staff.attachments.destroy', $attachment))
             ->assertForbidden();
 

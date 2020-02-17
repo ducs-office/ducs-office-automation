@@ -3,7 +3,6 @@
 namespace App;
 
 use App\College;
-
 use Illuminate\Database\Eloquent\Model;
 
 class Programme extends Model
@@ -13,9 +12,8 @@ class Programme extends Model
     protected $dates = ['wef'];
 
     protected $casts = [
-        'wef' => 'date:Y-m-d'
+        'wef' => 'date:Y-m-d',
     ];
-
 
     public function colleges()
     {
@@ -37,12 +35,13 @@ class Programme extends Model
     {
         return $this->revisions()->orderBy('revised_at', 'desc')->first();
     }
+
     public function scopeWithLatestRevision($query)
     {
         return $query->addSelect([
             'latest_revision_id' => ProgrammeRevision::select('id')
                 ->whereColumn('programme_id', 'programmes.id')
-                ->orderBy('revised_at', 'desc')->limit(1)
+                ->orderBy('revised_at', 'desc')->limit(1),
         ])->with(['latestRevision']);
     }
 }

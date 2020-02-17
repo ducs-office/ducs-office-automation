@@ -3,9 +3,9 @@
 namespace Tests\Feature\InternalApi;
 
 use App\User;
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
+use Tests\TestCase;
 
 class ShowUserTest extends TestCase
 {

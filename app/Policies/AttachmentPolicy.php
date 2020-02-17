@@ -16,6 +16,7 @@ class AttachmentPolicy
      *
      * @param  \App\User  $user
      * @param  \App\Attachment  $attachment
+     *
      * @return mixed
      */
     public function view(User $user, Attachment $attachment)
@@ -28,6 +29,7 @@ class AttachmentPolicy
      *
      * @param  \App\User  $user
      * @param  \App\Attachment  $attachment
+     *
      * @return mixed
      */
     public function delete(User $user, Attachment $attachment)

@@ -2,10 +2,10 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 use App\College;
 use App\Programme;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class UpdateCollegeTest extends TestCase
 {
@@ -22,6 +22,7 @@ class UpdateCollegeTest extends TestCase
 
         $this->assertEquals($college->code, $college->fresh()->code);
     }
+
     /** @test */
     public function admin_can_update_a_college_code()
     {
@@ -64,7 +65,7 @@ class UpdateCollegeTest extends TestCase
 
         $this->withoutExceptionHandling()
             ->patch(route('staff.colleges.update', $college), [
-                'principal_name' => $new_principal = 'New Principal'
+                'principal_name' => $new_principal = 'New Principal',
             ])
             ->assertRedirect()
             ->assertSessionHasNoErrors()
@@ -82,7 +83,7 @@ class UpdateCollegeTest extends TestCase
 
         $this->withoutExceptionHandling()
             ->patch(route('staff.colleges.update', $college->id), [
-                'principal_phones' => $new_phones = ['9876543210']
+                'principal_phones' => $new_phones = ['9876543210'],
             ])
             ->assertRedirect()
             ->assertSessionHasNoErrors()
@@ -100,7 +101,7 @@ class UpdateCollegeTest extends TestCase
 
         $this->withoutExceptionHandling()
             ->patch(route('staff.colleges.update', $college), [
-                'principal_emails' => $new_emails = ['princy@somecollege.com']
+                'principal_emails' => $new_emails = ['princy@somecollege.com'],
             ])
             ->assertRedirect()
             ->assertSessionHasNoErrors()
@@ -118,7 +119,7 @@ class UpdateCollegeTest extends TestCase
 
         $this->withoutExceptionHandling()
             ->patch(route('staff.colleges.update', $college), [
-                'address' => $new_address = 'Arts Faculty, Delhi University, Delhi - 110007'
+                'address' => $new_address = 'Arts Faculty, Delhi University, Delhi - 110007',
             ])
             ->assertRedirect()
             ->assertSessionHasNoErrors()
@@ -136,7 +137,7 @@ class UpdateCollegeTest extends TestCase
 
         $this->withoutExceptionHandling()
             ->patch(route('staff.colleges.update', $college), [
-                'website' => $new_website = 'https://new-website.com'
+                'website' => $new_website = 'https://new-website.com',
             ])
             ->assertRedirect()
             ->assertSessionHasNoErrors()
@@ -190,7 +191,7 @@ class UpdateCollegeTest extends TestCase
 
         $response = $this->patch(route('staff.colleges.update', $college), [
             'code' => $college->code,
-            'name' => $newName = 'New college'
+            'name' => $newName = 'New college',
         ])->assertRedirect()
         ->assertSessionHasNoErrors()
         ->assertSessionHasFlash('success', 'College updated successfully!');
@@ -209,7 +210,7 @@ class UpdateCollegeTest extends TestCase
 
         $response = $this->patch(route('staff.colleges.update', $college), [
             'code' => $new_code = 'new_code123',
-            'name' => $college->name
+            'name' => $college->name,
         ])->assertRedirect()
         ->assertSessionHasNoErrors()
         ->assertSessionHasFlash('success', 'College updated successfully!');
@@ -217,7 +218,6 @@ class UpdateCollegeTest extends TestCase
         $this->assertEquals(1, College::count());
         $this->assertEquals($new_code, $college->fresh()->code);
     }
-
 
     /** @test */
     public function colleges_principal_name_cannot_be_updated_to_null()
@@ -228,7 +228,7 @@ class UpdateCollegeTest extends TestCase
 
         $this->withExceptionHandling()
             ->patch(route('staff.colleges.update', $college), [
-                'principal_name' => ''
+                'principal_name' => '',
             ])
             ->assertSessionHasErrorsIn('principal_name');
 

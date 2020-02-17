@@ -2,16 +2,16 @@
 
 namespace App;
 
+use App\LetterReminder;
 use App\Model;
 use App\Remark;
-use App\LetterReminder;
 use Illuminate\Support\Facades\Cache;
 
 class OutgoingLetter extends Model
 {
     protected $fillable = [
         'date', 'type', 'subject', 'recipient', 'description', 'amount',
-        'sender_id', 'creator_id'
+        'sender_id', 'creator_id',
     ];
 
     protected $dates = ['date'];
@@ -21,7 +21,7 @@ class OutgoingLetter extends Model
         'type' => 'equals',
         'recipient' => 'equals',
         'creator_id' => 'equals',
-        'sender_id' => 'equals'
+        'sender_id' => 'equals',
     ];
 
     protected static function boot()
@@ -45,7 +45,7 @@ class OutgoingLetter extends Model
             'General' => '',
         ];
 
-        $serial_no = "CS/" . $prefixes[$this->type] . $this->date->format('Y');
+        $serial_no = 'CS/' . $prefixes[$this->type] . $this->date->format('Y');
         $number_sequence = Cache::increment("letter_seq_{$serial_no}");
 
         $this->serial_no = $serial_no . '/' . str_pad($number_sequence, 4, '0', STR_PAD_LEFT);
