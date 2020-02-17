@@ -13,7 +13,7 @@ class CreateCourseRevisionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('course_revisions', function (Blueprint $table) {
+        Schema::create('course_revisions', static function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->timestamp('revised_at');
             $table->unsignedBigInteger('course_id');

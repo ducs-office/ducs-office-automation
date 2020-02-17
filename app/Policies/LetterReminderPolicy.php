@@ -46,7 +46,7 @@ class LetterReminderPolicy
     public function create(User $user, OutgoingLetter $letter)
     {
         return $user->can('letter reminders:create')
-            && $letter->creator_id == $user->id;
+            && (int) $letter->creator_id === (int) $user->id;
     }
 
     /**
@@ -60,7 +60,7 @@ class LetterReminderPolicy
     public function update(User $user, LetterReminder $letterReminder)
     {
         return $user->can('letter reminders:edit')
-            && $letterReminder->letter->creator_id == $user->id;
+            && (int) $letterReminder->letter->creator_id === (int) $user->id;
     }
 
     /**
@@ -74,6 +74,6 @@ class LetterReminderPolicy
     public function delete(User $user, LetterReminder $letterReminder)
     {
         return $user->can('letter reminders:delete')
-            && $letterReminder->letter->creator_id == $user->id;
+            && (int) $letterReminder->letter->creator_id === (int) $user->id;
     }
 }

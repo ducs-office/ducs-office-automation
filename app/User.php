@@ -42,7 +42,7 @@ class User extends Authenticatable
     {
         parent::boot();
 
-        static::deleting(function ($user) {
+        static::deleting(static function ($user) {
             $user->roles()->sync([]);
             $user->remarks()->update(['user_id' => null]);
         });

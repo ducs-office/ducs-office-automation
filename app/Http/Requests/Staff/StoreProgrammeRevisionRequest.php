@@ -51,8 +51,8 @@ class StoreProgrammeRevisionRequest extends FormRequest
     public function getSemesterCourses()
     {
         return collect($this->semester_courses)
-            ->flatMap(function ($courses, $semester) {
-                return array_map(function ($course) use ($semester) {
+            ->flatMap(static function ($courses, $semester) {
+                return array_map(static function ($course) use ($semester) {
                     return ['id' => $course, 'pivot' => ['semester' => $semester]];
                 }, $courses);
             })

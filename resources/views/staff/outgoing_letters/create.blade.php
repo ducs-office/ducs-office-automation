@@ -23,11 +23,11 @@
             </label>
             <select name="type"
                 class="w-full form-input{{ $errors->has('type') ? ' border-red-600' : '' }}"
-                onchange="value == 'General' ? amount.disabled = true : amount.disabled = false;"
+                onchange="value === 'General' ? amount.disabled = true : amount.disabled = false;"
                 required>
-                <option value="General"{{ old('type', 'General') == 'General' ? ' selected' : '' }}>General</option>
-                <option value="Bill"{{ old('type') == 'Bill' ? ' selected' : '' }}>Bill</option>
-                <option value="Notesheet"{{ old('type') == 'Notesheet' ? ' selected' : '' }}>Notesheet</option>
+                <option value="General"{{ old('type', 'General') === 'General' ? ' selected' : '' }}>General</option>
+                <option value="Bill"{{ old('type') === 'Bill' ? ' selected' : '' }}>Bill</option>
+                <option value="Notesheet"{{ old('type') === 'Notesheet' ? ' selected' : '' }}>Notesheet</option>
             </select>
             @if($errors->has('type'))
                 <p class="mt-1 text-red-600">{{ $errors->first('type') }}</p>
@@ -92,7 +92,7 @@
                 class=" w-full form-input"
                 placeholder="Amount (INR)"
                 value="{{ old('amount') }}"
-                {{ old('type') == 'General' || old('type') == null ?  'disabled' : ''}}>
+                {{ old('type') === 'General' || old('type') === null ?  'disabled' : ''}}>
             @if($errors->has('amount'))
                 <p class="mt-1 text-red-600">{{ $errors->first('amount') }}</p>
             @endif

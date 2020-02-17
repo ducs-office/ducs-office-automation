@@ -33,7 +33,7 @@ class CourseRevisionController extends Controller
         ]);
 
         $revision->attachments()->createMany(
-            array_map(function ($uploadedFile) {
+            array_map(static function ($uploadedFile) {
                 return [
                     'original_name' => $uploadedFile->getClientOriginalName(),
                     'path' => $uploadedFile->store('/course_attachments'),

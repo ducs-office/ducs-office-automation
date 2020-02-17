@@ -28,13 +28,13 @@ class SubmitTeacherDetailsTest extends TestCase
             'account_no' => $this->faker->bankAccountNumber,
             'bank_name' => $this->faker->name,
             'bank_branch' => $this->faker->address,
-            'college_id' => function () {
+            'college_id' => static function () {
                 return factory(College::class)->create()->id;
             },
-            'teacher_id' => function () {
+            'teacher_id' => static function () {
                 return factory(Teacher::class)->create()->id;
             },
-            'teaching_details' => function () {
+            'teaching_details' => static function () {
                 $programme = create(Programme::class, 1, ['wef' => now()]);
                 $course = create(Course::class);
                 $revision = $programme->revisions()->create(['revised_at' => $programme->wef]);

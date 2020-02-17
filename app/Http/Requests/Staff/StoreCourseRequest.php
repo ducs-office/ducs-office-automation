@@ -38,7 +38,7 @@ class StoreCourseRequest extends FormRequest
 
     public function storeAttachments()
     {
-        return array_map(function ($attachedFile) {
+        return array_map(static function ($attachedFile) {
             return [
                 'path' => $attachedFile->store('/course_attachments'),
                 'original_name' => $attachedFile->getClientOriginalName(),

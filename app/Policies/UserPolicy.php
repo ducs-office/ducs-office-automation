@@ -66,6 +66,7 @@ class UserPolicy
      */
     public function delete(User $user, User $userModel)
     {
-        return $user->can('users:delete') && $userModel->id != $user->id;
+        return $user->can('users:delete')
+            && (int) $userModel->id !== (int) $user->id;
     }
 }

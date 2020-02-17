@@ -14,7 +14,7 @@ class Teacher extends User
     {
         parent::boot();
 
-        static::created(function (Teacher $teacher) {
+        static::created(static function (Teacher $teacher) {
             $teacher->profile()->create();
 
             return $teacher;

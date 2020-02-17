@@ -13,7 +13,7 @@ class CreateTeachersProfileTable extends Migration
      */
     public function up()
     {
-        Schema::create('teachers_profile', function (Blueprint $table) {
+        Schema::create('teachers_profile', static function (Blueprint $table) {
             $table->unsignedBigInteger('teacher_id')->primary();
             $table->string('phone_no')->nullable();
             $table->text('address', 251)->nullable();

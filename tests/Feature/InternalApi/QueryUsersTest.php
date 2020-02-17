@@ -73,7 +73,8 @@ class QueryUsersTest extends TestCase
 
         $this->signIn($john);
 
-        $users = $this->getJson('/api/users?q=')
+        $users = $this->withoutExceptionHandling()
+            ->getJson('/api/users?q=')
             ->assertSuccessful()
             ->json();
 

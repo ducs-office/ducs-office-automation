@@ -10,7 +10,7 @@ class UsersController extends Controller
 {
     public function index(Request $request)
     {
-        if (! $request->has('q') || $request->q == '') {
+        if (! $request->has('q') || trim($request->q) === '') {
             return [];
         }
 

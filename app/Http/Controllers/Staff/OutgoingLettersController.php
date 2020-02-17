@@ -24,7 +24,7 @@ class OutgoingLettersController extends Controller
 
         $query = OutgoingLetter::applyFilter($filters)->with(['remarks.user', 'reminders']);
 
-        if ($request->has('search') && request('search') != '') {
+        if ($request->has('search') && request('search') !== '') {
             $query->where('subject', 'like', '%' . request('search') . '%')
                 ->orWhere('description', 'like', '%' . request('search') . '%');
         }
@@ -50,7 +50,7 @@ class OutgoingLettersController extends Controller
         $letter = OutgoingLetter::create($data + ['creator_id' => $request->user()->id]);
 
         $letter->attachments()->createMany(
-            array_map(function ($attachedFile) {
+            array_map(static function ($attachedFile) {
                 return [
                     'original_name' => $attachedFile->getClientOriginalName(),
                     'path' => $attachedFile->store('/letter_attachments/outgoing'),
@@ -74,7 +74,7 @@ class OutgoingLettersController extends Controller
 
         if ($request->hasFile('attachments')) {
             $outgoing_letter->attachments()->createMany(
-                array_map(function ($attachedFile) {
+                array_map(static function ($attachedFile) {
                     return [
                         'original_name' => $attachedFile->getClientOriginalName(),
                         'path' => $attachedFile->store('/letter_attachments/outgoing'),

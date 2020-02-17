@@ -25,7 +25,7 @@ trait CreatesApplication
             $this->assertSessionHas('flash_notification');
 
             $test = Session::get('flash_notification')->some(function ($notification) use ($level, $contains) {
-                return $notification->level == $level
+                return $notification->level === $level
                     && Str::contains($notification->message, $contains);
             });
 

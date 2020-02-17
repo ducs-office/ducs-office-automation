@@ -17,7 +17,7 @@ class ProgrammeRevisionController extends Controller
         $programme->load(['revisions.courses']);
 
         $grouped_revision_courses = $programme->revisions
-            ->map(function ($revision) {
+            ->map(static function ($revision) {
                 return $revision->courses->groupBy('pivot.semester');
             });
 
@@ -35,7 +35,7 @@ class ProgrammeRevisionController extends Controller
             ->where('revised_at', $programme->wef)
             ->first();
 
-        $semester_courses = (! $revision) ? [] : $revision
+        $semester_courses = ! $revision ? [] : $revision
             ->courses
             ->groupBy('pivot.semester')
             ->map
@@ -71,7 +71,7 @@ class ProgrammeRevisionController extends Controller
 
     public function edit(Programme $programme, ProgrammeRevision $programme_revision)
     {
-        if ($programme_revision->programme_id != $programme->id) {
+        if ((int) $programme_revision->programme_id !== (int) $programme->id) {
             return redirect(route('staff.programmes.index'));
         }
 
@@ -110,7 +110,7 @@ class ProgrammeRevisionController extends Controller
     {
         $programmeRevision->delete();
 
-        if ($programme->revisions->count() == 0) {
+        if ($programme->revisions->count() === 0) {
             $programme->delete();
             return redirect(route('staff.programmes.index'));
         }

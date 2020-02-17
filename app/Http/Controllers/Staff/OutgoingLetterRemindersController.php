@@ -21,7 +21,7 @@ class OutgoingLetterRemindersController extends Controller
         $letter_reminder = $letter->reminders()->create($validData);
 
         $letter_reminder->attachments()->createMany(
-            array_map(function ($attachedFile) {
+            array_map(static function ($attachedFile) {
                 return [
                     'original_name' => $attachedFile->getClientOriginalName(),
                     'path' => $attachedFile->store('/letter_attachments/outgoing/reminders'),

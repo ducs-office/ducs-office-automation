@@ -11,8 +11,8 @@ class UserRegisteredMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
-    public $user;
-    public $password;
+    protected $user;
+    protected $password;
 
     /**
      * Create a new message instance.
@@ -32,6 +32,9 @@ class UserRegisteredMail extends Mailable implements ShouldQueue
      */
     public function build()
     {
-        return $this->view('mail.users.registered');
+        return $this->view('mail.users.registered', [
+            'user' => $this->user,
+            'password' => $this->password,
+        ]);
     }
 }

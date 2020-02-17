@@ -104,7 +104,7 @@
                     <option value="" >None</option>
                     @foreach ($priorities as $value => $name)
                         <option value="{{ $value }}"
-                            {{ old('priority') == $value ? 'selected' : ''}}>
+                            {{ old('priority') === $value ? 'selected' : ''}}>
                             $name
                         </option>
                     @endforeach

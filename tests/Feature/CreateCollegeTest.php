@@ -30,7 +30,7 @@ class CreateCollegeTest extends TestCase
             'principal_emails' => ['principal@andcollege.du.ac.in', 'ravi_toteja@gmail.com'],
             'address' => 'Govindpuri, Kalkaji, New Delhi - 110019',
             'website' => 'http://andcollege.du.ac.in',
-            'programmes' => function () {
+            'programmes' => static function () {
                 return create(Programme::class, 3)->pluck('id')->toArray();
             },
         ], $overrides);

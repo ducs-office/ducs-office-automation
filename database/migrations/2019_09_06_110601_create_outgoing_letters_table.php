@@ -13,7 +13,7 @@ class CreateOutgoingLettersTable extends Migration
      */
     public function up()
     {
-        Schema::create('outgoing_letters', function (Blueprint $table) {
+        Schema::create('outgoing_letters', static function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('serial_no')->unique();
             $table->date('date');

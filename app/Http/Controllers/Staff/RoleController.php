@@ -19,9 +19,10 @@ class RoleController extends Controller
     {
         return view('staff.roles.index', [
             'roles' => Role::all(),
-            'permissions' => Permission::all()->groupBy(function ($p) {
-                return ucwords(explode(':', $p->name, 2)[0]);
-            }),
+            'permissions' => Permission::all()
+                ->groupBy(static function ($permission) {
+                    return ucwords(explode(':', $permission->name, 2)[0]);
+                }),
         ]);
     }
 

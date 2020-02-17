@@ -86,7 +86,9 @@ class CreateNewUserTest extends TestCase
             ->assertSessionHasFlash('success', 'User created successfully!');
 
         Mail::assertQueued(UserRegisteredMail::class, function ($mail) {
-            return $mail->password && $mail->user;
+            $this->assertArrayHasKey('user', $mail->build()->viewData);
+            $this->assertArrayHasKey('password', $mail->build()->viewData);
+            return true;
         });
     }
 

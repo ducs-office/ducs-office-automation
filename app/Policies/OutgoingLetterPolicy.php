@@ -58,7 +58,7 @@ class OutgoingLetterPolicy
     public function update(User $user, OutgoingLetter $outgoingLetter)
     {
         return $user->can('outgoing letters:edit')
-            && $outgoingLetter->creator_id == $user->id;
+            && (int) $outgoingLetter->creator_id === (int) $user->id;
     }
 
     /**
@@ -72,6 +72,6 @@ class OutgoingLetterPolicy
     public function delete(User $user, OutgoingLetter $outgoingLetter)
     {
         return $user->can('outgoing letters:delete')
-            && $outgoingLetter->creator_id == $user->id;
+            && (int) $outgoingLetter->creator_id === (int) $user->id;
     }
 }

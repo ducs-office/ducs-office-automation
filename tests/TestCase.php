@@ -45,7 +45,7 @@ abstract class TestCase extends BaseTestCase
 
     public function mergeFormFields($data, $overrides)
     {
-        return array_map(function ($value) {
+        return array_map(static function ($value) {
             if (is_callable($value)) {
                 return $value();
             }

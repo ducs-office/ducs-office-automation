@@ -25,7 +25,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Blade::directive('csrf_token', function () {
+        Blade::directive('csrf_token', static function () {
             return '<input type="hidden" name="<?php echo config(\'app.csrf_token_name\') ?>" value="<?php echo csrf_token(); ?>">';
         });
     }

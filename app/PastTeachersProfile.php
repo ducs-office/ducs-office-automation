@@ -2,7 +2,6 @@
 
 namespace App;
 
-use App\PastTeachingDetail;
 use Illuminate\Database\Eloquent\Model;
 
 class PastTeachersProfile extends Model

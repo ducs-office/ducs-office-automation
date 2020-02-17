@@ -7,7 +7,7 @@ use App\Teacher;
 use App\TeacherProfile;
 use Faker\Generator as Faker;
 
-$factory->define(TeacherProfile::class, function (Faker $faker) {
+$factory->define(TeacherProfile::class, static function (Faker $faker) {
     return [
         'phone_no' => $faker->regexify('[6-9][0-9]{9}'),
         'address' => $faker->address,
@@ -16,7 +16,7 @@ $factory->define(TeacherProfile::class, function (Faker $faker) {
         'account_no' => $faker->bankAccountNumber, // @todo make it 'account_number' or 'bank_account'
         'bank_name' => $faker->words(4, true),
         'bank_branch' => $faker->city,
-        'college_id' => function () {
+        'college_id' => static function () {
             return factory(College::class)->create()->id;
         },
     ];

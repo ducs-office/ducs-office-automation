@@ -22,7 +22,7 @@
                 <select id="designation" type="text" name="designation" class="form-input font-bold mb-2">
                     @foreach($designations as $value => $designation)
                     <option value="{{ $value }}"
-                    {{ $value == old('designation', $teacher->profile->desingation) ? 'selected' : '' }}>
+                    {{ $value === old('designation', $teacher->profile->desingation) ? 'selected' : '' }}>
                         {{ $designation }}
                     </option>
                     @endforeach
@@ -38,7 +38,7 @@
                     <select id="college_id" type="text" name="college_id" class="form-input ml-2">
                         @foreach($colleges as $id => $college)
                         <option value="{{ $id }}"
-                            {{ $id == old('college_id', $teacher->profile->college_id) ? 'selected' : '' }}>
+                            {{ $id === old('college_id', $teacher->profile->college_id) ? 'selected' : '' }}>
                             {{ $college }}
                         </option>
                         @endforeach
@@ -112,7 +112,7 @@
                     <option value="" selected>Choose a Programme</option>
                     @foreach ($programmes as $id => $programme)
                         <option value="{{ $id }}"
-                            {{ $id == old("teaching_details[{$index}][programme_revision]", $detail->programme_revision_id) ? 'selected' : '' }}>
+                            {{ $id === old("teaching_details[{$index}][programme_revision]", $detail->programme_revision_id) ? 'selected' : '' }}>
                             {{ $programme }}
                         </option>
                     @endforeach
@@ -125,7 +125,7 @@
                     <option value="">Choose Course</option>
                     @foreach ($courses as $id => $course)
                     <option value="{{ $id }}"
-                        {{ $id == old("teaching_details[{$index}][course]", $detail->course_id) ? 'selected' : '' }}>
+                        {{ $id === old("teaching_details[{$index}][course]", $detail->course_id) ? 'selected' : '' }}>
                         {{ $course }}
                     </option>
                     @endforeach
@@ -143,7 +143,7 @@
                     <option value="" selected>Choose a Programme</option>
                     @foreach ($programmes as $id => $programme)
                     <option value="{{ $id }}"
-                        {{ $id == old("teaching_details[" . ($index + $details_count) . "][programme_revision]") ? 'selected' : '' }}>
+                        {{ $id === old("teaching_details[" . ($index + $details_count) . "][programme_revision]") ? 'selected' : '' }}>
                         {{ $programme }}
                     </option>
                     @endforeach
@@ -156,7 +156,7 @@
                     <option value="">Choose Course</option>
                     @foreach ($courses as $id => $course)
                     <option value="{{ $id }}"
-                        {{ $id == old("teaching_details[" . ($index + $details_count) . "][course]") ? 'selected' : '' }}>
+                        {{ $id === old("teaching_details[" . ($index + $details_count) . "][course]") ? 'selected' : '' }}>
                         {{ $course }}
                     </option>
                     @endforeach

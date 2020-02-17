@@ -6,9 +6,9 @@ use App\Programme;
 use App\ProgrammeRevision;
 use Faker\Generator as Faker;
 
-$factory->define(ProgrammeRevision::class, function (Faker $faker) {
+$factory->define(ProgrammeRevision::class, static function (Faker $faker) {
     return [
-        'programme_id' => function () {
+        'programme_id' => static function () {
             return factory(Programme::class)->create()->id;
         },
         'revised_at' => $faker->dateTime(),

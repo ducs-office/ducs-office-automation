@@ -43,7 +43,7 @@ class StoreIncomingLetterRequest extends FormRequest
 
     public function attachmentFiles()
     {
-        return array_map(function ($attachedFile) {
+        return array_map(static function ($attachedFile) {
             return [
                 'original_name' => $attachedFile->getClientOriginalName(),
                 'path' => $attachedFile->store('/letter_attachments/incoming'),

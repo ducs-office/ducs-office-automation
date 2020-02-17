@@ -36,7 +36,7 @@ class DatabaseSeeder extends Seeder
 
         $outgoing = factory(OutgoingLetter::class, 5)->create(['creator_id' => $admin->id]);
 
-        $outgoing->each(function ($letter) {
+        $outgoing->each(static function ($letter) {
             factory(IncomingLetter::class)->create([
                 'recipient_id' => $letter->sender_id,
                 'creator_id' => $letter->creator_id,
@@ -50,7 +50,7 @@ class DatabaseSeeder extends Seeder
             factory(Programme::class)->create(['code' => 'MCS', 'name' => 'M.Sc. Computer Science', 'duration' => '3', 'type' => 'PG']),
         ]);
 
-        $programme_revisions = $programmes->map(function ($programme) {
+        $programme_revisions = $programmes->map(static function ($programme) {
             return factory(ProgrammeRevision::class)->create([
                 'revised_at' => $programme->wef,
                 'programme_id' => $programme->id,
@@ -86,10 +86,10 @@ class DatabaseSeeder extends Seeder
             });
         });
 
-        $courses->each(function ($course) {
+        $courses->each(static function ($course) {
             factory(CourseRevision::class, 3)->create(['course_id' => $course->id]);
         });
-        $programmes->each(function ($programme) {
+        $programmes->each(static function ($programme) {
             factory(ProgrammeRevision::class)->create(['programme_id' => $programme->id]);
         });
 

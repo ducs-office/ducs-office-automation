@@ -13,7 +13,7 @@ class CollegesProgrammes extends Migration
      */
     public function up()
     {
-        Schema::create('colleges_programmes', function (Blueprint $table) {
+        Schema::create('colleges_programmes', static function (Blueprint $table) {
             $table->unsignedBigInteger('college_id');
             $table->unsignedBigInteger('programme_id');
 

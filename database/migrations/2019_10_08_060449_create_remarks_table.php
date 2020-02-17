@@ -13,7 +13,7 @@ class CreateRemarksTable extends Migration
      */
     public function up()
     {
-        Schema::create('remarks', function (Blueprint $table) {
+        Schema::create('remarks', static function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('user_id')->nullable();
             $table->string('description');

@@ -4,7 +4,7 @@
 use App\Teacher;
 use Faker\Generator as Faker;
 
-$factory->define(Teacher::class, function (Faker $faker) {
+$factory->define(Teacher::class, static function (Faker $faker) {
     return [
         'first_name' => $faker->firstName,
         'last_name' => $faker->lastName,

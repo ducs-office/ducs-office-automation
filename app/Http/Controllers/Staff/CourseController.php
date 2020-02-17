@@ -26,8 +26,8 @@ class CourseController extends Controller
     public function index()
     {
         $courses = Course::with([
-            'revisions' => function ($q) {
-                return $q->orderBy('revised_at', 'desc');
+            'revisions' => static function ($query) {
+                return $query->orderBy('revised_at', 'desc');
             },
             'revisions.attachments',
         ])->latest()->get();

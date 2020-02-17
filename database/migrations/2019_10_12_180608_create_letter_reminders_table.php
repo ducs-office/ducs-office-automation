@@ -13,7 +13,7 @@ class CreateLetterRemindersTable extends Migration
      */
     public function up()
     {
-        Schema::create('letter_reminders', function (Blueprint $table) {
+        Schema::create('letter_reminders', static function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('letter_id')->index();
             $table->string('serial_no')->unique();

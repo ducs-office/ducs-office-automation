@@ -2,7 +2,6 @@
 
 namespace App;
 
-use App\Course;
 use Illuminate\Database\Eloquent\Model;
 
 class ProgrammeRevision extends Model

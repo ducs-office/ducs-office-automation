@@ -13,7 +13,7 @@ class CreateIncomingLettersTable extends Migration
      */
     public function up()
     {
-        Schema::create('incoming_letters', function (Blueprint $table) {
+        Schema::create('incoming_letters', static function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->date('date');
             $table->string('serial_no')->unique(); // Serial no assigned to In bound letters

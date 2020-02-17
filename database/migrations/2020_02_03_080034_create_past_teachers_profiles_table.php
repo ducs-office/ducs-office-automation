@@ -13,7 +13,7 @@ class CreatePastTeachersProfilesTable extends Migration
      */
     public function up()
     {
-        Schema::create('past_teachers_profiles', function (Blueprint $table) {
+        Schema::create('past_teachers_profiles', static function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('designation', 5);
             $table->unsignedBigInteger('college_id');

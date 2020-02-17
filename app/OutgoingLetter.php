@@ -2,9 +2,6 @@
 
 namespace App;
 
-use App\LetterReminder;
-use App\Model;
-use App\Remark;
 use Illuminate\Support\Facades\Cache;
 
 class OutgoingLetter extends Model
@@ -28,11 +25,11 @@ class OutgoingLetter extends Model
     {
         parent::boot();
 
-        static::creating(function ($outgoing_letter) {
+        static::creating(static function ($outgoing_letter) {
             $outgoing_letter->assignSerialNumber();
         });
 
-        static::updating(function ($outgoing_letter) {
+        static::updating(static function ($outgoing_letter) {
             $outgoing_letter->assignSerialNumber();
         });
     }

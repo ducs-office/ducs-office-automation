@@ -13,7 +13,7 @@ class CreateProgrammeRevisionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('programme_revisions', function (Blueprint $table) {
+        Schema::create('programme_revisions', static function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('programme_id');
             $table->timestamp('revised_at');

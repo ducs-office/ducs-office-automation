@@ -12,7 +12,7 @@
         </div>
         <div class="flex flex-wrap w-full px-6">
             @foreach ($programme->revisions as $index => $programmeRevision)
-                <div class="page-card w-5/12 border-b mb-4 p-6 {{ $loop->index % 2 == 1 ? 'ml-10': ''}}">
+                <div class="page-card w-5/12 border-b mb-4 p-6 {{ $loop->index % 2 === 1 ? 'ml-10': ''}}">
                     <div class="flex items-baseline">
                         <div class="relative z-10 -ml-8 my-4">
                             <h5 class="relative z-20 pl-8 pr-4 py-2 inline-block font-bold bg-magenta-700 text-white shadow">Revision w.e.f {{ $programmeRevision->revised_at->format('Y') }}</h5>
@@ -36,7 +36,7 @@
                     </div>
                     <div class="flex flex-wrap mb-8">
                         @forelse (range(1, $programme->duration*2) as $semester)
-                            <div class="w-1/2 border-t border-r border-gray-900 {{ $semester % 2 == 1 ? 'border-l': ''}} {{ $semester > ($programme->duration-1) * 2 ? 'border-b': '' }}">
+                            <div class="w-1/2 border-t border-r border-gray-900 {{ $semester % 2 === 1 ? 'border-l': ''}} {{ $semester > ($programme->duration-1) * 2 ? 'border-b': '' }}">
                                 <div class="px-4 py-2 text-center border-b border-gray-900 bg-gray-300">
                                     <h5 class="font-bold"> Semester {{ $semester }}</h5>
                                 </div>

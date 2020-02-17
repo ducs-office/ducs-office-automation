@@ -58,7 +58,7 @@ class RemarkPolicy
     public function update(User $user, Remark $remark)
     {
         return $user->can('remarks:edit')
-            && $remark->user_id == $user->id;
+            && (int) $remark->user_id === (int) $user->id;
     }
 
     /**
@@ -72,6 +72,6 @@ class RemarkPolicy
     public function delete(User $user, Remark $remark)
     {
         return $user->can('remarks:delete')
-            && $remark->user_id == $user->id;
+            && (int) $remark->user_id === (int) $user->id;
     }
 }

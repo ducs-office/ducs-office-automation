@@ -22,7 +22,7 @@ class IncomingLettersController extends Controller
 
         $query = IncomingLetter::applyFilter($filters)->with(['remarks.user', 'handovers']);
 
-        if ($request->has('search') && $request['search'] != '') {
+        if ($request->has('search') && $request['search'] !== '') {
             $query->where('subject', 'like', '%' . $request['search'] . '%')
                 ->orWhere('description', 'like', '%' . $request['search'] . '%');
         }

@@ -2,8 +2,6 @@
 
 namespace App;
 
-use App\Model;
-use App\Remark;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 
@@ -27,7 +25,7 @@ class IncomingLetter extends Model
     {
         parent::boot();
 
-        static::creating(function (IncomingLetter $incoming_letter) {
+        static::creating(static function (IncomingLetter $incoming_letter) {
             $incoming_letter->assignSerialNumber();
 
             if (! $incoming_letter->creator_id) {
@@ -35,7 +33,7 @@ class IncomingLetter extends Model
             }
         });
 
-        static::updating(function (IncomingLetter $incoming_letter) {
+        static::updating(static function (IncomingLetter $incoming_letter) {
             $incoming_letter->assignSerialNumber();
         });
     }

@@ -39,7 +39,7 @@ class UpdateProgrammeRevisionRequest extends FormRequest
             'revised_at' => ['sometimes', 'required', 'date', Rule::notIn($revision_dates)],
             'semester_courses' => [
                 'sometimes', 'required', 'array',
-                'size:' . (($programme->duration) * 2),
+                'size:' . $programme->duration * 2,
             ],
             'semester_courses.*' => ['sometimes', 'required', 'array', 'min:1'],
             'semester_courses.*.*' => ['sometimes', 'numeric', 'distinct', 'exists:courses,id',
@@ -55,8 +55,8 @@ class UpdateProgrammeRevisionRequest extends FormRequest
     public function getSemesterCourses()
     {
         return collect($this->semester_courses)
-            ->flatMap(function ($courses, $semester) {
-                return array_map(function ($course) use ($semester) {
+            ->flatMap(static function ($courses, $semester) {
+                return array_map(static function ($course) use ($semester) {
                     return ['id' => $course, 'pivot' => ['semester' => $semester]];
                 }, $courses);
             })

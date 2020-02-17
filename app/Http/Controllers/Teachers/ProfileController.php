@@ -37,13 +37,13 @@ class ProfileController extends Controller
                 'profile.profile_picture',
             ]),
             'colleges' => College::all()->pluck('name', 'id'),
-            'programmes' => Programme::withLatestRevision()->get()->map(function ($programme) {
+            'programmes' => Programme::withLatestRevision()->get()->map(static function ($programme) {
                 return [
                     'id' => $programme->latestRevision->id,
                     'name' => $programme->code . ' - ' . $programme->name,
                 ];
             })->pluck('name', 'id'),
-            'courses' => Course::all()->map(function ($course) {
+            'courses' => Course::all()->map(static function ($course) {
                 return [
                     'id' => $course->id,
                     'name' => $course->code . ' - ' . $course->name,
@@ -72,12 +72,12 @@ class ProfileController extends Controller
             'teaching_details.*.programme_revision' => ['nullable', 'numeric', 'exists:programme_revisions,id'],
             'teaching_details.*.course' => ['nullable', 'numeric', 'exists:courses,id'],
             'teaching_details.*' => ['bail', 'nullable', 'array',
-                function ($attribute, $value, $fail) {
+                static function ($attribute, $value, $fail) {
                     if (! isset($value['course'])) {
                         return true;
                     }
                     $revision = ProgrammeRevision::find($value['programme_revision']);
-                    if ($revision->courses->pluck('id')->contains($value['course']) == false) {
+                    if (! $revision->courses->pluck('id')->contains($value['course'])) {
                         $fail($attribute . ' is invalid.');
                     }
                 },
@@ -91,9 +91,9 @@ class ProfileController extends Controller
             $teaching_details = $validData['teaching_details'];
 
             $programmeCoursesTaught = collect($teaching_details)
-                ->filter(function ($teaching_detail) {
+                ->filter(static function ($teaching_detail) {
                     return isset($teaching_detail['programme_revision'], $teaching_detail['course']);
-                })->map(function ($teaching_detail) {
+                })->map(static function ($teaching_detail) {
                     return CourseProgrammeRevision::where(
                         'programme_revision_id',
                         $teaching_detail['programme_revision']

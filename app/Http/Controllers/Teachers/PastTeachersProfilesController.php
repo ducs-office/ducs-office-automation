@@ -27,7 +27,7 @@ class PastTeachersProfilesController extends Controller
         );
 
         $pastProfile->past_teaching_details()->createMany(
-            array_map(function ($teaching_detail) {
+            array_map(static function ($teaching_detail) {
                 return ['course_programme_revision_id' => $teaching_detail['id']];
             }, $teacherProfile->teaching_details->toArray())
         );

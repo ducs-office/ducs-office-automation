@@ -14,7 +14,7 @@ class CreateTeachingDetailsTable extends Migration
      */
     public function up()
     {
-        Schema::create('teaching_details', function (Blueprint $table) {
+        Schema::create('teaching_details', static function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('course_programme_revision_id');
             $table->unsignedBigInteger('teacher_id');

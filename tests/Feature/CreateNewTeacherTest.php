@@ -73,7 +73,10 @@ class CreateTeacherTest extends TestCase
         $teacher = Teacher::first();
 
         Mail::assertQueued(UserRegisteredMail::class, function ($mail) use ($teacher) {
-            return $mail->user && $mail->user->id == $teacher->id && $mail->password;
+            $data = $mail->build()->viewData;
+            $this->assertArrayHasKey('user', $data);
+            $this->assertArrayHasKey('password', $data);
+            return (int) $data['user']->id === (int) $teacher->id;
         });
     }
 

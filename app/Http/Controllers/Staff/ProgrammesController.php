@@ -23,7 +23,7 @@ class ProgrammesController extends Controller
     public function index()
     {
         $programmes = Programme::withLatestRevision()->latest()->get();
-        $grouped_courses = $programmes->map(function ($programme) {
+        $grouped_courses = $programmes->map(static function ($programme) {
             return $programme->latestRevision
                 ->courses
                 ->sortBy('pivot.semester')
@@ -64,8 +64,6 @@ class ProgrammesController extends Controller
 
     public function update(UpdateProgrammeRequest $request, Programme $programme)
     {
-        $data = $request->validated();
-
         if ($request->has('wef')) {
             // @todo: Discuss the need
             $programme->revisions()
