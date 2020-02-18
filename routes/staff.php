@@ -80,3 +80,6 @@ Route::get('/teachers/{teacher}/avatar', 'TeacherController@avatar')->name('teac
 Route::get('/teachers/{teacher}', 'TeacherController@show')->name('teachers.show');
 Route::patch('/teachers/{Teacher}', 'TeacherController@update')->name('teachers.update');
 Route::delete('/teachers/{Teacher}', 'TeacherController@destroy')->name('teachers.destroy');
+
+Route::post('/teaching_records/accept', 'AcceptTeachingRecordsController@start')->name('teaching_records.accept');
+Route::patch('/teaching_records/extend', 'AcceptTeachingRecordsController@extend')->name('teaching_records.extend');

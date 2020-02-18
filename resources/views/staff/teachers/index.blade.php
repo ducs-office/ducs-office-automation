@@ -8,30 +8,43 @@
             @click.prevent="$modal.show('create-teacher-modal')">
             New
         </button>
-        <form method="GET" class="ml-auto self-start flex items-end">
+        <form action=" {{ route('staff.teaching_records.accept')}} " method="post"  class="ml-auto self-start flex items-end">
+            @csrf_token
             <div class="mr-2">
-                <label for="valid_from" class="block form-label">Taught After</label>
-            <input type="date" name="filters[valid_from]" id="valid_from" class="form-input text-sm" value="{{ old('filters.valid_from') }}">
+                <label for="start_date" class="block form-label">Start Date</label>
+                <input type="date" name="start_date" id="start_date" class="form-input">
             </div>
             <div class="mr-2">
-                <label for="course_id" class="block form-label">Course Taught</label>
-                <select name="filters[course_id]" id="course_id" class="form-input text-sm">
-                    <option value="">All</option>
-                    @foreach($courses as  $id => $course)
-                    <option value="{{ $id }}" {{ old('filters.course_id', '') == $id ? 'selected' : ''}}>{{ $course }}</option>
-                    @endforeach
-                </select>
+                <label for="end_date" class="block form-label">End Date</label>
+                <input type="date" name="end_date" id="end_date" class="form-input">
             </div>
-            <div>
-                <button type="submit" class="btn btn-magenta text-sm">Filter</button>
-                <button type="button" onclick="window.location.replace(window.location.pathname)" class="btn text-sm">Clear Filter</button>
-            </div>
+            <button type="submit" class="btn btn-magenta">Start Accepting Details</button>
         </form>
         @include('staff.teachers.modals.create', [
             'modalName' => 'create-teacher-modal',
         ])
         @endcan
     </div>
+    <form method="GET" class="p-5 justify-end flex items-end border-b">
+        <div class="mr-2">
+            <label for="valid_from" class="block form-label">Taught After</label>
+        <input type="date" name="filters[valid_from]" id="valid_from" class="form-input text-sm" value="{{ old('filters.valid_from') }}">
+        </div>
+        <div class="mr-2">
+            <label for="course_id" class="block form-label">Course Taught</label>
+            <select name="filters[course_id]" id="course_id" class="form-input text-sm">
+                <option value="">All</option>
+                @foreach($courses as  $id => $course)
+                <option value="{{ $id }}" {{ old('filters.course_id', '') == $id ? 'selected' : ''}}>{{ $course }}</option>
+                @endforeach
+            </select>
+        </div>
+        <div>
+            <button type="submit" class="btn btn-magenta text-sm">Filter</button>
+            <button type="button" onclick="window.location.replace(window.location.pathname)" class="btn text-sm">Clear Filter</button>
+        </div>
+    </form>
+
     @can('update', App\Teacher::class)
     @include('staff.teachers.modals.edit', [
         'modalName' => 'edit-teacher-modal',

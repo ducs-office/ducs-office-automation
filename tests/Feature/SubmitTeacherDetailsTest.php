@@ -15,32 +15,31 @@ use Illuminate\Validation\ValidationException;
 
 class SubmitTeacherDetailsTest extends TestCase
 {
-    use RefreshDatabase;
-    use WithFaker;
+    use RefreshDatabase, WithFaker;
 
     protected function fillTeacherProfileFormFields($overrides = [])
     {
         return $this->mergeFormFields([
-        'phone_no' => $this->faker->phoneNumber,
-        'address' => $this->faker->address,
-        'designation' => $this->faker->randomElement(array_keys(config('options.teachers.designations'))),
-        'college_id' => function () {
-            return factory(College::class)->create()->id;
-        },
-        'teacher_id' => function () {
-            return factory(Teacher::class)->create()->id;
-        },
-        'teaching_details' => function () {
-            $programme = create(Programme::class, 1, ['wef' => now()]);
-            $course = create(Course::class);
-            $revision = $programme->revisions()->create(['revised_at' => $programme->wef]);
-            $revision->courses()->attach($course, ['semester' => 1]);
-            return [
-                ['programme' => $programme->id, 'course' => $course->id]
-            ];
-        }
+            'phone_no' => $this->faker->phoneNumber,
+            'address' => $this->faker->address,
+            'designation' => $this->faker->randomElement(array_keys(config('options.teachers.designations'))),
+            'college_id' => function () {
+                return factory(College::class)->create()->id;
+            },
+            'teacher_id' => function () {
+                return factory(Teacher::class)->create()->id;
+            },
+            'teaching_details' => function () {
+                $programme = create(Programme::class, 1, ['wef' => now()]);
+                $course = create(Course::class);
+                $revision = $programme->revisions()->create(['revised_at' => $programme->wef]);
+                $revision->courses()->attach($course, ['semester' => 1]);
+                return [
+                    ['programme' => $programme->id, 'course' => $course->id]
+                ];
+            }
 
-    ], $overrides);
+        ], $overrides);
     }
     /**
      * A basic feature test example.
@@ -53,9 +52,11 @@ class SubmitTeacherDetailsTest extends TestCase
         $this->signInTeacher($teacher = create(Teacher::class));
 
         $profile_form = $this->fillTeacherProfileFormFields(['teacher_id' => $teacher->id]);
-      
+
         $this->patch(route('teachers.profile.update'), $profile_form);
-       
+        
+        PastTeachersProfile::startAccepting(now(), now()->addMonths(6));
+
         $this->withoutExceptionHandling()
             ->post(route('teachers.profile.submit'))
             ->assertSessionHasFlash('success', 'Details submitted successfully!');
@@ -77,6 +78,8 @@ class SubmitTeacherDetailsTest extends TestCase
 
         $this->patch(route('teachers.profile.update'), $profile_form);
 
+        PastTeachersProfile::startAccepting(now(), now()->addMonths(6));
+
         $this->withoutExceptionHandling()
             ->post(route('teachers.profile.submit'))
             ->assertSessionHasFlash('fail', 'Fill complete details to make submission');
@@ -92,6 +95,8 @@ class SubmitTeacherDetailsTest extends TestCase
         $profile_form = $this->fillTeacherProfileFormFields(['teacher_id' => $teacher->id, 'designation' =>'']);
 
         $this->patch(route('teachers.profile.update'), $profile_form);
+
+        PastTeachersProfile::startAccepting(now(), now()->addMonths(6));
 
         $this->withoutExceptionHandling()
             ->post(route('teachers.profile.submit'))
@@ -109,10 +114,50 @@ class SubmitTeacherDetailsTest extends TestCase
 
         $this->patch(route('teachers.profile.update'), $profile_form);
 
+        PastTeachersProfile::startAccepting(now(), now()->addMonths(6));
+
         $this->withoutExceptionHandling()
             ->post(route('teachers.profile.submit'))
             ->assertSessionHasFlash('fail', 'Fill complete details to make submission');
 
         $this->assertEquals(0, PastTeachersProfile::count());
+    }
+
+    /** @test */
+    public function teachers_cannot_submit_their_profile_if_accept_details_date_is_not_set_or_time_period_expired()
+    {
+        $this->signInTeacher($teacher = create(Teacher::class));
+        
+        $profile_form = $this->fillTeacherProfileFormFields([
+            'teacher_id' => $teacher->id,
+        ]);
+
+        $this->patch(route('teachers.profile.update'), $profile_form);
+
+        // PastTeachersProfile::startAccepting(now(), now()->addMonths(6));
+        // submit without any start_date
+        $this->withExceptionHandling()
+            ->post(route('teachers.profile.submit'))
+            ->assertForbidden();
+
+        $this->assertEquals(0, PastTeachersProfile::count());
+
+        PastTeachersProfile::startAccepting(now(), now()->addMonths(6));
+
+        \Carbon\Carbon::setTestNow(now()->addMonths(1));
+
+        // submit after start_date is set
+        $this->withoutExceptionHandling()
+            ->post(route('teachers.profile.submit'))
+            ->assertRedirect();
+
+        $this->assertEquals(1, PastTeachersProfile::count());
+
+        // submitting again
+        $this->withExceptionHandling()
+            ->post(route('teachers.profile.submit'))
+            ->assertForbidden();
+
+        $this->assertEquals(1, PastTeachersProfile::count());
     }
 }

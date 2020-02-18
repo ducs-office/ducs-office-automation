@@ -4,11 +4,14 @@ namespace App\Http\Controllers\Teachers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\PastTeachersProfile;
 
 class PastTeachersProfilesController extends Controller
 {
     public function store()
     {
+        $this->authorize('create', PastTeachersProfile::class);
+        
         $teacher = auth()->user();
         $teacherProfile = $teacher->profile;
 
@@ -24,7 +27,7 @@ class PastTeachersProfilesController extends Controller
             [
                 'designation' => $teacherProfile->designation,
                 'college_id' => $teacherProfile->college_id,
-                'valid_from' => now(),
+                'valid_from' => PastTeachersProfile::getStartDate(),
             ]
         );
 
