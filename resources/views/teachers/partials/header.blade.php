@@ -8,6 +8,7 @@
         </div>
         @auth('teachers')
         @include('teachers.partials.users_menu')
+        @include('teachers.partials.notifications')
         @endauth
         @guest('teachers')
         <a class="bg-white text-gray-900 px-3 py-1 rounded font-bold" href="{{ route('login') }}">Login</a>

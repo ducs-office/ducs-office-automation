@@ -8,18 +8,31 @@
             @click.prevent="$modal.show('create-teacher-modal')">
             New
         </button>
-        <form action=" {{ route('staff.teaching_records.accept')}} " method="post"  class="ml-auto self-start flex items-end">
-            @csrf_token
-            <div class="mr-2">
-                <label for="start_date" class="block form-label">Start Date</label>
+        @if(now() > $end_date)
+            <form action=" {{ route('staff.teaching_records.accept')}} " method="post"  class="ml-auto self-start flex items-end">
+                @csrf_token
+                <div class="mr-2">
+                    <label for="start_date" class="block form-label">Start Date</label>
                 <input type="date" name="start_date" id="start_date" class="form-input">
-            </div>
-            <div class="mr-2">
-                <label for="end_date" class="block form-label">End Date</label>
+                </div>
+                <div class="mr-2">
+                    <label for="end_date" class="block form-label">End Date</label>
                 <input type="date" name="end_date" id="end_date" class="form-input">
+                </div>
+                <button type="submit" class="btn btn-magenta">Start Accepting Details</button>
+            </form>
+        @else
+            <div class="ml-auto self-start flex items-end">
+                <div class="mr-2">
+                    <label for="start_date" class="block form-label">Start Date</label>
+                <input type="date" name="start_date" id="start_date" class="form-input" value="{{ $start_date->format('Y-m-d') }}" disabled>
+                </div>
+                <div class="mr-2">
+                    <label for="end_date" class="block form-label">End Date</label>
+                <input type="date" name="end_date" id="end_date" class="form-input" value="{{ $end_date->format('Y-m-d') }}" disabled>
+                </div>
             </div>
-            <button type="submit" class="btn btn-magenta">Start Accepting Details</button>
-        </form>
+        @endif
         @include('staff.teachers.modals.create', [
             'modalName' => 'create-teacher-modal',
         ])

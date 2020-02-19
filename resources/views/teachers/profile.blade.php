@@ -53,10 +53,14 @@
             @else
             <p class="text-gray-600 font-bold">Nothing to show here.</p>
             @endif
-            <form action="{{ route('teachers.profile.submit') }}" method="POST">
-                @csrf_token
-                <button type="submitc" class="btn btn-magenta mt-6"> Submit Details </button>
-            </form>
+            @if(App\PastTeachersProfile::canSubmit($teacher))
+                <form action="{{ route('teachers.profile.submit') }}" method="POST">
+                    @csrf_token
+                    <button type="submit" class="btn btn-magenta mt-6" enabled> Submit Details </button>
+                </form>
+            @else
+                <div type="submit" class="cursor-auto inline-block px-3 py-2 font-bold rounded bg-gray-700 text-white border-gray-700 mt-6" > Submit Details </div>
+            @endif
         </div>
 
         <div class="bg-white p-6 h-full rounded shadow-md mt-4">

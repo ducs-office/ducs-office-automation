@@ -48,7 +48,7 @@ class AcceptingTeachingRecordsStarted extends Notification
         return (new MailMessage)
                     ->line('We\'ve started accepting teaching records from '. $this->start_date . '. Please visit your profile')
                     ->line('The deadline to make submissionsis ' . $this->end_date)
-                    ->action('Profile', url('/'))
+                    ->action('Profile', url(route('teachers.profile')))
                     ->line('Thank you!');
     }
 
@@ -69,7 +69,7 @@ class AcceptingTeachingRecordsStarted extends Notification
     {
         return [
             'inform' => 'Accepting details has begun from '. $this->start_date . '. The deadline to submit profiles is '
-                    . $this->end_date
+                    . $this->end_date . '.'
         ];
     }
 }

@@ -37,7 +37,7 @@ class TeacherController extends Controller
 
         $start_date = PastTeachersProfile::getStartDate();
         $end_date = PastTeachersProfile::getEndDate();
-        return view('staff.teachers.index', compact('Teachers', 'courses'));
+        return view('staff.teachers.index', compact('Teachers', 'courses', 'start_date', 'end_date'));
     }
 
     public function show(Request $request, Teacher $teacher)
