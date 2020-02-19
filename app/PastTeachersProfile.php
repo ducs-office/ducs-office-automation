@@ -44,6 +44,11 @@ class PastTeachersProfile extends Model
         return Cache::get(static::$accept_details_key_prefix . '_end');
     }
 
+    public function teacher()
+    {
+        return $this->belongsTo(Teacher::class, 'teacher_id');
+    }
+
     public function past_teaching_details()
     {
         return $this->belongsToMany(CourseProgrammeRevision::class, 'past_teaching_details', 'past_teachers_profile_id', 'course_programme_revision_id');
