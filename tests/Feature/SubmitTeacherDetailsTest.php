@@ -189,8 +189,8 @@ class SubmitTeacherDetailsTest extends TestCase
             $teachers,
             AcceptingTeachingRecordsStarted::class,
             function ($notification) use ($start_date, $end_date) {
-                return $notification->start_date == $start_date->format('d-M-Y')
-                        && $notification->end_date == $end_date->format('d-M-Y');
+                return $notification->start_date == $start_date
+                        && $notification->end_date == $end_date;
             }
         );
     }

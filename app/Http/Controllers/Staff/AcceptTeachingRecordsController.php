@@ -20,16 +20,14 @@ class AcceptTeachingRecordsController extends Controller
         ]);
 
         PastTeachersProfile::startAccepting(
-            Carbon::parse($request->start_date),
-            Carbon::parse($request->end_date)
+            $start = Carbon::parse($request->start_date),
+            $end = Carbon::parse($request->end_date)
         );
 
-        $teachers = Teacher::all();
-
-        Notification::send($teachers, new AcceptingTeachingRecordsStarted(
-            PastTeachersProfile::getStartDate()->format('d-M-Y'),
-            PastTeachersProfile::getEndDate()->format('d-M-Y')
-        ));
+        Notification::send(
+            Teacher::all(),
+            new AcceptingTeachingRecordsStarted($start, $end)
+        );
 
         flash('Teachers can start submitting profiles.')->success();
 

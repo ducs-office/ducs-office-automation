@@ -27,7 +27,7 @@ class TeacherController extends Controller
 
         $teachers = $query->orderBy('id')->get();
         $courses = Course::select('id', 'code', 'name')->get()
-            ->map(function ($course) {
+            ->map(static function ($course) {
                 return [
                     'id' => $course->id,
                     'name' => $course->code . ' - ' . $course->name,

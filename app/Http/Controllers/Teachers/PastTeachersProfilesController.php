@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Teachers;
 
-use App\Exceptions\TeacherProfileNotCompletedException;
+use App\Exceptions\TeacherProfileNotCompleted;
 use App\Http\Controllers\Controller;
 use App\Notifications\TeacherDetailsAccepted;
 use App\PastTeachersProfile;
@@ -31,7 +31,7 @@ class PastTeachersProfilesController extends Controller
     protected function ensureProfileCompleted(Request $request)
     {
         if (! $request->user()->profile->isCompleted()) {
-            throw new TeacherProfileNotCompletedException(
+            throw new TeacherProfileNotCompleted(
                 'Your profile is not completed. You cannot perform this action.'
             );
         }

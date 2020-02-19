@@ -2,10 +2,9 @@
 
 namespace App\Exceptions;
 
-use App\TeacherProfile;
 use Exception;
 
-class TeacherProfileNotCompletedException extends Exception
+class TeacherProfileNotCompleted extends Exception
 {
     public function render()
     {

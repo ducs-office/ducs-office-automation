@@ -43,15 +43,21 @@ class Teacher extends User
     public function scopeApplyFilter($query, $filters)
     {
         if (isset($filters['course_id'])) {
-            $query->whereHas('past_profiles.past_teaching_details.course', function (Builder $q) use ($filters) {
-                $q->where('id', $filters['course_id']);
-            });
+            $query->whereHas(
+                'past_profiles.past_teaching_details.course',
+                static function (Builder $query) use ($filters) {
+                    return $query->where('id', $filters['course_id']);
+                }
+            );
         }
 
         if (isset($filters['valid_from'])) {
-            $query->whereHas('past_profiles', function (Builder $q) use ($filters) {
-                $q->where('valid_from', '>=', $filters['valid_from']);
-            });
+            $query->whereHas(
+                'past_profiles',
+                static function (Builder $query) use ($filters) {
+                    return $query->where('valid_from', '>=', $filters['valid_from']);
+                }
+            );
         }
     }
 }

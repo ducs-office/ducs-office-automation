@@ -2,7 +2,6 @@
 
 namespace App\Notifications;
 
-use App\Teacher;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -12,17 +11,17 @@ class TeacherDetailsAccepted extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    public function via($notifiable)
+    public function via()
     {
         return ['mail'];
     }
 
-    public function toMail($notifiable)
+    public function toMail()
     {
         $url = route('teachers.profile');
-        return (new MailMessage)
-                    ->line('Your teaching details has been submitted.')
-                    ->action('View Teaching Details', url($url))
-                    ->line('Thank you!');
+        return (new MailMessage())
+            ->line('Your teaching details has been submitted.')
+            ->action('View Teaching Details', url($url))
+            ->line('Thank you!');
     }
 }
