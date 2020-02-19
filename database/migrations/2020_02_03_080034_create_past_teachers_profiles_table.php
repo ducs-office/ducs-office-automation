@@ -18,9 +18,10 @@ class CreatePastTeachersProfilesTable extends Migration
             $table->string('designation', 5);
             $table->unsignedBigInteger('college_id');
             $table->unsignedBigInteger('teacher_id');
+            $table->date('valid_from');
             $table->timestamps();
 
-            $table->foreign('teacher_id')->references('teacher_id')->on('teachers_profile')->onDelete('cascade');
+            $table->foreign('teacher_id')->references('id')->on('teachers')->onDelete('cascade');
         });
     }
 

@@ -12,10 +12,6 @@ class TeacherProfile extends Model
         'phone_no',
         'address',
         'designation',
-        'ifsc',
-        'account_no',
-        'bank_name',
-        'bank_branch',
         'college_id',
         'teacher_id',
     ];
@@ -45,10 +41,5 @@ class TeacherProfile extends Model
     public function getDesignation()
     {
         return config('options.teachers.designations')[$this->designation] ?? 'Unknown';
-    }
-
-    public function past_profiles()
-    {
-        return $this->hasMany(PastTeachersProfile::class, 'teacher_id');
     }
 }

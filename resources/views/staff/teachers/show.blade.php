@@ -1,9 +1,10 @@
-@extends('layouts.teachers')
+@extends('layouts.master')
 @section('body')
     <div class="container mx-auto p-4">
         <div class="bg-white p-6 h-full rounded shadow-md">
             <div class="flex items-center mb-4">
-                <img src="{{ route('teachers.profile.avatar') }}" class="w-24 h-24 object-cover mr-4 border rounded shadow">
+                <img src="{{ route('staff.teachers.avatar', $teacher) }}"
+                    class="w-24 h-24 object-cover mr-4 border rounded shadow">
                 <div>
                     <h3 class="text-2xl font-bold">{{ $teacher->name }}</h3>
                     <h5 class="text-xl text-gray-700 font-medium mb-2">{{ $teacher->profile->getDesignation() }}</h5>
@@ -17,7 +18,22 @@
                     </div>
                 </div>
                 <div class="ml-auto self-start">
-                    <a href="{{ route('teachers.profile.edit') }}" class="btn btn-magenta">Edit</a>
+                    @can('update', App\Teacher::class)
+                        @include('staff.teachers.modals.edit', [
+                            'modalName' => 'edit-teacher-modal',
+                        ])
+                        <button type="submit" class="p-1 hover:text-red-700 mr-2" @click="
+                            $modal.show('edit-teacher-modal', {
+                                Teacher: {
+                                    id: {{ $teacher->id }},
+                                    first_name: {{ json_encode($teacher->first_name) }},
+                                    last_name: {{ json_encode($teacher->last_name) }},
+                                    email: {{ json_encode($teacher->email) }},
+                                },
+                            })">
+                        <feather-icon class="h-current" name="edit">Edit</feather-icon>
+                    </button>
+                    @endcan
                 </div>
             </div>
             <address>
@@ -53,44 +69,30 @@
             @else
             <p class="text-gray-600 font-bold">Nothing to show here.</p>
             @endif
-            @if(App\PastTeachersProfile::canSubmit($teacher))
-                <form action="{{ route('teachers.profile.submit') }}" method="POST">
-                    @csrf_token
-                    <button type="submit" class="btn btn-magenta mt-6" enabled> Submit Details </button>
-                </form>
-            @else
-                <div type="submit" class="cursor-auto inline-block px-3 py-2 font-bold rounded bg-gray-700 text-white border-gray-700 mt-6" > Submit Details </div>
-            @endif
         </div>
 
         <div class="bg-white p-6 h-full rounded shadow-md mt-4">
-            <div> 
+            <div>
                 <h3 class="font-bold text-2xl underline">Past Teaching Details</h3>
                 @foreach ($teacher->past_profiles as $past_profile)
-                    <details class="mt-6"> 
-                        <summary class="font-bold cursor-pointer outline-none"> {{ $past_profile->valid_from->format('M-Y')}} </summary>
-                        <div class="flex items-baseline p-6">
-                            <div>
-                                <h5 class="font-bold"> Designation </h5>
-                                <h5 class="text-l font-medium">{{ $past_profile->getDesignation() }}</h5>
-                            </div>
-                            <div class="ml-5">
-                                <h5 class="font-bold"> College </h5>
-                                <h5 class="text-l font-medium">{{ $past_profile->college->name }}</h5>
-                            </div>
-                        </div>
-                        <h4 class="font-bold px-6"> Programme-Courses Taught</h4>
-                        <div class="px-6 mt-2">
-                            @foreach ($past_profile->past_teaching_details as $index => $past_teaching_detail)
-                                <?php
-                                    $programme = $past_teaching_detail->programme_course_set()['programme'];
-                                    $course = $past_teaching_detail->programme_course_set()['course'];
-                                ?> 
-                                <div class="bg-gray-300 flex w-1/2 border-l border-r border-t border-black {{ $loop->last ? 'border-b' : '' }}">
-                                    <p class="w-1/2 p-2"> {{ $programme['name']}} </p>  
-                                    <p class="border-l border-black p-2">{{ $course['name']}} </p>
-                                </div>   
-                            @endforeach
+                    <details class="mt-6 bg-gray-200 rounded border" open>
+                        <summary class="px-4 font-bold cursor-pointer outline-none py-2"> {{ $past_profile->valid_from->format('M, Y')}} </summary>
+                        <div class="px-8">
+                            <p>
+                                Courses Taught in <em class="underline">{{ $past_profile->college->name }}</em> as <strong>{{ $past_profile->getDesignation() }}</strong> teacher.
+                            </p>
+                            <ul class="mt-2 list-disc pl-4">
+                                @foreach ($past_profile->past_teaching_details as $index => $past_teaching_detail)
+                                    @php
+                                        $revision = $past_teaching_detail->programme_revision;
+                                        $course = $past_teaching_detail->course;
+                                    @endphp
+                                    <li class="p-2">
+                                        <p><b>{{ $course['name']}}</b> during <b>Semester {{ $past_teaching_detail->semester }}</b></p>
+                                        <p class="text-gray-700"><b>{{ $revision->programme->name }}</b> <em>(w.e.f {{ $revision->revised_at->format('M, Y') }})</em> </p>
+                                    </li>
+                                @endforeach
+                            </ul>
                         </div>
                     </details>
                 @endforeach

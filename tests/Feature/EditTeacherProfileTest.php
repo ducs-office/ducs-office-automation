@@ -37,11 +37,7 @@ class EditTeacherProfileTest extends TestCase
         $update = [
             'phone_no' => '9876543210',
             'address' => 'new address, New Delhi',
-            'designation' => 'G',
-            'ifsc' => 'PNB098765498',
-            'account_no' => '12234567890',
-            'bank_name' => 'Punjab National Bank',
-            'bank_branch' => 'Rejender Nagar, New Delhi',
+            'designation' => 'A',
             'college_id' => $college->id,
             'teaching_details' => [
                 ['programme_revision' => $revision->id, 'course' => $courses[0]->id],
@@ -60,10 +56,6 @@ class EditTeacherProfileTest extends TestCase
         $this->assertEquals($update['phone_no'], $teacher->profile->fresh()->phone_no);
         $this->assertEquals($update['address'], $teacher->profile->fresh()->address);
         $this->assertEquals($update['designation'], $teacher->profile->fresh()->designation);
-        $this->assertEquals($update['ifsc'], $teacher->profile->fresh()->ifsc);
-        $this->assertEquals($update['account_no'], $teacher->profile->fresh()->account_no);
-        $this->assertEquals($update['bank_name'], $teacher->profile->fresh()->bank_name);
-        $this->assertEquals($update['bank_branch'], $teacher->profile->fresh()->bank_branch);
         $this->assertEquals($update['college_id'], $teacher->profile->fresh()->college_id);
 
         $this->assertEquals($teacher->profile->teaching_details->count(), 2);
@@ -152,10 +144,6 @@ class EditTeacherProfileTest extends TestCase
             'phone_no' => '',
             'address' => '',
             'designation' => '',
-            'ifsc' => '',
-            'account_no' => '',
-            'bank_name' => '',
-            'bank_branch' => '',
             'college_id' => '',
             'teaching_details' => '',
         ];

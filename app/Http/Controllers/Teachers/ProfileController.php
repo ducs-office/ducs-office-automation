@@ -8,8 +8,6 @@ use App\CourseProgrammeRevision;
 use App\Http\Controllers\Controller;
 use App\Programme;
 use App\ProgrammeRevision;
-use App\Teacher;
-use App\TeacherProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
@@ -18,12 +16,15 @@ class ProfileController extends Controller
 {
     public function index()
     {
+        $teacher = auth()->user()->load([
+            'profile.college',
+            'profile.teaching_details',
+            'profile.profile_picture',
+            'past_profiles.past_teaching_details',
+        ]);
+
         return view('teachers.profile', [
-            'teacher' => auth()->user()->load([
-                'profile.college',
-                'profile.teaching_details',
-                'profile.profile_picture',
-            ]),
+            'teacher' => $teacher,
             'designations' => config('options.teachers.designations'),
         ]);
     }
@@ -63,10 +64,6 @@ class ProfileController extends Controller
             'phone_no' => ['nullable', 'string'],
             'address' => ['nullable', 'string'],
             'designation' => ['nullable', 'string', 'in:' . $designations],
-            'ifsc' => ['nullable', 'string'],
-            'account_no' => ['nullable', 'string'],
-            'bank_name' => ['nullable', 'string'],
-            'bank_branch' => ['nullable', 'string'],
             'college_id' => ['nullable', 'numeric', 'exists:colleges,id'],
             'teaching_details' => ['nullable', 'array'],
             'teaching_details.*.programme_revision' => ['nullable', 'numeric', 'exists:programme_revisions,id'],
