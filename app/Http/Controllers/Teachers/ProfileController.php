@@ -4,109 +4,72 @@ namespace App\Http\Controllers\Teachers;
 
 use App\College;
 use App\Course;
-use App\CourseProgrammeRevision;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Teacher\UpdateProfileRequest;
 use App\Programme;
-use App\ProgrammeRevision;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $teacher = auth()->user()->load([
-            'profile.college',
-            'profile.teaching_details',
-            'profile.profile_picture',
+        $teacher = $request->user()->load([
             'past_profiles.past_teaching_details',
+            'profile.college',
+            'profile.profile_picture',
+            'profile.teaching_details',
         ]);
 
         return view('teachers.profile', [
+            'designations' => config('options.teachers.designations'),
             'teacher' => $teacher,
-            'designations' => config('options.teachers.designations'),
         ]);
     }
 
-    public function edit()
+    public function edit(Request $request)
     {
+        $teacher = $request->user()->load([
+            'profile.college',
+            'profile.profile_picture',
+            'profile.teaching_details',
+        ]);
+
+        $programmes = Programme::withLatestRevision()->get()
+            ->mapWithKeys(static function ($programme) {
+                $latestRevisionId = $programme->latestRevision->id;
+                $name = $programme->code . ' - ' . $programme->name;
+                return [$latestRevisionId => $name];
+            });
+
+        $courses = Course::select(['id', 'code', 'name'])->get()
+            ->mapWithKeys(static function ($course) {
+                return [$course->id => $course->code . ' - ' . $course->name];
+            });
+
         return view('teachers.edit', [
-            'teacher' => auth()->user()->load([
-                'profile.college',
-                'profile.teaching_details',
-                'profile.profile_picture',
-            ]),
             'colleges' => College::all()->pluck('name', 'id'),
-            'programmes' => Programme::withLatestRevision()->get()->map(static function ($programme) {
-                return [
-                    'id' => $programme->latestRevision->id,
-                    'name' => $programme->code . ' - ' . $programme->name,
-                ];
-            })->pluck('name', 'id'),
-            'courses' => Course::all()->map(static function ($course) {
-                return [
-                    'id' => $course->id,
-                    'name' => $course->code . ' - ' . $course->name,
-                ];
-            })->pluck('name', 'id'),
+            'courses' => $courses,
             'designations' => config('options.teachers.designations'),
+            'programmes' => $programmes,
+            'teacher' => $teacher,
         ]);
     }
 
-    public function update(Request $request)
+    public function update(UpdateProfileRequest $request)
     {
-        $teacher = auth()->user();
+        $validatedData = $request->validated();
+        $profile = $request->user()->profile;
 
-        $designations = implode(',', array_keys(config('options.teachers.designations')));
+        $profile->update($validatedData);
 
-        $validData = $request->validate([
-            'phone_no' => ['nullable', 'string'],
-            'address' => ['nullable', 'string'],
-            'designation' => ['nullable', 'string', 'in:' . $designations],
-            'college_id' => ['nullable', 'numeric', 'exists:colleges,id'],
-            'teaching_details' => ['nullable', 'array'],
-            'teaching_details.*.programme_revision' => ['nullable', 'numeric', 'exists:programme_revisions,id'],
-            'teaching_details.*.course' => ['nullable', 'numeric', 'exists:courses,id'],
-            'teaching_details.*' => ['bail', 'nullable', 'array',
-                static function ($attribute, $value, $fail) {
-                    if (! isset($value['course'])) {
-                        return true;
-                    }
-                    $revision = ProgrammeRevision::find($value['programme_revision']);
-                    if (! $revision->courses->pluck('id')->contains($value['course'])) {
-                        $fail($attribute . ' is invalid.');
-                    }
-                },
-            ],
-            'profile_picture' => ['nullable', 'file', 'image'],
-        ]);
-
-        $teacher->profile->update($validData);
-
-        if (isset($validData['teaching_details'])) {
-            $teaching_details = $validData['teaching_details'];
-
-            $programmeCoursesTaught = collect($teaching_details)
-                ->filter(static function ($teaching_detail) {
-                    return isset($teaching_detail['programme_revision'], $teaching_detail['course']);
-                })->map(static function ($teaching_detail) {
-                    return CourseProgrammeRevision::where(
-                        'programme_revision_id',
-                        $teaching_detail['programme_revision']
-                    )
-                        ->where('course_id', $teaching_detail['course'])
-                        ->first()->id;
-                })->toArray();
-
-            $teacher->profile->teaching_details()->sync($programmeCoursesTaught);
+        if ($request->has('teaching_details')) {
+            $profile->teaching_details()->sync($request->getTeachingRecord());
         }
 
-        if (isset($validData['profile_picture'])) {
-            $teacher->profile->profile_picture()->create([
-                'original_name' => $validData['profile_picture']->getClientOriginalName(),
-                'path' => $validData['profile_picture']->store('/teacher_attachments/profile_picture'),
-            ]);
+        if ($request->has('profile_picture')) {
+            $profile->profile_picture()->create($request->getProfilePicture());
         }
 
         flash('Profile Updated Successfully!')->success();
