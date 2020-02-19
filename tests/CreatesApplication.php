@@ -4,9 +4,9 @@ namespace Tests;
 
 use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Foundation\Testing\TestResponse;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use PHPUnit\Framework\Assert;
-use Session;
 
 trait CreatesApplication
 {

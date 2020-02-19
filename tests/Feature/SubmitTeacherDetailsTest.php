@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\College;
 use App\Course;
+use App\Exceptions\TeacherProfileNotCompletedException;
 use App\Notifications\AcceptingTeachingRecordsStarted;
 use App\Notifications\TeacherDetailsAccepted;
 use App\PastTeachersProfile;
@@ -82,9 +83,10 @@ class SubmitTeacherDetailsTest extends TestCase
 
         PastTeachersProfile::startAccepting(now(), now()->addMonths(6));
 
-        $this->withoutExceptionHandling()
+        $this->withExceptionHandling()
             ->post(route('teachers.profile.submit'))
-            ->assertSessionHasFlash('fail', 'Fill complete details to make submission');
+            ->assertRedirect()
+            ->assertSessionHasFlash('danger', 'Your profile is not completed. You cannot perform this action.');
 
         $this->assertEquals(0, PastTeachersProfile::count());
     }
@@ -100,15 +102,16 @@ class SubmitTeacherDetailsTest extends TestCase
 
         PastTeachersProfile::startAccepting(now(), now()->addMonths(6));
 
-        $this->withoutExceptionHandling()
+        $this->withExceptionHandling()
             ->post(route('teachers.profile.submit'))
-            ->assertSessionHasFlash('fail', 'Fill complete details to make submission');
+            ->assertRedirect()
+            ->assertSessionHasFlash('danger', 'Your profile is not completed. You cannot perform this action.');
 
         $this->assertEquals(0, PastTeachersProfile::count());
     }
 
     /** @test */
-    public function details_of_teacher_cannot_be_submited_if_teacher_profile_teaching_details_is_null()
+    public function details_of_teacher_cannot_be_submited_if_teacher_profile_teaching_details_are_empty()
     {
         $this->signInTeacher($teacher = create(Teacher::class));
 
@@ -118,9 +121,11 @@ class SubmitTeacherDetailsTest extends TestCase
 
         PastTeachersProfile::startAccepting(now(), now()->addMonths(6));
 
-        $this->withoutExceptionHandling()
+        $this->withExceptionHandling()
+            ->from('/teachers')
             ->post(route('teachers.profile.submit'))
-            ->assertSessionHasFlash('fail', 'Fill complete details to make submission');
+            ->assertRedirect('/teachers')
+            ->assertSessionHasFlash('danger', 'Your profile is not completed. You cannot perform this action.');
 
         $this->assertEquals(0, PastTeachersProfile::count());
     }
@@ -150,8 +155,10 @@ class SubmitTeacherDetailsTest extends TestCase
 
         // submit after start_date is set
         $this->withoutExceptionHandling()
+            ->from('/teachers')
             ->post(route('teachers.profile.submit'))
-            ->assertRedirect();
+            ->assertRedirect('/teachers')
+            ->assertSessionHasNoErrors();
 
         $this->assertEquals(1, PastTeachersProfile::count());
 

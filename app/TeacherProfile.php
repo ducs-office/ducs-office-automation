@@ -42,4 +42,11 @@ class TeacherProfile extends Model
     {
         return config('options.teachers.designations')[$this->designation] ?? 'Unknown';
     }
+
+    public function isCompleted()
+    {
+        return $this->designation
+            && $this->college_id
+            && $this->teaching_details->count() > 0;
+    }
 }
