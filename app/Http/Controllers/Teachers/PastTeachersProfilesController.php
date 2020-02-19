@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Teachers;
 
 use App\Http\Controllers\Controller;
+use App\Notifications\TeacherDetailsAccepted;
 use Illuminate\Http\Request;
 use App\PastTeachersProfile;
 
@@ -35,6 +36,9 @@ class PastTeachersProfilesController extends Controller
             ->attach($teacherProfile->teaching_details->pluck('id')->toArray());
 
         flash('Details submitted successfully!', 'success');
+
+        $teacher->notify(new TeacherDetailsAccepted());
+
         return redirect()->back();
     }
 }
