@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use App\Mail\UserRegisteredMail;
 use App\Http\Controllers\Controller;
+use App\PastTeachersProfile;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
@@ -34,6 +35,8 @@ class TeacherController extends Controller
                 ];
             })->pluck('name', 'id');
 
+        $start_date = PastTeachersProfile::getStartDate();
+        $end_date = PastTeachersProfile::getEndDate();
         return view('staff.teachers.index', compact('Teachers', 'courses'));
     }
 

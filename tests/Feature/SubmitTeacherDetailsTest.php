@@ -12,6 +12,10 @@ use App\Course;
 use App\Programme;
 use App\College;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Mail;
+use App\Notifications\AcceptingTeachingRecordsStarted;
+use App\Notifications\TeacherDetailsAccepted;
 
 class SubmitTeacherDetailsTest extends TestCase
 {
@@ -159,5 +163,50 @@ class SubmitTeacherDetailsTest extends TestCase
             ->assertForbidden();
 
         $this->assertEquals(1, PastTeachersProfile::count());
+    }
+
+    /** @test */
+    public function notification_is_sent_to_all_teachers_when_accepting_details_has_started()
+    {
+        $this->signIn();
+
+        Notification::fake();
+
+        $teachers = create(Teacher::class, 5);
+
+        $this->withExceptionHandling()
+            ->post(route('staff.teaching_records.accept'), [
+                'start_date' => $start_date = now(),
+                'end_date' => $end_date = now()->addMonths(6)
+            ]);
+                
+        Notification::assertSentTo(
+            $teachers,
+            AcceptingTeachingRecordsStarted::class,
+            function ($notification) use ($start_date, $end_date) {
+                return $notification->start_date == $start_date->format('d-m-Y')
+                        && $notification->end_date == $end_date->format('d-m-Y');
+            }
+        );
+    }
+
+    /** @test */
+    public function acknowledgement_is_sent_via_mail_when_teacher_submitted_their_profile()
+    {
+        Notification::fake();
+
+        $this->signInTeacher($teacher = create(Teacher::class));
+
+        $profile_form = $this->fillTeacherProfileFormFields(['teacher_id' => $teacher->id]);
+
+        $this->patch(route('teachers.profile.update'), $profile_form);
+        
+        PastTeachersProfile::startAccepting(now(), now()->addMonths(6));
+
+        $this->withoutExceptionHandling()
+            ->post(route('teachers.profile.submit'))
+            ->assertSessionHasFlash('success', 'Details submitted successfully!');
+
+        Notification::assertSentTo($teacher, TeacherDetailsAccepted::class);
     }
 }

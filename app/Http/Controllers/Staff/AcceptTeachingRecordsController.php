@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use App\PastTeachersProfile;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\AcceptingTeachingRecordsStarted;
+use App\Teacher;
 
 class AcceptTeachingRecordsController extends Controller
 {
@@ -20,7 +23,15 @@ class AcceptTeachingRecordsController extends Controller
             Carbon::parse($request->start_date),
             Carbon::parse($request->end_date)
         );
+        
+        $teachers = Teacher::all();
 
+        Notification::send($teachers, new AcceptingTeachingRecordsStarted(
+            PastTeachersProfile::getStartDate()->format('d-m-Y'),
+            PastTeachersProfile::getEndDate()->format('d-m-Y')
+        ));
+       
+        
         flash('Teachers can start submitting profiles.')->success();
 
         return redirect()->back();

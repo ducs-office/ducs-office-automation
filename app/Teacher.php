@@ -4,9 +4,12 @@ namespace App;
 
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Notifications\Notifiable;
 
 class Teacher extends User
 {
+    use Notifiable;
+
     protected $guarded = [];
 
     protected $hidden = ['password'];
