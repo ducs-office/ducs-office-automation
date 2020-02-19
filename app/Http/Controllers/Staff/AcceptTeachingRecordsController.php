@@ -27,8 +27,8 @@ class AcceptTeachingRecordsController extends Controller
         $teachers = Teacher::all();
 
         Notification::send($teachers, new AcceptingTeachingRecordsStarted(
-            PastTeachersProfile::getStartDate()->format('d-m-Y'),
-            PastTeachersProfile::getEndDate()->format('d-m-Y')
+            PastTeachersProfile::getStartDate()->format('d-M-Y'),
+            PastTeachersProfile::getEndDate()->format('d-M-Y')
         ));
        
         

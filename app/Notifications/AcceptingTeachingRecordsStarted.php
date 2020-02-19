@@ -69,7 +69,7 @@ class AcceptingTeachingRecordsStarted extends Notification
     {
         return [
             'inform' => 'Accepting details has begun from '. $this->start_date . '. The deadline to submit profiles is '
-                    . $this->end_date
+                    . $this->end_date . '.'
         ];
     }
 }
