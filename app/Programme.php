@@ -30,11 +30,6 @@ class Programme extends Model
         return $this->hasOne(ProgrammeRevision::class);
     }
 
-    public function latestRev()
-    {
-        return $this->revisions()->orderBy('revised_at', 'desc')->first();
-    }
-
     public function scopeWithLatestRevision($query)
     {
         return $query->addSelect([

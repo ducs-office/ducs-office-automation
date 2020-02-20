@@ -16,14 +16,14 @@ class ProgrammeRevisionController extends Controller
     {
         $programme->load(['revisions.courses']);
 
-        $grouped_revision_courses = $programme->revisions
+        $groupedCourses = $programme->revisions
             ->map(static function ($revision) {
                 return $revision->courses->groupBy('pivot.semester');
             });
 
         return view('staff.programmes.revisions.index', [
             'programme' => $programme,
-            'groupedRevisionCourses' => $grouped_revision_courses,
+            'groupedRevisionCourses' => $groupedCourses,
         ]);
     }
 
@@ -35,7 +35,7 @@ class ProgrammeRevisionController extends Controller
             ->where('revised_at', $programme->wef)
             ->first();
 
-        $semester_courses = ! $revision ? [] : $revision
+        $semesterCourses = ! $revision ? [] : $revision
             ->courses
             ->groupBy('pivot.semester')
             ->map
@@ -44,7 +44,7 @@ class ProgrammeRevisionController extends Controller
         return view('staff.programmes.revisions.create', [
             'programme' => $programme,
             'revision' => $revision,
-            'semester_courses' => $semester_courses,
+            'semesterCourses' => $semesterCourses,
             'courses' => $courses,
         ]);
     }
@@ -69,31 +69,31 @@ class ProgrammeRevisionController extends Controller
         return redirect(route('staff.programmes.index'));
     }
 
-    public function edit(Programme $programme, ProgrammeRevision $programme_revision)
+    public function edit(Programme $programme, ProgrammeRevision $revision)
     {
-        if ((int) $programme_revision->programme_id !== (int) $programme->id) {
+        if ((int) $revision->programme_id !== (int) $programme->id) {
             return redirect(route('staff.programmes.index'));
         }
 
-        $semester_courses = $programme_revision->courses
+        $semesterCourses = $revision->courses
             ->groupBy('pivot.semester')
             ->map
             ->pluck('id');
 
         return view('staff.programmes.revisions.edit', [
             'programme' => $programme,
-            'programme_revision' => $programme_revision,
-            'semester_courses' => $semester_courses,
+            'revision' => $revision,
+            'semesterCourses' => $semesterCourses,
             'courses' => Course::where('code', 'like', "{$programme->code}%")->get(),
         ]);
     }
 
-    public function update(UpdateProgrammeRevisionRequest $request, Programme $programme, ProgrammeRevision $programme_revision)
+    public function update(UpdateProgrammeRevisionRequest $request, Programme $programme, ProgrammeRevision $revision)
     {
         DB::beginTransaction();
 
-        $programme_revision->update($request->validated());
-        $programme_revision->courses()->sync($request->getSemesterCourses());
+        $revision->update($request->validated());
+        $revision->courses()->sync($request->getSemesterCourses());
 
         DB::commit();
 
@@ -106,9 +106,9 @@ class ProgrammeRevisionController extends Controller
         return redirect(route('staff.programmes.revisions.show', $programme));
     }
 
-    public function destroy(Programme $programme, ProgrammeRevision $programmeRevision)
+    public function destroy(Programme $programme, ProgrammeRevision $revision)
     {
-        $programmeRevision->delete();
+        $revision->delete();
 
         if ($programme->revisions->count() === 0) {
             $programme->delete();

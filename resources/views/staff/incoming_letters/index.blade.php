@@ -18,11 +18,11 @@
                 ]
             ])
         </div>
-        @forelse($incoming_letters as $letter)
+        @forelse($incomingLetters as $letter)
             @include('staff.incoming_letters.partials.letter',[
                 'letter' => $letter,
                 'priorities' => $priorities,
-                'priority_colors' => $priority_colors,
+                'priorityColors' => $priorityColors,
             ])
         @empty
             <div class="py-8 flex flex-col items-center justify-center text-gray-500">

@@ -34,7 +34,7 @@ class CourseController extends Controller
 
         return view('staff.courses.index', [
             'courses' => $courses,
-            'course_types' => config('options.courses.types'),
+            'courseTypes' => config('options.courses.types'),
         ]);
     }
 

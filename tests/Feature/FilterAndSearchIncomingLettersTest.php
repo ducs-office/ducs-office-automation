@@ -31,8 +31,8 @@ class FilterAndSearchIncomingLettersTest extends TestCase
             ]))
             ->assertSuccessful()
             ->assertViewIs('staff.incoming_letters.index')
-            ->assertViewHas('incoming_letters')
-            ->viewdata('incoming_letters');
+            ->assertViewHas('incomingLetters')
+            ->viewdata('incomingLetters');
 
         $this->assertInstanceOf(Collection::class, $viewIncomingLetters);
         $this->assertCount(2, $viewIncomingLetters, 'Only 2 letters were expected but :actual letters were returned');
@@ -61,8 +61,8 @@ class FilterAndSearchIncomingLettersTest extends TestCase
             ]))
             ->assertSuccessful()
             ->assertViewIs('staff.incoming_letters.index')
-            ->assertViewHas('incoming_letters')
-            ->viewData('incoming_letters');
+            ->assertViewHas('incomingLetters')
+            ->viewData('incomingLetters');
 
         $this->assertInstanceOf(Collection::class, $viewIncomingLetters);
         $this->assertCount(1, $viewIncomingLetters, 'Only 1 letter was expected but :actual letters were returned');
@@ -98,8 +98,8 @@ class FilterAndSearchIncomingLettersTest extends TestCase
             ]))
             ->assertSuccessful()
             ->assertViewIs('staff.incoming_letters.index')
-            ->assertViewHas('incoming_letters')
-            ->viewData('incoming_letters');
+            ->assertViewHas('incomingLetters')
+            ->viewData('incomingLetters');
 
         $this->assertInstanceOf(Collection::class, $viewIncomingLetters);
         $this->assertCount(2, $viewIncomingLetters, 'Only 2 letters were expected but :actual letters were returned');
@@ -125,8 +125,8 @@ class FilterAndSearchIncomingLettersTest extends TestCase
             ]))
             ->assertSuccessful()
             ->assertViewIs('staff.incoming_letters.index')
-            ->assertViewHas('incoming_letters')
-            ->viewData('incoming_letters');
+            ->assertViewHas('incomingLetters')
+            ->viewData('incomingLetters');
 
         $this->assertCount(1, $viewIncomingLetters);
     }
@@ -144,8 +144,8 @@ class FilterAndSearchIncomingLettersTest extends TestCase
             ]))
             ->assertSuccessful()
             ->assertViewIs('staff.incoming_letters.index')
-            ->assertViewHas('incoming_letters')
-            ->viewData('incoming_letters');
+            ->assertViewHas('incomingLetters')
+            ->viewData('incomingLetters');
 
         $this->assertCount(1, $viewIncomingLetters);
     }
@@ -169,8 +169,8 @@ class FilterAndSearchIncomingLettersTest extends TestCase
             ]))
             ->assertSuccessful()
             ->assertViewIs('staff.incoming_letters.index')
-            ->assertViewHas('incoming_letters')
-            ->viewData('incoming_letters');
+            ->assertViewHas('incomingLetters')
+            ->viewData('incomingLetters');
 
         $this->assertCount(1, $viewIncomingLetters);
     }
@@ -190,8 +190,8 @@ class FilterAndSearchIncomingLettersTest extends TestCase
                                 ]))
                                 ->assertSuccessful()
                                 ->assertViewIs('staff.incoming_letters.index')
-                                ->AssertViewHas('incoming_letters')
-                                ->viewData('incoming_letters');
+                                ->AssertViewHas('incomingLetters')
+                                ->viewData('incomingLetters');
 
         $this->assertCount(2, $viewIncomingLetters);
         $this->assertTrue($viewIncomingLetters->pluck('id')->contains($prioritisedLetters[0]->id));
@@ -214,8 +214,8 @@ class FilterAndSearchIncomingLettersTest extends TestCase
                                 ]))
                                 ->assertSuccessful()
                                 ->assertViewIs('staff.incoming_letters.index')
-                                ->assertViewHas('incoming_letters')
-                                ->viewData('incoming_letters');
+                                ->assertViewHas('incomingLetters')
+                                ->viewData('incomingLetters');
 
         $this->assertCount(2, $viewIncomingLetters);
         $this->assertTrue($viewIncomingLetters->pluck('id')->contains($recipientIs1[0]->id));
@@ -237,8 +237,8 @@ class FilterAndSearchIncomingLettersTest extends TestCase
             ]))
             ->assertSuccessful()
             ->assertViewIs('staff.incoming_letters.index')
-            ->assertViewHas('incoming_letters')
-            ->viewData('incoming_letters');
+            ->assertViewHas('incomingLetters')
+            ->viewData('incomingLetters');
 
         $this->assertCount(2, $viewIncomingLetters);
         $this->assertTrue($viewIncomingLetters->pluck('id')->contains($sentBy[0]->id));
@@ -258,8 +258,8 @@ class FilterAndSearchIncomingLettersTest extends TestCase
             ->get(route('staff.incoming_letters.index', ['search' => 'def']))
             ->assertSuccessful()
             ->assertViewIs('staff.incoming_letters.index')
-            ->assertViewHas('incoming_letters')
-            ->viewData('incoming_letters');
+            ->assertViewHas('incomingLetters')
+            ->viewData('incomingLetters');
 
         $this->assertCount(2, $viewIncomingLetters);
         $this->assertTrue($viewIncomingLetters->pluck('id')->contains($sender1->id));

@@ -51,14 +51,14 @@ class CourseRevisionController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\CourseRevision  $course_revision
+     * @param  \App\CourseRevision  $revision
      *
      * @return \Illuminate\Http\Response
      */
-    public function destroy($course, CourseRevision $course_revision)
+    public function destroy($course, CourseRevision $revision)
     {
-        $course_revision->attachments()->delete();
-        $course_revision->delete();
+        $revision->attachments()->delete();
+        $revision->delete();
 
         flash('Course Revision deleted!')->success();
 

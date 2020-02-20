@@ -8,7 +8,7 @@
             @click.prevent="$modal.show('create-teacher-modal')">
             New
         </button>
-        @if(now() > $end_date)
+        @if(now() > $endDate)
             <form action=" {{ route('staff.teaching_records.accept')}} " method="post"  class="ml-auto self-start flex items-end">
                 @csrf_token
                 <div class="mr-2">
@@ -25,11 +25,11 @@
             <div class="ml-auto self-start flex items-end">
                 <div class="mr-2">
                     <label for="start_date" class="block form-label">Start Date</label>
-                <input type="date" name="start_date" id="start_date" class="form-input" value="{{ $start_date->format('Y-m-d') }}" disabled>
+                <input type="date" name="start_date" id="start_date" class="form-input" value="{{ $startDate->format('Y-m-d') }}" disabled>
                 </div>
                 <div class="mr-2">
                     <label for="end_date" class="block form-label">End Date</label>
-                <input type="date" name="end_date" id="end_date" class="form-input" value="{{ $end_date->format('Y-m-d') }}" disabled>
+                <input type="date" name="end_date" id="end_date" class="form-input" value="{{ $endDate->format('Y-m-d') }}" disabled>
                 </div>
             </div>
         @endif

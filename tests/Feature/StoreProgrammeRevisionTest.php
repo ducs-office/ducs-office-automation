@@ -25,7 +25,7 @@ class StoreProgrammeRevisionTest extends TestCase
         $semester_courses = create(Course::class, 2);
 
         foreach ($semester_courses as $index => $course) {
-            $course->programme_revisions()->attach($revision, ['semester' => $index + 1]);
+            $course->programmeRevisions()->attach($revision, ['semester' => $index + 1]);
         }
 
         $revised_at = '2000-02-01';
@@ -55,7 +55,7 @@ class StoreProgrammeRevisionTest extends TestCase
         $semester_courses = create(Course::class, 2);
 
         foreach ($semester_courses as $index => $course) {
-            $course->programme_revisions()->attach($revision, ['semester' => $index + 1]);
+            $course->programmeRevisions()->attach($revision, ['semester' => $index + 1]);
         }
 
         try {
@@ -84,7 +84,7 @@ class StoreProgrammeRevisionTest extends TestCase
         $semester_courses = create(Course::class, 3);
 
         foreach ($semester_courses as $index => $course) {
-            $course->programme_revisions()->attach($revision, ['semester' => $index + 1]);
+            $course->programmeRevisions()->attach($revision, ['semester' => $index + 1]);
         }
 
         try {
@@ -115,7 +115,7 @@ class StoreProgrammeRevisionTest extends TestCase
         $courses = create(Course::class, 2);
 
         foreach ($courses as $index => $course) {
-            $course->programme_revisions()->attach($revision, ['semester' => $index + 1]);
+            $course->programmeRevisions()->attach($revision, ['semester' => $index + 1]);
         }
 
         try {
@@ -152,7 +152,7 @@ class StoreProgrammeRevisionTest extends TestCase
         $courses = create(Course::class, 2);
 
         foreach ($courses as $index => $course) {
-            $course->programme_revisions()->attach($revision, ['semester' => $index + 1]);
+            $course->programmeRevisions()->attach($revision, ['semester' => $index + 1]);
         }
 
         $revised_at = '2019-09-08';
@@ -174,13 +174,13 @@ class StoreProgrammeRevisionTest extends TestCase
         $assignedCourse = create(Course::class);
         $programme1 = create(Programme::class, 1, ['wef' => '1999-09-08', 'duration' => '1']);
         $revision1 = create(ProgrammeRevision::class, 1, ['revised_at' => $programme1->wef, 'programme_id' => $programme1->id]);
-        $assignedCourse->programme_revisions()->attach($revision1, ['semester' => 1]);
+        $assignedCourse->programmeRevisions()->attach($revision1, ['semester' => 1]);
         $unassignedCourses = create(Course::class, 2);
 
         $programme2 = create(Programme::class, 1, ['duration' => 1, 'wef' => '2000-09-08']);
         $revision2 = create(ProgrammeRevision::class, 1, ['revised_at' => $programme2->wef, 'programme_id' => $programme2->id]);
         foreach ($unassignedCourses as $index => $course) {
-            $course->programme_revisions()->attach($revision2, ['semester' => $index + 1]);
+            $course->programmeRevisions()->attach($revision2, ['semester' => $index + 1]);
         }
 
         try {
@@ -210,7 +210,7 @@ class StoreProgrammeRevisionTest extends TestCase
         $courses = create(Course::class, 3);
         $revision = create(ProgrammeRevision::class, 1, ['revised_at' => $programme->wef, 'programme_id' => $programme->id]);
 
-        $courses[1]->programme_revisions()->attach($revision, ['semester' => 1]);
+        $courses[1]->programmeRevisions()->attach($revision, ['semester' => 1]);
 
         $this->withoutExceptionHandling()
             ->post(route('staff.programmes.revisions.store', $programme), [
@@ -237,7 +237,7 @@ class StoreProgrammeRevisionTest extends TestCase
         $revision = create(ProgrammeRevision::class, 1, ['revised_at' => $programme->wef, 'programme_id' => $programme->id]);
 
         foreach ($courses as $index => $course) {
-            $course->programme_revisions()->attach($revision, ['semester' => $index + 1]);
+            $course->programmeRevisions()->attach($revision, ['semester' => $index + 1]);
         }
 
         $revised_at = '2019-09-08';

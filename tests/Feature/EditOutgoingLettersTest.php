@@ -28,7 +28,7 @@ class EditOutgoingLettersTest extends TestCase
             ->get(route('staff.outgoing_letters.edit', $letter))
             ->assertSuccessful()
             ->assertViewIs('staff.outgoing_letters.edit')
-            ->assertViewHas('outgoing_letter');
+            ->assertViewHas('letter');
     }
 
     /** @test */

@@ -25,7 +25,10 @@
                                 class="p-1 text-gray-700 hover:text-blue-600 hover:bg-gray-200 rounded mr-3" title="Edit">
                                 <feather-icon name="edit-3" stroke-width="2.5" class="h-current">Edit</feather-icon>
                             </a>
-                            <form action="{{  route('staff.programmes.revisions.destroy', [$programme, $programmeRevision]) }}" method="POST"
+                            <form method="POST" action="{{  route('staff.programmes.revisions.destroy', [
+                                        'programme' => $programme,
+                                        'revision' => $programmeRevision
+                                    ]) }}"
                                 onsubmit="return confirm('Do you really want to delete programme revision?');">
                                 @csrf_token @method('delete')
                                 <button type="submit" class="p-1 hover:text-red-700">

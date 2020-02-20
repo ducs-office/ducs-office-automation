@@ -20,10 +20,10 @@
             ])
 
         </div>
-        @forelse($outgoing_letters as $letter)
+        @forelse($letters as $letter)
             @include('staff.outgoing_letters.partials.letter', [
                 'letter' => $letter,
-                'type_colors' => [
+                'typeColors' => [
                     'General' => 'bg-magenta-700',
                     'Notesheet' => 'bg-teal-600',
                     'Bill' => 'bg-blue-600'

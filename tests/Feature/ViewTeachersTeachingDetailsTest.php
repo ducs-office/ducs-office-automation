@@ -7,7 +7,7 @@ use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class ViewTeachersPastDetailsTest extends TestCase
+class ViewTeachersTeachingDetailsTest extends TestCase
 {
     use RefreshDatabase;
 

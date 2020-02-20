@@ -38,7 +38,7 @@ class ViewProgrammesTest extends TestCase
 
         $view_data = $this->get(route('staff.programmes.index'))
             ->assertViewIs('staff.programmes.index')
-            ->assertViewHasAll(['programmes', 'grouped_courses'])
+            ->assertViewHasAll(['programmes', 'groupedCourses'])
             ->viewData('programmes');
 
         $this->assertCount(3, $view_data);

@@ -28,9 +28,9 @@ class UpdateProgrammeRevisionRequest extends FormRequest
     public function rules()
     {
         $programme = $this->route('programme');
-        $programme_revision = $this->route('programme_revision');
+        $revision = $this->route('revision');
         $revision_dates = $programme->revisions
-            ->except($programme_revision->id)
+            ->except($revision->id)
             ->pluck('revised_at')
             ->map->format('Y-m-d')
             ->toArray();

@@ -26,11 +26,11 @@ class OutgoingLetterPolicy
      * Determine whether the user can view the outgoing letter.
      *
      * @param  \App\User  $user
-     * @param  \App\OutgoingLetter  $outgoingLetter
+     * @param  \App\OutgoingLetter  $letter
      *
      * @return mixed
      */
-    public function view(User $user, OutgoingLetter $outgoingLetter)
+    public function view(User $user, OutgoingLetter $letter)
     {
         return $user->can('outgoing letters:view');
     }
@@ -51,27 +51,27 @@ class OutgoingLetterPolicy
      * Determine whether the user can update the outgoing letter.
      *
      * @param  \App\User  $user
-     * @param  \App\OutgoingLetter  $outgoingLetter
+     * @param  \App\OutgoingLetter  $letter
      *
      * @return mixed
      */
-    public function update(User $user, OutgoingLetter $outgoingLetter)
+    public function update(User $user, OutgoingLetter $letter)
     {
         return $user->can('outgoing letters:edit')
-            && (int) $outgoingLetter->creator_id === (int) $user->id;
+            && (int) $letter->creator_id === (int) $user->id;
     }
 
     /**
      * Determine whether the user can delete the outgoing letter.
      *
      * @param  \App\User  $user
-     * @param  \App\OutgoingLetter  $outgoingLetter
+     * @param  \App\OutgoingLetter  $letter
      *
      * @return mixed
      */
-    public function delete(User $user, OutgoingLetter $outgoingLetter)
+    public function delete(User $user, OutgoingLetter $letter)
     {
         return $user->can('outgoing letters:delete')
-            && (int) $outgoingLetter->creator_id === (int) $user->id;
+            && (int) $letter->creator_id === (int) $user->id;
     }
 }

@@ -6,7 +6,7 @@ use App\College;
 use App\Course;
 use App\Exceptions\TeacherProfileNotCompleted;
 use App\Notifications\AcceptingTeachingRecordsStarted;
-use App\Notifications\TeacherDetailsAccepted;
+use App\Notifications\TeachingRecordsSaved;
 use App\Programme;
 use App\Teacher;
 use App\TeachingRecord;
@@ -218,6 +218,6 @@ class SubmitTeacherDetailsTest extends TestCase
             ->post(route('teachers.profile.submit'))
             ->assertSessionHasFlash('success', 'Details submitted successfully!');
 
-        Notification::assertSentTo($teacher, TeacherDetailsAccepted::class);
+        Notification::assertSentTo($teacher, TeachingRecordsSaved::class);
     }
 }

@@ -7,15 +7,15 @@ use Illuminate\Support\Facades\Cache;
 
 class TeachingRecord extends Model
 {
-    protected static $accept_records_key_prefix = 'teaching_records_';
+    protected static $acceptRecordsKeyPrefix = 'teaching_records_';
 
     protected $guarded = [];
     protected $dates = ['valid_from'];
 
     public static function startAccepting($start, $end)
     {
-        return Cache::put(static::$accept_records_key_prefix . 'start', $start)
-            && Cache::put(static::$accept_records_key_prefix . 'end', $end);
+        return Cache::put(static::$acceptRecordsKeyPrefix . 'start', $start)
+            && Cache::put(static::$acceptRecordsKeyPrefix . 'end', $end);
     }
 
     public static function canSubmit($teacher)
@@ -28,17 +28,17 @@ class TeachingRecord extends Model
 
     public static function extendDeadline($extend_to)
     {
-        return Cache::put(static::$accept_records_key_prefix . 'end', $extend_to);
+        return Cache::put(static::$acceptRecordsKeyPrefix . 'end', $extend_to);
     }
 
     public static function getStartDate()
     {
-        return Cache::get(static::$accept_records_key_prefix . 'start');
+        return Cache::get(static::$acceptRecordsKeyPrefix . 'start');
     }
 
     public static function getEndDate()
     {
-        return Cache::get(static::$accept_records_key_prefix . 'end');
+        return Cache::get(static::$acceptRecordsKeyPrefix . 'end');
     }
 
     public function course()

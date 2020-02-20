@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Staff;
 use App\Course;
 use App\Http\Controllers\Controller;
 use App\Mail\UserRegisteredMail;
-use App\PastTeachersProfile;
 use App\Teacher;
 use App\TeachingRecord;
 use Illuminate\Http\Request;
@@ -35,17 +34,26 @@ class TeacherController extends Controller
                 ];
             })->pluck('name', 'id');
 
-        $start_date = TeachingRecord::getStartDate();
-        $end_date = TeachingRecord::getEndDate();
-        return view('staff.teachers.index', compact('teachers', 'courses', 'start_date', 'end_date'));
+        $startDate = TeachingRecord::getStartDate();
+        $endDate = TeachingRecord::getEndDate();
+
+        return view('staff.teachers.index', ([
+            'teachers' => $teachers,
+            'courses' => $courses,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+        ]));
     }
 
     public function show(Request $request, Teacher $teacher)
     {
         $records = $teacher->teachingRecords()
-            ->with(['course', 'programme_revision.programme']);
+            ->with(['course', 'programmeRevision.programme']);
 
-        return view('staff.teachers.show', compact('teacher', 'records'));
+        return view('staff.teachers.show', ([
+            'teacher' => $teacher,
+            'records' => $records,
+        ]));
     }
 
     public function avatar(Teacher $teacher)
@@ -66,17 +74,17 @@ class TeacherController extends Controller
 
     public function store(Request $request)
     {
-        $valid_data = $request->validate([
+        $validatedData = $request->validate([
             'first_name' => 'required| string| min:3| max:50',
             'last_name' => 'required| string| min:3| max:50',
             'email' => 'required| email| unique:teachers| min:3| max:190',
         ]);
 
-        $plain_password = strtoupper(Str::random(8));
+        $plainPassword = strtoupper(Str::random(8));
 
-        $teacher = Teacher::create($valid_data + ['password' => bcrypt($plain_password)]);
+        $teacher = Teacher::create($validatedData + ['password' => bcrypt($plainPassword)]);
 
-        Mail::to($teacher)->send(new UserRegisteredMail($teacher, $plain_password));
+        Mail::to($teacher)->send(new UserRegisteredMail($teacher, $plainPassword));
 
         flash('College Teacher created successfully!')->success();
 
@@ -85,7 +93,7 @@ class TeacherController extends Controller
 
     public function update(Request $request, Teacher $teacher)
     {
-        $valid_data = $request->validate([
+        $validData = $request->validate([
             'first_name' => ['sometimes', 'required', 'string', 'min:3', 'max:50'],
             'last_name' => ['sometimes', 'required', 'string', 'min:3', 'max:50'],
             'email' => ['sometimes', 'required', 'min:3', 'max:190', 'email',
@@ -93,7 +101,7 @@ class TeacherController extends Controller
             ],
         ]);
 
-        $teacher->update($valid_data);
+        $teacher->update($validData);
 
         flash('College teacher updated successfully')->success();
 

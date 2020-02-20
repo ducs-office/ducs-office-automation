@@ -103,30 +103,30 @@
             </div>
         </div>
         @endforeach
-        @php($details_count = $teacher->profile->teaching_details->count())
-        @foreach(range(1, 3 - $details_count) as $index => $n)
+        @php($detailsCount = $teacher->profile->teachingDetails->count())
+        @foreach(range(1, 3 - $detailsCount) as $index => $n)
         <div class="flex items-end mb-2 -mx-2">
             <div class="mx-2">
-                <label for="programme-{{ $n + $details_count }}" class="block form-label mb-1">Programme {{ $n + $details_count }}</label>
-                <select id="programme-{{ $n + $details_count }}" name="teaching_details[{{$index + $details_count}}][programme_revision]"
+                <label for="programme-{{ $n + $detailsCount }}" class="block form-label mb-1">Programme {{ $n + $detailsCount }}</label>
+                <select id="programme-{{ $n + $detailsCount }}" name="teaching_details[{{$index + $detailsCount}}][programme_revision]"
                 class="block form-input">
                     <option value="" selected>Choose a Programme</option>
                     @foreach ($programmes as $id => $programme)
                     <option value="{{ $id }}"
-                        {{ $id === old("teaching_details[" . ($index + $details_count) . "][programme_revision]") ? 'selected' : '' }}>
+                        {{ $id === old("teaching_details[" . ($index + $detailsCount) . "][programme_revision]") ? 'selected' : '' }}>
                         {{ $programme }}
                     </option>
                     @endforeach
                 </select>
             </div>
             <div class="mx-2">
-                <label for="course-{{ $n + $details_count }}" class="block form-label mb-1">Course {{ $n + $details_count  }}</label>
-                <select id="course-{{ $n + $details_count  }}" name="teaching_details[{{$index + $details_count}}][course]"
+                <label for="course-{{ $n + $detailsCount }}" class="block form-label mb-1">Course {{ $n + $detailsCount  }}</label>
+                <select id="course-{{ $n + $detailsCount  }}" name="teaching_details[{{$index + $detailsCount}}][course]"
                 class="block form-input">
                     <option value="">Choose Course</option>
                     @foreach ($courses as $id => $course)
                     <option value="{{ $id }}"
-                        {{ $id === old("teaching_details[" . ($index + $details_count) . "][course]") ? 'selected' : '' }}>
+                        {{ $id === old("teaching_details[" . ($index + $detailsCount) . "][course]") ? 'selected' : '' }}>
                         {{ $course }}
                     </option>
                     @endforeach

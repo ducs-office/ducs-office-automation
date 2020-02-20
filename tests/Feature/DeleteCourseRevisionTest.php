@@ -40,7 +40,7 @@ class DeleteCourseRevisionTest extends TestCase
         $this->withoutExceptionHandling()
             ->delete(route('staff.courses.revisions.destroy', [
                 'course' => $course,
-                'course_revision' => $newRevision,
+                'revision' => $newRevision,
             ]))
             ->assertRedirect()
             ->assertSessionHasNoErrors();

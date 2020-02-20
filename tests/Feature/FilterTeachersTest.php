@@ -2,12 +2,8 @@
 
 namespace Tests\Feature;
 
-use App\College;
 use App\Course;
-use App\PastTeachersProfile;
-use App\Programme;
 use App\ProgrammeRevision;
-use App\Teacher;
 use App\TeachingRecord;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;

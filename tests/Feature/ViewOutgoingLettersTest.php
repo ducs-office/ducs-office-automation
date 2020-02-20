@@ -48,8 +48,8 @@ class ViewOutgoingLettersTest extends TestCase
             ->get(route('staff.outgoing_letters.index'))
             ->assertSuccessful()
             ->assertViewIs('staff.outgoing_letters.index')
-            ->assertViewHas('outgoing_letters')
-            ->viewData('outgoing_letters');
+            ->assertViewHas('letters')
+            ->viewData('letters');
 
         $this->assertInstanceOf(Collection::class, $viewOutgoingLetters);
         $this->assertCount(3, $viewOutgoingLetters);
@@ -65,8 +65,8 @@ class ViewOutgoingLettersTest extends TestCase
             ->get(route('staff.outgoing_letters.index'))
             ->assertSuccessful()
             ->assertViewIs('staff.outgoing_letters.index')
-            ->assertViewHas('outgoing_letters')
-            ->viewData('outgoing_letters');
+            ->assertViewHas('letters')
+            ->viewData('letters');
 
         $letters = $letters->sortByDesc('date');
         $sorted_letters_ids = $letters->pluck('id')->toArray();

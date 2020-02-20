@@ -37,7 +37,7 @@ class StoreOutgoingLettersTest extends TestCase
     {
         $this->signIn();
 
-        $outgoing_letter = [
+        $letter = [
             'date' => now()->format('Y-m-d'),
             'subject' => $this->faker->words(3, true),
             'recipient' => $this->faker->name(),
@@ -51,7 +51,7 @@ class StoreOutgoingLettersTest extends TestCase
         ];
 
         $this->withoutExceptionHandling()
-            ->post(route('staff.outgoing_letters.store'), $outgoing_letter)
+            ->post(route('staff.outgoing_letters.store'), $letter)
             ->assertRedirect();
 
         $this->assertEquals(1, OutgoingLetter::count());

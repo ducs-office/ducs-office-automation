@@ -5,11 +5,11 @@ namespace App\Http\Controllers\Teachers;
 use App\Exceptions\TeacherProfileNotCompleted;
 use App\Http\Controllers\Controller;
 use App\Notifications\TeacherDetailsAccepted;
-use App\PastTeachersProfile;
+use App\Notifications\TeachingRecordsSaved;
 use App\TeachingRecord;
 use Illuminate\Http\Request;
 
-class PastTeachersProfilesController extends Controller
+class TeachingRecordsController extends Controller
 {
     public function store(Request $request)
     {
@@ -18,7 +18,7 @@ class PastTeachersProfilesController extends Controller
         $this->ensureProfileCompleted($request);
         $currentProfile = $request->user()->profile;
 
-        $records = $request->user()->teachingRecords()->createMany(
+        $request->user()->teachingRecords()->createMany(
             array_map(function ($detail) use ($currentProfile) {
                 return ['valid_from' => TeachingRecord::getStartDate()]
                     + $currentProfile->only(['college_id', 'designation', 'teacher_id'])
@@ -40,7 +40,8 @@ class PastTeachersProfilesController extends Controller
 
     protected function sendDetailsSubmittedResponse(Request $request)
     {
-        $request->user()->notify(new TeacherDetailsAccepted());
+        $request->user()->notify(new TeachingRecordsSaved());
+
         flash('Details submitted successfully!')->success();
 
         return redirect()->back();

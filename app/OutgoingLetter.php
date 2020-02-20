@@ -25,12 +25,12 @@ class OutgoingLetter extends Model
     {
         parent::boot();
 
-        static::creating(static function ($outgoing_letter) {
-            $outgoing_letter->assignSerialNumber();
+        static::creating(static function ($letter) {
+            $letter->assignSerialNumber();
         });
 
-        static::updating(static function ($outgoing_letter) {
-            $outgoing_letter->assignSerialNumber();
+        static::updating(static function ($letter) {
+            $letter->assignSerialNumber();
         });
     }
 

@@ -40,7 +40,7 @@
             </div>
             <h4 class="text-xl font-bold flex items-baseline mb-3">
                 @isset($letter->priority)
-                <span class="font-bold text-xl {{ $priority_colors[$letter->priority] }} mr-2"
+                <span class="font-bold text-xl {{ $priorityColors[$letter->priority] }} mr-2"
                     title="{{ $priorities[$letter->priority] }}">
                     {{ str_repeat('!', 4 - $letter->priority) }}
                 </span>

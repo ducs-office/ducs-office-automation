@@ -32,7 +32,7 @@ class TeachersProfileTest extends TestCase
     }
 
     /** @test */
-    public function previous_submitted_profiles_of_teacher_can_be_viewed()
+    public function teaching_records_of_a_teacher_can_be_viewed()
     {
         $this->signInTeacher($teacher = create(Teacher::class));
 

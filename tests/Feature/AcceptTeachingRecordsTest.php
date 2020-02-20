@@ -13,7 +13,7 @@ class AcceptTeachingRecordsTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function teachers_details_submission_period_can_be_set()
+    public function teaching_records_submission_period_can_be_set()
     {
         $this->signIn();
 
@@ -29,7 +29,7 @@ class AcceptTeachingRecordsTest extends TestCase
     }
 
     /** @test */
-    public function teachers_details_submission_period_can_be_extended()
+    public function teaching_records_submission_period_can_be_extended()
     {
         $this->signIn();
 
@@ -44,7 +44,7 @@ class AcceptTeachingRecordsTest extends TestCase
     }
 
     /** @test */
-    public function extended_date_can_not_be_less_than_end_date()
+    public function teaching_records_submission_extended_date_can_not_be_less_than_end_date()
     {
         $this->signIn();
 
@@ -64,7 +64,7 @@ class AcceptTeachingRecordsTest extends TestCase
     }
 
     /** @test */
-    public function end_date_can_not_be_less_than_start_date()
+    public function teaching_records_submission_end_date_can_not_be_less_than_start_date()
     {
         $this->signIn();
 

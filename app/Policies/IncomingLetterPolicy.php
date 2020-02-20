@@ -30,7 +30,7 @@ class IncomingLetterPolicy
      *
      * @return mixed
      */
-    public function view(User $user, IncomingLetter $incomingLetter)
+    public function view(User $user, IncomingLetter $letter)
     {
         return $user->can('incoming letters:view');
     }
@@ -55,10 +55,10 @@ class IncomingLetterPolicy
      *
      * @return mixed
      */
-    public function update(User $user, IncomingLetter $incomingLetter)
+    public function update(User $user, IncomingLetter $letter)
     {
         return $user->can('incoming letters:edit')
-            && (int) $incomingLetter->creator_id === (int) $user->id;
+            && (int) $letter->creator_id === (int) $user->id;
     }
 
     /**
@@ -69,9 +69,9 @@ class IncomingLetterPolicy
      *
      * @return mixed
      */
-    public function delete(User $user, IncomingLetter $incomingLetter)
+    public function delete(User $user, IncomingLetter $letter)
     {
         return $user->can('incoming letters:delete')
-            && (int) $incomingLetter->creator_id === (int) $user->id;
+            && (int) $letter->creator_id === (int) $user->id;
     }
 }

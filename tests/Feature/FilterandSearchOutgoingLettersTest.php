@@ -31,8 +31,8 @@ class FilterOutgoingLettersTest extends TestCase
             ]))
             ->assertSuccessful()
             ->assertViewIs('staff.outgoing_letters.index')
-            ->assertViewHas('outgoing_letters')
-            ->viewData('outgoing_letters');
+            ->assertViewHas('letters')
+            ->viewData('letters');
 
         $this->assertInstanceOf(Collection::class, $viewOutgoingLetters);
         $this->assertCount(2, $viewOutgoingLetters, 'Only 2 letters were expected but :actual letters were returned');
@@ -61,8 +61,8 @@ class FilterOutgoingLettersTest extends TestCase
             ]))
             ->assertSuccessful()
             ->assertViewIs('staff.outgoing_letters.index')
-            ->assertViewHas('outgoing_letters')
-            ->viewData('outgoing_letters');
+            ->assertViewHas('letters')
+            ->viewData('letters');
 
         $this->assertInstanceOf(Collection::class, $viewOutgoingLetters);
         $this->assertCount(1, $viewOutgoingLetters, 'Only 1 letter was expected but :actual letters were returned');
@@ -98,8 +98,8 @@ class FilterOutgoingLettersTest extends TestCase
             ]))
             ->assertSuccessful()
             ->assertViewIs('staff.outgoing_letters.index')
-            ->assertViewHas('outgoing_letters')
-            ->viewData('outgoing_letters');
+            ->assertViewHas('letters')
+            ->viewData('letters');
 
         $this->assertInstanceOf(Collection::class, $viewOutgoingLetters);
         $this->assertCount(2, $viewOutgoingLetters, 'Only 2 letters were expected but :actual letters were returned');
@@ -126,8 +126,8 @@ class FilterOutgoingLettersTest extends TestCase
             ]))
             ->assertSuccessful()
             ->assertViewIs('staff.outgoing_letters.index')
-            ->assertViewHas('outgoing_letters')
-            ->viewData('outgoing_letters');
+            ->assertViewHas('letters')
+            ->viewData('letters');
 
         $this->assertCount(1, $viewLetters);
     }
@@ -148,8 +148,8 @@ class FilterOutgoingLettersTest extends TestCase
             ]))
             ->assertSuccessful()
             ->assertViewIs('staff.outgoing_letters.index')
-            ->assertViewHas('outgoing_letters')
-            ->viewData('outgoing_letters');
+            ->assertViewHas('letters')
+            ->viewData('letters');
 
         $this->assertCount(1, $viewLetters);
     }
@@ -174,8 +174,8 @@ class FilterOutgoingLettersTest extends TestCase
             ]))
             ->assertSuccessful()
             ->assertViewIs('staff.outgoing_letters.index')
-            ->assertViewHas('outgoing_letters')
-            ->viewData('outgoing_letters');
+            ->assertViewHas('letters')
+            ->viewData('letters');
 
         $this->assertCount(1, $viewLetters);
     }
@@ -195,8 +195,8 @@ class FilterOutgoingLettersTest extends TestCase
             ]))
             ->assertSuccessful()
             ->assertViewIs('staff.outgoing_letters.index')
-            ->assertViewHas('outgoing_letters')
-            ->viewData('outgoing_letters');
+            ->assertViewHas('letters')
+            ->viewData('letters');
 
         $this->assertCount(2, $viewLetters);
         $this->assertTrue($viewLetters->pluck('id')->contains($bills[0]->id));
@@ -218,8 +218,8 @@ class FilterOutgoingLettersTest extends TestCase
             ]))
             ->assertSuccessful()
             ->assertViewIs('staff.outgoing_letters.index')
-            ->assertViewHas('outgoing_letters')
-            ->viewData('outgoing_letters');
+            ->assertViewHas('letters')
+            ->viewData('letters');
 
         $this->assertCount(2, $viewLetters);
         $this->assertTrue($viewLetters->pluck('id')->contains($sentToDUCC[0]->id));
@@ -241,8 +241,8 @@ class FilterOutgoingLettersTest extends TestCase
             ]))
             ->assertSuccessful()
             ->assertViewIs('staff.outgoing_letters.index')
-            ->assertViewHas('outgoing_letters')
-            ->viewData('outgoing_letters');
+            ->assertViewHas('letters')
+            ->viewData('letters');
 
         $this->assertCount(2, $viewLetters);
         $this->assertTrue($viewLetters->pluck('id')->contains($createdBy1[0]->id));
@@ -264,8 +264,8 @@ class FilterOutgoingLettersTest extends TestCase
             ]))
             ->assertSuccessful()
             ->assertViewIs('staff.outgoing_letters.index')
-            ->assertViewHas('outgoing_letters')
-            ->viewData('outgoing_letters');
+            ->assertViewHas('letters')
+            ->viewData('letters');
 
         $this->assertCount(2, $viewLetters);
         $this->assertTrue($viewLetters->pluck('id')->contains($sentBy1[0]->id));
@@ -287,8 +287,8 @@ class FilterOutgoingLettersTest extends TestCase
             ]))
             ->assertSuccessful()
             ->assertViewIs('staff.outgoing_letters.index')
-            ->assertViewHas('outgoing_letters')
-            ->viewData('outgoing_letters');
+            ->assertViewHas('letters')
+            ->viewData('letters');
 
         $this->assertCount(2, $viewLetters);
         $this->assertTrue($viewLetters->pluck('id')->contains($sender1->id));

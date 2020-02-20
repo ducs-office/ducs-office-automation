@@ -30,7 +30,7 @@
             name="semester_courses"
             :count="{{ $programme->duration * 2 }}"
             :data-courses="{{ $courses->toJson() }}"
-            :value="{{ json_encode(old('semester_courses', $semester_courses)) }}">
+            :value="{{ json_encode(old('semester_courses', $semesterCourses)) }}">
         </semester-wise-courses-input>
         <div class="mb-2">
             <button type="submit" class="btn btn-magenta">Create</button>

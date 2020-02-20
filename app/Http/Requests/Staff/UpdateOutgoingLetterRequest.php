@@ -13,7 +13,7 @@ class UpdateOutgoingLetterRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->can('update', $this->route('outgoing_letter'));
+        return $this->user()->can('update', $this->route('letter'));
     }
 
     /**
@@ -34,7 +34,7 @@ class UpdateOutgoingLetterRequest extends FormRequest
             'attachments.*' => ['file', 'max:200', 'mimes:jpeg,jpg,png,pdf'],
         ];
 
-        if ($this->route('outgoing_letter')->attachments()->count() < 1) {
+        if ($this->route('letter')->attachments()->count() < 1) {
             array_push($rules['attachments'], 'min:1');
         } else {
             array_unshift($rules['attachments'], 'sometimes');

@@ -13,7 +13,7 @@ class IncomingLettersController extends Controller
 {
     public function __construct()
     {
-        $this->authorizeResource(IncomingLetter::class, 'incoming_letter');
+        $this->authorizeResource(IncomingLetter::class, 'letter');
     }
 
     public function index(Request $request)
@@ -33,11 +33,11 @@ class IncomingLettersController extends Controller
         )->get()->pluck('name', 'id');
 
         return view('staff.incoming_letters.index', [
-            'incoming_letters' => $query->orderBy('date', 'DESC')->get(),
+            'incomingLetters' => $query->orderBy('date', 'DESC')->get(),
             'recipients' => $recipients,
             'senders' => IncomingLetter::selectRaw('DISTINCT(sender)')->get()->pluck('sender', 'sender'),
             'priorities' => config('options.incoming_letters.priorities'),
-            'priority_colors' => config('options.incoming_letters.priority_colors'),
+            'priorityColors' => config('options.incoming_letters.priority_colors'),
         ]);
     }
 
@@ -45,7 +45,6 @@ class IncomingLettersController extends Controller
     {
         return view('staff.incoming_letters.create', [
             'priorities' => config('options.incoming_letters.priorities'),
-            'priority_colors' => config('options.incoming_letters.priority_colors'),
         ]);
     }
 
@@ -62,44 +61,44 @@ class IncomingLettersController extends Controller
         return redirect(route('staff.incoming_letters.index'));
     }
 
-    public function edit(IncomingLetter $incoming_letter)
+    public function edit(IncomingLetter $letter)
     {
         return view('staff.incoming_letters.edit', [
-            'incoming_letter' => $incoming_letter,
+            'letter' => $letter,
             'priorities' => config('options.incoming_letters.priorities'),
         ]);
     }
 
-    public function update(UpdateIncomingLettersRequest $request, IncomingLetter $incoming_letter)
+    public function update(UpdateIncomingLettersRequest $request, IncomingLetter $letter)
     {
-        $incoming_letter->update($request->validated());
+        $letter->update($request->validated());
 
-        $incoming_letter->handovers()->sync($request->handovers ?? []);
+        $letter->handovers()->sync($request->handovers ?? []);
 
-        $incoming_letter->attachments()->createMany(
+        $letter->attachments()->createMany(
             $request->attachmentFiles()
         );
 
         return redirect(route('staff.incoming_letters.index'));
     }
 
-    public function destroy(IncomingLetter $incoming_letter)
+    public function destroy(IncomingLetter $letter)
     {
-        $incoming_letter->attachments->each->delete();
-        $incoming_letter->remarks->each->delete();
+        $letter->attachments->each->delete();
+        $letter->remarks->each->delete();
 
-        $incoming_letter->delete();
+        $letter->delete();
 
         return redirect(route('staff.incoming_letters.index'));
     }
 
-    public function storeRemark(Request $request, IncomingLetter $incoming_letter)
+    public function storeRemark(Request $request, IncomingLetter $letter)
     {
         $data = $request->validate([
             'description' => 'required|string|min:2|max:190',
         ]);
 
-        $incoming_letter->remarks()->create($data + ['user_id' => $request->user()->id]);
+        $letter->remarks()->create($data + ['user_id' => $request->user()->id]);
 
         return back();
     }

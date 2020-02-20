@@ -23,7 +23,7 @@ class ProgrammesController extends Controller
     public function index()
     {
         $programmes = Programme::withLatestRevision()->latest()->get();
-        $grouped_courses = $programmes->map(static function ($programme) {
+        $groupedCourses = $programmes->map(static function ($programme) {
             return $programme->latestRevision
                 ->courses
                 ->sortBy('pivot.semester')
@@ -32,7 +32,7 @@ class ProgrammesController extends Controller
 
         return view('staff.programmes.index', [
             'programmes' => $programmes,
-            'grouped_courses' => $grouped_courses,
+            'groupedCourses' => $groupedCourses,
         ]);
     }
 

@@ -45,7 +45,7 @@
             <ul>
                 @foreach($teacher->profile->teachingDetails as $detail)
                 <li>
-                    {{ $detail->programme_revision->programme->name }} -
+                    {{ $detail->programmeRevision->programme->name }} -
                     {{ $detail->course->name }}
                 </li>
                 @endforeach
@@ -65,19 +65,22 @@
 
         <div class="bg-white p-6 h-full rounded shadow-md mt-4">
             <h3 class="font-bold text-2xl underline">Teaching Records</h3>
-            @foreach ($teacher->teachingRecords as $record)
+            @foreach ($teacher->teachingRecords->groupBy(function($record) {
+                    return $record->valid_from->format('M, Y');
+                }) as $date => $records)
             <details class="mt-6 bg-gray-200 rounded border" open>
-                <summary class="px-4 font-bold cursor-pointer outline-none py-2"> {{ $record->valid_from->format('M, Y')}}
-                </summary>
-                <div class="px-8">
-                    <p>
-                        Taught <span>{{ $record->course->code }} - {{ $record->course->name }}</span>
+                <summary class="px-4 font-bold cursor-pointer outline-none py-2"> {{ $date }}</summary>
+                <ul class="px-8 list-disc ml-6">
+                    @foreach($records as $record)
+                    <li class="mb-3">
+                        Taught <b>{{ $record->course->name }} <em>({{ $record->course->code }})</em></b>
                         under {{ $record->programmeRevision->programme->name }}
                         (w.e.f {{ $record->programmeRevision->revised_at->year }})
                         in <em class="underline">{{ $record->college->name }}</em> as
                         <strong>{{ $record->getDesignation() }}</strong> teacher.
-                    </p>
-                </div>
+                    </li>
+                    @endforeach
+                </ul>
             </details>
             @endforeach
         </div>

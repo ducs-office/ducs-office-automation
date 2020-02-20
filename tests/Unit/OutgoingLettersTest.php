@@ -16,20 +16,20 @@ class OutgoingLettersTest extends TestCase
     /** @test */
     public function date_attribute_is_casted_to_carbon_instance()
     {
-        $outgoing_letter = make(OutgoingLetter::class, 1, ['date' => '2016-08-08']);
+        $letter = make(OutgoingLetter::class, 1, ['date' => '2016-08-08']);
 
-        $this->assertInstanceOf(Carbon::class, $outgoing_letter->date);
-        $this->assertEquals('2016-08-08', $outgoing_letter->date->format('Y-m-d'));
+        $this->assertInstanceOf(Carbon::class, $letter->date);
+        $this->assertEquals('2016-08-08', $letter->date->format('Y-m-d'));
     }
 
     /** @test */
     public function letter_has_an_associated_sender_who_is_a_user()
     {
         $jack = create(User::class);
-        $outgoing_letter = create(OutgoingLetter::class, 1, ['sender_id' => $jack->id]);
+        $letter = create(OutgoingLetter::class, 1, ['sender_id' => $jack->id]);
 
-        $this->assertInstanceOf(BelongsTo::class, $outgoing_letter->sender(), 'sender method was expected to return a belongsTo relation');
-        $this->assertInstanceOf(User::class, $outgoing_letter->sender);
-        $this->assertTrue($outgoing_letter->sender->is($jack));
+        $this->assertInstanceOf(BelongsTo::class, $letter->sender(), 'sender method was expected to return a belongsTo relation');
+        $this->assertInstanceOf(User::class, $letter->sender);
+        $this->assertTrue($letter->sender->is($jack));
     }
 }

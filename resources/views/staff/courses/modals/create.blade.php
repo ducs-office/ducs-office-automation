@@ -19,7 +19,7 @@
                 Type <span class="text-red-600">*</span>
             </label>
             <select class="w-full form-input" name="type" required>
-                @foreach ($course_types as $key => $type)
+                @foreach ($courseTypes as $key => $type)
                 <option value="{{ $key }}"
                     {{ old('type', 'C') === $key ? 'selected' : ''}}>
                     {{ $type }}
