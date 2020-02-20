@@ -8,55 +8,11 @@
             @click.prevent="$modal.show('create-teacher-modal')">
             New
         </button>
-        @if(now() > $endDate)
-            <form action=" {{ route('staff.teaching_records.accept')}} " method="post"  class="ml-auto self-start flex items-end">
-                @csrf_token
-                <div class="mr-2">
-                    <label for="start_date" class="block form-label">Start Date</label>
-                <input type="date" name="start_date" id="start_date" class="form-input">
-                </div>
-                <div class="mr-2">
-                    <label for="end_date" class="block form-label">End Date</label>
-                <input type="date" name="end_date" id="end_date" class="form-input">
-                </div>
-                <button type="submit" class="btn btn-magenta">Start Accepting Details</button>
-            </form>
-        @else
-            <div class="ml-auto self-start flex items-end">
-                <div class="mr-2">
-                    <label for="start_date" class="block form-label">Start Date</label>
-                <input type="date" name="start_date" id="start_date" class="form-input" value="{{ $startDate->format('Y-m-d') }}" disabled>
-                </div>
-                <div class="mr-2">
-                    <label for="end_date" class="block form-label">End Date</label>
-                <input type="date" name="end_date" id="end_date" class="form-input" value="{{ $endDate->format('Y-m-d') }}" disabled>
-                </div>
-            </div>
-        @endif
         @include('staff.teachers.modals.create', [
             'modalName' => 'create-teacher-modal',
         ])
         @endcan
     </div>
-    <form method="GET" class="p-5 justify-end flex items-end border-b">
-        <div class="mr-2">
-            <label for="valid_from" class="block form-label">Taught After</label>
-        <input type="date" name="filters[valid_from]" id="valid_from" class="form-input text-sm" value="{{ old('filters.valid_from') }}">
-        </div>
-        <div class="mr-2">
-            <label for="course_id" class="block form-label">Course Taught</label>
-            <select name="filters[course_id]" id="course_id" class="form-input text-sm">
-                <option value="">All</option>
-                @foreach($courses as  $id => $course)
-                <option value="{{ $id }}" {{ old('filters.course_id', '') == $id ? 'selected' : ''}}>{{ $course }}</option>
-                @endforeach
-            </select>
-        </div>
-        <div>
-            <button type="submit" class="btn btn-magenta text-sm">Filter</button>
-            <button type="button" onclick="window.location.replace(window.location.pathname)" class="btn text-sm">Clear Filter</button>
-        </div>
-    </form>
 
     @can('update', App\Teacher::class)
     @include('staff.teachers.modals.edit', [
@@ -92,7 +48,7 @@
                 @endcan
                 @can('delete', $teacher)
                 <form action="{{ route('staff.teachers.destroy', $teacher) }}" method="POST"
-                    onsubmit="return confirm('Do you really want to delete teacher \'{{ $teacher->getNameAttribute() }}\'?');">
+                    onsubmit="return confirm('Do you really want to delete teacher \'{{ $teacher->name }}\'?');">
                     @csrf_token @method('delete')
                     <button type="submit" class="p-1 hover:text-red-700">
                         <feather-icon class="h-current" name="trash-2">Trash</feather-icon>

@@ -18,30 +18,27 @@ class TeacherController extends Controller
 {
     public function index(Request $request)
     {
-        $filters = $request->query('filters');
-        $query = Teacher::applyFilter($filters)->with([
-            'teachingRecords',
-            'teachingRecords.course',
-            'teachingRecords.programmeRevision.programme',
-        ]);
+//        $filters = $request->query('filters');
+//        $query = Teacher::applyFilter($filters)->with([
+//            'teachingRecords',
+//            'teachingRecords.course',
+//            'teachingRecords.programmeRevision.programme',
+//        ]);
 
-        $teachers = $query->orderBy('id')->get();
-        $courses = Course::select('id', 'code', 'name')->get()
-            ->map(static function ($course) {
-                return [
-                    'id' => $course->id,
-                    'name' => $course->code . ' - ' . $course->name,
-                ];
-            })->pluck('name', 'id');
-
-        $startDate = TeachingRecord::getStartDate();
-        $endDate = TeachingRecord::getEndDate();
+        $teachers = Teacher::latest()->get();
+//        $courses = Course::select(['id', 'code', 'name'])->get()
+//            ->map(static function ($course) {
+//                return [
+//                    'id' => $course->id,
+//                    'name' => $course->code . ' - ' . $course->name,
+//                ];
+//            })->pluck('name', 'id');
+//
+//        $startDate = TeachingRecord::getStartDate();
+//        $endDate = TeachingRecord::getEndDate();
 
         return view('staff.teachers.index', ([
             'teachers' => $teachers,
-            'courses' => $courses,
-            'startDate' => $startDate,
-            'endDate' => $endDate,
         ]));
     }
 

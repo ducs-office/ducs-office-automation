@@ -5,7 +5,7 @@
             <h2 class="mb-1">Programme Revisions</h2>
             <div class="flex mt-3">
                 <h2 class="text-lg font-bold">
-                   {{ ucwords($programme->name) }}
+                    {{ ucwords($programme->name) }}
                 </h2>
             <span class="ml-2 py-1 rounded bg-black font-bold font-mono text-sm text-white mr-2 w-24 text-center"> {{ $programme->code }}</span>
             </div>

@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 
@@ -12,6 +13,12 @@ class TeachingRecord extends Model
     protected $guarded = [];
     protected $dates = ['valid_from'];
 
+    public static function isAccepting()
+    {
+        return static::getStartDate() && static::getStartDate() < now()
+            && static::getEndDate() && static::getEndDate() > now();
+    }
+
     public static function startAccepting($start, $end)
     {
         return Cache::put(static::$acceptRecordsKeyPrefix . 'start', $start)
@@ -20,8 +27,7 @@ class TeachingRecord extends Model
 
     public static function canSubmit($teacher)
     {
-        return static::getStartDate() < now()
-            && static::getEndDate() > now()
+        return static::isAccepting()
             && ! static::where('valid_from', static::getStartDate())
                 ->where('teacher_id', $teacher->id)->exists();
     }
@@ -39,6 +45,33 @@ class TeachingRecord extends Model
     public static function getEndDate()
     {
         return Cache::get(static::$acceptRecordsKeyPrefix . 'end');
+    }
+
+    public function scopeFilter(Builder $query, $filters)
+    {
+        if (! isset($filters['valid_from']) && ! isset($filters['course_id'])) {
+            return $query;
+        }
+
+        if (isset($filters['valid_from'])) {
+            $query->where('valid_from', '>=', $filters['valid_from']);
+        }
+
+        if (isset($filters['course_id'])) {
+            $query->where('course_id', $filters['course_id']);
+        }
+    }
+
+    public function scopeFilterByCourse(Builder $query, $course_id)
+    {
+        if ($course_id != null) {
+            $query->where('course_id', $course_id);
+        }
+    }
+
+    public function teacher()
+    {
+        return $this->belongsTo(Teacher::class);
     }
 
     public function course()

@@ -39,21 +39,4 @@ class Teacher extends User
     {
         return $this->hasMany(TeachingRecord::class, 'teacher_id');
     }
-
-    public function scopeApplyFilter($query, $filters)
-    {
-        if (isset($filters['valid_from']) || isset($filters['course_id'])) {
-            $query->whereHas(
-                'teachingRecords',
-                static function (Builder $query) use ($filters) {
-                    if (isset($filters['course_id'])) {
-                        $query->where('course_id', $filters['course_id']);
-                    }
-                    if (isset($filters['valid_from'])) {
-                        $query->where('valid_from', '>=', $filters['valid_from']);
-                    }
-                }
-            );
-        }
-    }
 }
