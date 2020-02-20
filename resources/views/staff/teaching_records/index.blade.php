@@ -95,6 +95,11 @@
                 <feather-icon name="filter" stroke-width="2.5" class="h-5 mr-2">Filter</feather-icon>
                 Filter
             </button>
+            <button type="submit" formaction="{{ route('staff.teaching_records.export') }}"
+                class="inline-flex items-center btn btn-magenta mr-2">
+                <feather-icon name="download" stroke-width="2.5" class="h-5 mr-2">Export</feather-icon>
+                Export CSV
+            </button>
         </div>
     </form>
     <table class="border-collapse">

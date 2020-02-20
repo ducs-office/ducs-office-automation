@@ -82,5 +82,6 @@ Route::patch('/teachers/{teacher}', 'TeacherController@update')->name('teachers.
 Route::delete('/teachers/{teacher}', 'TeacherController@destroy')->name('teachers.destroy');
 
 Route::get('/teaching-records', 'TeachingRecordsController@index')->name('teaching_records.index');
+Route::get('/teaching-records/export', 'TeachingRecordsController@index')->name('teaching_records.export');
 Route::post('/teaching-records/accept', 'AcceptTeachingRecordsController@start')->name('teaching_records.accept');
 Route::patch('/teaching-records/extend', 'AcceptTeachingRecordsController@extend')->name('teaching_records.extend');
