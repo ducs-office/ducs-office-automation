@@ -4,10 +4,10 @@ namespace Tests\Feature;
 
 use App\Teacher;
 use App\User;
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
+use Tests\TestCase;
 
 class LoginTest extends TestCase
 {
@@ -26,7 +26,7 @@ class LoginTest extends TestCase
         $adminRole = Role::firstOrCreate(['name' => 'admin']);
 
         $adminStaff = create(User::class, 1, [
-            'password' => bcrypt($password = 'secret')
+            'password' => bcrypt($password = 'secret'),
         ])->assignRole($adminRole);
 
         $this->withoutExceptionHandling();
@@ -34,7 +34,7 @@ class LoginTest extends TestCase
         $this->post(route('login'), [
             'email' => $adminStaff->email,
             'password' => $password,
-            'type' => 'web'
+            'type' => 'web',
         ])->assertRedirect();
 
         $this->assertTrue(Auth::guard('web')->check(), 'User was expected to login but was not.');
@@ -44,13 +44,13 @@ class LoginTest extends TestCase
     public function teachers_can_login()
     {
         $teacher = create(Teacher::class, 1, [
-            'password' => bcrypt($plainPassword = 'secret')
+            'password' => bcrypt($plainPassword = 'secret'),
         ]);
 
         $this->withoutExceptionHandling()->post(route('login'), [
             'email' => $teacher->email,
             'password' => $plainPassword,
-            'type' => 'teachers'
+            'type' => 'teachers',
         ])->assertRedirect();
 
         $this->assertTrue(Auth::guard('teachers')->check());
@@ -60,15 +60,15 @@ class LoginTest extends TestCase
     public function teachers_cannot_login_on_invalid_guard()
     {
         $teacher = create(Teacher::class, 1, [
-            'password' => bcrypt($plainPassword = 'secret')
+            'password' => bcrypt($plainPassword = 'secret'),
         ]);
 
         $this->withExceptionHandling()
-            
+
             ->post(route('login'), [
                 'email' => $teacher->email,
                 'password' => $plainPassword,
-                'type' => 'dsadasfm' // random
+                'type' => 'dsadasfm', // random
             ])->assertRedirect()
             ->assertSessionHasErrors('type');
 
@@ -83,7 +83,6 @@ class LoginTest extends TestCase
         $this->get(route('login_form'))->assertRedirect();
         $this->post(route('login'))->assertRedirect();
     }
-
 
     /** @test */
     public function logged_in_user_can_logout()

@@ -12,6 +12,7 @@ class CommonHeadersMiddleware
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next
+     *
      * @return mixed
      */
     public function handle($request, Closure $next)
@@ -22,8 +23,8 @@ class CommonHeadersMiddleware
             return $response;
         }
 
-        return $response->header("X-Frame-Options", "SAMEORIGIN")
-            ->header("X-XSS-Protection", "1; mode=block")
-            ->header("X-Content-Type-Options", "nosniff");
+        return $response->header('X-Frame-Options', 'SAMEORIGIN')
+            ->header('X-XSS-Protection', '1; mode=block')
+            ->header('X-Content-Type-Options', 'nosniff');
     }
 }

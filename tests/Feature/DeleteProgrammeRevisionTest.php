@@ -21,7 +21,7 @@ class DeleteProgrammeRevisionTest extends TestCase
         $this->withExceptionHandling()
             ->delete(route('staff.programmes.revisions.destroy', [
                 'programme' => $programme,
-                'programmeRevision' => $revision,
+                'revision' => $revision,
             ]))
             ->assertRedirect();
     }
@@ -39,9 +39,9 @@ class DeleteProgrammeRevisionTest extends TestCase
 
         $this->withExceptionHandling()
             ->delete(route('staff.programmes.revisions.destroy', [
-                    'programme' => $programme,
-                    'programmeRevision' => $revision
-                ]))
+                'programme' => $programme,
+                'revision' => $revision,
+            ]))
             ->assertRedirect();
 
         $this->assertEquals(0, $revision->courses->count());
@@ -58,7 +58,7 @@ class DeleteProgrammeRevisionTest extends TestCase
 
         $revisions = $programme->revisions()->createMany([
             ['revised_at' => $programme->wef],
-            ['revised_at' => $programme->wef->addYear()]
+            ['revised_at' => $programme->wef->addYear()],
         ]);
 
         foreach ($revisions as $index => $revision) {
@@ -68,18 +68,19 @@ class DeleteProgrammeRevisionTest extends TestCase
         $this->withoutExceptionHandling()
             ->delete(route('staff.programmes.revisions.destroy', [
                 'programme' => $programme,
-                'programmeRevision' => $revisions[0],
+                'revision' => $revisions[0],
             ]))
             ->assertRedirect();
 
         $this->withExceptionHandling()
         ->delete(route('staff.programmes.revisions.destroy', [
             'programme' => $programme,
-            'programmeRevision' => $revisions[1]
+            'revision' => $revisions[1],
         ]))
         ->assertRedirect();
 
-        $this->assertEquals(0, $revision->courses->count());
+        $this->assertEquals(0, $revisions[0]->courses()->count());
+        $this->assertEquals(0, $revisions[1]->courses()->count());
         $this->assertEquals(0, ProgrammeRevision::count());
         $this->assertEquals(0, Programme::count());
     }

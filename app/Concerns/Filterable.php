@@ -1,9 +1,9 @@
 <?php
+
 namespace App\Concerns;
 
 trait Filterable
 {
-    
     /**
      * variable controls filters
      *
@@ -19,7 +19,7 @@ trait Filterable
 
         foreach ($filters as $field => $comparators) {
             foreach ($comparators as $operator => $value) {
-                if ($value != '') {
+                if (trim($value) !== '') {
                     $query->where($field, $operators[$operator], $value);
                 }
             }

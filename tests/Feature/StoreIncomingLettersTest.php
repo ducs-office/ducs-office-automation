@@ -5,10 +5,10 @@ namespace Tests\Feature;
 use \App\User;
 use App\IncomingLetter;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Validation\ValidationException;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
 
 class StoreIncomingLetters extends TestCase
@@ -36,13 +36,13 @@ class StoreIncomingLetters extends TestCase
             'sender' => $this->faker->name(),
             'recipient_id' => create(User::class)->id,
             'handovers' => [
-               create(User::class)->id,
-               create(User::class)->id
+                create(User::class)->id,
+                create(User::class)->id,
             ],
             'priority' => 2,
             'subject' => $this->faker->words(3, true),
             'description' => $this->faker->paragraph(),
-            'attachments' => [ $scanFile = UploadedFile::fake()->image('scanned_copy.jpg')]
+            'attachments' => [$scanFile = UploadedFile::fake()->image('scanned_copy.jpg')],
         ];
 
         $this->withoutExceptionHandling()
@@ -72,7 +72,7 @@ class StoreIncomingLetters extends TestCase
                 'priority' => 2,
                 'subject' => $this->faker->words(3, true),
                 'description' => $this->faker->paragraph(),
-                'attachments' =>  [UploadedFile::fake()->create('document.pdf')]
+                'attachments' => [UploadedFile::fake()->create('document.pdf')],
             ];
 
             $this->withoutExceptionHandling()
@@ -96,18 +96,18 @@ class StoreIncomingLetters extends TestCase
             'priority' => 2,
             'subject' => $this->faker->words(3, true),
             'description' => $this->faker->paragraph(),
-            'attachments' =>  [UploadedFile::fake()->create('document.pdf')]
+            'attachments' => [UploadedFile::fake()->create('document.pdf')],
         ];
 
         $invalid_dates = [
             '2007-17-31',
             '2003-11-31',
-            '2013-2-29'
+            '2013-2-29',
         ];
         $valid_dates = [
             '2007-12-31',
             '2009-11-30',
-            '2012-2-29'
+            '2012-2-29',
         ];
 
         foreach ($invalid_dates as $date) {
@@ -150,7 +150,7 @@ class StoreIncomingLetters extends TestCase
                 'priority' => 2,
                 'subject' => $this->faker->words(3, true),
                 'description' => $this->faker->paragraph(),
-                'attachments' =>  [UploadedFile::fake()->create('document.pdf')]
+                'attachments' => [UploadedFile::fake()->create('document.pdf')],
             ];
 
             $this->withoutExceptionHandling()
@@ -176,7 +176,7 @@ class StoreIncomingLetters extends TestCase
                 'priority' => 2,
                 'subject' => $this->faker->words(3, true),
                 'description' => $this->faker->paragraph(),
-                'attachments' =>  [UploadedFile::fake()->create('document.pdf')]
+                'attachments' => [UploadedFile::fake()->create('document.pdf')],
             ];
 
             $this->withoutExceptionHandling()
@@ -202,7 +202,7 @@ class StoreIncomingLetters extends TestCase
                 'priority' => 2,
                 'subject' => $this->faker->words(3, true),
                 'description' => $this->faker->paragraph(),
-                'attachments' =>  [UploadedFile::fake()->create('document.pdf')]
+                'attachments' => [UploadedFile::fake()->create('document.pdf')],
             ];
 
             $this->withoutExceptionHandling()
@@ -228,7 +228,7 @@ class StoreIncomingLetters extends TestCase
                 'priority' => 2,
                 'subject' => $this->faker->words(3, true),
                 'description' => $this->faker->paragraph(),
-                'attachments' =>  [UploadedFile::fake()->create('document.pdf')]
+                'attachments' => [UploadedFile::fake()->create('document.pdf')],
             ];
 
             $this->withoutExceptionHandling()
@@ -254,7 +254,7 @@ class StoreIncomingLetters extends TestCase
                 'priority' => 2,
                 'subject' => $this->faker->words(3, true),
                 'description' => $this->faker->paragraph(),
-                'attachments' =>  [UploadedFile::fake()->create('document.pdf')]
+                'attachments' => [UploadedFile::fake()->create('document.pdf')],
             ];
 
             $this->withoutExceptionHandling()
@@ -280,7 +280,7 @@ class StoreIncomingLetters extends TestCase
                 'priority' => 2,
                 'subject' => $this->faker->words(3, true),
                 'description' => $this->faker->paragraph(),
-                'attachments' =>  [UploadedFile::fake()->create('document.pdf')]
+                'attachments' => [UploadedFile::fake()->create('document.pdf')],
             ];
 
             $this->withoutExceptionHandling()
@@ -305,7 +305,7 @@ class StoreIncomingLetters extends TestCase
             'priority' => 2,
             'subject' => $this->faker->words(3, true),
             'description' => $this->faker->paragraph(),
-            'attachments' =>  [UploadedFile::fake()->create('document.pdf')]
+            'attachments' => [UploadedFile::fake()->create('document.pdf')],
         ];
 
         $this->withoutExceptionHandling()
@@ -329,7 +329,7 @@ class StoreIncomingLetters extends TestCase
                 'priority' => 2,
                 'subject' => $this->faker->words(3, true),
                 'description' => $this->faker->paragraph(),
-                'attachments' =>  [UploadedFile::fake()->create('document.pdf')]
+                'attachments' => [UploadedFile::fake()->create('document.pdf')],
             ];
 
             $this->withoutExceptionHandling()
@@ -354,7 +354,7 @@ class StoreIncomingLetters extends TestCase
             'priority' => '',
             'subject' => $this->faker->words(3, true),
             'description' => $this->faker->paragraph(),
-            'attachments' =>  [UploadedFile::fake()->create('document.pdf')]
+            'attachments' => [UploadedFile::fake()->create('document.pdf')],
         ];
 
         $this->withoutExceptionHandling()
@@ -378,7 +378,7 @@ class StoreIncomingLetters extends TestCase
                 'priority' => $this->faker->numberBetween(4, 10),
                 'subject' => $this->faker->words(3, true),
                 'description' => $this->faker->paragraph(),
-                'attachments' =>  [UploadedFile::fake()->create('document.pdf')]
+                'attachments' => [UploadedFile::fake()->create('document.pdf')],
             ];
 
             $this->withoutExceptionHandling()
@@ -404,7 +404,7 @@ class StoreIncomingLetters extends TestCase
                 'priority' => 2,
                 'subject' => '',
                 'description' => $this->faker->paragraph(),
-                'attachments' =>  [UploadedFile::fake()->create('document.pdf')]
+                'attachments' => [UploadedFile::fake()->create('document.pdf')],
             ];
 
             $this->withoutExceptionHandling()
@@ -430,7 +430,7 @@ class StoreIncomingLetters extends TestCase
                 'priority' => 2,
                 'subject' => $this->faker->regexify('[A-Ba-b0-9]{101}'),
                 'description' => $this->faker->paragraph(),
-                'attachments' =>  [UploadedFile::fake()->create('document.pdf')]
+                'attachments' => [UploadedFile::fake()->create('document.pdf')],
             ];
 
             $this->withoutExceptionHandling()
@@ -455,7 +455,7 @@ class StoreIncomingLetters extends TestCase
             'priority' => 2,
             'subject' => $this->faker->words(3, true),
             'description' => '',
-            'attachments' =>  [UploadedFile::fake()->create('document.pdf')]
+            'attachments' => [UploadedFile::fake()->create('document.pdf')],
         ];
 
         $this->withoutExceptionHandling()
@@ -479,7 +479,7 @@ class StoreIncomingLetters extends TestCase
                 'priority' => 2,
                 'subject' => $this->faker->words(3, true),
                 'description' => $this->faker->regexify('[A-Ba-b0-9]{401}'),
-                'attachments' =>  [UploadedFile::fake()->create('document.pdf')]
+                'attachments' => [UploadedFile::fake()->create('document.pdf')],
             ];
 
             $this->withoutExceptionHandling()

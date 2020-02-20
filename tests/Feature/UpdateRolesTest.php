@@ -27,7 +27,7 @@ class UpdateRolesTest extends TestCase
         $this->withoutExceptionHandling()
             ->patch(route('staff.roles.update', $role), [
                 'name' => 'existing role updated',
-                'permissions' => [$firstPermission->id, $thirdPermission->id]
+                'permissions' => [$firstPermission->id, $thirdPermission->id],
             ])->assertRedirect()
             ->assertSessionHasFlash('success', 'Role updated');
 

@@ -3,8 +3,8 @@
 namespace Tests\Feature\InternalApi;
 
 use App\User;
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class QueryUsersTest extends TestCase
 {
@@ -15,7 +15,7 @@ class QueryUsersTest extends TestCase
     {
         $john = create(User::class, 1, ['name' => 'John']);
 
-        $this->getJson('/api/users?q='.$john->name)
+        $this->getJson('/api/users?q=' . $john->name)
             ->assertUnauthorized();
     }
 
@@ -73,7 +73,8 @@ class QueryUsersTest extends TestCase
 
         $this->signIn($john);
 
-        $users = $this->getJson('/api/users?q=')
+        $users = $this->withoutExceptionHandling()
+            ->getJson('/api/users?q=')
             ->assertSuccessful()
             ->json();
 

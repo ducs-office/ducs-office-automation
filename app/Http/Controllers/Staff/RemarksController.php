@@ -2,12 +2,8 @@
 
 namespace App\Http\Controllers\Staff;
 
-use App\IncomingLetter;
-use Illuminate\Http\Request;
-use App\OutgoingLetter;
-use App\Remark;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use App\Remark;
 
 class RemarksController extends Controller
 {
@@ -16,7 +12,7 @@ class RemarksController extends Controller
         $this->authorize('update', $remark);
 
         $remark->update(request()->validate([
-            'description'=>'required|string|min:2|max:190'
+            'description' => 'required|string|min:2|max:190',
         ]));
         return back();
     }

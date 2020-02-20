@@ -2,13 +2,13 @@
 
 namespace Tests\Feature;
 
+use App\Course;
+use App\Programme;
+use App\ProgrammeRevision;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-use Illuminate\Auth\AuthenticationException;
-use App\Programme;
-use App\ProgrammeRevision;
-use App\Course;
 
 class CreateProgrammeRevision extends TestCase
 {
@@ -24,14 +24,14 @@ class CreateProgrammeRevision extends TestCase
         $semester_courses = create(Course::class, 2);
 
         foreach ($semester_courses as $index => $course) {
-            $course->programme_revisions()->attach($revision, ['semester' => $index + 1]);
+            $course->programmeRevisions()->attach($revision, ['semester' => $index + 1]);
         }
 
         $this->withoutExceptionHandling()
             ->get(route('staff.programmes.revisions.create', $programme))
             ->assertSuccessful()
             ->assertViewIs('staff.programmes.revisions.create')
-            ->assertViewHas('semester_courses')
+            ->assertViewHas('semesterCourses')
             ->assertViewHas('programme');
     }
 

@@ -13,14 +13,14 @@ class CreateIncomingLettersTable extends Migration
      */
     public function up()
     {
-        Schema::create('incoming_letters', function (Blueprint $table) {
+        Schema::create('incoming_letters', static function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->date('date');
             $table->string('serial_no')->unique(); // Serial no assigned to In bound letters
             $table->string('received_id'); // ID on the received letter
             $table->string('sender', 100);
             $table->unsignedBigInteger('recipient_id');
-            $table->enum('priority', [1,2,3])->nullable();
+            $table->enum('priority', array_keys(config('options.incoming_letters.priorities')))->nullable();
             $table->string('subject', 100);
             $table->text('description', 400)->nullable();
             $table->unsignedBigInteger('creator_id');

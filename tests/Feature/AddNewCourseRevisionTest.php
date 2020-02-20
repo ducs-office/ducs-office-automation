@@ -26,15 +26,15 @@ class AddNewCourseRevisionTest extends TestCase
             'revised_at' => now(),
         ])->attachments()->create([
             'original_name' => 'filename.jpg',
-            'path' => UploadedFile::fake()->image('filename.jpg')->store('/course_attachments')
+            'path' => UploadedFile::fake()->image('filename.jpg')->store('/course_attachments'),
         ]);
 
         $this->withoutExceptionHandling()
             ->post(route('staff.courses.revisions.store', $course), $revision = [
                 'revised_at' => now()->subMonth(12)->format('Y-m-d'),
                 'attachments' => [
-                    UploadedFile::fake()->create('New Doc.pdf')
-                ]
+                    UploadedFile::fake()->create('New Doc.pdf'),
+                ],
             ])->assertRedirect()
             ->assertSessionHasNoErrors();
 

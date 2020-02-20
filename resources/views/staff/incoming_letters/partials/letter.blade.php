@@ -1,15 +1,3 @@
-@php
-$priority_colour = [
-    '1' => 'text-red-600',
-    '2' => 'text-blue-600',
-    '3' => 'text-yellow-800'
-];
-$priority_name = [
-    '1' => 'High Priority',
-    '2' => 'Medium Priority',
-    '3' => 'Low Priority',
-]
-@endphp
 <div class="page-card border-b mb-4 pt-6 pb-0 overflow-hidden">
         <div class="px-6">
             <div class="flex items-baseline mb-3">
@@ -52,8 +40,8 @@ $priority_name = [
             </div>
             <h4 class="text-xl font-bold flex items-baseline mb-3">
                 @isset($letter->priority)
-                <span class="font-bold text-xl {{ $priority_colour[$letter->priority] }} mr-2"
-                    title="{{ $priority_name[$letter->priority] }}">
+                <span class="font-bold text-xl {{ $priorityColors[$letter->priority] }} mr-2"
+                    title="{{ $priorities[$letter->priority] }}">
                     {{ str_repeat('!', 4 - $letter->priority) }}
                 </span>
                 @endisset

@@ -4,111 +4,72 @@ namespace App\Http\Controllers\Teachers;
 
 use App\College;
 use App\Course;
-use App\CourseProgrammeRevision;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Requests\Teacher\UpdateProfileRequest;
 use App\Programme;
-use App\ProgrammeRevision;
-use App\Teacher;
-use App\TeacherProfile;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $teacher = auth()->user()->load([
+        $teacher = $request->user()->load([
+            'teachingRecords',
             'profile.college',
-            'profile.teaching_details',
-            'profile.profile_picture',
-            'past_profiles.past_teaching_details'
+            'profile.profilePicture',
+            'profile.teachingDetails',
         ]);
-        
+
         return view('teachers.profile', [
+            'designations' => config('options.teachers.designations'),
             'teacher' => $teacher,
-            'designations' => config('options.teachers.designations'),
         ]);
     }
 
-    public function edit()
+    public function edit(Request $request)
     {
+        $teacher = $request->user()->load([
+            'profile.college',
+            'profile.profilePicture',
+            'profile.teachingDetails',
+        ]);
+
+        $programmes = Programme::withLatestRevision()->get()
+            ->mapWithKeys(static function ($programme) {
+                $latestRevisionId = $programme->latestRevision->id;
+                $name = $programme->code . ' - ' . $programme->name;
+                return [$latestRevisionId => $name];
+            });
+
+        $courses = Course::select(['id', 'code', 'name'])->get()
+            ->mapWithKeys(static function ($course) {
+                return [$course->id => $course->code . ' - ' . $course->name];
+            });
+
         return view('teachers.edit', [
-            'teacher' => auth()->user()->load([
-                'profile.college',
-                'profile.teaching_details',
-                'profile.profile_picture'
-            ]),
             'colleges' => College::all()->pluck('name', 'id'),
-            'programmes' => Programme::withLatestRevision()->get()->map(function ($programme) {
-                return [
-                    'id' => $programme->latestRevision->id,
-                    'name' => $programme->code . ' - ' . $programme->name,
-                ];
-            })->pluck('name', 'id'),
-            'courses' => Course::all()->map(function ($course) {
-                return [
-                    'id' => $course->id,
-                    'name' => $course->code . ' - ' . $course->name,
-                ];
-            })->pluck('name', 'id'),
+            'courses' => $courses,
             'designations' => config('options.teachers.designations'),
+            'programmes' => $programmes,
+            'teacher' => $teacher,
         ]);
     }
 
-    public function update(Request $request)
+    public function update(UpdateProfileRequest $request)
     {
-        $teacher = auth()->user();
+        $validatedData = $request->validated();
+        $profile = $request->user()->profile;
 
-        $designations = implode(',', array_keys(config('options.teachers.designations')));
+        $profile->update($validatedData);
 
-        $validData = $request->validate([
-            'phone_no' => ['nullable', 'string'],
-            'address' => ['nullable', 'string'],
-            'designation' => ['nullable', 'string','in:'.$designations],
-            'college_id' => ['nullable', 'numeric', 'exists:colleges,id'],
-            'teaching_details' => ['nullable' , 'array'],
-            'teaching_details.*.programme' => ['nullable', 'numeric', 'exists:programme_revisions,id'],
-            'teaching_details.*.course' => ['nullable', 'numeric', 'exists:courses,id'],
-            'teaching_details.*' => ['bail', 'nullable', 'array',
-                function ($attribute, $value, $fail) {
-                    if (! isset($value['course'])) {
-                        return true;
-                    }
-                    $revision = ProgrammeRevision::find($value['programme']);
-                    if ($revision->courses->pluck('id')->contains($value['course']) == false) {
-                        $fail($attribute. ' is invalid.');
-                    }
-                }
-            ],
-            'profile_picture' => ['nullable', 'file', 'image'],
-        ]);
-        
-        $teacher->profile->update($validData);
-
-        if (isset($validData['teaching_details'])) {
-            $teaching_details = $validData['teaching_details'];
-
-            $programmeCoursesTaught = collect($teaching_details)
-                ->filter(function ($teaching_detail) {
-                    return isset($teaching_detail['programme'], $teaching_detail['course']);
-                })->map(function ($teaching_detail) {
-                    return CourseProgrammeRevision::where(
-                        'programme_revision_id',
-                        $teaching_detail['programme']
-                    )->where('course_id', $teaching_detail['course'])
-                    ->first()->id;
-                })->toArray();
-
-            $teacher->profile->teaching_details()->sync($programmeCoursesTaught);
+        if ($request->has('teaching_details')) {
+            $profile->teachingDetails()->createMany($request->getTeachingRecord());
         }
 
-
-        if (isset($validData['profile_picture'])) {
-            $teacher->profile->profile_picture()->create([
-                'original_name' => $validData['profile_picture']->getClientOriginalName(),
-                'path' => $validData['profile_picture']->store('/teacher_attachments/profile_picture'),
-            ]);
+        if ($request->has('profile_picture')) {
+            $profile->profilePicture()->create($request->getProfilePicture());
         }
 
         flash('Profile Updated Successfully!')->success();
@@ -118,7 +79,7 @@ class ProfileController extends Controller
 
     public function avatar()
     {
-        $attachmentPicture = auth()->user()->profile->profile_picture;
+        $attachmentPicture = auth()->user()->profile->profilePicture;
 
         if ($attachmentPicture && Storage::exists($attachmentPicture->path)) {
             return Response::file(Storage::path($attachmentPicture->path));
@@ -128,7 +89,7 @@ class ProfileController extends Controller
         $avatar = file_get_contents('https://gravatar.com/avatar/' . $gravatarHash . '?s=200&d=identicon');
 
         return Response::make($avatar, 200, [
-            'Content-Type' => 'image/jpg'
+            'Content-Type' => 'image/jpg',
         ]);
     }
 }

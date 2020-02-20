@@ -14,6 +14,7 @@ class RemarkPolicy
      * Determine whether the user can view any remarks.
      *
      * @param  \App\User  $user
+     *
      * @return mixed
      */
     public function viewAny(User $user)
@@ -26,6 +27,7 @@ class RemarkPolicy
      *
      * @param  \App\User  $user
      * @param  \App\Remark  $remark
+     *
      * @return mixed
      */
     public function view(User $user, Remark $remark)
@@ -37,6 +39,7 @@ class RemarkPolicy
      * Determine whether the user can create remarks.
      *
      * @param  \App\User  $user
+     *
      * @return mixed
      */
     public function create(User $user)
@@ -49,12 +52,13 @@ class RemarkPolicy
      *
      * @param  \App\User  $user
      * @param  \App\Remark  $remark
+     *
      * @return mixed
      */
     public function update(User $user, Remark $remark)
     {
         return $user->can('remarks:edit')
-            && $remark->user_id == $user->id;
+            && (int) $remark->user_id === (int) $user->id;
     }
 
     /**
@@ -62,11 +66,12 @@ class RemarkPolicy
      *
      * @param  \App\User  $user
      * @param  \App\Remark  $remark
+     *
      * @return mixed
      */
     public function delete(User $user, Remark $remark)
     {
         return $user->can('remarks:delete')
-            && $remark->user_id == $user->id;
+            && (int) $remark->user_id === (int) $user->id;
     }
 }

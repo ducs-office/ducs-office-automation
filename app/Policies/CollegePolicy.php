@@ -2,7 +2,6 @@
 
 namespace App\Policies;
 
-use App\College;
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -14,6 +13,7 @@ class CollegePolicy
      * Determine whether the user can view any colleges.
      *
      * @param  \App\User  $user
+     *
      * @return mixed
      */
     public function viewAny(User $user)
@@ -25,6 +25,7 @@ class CollegePolicy
      * Determine whether the user can view the college.
      *
      * @param  \App\User  $user
+     *
      * @return mixed
      */
     public function view(User $user)
@@ -36,6 +37,7 @@ class CollegePolicy
      * Determine whether the user can create colleges.
      *
      * @param  \App\User  $user
+     *
      * @return mixed
      */
     public function create(User $user)
@@ -47,6 +49,7 @@ class CollegePolicy
      * Determine whether the user can update the college.
      *
      * @param  \App\User  $user
+     *
      * @return mixed
      */
     public function update(User $user)
@@ -58,6 +61,7 @@ class CollegePolicy
      * Determine whether the user can delete the college.
      *
      * @param  \App\User  $user
+     *
      * @return mixed
      */
     public function delete(User $user)

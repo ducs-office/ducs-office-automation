@@ -65,7 +65,7 @@
                     Courses
                 </summary>
                 <div class="flex flex-wrap mx-2">
-                    @foreach($grouped_courses[$index] as $semester => $courses)
+                    @foreach($groupedCourses[$index] as $semester => $courses)
                         <div class="p-2 w-1/2">
                             <ul class="font-bold mb-2 p-2"> Semester - {{$semester}}
                                 @foreach ($courses as $course)

@@ -2,14 +2,11 @@
 
 namespace Tests\Feature;
 
-use App\Course;
-use App\ProgrammeRevision;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
 use App\Teacher;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
-class ViewTeacherTest extends TestCase
+class ViewTeachersTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -33,8 +30,8 @@ class ViewTeacherTest extends TestCase
         $view_data = $this->withoutExceptionHandling()
             ->get(route('staff.teachers.index'))
             ->assertViewIs('staff.teachers.index')
-            ->assertViewHas('Teachers')
-            ->viewData('Teachers');
+            ->assertViewHas('teachers')
+            ->viewData('teachers');
 
         $this->assertEquals(Teacher::count(), count($view_data));
     }

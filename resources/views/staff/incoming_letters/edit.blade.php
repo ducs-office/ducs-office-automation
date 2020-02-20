@@ -4,10 +4,10 @@
         <div class="page-header flex items-baseline">
             <h2 class="mr-4">Update Incoming Letter</h2>
             <span class="ml-auto px-2 py-1 rounded text-sm uppercase text-white font-bold font-mono bg-gray-800">
-                {{ $incoming_letter->serial_no }}
+                {{ $letter->serial_no }}
             </span>
         </div>
-        <form action="{{ route('staff.incoming_letters.update', $incoming_letter) }}"
+        <form action="{{ route('staff.incoming_letters.update', $letter) }}"
             method="POST"
             class="px-6"
             enctype="multipart/form-data">
@@ -19,7 +19,7 @@
                 </label>
                 <input id="date"
                     type="date" name="date"
-                    value="{{ old('date', $incoming_letter->date->format('Y-m-d')) }}"
+                    value="{{ old('date', $letter->date->format('Y-m-d')) }}"
                     class="w-full form-input{{ $errors->has('date') ? ' border-red-600' : ''}}"
                     requried>
                 @if($errors->has('date'))
@@ -32,7 +32,7 @@
                 </label>
                 <input id="received_id"
                     type="text" name="received_id"
-                    value="{{ old('received_id', $incoming_letter->received_id) }}"
+                    value="{{ old('received_id', $letter->received_id) }}"
                     class="w-full form-input{{ $errors->has('received_id') ? ' border-red-600' : ''}}"
                     placeholder="ID / Serial Number on the received Letter"
                     required>
@@ -46,7 +46,7 @@
                 </label>
                 <input id="sender"
                     type="text" name="sender"
-                    value="{{ old('sender', $incoming_letter->sender) }}"
+                    value="{{ old('sender', $letter->sender) }}"
                     class="w-full form-input{{ $errors->has('sender') ? ' border-red-600' : ''}}"
                     placeholder="Sender (Received from)"
                     requried>
@@ -64,7 +64,7 @@
                         source="/api/users"
                         find-source="/api/users/{value}"
                         limit="5"
-                        value="{{ old('recipient_id', $incoming_letter->recipient_id) }}"
+                        value="{{ old('recipient_id', $letter->recipient_id) }}"
                         :has-errors="{{ $errors->has('recipient_id') ? 'true' : 'false'}}"
                         placeholder="Receiver (Received by)">
                     </vue-typeahead>
@@ -81,7 +81,7 @@
                         source="/api/users"
                         find-source="/api/users/{value}"
                         limit="5"
-                        :value="{{ json_encode(old('handovers', $incoming_letter->handovers->map->id)) }}"
+                        :value="{{ json_encode(old('handovers', $letter->handovers->map->id)) }}"
                         placeholder="Handovered To">
                     </v-multi-typeahead>
                     @if($errors->has('handovers'))
@@ -95,7 +95,7 @@
                 </label>
                 <input id="subject"
                     type="text" name="subject"
-                    value="{{ old('subject', $incoming_letter->subject) }}"
+                    value="{{ old('subject', $letter->subject) }}"
                     class="w-full form-input{{ $errors->has('description') ? ' border-red-600' : ''}}"
                     placeholder="Subject of the letter"
                     required>
@@ -105,12 +105,15 @@
             </div>
             <div class="mb-2">
                 <label for="priority" class="w-full form-label mb-1">Letter Priority</label>
-                @php($priority = old('priority', $incoming_letter->priority))
+                @php($priority = old('priority', $letter->priority))
                 <select class="w-full form-input" name="priority">
-                    <option value="">None</option>
-                    <option value="1" {{ $priority == '1' ? 'selected' : ''}} >High</option>
-                    <option value="2" {{ $priority == '2' ? 'selected' : ''}}>Medium</option>
-                    <option value="3" {{ $priority == '3' ? 'selected' : ''}}>Low</option>
+                    <option value="" >None</option>
+                    @foreach ($priorities as $value => $name)
+                        <option value="{{ $value }}"
+                            {{ $priority === $value ? 'selected' : ''}}>
+                            $name
+                        </option>
+                    @endforeach
                 </select>
                 @if($errors->has('priority'))
                     <p class="mt-1 text-red-600">{{ $errors->first('priority') }}</p>
@@ -119,17 +122,17 @@
             <div class="mb-2">
                 <label for="description" class="w-full form-label mb-1">Description</label>
                 <textarea name="description" id="description"
-                placeholder="What this letter is about?"
-                class="w-full form-input" rows="3">{{ old('description') ?? $incoming_letter->description }}</textarea>
+                placeholder="What is this letter about?"
+                class="w-full form-input" rows="3">{{ old('description') ?? $letter->description }}</textarea>
                 @if($errors->has('description'))
                     <p class="mt-1 text-red-600">{{ $errors->first('description') }}</p>
                 @endif
             </div>
             <div class="mb-2">
-                @if($incoming_letter->attachments->count())
+                @if($letter->attachments->count())
                     <label for="attachments" class="w-full form-label mb-1">Add Attachments</label>
                     <div class="flex flex-wrap -mx-2 mb-2">
-                        @foreach ($incoming_letter->attachments as $attachment)
+                        @foreach ($letter->attachments as $attachment)
                         <div class="inline-flex items-center p-2 rounded border hover:bg-gray-300 text-gray-600 mx-2 my-1">
                             <a href="{{ route('staff.attachments.show', $attachment) }}" target="__blank" class="inline-flex items-center mr-1">
                                 <feather-icon name="paperclip" class="h-4 mr-2" stroke-width="2">View Attachment</feather-icon>
@@ -156,7 +159,7 @@
                     accept="image/*, application/pdf"
                     class="w-full"
                     multiple
-                    {{ $incoming_letter->attachments->count() < 1 ? 'required' : '' }}>
+                    {{ $letter->attachments->count() < 1 ? 'required' : '' }}>
                 @if($errors->has('file'))
                     <p class="mt-1 text-red-600">{{ $errors->first('file') }}</p>
                 @endif

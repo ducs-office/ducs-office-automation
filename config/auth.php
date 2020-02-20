@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Authentication Defaults
@@ -81,7 +80,7 @@ return [
         'teachers' => [
             'driver' => 'eloquent',
             'model' => App\Teacher::class,
-        ]
+        ],
         // 'users' => [
         //     'driver' => 'database',
         //     'table' => 'users',
@@ -110,5 +109,4 @@ return [
             'expire' => 60,
         ],
     ],
-
 ];

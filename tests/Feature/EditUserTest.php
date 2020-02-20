@@ -22,7 +22,7 @@ class EditUserTest extends TestCase
 
         $this->withoutExceptionHandling()
             ->patch(route('staff.users.update', $john), [
-                'email' => $correctEmail = 'john@gmail.com'
+                'email' => $correctEmail = 'john@gmail.com',
             ])->assertRedirect()
             ->assertSessionHasFlash('success', 'User updated successfully!');
 
@@ -46,7 +46,7 @@ class EditUserTest extends TestCase
 
         $this->withoutExceptionHandling()
             ->patch(route('staff.users.update', $john), [
-                'name' => $correctName = 'John Doe'
+                'name' => $correctName = 'John Doe',
             ])->assertRedirect()
             ->assertSessionHasFlash('success', 'User updated successfully!');
 
@@ -72,7 +72,7 @@ class EditUserTest extends TestCase
 
         $this->withoutExceptionHandling()
             ->patch(route('staff.users.update', $john), [
-                'roles' => [ $adminRole->id ]
+                'roles' => [$adminRole->id],
             ])->assertRedirect()
             ->assertSessionHasFlash('success', 'User updated successfully!');
 
@@ -93,7 +93,7 @@ class EditUserTest extends TestCase
 
         $this->withoutExceptionHandling()
             ->patch(route('staff.users.update', $john), [
-                'category' => $newCategory = $categories[1]
+                'category' => $newCategory = $categories[1],
             ])->assertRedirect()
             ->assertSessionHasFlash('success', 'User updated successfully!');
 
@@ -115,13 +115,12 @@ class EditUserTest extends TestCase
 
         $this->withoutExceptionHandling()
             ->patch(route('staff.users.update', $user), [
-            'email' => $user->email,
-            'name' => $newName = 'New name',
-            'category' => $newCategory = 'hod'
-        ])->assertRedirect()
+                'email' => $user->email,
+                'name' => $newName = 'New name',
+                'category' => $newCategory = 'hod',
+            ])->assertRedirect()
         ->assertSessionHasNoErrors()
         ->assertSessionHasFlash('success', 'User updated successfully!');
-
 
         $this->assertEquals(2, User::count());
         $this->assertEquals($newName, $user->fresh()->name);

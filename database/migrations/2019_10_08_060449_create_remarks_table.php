@@ -13,7 +13,7 @@ class CreateRemarksTable extends Migration
      */
     public function up()
     {
-        Schema::create('remarks', function (Blueprint $table) {
+        Schema::create('remarks', static function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('user_id')->nullable();
             $table->string('description');
@@ -24,7 +24,6 @@ class CreateRemarksTable extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('SET NULL');
         });
     }
-
 
     /**
      * Reverse the migrations.

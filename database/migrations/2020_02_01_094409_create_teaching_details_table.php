@@ -14,13 +14,16 @@ class CreateTeachingDetailsTable extends Migration
      */
     public function up()
     {
-        Schema::create('teaching_details', function (Blueprint $table) {
+        Schema::create('teaching_details', static function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('course_programme_revision_id');
             $table->unsignedBigInteger('teacher_id');
+            $table->unsignedBigInteger('programme_revision_id');
+            $table->unsignedBigInteger('course_id');
+            $table->unsignedTinyInteger('semester');
 
             $table->foreign('teacher_id')->references('teacher_id')->on('teachers_profile')->onDelete('cascade');
-            $table->foreign('course_programme_revision_id')->references('id')->on('course_programme_revision')->onDelete('cascade');
+            $table->foreign('programme_revision_id')->references('id')->on('programme_revisions')->onDelete('cascade');
+            $table->foreign('course_id')->references('id')->on('courses')->onDelete('cascade');
         });
     }
 

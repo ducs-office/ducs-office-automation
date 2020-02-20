@@ -3,7 +3,6 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use App\OutgoingLetter;
 
 class Remark extends Model
 {
@@ -16,7 +15,7 @@ class Remark extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class)->withDefault(function () {
+        return $this->belongsTo(User::class)->withDefault(static function () {
             return new User([
                 'name' => 'Deleted User',
                 'email' => 'deleted_user@null.co',

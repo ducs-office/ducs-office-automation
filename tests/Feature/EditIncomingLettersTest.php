@@ -7,9 +7,9 @@ use App\User;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use Tests\TestCase;
 
 class EditIncomingLettersTest extends TestCase
 {
@@ -20,7 +20,7 @@ class EditIncomingLettersTest extends TestCase
     {
         $this->expectException(AuthenticationException::class);
 
-        $letter= create(IncomingLetter::class);
+        $letter = create(IncomingLetter::class);
 
         $this->withoutExceptionHandling()
             ->get(route('staff.incoming_letters.edit', $letter))
@@ -35,7 +35,7 @@ class EditIncomingLettersTest extends TestCase
         $permission = Permission::firstOrCreate(['name' => 'edit incoming letters']);
 
         $letter = create(IncomingLetter::class, 1, [
-            'subject' => $oldSubject = 'old subject'
+            'subject' => $oldSubject = 'old subject',
         ]);
 
         $role->revokePermissionTo($permission);
@@ -62,7 +62,7 @@ class EditIncomingLettersTest extends TestCase
 
         $letter = create(incomingLetter::class, 1, [
             'subject' => $oldSubject = 'old subject',
-            'creator_id' => create(User::class)->id
+            'creator_id' => create(User::class)->id,
         ]);
 
         $role->givePermissionTo($permission);

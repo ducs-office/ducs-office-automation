@@ -14,6 +14,7 @@ class ProgrammePolicy
      * Determine whether the user can view any programmes.
      *
      * @param  \App\User  $user
+     *
      * @return mixed
      */
     public function viewAny(User $user)
@@ -25,6 +26,7 @@ class ProgrammePolicy
      * Determine whether the user can view the programme.
      *
      * @param  \App\User  $user
+     *
      * @return mixed
      */
     public function view(User $user)
@@ -36,6 +38,7 @@ class ProgrammePolicy
      * Determine whether the user can create programmes.
      *
      * @param  \App\User  $user
+     *
      * @return mixed
      */
     public function create(User $user)
@@ -47,6 +50,7 @@ class ProgrammePolicy
      * Determine whether the user can update the programme.
      *
      * @param  \App\User  $user
+     *
      * @return mixed
      */
     public function update(User $user)
@@ -58,6 +62,7 @@ class ProgrammePolicy
      * Determine whether the user can delete the programme.
      *
      * @param  \App\User  $user
+     *
      * @return mixed
      */
     public function delete(User $user)

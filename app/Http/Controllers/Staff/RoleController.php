@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Staff;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
-use App\Http\Controllers\Controller;
 
 class RoleController extends Controller
 {
@@ -19,9 +19,10 @@ class RoleController extends Controller
     {
         return view('staff.roles.index', [
             'roles' => Role::all(),
-            'permissions' => Permission::all()->groupBy(function ($p) {
-                return ucwords(explode(':', $p->name, 2)[0]);
-            })
+            'permissions' => Permission::all()
+                ->groupBy(static function ($permission) {
+                    return ucwords(explode(':', $permission->name, 2)[0]);
+                }),
         ]);
     }
 
@@ -30,11 +31,11 @@ class RoleController extends Controller
         $request->validate([
             'name' => ['required', 'string', 'min:3', 'max:190', 'unique:roles'],
             'permissions' => ['required', 'array', 'min:1'],
-            'permissions.*' => ['integer', 'exists:permissions,id']
+            'permissions.*' => ['integer', 'exists:permissions,id'],
         ]);
 
         Role::create([
-            'name' => $request->name
+            'name' => $request->name,
         ])->syncPermissions($request->permissions);
 
         flash('Role created successfully!')->success();
@@ -47,11 +48,11 @@ class RoleController extends Controller
         $request->validate([
             'name' => ['sometimes', 'required', 'string', 'min:3', 'max:190', Rule::unique('roles', 'name')->ignore($role)],
             'permissions' => ['sometimes', 'required', 'array', 'min:1'],
-            'permissions.*' => ['integer', 'exists:permissions,id']
+            'permissions.*' => ['integer', 'exists:permissions,id'],
         ]);
 
         $role->update([
-            'name' => $request->name
+            'name' => $request->name,
         ]);
 
         if ($request->has('permissions')) {

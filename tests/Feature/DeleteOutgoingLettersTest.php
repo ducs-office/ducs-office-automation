@@ -4,11 +4,11 @@ namespace Tests\Feature;
 
 use App\OutgoingLetter;
 use App\User;
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Spatie\Permission\Models\Role;
+use Illuminate\Foundation\Testing\WithFaker;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
+use Tests\TestCase;
 
 class DeleteOutgoingLettersTest extends TestCase
 {
@@ -22,7 +22,7 @@ class DeleteOutgoingLettersTest extends TestCase
         $this->delete(route('staff.outgoing_letters.destroy', $letter))
             ->assertRedirect(route('login_form'));
 
-        $this -> assertEquals(1, OutgoingLetter::count());
+        $this->assertEquals(1, OutgoingLetter::count());
     }
 
     /** @test */
@@ -31,7 +31,7 @@ class DeleteOutgoingLettersTest extends TestCase
         $this->signIn(create(User::class), 'admin');
 
         $letter = create(OutgoingLetter::class, 1, [
-            'creator_id' => auth()->id()
+            'creator_id' => auth()->id(),
         ]);
 
         $this->withoutExceptionHandling()
@@ -67,11 +67,11 @@ class DeleteOutgoingLettersTest extends TestCase
         $user = create(User::class);
         $role = Role::create(['name' => 'random role']);
         $permission = Permission::firstOrCreate([
-            'name' => 'delete outgoing letters'
+            'name' => 'delete outgoing letters',
         ]);
 
         $letter = create(OutgoingLetter::class, 1, [
-            'creator_id' => create(User::class)->id
+            'creator_id' => create(User::class)->id,
         ]);
 
         $role->givePermissionTo($permission);

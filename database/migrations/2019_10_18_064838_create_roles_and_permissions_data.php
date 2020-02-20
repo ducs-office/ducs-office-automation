@@ -13,7 +13,7 @@ class CreateRolesAndPermissionsData extends Migration
     public function up()
     {
         DB::table(config('permission.table_names.permissions'))->insert(
-            collect(config('permission.static.permissions'))->map(function ($operations, $resource) {
+            collect(config('permission.static.permissions'))->map(static function ($operations, $resource) {
                 return collect($operations)->map(function ($operation) use ($resource) {
                     return ['name' => "$resource:$operation", 'guard_name' => 'web'];
                 });
@@ -21,17 +21,17 @@ class CreateRolesAndPermissionsData extends Migration
         );
 
         DB::table(config('permission.table_names.roles'))->insert(
-            collect(config('permission.static.roles'))->keys()->map(function ($role) {
+            collect(config('permission.static.roles'))->keys()->map(static function ($role) {
                 return ['name' => $role, 'guard_name' => 'web'];
             })->toArray()
         );
 
         $role_permissions = collect(config('permission.static.roles'))
-            ->map(function ($permissions, $role) {
+            ->map(static function ($permissions, $role) {
                 $role = DB::table(config('permission.table_names.roles'))
                     ->where('name', $role)->first();
 
-                if (!$role) {
+                if (! $role) {
                     return false;
                 }
 
@@ -41,7 +41,7 @@ class CreateRolesAndPermissionsData extends Migration
                             ->whereName("$resource:$operation")
                             ->first();
 
-                        if (!$permission) {
+                        if (! $permission) {
                             return false;
                         }
 

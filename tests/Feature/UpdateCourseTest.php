@@ -2,8 +2,8 @@
 
 namespace Tests\Feature;
 
-use App\Programme;
 use App\Course;
+use App\Programme;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -24,7 +24,7 @@ class UpdateCourseTest extends TestCase
         $course = create(Course::class);
 
         $response = $this->patch(route('staff.courses.update', $course), [
-            'code' => $newCode = 'New123'
+            'code' => $newCode = 'New123',
         ])->assertRedirect()
         ->assertSessionHasFlash('success', 'Course updated successfully!');
 
@@ -41,7 +41,7 @@ class UpdateCourseTest extends TestCase
         $course = create(Course::class);
 
         $response = $this->patch(route('staff.courses.update', $course), [
-            'name' => $newName = 'New course'
+            'name' => $newName = 'New course',
         ])->assertRedirect()
         ->assertSessionHasFlash('success', 'Course updated successfully!');
 
@@ -59,11 +59,10 @@ class UpdateCourseTest extends TestCase
 
         $response = $this->patch(route('staff.courses.update', $course), [
             'code' => $course->code,
-            'name' => $newName = 'New course'
+            'name' => $newName = 'New course',
         ])->assertRedirect()
         ->assertSessionHasNoErrors()
         ->assertSessionHasFlash('success', 'Course updated successfully!');
-
 
         $this->assertEquals(1, Course::count());
         $this->assertEquals($newName, $course->fresh()->name);
@@ -78,7 +77,7 @@ class UpdateCourseTest extends TestCase
         $course = create(Course::class, 1, ['type' => 'C']);
 
         $this->patch(route('staff.courses.update', $course), [
-            'type' => $newType = 'OE'
+            'type' => $newType = 'OE',
         ])->assertRedirect()
         ->assertSessionHasFlash('success', 'Course updated successfully!');
 
@@ -97,27 +96,27 @@ class UpdateCourseTest extends TestCase
         $course = create(Course::class, 1, ['type' => 'C']);
 
         $oldRevision = $course->revisions()->create([
-            'revised_at' => now()->subYears(2)
+            'revised_at' => now()->subYears(2),
         ]);
 
         $oldRevision->attachments()->create([
             'original_name' => 'old_syllabus.pdf',
-            'path' => UploadedFile::fake()->create('old_syllabus.pdf')->store('course_attachments')
+            'path' => UploadedFile::fake()->create('old_syllabus.pdf')->store('course_attachments'),
         ]);
 
         $newRevision = $course->revisions()->create([
-            'revised_at' => now()->subYears(1)
+            'revised_at' => now()->subYears(1),
         ]);
 
         $newRevision->attachments()->create([
             'original_name' => 'new_syllabus.pdf',
-            'path' => UploadedFile::fake()->create('new_syllabus.pdf')->store('courses_attachments')
+            'path' => UploadedFile::fake()->create('new_syllabus.pdf')->store('courses_attachments'),
         ]);
 
         $this->patch(route('staff.courses.update', $course), [
             'attachments' => [
-                $newDoc = UploadedFile::fake()->create('newFile.pdf')
-            ]
+                $newDoc = UploadedFile::fake()->create('newFile.pdf'),
+            ],
         ])->assertRedirect()
         ->assertSessionHasFlash('success', 'Course updated successfully!');
 

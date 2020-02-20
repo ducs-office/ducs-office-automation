@@ -3,12 +3,12 @@
 namespace Tests\Feature;
 
 use App\OutgoingLetter;
+use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
-use App\User;
 
 class ViewAttachmentTest extends TestCase
 {
@@ -24,7 +24,7 @@ class ViewAttachmentTest extends TestCase
 
         $attachment = $letter->attachments()->create([
             'original_name' => 'My Document',
-            'path' => $documentPath
+            'path' => $documentPath,
         ]);
 
         $this->withExceptionHandling()
@@ -42,7 +42,7 @@ class ViewAttachmentTest extends TestCase
 
         $attachment = $letter->attachments()->create([
             'original_name' => 'My Document',
-            'path' => $documentPath
+            'path' => $documentPath,
         ]);
 
         $this->signIn();

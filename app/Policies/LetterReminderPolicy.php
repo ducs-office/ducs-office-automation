@@ -15,6 +15,7 @@ class LetterReminderPolicy
      * Determine whether the user can view any letter reminders.
      *
      * @param  \App\User  $user
+     *
      * @return mixed
      */
     public function viewAny(User $user)
@@ -27,6 +28,7 @@ class LetterReminderPolicy
      *
      * @param  \App\User  $user
      * @param  \App\LetterReminder  $letterReminder
+     *
      * @return mixed
      */
     public function view(User $user, LetterReminder $letterReminder)
@@ -38,12 +40,13 @@ class LetterReminderPolicy
      * Determine whether the user can create letter reminders.
      *
      * @param  \App\User  $user
+     *
      * @return mixed
      */
     public function create(User $user, OutgoingLetter $letter)
     {
         return $user->can('letter reminders:create')
-            && $letter->creator_id == $user->id;
+            && (int) $letter->creator_id === (int) $user->id;
     }
 
     /**
@@ -51,12 +54,13 @@ class LetterReminderPolicy
      *
      * @param  \App\User  $user
      * @param  \App\LetterReminder  $letterReminder
+     *
      * @return mixed
      */
     public function update(User $user, LetterReminder $letterReminder)
     {
         return $user->can('letter reminders:edit')
-            && $letterReminder->letter->creator_id == $user->id;
+            && (int) $letterReminder->letter->creator_id === (int) $user->id;
     }
 
     /**
@@ -64,11 +68,12 @@ class LetterReminderPolicy
      *
      * @param  \App\User  $user
      * @param  \App\LetterReminder  $letterReminder
+     *
      * @return mixed
      */
     public function delete(User $user, LetterReminder $letterReminder)
     {
         return $user->can('letter reminders:delete')
-            && $letterReminder->letter->creator_id == $user->id;
+            && (int) $letterReminder->letter->creator_id === (int) $user->id;
     }
 }

@@ -2,24 +2,14 @@
 
 namespace App;
 
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
     use Notifiable, HasRoles;
-
-    public static function boot()
-    {
-        parent::boot();
-
-        static::deleting(function ($user) {
-            $user->roles()->sync([]);
-            $user->remarks()->update(['user_id' => null]);
-        });
-    }
 
     /**
      * The attributes that are mass assignable.
@@ -27,7 +17,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password','category',
+        'name', 'email', 'password', 'category',
     ];
 
     /**
@@ -47,6 +37,16 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(static function ($user) {
+            $user->roles()->sync([]);
+            $user->remarks()->update(['user_id' => null]);
+        });
+    }
 
     public function remarks()
     {

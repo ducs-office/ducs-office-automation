@@ -102,9 +102,12 @@
                     name="priority"
                     class="w-full form-input{{ $errors->has('priority') ? ' border-red-600' : ''}}">
                     <option value="" >None</option>
-                    <option value="1" {{ old('priority') == '1' ? 'selected' : ''}}>High</option>
-                    <option value="2" {{ old('priority') == '2' ? 'selected' : ''}}>Medium</option>
-                    <option value="3" {{ old('priority') == '3' ? 'selected' : ''}}>Low</option>
+                    @foreach ($priorities as $value => $name)
+                        <option value="{{ $value }}"
+                            {{ old('priority') === $value ? 'selected' : ''}}>
+                            $name
+                        </option>
+                    @endforeach
                 </select>
                 @if($errors->has('priority'))
                     <p class="mt-1 text-red-600">{{ $errors->first('priority') }}</p>

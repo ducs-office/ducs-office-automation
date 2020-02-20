@@ -28,12 +28,12 @@ class TeacherProfile extends Model
         return $this->belongsTo('App\College');
     }
 
-    public function teaching_details()
+    public function teachingDetails()
     {
-        return $this->belongsToMany(CourseProgrammeRevision::class, 'teaching_details', 'teacher_id', 'course_programme_revision_id');
+        return $this->hasMany(TeachingDetail::class, 'teacher_id');
     }
 
-    public function profile_picture()
+    public function profilePicture()
     {
         return $this->morphOne(Attachment::class, 'attachable');
     }
@@ -41,5 +41,12 @@ class TeacherProfile extends Model
     public function getDesignation()
     {
         return config('options.teachers.designations')[$this->designation] ?? 'Unknown';
+    }
+
+    public function isCompleted()
+    {
+        return $this->designation
+            && $this->college_id
+            && $this->teachingDetails->count() > 0;
     }
 }

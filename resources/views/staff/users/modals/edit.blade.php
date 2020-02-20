@@ -36,7 +36,7 @@
                         <option value="" selected disabled>Select a category for the user</option>
                         @foreach ($categories as $key => $category)
                         <option value="{{ $key }}"
-                            :selected="data('user.category') == '{{ $key }}'">
+                            :selected="data('user.category') === '{{ $key }}'">
                             {{ $category }}
                         </option>
                         @endforeach

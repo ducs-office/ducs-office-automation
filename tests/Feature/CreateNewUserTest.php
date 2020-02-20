@@ -29,7 +29,7 @@ class CreateNewUserTest extends TestCase
                 'name' => $name = 'HOD Faculty',
                 'email' => $email = 'hod@uni.ac.in',
                 'category' => 'hod',
-                'roles' => [$teacherRole->id]
+                'roles' => [$teacherRole->id],
             ])->assertRedirect('/')
             ->assertSessionHasFlash('success', 'User created successfully!');
 
@@ -56,7 +56,7 @@ class CreateNewUserTest extends TestCase
                 'name' => $name = 'HOD Faculty',
                 'email' => $email = 'hod@uni.ac.in',
                 'category' => 'hod',
-                'roles' => [$facultyRole->id, $hodRole->id]
+                'roles' => [$facultyRole->id, $hodRole->id],
             ])->assertRedirect('/')
             ->assertSessionHasFlash('success', 'User created successfully!');
 
@@ -81,12 +81,14 @@ class CreateNewUserTest extends TestCase
                 'name' => 'teacher',
                 'email' => 'contact@teacher.me',
                 'category' => 'teacher',
-                'roles' => [$teacherRole->id]
+                'roles' => [$teacherRole->id],
             ])->assertRedirect('/')
             ->assertSessionHasFlash('success', 'User created successfully!');
 
         Mail::assertQueued(UserRegisteredMail::class, function ($mail) {
-            return $mail->password && $mail->user;
+            $this->assertArrayHasKey('user', $mail->build()->viewData);
+            $this->assertArrayHasKey('password', $mail->build()->viewData);
+            return true;
         });
     }
 
@@ -103,7 +105,7 @@ class CreateNewUserTest extends TestCase
                     'name' => '',
                     'email' => 'hod@uni.ac.in',
                     'category' => 'hod',
-                    'roles' => [$teacherRole->id]
+                    'roles' => [$teacherRole->id],
                 ]);
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('name', $e->errors());
@@ -124,7 +126,7 @@ class CreateNewUserTest extends TestCase
                     'name' => 'HOD Faculty',
                     'email' => '',
                     'category' => 'hod',
-                    'roles' => [$teacherRole->id]
+                    'roles' => [$teacherRole->id],
                 ]);
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('email', $e->errors());
@@ -146,7 +148,7 @@ class CreateNewUserTest extends TestCase
                     'name' => 'HOD Faculty',
                     'email' => $user->email,
                     'category' => 'hod',
-                    'roles' => [$teacherRole->id]
+                    'roles' => [$teacherRole->id],
                 ]);
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('email', $e->errors());
@@ -167,7 +169,7 @@ class CreateNewUserTest extends TestCase
                     'name' => 'HOD Faculty',
                     'email' => 'hod@uni.ac.in',
                     'category' => '',
-                    'roles' => [$teacherRole->id]
+                    'roles' => [$teacherRole->id],
                 ]);
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('category', $e->errors());
@@ -188,7 +190,7 @@ class CreateNewUserTest extends TestCase
                     'name' => 'HOD Faculty',
                     'email' => 'hod@uni.ac.in',
                     'category' => 'InvalidCategory123',
-                    'roles' => [$teacherRole->id]
+                    'roles' => [$teacherRole->id],
                 ]);
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('category', $e->errors());
@@ -209,7 +211,7 @@ class CreateNewUserTest extends TestCase
                     'name' => 'HOD Faculty',
                     'email' => 'hod@uni.ac.in',
                     'category' => 'hod',
-                    'roles' => ''
+                    'roles' => '',
                 ]);
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('roles', $e->errors());

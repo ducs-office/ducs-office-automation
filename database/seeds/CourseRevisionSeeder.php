@@ -11,6 +11,5 @@ class CourseRevisionSeeder extends Seeder
      */
     public function run()
     {
-        //
     }
 }

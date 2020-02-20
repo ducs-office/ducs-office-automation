@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateCourseProgrammeRevisionPivotTable extends Migration
 {
@@ -13,7 +13,7 @@ class CreateCourseProgrammeRevisionPivotTable extends Migration
      */
     public function up()
     {
-        Schema::create('course_programme_revision', function (Blueprint $table) {
+        Schema::create('course_programme_revision', static function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->Biginteger('course_id')->unsigned()->index();
             $table->Biginteger('programme_revision_id')->unsigned()->index();

@@ -14,7 +14,7 @@
                     <label class="w-full form-label mb-1">
                         {{ $filter['label'] }}
                     </label>
-                    @if($filter['type'] == 'select')
+                    @if($filter['type'] === 'select')
                     <select name="filters[{{ $filter['field'] }}][{{ $filter['operator'] }}]"
                         class="w-full form-input is-sm">
                         <option value="">All</option>

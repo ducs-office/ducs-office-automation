@@ -15,13 +15,13 @@ class AddCoursesToProgramme
      */
     public function __construct()
     {
-        //
     }
 
     /**
      * Handle the event.
      *
      * @param  ProgrammeCreated  $event
+     *
      * @return void
      */
     public function handle(ProgrammeCreated $event)

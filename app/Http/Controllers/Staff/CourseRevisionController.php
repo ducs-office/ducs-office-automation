@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Staff;
 
-use App\Http\Controllers\Controller;
 use App\Course;
 use App\CourseRevision;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
@@ -12,19 +12,10 @@ use Illuminate\Support\Facades\Redirect;
 class CourseRevisionController extends Controller
 {
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request, Course $course)
@@ -32,20 +23,20 @@ class CourseRevisionController extends Controller
         $request->validate([
             'revised_at' => ['required', 'date', 'before_or_equal:now'],
             'attachments' => ['required', 'array', 'max:5'],
-            'attachments.*' => ['required', 'file', 'mimes:jpeg,jpg,png,pdf', 'max:200']
+            'attachments.*' => ['required', 'file', 'mimes:jpeg,jpg,png,pdf', 'max:200'],
         ]);
 
         DB::beginTransaction();
 
         $revision = $course->revisions()->create([
-            'revised_at' => $request->revised_at
+            'revised_at' => $request->revised_at,
         ]);
 
         $revision->attachments()->createMany(
-            array_map(function ($uploadedFile) {
+            array_map(static function ($uploadedFile) {
                 return [
                     'original_name' => $uploadedFile->getClientOriginalName(),
-                    'path' => $uploadedFile->store('/course_attachments')
+                    'path' => $uploadedFile->store('/course_attachments'),
                 ];
             }, $request->attachments)
         );
@@ -60,13 +51,14 @@ class CourseRevisionController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\CourseRevision  $course_revision
+     * @param  \App\CourseRevision  $revision
+     *
      * @return \Illuminate\Http\Response
      */
-    public function destroy($course, CourseRevision $course_revision)
+    public function destroy($course, CourseRevision $revision)
     {
-        $course_revision->attachments()->delete();
-        $course_revision->delete();
+        $revision->attachments()->delete();
+        $revision->delete();
 
         flash('Course Revision deleted!')->success();
 

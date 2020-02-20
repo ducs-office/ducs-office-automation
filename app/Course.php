@@ -8,7 +8,7 @@ class Course extends Model
 {
     protected $fillable = ['code', 'name', 'type'];
 
-    public function programme_revisions()
+    public function programmeRevisions()
     {
         return $this->belongsToMany(ProgrammeRevision::class);
     }

@@ -22,17 +22,17 @@ class DeleteCourseRevisionTest extends TestCase
         $course = create(Course::class);
         $oldRevision = create(CourseRevision::class, 1, [
             'revised_at' => now()->subYears(2),
-            'course_id' => $course->id
+            'course_id' => $course->id,
         ]);
 
         $newRevision = create(CourseRevision::class, 1, [
             'revised_at' => now()->subYears(1),
-            'course_id' => $course->id
+            'course_id' => $course->id,
         ]);
 
         $attachment = $newRevision->attachments()->create([
             'original_name' => 'file.pdf',
-            'path' => UploadedFile::fake()->create('file.pdf')
+            'path' => UploadedFile::fake()->create('file.pdf'),
         ]);
 
         $this->signIn();
@@ -40,7 +40,7 @@ class DeleteCourseRevisionTest extends TestCase
         $this->withoutExceptionHandling()
             ->delete(route('staff.courses.revisions.destroy', [
                 'course' => $course,
-                'course_revision' => $newRevision
+                'revision' => $newRevision,
             ]))
             ->assertRedirect()
             ->assertSessionHasNoErrors();

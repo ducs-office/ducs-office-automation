@@ -2,8 +2,6 @@
 
 namespace App;
 
-use App\College;
-
 use Illuminate\Database\Eloquent\Model;
 
 class Programme extends Model
@@ -13,10 +11,9 @@ class Programme extends Model
     protected $dates = ['wef'];
 
     protected $casts = [
-        'wef' => 'date:Y-m-d'
+        'wef' => 'date:Y-m-d',
     ];
 
-    
     public function colleges()
     {
         return $this->belongsToMany(College::class, 'colleges_programmes', 'programe_id', 'college_id');
@@ -24,7 +21,8 @@ class Programme extends Model
 
     public function revisions()
     {
-        return $this->hasMany(ProgrammeRevision::class);
+        return $this->hasMany(ProgrammeRevision::class)
+            ->orderBy('revised_at', 'desc');
     }
 
     public function latestRevision()
@@ -32,16 +30,12 @@ class Programme extends Model
         return $this->hasOne(ProgrammeRevision::class);
     }
 
-    public function latestRev()
-    {
-        return $this->revisions()->orderBy('revised_at', 'desc')->first();
-    }
     public function scopeWithLatestRevision($query)
     {
         return $query->addSelect([
             'latest_revision_id' => ProgrammeRevision::select('id')
                 ->whereColumn('programme_id', 'programmes.id')
-                ->orderBy('revised_at', 'desc')->limit(1)
+                ->orderBy('revised_at', 'desc')->limit(1),
         ])->with(['latestRevision']);
     }
 }

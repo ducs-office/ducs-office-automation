@@ -2,8 +2,8 @@
 
 namespace Tests\Feature;
 
-use App\User;
 use App\College;
+use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -15,7 +15,6 @@ class ViewCollegesTest extends TestCase
      *
      * @return void
      */
-
     use RefreshDatabase;
 
     /** @test */
@@ -35,12 +34,12 @@ class ViewCollegesTest extends TestCase
 
         create(College::class, 3);
 
-        $viewData = $this->withoutExceptionHandling()
+        $view_data = $this->withoutExceptionHandling()
                     ->get(route('staff.colleges.index'))
                     ->assertViewIs('staff.colleges.index')
                     ->assertViewHas('colleges')
                     ->viewData('colleges');
 
-        $this->assertCount(3, $viewData);
+        $this->assertCount(3, $view_data);
     }
 }

@@ -2,14 +2,14 @@
 
 namespace Tests\Feature;
 
-use App\User;
-use Tests\TestCase;
 use App\OutgoingLetter;
+use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use Tests\TestCase;
 
 class CreateOutgoingLettersTest extends TestCase
 {
@@ -47,7 +47,7 @@ class CreateOutgoingLettersTest extends TestCase
         $user = create(User::class);
         $role = Role::create(['name' => 'random role']);
         $permission = Permission::firstOrCreate([
-            'name' => 'create outgoing letters'
+            'name' => 'create outgoing letters',
         ]);
 
         $role->revokePermissionTo($permission);

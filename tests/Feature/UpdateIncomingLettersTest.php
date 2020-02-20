@@ -4,16 +4,16 @@ namespace Tests\Feature;
 
 use App\IncomingLetter;
 use App\User;
-use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Concerns\ValidatesAttributes;
+use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
-use Illuminate\Support\Facades\Auth;
 
 class UpdateIncomingLettersTest extends TestCase
 {
@@ -25,7 +25,7 @@ class UpdateIncomingLettersTest extends TestCase
 
         $letter->attachments()->create([
             'original_name' => 'Some random file.jpg',
-            'path' => '/file/path.jpg'
+            'path' => '/file/path.jpg',
         ]);
 
         return $letter;
@@ -54,19 +54,19 @@ class UpdateIncomingLettersTest extends TestCase
         $handovers = [create(User::class)->id, create(User::class)->id];
         $letter = create(IncomingLetter::class, 1, [
             'priority' => 2,
-            'creator_id' => auth()->id()
+            'creator_id' => auth()->id(),
         ]);
 
         $new_incoming_letter = [
             'date' => '2019-04-02',
             'received_id' => 'Dept/RD/0002',
-            'sender' => "Exam Office",
+            'sender' => 'Exam Office',
             'recipient_id' => $receiver->id,
             'handovers' => $handovers,
             'priority' => 3,
             'subject' => 'foobar',
-            'description' => "lorem ipsum",
-            'attachments' => [$file = UploadedFile::fake()->create('letter-scan.pdf')]
+            'description' => 'lorem ipsum',
+            'attachments' => [$file = UploadedFile::fake()->create('letter-scan.pdf')],
         ];
 
         $this->withoutExceptionHandling()
@@ -83,7 +83,7 @@ class UpdateIncomingLettersTest extends TestCase
         $this->assertEquals($new_incoming_letter['subject'], $letter['subject']);
         $this->assertEquals($new_incoming_letter['description'], $letter['description']);
 
-        $this->assertEquals('letter_attachments/incoming/'. $file->hashName(), $letter->attachments->last()->path);
+        $this->assertEquals('letter_attachments/incoming/' . $file->hashName(), $letter->attachments->last()->path);
         Storage::assertExists($letter->attachments->last()->path);
     }
 
@@ -92,9 +92,8 @@ class UpdateIncomingLettersTest extends TestCase
     {
         $this->signIn();
         $letter = $this->createLetterWithAttachment(1, [
-            'creator_id' => auth()->id()
+            'creator_id' => auth()->id(),
         ]);
-
 
         $this->withoutExceptionHandling()
             ->patch(
@@ -106,16 +105,15 @@ class UpdateIncomingLettersTest extends TestCase
     }
 
     /** @test */
-
     public function request_validates_date_field_can_not_be_null()
     {
         $this->signIn();
         $letter = $this->createLetterWithAttachment(1, [
-            'creator_id' => Auth::id()
+            'creator_id' => Auth::id(),
         ]);
         try {
             $this->withoutExceptionHandling()
-            ->patch(route('staff.incoming_letters.update', $letter), ['date'=>'']);
+            ->patch(route('staff.incoming_letters.update', $letter), ['date' => '']);
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('date', $e->errors());
         }
@@ -127,7 +125,7 @@ class UpdateIncomingLettersTest extends TestCase
     {
         $this->signIn();
         $letter = $this->createLetterWithAttachment(1, [
-            'creator_id' => auth()->id()
+            'creator_id' => auth()->id(),
         ]);
         $invalidDates = [
             '2014-16-14', //16 is not a valid month
@@ -139,7 +137,7 @@ class UpdateIncomingLettersTest extends TestCase
         foreach ($invalidDates as $date) {
             try {
                 $this->withoutExceptionHandling()
-                ->patch(route('staff.incoming_letters.update', $letter), [ 'date' => $date ]);
+                ->patch(route('staff.incoming_letters.update', $letter), ['date' => $date]);
 
                 $this->fail("Invalid date '{$date}' was not validated");
             } catch (ValidationException $e) {
@@ -155,7 +153,6 @@ class UpdateIncomingLettersTest extends TestCase
             '2016-02-29',
             '2018-02-28',
             '2018-03-30',
-
         ];
 
         foreach ($validDates as $date) {
@@ -172,7 +169,7 @@ class UpdateIncomingLettersTest extends TestCase
     {
         $this->signIn();
         $letter = $this->createLetterWithAttachment(1, [
-            'creator_id' => auth()->id()
+            'creator_id' => auth()->id(),
         ]);
 
         try {
@@ -189,7 +186,7 @@ class UpdateIncomingLettersTest extends TestCase
 
         $date = now()->subDay(1)->format('Y-m-d');
         $this->withoutExceptionHandling()
-            ->patch(route('staff.incoming_letters.update', $letter), ['date'=>$date])
+            ->patch(route('staff.incoming_letters.update', $letter), ['date' => $date])
                 ->assertRedirect();
 
         $this->assertEquals($date, $letter->fresh()->date->format('Y-m-d'));
@@ -200,7 +197,7 @@ class UpdateIncomingLettersTest extends TestCase
     {
         $this->signIn();
         $letter = $this->createLetterWithAttachment(1, [
-            'creator_id' => auth()->id()
+            'creator_id' => auth()->id(),
         ]);
 
         try {
@@ -218,7 +215,7 @@ class UpdateIncomingLettersTest extends TestCase
     {
         $this->signIn();
         $letter = $this->createLetterWithAttachment(1, [
-            'creator_id' => auth()->id()
+            'creator_id' => auth()->id(),
         ]);
 
         try {
@@ -236,12 +233,12 @@ class UpdateIncomingLettersTest extends TestCase
     {
         $this->signIn();
         $letter = $this->createLetterWithAttachment(1, [
-            'creator_id' => auth()->id()
+            'creator_id' => auth()->id(),
         ]);
 
         try {
             $this->withoutExceptionHandling()
-            ->patch(route('staff.incoming_letters.update', $letter), ['recipient_id'=>4]);
+            ->patch(route('staff.incoming_letters.update', $letter), ['recipient_id' => 4]);
 
             $this->fail("Failed to validate \'recipient_id\' is an existing user");
         } catch (ValidationException $e) {
@@ -256,12 +253,12 @@ class UpdateIncomingLettersTest extends TestCase
     {
         $this->signIn();
         $letter = $this->createLetterWithAttachment(1, [
-            'creator_id' => auth()->id()
+            'creator_id' => auth()->id(),
         ]);
 
         try {
             $this->withoutExceptionHandling()
-            ->patch(route('staff.incoming_letters.update', $letter), ['handovers'=>[4]]);
+            ->patch(route('staff.incoming_letters.update', $letter), ['handovers' => [4]]);
 
             $this->fail("Failed to validate \'handover_id\' is an existing user");
         } catch (ValidationException $e) {
@@ -276,7 +273,7 @@ class UpdateIncomingLettersTest extends TestCase
     {
         $this->signIn();
         $letter = $this->createLetterWithAttachment(1, [
-            'creator_id' => auth()->id()
+            'creator_id' => auth()->id(),
         ]);
 
         $this->withoutExceptionHandling()
@@ -291,7 +288,7 @@ class UpdateIncomingLettersTest extends TestCase
     {
         $this->signIn();
         $letter = $this->createLetterWithAttachment(1, [
-            'creator_id' => auth()->id()
+            'creator_id' => auth()->id(),
         ]);
 
         $this->withoutExceptionHandling()
@@ -306,7 +303,7 @@ class UpdateIncomingLettersTest extends TestCase
     {
         $this->signIn();
         $letter = $this->createLetterWithAttachment(1, [
-            'creator_id' => auth()->id()
+            'creator_id' => auth()->id(),
         ]);
 
         try {
@@ -318,25 +315,25 @@ class UpdateIncomingLettersTest extends TestCase
             $this->assertArrayHasKey('subject', $e->errors());
         }
 
-        $this -> assertEquals($letter->subject, $letter->fresh()->subject);
+        $this->assertEquals($letter->subject, $letter->fresh()->subject);
     }
 
     /** @test */
     public function request_validates_subject_field_maxlimit_100()
     {
-        $this -> signIn();
+        $this->signIn();
         $letter = $this->createLetterWithAttachment(1, [
-            'creator_id' => auth()->id()
+            'creator_id' => auth()->id(),
         ]);
 
         try {
             $this->withoutExceptionHandling()
                 ->patch(route('staff.incoming_letters.update', $letter), ['subject' => Str::random(101)]);
         } catch (ValidationException $e) {
-            $this -> assertArrayHasKey('subject', $e->errors());
+            $this->assertArrayHasKey('subject', $e->errors());
         }
 
-        $this -> assertEquals($letter->subject, $letter->fresh()->subject);
+        $this->assertEquals($letter->subject, $letter->fresh()->subject);
     }
 
     /** @test */
@@ -344,7 +341,7 @@ class UpdateIncomingLettersTest extends TestCase
     {
         $this->signIn();
         $letter = $this->createLetterWithAttachment(1, [
-            'creator_id' => auth()->id()
+            'creator_id' => auth()->id(),
         ]);
 
         $this->withoutExceptionHandling()
@@ -359,7 +356,7 @@ class UpdateIncomingLettersTest extends TestCase
     {
         $this->signIn();
         $letter = $this->createLetterWithAttachment(1, [
-            'creator_id' => auth()->id()
+            'creator_id' => auth()->id(),
         ]);
 
         try {

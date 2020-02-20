@@ -3,48 +3,54 @@
 namespace App\Http\Controllers\Staff;
 
 use App\Course;
-use App\Teacher;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Str;
-use App\Mail\UserRegisteredMail;
 use App\Http\Controllers\Controller;
-use Illuminate\Database\Eloquent\Builder;
+use App\Mail\UserRegisteredMail;
+use App\Teacher;
+use App\TeachingRecord;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class TeacherController extends Controller
 {
     public function index(Request $request)
     {
-        $filters = $request->query('filters');
-        $query = Teacher::applyFilter($filters)->with([
-            'past_profiles',
-            'past_profiles.past_teaching_details.course',
-            'past_profiles.past_teaching_details.programme_revision.programme',
-        ]);
+//        $filters = $request->query('filters');
+//        $query = Teacher::applyFilter($filters)->with([
+//            'teachingRecords',
+//            'teachingRecords.course',
+//            'teachingRecords.programmeRevision.programme',
+//        ]);
 
-        $Teachers = $query->orderBy('id')->get();
-        $courses = Course::select('id', 'code', 'name')->get()
-            ->map(function ($course) {
-                return [
-                    'id' => $course->id,
-                    'name' => $course->code . ' - ' . $course->name,
-                ];
-            })->pluck('name', 'id');
+        $teachers = Teacher::latest()->get();
+//        $courses = Course::select(['id', 'code', 'name'])->get()
+//            ->map(static function ($course) {
+//                return [
+//                    'id' => $course->id,
+//                    'name' => $course->code . ' - ' . $course->name,
+//                ];
+//            })->pluck('name', 'id');
+//
+//        $startDate = TeachingRecord::getStartDate();
+//        $endDate = TeachingRecord::getEndDate();
 
-        return view('staff.teachers.index', compact('Teachers', 'courses'));
+        return view('staff.teachers.index', ([
+            'teachers' => $teachers,
+        ]));
     }
 
     public function show(Request $request, Teacher $teacher)
     {
-        $past_profiles = $teacher->past_profiles()->with([
-            'past_teaching_details.course',
-            'past_teaching_details.programme_revision.programme',
-        ]);
+        $records = $teacher->teachingRecords()
+            ->with(['course', 'programmeRevision.programme']);
 
-        return view('staff.teachers.show', compact('teacher', 'past_profiles'));
+        return view('staff.teachers.show', ([
+            'teacher' => $teacher,
+            'records' => $records,
+        ]));
     }
 
     public function avatar(Teacher $teacher)
@@ -59,13 +65,13 @@ class TeacherController extends Controller
         $avatar = file_get_contents('https://gravatar.com/avatar/' . $gravatarHash . '?s=200&d=identicon');
 
         return Response::make($avatar, 200, [
-            'Content-Type' => 'image/jpg'
+            'Content-Type' => 'image/jpg',
         ]);
     }
 
     public function store(Request $request)
     {
-        $validData = $request->validate([
+        $validatedData = $request->validate([
             'first_name' => 'required| string| min:3| max:50',
             'last_name' => 'required| string| min:3| max:50',
             'email' => 'required| email| unique:teachers| min:3| max:190',
@@ -73,35 +79,35 @@ class TeacherController extends Controller
 
         $plainPassword = strtoupper(Str::random(8));
 
-        $Teacher = Teacher::create($validData + ['password' => bcrypt($plainPassword)]);
+        $teacher = Teacher::create($validatedData + ['password' => bcrypt($plainPassword)]);
 
-        Mail::to($Teacher)->send(new UserRegisteredMail($Teacher, $plainPassword));
+        Mail::to($teacher)->send(new UserRegisteredMail($teacher, $plainPassword));
 
         flash('College Teacher created successfully!')->success();
 
         return redirect(route('staff.teachers.index'));
     }
 
-    public function update(Request $request, Teacher $Teacher)
+    public function update(Request $request, Teacher $teacher)
     {
-        $data = $request->validate([
+        $validData = $request->validate([
             'first_name' => ['sometimes', 'required', 'string', 'min:3', 'max:50'],
             'last_name' => ['sometimes', 'required', 'string', 'min:3', 'max:50'],
             'email' => ['sometimes', 'required', 'min:3', 'max:190', 'email',
-                        Rule::unique('teachers')->ignore($Teacher)
-            ]
+                Rule::unique('teachers')->ignore($teacher),
+            ],
         ]);
 
-        $Teacher->update($data);
+        $teacher->update($validData);
 
         flash('College teacher updated successfully')->success();
 
         return redirect()->back();
     }
 
-    public function destroy(Teacher $Teacher)
+    public function destroy(Teacher $teacher)
     {
-        $Teacher->delete();
+        $teacher->delete();
 
         flash('College teacher deleted successfully')->success();
 

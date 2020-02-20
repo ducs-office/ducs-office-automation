@@ -2,21 +2,20 @@
 
 namespace App\Http\Controllers\Staff;
 
-use Auth;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Staff\StoreOutgoingLetterRequest;
+use App\Http\Requests\Staff\UpdateOutgoingLetterRequest;
 use App\OutgoingLetter;
 use App\Remark;
 use App\User;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class OutgoingLettersController extends Controller
 {
     public function __construct()
     {
-        $this->authorizeResource(OutgoingLetter::class, 'outgoing_letter');
+        $this->authorizeResource(OutgoingLetter::class, 'letter');
     }
 
     public function index(Request $request)
@@ -25,26 +24,18 @@ class OutgoingLettersController extends Controller
 
         $query = OutgoingLetter::applyFilter($filters)->with(['remarks.user', 'reminders']);
 
-        if ($request->has('search') && request('search')!= '') {
-            $query->where('subject', 'like', '%'.request('search').'%')
-                ->orWhere('description', 'like', '%'.request('search').'%');
+        if ($request->has('search') && request('search') !== '') {
+            $query->where('subject', 'like', '%' . request('search') . '%')
+                ->orWhere('description', 'like', '%' . request('search') . '%');
         }
 
-        $outgoing_letters = $query->orderBy('date', 'DESC')->get();
-
-        $recipients = OutgoingLetter::selectRaw('DISTINCT(recipient)')->get()->pluck('recipient', 'recipient');
-        $types = OutgoingLetter::selectRaw('DISTINCT(type)')->get()->pluck('type', 'type');
-        $senders = User::select('id', 'name')->whereIn('id', OutgoingLetter::selectRaw('DISTINCT(sender_id)'))->get()->pluck('name', 'id');
-        $creators = User::select('id', 'name')->whereIn('id', OutgoingLetter::selectRaw('DISTINCT(creator_id)'))->get()->pluck('name', 'id');
-
-
-        return view('staff.outgoing_letters.index', compact(
-            'outgoing_letters',
-            'types',
-            'recipients',
-            'creators',
-            'senders'
-        ));
+        return view('staff.outgoing_letters.index', [
+            'letters' => $query->orderBy('date', 'DESC')->get(),
+            'types' => OutgoingLetter::selectRaw('DISTINCT(type)')->get()->pluck('type', 'type'),
+            'recipients' => OutgoingLetter::selectRaw('DISTINCT(recipient)')->get()->pluck('recipient', 'recipient'),
+            'creators' => User::select('id', 'name')->whereIn('id', OutgoingLetter::selectRaw('DISTINCT(creator_id)'))->get()->pluck('name', 'id'),
+            'senders' => User::select('id', 'name')->whereIn('id', OutgoingLetter::selectRaw('DISTINCT(sender_id)'))->get()->pluck('name', 'id'),
+        ]);
     }
 
     public function create()
@@ -52,27 +43,17 @@ class OutgoingLettersController extends Controller
         return view('staff.outgoing_letters.create');
     }
 
-    protected function store(Request $request)
+    public function store(StoreOutgoingLetterRequest $request)
     {
-        $validData = $request->validate([
-            'date' => 'required|date|before_or_equal:today',
-            'type' => 'required|in:Bill,Notesheet,General',
-            'recipient' => 'required|min:5|max:100',
-            'sender_id' => 'required|integer|exists:users,id',
-            'subject' => 'required|string|min:5|max:100',
-            'description' => 'nullable|string|max:400',
-            'amount' => 'nullable|numeric',
-            'attachments' => 'required|array|min:1|max:2',
-            'attachments.*' => 'file|max:200|mimes:jpeg,jpg,png,pdf'
-        ]);
+        $data = $request->validated();
 
-        $letter = OutgoingLetter::create($validData + ['creator_id' => Auth::id()]);
+        $letter = OutgoingLetter::create($data + ['creator_id' => $request->user()->id]);
 
         $letter->attachments()->createMany(
-            array_map(function ($attachedFile) {
+            array_map(static function ($attachedFile) {
                 return [
                     'original_name' => $attachedFile->getClientOriginalName(),
-                    'path' => $attachedFile->store('/letter_attachments/outgoing')
+                    'path' => $attachedFile->store('/letter_attachments/outgoing'),
                 ];
             }, $request->file('attachments'))
         );
@@ -80,40 +61,21 @@ class OutgoingLettersController extends Controller
         return redirect(route('staff.outgoing_letters.index'));
     }
 
-    public function edit(OutgoingLetter $outgoing_letter)
+    public function edit(OutgoingLetter $letter)
     {
-        return view('staff.outgoing_letters.edit', compact('outgoing_letter'));
+        return view('staff.outgoing_letters.edit', ['letter' => $letter]);
     }
 
-    public function update(OutgoingLetter $outgoing_letter, Request $request)
+    public function update(UpdateOutgoingLetterRequest $request, OutgoingLetter $letter)
     {
-        $rules = [
-            'date' => ['sometimes', 'required', 'date', 'before_or_equal:today'],
-            'recipient' => ['sometimes', 'required', 'min:5', 'max:100'],
-            'subject' => ['sometimes', 'required', 'string', 'min:5', 'max:100'],
-            'description' => ['nullable', 'string', 'max:400'],
-            'amount' => ['nullable', 'numeric'],
-            'sender_id' => ['sometimes', 'required', 'integer', 'exists:users,id'],
-            'attachments' => ['required', 'array', 'max:2'],
-            'attachments.*' => ['file', 'max:200', 'mimes:jpeg,jpg,png,pdf'],
-        ];
-
-        if ($outgoing_letter->attachments()->count() < 1) {
-            array_push($rules['attachments'], 'min:1');
-        } else {
-            array_unshift($rules['attachments'], 'sometimes');
-        }
-
-        $validData = $request->validate($rules);
-
-        $outgoing_letter->update($validData);
+        $letter->update($request->validated());
 
         if ($request->hasFile('attachments')) {
-            $outgoing_letter->attachments()->createMany(
-                array_map(function ($attachedFile) {
+            $letter->attachments()->createMany(
+                array_map(static function ($attachedFile) {
                     return [
                         'original_name' => $attachedFile->getClientOriginalName(),
-                        'path' => $attachedFile->store('/letter_attachments/outgoing')
+                        'path' => $attachedFile->store('/letter_attachments/outgoing'),
                     ];
                 }, $request->file('attachments'))
             );
@@ -122,26 +84,26 @@ class OutgoingLettersController extends Controller
         return redirect(route('staff.outgoing_letters.index'));
     }
 
-    public function destroy(OutgoingLetter $outgoing_letter)
+    public function destroy(OutgoingLetter $letter)
     {
-        $outgoing_letter->reminders->each->delete();
-        $outgoing_letter->remarks->each->delete();
-        $outgoing_letter->attachments->each->delete();
+        $letter->reminders->each->delete();
+        $letter->remarks->each->delete();
+        $letter->attachments->each->delete();
 
-        $outgoing_letter->delete();
+        $letter->delete();
 
         return redirect(route('staff.outgoing_letters.index'));
     }
 
-    public function storeRemark(OutgoingLetter $outgoing_letter)
+    public function storeRemark(OutgoingLetter $letter)
     {
-        $this->authorize('create', Remark::class, $outgoing_letter);
+        $this->authorize('create', Remark::class, $letter);
 
         $data = request()->validate([
-            'description'=>'required|string|min:2|max:190',
+            'description' => 'required|string|min:2|max:190',
         ]);
 
-        $outgoing_letter->remarks()->create($data + ['user_id' => Auth::id()]);
+        $letter->remarks()->create($data + ['user_id' => Auth::id()]);
 
         return back();
     }

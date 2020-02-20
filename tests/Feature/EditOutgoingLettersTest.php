@@ -5,11 +5,11 @@ namespace Tests\Feature;
 use App\OutgoingLetter;
 use App\User;
 use Illuminate\Auth\AuthenticationException;
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use Tests\TestCase;
 
 class EditOutgoingLettersTest extends TestCase
 {
@@ -21,14 +21,14 @@ class EditOutgoingLettersTest extends TestCase
         $this->signIn();
 
         $letter = create(OutgoingLetter::class, 1, [
-            'creator_id' => auth()->id()
+            'creator_id' => auth()->id(),
         ]);
 
         $this->withoutExceptionHandling()
             ->get(route('staff.outgoing_letters.edit', $letter))
             ->assertSuccessful()
             ->assertViewIs('staff.outgoing_letters.edit')
-            ->assertViewHas('outgoing_letter');
+            ->assertViewHas('letter');
     }
 
     /** @test */
@@ -50,7 +50,7 @@ class EditOutgoingLettersTest extends TestCase
         $permission = Permission::firstOrCreate(['name' => 'edit outgoing letters']);
 
         $letter = create(OutgoingLetter::class, 1, [
-            'subject' => $oldSubject = 'old subject'
+            'subject' => $oldSubject = 'old subject',
         ]);
 
         $role->revokePermissionTo($permission);
@@ -77,7 +77,7 @@ class EditOutgoingLettersTest extends TestCase
 
         $letter = create(OutgoingLetter::class, 1, [
             'subject' => $oldSubject = 'old subject',
-            'creator_id' => create(User::class)->id
+            'creator_id' => create(User::class)->id,
         ]);
 
         $role->givePermissionTo($permission);

@@ -2,13 +2,13 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\OutgoingLetter;
-use Illuminate\Support\Collection;
 use App\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
+use Tests\TestCase;
 
 class FilterOutgoingLettersTest extends TestCase
 {
@@ -27,12 +27,12 @@ class FilterOutgoingLettersTest extends TestCase
 
         $viewOutgoingLetters = $this->withoutExceptionHandling()
             ->get(route('staff.outgoing_letters.index', [
-                'filters' => ['date' => ['less_than' => $beforeFilter]]
+                'filters' => ['date' => ['less_than' => $beforeFilter]],
             ]))
             ->assertSuccessful()
             ->assertViewIs('staff.outgoing_letters.index')
-            ->assertViewHas('outgoing_letters')
-            ->viewData('outgoing_letters');
+            ->assertViewHas('letters')
+            ->viewData('letters');
 
         $this->assertInstanceOf(Collection::class, $viewOutgoingLetters);
         $this->assertCount(2, $viewOutgoingLetters, 'Only 2 letters were expected but :actual letters were returned');
@@ -57,12 +57,12 @@ class FilterOutgoingLettersTest extends TestCase
 
         $viewOutgoingLetters = $this->withoutExceptionHandling()
             ->get(route('staff.outgoing_letters.index', [
-                'filters' => ['date' => ['greater_than' =>  $afterFilter]]
+                'filters' => ['date' => ['greater_than' => $afterFilter]],
             ]))
             ->assertSuccessful()
             ->assertViewIs('staff.outgoing_letters.index')
-            ->assertViewHas('outgoing_letters')
-            ->viewData('outgoing_letters');
+            ->assertViewHas('letters')
+            ->viewData('letters');
 
         $this->assertInstanceOf(Collection::class, $viewOutgoingLetters);
         $this->assertCount(1, $viewOutgoingLetters, 'Only 1 letter was expected but :actual letters were returned');
@@ -89,17 +89,17 @@ class FilterOutgoingLettersTest extends TestCase
 
         $viewOutgoingLetters = $this->withoutExceptionHandling()
             ->get(route('staff.outgoing_letters.index', [
-                'filters' =>[
-                    'date' =>[
-                         'greater_than' => $afterFilter,
-                        'less_than' => $beforeFilter
-                    ]
-                ]
+                'filters' => [
+                    'date' => [
+                        'greater_than' => $afterFilter,
+                        'less_than' => $beforeFilter,
+                    ],
+                ],
             ]))
             ->assertSuccessful()
             ->assertViewIs('staff.outgoing_letters.index')
-            ->assertViewHas('outgoing_letters')
-            ->viewData('outgoing_letters');
+            ->assertViewHas('letters')
+            ->viewData('letters');
 
         $this->assertInstanceOf(Collection::class, $viewOutgoingLetters);
         $this->assertCount(2, $viewOutgoingLetters, 'Only 2 letters were expected but :actual letters were returned');
@@ -120,16 +120,16 @@ class FilterOutgoingLettersTest extends TestCase
 
         $after_date = '';
 
-        $viewLetters = $this -> withoutExceptionHandling()
+        $viewLetters = $this->withoutExceptionHandling()
             ->get(route('staff.outgoing_letters.index', [
-                'filters' => ['date' =>['greater_than' => $after_date]]
+                'filters' => ['date' => ['greater_than' => $after_date]],
             ]))
             ->assertSuccessful()
             ->assertViewIs('staff.outgoing_letters.index')
-            ->assertViewHas('outgoing_letters')
-            ->viewData('outgoing_letters');
+            ->assertViewHas('letters')
+            ->viewData('letters');
 
-        $this -> assertCount(1, $viewLetters);
+        $this->assertCount(1, $viewLetters);
     }
 
     /** @test */
@@ -140,18 +140,18 @@ class FilterOutgoingLettersTest extends TestCase
 
         $before_date = '';
 
-        $viewLetters = $this -> withoutExceptionHandling()
+        $viewLetters = $this->withoutExceptionHandling()
             ->get(route('staff.outgoing_letters.index', [
                 'filters' => [
-                    'date' => ['less_than' => $before_date]
-                ]
+                    'date' => ['less_than' => $before_date],
+                ],
             ]))
             ->assertSuccessful()
             ->assertViewIs('staff.outgoing_letters.index')
-            ->assertViewHas('outgoing_letters')
-            ->viewData('outgoing_letters');
+            ->assertViewHas('letters')
+            ->viewData('letters');
 
-        $this -> assertCount(1, $viewLetters);
+        $this->assertCount(1, $viewLetters);
     }
 
     /** @test */
@@ -163,21 +163,21 @@ class FilterOutgoingLettersTest extends TestCase
         $after_date = '';
         $before_date = '';
 
-        $viewLetters = $this -> withoutExceptionHandling()
+        $viewLetters = $this->withoutExceptionHandling()
             ->get(route('staff.outgoing_letters.index', [
                 'filters' => [
                     'date' => [
                         'greater_than' => $after_date,
-                        'less_than' => $before_date
-                    ]
-                ]
+                        'less_than' => $before_date,
+                    ],
+                ],
             ]))
             ->assertSuccessful()
             ->assertViewIs('staff.outgoing_letters.index')
-            ->assertViewHas('outgoing_letters')
-            ->viewData('outgoing_letters');
+            ->assertViewHas('letters')
+            ->viewData('letters');
 
-        $this -> assertCount(1, $viewLetters);
+        $this->assertCount(1, $viewLetters);
     }
 
     /** @test */
@@ -189,14 +189,14 @@ class FilterOutgoingLettersTest extends TestCase
 
         $this->signIn(create(User::class), 'admin');
 
-        $viewLetters = $this -> withoutExceptionHandling()
+        $viewLetters = $this->withoutExceptionHandling()
             ->get(route('staff.outgoing_letters.index', [
-                'filters' => ['type' => ['equals' => 'Bill']]
+                'filters' => ['type' => ['equals' => 'Bill']],
             ]))
             ->assertSuccessful()
             ->assertViewIs('staff.outgoing_letters.index')
-            ->assertViewHas('outgoing_letters')
-            ->viewData('outgoing_letters');
+            ->assertViewHas('letters')
+            ->viewData('letters');
 
         $this->assertCount(2, $viewLetters);
         $this->assertTrue($viewLetters->pluck('id')->contains($bills[0]->id));
@@ -212,14 +212,14 @@ class FilterOutgoingLettersTest extends TestCase
 
         $this->signIn();
 
-        $viewLetters = $this -> withoutExceptionHandling()
+        $viewLetters = $this->withoutExceptionHandling()
             ->get(route('staff.outgoing_letters.index', [
-                'filters' => ['recipient' => ['equals' => 'DUCC']]
+                'filters' => ['recipient' => ['equals' => 'DUCC']],
             ]))
             ->assertSuccessful()
             ->assertViewIs('staff.outgoing_letters.index')
-            ->assertViewHas('outgoing_letters')
-            ->viewData('outgoing_letters');
+            ->assertViewHas('letters')
+            ->viewData('letters');
 
         $this->assertCount(2, $viewLetters);
         $this->assertTrue($viewLetters->pluck('id')->contains($sentToDUCC[0]->id));
@@ -235,14 +235,14 @@ class FilterOutgoingLettersTest extends TestCase
 
         $this->signIn();
 
-        $viewLetters = $this -> withoutExceptionHandling()
+        $viewLetters = $this->withoutExceptionHandling()
             ->get(route('staff.outgoing_letters.index', [
-                'filters' => ['creator_id' => ['equals' => 1]]
+                'filters' => ['creator_id' => ['equals' => 1]],
             ]))
             ->assertSuccessful()
             ->assertViewIs('staff.outgoing_letters.index')
-            ->assertViewHas('outgoing_letters')
-            ->viewData('outgoing_letters');
+            ->assertViewHas('letters')
+            ->viewData('letters');
 
         $this->assertCount(2, $viewLetters);
         $this->assertTrue($viewLetters->pluck('id')->contains($createdBy1[0]->id));
@@ -258,14 +258,14 @@ class FilterOutgoingLettersTest extends TestCase
 
         $this->signIn();
 
-        $viewLetters = $this -> withoutExceptionHandling()
+        $viewLetters = $this->withoutExceptionHandling()
             ->get(route('staff.outgoing_letters.index', [
-                'filters' => ['sender_id' => ['equals' => 1]]
+                'filters' => ['sender_id' => ['equals' => 1]],
             ]))
             ->assertSuccessful()
             ->assertViewIs('staff.outgoing_letters.index')
-            ->assertViewHas('outgoing_letters')
-            ->viewData('outgoing_letters');
+            ->assertViewHas('letters')
+            ->viewData('letters');
 
         $this->assertCount(2, $viewLetters);
         $this->assertTrue($viewLetters->pluck('id')->contains($sentBy1[0]->id));
@@ -275,20 +275,20 @@ class FilterOutgoingLettersTest extends TestCase
     /** @test */
     public function user_can_search_letters_based_on_subject_and_description()
     {
-        $sender1 = create(OutgoingLetter::class, 1, ['subject' => 'abc def ghi' , 'description' => 'abc jkl ghi']);
-        $sender2 = create(OutgoingLetter::class, 1, ['subject'=>'jkl abc ghi' , 'description'=>'ghi def jkl']);
-        create(OutgoingLetter::class, 1, ['subject'=>'abc ghi jkl' , 'description'=>'ghi abc jkl xyz']);
+        $sender1 = create(OutgoingLetter::class, 1, ['subject' => 'abc def ghi', 'description' => 'abc jkl ghi']);
+        $sender2 = create(OutgoingLetter::class, 1, ['subject' => 'jkl abc ghi', 'description' => 'ghi def jkl']);
+        create(OutgoingLetter::class, 1, ['subject' => 'abc ghi jkl', 'description' => 'ghi abc jkl xyz']);
 
         $this->signIn();
 
         $viewLetters = $this->withoutExceptionHandling()
             ->get(route('staff.outgoing_letters.index', [
-                'search' => 'def'
+                'search' => 'def',
             ]))
             ->assertSuccessful()
             ->assertViewIs('staff.outgoing_letters.index')
-            ->assertViewHas('outgoing_letters')
-            ->viewData('outgoing_letters');
+            ->assertViewHas('letters')
+            ->viewData('letters');
 
         $this->assertCount(2, $viewLetters);
         $this->assertTrue($viewLetters->pluck('id')->contains($sender1->id));

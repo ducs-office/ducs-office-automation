@@ -75,6 +75,12 @@
                 College Teachers
             </a>
         </li>
+        <li class="mb-1 last:mb-0">
+            <a href="{{ route('staff.teaching_records.index') }}" class="flex items-center py-2 px-4 hover:bg-magenta-700 rounded">
+                <feather-icon name="database" class="h-4 mr-2">UG Teaching Records</feather-icon>
+                UG Teaching Records
+            </a>
+        </li>
         @endcan
     </ul>
 </aside>

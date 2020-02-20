@@ -2,71 +2,63 @@
 
 namespace App\Http\Controllers\Staff;
 
-use App\Http\Controllers\Controller;
-use App\Programme;
 use App\Course;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Staff\StoreProgrammeRevisionRequest;
+use App\Http\Requests\Staff\UpdateProgrammeRevisionRequest;
+use App\Programme;
 use App\ProgrammeRevision;
-use App\CourseProgrammeRevision;
-use Illuminate\Http\Request;
-use Carbon\Carbon;
-use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\DB;
 
 class ProgrammeRevisionController extends Controller
 {
     public function index(Programme $programme)
     {
-        $programmeRevisions = $programme->revisions->sortByDesc('revised_at');
+        $programme->load(['revisions.courses']);
 
-        $groupedRevisionCourses = $programmeRevisions->map(function ($programmeRevision) {
-            return $programmeRevision->courses->sortBy('pivot.semester')->groupBy('pivot.semester');
-        });
+        $groupedCourses = $programme->revisions
+            ->map(static function ($revision) {
+                return $revision->courses->groupBy('pivot.semester');
+            });
 
-        return view('staff.programmes.revisions.index', compact('programme', 'programmeRevisions', 'groupedRevisionCourses'));
+        return view('staff.programmes.revisions.index', [
+            'programme' => $programme,
+            'groupedRevisionCourses' => $groupedCourses,
+        ]);
     }
 
     public function create(Programme $programme)
     {
-        $revision = $programme->revisions()->with('courses')->where('revised_at', $programme->wef)->first();
-        $semester_courses = $revision->courses->groupBy('pivot.semester')->map->pluck('id');
         $courses = Course::where('code', 'like', "{$programme->code}%")->get();
-        return view('staff.programmes.revisions.create', compact('programme', 'revision', 'semester_courses', 'courses'));
+        $revision = $programme->revisions()
+            ->with('courses')
+            ->where('revised_at', $programme->wef)
+            ->first();
+
+        $semesterCourses = ! $revision ? [] : $revision
+            ->courses
+            ->groupBy('pivot.semester')
+            ->map
+            ->pluck('id');
+
+        return view('staff.programmes.revisions.create', [
+            'programme' => $programme,
+            'revision' => $revision,
+            'semesterCourses' => $semesterCourses,
+            'courses' => $courses,
+        ]);
     }
 
-    public function store(Programme $programme, Request $request)
+    public function store(StoreProgrammeRevisionRequest $request, Programme $programme)
     {
-        $data = $request->validate([
-            'revised_at' => ['required', 'date',
-                function ($attribute, $value, $fail) use ($programme) {
-                    $revisions = $programme->revisions->map->toArray();
-                    if ($revisions->contains('revised_at', $value)) {
-                        $fail($attribute.' is invalid');
-                    }
-                },
-            ],
-            'semester_courses' => [
-                'sometimes', 'required', 'array',
-                'size:'.(($programme->duration) * 2),
-            ],
-            'semester_courses.*' => ['required', 'array', 'min:1'],
-            'semester_courses.*.*' => ['numeric', 'distinct', 'exists:courses,id',
-                function ($attribute, $value, $fail) use ($programme) {
-                    $courses = CourseProgrammeRevision::all();
-                    foreach ($courses as $course) {
-                        if ($value == $course->course_id && Course::find($course->course_id)->programme_revisions()->first()->programme_id != $programme->id) {
-                            $fail($attribute.' is invalid');
-                        }
-                    }
-                },
-            ],
+        $data = $request->validated();
+
+        $revision = ProgrammeRevision::create([
+            'revised_at' => $data['revised_at'],
+            'programme_id' => $programme->id,
         ]);
 
-        $revision = create(ProgrammeRevision::class, 1, ['revised_at' => $data['revised_at'], 'programme_id' => $programme->id]);
-
-        foreach ($data['semester_courses'] as $semester => $courses) {
-            foreach ($courses as $course) {
-                Course::find($course)->programme_revisions()->attach($revision, ['semester' => $semester + 1]);
-            }
-        }
+        $revision->courses()->sync($request->getSemesterCourses());
 
         if ($programme->wef < $data['revised_at']) {
             $programme->update(['wef' => $data['revised_at']]);
@@ -77,66 +69,36 @@ class ProgrammeRevisionController extends Controller
         return redirect(route('staff.programmes.index'));
     }
 
-    public function edit(Programme $programme, ProgrammeRevision $programme_revision)
+    public function edit(Programme $programme, ProgrammeRevision $revision)
     {
-        if ($programme_revision->programme_id != $programme->id) {
+        if ((int) $revision->programme_id !== (int) $programme->id) {
             return redirect(route('staff.programmes.index'));
         }
 
-        $semester_courses = $programme_revision->courses->groupBy('pivot.semester')->map->pluck('id');
-        $courses = Course::where('code', 'like', "{$programme->code}%")->get();
+        $semesterCourses = $revision->courses
+            ->groupBy('pivot.semester')
+            ->map
+            ->pluck('id');
 
-        return view('staff.programmes.revisions.edit', compact('programme', 'programme_revision', 'semester_courses', 'courses'));
+        return view('staff.programmes.revisions.edit', [
+            'programme' => $programme,
+            'revision' => $revision,
+            'semesterCourses' => $semesterCourses,
+            'courses' => Course::where('code', 'like', "{$programme->code}%")->get(),
+        ]);
     }
 
-    public function update(Programme $programme, ProgrammeRevision $programme_revision, Request $request)
+    public function update(UpdateProgrammeRevisionRequest $request, Programme $programme, ProgrammeRevision $revision)
     {
-        $data = $request->validate([
-            'revised_at' => ['sometimes', 'required', 'date',
-                function ($attribute, $value, $fail) use ($programme, $programme_revision) {
-                    $revisions = $programme->revisions
-                        ->filter(function ($revision) use ($programme_revision) {
-                            return $revision->id != $programme_revision->id;
-                        })
-                        ->map->toArray();
-                    if ($revisions->contains('revised_at', $value)) {
-                        $fail($attribute.' is invalid');
-                    }
-                },
-            ],
-            'semester_courses' => [
-                'sometimes', 'required', 'array',
-                'size:'.(($programme->duration) * 2),
-            ],
-            'semester_courses.*' => ['sometimes', 'required', 'array', 'min:1'],
-            'semester_courses.*.*' => ['sometimes', 'numeric', 'distinct', 'exists:courses,id',
-                function ($attribute, $value, $fail) use ($programme) {
-                    $courses = CourseProgrammeRevision::all();
-                    foreach ($courses as $course) {
-                        if ($value == $course->course_id && Course::find($course->course_id)->programme_revisions()->first()->programme_id != $programme->id) {
-                            $fail($attribute.'is invalid');
-                        }
-                    }
-                },
-            ],
-        ]);
+        DB::beginTransaction();
 
-        $programme_revision->update($data);
+        $revision->update($request->validated());
+        $revision->courses()->sync($request->getSemesterCourses());
 
-        $semester_courses = collect($request->semester_courses)
-            ->map(function ($courses, $index) {
-                return array_map(function ($course) use ($index) {
-                    return [$course, $index + 1];
-                }, $courses);
-            })->flatten(1)->pluck('1', '0')
-            ->map(function ($value) {
-                return ['semester' => $value];
-            })->toArray();
+        DB::commit();
 
-        $programme_revision->courses()->sync($semester_courses);
-
-        if ($programme->wef->format('Y-m-d') < $data['revised_at']) {
-            $programme->update(['wef' => $data['revised_at']]);
+        if ($programme->wef->format('Y-m-d') < $request->revised_at) {
+            $programme->update(['wef' => $request->revised_at]);
         }
 
         flash("Programme's revision edited successfully!", 'success');
@@ -144,17 +106,17 @@ class ProgrammeRevisionController extends Controller
         return redirect(route('staff.programmes.revisions.show', $programme));
     }
 
-    public function destroy(Programme $programme, ProgrammeRevision $programmeRevision)
+    public function destroy(Programme $programme, ProgrammeRevision $revision)
     {
-        $programmeRevision->delete();
+        $revision->delete();
 
-        if ($programme->revisions->count() == 0) {
+        if ($programme->revisions->count() === 0) {
             $programme->delete();
             return redirect(route('staff.programmes.index'));
-        } else {
-            $lastRevision = $programme->revisions->max('revised_at');
-            $programme->update(['wef' => $lastRevision]);
-            return redirect(route('staff.programmes.revisions.show', $programme));
         }
+
+        $lastRevision = $programme->revisions->max('revised_at');
+        $programme->update(['wef' => $lastRevision]);
+        return redirect(route('staff.programmes.revisions.show', $programme));
     }
 }

@@ -56,12 +56,12 @@
                     <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
                 </svg>
             </div>
-            @if($teacher->profile->teaching_details->count())
+            @if($teacher->profile->teachingDetails->count())
             <h6 class="font-semibold mb-2">Present</h6>
             <ul>
-                @foreach($teacher->profile->teaching_details as $detail)
+                @foreach($teacher->profile->teachingDetails as $detail)
                 <li>
-                    {{ $detail->programme_revision->programme->name }} -
+                    {{ $detail->programmeRevision->programme->name }} -
                     {{ $detail->course->name }}
                 </li>
                 @endforeach
@@ -73,28 +73,24 @@
 
         <div class="bg-white p-6 h-full rounded shadow-md mt-4">
             <div>
-                <h3 class="font-bold text-2xl underline">Past Teaching Details</h3>
-                @foreach ($teacher->past_profiles as $past_profile)
-                    <details class="mt-6 bg-gray-200 rounded border" open>
-                        <summary class="px-4 font-bold cursor-pointer outline-none py-2"> {{ $past_profile->valid_from->format('M, Y')}} </summary>
-                        <div class="px-8">
-                            <p>
-                                Courses Taught in <em class="underline">{{ $past_profile->college->name }}</em> as <strong>{{ $past_profile->getDesignation() }}</strong> teacher.
-                            </p>
-                            <ul class="mt-2 list-disc pl-4">
-                                @foreach ($past_profile->past_teaching_details as $index => $past_teaching_detail)
-                                    @php
-                                        $revision = $past_teaching_detail->programme_revision;
-                                        $course = $past_teaching_detail->course;
-                                    @endphp
-                                    <li class="p-2">
-                                        <p><b>{{ $course['name']}}</b> during <b>Semester {{ $past_teaching_detail->semester }}</b></p>
-                                        <p class="text-gray-700"><b>{{ $revision->programme->name }}</b> <em>(w.e.f {{ $revision->revised_at->format('M, Y') }})</em> </p>
-                                    </li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    </details>
+                <h3 class="font-bold text-2xl underline">Teaching Records</h3>
+                @foreach ($teacher->teachingRecords->groupBy(function($record) {
+                return $record->valid_from->format('M, Y');
+                }) as $date => $records)
+                <details class="mt-6 bg-gray-200 rounded border" open>
+                    <summary class="px-4 font-bold cursor-pointer outline-none py-2"> {{ $date }}</summary>
+                    <ul class="px-8 list-disc ml-6">
+                        @foreach($records as $record)
+                        <li class="mb-3">
+                            Taught <b>{{ $record->course->name }} <em>({{ $record->course->code }})</em></b>
+                            under {{ $record->programmeRevision->programme->name }}
+                            (w.e.f {{ $record->programmeRevision->revised_at->year }})
+                            in <em class="underline">{{ $record->college->name }}</em> as
+                            <strong>{{ $record->getDesignation() }}</strong> teacher.
+                        </li>
+                        @endforeach
+                    </ul>
+                </details>
                 @endforeach
             </div>
         </div>

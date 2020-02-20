@@ -14,6 +14,7 @@ class IncomingLetterPolicy
      * Determine whether the user can view any incoming letters.
      *
      * @param  \App\User  $user
+     *
      * @return mixed
      */
     public function viewAny(User $user)
@@ -26,9 +27,10 @@ class IncomingLetterPolicy
      *
      * @param  \App\User  $user
      * @param  \App\IncomingLetter  $incomingLetter
+     *
      * @return mixed
      */
-    public function view(User $user, IncomingLetter $incomingLetter)
+    public function view(User $user, IncomingLetter $letter)
     {
         return $user->can('incoming letters:view');
     }
@@ -37,6 +39,7 @@ class IncomingLetterPolicy
      * Determine whether the user can create incoming letters.
      *
      * @param  \App\User  $user
+     *
      * @return mixed
      */
     public function create(User $user)
@@ -49,12 +52,13 @@ class IncomingLetterPolicy
      *
      * @param  \App\User  $user
      * @param  \App\IncomingLetter  $incomingLetter
+     *
      * @return mixed
      */
-    public function update(User $user, IncomingLetter $incomingLetter)
+    public function update(User $user, IncomingLetter $letter)
     {
         return $user->can('incoming letters:edit')
-            && $incomingLetter->creator_id == $user->id;
+            && (int) $letter->creator_id === (int) $user->id;
     }
 
     /**
@@ -62,11 +66,12 @@ class IncomingLetterPolicy
      *
      * @param  \App\User  $user
      * @param  \App\IncomingLetter  $incomingLetter
+     *
      * @return mixed
      */
-    public function delete(User $user, IncomingLetter $incomingLetter)
+    public function delete(User $user, IncomingLetter $letter)
     {
         return $user->can('incoming letters:delete')
-            && $incomingLetter->creator_id == $user->id;
+            && (int) $letter->creator_id === (int) $user->id;
     }
 }

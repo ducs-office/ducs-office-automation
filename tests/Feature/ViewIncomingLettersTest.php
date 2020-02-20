@@ -3,8 +3,8 @@
 namespace Tests\Feature;
 
 use App\Handover;
-use App\IncomingLetter;
 use App\Http\Controllers\IncomingLetterController;
+use App\IncomingLetter;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -35,8 +35,8 @@ class ViewIncomingLettersTest extends TestCase
                     ->get(route('staff.incoming_letters.index'))
                     ->assertSuccessful()
                     ->assertViewIs('staff.incoming_letters.index')
-                    ->assertViewHas('incoming_letters')
-                    ->viewData('incoming_letters');
+                    ->assertViewHas('incomingLetters')
+                    ->viewData('incomingLetters');
 
         $this->assertInstanceOf(Collection::class, $viewIncomingLetters);
         $this->assertCount(2, $viewIncomingLetters);
@@ -48,17 +48,17 @@ class ViewIncomingLettersTest extends TestCase
         $this->signIn();
         $letters = create(IncomingLetter::class, 3);
 
-        $viewData = $this->withExceptionHandling()
+        $view_data = $this->withExceptionHandling()
                     ->get(route('staff.incoming_letters.index'))
                     ->assertSuccessful()
                     ->assertViewIs('staff.incoming_letters.index')
-                    ->assertViewHas('incoming_letters')
-                    ->viewData('incoming_letters');
+                    ->assertViewHas('incomingLetters')
+                    ->viewData('incomingLetters');
 
         $letters = $letters->sortByDesc('date');
         $sorted_letter_ids = $letters->pluck('id')->toArray();
-        $viewData_ids = $viewData->pluck('id')->toArray();
-        $this->assertSame($sorted_letter_ids, $viewData_ids);
+        $view_data_ids = $view_data->pluck('id')->toArray();
+        $this->assertSame($sorted_letter_ids, $view_data_ids);
     }
 
     /** @test */
@@ -92,7 +92,7 @@ class ViewIncomingLettersTest extends TestCase
         create(IncomingLetter::class);
         create(IncomingLetter::class);
 
-        $senders = $this->withExceptionHandling()
+        $senders = $this->withoutExceptionHandling()
                     ->get(route('staff.incoming_letters.index'))
                     ->assertSuccessful()
                     ->assertViewIs('staff.incoming_letters.index')
@@ -122,13 +122,6 @@ class ViewIncomingLettersTest extends TestCase
                         ->assertViewHas('priorities')
                         ->viewData('priorities');
 
-        $this->assertCount(3, $priorities);
-
-        $allLetters = IncomingLetter::all()->pluck('priority', 'priority')->toArray();
-        $allLetters[1] = 'High';
-        $allLetters[2] = 'Medium';
-        $allLetters[3] = 'Low';
-
-        $this->assertSame($allLetters, $priorities->toArray());
+        $this->assertSame(config('options.incoming_letters.priorities'), $priorities);
     }
 }

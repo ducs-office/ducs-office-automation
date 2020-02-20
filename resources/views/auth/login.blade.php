@@ -9,12 +9,12 @@
             <div class="flex">
                 <div class="inline-flex items-center mr-3">
                     <input type="radio" name="type" id="web" value="web"
-                        {{ old('type', 'web') == 'web' ? 'checked' : '' }}>
+                        {{ old('type', 'web') === 'web' ? 'checked' : '' }}>
                     <label for="web" class="form-label ml-1">Faculty/Staff</label>
                 </div>
                 <div class="inline-flex items-center ml-3">
                     <input type="radio" name="type" id="teachers" value="teachers"
-                        {{ old('type', 'web') == 'teachers' ? 'checked' : '' }}>
+                        {{ old('type', 'web') === 'teachers' ? 'checked' : '' }}>
                     <label for="teachers" class="form-label ml-1">College Teacher</label>
                 </div>
             </div>

@@ -4,12 +4,12 @@ namespace Tests\Feature;
 
 use App\OutgoingLetter;
 use App\User;
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use Tests\TestCase;
 
 class ViewOutgoingLettersTest extends TestCase
 {
@@ -48,8 +48,8 @@ class ViewOutgoingLettersTest extends TestCase
             ->get(route('staff.outgoing_letters.index'))
             ->assertSuccessful()
             ->assertViewIs('staff.outgoing_letters.index')
-            ->assertViewHas('outgoing_letters')
-            ->viewData('outgoing_letters');
+            ->assertViewHas('letters')
+            ->viewData('letters');
 
         $this->assertInstanceOf(Collection::class, $viewOutgoingLetters);
         $this->assertCount(3, $viewOutgoingLetters);
@@ -61,21 +61,20 @@ class ViewOutgoingLettersTest extends TestCase
         $this->signIn();
         $letters = create(OutgoingLetter::class, 3);
 
-        $viewData = $this->withExceptionHandling()
+        $view_data = $this->withExceptionHandling()
             ->get(route('staff.outgoing_letters.index'))
             ->assertSuccessful()
             ->assertViewIs('staff.outgoing_letters.index')
-            ->assertViewHas('outgoing_letters')
-            ->viewData('outgoing_letters');
+            ->assertViewHas('letters')
+            ->viewData('letters');
 
         $letters = $letters->sortByDesc('date');
         $sorted_letters_ids = $letters->pluck('id')->toArray();
-        $viewData_ids = $viewData->pluck('id')->toArray();
-        $this->assertSame($sorted_letters_ids, $viewData_ids);
+        $view_data_ids = $view_data->pluck('id')->toArray();
+        $this->assertSame($sorted_letters_ids, $view_data_ids);
     }
 
     /** @test */
-
     public function view_has_a_unique_list_of_recipients()
     {
         $this->signIn();

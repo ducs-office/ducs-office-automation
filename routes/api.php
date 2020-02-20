@@ -3,12 +3,12 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth')->group(static function () {
     Route::get('/users', 'UsersController@index');
     Route::get('/users/{user}', 'UsersController@show');
 });
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth')->group(static function () {
     Route::get('/courses', 'CoursesController@index');
     Route::get('/courses/{course}', 'CoursesController@show');
 });

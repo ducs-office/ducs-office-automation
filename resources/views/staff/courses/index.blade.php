@@ -9,14 +9,14 @@
             </button>
             @include('staff.courses.modals.create', [
                 'modalName' => 'create-college-modal',
-                'course_types' => $course_types,
+                'courseTypes' => $courseTypes,
             ])
             @endcan
         </div>
         @can('update', App\Course::class)
         @include('staff.courses.modals.edit', [
             'modalName' => 'edit-course-modal',
-            'course_types' => $course_types,
+            'courseTypes' => $courseTypes,
         ])
         @endcan
         <div>
@@ -35,7 +35,7 @@
                             <h5 class="font-medium">Latest Revision w.e.f <strong>{{ $latestRevision->revised_at->format('M, Y') }}</strong></h5>
                             <form method="POST" action="{{ route('staff.courses.revisions.destroy', [
                                 'course' => $course,
-                                'courseRevision' => $latestRevision
+                                'revision' => $latestRevision
                             ]) }}" class="ml-2">
                                 @csrf_token @method('DELETE')
                                 <button type="submit" class="p-2 text-sm text-gray-700 hover:text-red-600 hover:bg-gray-300 rounded">
@@ -105,7 +105,10 @@
                             <li>
                                 <div class="flex items-center mb-1">
                                     <h5 class="font-medium">Revision w.e.f <strong>{{ $courseRevision->revised_at->format('M, Y') }}</strong></h5>
-                                    <form method="POST" action="{{ route('staff.courses.revisions.destroy', compact('course', 'courseRevision')) }}"
+                                    <form method="POST" action="{{ route('staff.courses.revisions.destroy', ([
+                                        'course' => $course,
+                                        'revision' => $courseRevision
+                                        ])) }}"
                                         class="ml-2">
                                         @csrf_token @method('DELETE')
                                         <button type="submit" class="p-2 text-gray-700 hover:text-red-600 hover:bg-gray-300 rounded">

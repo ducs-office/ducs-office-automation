@@ -2,15 +2,15 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
 use App\LetterReminder;
 use App\OutgoingLetter;
 use App\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use Tests\TestCase;
 
 class DeleteLetterRemindersTest extends TestCase
 {
@@ -39,11 +39,11 @@ class DeleteLetterRemindersTest extends TestCase
         $this->signIn(create(User::class), 'admin');
 
         $letter = create(OutgoingLetter::class, 1, [
-            'creator_id' => auth()->id()
+            'creator_id' => auth()->id(),
         ]);
 
         $reminder = create(LetterReminder::class, 1, [
-            'letter_id' => $letter->id
+            'letter_id' => $letter->id,
         ]);
 
         $this->withoutExceptionHandling()

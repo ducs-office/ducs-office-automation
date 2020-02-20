@@ -2,11 +2,11 @@
 
 namespace Tests\Feature;
 
+use App\College;
+use App\Programme;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 use Tests\TestCase;
-use App\College;
-use App\Programme;
 
 class CreateCollegeTest extends TestCase
 {
@@ -17,6 +17,7 @@ class CreateCollegeTest extends TestCase
      * `make()` tends to go through the model's accessors and mutators
      *
      * @param array $overrides
+     *
      * @return array
      */
     protected function fillCollegeFormFields($overrides = [])
@@ -29,9 +30,9 @@ class CreateCollegeTest extends TestCase
             'principal_emails' => ['principal@andcollege.du.ac.in', 'ravi_toteja@gmail.com'],
             'address' => 'Govindpuri, Kalkaji, New Delhi - 110019',
             'website' => 'http://andcollege.du.ac.in',
-            'programmes' => function () {
+            'programmes' => static function () {
                 return create(Programme::class, 3)->pluck('id')->toArray();
-            }
+            },
         ], $overrides);
     }
 
@@ -123,7 +124,7 @@ class CreateCollegeTest extends TestCase
         $this->signIn();
 
         $params = $this->fillCollegeFormFields([
-            'programmes' => []
+            'programmes' => [],
         ]);
 
         $this->withExceptionHandling()
@@ -139,7 +140,7 @@ class CreateCollegeTest extends TestCase
         $this->signIn();
 
         $params = $this->fillCollegeFormFields([
-            'programmes' => [123432, 321323]
+            'programmes' => [123432, 321323],
         ]);
 
         $this->withExceptionHandling()
@@ -155,7 +156,7 @@ class CreateCollegeTest extends TestCase
         $this->signIn();
 
         $params = $this->fillCollegeFormFields([
-            'principal_name' => ''
+            'principal_name' => '',
         ]);
 
         $this->withExceptionHandling()
@@ -171,7 +172,7 @@ class CreateCollegeTest extends TestCase
         $this->signIn();
 
         $params = $this->fillCollegeFormFields([
-            'principal_phones' => ''
+            'principal_phones' => '',
         ]);
 
         $this->withExceptionHandling()
@@ -187,7 +188,7 @@ class CreateCollegeTest extends TestCase
         $this->signIn();
 
         $params = $this->fillCollegeFormFields([
-            'principal_phones' => []
+            'principal_phones' => [],
         ]);
 
         $this->withExceptionHandling()
@@ -203,7 +204,7 @@ class CreateCollegeTest extends TestCase
         $this->signIn();
 
         $params = $this->fillCollegeFormFields([
-            'principal_phones' => ['9876']
+            'principal_phones' => ['9876'],
         ]);
 
         $this->withExceptionHandling()
@@ -219,7 +220,7 @@ class CreateCollegeTest extends TestCase
         $this->signIn();
 
         $params = $this->fillCollegeFormFields([
-            'principal_emails' => ''
+            'principal_emails' => '',
         ]);
 
         $this->withExceptionHandling()
@@ -235,7 +236,7 @@ class CreateCollegeTest extends TestCase
         $this->signIn();
 
         $params = $this->fillCollegeFormFields([
-            'principal_emails' => []
+            'principal_emails' => [],
         ]);
 
         $this->withExceptionHandling()
@@ -251,7 +252,7 @@ class CreateCollegeTest extends TestCase
         $this->signIn();
 
         $params = $this->fillCollegeFormFields([
-            'principal_emails' => ['9876']
+            'principal_emails' => ['9876'],
         ]);
 
         $this->withExceptionHandling()
@@ -267,7 +268,7 @@ class CreateCollegeTest extends TestCase
         $this->signIn();
 
         $params = $this->fillCollegeFormFields([
-            'address' => ''
+            'address' => '',
         ]);
 
         $this->withExceptionHandling()
@@ -283,7 +284,7 @@ class CreateCollegeTest extends TestCase
         $this->signIn();
 
         $params = $this->fillCollegeFormFields([
-            'address' => Str::random(9)
+            'address' => Str::random(9),
         ]);
 
         $this->withExceptionHandling()
@@ -299,7 +300,7 @@ class CreateCollegeTest extends TestCase
         $this->signIn();
 
         $params = $this->fillCollegeFormFields([
-            'website' => ''
+            'website' => '',
         ]);
 
         $this->withExceptionHandling()
@@ -309,14 +310,13 @@ class CreateCollegeTest extends TestCase
         $this->assertEquals(0, College::count());
     }
 
-
     /** @test */
     public function request_validates_website_field_is_well_formed_url()
     {
         $this->signIn();
 
         $params = $this->fillCollegeFormFields([
-            'website' => 'without-protocol.com'
+            'website' => 'without-protocol.com',
         ]);
 
         $this->withExceptionHandling()

@@ -20,7 +20,7 @@ class ToCsv
 
                 $flatRows = Collection::times($depth, static function ($index) use ($row) {
                     return $row->map(function ($item) use ($index) {
-                        return $item[($index-1) % count($item)];
+                        return $item[($index - 1) % count($item)];
                     });
                 })->toArray();
 
