@@ -40,10 +40,10 @@
                     <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
                 </svg>
             </div>
-            @if($teacher->profile->teaching_details->count())
+            @if($teacher->profile->teachingDetails->count())
             <h6 class="font-semibold mb-2">Present</h6>
             <ul>
-                @foreach($teacher->profile->teaching_details as $detail)
+                @foreach($teacher->profile->teachingDetails as $detail)
                 <li>
                     {{ $detail->programme_revision->programme->name }} -
                     {{ $detail->course->name }}
@@ -53,48 +53,33 @@
             @else
             <p class="text-gray-600 font-bold">Nothing to show here.</p>
             @endif
-            @if(App\PastTeachersProfile::canSubmit($teacher))
+            @can('create', App\TeachingRecord::class)
                 <form action="{{ route('teachers.profile.submit') }}" method="POST">
                     @csrf_token
                     <button type="submit" class="btn btn-magenta mt-6" enabled> Submit Details </button>
                 </form>
             @else
-                <div type="submit" class="cursor-auto inline-block px-3 py-2 font-bold rounded bg-gray-700 text-white border-gray-700 mt-6" > Submit Details </div>
-            @endif
+                <button disabled class="cursor-not-allowed px-3 py-2 font-bold rounded bg-gray-700 text-white border-gray-700 mt-6" > Submit Details </button>
+            @endcan
         </div>
 
         <div class="bg-white p-6 h-full rounded shadow-md mt-4">
-            <div> 
-                <h3 class="font-bold text-2xl underline">Past Teaching Details</h3>
-                @foreach ($teacher->past_profiles as $past_profile)
-                    <details class="mt-6"> 
-                        <summary class="font-bold cursor-pointer outline-none"> {{ $past_profile->valid_from->format('M-Y')}} </summary>
-                        <div class="flex items-baseline p-6">
-                            <div>
-                                <h5 class="font-bold"> Designation </h5>
-                                <h5 class="text-l font-medium">{{ $past_profile->getDesignation() }}</h5>
-                            </div>
-                            <div class="ml-5">
-                                <h5 class="font-bold"> College </h5>
-                                <h5 class="text-l font-medium">{{ $past_profile->college->name }}</h5>
-                            </div>
-                        </div>
-                        <h4 class="font-bold px-6"> Programme-Courses Taught</h4>
-                        <div class="px-6 mt-2">
-                            @foreach ($past_profile->past_teaching_details as $index => $past_teaching_detail)
-                                <?php
-                                    $programme = $past_teaching_detail->programme_course_set()['programme'];
-                                    $course = $past_teaching_detail->programme_course_set()['course'];
-                                ?> 
-                                <div class="bg-gray-300 flex w-1/2 border-l border-r border-t border-black {{ $loop->last ? 'border-b' : '' }}">
-                                    <p class="w-1/2 p-2"> {{ $programme['name']}} </p>  
-                                    <p class="border-l border-black p-2">{{ $course['name']}} </p>
-                                </div>   
-                            @endforeach
-                        </div>
-                    </details>
-                @endforeach
-            </div>
+            <h3 class="font-bold text-2xl underline">Teaching Records</h3>
+            @foreach ($teacher->teachingRecords as $record)
+            <details class="mt-6 bg-gray-200 rounded border" open>
+                <summary class="px-4 font-bold cursor-pointer outline-none py-2"> {{ $record->valid_from->format('M, Y')}}
+                </summary>
+                <div class="px-8">
+                    <p>
+                        Taught <span>{{ $record->course->code }} - {{ $record->course->name }}</span>
+                        under {{ $record->programmeRevision->programme->name }}
+                        (w.e.f {{ $record->programmeRevision->revised_at->year }})
+                        in <em class="underline">{{ $record->college->name }}</em> as
+                        <strong>{{ $record->getDesignation() }}</strong> teacher.
+                    </p>
+                </div>
+            </details>
+            @endforeach
         </div>
     </div>
 @endsection

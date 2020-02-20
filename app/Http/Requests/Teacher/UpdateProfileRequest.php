@@ -46,7 +46,8 @@ class UpdateProfileRequest extends FormRequest
                     'programme_revision_id',
                     $teaching_detail['programme_revision']
                 )->where('course_id', $teaching_detail['course'])
-                ->first()->id;
+                ->first()
+                ->only(['programme_revision_id', 'course_id', 'semester']);
             })->toArray();
     }
 

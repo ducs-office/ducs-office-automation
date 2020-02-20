@@ -58,15 +58,15 @@ class EditTeacherProfileTest extends TestCase
         $this->assertEquals($update['designation'], $teacher->profile->fresh()->designation);
         $this->assertEquals($update['college_id'], $teacher->profile->fresh()->college_id);
 
-        $this->assertEquals($teacher->profile->teaching_details->count(), 2);
-        $this->assertEquals($teacher->profile->teaching_details[0]->programme_revision_id, $revision->id);
-        $this->assertEquals($teacher->profile->teaching_details[1]->programme_revision_id, $revision->id);
-        $this->assertEquals($teacher->profile->teaching_details[0]->course_id, $courses[0]->id);
-        $this->assertEquals($teacher->profile->teaching_details[1]->course_id, $courses[1]->id);
+        $this->assertEquals($teacher->profile->teachingDetails->count(), 2);
+        $this->assertEquals($teacher->profile->teachingDetails[0]->programme_revision_id, $revision->id);
+        $this->assertEquals($teacher->profile->teachingDetails[1]->programme_revision_id, $revision->id);
+        $this->assertEquals($teacher->profile->teachingDetails[0]->course_id, $courses[0]->id);
+        $this->assertEquals($teacher->profile->teachingDetails[1]->course_id, $courses[1]->id);
 
         $this->assertEquals(
             'teacher_attachments/profile_picture/' . $profilePicture->hashName(),
-            $teacher->profile->fresh()->profile_picture->path
+            $teacher->profile->fresh()->profilePicture->path
         );
         Storage::assertExists('teacher_attachments/profile_picture/' . $profilePicture->hashName());
     }
@@ -94,7 +94,7 @@ class EditTeacherProfileTest extends TestCase
                 ->assertRedirect()
                 ->assertSessionHasErrors('teaching_details.0.course');
 
-        $this->assertEquals($teacher->profile->teaching_details->count(), 0);
+        $this->assertEquals($teacher->profile->teachingDetails->count(), 0);
     }
 
     /** @test */
@@ -123,7 +123,7 @@ class EditTeacherProfileTest extends TestCase
 
         $this->assertEquals(1, TeacherProfile::count());
 
-        $this->assertEquals($teacher->profile->teaching_details->count(), 0);
+        $this->assertEquals($teacher->profile->teachingDetails->count(), 0);
     }
 
     /** @test */
@@ -177,6 +177,6 @@ class EditTeacherProfileTest extends TestCase
             ->assertSessionHasFlash('success', 'Profile Updated Successfully!');
 
         $this->assertEquals(1, TeacherProfile::count());
-        $this->assertEquals($teacher->profile->teaching_details->count(), 2);
+        $this->assertEquals($teacher->profile->teachingDetails->count(), 2);
     }
 }

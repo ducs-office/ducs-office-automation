@@ -2,16 +2,16 @@
 
 namespace App\Policies;
 
-use App\PastTeachersProfile;
 use App\Teacher;
+use App\TeachingRecord;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class PastTeachersProfilePolicy
+class TeachingRecordPolicy
 {
     use HandlesAuthorization;
 
     public function create(Teacher $teacher)
     {
-        return PastTeachersProfile::canSubmit($teacher);
+        return TeachingRecord::canSubmit($teacher);
     }
 }

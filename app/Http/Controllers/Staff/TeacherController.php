@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Mail\UserRegisteredMail;
 use App\PastTeachersProfile;
 use App\Teacher;
+use App\TeachingRecord;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Response;
@@ -20,9 +21,9 @@ class TeacherController extends Controller
     {
         $filters = $request->query('filters');
         $query = Teacher::applyFilter($filters)->with([
-            'past_profiles',
-            'past_profiles.past_teaching_details.course',
-            'past_profiles.past_teaching_details.programme_revision.programme',
+            'teachingRecords',
+            'teachingRecords.course',
+            'teachingRecords.programmeRevision.programme',
         ]);
 
         $teachers = $query->orderBy('id')->get();
@@ -34,19 +35,17 @@ class TeacherController extends Controller
                 ];
             })->pluck('name', 'id');
 
-        $start_date = PastTeachersProfile::getStartDate();
-        $end_date = PastTeachersProfile::getEndDate();
+        $start_date = TeachingRecord::getStartDate();
+        $end_date = TeachingRecord::getEndDate();
         return view('staff.teachers.index', compact('teachers', 'courses', 'start_date', 'end_date'));
     }
 
     public function show(Request $request, Teacher $teacher)
     {
-        $past_profiles = $teacher->past_profiles()->with([
-            'past_teaching_details.course',
-            'past_teaching_details.programme_revision.programme',
-        ]);
+        $records = $teacher->teachingRecords()
+            ->with(['course', 'programme_revision.programme']);
 
-        return view('staff.teachers.show', compact('teacher', 'past_profiles'));
+        return view('staff.teachers.show', compact('teacher', 'records'));
     }
 
     public function avatar(Teacher $teacher)

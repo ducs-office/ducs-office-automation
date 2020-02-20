@@ -6,24 +6,25 @@ use App\Exceptions\TeacherProfileNotCompleted;
 use App\Http\Controllers\Controller;
 use App\Notifications\TeacherDetailsAccepted;
 use App\PastTeachersProfile;
+use App\TeachingRecord;
 use Illuminate\Http\Request;
 
 class PastTeachersProfilesController extends Controller
 {
     public function store(Request $request)
     {
-        $this->authorize('create', PastTeachersProfile::class);
+        $this->authorize('create', TeachingRecord::class);
 
         $this->ensureProfileCompleted($request);
+        $currentProfile = $request->user()->profile;
 
-        $pastProfile = $request->user()->past_profiles()->create([
-            'designation' => $request->user()->profile->designation,
-            'college_id' => $request->user()->profile->college_id,
-            'valid_from' => PastTeachersProfile::getStartDate(),
-        ]);
-
-        $pastProfile->past_teaching_details()
-            ->attach($request->user()->profile->teaching_details);
+        $records = $request->user()->teachingRecords()->createMany(
+            array_map(function ($detail) use ($currentProfile) {
+                return ['valid_from' => TeachingRecord::getStartDate()]
+                    + $currentProfile->only(['college_id', 'designation', 'teacher_id'])
+                    + $detail->only(['programme_revision_id', 'course_id', 'semester']);
+            }, $currentProfile->teachingDetails->all())
+        );
 
         return $this->sendDetailsSubmittedResponse($request);
     }

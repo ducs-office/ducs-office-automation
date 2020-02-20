@@ -35,27 +35,23 @@ class Teacher extends User
         return $this->hasOne(TeacherProfile::class, 'teacher_id');
     }
 
-    public function past_profiles()
+    public function teachingRecords()
     {
-        return $this->hasMany(PastTeachersProfile::class, 'teacher_id');
+        return $this->hasMany(TeachingRecord::class, 'teacher_id');
     }
 
     public function scopeApplyFilter($query, $filters)
     {
-        if (isset($filters['course_id'])) {
+        if (isset($filters['valid_from']) || isset($filters['course_id'])) {
             $query->whereHas(
-                'past_profiles.past_teaching_details.course',
+                'teachingRecords',
                 static function (Builder $query) use ($filters) {
-                    return $query->where('id', $filters['course_id']);
-                }
-            );
-        }
-
-        if (isset($filters['valid_from'])) {
-            $query->whereHas(
-                'past_profiles',
-                static function (Builder $query) use ($filters) {
-                    return $query->where('valid_from', '>=', $filters['valid_from']);
+                    if (isset($filters['course_id'])) {
+                        $query->where('course_id', $filters['course_id']);
+                    }
+                    if (isset($filters['valid_from'])) {
+                        $query->where('valid_from', '>=', $filters['valid_from']);
+                    }
                 }
             );
         }

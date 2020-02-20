@@ -73,7 +73,7 @@
 
         <p class="my-3 text-gray-700"> Choose upto 3 programme and courses you're teaching in current semester.</p>
 
-        @foreach($teacher->profile->teaching_details as $index => $detail)
+        @foreach($teacher->profile->teachingDetails as $index => $detail)
         <div class="flex items-end mb-2 -mx-2">
             <div class="mx-2">
                 <label for="programme-{{$index + 1}}" class="block form-label mb-1">Programme {{ $index + 1 }}</label>

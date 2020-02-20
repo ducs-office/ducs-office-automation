@@ -16,10 +16,10 @@ class ProfileController extends Controller
     public function index(Request $request)
     {
         $teacher = $request->user()->load([
-            'past_profiles.past_teaching_details',
+            'teachingRecords',
             'profile.college',
-            'profile.profile_picture',
-            'profile.teaching_details',
+            'profile.profilePicture',
+            'profile.teachingDetails',
         ]);
 
         return view('teachers.profile', [
@@ -32,8 +32,8 @@ class ProfileController extends Controller
     {
         $teacher = $request->user()->load([
             'profile.college',
-            'profile.profile_picture',
-            'profile.teaching_details',
+            'profile.profilePicture',
+            'profile.teachingDetails',
         ]);
 
         $programmes = Programme::withLatestRevision()->get()
@@ -65,11 +65,11 @@ class ProfileController extends Controller
         $profile->update($validatedData);
 
         if ($request->has('teaching_details')) {
-            $profile->teaching_details()->sync($request->getTeachingRecord());
+            $profile->teachingDetails()->createMany($request->getTeachingRecord());
         }
 
         if ($request->has('profile_picture')) {
-            $profile->profile_picture()->create($request->getProfilePicture());
+            $profile->profilePicture()->create($request->getProfilePicture());
         }
 
         flash('Profile Updated Successfully!')->success();
@@ -79,7 +79,7 @@ class ProfileController extends Controller
 
     public function avatar()
     {
-        $attachmentPicture = auth()->user()->profile->profile_picture;
+        $attachmentPicture = auth()->user()->profile->profilePicture;
 
         if ($attachmentPicture && Storage::exists($attachmentPicture->path)) {
             return Response::file(Storage::path($attachmentPicture->path));

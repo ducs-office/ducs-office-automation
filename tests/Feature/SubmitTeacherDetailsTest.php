@@ -4,12 +4,12 @@ namespace Tests\Feature;
 
 use App\College;
 use App\Course;
-use App\Exceptions\TeacherProfileNotCompletedException;
+use App\Exceptions\TeacherProfileNotCompleted;
 use App\Notifications\AcceptingTeachingRecordsStarted;
 use App\Notifications\TeacherDetailsAccepted;
-use App\PastTeachersProfile;
 use App\Programme;
 use App\Teacher;
+use App\TeachingRecord;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Notification;
@@ -58,18 +58,20 @@ class SubmitTeacherDetailsTest extends TestCase
 
         $this->patch(route('teachers.profile.update'), $profile_form);
 
-        PastTeachersProfile::startAccepting(now(), now()->addMonths(6));
+        TeachingRecord::startAccepting(now(), now()->addMonths(6));
 
         $this->withoutExceptionHandling()
             ->post(route('teachers.profile.submit'))
             ->assertSessionHasFlash('success', 'Details submitted successfully!');
 
-        $this->assertEquals(1, PastTeachersProfile::count());
-        $this->assertEquals($teacher->profile->fresh()->college_id, PastTeachersProfile::first()->college_id);
-        $this->assertEquals($teacher->profile->fresh()->designation, PastTeachersProfile::first()->designation);
-        $this->assertEquals($teacher->profile->fresh()->teaching_details->count(), PastTeachersProfile::first()->past_teaching_details->count());
-        $this->assertEquals($teacher->profile->fresh()->teaching_details->first()->id, PastTeachersProfile::first()->past_teaching_details->first()->id);
-        $this->assertEquals($teacher->profile->fresh()->teacher_id, PastTeachersProfile::first()->teacher_id);
+        $this->assertEquals(1, TeachingRecord::count());
+        $this->assertEqualsWithDelta(TeachingRecord::getStartDate(), TeachingRecord::first()->valid_from, 1);
+        $this->assertEquals($teacher->profile->fresh()->teacher_id, TeachingRecord::first()->teacher_id);
+        $this->assertEquals($teacher->profile->fresh()->college_id, TeachingRecord::first()->college_id);
+        $this->assertEquals($teacher->profile->fresh()->designation, TeachingRecord::first()->designation);
+        $this->assertEquals($teacher->profile->fresh()->teachingDetails->first()->programme_id, TeachingRecord::first()->programme_id);
+        $this->assertEquals($teacher->profile->fresh()->teachingDetails->first()->course_id, TeachingRecord::first()->course_id);
+        $this->assertEquals($teacher->profile->fresh()->teachingDetails->first()->semester, TeachingRecord::first()->semester);
     }
 
     /** @test */
@@ -81,14 +83,14 @@ class SubmitTeacherDetailsTest extends TestCase
 
         $this->patch(route('teachers.profile.update'), $profile_form);
 
-        PastTeachersProfile::startAccepting(now(), now()->addMonths(6));
+        TeachingRecord::startAccepting(now(), now()->addMonths(6));
 
         $this->withExceptionHandling()
             ->post(route('teachers.profile.submit'))
             ->assertRedirect()
             ->assertSessionHasFlash('danger', 'Your profile is not completed. You cannot perform this action.');
 
-        $this->assertEquals(0, PastTeachersProfile::count());
+        $this->assertEquals(0, TeachingRecord::count());
     }
 
     /** @test */
@@ -100,14 +102,14 @@ class SubmitTeacherDetailsTest extends TestCase
 
         $this->patch(route('teachers.profile.update'), $profile_form);
 
-        PastTeachersProfile::startAccepting(now(), now()->addMonths(6));
+        TeachingRecord::startAccepting(now(), now()->addMonths(6));
 
         $this->withExceptionHandling()
             ->post(route('teachers.profile.submit'))
             ->assertRedirect()
             ->assertSessionHasFlash('danger', 'Your profile is not completed. You cannot perform this action.');
 
-        $this->assertEquals(0, PastTeachersProfile::count());
+        $this->assertEquals(0, TeachingRecord::count());
     }
 
     /** @test */
@@ -119,15 +121,19 @@ class SubmitTeacherDetailsTest extends TestCase
 
         $this->patch(route('teachers.profile.update'), $profile_form);
 
-        PastTeachersProfile::startAccepting(now(), now()->addMonths(6));
+        TeachingRecord::startAccepting(now(), now()->addMonths(6));
 
-        $this->withExceptionHandling()
-            ->from('/teachers')
-            ->post(route('teachers.profile.submit'))
-            ->assertRedirect('/teachers')
-            ->assertSessionHasFlash('danger', 'Your profile is not completed. You cannot perform this action.');
+        try {
+            $this->withoutExceptionHandling()
+                ->from('/teachers')
+                ->post(route('teachers.profile.submit'))
+                ->assertRedirect('/teachers')
+                ->assertSessionHasFlash('danger', 'Your profile is not completed. You cannot perform this action.');
 
-        $this->assertEquals(0, PastTeachersProfile::count());
+            $this->fail('Profile Not Completed Exception was not thrown');
+        } catch (TeacherProfileNotCompleted $e) {
+            $this->assertEquals(0, TeachingRecord::count());
+        }
     }
 
     /** @test */
@@ -141,15 +147,15 @@ class SubmitTeacherDetailsTest extends TestCase
 
         $this->patch(route('teachers.profile.update'), $profile_form);
 
-        // PastTeachersProfile::startAccepting(now(), now()->addMonths(6));
+        // TeachingRecord::startAccepting(now(), now()->addMonths(6));
         // submit without any start_date
         $this->withExceptionHandling()
             ->post(route('teachers.profile.submit'))
             ->assertForbidden();
 
-        $this->assertEquals(0, PastTeachersProfile::count());
+        $this->assertEquals(0, TeachingRecord::count());
 
-        PastTeachersProfile::startAccepting(now(), now()->addMonths(6));
+        TeachingRecord::startAccepting(now(), now()->addMonths(6));
 
         \Carbon\Carbon::setTestNow(now()->addMonths(1));
 
@@ -160,14 +166,14 @@ class SubmitTeacherDetailsTest extends TestCase
             ->assertRedirect('/teachers')
             ->assertSessionHasNoErrors();
 
-        $this->assertEquals(1, PastTeachersProfile::count());
+        $this->assertEquals(1, TeachingRecord::count());
 
         // submitting again
         $this->withExceptionHandling()
             ->post(route('teachers.profile.submit'))
             ->assertForbidden();
 
-        $this->assertEquals(1, PastTeachersProfile::count());
+        $this->assertEquals(1, TeachingRecord::count());
     }
 
     /** @test */
@@ -206,7 +212,7 @@ class SubmitTeacherDetailsTest extends TestCase
 
         $this->patch(route('teachers.profile.update'), $profile_form);
 
-        PastTeachersProfile::startAccepting(now(), now()->addMonths(6));
+        TeachingRecord::startAccepting(now(), now()->addMonths(6));
 
         $this->withoutExceptionHandling()
             ->post(route('teachers.profile.submit'))

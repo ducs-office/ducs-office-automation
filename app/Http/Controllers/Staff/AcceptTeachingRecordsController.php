@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Staff;
 
 use App\Http\Controllers\Controller;
 use App\Notifications\AcceptingTeachingRecordsStarted;
-use App\PastTeachersProfile;
 use App\Teacher;
+use App\TeachingRecord;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Notification;
@@ -19,7 +19,7 @@ class AcceptTeachingRecordsController extends Controller
             'end_date' => 'required|date|after:' . $request->start_date,
         ]);
 
-        PastTeachersProfile::startAccepting(
+        TeachingRecord::startAccepting(
             $start = Carbon::parse($request->start_date),
             $end = Carbon::parse($request->end_date)
         );
@@ -37,9 +37,9 @@ class AcceptTeachingRecordsController extends Controller
     public function extend(Request $request)
     {
         $request->validate([
-            'extend_to' => 'required|date|after_or_equal:' . PastTeachersProfile::getEndDate(),
+            'extend_to' => 'required|date|after_or_equal:' . TeachingRecord::getEndDate(),
         ]);
-        PastTeachersProfile::extendDeadline(
+        TeachingRecord::extendDeadline(
             Carbon::parse($request->extend_to)
         );
 
