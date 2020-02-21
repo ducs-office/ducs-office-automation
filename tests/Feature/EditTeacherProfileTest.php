@@ -119,7 +119,7 @@ class EditTeacherProfileTest extends TestCase
         $this->withExceptionHandling()
             ->patch(route('teachers.profile.update'), $update)
             ->assertRedirect()
-            ->assertSessionHasErrors('teaching_details.0.course');
+            ->assertSessionHasErrors('teaching_details.0');
 
         $this->assertEquals(1, TeacherProfile::count());
 
