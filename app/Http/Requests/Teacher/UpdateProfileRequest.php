@@ -19,15 +19,18 @@ class UpdateProfileRequest extends FormRequest
         $designations = array_keys(config('options.teachers.designations'));
 
         return [
-            'phone_no' => [Rule::requiredIf($this->user()->profile->phone_no), 'string'],
-            'address' => [Rule::requiredIf($this->user()->profile->address), 'string'],
-            'designation' => [Rule::requiredIf($this->user()->profile->designation), 'string', Rule::in($designations)],
-            'college_id' => [Rule::requiredIf($this->user()->profile->college_id), 'numeric', 'exists:colleges,id'],
+            'phone_no' => [Rule::requiredIf($this->user()->profile->phone_no != null)],
+            'address' => [Rule::requiredIf($this->user()->profile->address != null)],
+            'designation' => [Rule::requiredIf($this->user()->profile->designation != null),  Rule::in($designations)],
+            'college_id' => [Rule::requiredIf($this->user()->profile->college_id != null), 'numeric', 'exists:colleges,id'],
             'teaching_details' => ['nullable', 'array'],
-            'teaching_details.*.programme_revision' => ['required_with:teaching_details.*', 'numeric', 'exists:programme_revisions,id'],
-            'teaching_details.*.course' => ['required_with:teaching_details.*', 'numeric', 'exists:course_programme_revision,course_id'],
+            'teaching_details.*.programme_revision' => ['nullable', 'numeric', 'exists:programme_revisions,id'],
+            'teaching_details.*.course' => ['nullable', 'numeric', 'exists:course_programme_revision,course_id'],
             'teaching_details.*' => ['nullable', 'array',
                 static function ($attribute, $value, $fail) {
+                    if (! isset($value['programme_revision'])) {
+                        return true;
+                    }
                     $revision = ProgrammeRevision::find($value['programme_revision']);
                     if (! $revision->courses->contains($value['course'] ?? '')) {
                         return $fail('course does not belong to the programme in' . $attribute);
@@ -41,6 +44,9 @@ class UpdateProfileRequest extends FormRequest
     public function getTeachingRecord()
     {
         return collect($this->teaching_details)
+            ->filter(function ($detail) {
+                return isset($detail['programme_revision']) && isset($detail['course']);
+            })
             ->map(static function ($teaching_detail) {
                 return CourseProgrammeRevision::where(
                     'programme_revision_id',
