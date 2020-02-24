@@ -13,9 +13,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', 'Auth\LoginController@showLoginForm')->middleware(['guest', 'guest:teachers'])->name('login_form');
-Route::post('/login', 'Auth\LoginController@login')->middleware(['guest', 'guest:teachers'])->name('login');
-Route::post('/logout', 'Auth\LoginController@logout')->middleware('auth:web,teachers')->name('logout');
+Route::get('/', 'Auth\LoginController@showLoginForm')->middleware(['guest', 'guest:teachers', 'guest:scholars'])->name('login_form');
+Route::post('/login', 'Auth\LoginController@login')->middleware(['guest', 'guest:teachers', 'guest:scholars'])->name('login');
+Route::post('/logout', 'Auth\LoginController@logout')->middleware('auth:web,teachers,scholars')->name('logout');
 
 Route::prefix('/teachers')
     ->middleware('auth:teachers')

@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use App\Scholar;
 use App\Teacher;
 use App\User;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
@@ -39,6 +40,17 @@ abstract class TestCase extends BaseTestCase
         }
 
         $this->be($teacher, 'teachers');
+
+        return $this;
+    }
+
+    public function signInScholar($scholar = null) 
+    {
+        if(! $scholar) {
+            $scholar = create(Scholar::class);
+        }
+
+        $this->be($scholar, 'scholars');
 
         return $this;
     }

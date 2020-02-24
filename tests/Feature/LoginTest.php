@@ -2,8 +2,10 @@
 
 namespace Tests\Feature;
 
+use App\Scholar;
 use App\Teacher;
 use App\User;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
@@ -106,5 +108,53 @@ class LoginTest extends TestCase
             ->assertRedirect();
 
         $this->assertFalse(Auth::guard('teachers')->check(), 'User was expected to be logged out, but was not logged out!');
+    }
+
+    /** @test */
+    public function scholar_can_login()
+    {
+        $scholar = create(Scholar::class, 1, [
+            'email' => $email = 'scholar@du.ac.in',
+            'password' => bcrypt($plainPassword = 'secret')
+        ]);
+        
+        $this->withoutExceptionHandling()
+            ->post(route('login'), [
+                'email' => $email,
+                'password' => $plainPassword,
+                'type' => 'scholars'
+            ])->assertRedirect();
+
+        $this->assertTrue(Auth::guard('scholars')->check());
+    }
+
+    /** @test */
+    public function logged_in_scholar_can_logout()
+    {
+        $this->signInScholar();
+       
+        $this->withoutExceptionHandling()
+            ->post(route('logout'), ['type' => 'scholars'])
+            ->assertRedirect();
+
+        $this->assertFalse(Auth::guard('scholars')->check(), 'Scholar was expected to logout, but was not logged out!');
+    }
+
+    /** @test */
+    public function scholars_cannot_login_on_invalid_guard()
+    {
+        $scholar = create(Scholar::class, 1, [
+            'password' => bcrypt($plainPassword = 'secret'),
+        ]);
+
+        $this->withExceptionHandling()
+            ->post(route('login'), [
+                'email' => $scholar->email,
+                'password' => $plainPassword,
+                'type' => 'tyuhgyt', 
+            ])->assertRedirect()
+            ->assertSessionHasErrors('type');
+
+        $this->assertFalse(Auth::guard('scholars')->check());
     }
 }

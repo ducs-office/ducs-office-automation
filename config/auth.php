@@ -47,6 +47,12 @@ return [
             'home' => '/teachers',
         ],
 
+        'scholars' => [
+            'driver' => 'session',
+            'provider' => 'scholars',
+            'home' => '/scholars',
+        ],
+
         'api' => [
             'driver' => 'token',
             'provider' => 'users',
@@ -80,6 +86,11 @@ return [
         'teachers' => [
             'driver' => 'eloquent',
             'model' => App\Teacher::class,
+        ],
+
+        'scholars' => [
+            'driver' => 'eloquent',
+            'model' => App\Scholar::class,
         ],
         // 'users' => [
         //     'driver' => 'database',
