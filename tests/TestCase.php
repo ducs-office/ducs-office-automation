@@ -44,9 +44,9 @@ abstract class TestCase extends BaseTestCase
         return $this;
     }
 
-    public function signInScholar($scholar = null) 
+    public function signInScholar($scholar = null)
     {
-        if(! $scholar) {
+        if (! $scholar) {
             $scholar = create(Scholar::class);
         }
 

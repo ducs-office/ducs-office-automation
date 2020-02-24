@@ -42,4 +42,18 @@ return [
             'T' => 'Temporary',
         ],
     ],
+    'scholars' => [
+        'categories' => [
+            'G' => 'General',
+            'O' => 'OBC',
+            'SC' => 'SC',
+            'ST' => 'ST',
+        ],
+        'admission_via' => [
+            'NET' => 'UGC NET',
+            'T' => 'DU College Teacher',
+            'M' => 'MOU with a government insta.',
+            'F' => 'Foreign Candidate',
+        ],
+    ],
 ];

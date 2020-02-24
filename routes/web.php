@@ -28,3 +28,11 @@ Route::prefix('/teachers')
         Route::get('/profile/avatar', 'ProfileController@avatar')->name('profile.avatar');
         Route::post('/profile/submit', 'TeachingRecordsController@store')->name('profile.submit');
     });
+
+Route::prefix('/scholars')
+    ->middleware('auth:scholars')
+    ->namespace('Scholars')
+    ->as('scholars.')
+    ->group(static function () {
+        Route::get('/', 'ProfileController@index')->name('profile');
+    });

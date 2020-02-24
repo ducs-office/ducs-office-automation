@@ -115,14 +115,14 @@ class LoginTest extends TestCase
     {
         $scholar = create(Scholar::class, 1, [
             'email' => $email = 'scholar@du.ac.in',
-            'password' => bcrypt($plainPassword = 'secret')
+            'password' => bcrypt($plainPassword = 'secret'),
         ]);
-        
+
         $this->withoutExceptionHandling()
             ->post(route('login'), [
                 'email' => $email,
                 'password' => $plainPassword,
-                'type' => 'scholars'
+                'type' => 'scholars',
             ])->assertRedirect();
 
         $this->assertTrue(Auth::guard('scholars')->check());
@@ -132,7 +132,7 @@ class LoginTest extends TestCase
     public function logged_in_scholar_can_logout()
     {
         $this->signInScholar();
-       
+
         $this->withoutExceptionHandling()
             ->post(route('logout'), ['type' => 'scholars'])
             ->assertRedirect();
@@ -151,7 +151,7 @@ class LoginTest extends TestCase
             ->post(route('login'), [
                 'email' => $scholar->email,
                 'password' => $plainPassword,
-                'type' => 'tyuhgyt', 
+                'type' => 'tyuhgyt',
             ])->assertRedirect()
             ->assertSessionHasErrors('type');
 
