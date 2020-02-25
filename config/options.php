@@ -49,10 +49,10 @@ return [
             'SC' => 'SC',
             'ST' => 'ST',
         ],
-        'admission_via' => [
+        'admission_criterias' => [
             'NET' => 'UGC NET',
             'T' => 'DU College Teacher',
-            'M' => 'MOU with a government insta.',
+            'M' => 'MOU',
             'F' => 'Foreign Candidate',
         ],
     ],

@@ -17,6 +17,11 @@
                         {{ old('type', 'web') === 'teachers' ? 'checked' : '' }}>
                     <label for="teachers" class="form-label ml-1">College Teacher</label>
                 </div>
+                <div class="inline-flex items-center ml-3">
+                    <input type="radio" name="type" id="scholars" value="scholars"
+                        {{ old('type', 'web') === 'scholars' ? 'checked' : ''}}>
+                    <label for="scholars" class="form-label ml-1">PhD Scholar</label>
+                </div>
             </div>
             @if($errors->has('type'))
                 <p class="text-red-600 mt-1">{{ $errors->first('type') }}</p>

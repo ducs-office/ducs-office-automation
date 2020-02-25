@@ -18,7 +18,7 @@ class CreateScholarsProfileTable extends Migration
             $table->string('phone_no')->nullable();
             $table->text('address', 251)->nullable();
             $table->enum('category', array_keys(config('options.scholars.categories')))->nullable();
-            $table->enum('admission_via', array_keys(config('options.scholars.admission_via')))->nullable();
+            $table->enum('admission_via', array_keys(config('options.scholars.admission_criterias')))->nullable();
             $table->timestamps();
 
             $table->foreign('scholar_id')->references('id')->on('scholars')->onDelete('cascade');

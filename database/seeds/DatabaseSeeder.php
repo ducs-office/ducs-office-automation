@@ -10,6 +10,8 @@ use App\OutgoingLetter;
 use App\Programme;
 use App\ProgrammeRevision;
 use App\Remark;
+use App\Scholar;
+use App\ScholarProfile;
 use App\Teacher;
 use App\TeacherProfile;
 use App\User;
@@ -113,6 +115,12 @@ class DatabaseSeeder extends Seeder
             'first_name' => 'Sharanjit',
             'last_name' => 'Kaur',
             'email' => 'kaur.sharanjit@andc.du.ac.in',
+        ]);
+
+        $scholar = factory(Scholar::class)->create([
+            'first_name' => 'Pushkar',
+            'last_name' => 'Sonkar',
+            'email' => 'pushkar@cs.du.ac.in',
         ]);
     }
 }
