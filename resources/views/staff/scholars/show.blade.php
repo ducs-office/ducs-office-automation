@@ -1,4 +1,4 @@
-@extends('layouts.scholars')
+@extends('layouts.master')
 @section('body')
     <div class="container mx-auto p-4">
         <div class="bg-white p-6 h-full shadow-md">

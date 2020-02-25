@@ -25,6 +25,8 @@ class ScholarController extends Controller
     {
         return view('staff.scholars.show', [
             'scholar' => $scholar->load(['profile']),
+            'categories' => config('options.scholars.categories'),
+            'admission_criterias' => config('options.scholars.admission_criterias'),
         ]);
     }
 
