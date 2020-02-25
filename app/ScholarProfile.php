@@ -14,7 +14,7 @@ class ScholarProfile extends Model
         'phone_no',
         'address',
         'category',
-        'admission_via'
+        'admission_via',
     ];
 
     public function profilePicture()

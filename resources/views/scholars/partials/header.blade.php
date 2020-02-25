@@ -6,6 +6,11 @@
                 <h1 class="text-lg font-bold">Department of <br> Computer Science</h1>
             </a>
         </div>
+        @auth('scholars')
         @include('scholars.partials.users_menu')
+        @endauth
+        @guest('scholars')
+        <a class="bg-white text-gray-900 px-3 py-1 rounded font-bold" href="{{ route('login') }}">Login</a>
+        @endguest
     </div>
 </header>

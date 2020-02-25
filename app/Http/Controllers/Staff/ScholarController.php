@@ -7,7 +7,10 @@ use App\Mail\UserRegisteredMail;
 use App\Scholar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Response as Response;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class ScholarController extends Controller
 {
@@ -15,6 +18,29 @@ class ScholarController extends Controller
     {
         return view('staff.scholars.index', [
             'scholars' => Scholar::all(),
+        ]);
+    }
+
+    public function show(Scholar $scholar)
+    {
+        return view('staff.scholars.show', [
+            'scholar' => $scholar->load(['profile']),
+        ]);
+    }
+
+    public function avatar(Scholar $scholar)
+    {
+        $attachmentPicture = $scholar->profile->profilePicture;
+
+        if ($attachmentPicture && Storage::exists($attachmentPicture->path)) {
+            return Response::file(Storage::path($attachmentPicture->path));
+        }
+
+        $gravatarHash = md5(strtolower(trim($scholar->email)));
+        $avatar = file_get_contents('https://gravatar.com/avatar/' . $gravatarHash . '?s=200&d=identicon');
+
+        return Response::make($avatar, 200, [
+            'Content-Type' => 'image/jpg',
         ]);
     }
 
@@ -35,6 +61,21 @@ class ScholarController extends Controller
         flash('New scholar added succesfully!')->success();
 
         return redirect(route('staff.scholars.index'));
+    }
+
+    public function update(Request $request, Scholar $scholar)
+    {
+        $validData = $request->validate([
+            'first_name' => 'sometimes|required|string',
+            'last_name' => 'sometimes|required|string',
+            'email' => 'sometimes|required|' . Rule::unique('scholars')->ignore($scholar),
+        ]);
+
+        $scholar->update($validData);
+
+        flash('Scholar updated successfully!')->success();
+
+        return redirect()->back();
     }
 
     public function destroy(Scholar $scholar)

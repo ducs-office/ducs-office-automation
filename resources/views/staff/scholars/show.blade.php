@@ -3,11 +3,8 @@
     <div class="container mx-auto p-4">
         <div class="bg-white p-6 h-full shadow-md">
             <div class="flex items-center mb-4">
-                <img src="{{ route('scholars.profile.avatar')}}" class="w-24 h-24 object-cover mr-4 border rounded shadow">
+                <img src="{{ route('staff.scholars.avatar', $scholar)}}" class="w-24 h-24 object-cover mr-4 border rounded shadow">
                 <h3 class="text-2xl font-bold"> {{$scholar->name}}</h3>
-                <div class="ml-auto self-start">
-                    <a href=" {{ route('scholars.profile.edit') }} " class="btn btn-magenta">Edit</a>
-                </div>
             </div>
             <address>
                 {{ $scholar->profile->address}}

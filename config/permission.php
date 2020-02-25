@@ -91,6 +91,7 @@ return [
             'roles' => ['view', 'create', 'edit', 'delete'],
             'users' => ['view', 'create', 'edit', 'delete'],
             'teachers' => ['view', 'create', 'edit', 'delete'],
+            'scholars' => ['view', 'create', 'edit', 'delete'],
         ],
 
         'roles' => [
@@ -105,6 +106,7 @@ return [
                 'roles' => ['view', 'create', 'edit', 'delete'],
                 'users' => ['view', 'create', 'edit', 'delete'],
                 'teachers' => ['view', 'create', 'edit', 'delete'],
+                'scholars' => ['view', 'create', 'edit', 'delete'],
             ],
         ],
     ],

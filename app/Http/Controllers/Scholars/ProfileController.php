@@ -18,7 +18,7 @@ class ProfileController extends Controller
         return view('scholars.profile', [
             'scholar' => $scholar,
             'categories' => config('options.scholars.categories'),
-            'admission_via' => config('options.scholars.admission_criterias'),
+            'admission_criterias' => config('options.scholars.admission_criterias'),
         ]);
     }
 
@@ -32,10 +32,11 @@ class ProfileController extends Controller
             'admission_criterias' => config('options.scholars.admission_criterias'),
         ]);
     }
+
     public function update(Request $request)
     {
         $scholar = Auth::user();
-        
+
         $validData = $request->validate([
             'phone_no' => [Rule::requiredIf($scholar->profile->phone_no != null)],
             'address' => [Rule::requiredIf($scholar->profile->address != null)],
@@ -61,12 +62,12 @@ class ProfileController extends Controller
     {
         $attachmentPicture = auth()->user()->profile->profilePicture;
 
-        if($attachmentPicture && Storage::exists($attachmentPicture->path)) {
+        if ($attachmentPicture && Storage::exists($attachmentPicture->path)) {
             return Response::file(Storage::path($attachmentPicture->path));
         }
 
         $gravatarHash = md5(strtolower(trim(auth()->user()->email)));
-        $avatar =  file_get_contents('https://gravatar.com/avatar/' . $gravatarHash . '?s=200&d=identicon');
+        $avatar = file_get_contents('https://gravatar.com/avatar/' . $gravatarHash . '?s=200&d=identicon');
 
         return Response::make($avatar, 200, [
             'Content-type' => 'image/jpg',

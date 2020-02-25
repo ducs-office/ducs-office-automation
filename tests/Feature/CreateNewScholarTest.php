@@ -19,7 +19,7 @@ class CreateNewScholarTest extends TestCase
     public function scholars_can_not_be_created_by_a_guest()
     {
         $this->withExceptionHandling()
-            ->post(route('staff.scholars.create'), [
+            ->post(route('staff.scholars.store'), [
                 'first_name' => 'Pushkar',
                 'last_name' => 'Sonkar',
                 'email' => 'pushkar@cs.du.ac.in',
@@ -40,7 +40,7 @@ class CreateNewScholarTest extends TestCase
         ];
 
         $this->withoutExceptionHandling()
-            ->post(route('staff.scholars.create'), $scholar)
+            ->post(route('staff.scholars.store'), $scholar)
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'New scholar added succesfully!');
 
@@ -59,7 +59,7 @@ class CreateNewScholarTest extends TestCase
         $this->signIn();
 
         $this->withoutExceptionHandling()
-            ->post(route('staff.scholars.create'), [
+            ->post(route('staff.scholars.store'), [
                 'first_name' => 'Pushkar',
                 'last_name' => 'Sonkar',
                 'email' => 'pushkar@cs.du.ac.in',
@@ -84,7 +84,7 @@ class CreateNewScholarTest extends TestCase
 
         try {
             $this->withoutExceptionHandling()
-                ->post(route('staff.scholars.create'), [
+                ->post(route('staff.scholars.store'), [
                     'first_name' => '',
                     'last_name' => 'Sonkar',
                     'email' => 'pushkar@cs.du.ac.in',
@@ -103,7 +103,7 @@ class CreateNewScholarTest extends TestCase
 
         try {
             $this->withoutExceptionHandling()
-                ->post(route('staff.scholars.create'), [
+                ->post(route('staff.scholars.store'), [
                     'first_name' => 'Pushkar',
                     'last_name' => '',
                     'email' => 'pushkar@cs.du.ac.in',
@@ -124,7 +124,7 @@ class CreateNewScholarTest extends TestCase
 
         try {
             $this->withoutExceptionHandling()
-                ->post(route('staff.scholars.create'), [
+                ->post(route('staff.scholars.store'), [
                     'first_name' => 'Pushkar',
                     'last_name' => 'Sonkar',
                     'email' => $scholar->email,

@@ -10,6 +10,6 @@ $factory->define(ScholarProfile::class, function (Faker $faker) {
         'phone_no' => $faker->phoneNumber(),
         'address' => $faker->address(),
         'category' => $faker->randomElement(array_keys(config('options.scholars.categories'))),
-        'admission_via' => $faker->randomElement(array_keys(config('options.scholars.admission_via'))),
+        'admission_via' => $faker->randomElement(array_keys(config('options.scholars.admission_criterias'))),
     ];
 });

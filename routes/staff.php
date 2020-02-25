@@ -87,5 +87,8 @@ Route::post('/teaching-records/accept', 'AcceptTeachingRecordsController@start')
 Route::patch('/teaching-records/extend', 'AcceptTeachingRecordsController@extend')->name('teaching_records.extend');
 
 Route::get('/scholars', 'ScholarController@index')->name('scholars.index');
-Route::post('/scholars', 'ScholarController@store')->name('scholars.create');
+Route::post('/scholars', 'ScholarController@store')->name('scholars.store');
+Route::get('/scholars/{scholar}', 'ScholarController@show')->name('scholars.show');
+Route::get('/scholars/{scholar}/avatar', 'ScholarController@avatar')->name('scholars.avatar');
+Route::patch('/scholars/{scholar}', 'ScholarController@update')->name('scholars.update');
 Route::delete('/scholars/{scholar}', 'ScholarController@destroy')->name('scholars.destroy');

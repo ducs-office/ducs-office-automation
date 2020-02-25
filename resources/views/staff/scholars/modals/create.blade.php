@@ -1,7 +1,7 @@
 <v-modal name="{{ $modalName }}" height="auto">
     <div class="p-6">
-        <h2 class="text-lg font-bold mb-8">Create Teacher</h2>
-        <form action="{{ route('staff.teachers.store') }}" method="POST" class="px-6">
+        <h2 class="text-lg font-bold mb-8">Create Scholar</h2>
+        <form action="{{ route('staff.scholars.store') }}" method="POST" class="px-6">
             @csrf_token
             <div class="mb-2">
                 <label for="first_name" class="w-full form-label">First Name<span

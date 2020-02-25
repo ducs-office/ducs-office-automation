@@ -17,7 +17,7 @@ class EditScholarProfileTest extends TestCase
     /** @test */
     public function scholar_can_edit_themselves()
     {
-        $this->signInScholar( $scholar = create(Scholar::class));
+        $this->signInScholar($scholar = create(Scholar::class));
 
         $updateDetails = [
             'phone_no' => '12345678',
@@ -31,7 +31,7 @@ class EditScholarProfileTest extends TestCase
             ->patch(route('scholars.profile.update'), $updateDetails)
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'Profile updated successfully!');
-        
+
         $this->assertEquals(1, Scholar::count());
 
         $this->assertEquals($updateDetails['phone_no'], $scholar->profile->fresh()->phone_no);
@@ -44,6 +44,5 @@ class EditScholarProfileTest extends TestCase
             $scholar->profile->fresh()->profilePicture->path
         );
         Storage::assertExists('scholar_attachments/profile_picture/' . $profilePicture->hashName());
-
     }
 }
