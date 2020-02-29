@@ -1,6 +1,6 @@
 @extends('layouts.master')
 @section('body')
-<div class="page-card m6">
+<div class="page-card m-6">
     <div class="flex items-center px-6 pb-4 border-b">
         <h1 class="page-header mb-0 px-0 mr-4">Scholars</h1>
         @can('create', App\Scholar::class)
