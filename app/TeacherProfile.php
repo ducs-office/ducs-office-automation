@@ -47,6 +47,6 @@ class TeacherProfile extends Model
     {
         return $this->designation
             && $this->college_id
-            && $this->teachingDetails->count() > 0;
+            && $this->teachingDetails()->count() > 0;
     }
 }

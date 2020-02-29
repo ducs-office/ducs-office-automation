@@ -24,15 +24,15 @@ class UpdateProfileRequest extends FormRequest
             'designation' => [Rule::requiredIf($this->user()->profile->designation != null),  Rule::in($designations)],
             'college_id' => [Rule::requiredIf($this->user()->profile->college_id != null), 'numeric', 'exists:colleges,id'],
             'teaching_details' => ['nullable', 'array'],
-            'teaching_details.*.programme_revision' => ['nullable', 'numeric', 'exists:programme_revisions,id'],
-            'teaching_details.*.course' => ['nullable', 'numeric', 'exists:course_programme_revision,course_id'],
+            'teaching_details.*.programme_revision_id' => ['nullable', 'numeric', 'exists:programme_revisions,id'],
+            'teaching_details.*.course_id' => ['nullable', 'numeric', 'exists:course_programme_revision,course_id'],
             'teaching_details.*' => ['nullable', 'array',
                 static function ($attribute, $value, $fail) {
-                    if (! isset($value['programme_revision'])) {
+                    if (! isset($value['programme_revision_id'])) {
                         return true;
                     }
-                    $revision = ProgrammeRevision::find($value['programme_revision']);
-                    if (! $revision->courses->contains($value['course'] ?? '')) {
+                    $revision = ProgrammeRevision::find($value['programme_revision_id']);
+                    if (! $revision->courses->contains($value['course_id'] ?? '')) {
                         return $fail('course does not belong to the programme in' . $attribute);
                     }
                 },
@@ -43,15 +43,15 @@ class UpdateProfileRequest extends FormRequest
 
     public function getTeachingRecord()
     {
-        return collect($this->teaching_details)
+        return collect($this->teaching_details ?? [])
             ->filter(function ($detail) {
-                return isset($detail['programme_revision']) && isset($detail['course']);
+                return isset($detail['programme_revision_id']) && isset($detail['course_id']);
             })
             ->map(static function ($teaching_detail) {
                 return CourseProgrammeRevision::where(
                     'programme_revision_id',
-                    $teaching_detail['programme_revision']
-                )->where('course_id', $teaching_detail['course'])
+                    $teaching_detail['programme_revision_id']
+                )->where('course_id', $teaching_detail['course_id'])
                 ->first()
                 ->only(['programme_revision_id', 'course_id', 'semester']);
             })->toArray();

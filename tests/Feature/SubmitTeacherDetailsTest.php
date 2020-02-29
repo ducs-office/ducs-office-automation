@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\College;
 use App\Course;
+use App\CourseProgrammeRevision;
 use App\Exceptions\TeacherProfileNotCompleted;
 use App\Notifications\AcceptingTeachingRecordsStarted;
 use App\Notifications\TeachingRecordsSaved;
@@ -32,12 +33,10 @@ class SubmitTeacherDetailsTest extends TestCase
                 return factory(Teacher::class)->create()->id;
             },
             'teaching_details' => function () {
-                $programme = create(Programme::class, 1, ['wef' => now()]);
-                $course = create(Course::class);
-                $revision = $programme->revisions()->create(['revised_at' => $programme->wef]);
-                $revision->courses()->attach($course, ['semester' => 1]);
                 return [
-                    ['programme_revision' => $revision->id, 'course' => $course->id],
+                    create(CourseProgrammeRevision::class)->only([
+                        'programme_revision_id', 'course_id', 'semester',
+                    ]),
                 ];
             },
         ], $overrides);

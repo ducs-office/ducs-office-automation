@@ -23,7 +23,7 @@ class TeachingRecordsController extends Controller
                 return ['valid_from' => TeachingRecord::getStartDate()]
                     + $currentProfile->only(['college_id', 'designation', 'teacher_id'])
                     + $detail->only(['programme_revision_id', 'course_id', 'semester']);
-            }, $currentProfile->teachingDetails->all())
+            }, $currentProfile->teachingDetails()->get()->all())
         );
 
         return $this->sendDetailsSubmittedResponse($request);
