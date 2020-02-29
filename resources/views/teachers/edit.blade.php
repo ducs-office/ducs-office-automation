@@ -70,69 +70,31 @@
                 <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
             </svg>
         </div>
-
         <p class="my-3 text-gray-700"> Choose upto 3 programme and courses you're teaching in current semester.</p>
 
         @foreach($teacher->profile->teachingDetails as $index => $detail)
-        <div class="flex items-end mb-2 -mx-2">
-            <div class="mx-2">
-                <label for="programme-{{$index + 1}}" class="block form-label mb-1">Programme {{ $index + 1 }}</label>
-                <select id="programme-{{$index + 1}}" name="teaching_details[{{$index}}][programme_revision_id]"
-                class="block form-input">
-                    <option value="" selected>Choose a Programme</option>
-                    @foreach ($programmes as $id => $programme)
-                        <option value="{{ $id }}"
-                            {{ $id === old("teaching_details[{$index}][programme_revision_id]", $detail->programme_revision_id) ? 'selected' : '' }}>
-                            {{ $programme }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="mx-2">
-                <label for="course-{{ $index + 1 }}" class="block form-label mb-1">Course {{ $index + 1 }}</label>
-                <select id="course-{{ $index + 1 }}" name="teaching_details[{{$index}}][course_id]"
-                    class="block form-input">
-                    <option value="">Choose Course</option>
-                    @foreach ($courses as $id => $course)
-                    <option value="{{ $id }}"
-                        {{ $id === old("teaching_details[{$index}][course_id]", $detail->course_id) ? 'selected' : '' }}>
-                        {{ $course }}
-                    </option>
-                    @endforeach
-                </select>
-            </div>
-        </div>
+            <course-programme-revision-selector
+                :index="{{ $index }}"
+                :programmes="{{ $programmes->toJson() }}"
+                :value="{{ json_encode(
+                    old(
+                        "teaching_details[{$index}]",
+                        $detail->only(['programme_revision_id', 'course_id'])
+                    )
+                ) }}"
+            ></course-programme-revision-selector>
         @endforeach
         @php($detailsCount = $teacher->profile->teachingDetails->count())
         @foreach(range(1, 3 - $detailsCount) as $index => $n)
-        <div class="flex items-end mb-2 -mx-2">
-            <div class="mx-2">
-                <label for="programme-{{ $n + $detailsCount }}" class="block form-label mb-1">Programme {{ $n + $detailsCount }}</label>
-                <select id="programme-{{ $n + $detailsCount }}" name="teaching_details[{{$index + $detailsCount}}][programme_revision_id]"
-                class="block form-input">
-                    <option value="" selected>Choose a Programme</option>
-                    @foreach ($programmes as $id => $programme)
-                    <option value="{{ $id }}"
-                        {{ $id === old("teaching_details[" . ($index + $detailsCount) . "][programme_revision_id]") ? 'selected' : '' }}>
-                        {{ $programme }}
-                    </option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="mx-2">
-                <label for="course-{{ $n + $detailsCount }}" class="block form-label mb-1">Course {{ $n + $detailsCount  }}</label>
-                <select id="course-{{ $n + $detailsCount  }}" name="teaching_details[{{$index + $detailsCount}}][course_id]"
-                class="block form-input">
-                    <option value="">Choose Course</option>
-                    @foreach ($courses as $id => $course)
-                    <option value="{{ $id }}"
-                        {{ $id === old("teaching_details[" . ($index + $detailsCount) . "][course_id]") ? 'selected' : '' }}>
-                        {{ $course }}
-                    </option>
-                    @endforeach
-                </select>
-            </div>
-        </div>
+            <course-programme-revision-selector
+                :index="{{ $index + $detailsCount }}"
+                :programmes="{{ $programmes->toJson() }}"
+                :value="{{ json_encode(
+                    old(
+                        'teaching_details[' . ($index + $detailsCount) . ']',
+                        ['programme_revision_id' => '', 'course_id' => '']
+                    )
+                ) }}"></course-programme-revision-selector>
         @endforeach
 
         <div class="mt-5">

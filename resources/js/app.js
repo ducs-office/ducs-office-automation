@@ -14,7 +14,8 @@ import ImageUploadInput from './components/ImageUploadInput.vue';
 import DynamicModal from './components/DynamicModal.vue';
 import ToggleVisibility from './components/ToggleVisibility';
 import ProgrammeForm from'./components/ProgrammeForm.js';
-import SemesterWiseCourseInput from './components/SemesterWiseCoursesInput.vue';
+import SemesterWiseCourseInput from "./components/SemesterWiseCoursesInput.vue";
+import CourseProgrammeRevisionSelector from './components/CourseProgrammeRevisionSelector.vue';
 
 import ClickOutside from './click-outside.js';
 
@@ -35,6 +36,7 @@ Vue.component("image-upload-input", ImageUploadInput);
 Vue.component('toggle-visibility', ToggleVisibility);
 Vue.component('programme-form', ProgrammeForm);
 Vue.component("semester-wise-courses-input", SemesterWiseCourseInput);
+Vue.component("course-programme-revision-selector", CourseProgrammeRevisionSelector);
 
 
 Vue.mixin({

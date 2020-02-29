@@ -37,21 +37,10 @@ class ProfileController extends Controller
             'profile.teachingDetails',
         ]);
 
-        $programmes = Programme::withLatestRevision()->get()
-            ->mapWithKeys(static function ($programme) {
-                $latestRevisionId = $programme->latestRevision->id;
-                $name = $programme->code . ' - ' . $programme->name;
-                return [$latestRevisionId => $name];
-            });
-
-        $courses = Course::select(['id', 'code', 'name'])->get()
-            ->mapWithKeys(static function ($course) {
-                return [$course->id => $course->code . ' - ' . $course->name];
-            });
+        $programmes = Programme::withLatestRevision()->get();
 
         return view('teachers.edit', [
             'colleges' => College::all()->pluck('name', 'id'),
-            'courses' => $courses,
             'designations' => config('options.teachers.designations'),
             'programmes' => $programmes,
             'teacher' => $teacher,
