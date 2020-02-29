@@ -18,7 +18,9 @@ class TeachingRecordsController extends Controller
         $records = TeachingRecord::with([
             'teacher', 'college', 'course',
             'programmeRevision.programme',
-        ])->filter($request->get('filters'))->get();
+        ])->filter($request->get('filters'))
+        ->orderBy('valid_from', 'desc')
+        ->get();
 
         if (Route::is('staff.teaching_records.export')) {
             return $this->exportAndSendCSV($records);

@@ -60,8 +60,8 @@ class ExportTeachingRecordToCsvTest extends TestCase
 
         $expectedCSV = implode("\n", [
             'Year,Teacher,Designation,College,Course,Semester,Programme',
-            "{$oldRecord->valid_from->year},{$teacher->name},{$oldRecord->getDesignation()},{$college->name},{$courses[0]->name},{$oldRecord->semester},{$programme->name}",
             "{$newRecord->valid_from->year},{$teacher->name},{$newRecord->getDesignation()},{$college->name},{$courses[1]->name},{$newRecord->semester},{$programme->name}",
+            "{$oldRecord->valid_from->year},{$teacher->name},{$oldRecord->getDesignation()},{$college->name},{$courses[0]->name},{$oldRecord->semester},{$programme->name}",
         ]);
 
         $response = $this->withoutExceptionHandling()
