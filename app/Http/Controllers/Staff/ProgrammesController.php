@@ -33,12 +33,6 @@ class ProgrammesController extends Controller
         return view('staff.programmes.index', [
             'programmes' => $programmes,
             'groupedCourses' => $groupedCourses,
-        ]);
-    }
-
-    public function create()
-    {
-        return view('staff.programmes.create', [
             'types' => config('options.programmes.types'),
         ]);
     }
