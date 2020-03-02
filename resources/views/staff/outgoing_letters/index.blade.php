@@ -1,7 +1,7 @@
 @extends('layouts.master')
 @section('body')
     <div class="m-6">
-        <div class="flex items-baseline px-4 mb-4">
+        <div class="flex items-baseline mb-4">
             <h1 class="page-header mb-0 px-0 mr-4">Outgoing Letters</h1>
             @can('create', 'App\OutgoingLetter')
             <a href="{{ route('staff.outgoing_letters.create') }}" class="btn btn-magenta is-sm shadow-inset">
@@ -18,8 +18,10 @@
                     [ 'field' => 'creator', 'label' => 'Creator', 'type' => 'select', 'operator' => 'equals', 'options' => $creators->toArray() ],
                 ]
             ])
-
         </div>
+        <p class="mb-4">
+            Displaying <b>{{ $letters->firstItem() }}</b> - <b>{{ $letters->lastItem() }}</b> out of <b>{{ $letters->total() }}</b>
+        </p>
         @forelse($letters as $letter)
             @include('staff.outgoing_letters.partials.letter', [
                 'letter' => $letter,
@@ -37,6 +39,7 @@
                 </p>
             </div>
         @endforelse
+        {{ $letters->links()  }}
     </div>
     <form id="remove-attachment" method="POST" onsubmit="return confirm('Do you really want to delete attachment?');">
         @csrf_token @method('DELETE')

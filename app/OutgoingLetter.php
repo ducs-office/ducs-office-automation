@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Cache;
 
 class OutgoingLetter extends Model
 {
+    protected $perPage = 20;
+
     protected $fillable = [
         'date', 'type', 'subject', 'recipient', 'description', 'amount',
         'sender_id', 'creator_id',
