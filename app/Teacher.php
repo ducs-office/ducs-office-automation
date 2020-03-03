@@ -39,4 +39,9 @@ class Teacher extends User
     {
         return $this->hasMany(TeachingRecord::class, 'teacher_id');
     }
+
+    public function supervisorProfile()
+    {
+        return $this->morphOne(SupervisorProfile::class, 'supervisor');
+    }
 }

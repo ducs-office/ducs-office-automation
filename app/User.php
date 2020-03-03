@@ -72,4 +72,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(IncomingLetter::class, 'creator_id');
     }
+
+    public function supervisorProfile()
+    {
+        return $this->morphOne(SupervisorProfile::class, 'supervisor');
+    }
 }
