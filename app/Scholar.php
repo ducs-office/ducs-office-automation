@@ -28,6 +28,16 @@ class Scholar extends User
         return $this->hasOne(ScholarProfile::class, 'scholar_id');
     }
 
+    public function supervisorProfile()
+    {
+        return $this->belongsTo(SupervisorProfile::class);
+    }
+
+    public function supervisor()
+    {
+        return $this->supervisorProfile->supervisor();
+    }
+
     public function getNameAttribute()
     {
         return $this->first_name . ' ' . $this->last_name;

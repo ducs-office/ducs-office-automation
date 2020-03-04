@@ -10,4 +10,9 @@ class SupervisorProfile extends Model
     {
         return $this->morphTo('supervisor');
     }
+
+    public function scholars()
+    {
+        return $this->hasMany(Scholar::class, 'supervisor_profile_id');
+    }
 }
