@@ -4,7 +4,11 @@ namespace Tests\Unit;
 
 use App\Scholar;
 use App\ScholarProfile;
+use App\Teacher;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Schema;
 use Tests\TestCase;
 
 class ScholarTest extends TestCase

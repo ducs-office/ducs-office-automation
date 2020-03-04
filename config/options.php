@@ -50,10 +50,19 @@ return [
             'ST' => 'ST',
         ],
         'admission_criterias' => [
-            'NET' => 'UGC NET',
-            'T' => 'DU College Teacher',
-            'M' => 'MOU',
-            'F' => 'Foreign Candidate',
+            'NET' => ['mode' => 'UGC NET', 'funding' => 'Employed'],
+            'T' => ['mode' => 'DU College Teacher', 'funding' => 'Employed'],
+            'M' => ['mode' => 'MOU', 'funding' => 'Employed'],
+            'F' => ['mode' => 'Foreign Candidate', 'funding' => 'Employed'],
+            'E' => ['mode' => 'Enterance', 'funding' => 'Non-NET'],
+            'J' => ['mode' => 'JRF', 'funding' => 'JRF'],
+            'D' => ['mode' => 'DRDO', 'funding' => 'Employed'],
+        ],
+        'gender' => [
+            'F' => 'Female',
+            'M' => 'Male',
+            'T' => 'Transgender',
+            'N' => 'Do not wish to declare',
         ],
     ],
 ];

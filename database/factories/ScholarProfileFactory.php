@@ -11,5 +11,7 @@ $factory->define(ScholarProfile::class, function (Faker $faker) {
         'address' => $faker->address(),
         'category' => $faker->randomElement(array_keys(config('options.scholars.categories'))),
         'admission_via' => $faker->randomElement(array_keys(config('options.scholars.admission_criterias'))),
+        'research_area' => $faker->sentence(),
+        'gender' => $faker->randomElement(array_keys(config('options.scholars.gender'))),
     ];
 });

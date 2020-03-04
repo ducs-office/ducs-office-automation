@@ -17,6 +17,7 @@ class UserTest extends TestCase
         $user = create(User::class);
 
         $this->assertInstanceOf(MorphOne::class, $user->supervisorProfile());
+
         $this->assertNull($user->supervisorProfile);
 
         $profile = $user->supervisorProfile()->create();

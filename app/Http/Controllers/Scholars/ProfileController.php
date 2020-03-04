@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Scholars;
 
 use App\Http\Controllers\Controller;
+use App\SupervisorProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
@@ -19,6 +20,7 @@ class ProfileController extends Controller
             'scholar' => $scholar,
             'categories' => config('options.scholars.categories'),
             'admission_criterias' => config('options.scholars.admission_criterias'),
+            'supervisors' => SupervisorProfile::all()->pluck('id', 'supervisor.name'),
         ]);
     }
 
@@ -43,9 +45,26 @@ class ProfileController extends Controller
             'category' => [Rule::requiredIf($scholar->profile->category != null)],
             'admission_via' => [Rule::requiredIf($scholar->profile->admission_via != null)],
             'profile_picture' => ['nullable', 'image'],
+            'advisors' => ['nullable', 'array'],
+            'advisors.advisory_committee.*' => ['nullable', 'array', 'size: 4'],
+            'advisors.co_supervisors.*' => ['nullable', 'array', 'size: 4'],
         ]);
 
         $scholar->profile->update($validData);
+
+        $scholar->profile->advisors->each->delete();
+
+        $scholar->profile->advisors()->createMany(
+            array_map(function ($advisorCommitteeMember) {
+                return array_merge($advisorCommitteeMember, ['type' => 'A']);
+            }, $validData['advisors']['advisory_committee'])
+        );
+
+        $scholar->profile->advisors()->createMany(
+            array_map(function ($advisorCommitteeMember) {
+                return array_merge($advisorCommitteeMember, ['type' => 'C']);
+            }, $validData['advisors']['co_supervisors'])
+        );
 
         if ($request->has('profile_picture')) {
             $scholar->profile->profilePicture()->create([

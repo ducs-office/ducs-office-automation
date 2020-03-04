@@ -119,7 +119,7 @@ class DatabaseSeeder extends Seeder
 
         $scholar = factory(Scholar::class)->create([
             'first_name' => 'Pushkar',
-            'last_name' => 'Sonkar',
+            'last_name' => 'Gole',
             'email' => 'pushkar@cs.du.ac.in',
         ]);
     }
