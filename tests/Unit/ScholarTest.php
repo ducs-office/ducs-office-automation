@@ -64,9 +64,8 @@ class ScholarTest extends TestCase
         $advisorFieldsArray = $this->advisorFields(3);
         $advisors = $scholar->advisors()->createMany($advisorFieldsArray);
 
-        // $this->assertTrue($advisors->is($scholar->profile->fresh()->advisors));
-
         $this->assertCount(3, $scholar->fresh()->advisors);
+        $this->assertTrue($advisors[0]->is($scholar->fresh()->advisors->first()));
     }
 
     /** @test */
@@ -80,7 +79,7 @@ class ScholarTest extends TestCase
         $advisoryCommittee = $scholar->advisors()->createMany($advisoryCommitteeFieldsArray);
 
         $this->assertCount(3, $scholar->fresh()->advisoryCommittee);
-        $this->assertEquals($advisoryCommittee[0]->name, $scholar->fresh()->advisoryCommittee[0]->name);
+        $this->assertTrue($advisoryCommittee[0]->is($scholar->fresh()->advisoryCommittee->first()));
     }
 
     /** @test */
@@ -94,6 +93,6 @@ class ScholarTest extends TestCase
         $coSupervisors = $scholar->advisors()->createMany($coSupervisorsFieldsArray);
 
         $this->assertCount(3, $scholar->fresh()->coSupervisors);
-        $this->assertEquals($coSupervisors[0]->name, $scholar->fresh()->coSupervisors[0]->name);
+        $this->assertTrue($coSupervisors[0]->is($scholar->fresh()->coSupervisors->first()));
     }
 }
