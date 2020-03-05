@@ -34,4 +34,16 @@ class TeacherTest extends TestCase
 
         $this->assertTrue($profile->is($teacher->fresh()->supervisorProfile));
     }
+
+    /** @test */
+    public function isSupervisor_method_gives_boolean_indicating_whether_or_not_user_is_a_supervisor()
+    {
+        $teacher = create(Teacher::class);
+
+        $this->assertFalse($teacher->isSupervisor());
+
+        $profile = $teacher->supervisorProfile()->create();
+
+        $this->assertTrue($teacher->fresh()->isSupervisor());
+    }
 }

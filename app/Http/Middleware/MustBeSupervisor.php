@@ -17,7 +17,7 @@ class MustBeSupervisor
      */
     public function handle($request, Closure $next)
     {
-        if (! $request->user()->supervisorProfile) {
+        if (! $request->user()->isSupervisor()) {
             throw new AuthorizationException('You must be a supervisor!', 403);
         }
 

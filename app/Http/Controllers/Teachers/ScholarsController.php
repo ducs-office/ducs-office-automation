@@ -4,8 +4,6 @@ namespace App\Http\Controllers\Teachers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Middleware\MustBeSupervisor;
-use App\Scholar;
-use App\User;
 use Illuminate\Http\Request;
 
 class ScholarsController extends Controller
