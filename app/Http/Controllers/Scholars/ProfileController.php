@@ -14,13 +14,13 @@ class ProfileController extends Controller
 {
     public function index(Request $request)
     {
-        $scholar = $request->user();
+        $scholar = $request->user()->load(['advisoryCommittee', 'coSupervisors']);
 
         return view('scholars.profile', [
             'scholar' => $scholar,
             'categories' => config('options.scholars.categories'),
             'admission_criterias' => config('options.scholars.admission_criterias'),
-            'supervisors' => SupervisorProfile::all()->pluck('id', 'supervisor.name'),
+            'genders' => config('options.scholars.genders'),
         ]);
     }
 
@@ -32,6 +32,7 @@ class ProfileController extends Controller
             'scholar' => $scholar,
             'categories' => config('options.scholars.categories'),
             'admission_criterias' => config('options.scholars.admission_criterias'),
+            'supervisors' => SupervisorProfile::all()->pluck('id', 'supervisor.name'),
         ]);
     }
 

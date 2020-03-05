@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Scholar;
+use App\SupervisorProfile;
 use App\Teacher;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -14,6 +15,24 @@ use Tests\TestCase;
 class EditScholarProfileTest extends TestCase
 {
     use RefreshDatabase;
+
+    /** @test */
+    public function sholar_edit_view_has_a_unique_list_of_supervisors()
+    {
+        $supervisors = create(SupervisorProfile::class, 3);
+        
+        $this->signInScholar(create(Scholar::class, 1, ['supervisor_profile_id' => $supervisors[0]->id]));
+        
+        $viewData = $this->withoutExceptionHandling()
+            ->get(route('scholars.profile.edit'))
+            ->assertSuccessful()
+            ->assertViewIs('scholars.edit')
+            ->assertViewHas('supervisors')
+            ->viewData('supervisors');
+
+        $this->assertCount(3, $viewData);
+        $this->assertSame($supervisors->pluck('id', 'supervisor.name')->toArray(), $viewData->toArray());
+    }
 
     /** @test */
     public function scholar_can_edit_themselves()

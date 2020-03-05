@@ -26,25 +26,8 @@ class ScholarsProfileTest extends TestCase
                 'scholar',
                 'categories',
                 'admission_criterias',
+                'genders'
             ])
         ->assertSee($scholar->email);
-    }
-
-    /** @test */
-    public function view_has_unique_list_of_supervisors()
-    {
-        $this->signInScholar(create(Scholar::class));
-
-        $supervisors = create(SupervisorProfile::class, 3);
-
-        $viewData = $this->withoutExceptionHandling()
-            ->get(route('scholars.profile'))
-            ->assertSuccessful()
-            ->assertViewIs('scholars.profile')
-            ->assertViewHas('supervisors')
-            ->viewData('supervisors');
-
-        $this->assertCount(3, $viewData);
-        $this->assertSame($supervisors->pluck('id', 'supervisor.name')->toArray(), $viewData->toArray());
     }
 }

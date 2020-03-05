@@ -58,7 +58,7 @@ return [
             'J' => ['mode' => 'JRF', 'funding' => 'JRF'],
             'D' => ['mode' => 'DRDO', 'funding' => 'Employed'],
         ],
-        'gender' => [
+        'genders' => [
             'F' => 'Female',
             'M' => 'Male',
             'T' => 'Transgender',

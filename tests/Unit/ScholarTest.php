@@ -3,7 +3,7 @@
 namespace Tests\Unit;
 
 use App\Scholar;
-use App\ScholarProfile;
+use App\SupervisorProfile;
 use App\Teacher;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -36,22 +36,6 @@ class ScholarTest extends TestCase
 
         return $advisors;
     }
-
-    // /** @test */
-    // public function scholar_has_a_supervisor()
-    // {
-    //     $teacher = create(Teacher::class);
-
-    //     $scholar = create(Scholar::class);
-
-    //     $scholar->profile()->update([
-    //         'supervisor_type' => Teacher::class,
-    //         'supervisor_id' => $teacher->id,
-    //     ]);
-
-    //     $this->assertInstanceOf(BelongsTo::class, $scholar->profile->supervisor());
-    //     $this->assertTrue($scholar->profile->supervisor->is($teacher));
-    // }
 
     /** @test */
     public function scholar_may_have_many_advisors()

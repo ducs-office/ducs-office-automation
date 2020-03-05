@@ -3,6 +3,7 @@
 namespace App;
 
 use App\ScholarProfile;
+use App\SupervisorProfile;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User;
 
@@ -19,6 +20,9 @@ class Scholar extends User
         'address',
         'category',
         'admission_via',
+        'supervisor_profile_id',
+        'gender',
+        'research_area',
     ];
 
     public function getNameAttribute()
@@ -44,5 +48,15 @@ class Scholar extends User
     public function coSupervisors()
     {
         return $this->advisors()->where('type', 'C');
+    }
+
+    public function supervisorProfile()
+    {
+        return $this->belongsTo(SupervisorProfile::class);
+    }
+
+    public function supervisor()
+    {
+        return $this->supervisorProfile->supervisor();
     }
 }

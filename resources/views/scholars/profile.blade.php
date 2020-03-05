@@ -9,6 +9,12 @@
                     <a href=" {{ route('scholars.profile.edit') }} " class="btn btn-magenta">Edit</a>
                 </div>
             </div>
+            <div>
+                <p> {{ $genders[$scholar->gender] }}</p>
+            </div>
+            <div>
+                <p> {{ $scholar->research_area}} </p>
+            </div>
             <address>
                 {{ $scholar->address}}
             </address>
@@ -21,17 +27,49 @@
                 <a href="tel:{{ $scholar->phone_no }}">{{ $scholar->phone_no }}</a>
             </p>
             <div class="mt-4 mb-2">
-                <h3 class="font-bold"> Admission Details</h3>
+                <h3 class="font-bold mb-4"> Admission Details</h3>
                 <div class="flex">
                     <p class="font-semibold"> Category:</p>
                     <p class="ml-2"> {{$categories[$scholar->category] ?? 'not set'}}</p>
                 </div>
                 <div class="flex">
-                    <p class="font-semibold"> Admission via:</p>
-                    <p class="ml-2"> {{ $admission_criterias[$scholar->admission_via]['mode'] ?? 'not set'}}</p>
+                    <div class="flex">
+                        <p class="font-semibold"> Admission via: </p>
+                        <p class="ml-2"> {{ $admission_criterias[$scholar->admission_via]['mode'] ?? 'not set'}}</p>
+                    </div>
+                    
+                    <div class="ml-4 flex">
+                        <p class="font-semibold"> Funding: </p>
+                        <p class="ml-2"> {{ $admission_criterias[$scholar->admission_via]['funding'] ?? 'not set'}}</p>
+                    </div>
                 </div>
             </div>
-
+            <div class="mt-4">
+                <h3 class="font-bold"> Supervisor </h3>
+                <p> {{ $scholar->supervisor->name }} </p>
+            </div>
+            <div class="mt-4">
+                <h3 class="font-bold">Co-Supervisors</h3>
+                <div class="mt-2">
+                    @foreach ($scholar->coSupervisors as $coSupervisor)
+                        <p> {{ $coSupervisor->title }} </p>
+                        <p> {{ $coSupervisor->name }} </p>
+                        <p> {{ $coSupervisor->designation }} </p>
+                        <p> {{ $coSupervisor->affiliation }} </p>
+                    @endforeach
+                </div>
+            </div>
+            <div class="mt-4">
+                <h3 class="font-bold">Advisory Committee</h3>
+                <div mt-2>
+                    @foreach ($scholar->advisoryCommittee as $advisory)
+                        <p> {{ $advisory->title }} </p>
+                        <p> {{ $advisory->name }} </p>
+                        <p> {{ $advisory->designation }} </p>
+                        <p> {{ $advisory->affiliation }} </p>
+                    @endforeach
+                </div>
+            </div>
         </div>
     </div>
 @endsection

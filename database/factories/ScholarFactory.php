@@ -2,6 +2,7 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 use App\Scholar;
+use App\SupervisorProfile;
 use Faker\Generator as Faker;
 
 $factory->define(Scholar::class, function (Faker $faker) {
@@ -15,6 +16,9 @@ $factory->define(Scholar::class, function (Faker $faker) {
         'category' => $faker->randomElement(array_keys(config('options.scholars.categories'))),
         'admission_via' => $faker->randomElement(array_keys(config('options.scholars.admission_criterias'))),
         'research_area' => $faker->sentence(),
-        'gender' => $faker->randomElement(array_keys(config('options.scholars.gender'))),
+        'gender' => $faker->randomElement(array_keys(config('options.scholars.genders'))),
+        'supervisor_profile_id' => static function() {
+            return factory(SupervisorProfile::class)->create()->id;
+        },
     ];
 });
