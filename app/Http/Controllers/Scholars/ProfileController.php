@@ -14,7 +14,7 @@ class ProfileController extends Controller
 {
     public function index(Request $request)
     {
-        $scholar = $request->user()->load(['profile']);
+        $scholar = $request->user();
 
         return view('scholars.profile', [
             'scholar' => $scholar,
@@ -26,7 +26,7 @@ class ProfileController extends Controller
 
     public function edit(Request $request)
     {
-        $scholar = $request->user()->load(['profile']);
+        $scholar = $request->user();
 
         return view('scholars.edit', [
             'scholar' => $scholar,
@@ -40,34 +40,34 @@ class ProfileController extends Controller
         $scholar = Auth::user();
 
         $validData = $request->validate([
-            'phone_no' => [Rule::requiredIf($scholar->profile->phone_no != null)],
-            'address' => [Rule::requiredIf($scholar->profile->address != null)],
-            'category' => [Rule::requiredIf($scholar->profile->category != null)],
-            'admission_via' => [Rule::requiredIf($scholar->profile->admission_via != null)],
+            'phone_no' => [Rule::requiredIf($scholar->phone_no != null)],
+            'address' => [Rule::requiredIf($scholar->address != null)],
+            'category' => [Rule::requiredIf($scholar->category != null)],
+            'admission_via' => [Rule::requiredIf($scholar->admission_via != null)],
             'profile_picture' => ['nullable', 'image'],
             'advisors' => ['nullable', 'array'],
             'advisors.advisory_committee.*' => ['nullable', 'array', 'size: 4'],
             'advisors.co_supervisors.*' => ['nullable', 'array', 'size: 4'],
         ]);
 
-        $scholar->profile->update($validData);
+        $scholar->update($validData);
 
-        $scholar->profile->advisors->each->delete();
+        $scholar->advisors->each->delete();
 
-        $scholar->profile->advisors()->createMany(
+        $scholar->advisors()->createMany(
             array_map(function ($advisorCommitteeMember) {
                 return array_merge($advisorCommitteeMember, ['type' => 'A']);
             }, $validData['advisors']['advisory_committee'])
         );
 
-        $scholar->profile->advisors()->createMany(
+        $scholar->advisors()->createMany(
             array_map(function ($advisorCommitteeMember) {
                 return array_merge($advisorCommitteeMember, ['type' => 'C']);
             }, $validData['advisors']['co_supervisors'])
         );
 
         if ($request->has('profile_picture')) {
-            $scholar->profile->profilePicture()->create([
+            $scholar->profilePicture()->create([
                 'original_name' => $validData['profile_picture']->getClientOriginalName(),
                 'path' => $validData['profile_picture']->store('/scholar_attachments/profile_picture'),
             ]);
@@ -79,7 +79,7 @@ class ProfileController extends Controller
 
     public function avatar()
     {
-        $attachmentPicture = auth()->user()->profile->profilePicture;
+        $attachmentPicture = auth()->user()->profilePicture;
 
         if ($attachmentPicture && Storage::exists($attachmentPicture->path)) {
             return Response::file(Storage::path($attachmentPicture->path));

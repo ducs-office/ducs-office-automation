@@ -71,16 +71,16 @@ class EditScholarProfileTest extends TestCase
 
         $this->assertEquals(1, Scholar::count());
 
-        $this->assertEquals($updateDetails['phone_no'], $scholar->profile->fresh()->phone_no);
-        $this->assertEquals($updateDetails['address'], $scholar->profile->fresh()->address);
-        $this->assertEquals($updateDetails['category'], $scholar->profile->fresh()->category);
-        $this->assertEquals($updateDetails['admission_via'], $scholar->profile->fresh()->admission_via);
-        $this->assertEquals($updateDetails['advisors']['advisory_committee'][0]['title'], $scholar->profile->advisoryCommittee->first()->title);
-        $this->assertEquals($updateDetails['advisors']['co_supervisors'][0]['title'], $scholar->profile->coSupervisors->first()->title);
+        $this->assertEquals($updateDetails['phone_no'], $scholar->fresh()->phone_no);
+        $this->assertEquals($updateDetails['address'], $scholar->fresh()->address);
+        $this->assertEquals($updateDetails['category'], $scholar->fresh()->category);
+        $this->assertEquals($updateDetails['admission_via'], $scholar->fresh()->admission_via);
+        $this->assertEquals($updateDetails['advisors']['advisory_committee'][0]['title'], $scholar->advisoryCommittee->first()->title);
+        $this->assertEquals($updateDetails['advisors']['co_supervisors'][0]['title'], $scholar->coSupervisors->first()->title);
 
         $this->assertEquals(
             'scholar_attachments/profile_picture/' . $profilePicture->hashName(),
-            $scholar->profile->fresh()->profilePicture->path
+            $scholar->fresh()->profilePicture->path
         );
         Storage::assertExists('scholar_attachments/profile_picture/' . $profilePicture->hashName());
     }

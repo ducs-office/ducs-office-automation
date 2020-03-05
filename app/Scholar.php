@@ -8,28 +8,41 @@ use Illuminate\Foundation\Auth\User;
 
 class Scholar extends User
 {
-    protected $guarded = [];
-
     protected $hidden = ['password'];
 
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::created(static function (Scholar $scholar) {
-            $scholar->profile()->create();
-
-            return $scholar;
-        });
-    }
-
-    public function profile()
-    {
-        return $this->hasOne(ScholarProfile::class, 'scholar_id');
-    }
+    protected $fillable = [
+        'first_name',
+        'last_name',
+        'email',
+        'password',
+        'phone_no',
+        'address',
+        'category',
+        'admission_via',
+    ];
 
     public function getNameAttribute()
     {
         return $this->first_name . ' ' . $this->last_name;
+    }
+
+    public function profilePicture()
+    {
+        return $this->morphOne(Attachment::class, 'attachable');
+    }
+
+    public function advisors()
+    {
+        return $this->hasMany(Advisor::class, 'scholar_id');
+    }
+
+    public function advisoryCommittee()
+    {
+        return $this->advisors()->where('type', 'A');
+    }
+
+    public function coSupervisors()
+    {
+        return $this->advisors()->where('type', 'C');
     }
 }

@@ -20,7 +20,7 @@
             </div>
             <div class="mb-2">
                 <label for="address" class="block form-label mb-1">Address</label>
-                <textarea id="address" name="address" class="block w-auto form-input">{{ old('address', $scholar->profile->address) }}</textarea>
+                <textarea id="address" name="address" class="block w-auto form-input">{{ old('address', $scholar->address) }}</textarea>
             </div>
             <div class="mb-2">
                 <label for="email" class="block form-label mb-1">Email</label>
@@ -31,7 +31,7 @@
             </div>
             <div class="mb-2">
                 <label for="phone_no" class="block form-label mb-1">Phone Number</label>
-                <input id="phone_no" type="text" name="phone_no" class="block w-auto form-input" value="{{ old('phone_no', $scholar->profile->phone_no) }}">
+                <input id="phone_no" type="text" name="phone_no" class="block w-auto form-input" value="{{ old('phone_no', $scholar->phone_no) }}">
             </div>
             <div class="mt-4 mb-2">
                 <h3 class="font-bold mb-2"> Admission Details</h3>
@@ -41,7 +41,7 @@
                         <option value="" selected>Choose a category </option>
                         @foreach ($categories as $acronym => $category)
                         <option value=" {{ $acronym }}"
-                            {{ $acronym === old("category", $scholar->profile->category) ? 'selected': '' }}>
+                            {{ $acronym === old("category", $scholar->category) ? 'selected': '' }}>
                             {{ $category }}
                         </option>
                         @endforeach
@@ -53,8 +53,8 @@
                         <option value="" selected> Choose the mode of admission </option>
                         @foreach ($admission_criterias as $acronym => $admission_via)
                         <option value=" {{ $acronym }}"
-                            {{ $acronym === old("admission_via", $scholar->profile->admission_via) ? 'selected': '' }}>
-                            {{ $admission_via }}
+                            {{ $acronym === old("admission_via", $scholar->admission_via) ? 'selected': '' }}>
+                            {{ $admission_via['mode'] }}
                         </option>
                         @endforeach
                     </select>
