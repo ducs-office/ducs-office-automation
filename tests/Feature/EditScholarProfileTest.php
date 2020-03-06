@@ -48,6 +48,8 @@ class EditScholarProfileTest extends TestCase
             'admission_via' => 'NET',
             'profile_picture' => $profilePicture = UploadedFile::fake()->image('picture.jpeg'),
             'enrollment_date' => now()->subMonth(1)->format('Y-m-d'),
+            'supervisor_profile_id' => $supervisorProfile->id,
+            'research_area' => 'Artificial Intelligence',
             'advisory_committee' => [
                 [
                     'title' => 'Mr.',

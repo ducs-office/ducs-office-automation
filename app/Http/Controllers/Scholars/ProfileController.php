@@ -14,7 +14,7 @@ class ProfileController extends Controller
 {
     public function index(Request $request)
     {
-        $scholar = $request->user()->load(['advisoryCommittee', 'coSupervisors']);
+        $scholar = $request->user();
 
         return view('scholars.profile', [
             'scholar' => $scholar,

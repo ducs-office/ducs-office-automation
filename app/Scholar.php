@@ -52,14 +52,4 @@ class Scholar extends User
     {
         return $this->supervisorProfile->supervisor();
     }
-
-    public function supervisorProfile()
-    {
-        return $this->belongsTo(SupervisorProfile::class);
-    }
-
-    public function supervisor()
-    {
-        return $this->supervisorProfile->supervisor();
-    }
 }
