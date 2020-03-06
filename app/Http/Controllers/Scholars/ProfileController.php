@@ -14,13 +14,13 @@ class ProfileController extends Controller
 {
     public function index(Request $request)
     {
-        $scholar = $request->user();
+        $scholar = $request->user()->load(['advisoryCommittee', 'coSupervisors']);
 
         return view('scholars.profile', [
             'scholar' => $scholar,
-            'categories' => config('options.scholars.categories'),
-            'admission_criterias' => config('options.scholars.admission_criterias'),
+            'admissionCriterias' => config('options.scholars.admission_criterias'),
             'genders' => config('options.scholars.genders'),
+            'categories' => config('options.scholars.categories'),
         ]);
     }
 
@@ -31,8 +31,9 @@ class ProfileController extends Controller
         return view('scholars.edit', [
             'scholar' => $scholar,
             'categories' => config('options.scholars.categories'),
-            'admission_criterias' => config('options.scholars.admission_criterias'),
-            'supervisors' => SupervisorProfile::all()->pluck('id', 'supervisor.name'),
+            'admissionCriterias' => config('options.scholars.admission_criterias'),
+            'genders' => config('options.scholars.genders'),
+            'supervisorProfiles' => SupervisorProfile::all()->pluck('id', 'supervisor.name'),
         ]);
     }
 
@@ -46,6 +47,8 @@ class ProfileController extends Controller
             'category' => [Rule::requiredIf($scholar->category != null)],
             'admission_via' => [Rule::requiredIf($scholar->admission_via != null)],
             'profile_picture' => ['nullable', 'image'],
+            'research_area' => [Rule::requiredIf($scholar->research_area != null)],
+            'supervisor_profile_id' => ['exists:supervisor_profiles,id'],
             'enrollment_date' => ['date', 'before:today'],
             'advisory_committee' => ['nullable', 'array', 'max: 4'],
             'co_supervisors' => ['nullable', 'array', 'max: 2'],

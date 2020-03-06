@@ -17,13 +17,10 @@ $factory->define(Scholar::class, function (Faker $faker) {
         'admission_via' => $faker->randomElement(array_keys(config('options.scholars.admission_criterias'))),
         'research_area' => $faker->sentence(),
         'gender' => $faker->randomElement(array_keys(config('options.scholars.genders'))),
-
         'supervisor_profile_id' => static function () {
             return factory(SupervisorProfile::class)->create()->id;
         },
-
         'enrollment_date' => $faker->date($format = 'Y-m-d', $max = now()),
-
         'advisory_committee' => static function () use ($faker) {
             $x = random_int(0, 4);
             $data = [];
@@ -37,7 +34,6 @@ $factory->define(Scholar::class, function (Faker $faker) {
             }
             return $data;
         },
-
         'co_supervisors' => static function () use ($faker) {
             $x = random_int(0, 2);
             $data = [];

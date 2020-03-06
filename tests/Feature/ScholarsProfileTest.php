@@ -24,9 +24,9 @@ class ScholarsProfileTest extends TestCase
             ->assertSuccessful()
             ->assertViewHasAll([
                 'scholar',
-                'categories',
-                'admission_criterias',
+                'admissionCriterias',
                 'genders',
+                'categories',
             ])
         ->assertSee($scholar->email);
     }
