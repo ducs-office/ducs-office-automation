@@ -23,6 +23,7 @@ class Scholar extends User
         'supervisor_profile_id',
         'gender',
         'research_area',
+        'enrollment_date',
     ];
 
     public function getNameAttribute()

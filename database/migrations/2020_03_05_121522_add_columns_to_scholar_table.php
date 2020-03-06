@@ -20,6 +20,7 @@ class AddColumnsToScholarTable extends Migration
             $table->enum('admission_via', array_keys(config('options.scholars.admission_criterias')))->nullable();
             $table->text('research_area', 501)->nullable();
             $table->enum('gender', array_keys(config('options.scholars.genders')))->nullable();
+            $table->date('enrollment_date')->nullable();
         });
     }
 

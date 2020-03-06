@@ -10,6 +10,9 @@
                 </div>
             </div>
             <div>
+                <p> {{ $scholar->enrollment_date }}</p>
+            </div>
+            <div>
                 <p> {{ $genders[$scholar->gender] }}</p>
             </div>
             <div>

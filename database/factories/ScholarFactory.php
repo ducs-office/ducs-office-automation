@@ -20,5 +20,6 @@ $factory->define(Scholar::class, function (Faker $faker) {
         'supervisor_profile_id' => static function() {
             return factory(SupervisorProfile::class)->create()->id;
         },
+        'enrollment_date' => $faker->date($format = 'Y-m-d', $max = now()),
     ];
 });

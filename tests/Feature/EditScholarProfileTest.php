@@ -45,6 +45,7 @@ class EditScholarProfileTest extends TestCase
             'category' => 'SC',
             'admission_via' => 'NET',
             'profile_picture' => $profilePicture = UploadedFile::fake()->image('picture.jpeg'),
+            'enrollment_date' => now()->subMonth(1)->format('Y-m-d'),
             'advisors' => [
                 'advisory_committee' => [
                     [
@@ -53,36 +54,18 @@ class EditScholarProfileTest extends TestCase
                         'designation' => 'Permanent',
                         'affiliation' => 'IP University',
                     ],
+                ],
+                'co_supervisors' => [
                     [
                         'title' => 'Dr.',
                         'name' => 'Abdul Kalam',
                         'designation' => 'Permanent',
                         'affiliation' => 'DRDO',
                     ],
-                    [
-                        'title' => 'Mrs.',
-                        'name' => 'Surbhi Mahajan',
-                        'designation' => 'Permanent',
-                        'affiliation' => 'Jammu University',
-                    ],
-                ],
-                'co_supervisors' => [
-                    [
-                        'title' => 'Mrs.',
-                        'name' => 'Reena Prasad',
-                        'designation' => 'Permanent',
-                        'affiliation' => 'IP University',
-                    ],
-                    [
-                        'title' => 'Dr.',
-                        'name' => 'Zakir Hussain',
-                        'designation' => 'Permanent',
-                        'affiliation' => 'DRDO',
-                    ],
                 ],
             ],
         ];
-
+       
         $this->withoutExceptionHandling()
             ->patch(route('scholars.profile.update'), $updateDetails)
             ->assertRedirect()
@@ -94,6 +77,7 @@ class EditScholarProfileTest extends TestCase
         $this->assertEquals($updateDetails['address'], $scholar->fresh()->address);
         $this->assertEquals($updateDetails['category'], $scholar->fresh()->category);
         $this->assertEquals($updateDetails['admission_via'], $scholar->fresh()->admission_via);
+        $this->assertEquals($updateDetails['enrollment_date'], $scholar->fresh()->enrollment_date);
         $this->assertEquals($updateDetails['advisors']['advisory_committee'][0]['title'], $scholar->advisoryCommittee->first()->title);
         $this->assertEquals($updateDetails['advisors']['co_supervisors'][0]['title'], $scholar->coSupervisors->first()->title);
 
@@ -103,36 +87,4 @@ class EditScholarProfileTest extends TestCase
         );
         Storage::assertExists('scholar_attachments/profile_picture/' . $profilePicture->hashName());
     }
-
-    // /** @test */
-    // public function request_validates_size_of_advisory_committee_is_either_3_or_4()
-    // {
-    //     $this->signInScholar();
-
-    //     $updateDetails = [
-    //         'advisory_committee' => [
-    //             [
-    //                 'title' => 'Mr.',
-    //                 'name' => 'Ashwani Prasad',
-    //                 'designation' => 'Permanent',
-    //                 'affiliation' => 'IP University',
-    //             ],
-    //             [
-    //                 'title' => 'Dr.',
-    //                 'name' => 'Abdul Kalam',
-    //                 'designation' => 'Permanent',
-    //                 'affiliation' => 'DRDO',
-    //             ],
-    //         ],
-    //     ];
-
-    //     try {
-    //         $this->withoutExceptionHandling()
-    //             ->patch(route('scholars.profile.update'), $updateDetails);
-
-    //         $this->fail('advisory committee array size was not validated');
-    //     } catch (ValidationException $e) {
-    //         $this->assertArrayHasKey('advisory_committee', $e->errors());
-    //     }
-    // }
 }

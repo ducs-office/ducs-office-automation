@@ -47,6 +47,7 @@ class ProfileController extends Controller
             'admission_via' => [Rule::requiredIf($scholar->admission_via != null)],
             'profile_picture' => ['nullable', 'image'],
             'advisors' => ['nullable', 'array'],
+            'enrollment_date' => ['date', 'before:today'],
             'advisors.advisory_committee.*' => ['nullable', 'array', 'size: 4'],
             'advisors.co_supervisors.*' => ['nullable', 'array', 'size: 4'],
         ]);
