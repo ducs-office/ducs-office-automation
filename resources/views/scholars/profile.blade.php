@@ -54,22 +54,22 @@
             <div class="mt-4">
                 <h3 class="font-bold">Co-Supervisors</h3>
                 <div class="mt-2">
-                    @foreach ($scholar->coSupervisors as $coSupervisor)
-                        <p> {{ $coSupervisor->title }} </p>
-                        <p> {{ $coSupervisor->name }} </p>
-                        <p> {{ $coSupervisor->designation }} </p>
-                        <p> {{ $coSupervisor->affiliation }} </p>
+                    @foreach ($scholar->co_supervisors as $co_supervisor)
+                        <p> {{ $co_supervisor['title'] }} </p>
+                        <p> {{ $co_supervisor['name'] }} </p>
+                        <p> {{ $co_supervisor['designation'] }} </p>
+                        <p> {{ $co_supervisor['affiliation'] }} </p>
                     @endforeach
                 </div>
             </div>
             <div class="mt-4">
                 <h3 class="font-bold">Advisory Committee</h3>
                 <div mt-2>
-                    @foreach ($scholar->advisoryCommittee as $advisory)
-                        <p> {{ $advisory->title }} </p>
-                        <p> {{ $advisory->name }} </p>
-                        <p> {{ $advisory->designation }} </p>
-                        <p> {{ $advisory->affiliation }} </p>
+                    @foreach ($scholar->advisory_committee as $advisory)
+                        <p> {{ $advisory['title'] }} </p>
+                        <p> {{ $advisory['name'] }} </p>
+                        <p> {{ $advisory['designation'] }} </p>
+                        <p> {{ $advisory['affiliation'] }} </p>
                     @endforeach
                 </div>
             </div>

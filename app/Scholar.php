@@ -24,6 +24,13 @@ class Scholar extends User
         'gender',
         'research_area',
         'enrollment_date',
+        'advisory_committee',
+        'co_supervisors',
+    ];
+
+    protected $casts = [
+        'advisory_committee' => 'array',
+        'co_supervisors' => 'array',
     ];
 
     public function getNameAttribute()
@@ -36,19 +43,14 @@ class Scholar extends User
         return $this->morphOne(Attachment::class, 'attachable');
     }
 
-    public function advisors()
+    public function supervisorProfile()
     {
-        return $this->hasMany(Advisor::class, 'scholar_id');
+        return $this->belongsTo(SupervisorProfile::class);
     }
 
-    public function advisoryCommittee()
+    public function supervisor()
     {
-        return $this->advisors()->where('type', 'A');
-    }
-
-    public function coSupervisors()
-    {
-        return $this->advisors()->where('type', 'C');
+        return $this->supervisorProfile->supervisor();
     }
 
     public function supervisorProfile()

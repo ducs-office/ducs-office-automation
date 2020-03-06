@@ -14,7 +14,7 @@ class ProfileController extends Controller
 {
     public function index(Request $request)
     {
-        $scholar = $request->user()->load(['advisoryCommittee', 'coSupervisors']);
+        $scholar = $request->user();
 
         return view('scholars.profile', [
             'scholar' => $scholar,
@@ -46,27 +46,12 @@ class ProfileController extends Controller
             'category' => [Rule::requiredIf($scholar->category != null)],
             'admission_via' => [Rule::requiredIf($scholar->admission_via != null)],
             'profile_picture' => ['nullable', 'image'],
-            'advisors' => ['nullable', 'array'],
             'enrollment_date' => ['date', 'before:today'],
-            'advisors.advisory_committee.*' => ['nullable', 'array', 'size: 4'],
-            'advisors.co_supervisors.*' => ['nullable', 'array', 'size: 4'],
+            'advisory_committee' => ['nullable', 'array', 'max: 4'],
+            'co_supervisors' => ['nullable', 'array', 'max: 2'],
         ]);
 
         $scholar->update($validData);
-
-        $scholar->advisors->each->delete();
-
-        $scholar->advisors()->createMany(
-            array_map(function ($advisorCommitteeMember) {
-                return array_merge($advisorCommitteeMember, ['type' => 'A']);
-            }, $validData['advisors']['advisory_committee'])
-        );
-
-        $scholar->advisors()->createMany(
-            array_map(function ($advisorCommitteeMember) {
-                return array_merge($advisorCommitteeMember, ['type' => 'C']);
-            }, $validData['advisors']['co_supervisors'])
-        );
 
         if ($request->has('profile_picture')) {
             $scholar->profilePicture()->create([
