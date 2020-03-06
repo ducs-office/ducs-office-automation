@@ -22,7 +22,7 @@ $factory->define(Scholar::class, function (Faker $faker) {
         },
         'enrollment_date' => $faker->date($format = 'Y-m-d', $max = now()),
         'advisory_committee' => static function () use ($faker) {
-            $x = random_int(0, 4);
+            $x = random_int(1, 4);
             $data = [];
             for ($i = 1; $i <= $x; $i++) {
                 array_push($data, [
@@ -35,7 +35,7 @@ $factory->define(Scholar::class, function (Faker $faker) {
             return $data;
         },
         'co_supervisors' => static function () use ($faker) {
-            $x = random_int(0, 2);
+            $x = random_int(1, 2);
             $data = [];
             for ($i = 1; $i <= $x; $i++) {
                 array_push($data, [

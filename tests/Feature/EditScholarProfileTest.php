@@ -20,9 +20,9 @@ class EditScholarProfileTest extends TestCase
     public function sholar_edit_view_has_a_unique_list_of_supervisors()
     {
         $supervisorProfiles = create(SupervisorProfile::class, 3);
-        
+
         $this->signInScholar(create(Scholar::class, 1, ['supervisor_profile_id' => $supervisorProfiles[0]->id]));
-        
+
         $viewData = $this->withoutExceptionHandling()
             ->get(route('scholars.profile.edit'))
             ->assertSuccessful()
@@ -67,7 +67,7 @@ class EditScholarProfileTest extends TestCase
                 ],
             ],
         ];
-       
+
         $this->withoutExceptionHandling()
             ->patch(route('scholars.profile.update'), $updateDetails)
             ->assertRedirect()
