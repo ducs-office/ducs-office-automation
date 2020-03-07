@@ -42,6 +42,30 @@ class CreateNewUserTest extends TestCase
     }
 
     /** @test */
+    public function admin_can_create_new_supervisor_user_with_supervisor_profile()
+    {
+        Mail::fake();
+
+        $teacherRole = Role::firstOrcreate(['name' => 'teacher']);
+
+        $this->signIn(create(User::class), 'admin');
+
+        $this->withoutExceptionHandling()
+            ->post(route('staff.users.store'), [
+                'name' => $name = 'HOD Faculty',
+                'email' => $email = 'hod@uni.ac.in',
+                'category' => 'hod',
+                'roles' => [$teacherRole->id],
+                'is_supervisor' => true,
+            ])->assertRedirect('/')
+            ->assertSessionHasFlash('success', 'User created successfully!');
+
+        $user = User::whereEmail($email)->first();
+
+        $this->assertTrue($user->isSupervisor(), 'User\'s supervisor profile wasn\'t created');
+    }
+
+    /** @test */
     public function admin_can_create_new_user_with_mutliple_roles()
     {
         Mail::fake();

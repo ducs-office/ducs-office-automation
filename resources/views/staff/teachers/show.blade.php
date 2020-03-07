@@ -7,7 +7,12 @@
                     class="w-24 h-24 object-cover mr-4 border rounded shadow">
                 <div>
                     <h3 class="text-2xl font-bold">{{ $teacher->name }}</h3>
-                    <h5 class="text-xl text-gray-700 font-medium mb-2">{{ $teacher->profile->getDesignation() }}</h5>
+                    <h5 class="text-xl text-gray-700 font-medium mb-2">
+                        {{ $teacher->profile->getDesignation() }}
+                        @if($teacher->isSupervisor())
+                        / <span class="italic">Supervisor</span>
+                        @endif
+                    </h5>
                     <div class="flex items-center text-xl text-gray-700 font-medium">
                         <svg viewBox="0 0 20 20" class="h-current">
                             <g stroke="none" stroke-width="1" fill="currentColor" fill-rule="evenodd">
@@ -47,7 +52,6 @@
                 <feather-icon name="phone" class="h-current mr-2"></feather-icon>
                 <a href="tel:{{ $teacher->profile->phone }}">+91 {{ $teacher->profile->phone_no }}</a>
             </p>
-
             <div class="relative z-10 -ml-8 my-4">
                 <h5 class="relative z-20 pl-8 pr-4 py-2 inline-block font-bold bg-magenta-700 text-white shadow">
                     Teaching Details

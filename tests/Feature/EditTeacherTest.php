@@ -108,4 +108,21 @@ class EditTeacherTest extends TestCase
         $this->assertEquals($newFirstName, $teacher->fresh()->first_name);
         $this->assertEquals(1, Teacher::count());
     }
+
+    /** @test */
+    public function teacher_can_be_made_a_supervisor()
+    {
+        $this->signIn();
+
+        $teacher = create(Teacher::class);
+
+        $this->withoutExceptionHandling()
+            ->patch(route('staff.teachers.update', $teacher), [
+                'is_supervisor' => true,
+            ])
+            ->assertRedirect()
+            ->assertSessionHasFlash('success', 'College teacher updated successfully');
+
+        $this->assertTrue($teacher->fresh()->isSupervisor(), 'teacher wasn\'t made a supervisor');
+    }
 }

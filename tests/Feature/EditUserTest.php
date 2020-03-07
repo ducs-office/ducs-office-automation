@@ -126,4 +126,21 @@ class EditUserTest extends TestCase
         $this->assertEquals($newName, $user->fresh()->name);
         $this->assertEquals($newCategory, $user->fresh()->category);
     }
+
+    /** @test */
+    public function make_user_a_supervisor_test()
+    {
+        $this->signIn();
+
+        $user = create(User::class);
+
+        $this->withoutExceptionHandling()
+            ->patch(route('staff.users.update', $user), [
+                'is_supervisor' => true,
+            ])->assertRedirect()
+        ->assertSessionHasNoErrors()
+        ->assertSessionHasFlash('success', 'User updated successfully!');
+
+        $this->assertTrue($user->isSupervisor(), 'User was not made a supervisor.');
+    }
 }

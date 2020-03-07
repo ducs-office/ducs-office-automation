@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Staff;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Staff\StoreUserRequest;
+use App\Http\Requests\Staff\UpdateUserRequest;
 use App\Mail\UserRegisteredMail;
 use App\User;
 use Illuminate\Http\Request;
@@ -41,7 +42,12 @@ class UserController extends Controller
             'category' => $request->category,
             'password' => bcrypt($plain_password),
         ]);
+
         $user->syncRoles($request->roles);
+
+        if ($request->is_supervisor) {
+            $user->supervisorProfile()->create();
+        }
 
         DB::commit();
 
@@ -52,7 +58,7 @@ class UserController extends Controller
         return redirect()->back();
     }
 
-    public function update(Request $request, User $user)
+    public function update(UpdateUserRequest $request, User $user)
     {
         DB::beginTransaction();
 
@@ -60,6 +66,10 @@ class UserController extends Controller
 
         if ($request->has('roles')) {
             $user->syncRoles($request->roles);
+        }
+
+        if ($request->is_supervisor && ! $user->isSupervisor()) {
+            $user->supervisorProfile()->create();
         }
 
         DB::commit();

@@ -21,13 +21,24 @@
     @endcan
     @forelse($teachers as $teacher)
         <div class="px-4 py-2 hover:bg-gray-100 border-b flex">
-            <div class="px-2 w-64">
-                <h3 class="text-lg font-bold mr-2">
-                    {{ ucwords($teacher->name) }}
+            <div class="px-2">
+                <h3 class="text-lg font-bold mb-2 flex items-center">
+                    <span>{{ ucwords($teacher->name) }}</span>
+                    @if($teacher->isSupervisor())
+                        <span class="text-xs ml-4 bg-gray-800 text-white rounded px-2 py-1 uppercase tracking-wide">Supervisor</span>
+                    @endif
                 </h3>
                 <h4 class="text-sm font-semibold text-gray-600 mr-2">{{ $teacher->email }}</h4>
             </div>
             <div class="ml-auto px-2 flex items-center">
+                @if(! $teacher->isSupervisor())
+                <form action="{{ route('staff.teachers.update', $teacher) }}" method="POST" class="mr-3"
+                    onsubmit="return confirm('Caution: This action cannot be undone. Are you sure?');">
+                    @csrf_token @method('PATCH')
+                    <input type="hidden" name="is_supervisor" value="true">
+                    <button class="btn btn-magenta text-sm px-3 py-1"> Make Supervisor</button>
+                </form>
+                @endif
                 <a href="{{ route('staff.teachers.show', $teacher) }}"
                     class="p-1 hover:text-blue-700 mr-2">
                     <feather-icon class="h-4" name="eye" stroke-width="2.5">View</feather-icon>
