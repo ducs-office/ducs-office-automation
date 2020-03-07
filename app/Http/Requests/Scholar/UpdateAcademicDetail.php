@@ -30,7 +30,7 @@ class UpdateAcademicDetail extends FormRequest
             'number' => ['nullable', 'numeric'],
             'venue' => ['sometimes', 'required', 'array', 'size:2'],
             'indexed_in' => ['sometimes', 'required', 'array'],
-            'indexed_in.*' => ['in:Scopus,SCI,SCIE'],
+            // 'indexed_in.*' => ['in:Scopus,SCI,SCIE'],
         ];
     }
 }

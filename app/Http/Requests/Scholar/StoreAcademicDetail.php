@@ -30,7 +30,7 @@ class StoreAcademicDetail extends FormRequest
             'number' => ['nullable', 'numeric'],
             'venue' => ['required', 'array', 'size:2'],
             'indexed_in' => ['required', 'array'],
-            'indexed_in.*' => ['in:Scopus,SCI,SCIE'],
+            // 'indexed_in.*' => ['in:Scopus,SCI,SCIE'],
         ];
     }
 }

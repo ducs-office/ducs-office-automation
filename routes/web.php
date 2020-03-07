@@ -38,9 +38,13 @@ Route::prefix('/scholars')
         Route::get('/profile/edit', 'ProfileController@edit')->name('profile.edit');
         Route::patch('/profile', 'ProfileController@update')->name('profile.update');
         Route::get('/profile/avatar', 'ProfileController@avatar')->name('profile.avatar');
+
+        Route::get('/profile/publication', 'PublicationController@create')->name('profile.publication.create');
         Route::post('/profile/publication', 'PublicationController@store')->name('profile.publication.store');
+        Route::get('profile/publication/{publication}/edit', 'PublicationController@edit')->name('profile.publication.edit');
         Route::patch('profile/publication/{publication}', 'PublicationController@update')->name('profile.publication.update');
         Route::delete('/profile/publication/{publication}', 'PublicationController@destroy')->name('profile.publication.destroy');
+
         Route::post('/profile/presentation', 'PresentationController@store')->name('profile.presentation.store');
         Route::patch('profile/presentation/{presentation}', 'PresentationController@update')->name('profile.presentation.update');
         Route::delete('/profile/presentation/{presentation}', 'PresentationController@destroy')->name('profile.presentation.destroy');

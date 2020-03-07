@@ -109,5 +109,8 @@
                 @endforeach
             </div>
         </div>
+        @include('scholars.publications.index', [
+            'publications' => $scholar->publications
+        ])
     </div>
 @endsection

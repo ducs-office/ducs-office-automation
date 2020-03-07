@@ -15,6 +15,11 @@ use Illuminate\Validation\Rule;
 
 class PublicationController extends Controller
 {
+    public function create()
+    {
+        return view('scholars.publications.create');
+    }
+
     public function store(StoreAcademicDetail $request)
     {
         $scholar = $request->user();
@@ -27,7 +32,12 @@ class PublicationController extends Controller
 
         flash('Publication added successfully!')->success();
 
-        return back();
+        return redirect(route('scholars.profile'));
+    }
+
+    public function edit(AcademicDetail $publication)
+    {
+        return view('scholars.publications.edit', ['publication' => $publication]);
     }
 
     public function update(UpdateAcademicDetail $request, AcademicDetail $publication)
@@ -40,7 +50,7 @@ class PublicationController extends Controller
 
         flash('Publication updated successfully!')->success();
 
-        return back();
+        return redirect(route('scholars.profile'));
     }
 
     public function destroy(AcademicDetail $publication)

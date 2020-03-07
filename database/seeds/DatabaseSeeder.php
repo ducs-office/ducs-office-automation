@@ -1,5 +1,6 @@
 <?php
 
+use App\AcademicDetail;
 use App\College;
 use App\Course;
 use App\CourseRevision;
@@ -121,6 +122,16 @@ class DatabaseSeeder extends Seeder
             'first_name' => 'Pushkar',
             'last_name' => 'Gole',
             'email' => 'pushkar@cs.du.ac.in',
+        ]);
+
+        factory(AcademicDetail::class)->create([
+            'scholar_id' => $scholar->id,
+            'type' => 'publication',
+        ]);
+
+        factory(AcademicDetail::class)->create([
+            'scholar_id' => $scholar->id,
+            'type' => 'presentation',
         ]);
     }
 }

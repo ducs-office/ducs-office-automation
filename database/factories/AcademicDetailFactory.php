@@ -14,7 +14,7 @@ $factory->define(AcademicDetail::class, function (Faker $faker) {
                 return $faker->name;
             }, $authors);
         },
-        'title' => $faker->title,
+        'title' => $faker->sentence,
         'conference' => $faker->sentence,
         'volume' => $faker->numberBetween(1, 20),
         'publisher' => $faker->company,
