@@ -19,7 +19,7 @@ class Scholar extends User
         static::created(static function (Scholar $scholar) {
             $scholar->profile()->create();
 
-            return $scholar;
+            $scholar->courseworks()->attach(PhdCourse::core()->get());
         });
     }
 
@@ -36,6 +36,11 @@ class Scholar extends User
     public function supervisor()
     {
         return $this->supervisorProfile->supervisor();
+    }
+
+    public function courseworks()
+    {
+        return $this->belongsToMany(PhdCourse::class)->withPivot(['completed_at']);
     }
 
     public function getNameAttribute()

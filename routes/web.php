@@ -28,6 +28,8 @@ Route::prefix('/teachers')
         Route::get('/profile/avatar', 'ProfileController@avatar')->name('profile.avatar');
         Route::post('/profile/submit', 'TeachingRecordsController@store')->name('profile.submit');
         Route::get('/scholars', 'ScholarsController@index')->name('scholars.index');
+        Route::post('/scholars/{scholar}/coursework', 'ScholarCourseworkController@store')->name('scholars.courseworks.store');
+        Route::patch('/scholars/{scholar}/coursework/{courseId}', 'ScholarCourseworkController@complete')->name('scholars.courseworks.complete');
     });
 
 Route::prefix('/scholars')

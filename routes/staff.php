@@ -97,3 +97,6 @@ Route::get('/scholars/{scholar}', 'ScholarController@show')->name('scholars.show
 Route::get('/scholars/{scholar}/avatar', 'ScholarController@avatar')->name('scholars.avatar');
 Route::patch('/scholars/{scholar}', 'ScholarController@update')->name('scholars.update');
 Route::delete('/scholars/{scholar}', 'ScholarController@destroy')->name('scholars.destroy');
+
+Route::post('/scholars/{scholar}/coursework', 'ScholarCourseworkController@store')->name('scholars.courseworks.store');
+Route::patch('/scholars/{scholar}/coursework/{courseId}', 'ScholarCourseworkController@complete')->name('scholars.courseworks.complete');
