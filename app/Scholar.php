@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\AcademicDetail;
 use App\ScholarProfile;
 use App\SupervisorProfile;
 use Illuminate\Database\Eloquent\Model;
@@ -51,5 +52,20 @@ class Scholar extends User
     public function supervisor()
     {
         return $this->supervisorProfile->supervisor();
+    }
+
+    public function academicDetails()
+    {
+        return $this->hasMany(AcademicDetail::class);
+    }
+
+    public function publications()
+    {
+        return $this->academicDetails()->where('type', 'publication');
+    }
+
+    public function presentations()
+    {
+        return $this->academicDetails()->where('type', 'presentation');
     }
 }
