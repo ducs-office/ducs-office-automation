@@ -35,6 +35,12 @@ return [
             'OE' => 'Open Elective',
         ],
     ],
+    'phd_courses' => [
+        'types' => [
+            'C' => 'Core',
+            'E' => 'Elective',
+        ],
+    ],
     'teachers' => [
         'designations' => [
             'P' => 'Permanent',

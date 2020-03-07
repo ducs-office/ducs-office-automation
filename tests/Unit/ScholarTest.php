@@ -36,7 +36,7 @@ class ScholarTest extends TestCase
     }
 
     /** @test */
-    public function scholar_Belongs_to_a_supervisor_profile()
+    public function scholar_belongs_to_a_supervisor_profile()
     {
         $supervisorProfile = create(SupervisorProfile::class);
 
@@ -59,5 +59,11 @@ class ScholarTest extends TestCase
 
         $this->assertInstanceOf(MorphTo::class, $scholar->supervisor());
         $this->assertTrue($supervisorProfile->supervisor->is($scholar->supervisor));
+    }
+
+    /** @test */
+    public function scholar_has_many_pre_phd_courseworks()
+    {
+
     }
 }

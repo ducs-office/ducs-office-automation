@@ -122,5 +122,7 @@ class DatabaseSeeder extends Seeder
             'last_name' => 'Sonkar',
             'email' => 'pushkar@cs.du.ac.in',
         ]);
+
+        $this->call(PhdCourseSeeder::class);
     }
 }

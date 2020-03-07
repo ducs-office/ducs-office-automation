@@ -43,6 +43,12 @@
                 Courses
             </a>
         </li>
+        <li class="mb-1 last:mb-0">
+            <a href="{{ route('staff.phd_courses.index') }}" class="flex items-center py-2 px-4 hover:bg-magenta-700 rounded">
+                <feather-icon name="file-text" class="h-4 mr-2">Pre-PhD Courses</feather-icon>
+                PhD Courses
+            </a>
+        </li>
         @endcan
         @can('viewAny', App\College::class)
         <li class="mb-1 last:mb-0">
