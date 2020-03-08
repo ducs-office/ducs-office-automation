@@ -64,5 +64,12 @@ return [
             'T' => 'Transgender',
             'N' => 'Do not wish to declare',
         ],
+        'academic_details' => [
+            'indexed_in' => [
+                'Scopus' => 'Scopus',
+                'SCI' => 'SCI',
+                'SCIE' => 'SCIE',
+            ],
+        ],
     ],
 ];

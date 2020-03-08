@@ -19,18 +19,25 @@ class StoreAcademicDetail extends FormRequest
      */
     public function rules()
     {
+        $indexedIn = implode(',', array_keys(config('options.scholars.academic_details.indexed_in')));
+
         return [
-            'authors' => ['required', 'array', 'max:10'],
+            'authors' => ['required', 'array', 'max:10', 'min:1'],
+            'authors.*' => ['required'],
             'title' => ['required', 'string', 'max:400'],
             'conference' => ['required', 'string', 'max:100'],
             'volume' => ['nullable', 'integer'],
             'publisher' => ['required', 'string', 'max:100'],
             'page_numbers' => ['required', 'array', 'size:2'],
+            'page_numbers.from' => ['required'],
+            'page_numbers.to' => ['required'],
             'date' => ['required', 'date'],
             'number' => ['nullable', 'numeric'],
             'venue' => ['required', 'array', 'size:2'],
+            'venue.city' => ['required'],
+            'venue.Country' => ['required'],
             'indexed_in' => ['required', 'array'],
-            // 'indexed_in.*' => ['in:Scopus,SCI,SCIE'],
+            'indexed_in.*' => ['in:' . $indexedIn],
         ];
     }
 }

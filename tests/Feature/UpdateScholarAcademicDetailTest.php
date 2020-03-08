@@ -6,6 +6,7 @@ use App\AcademicDetail;
 use App\Scholar;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
 
 class UpdateScholarAcademicDetailTest extends TestCase
@@ -22,13 +23,16 @@ class UpdateScholarAcademicDetailTest extends TestCase
             'scholar_id' => $Scholar->id,
             'volume' => $volume = '3',
         ]);
-
+        // dd($publication);
         $this->assertEquals($volume, $Scholar->fresh()->publications->first()->volume);
-
-        $this->withoutExceptionHandling()
-        ->patch(route('scholars.profile.publication.update', $publication), ['volume' => $newVolume = 4])
-        ->assertRedirect()
-        ->assertSessionHasFlash('success', 'Publication updated successfully!');
+        try {
+            $this->withoutExceptionHandling()
+            ->patch(route('scholars.profile.publication.update', $publication), ['volume' => $newVolume = 4])
+            ->assertRedirect()
+            ->assertSessionHasFlash('success', 'Publication updated successfully!');
+        } catch (ValidationException $e) {
+            dd($e->errors());
+        }
 
         $this->assertEquals($newVolume, $Scholar->fresh()->publications->first()->volume);
     }

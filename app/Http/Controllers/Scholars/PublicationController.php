@@ -17,7 +17,9 @@ class PublicationController extends Controller
 {
     public function create()
     {
-        return view('scholars.publications.create');
+        return view('scholars.publications.create', [
+            'indexedIn' => config('options.scholars.academic_details.indexed_in'),
+        ]);
     }
 
     public function store(StoreAcademicDetail $request)
@@ -37,7 +39,10 @@ class PublicationController extends Controller
 
     public function edit(AcademicDetail $publication)
     {
-        return view('scholars.publications.edit', ['publication' => $publication]);
+        return view('scholars.publications.edit', [
+            'publication' => $publication,
+            'indexedIn' => config('options.scholars.academic_details.indexed_in'),
+        ]);
     }
 
     public function update(UpdateAcademicDetail $request, AcademicDetail $publication)

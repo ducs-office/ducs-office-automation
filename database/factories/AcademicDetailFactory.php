@@ -30,7 +30,7 @@ $factory->define(AcademicDetail::class, function (Faker $faker) {
             $size = random_int(1, 3);
             $indexed_in = array_fill(0, $size, 'NULL');
             return array_map(function () use ($faker) {
-                return $faker->randomElement(['Scopus', 'SCI', 'SCIE']);
+                return $faker->randomElement(array_keys(config('options.scholars.academic_details.indexed_in')));
             }, $indexed_in);
         },
         'scholar_id' => static function () {
