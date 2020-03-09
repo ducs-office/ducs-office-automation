@@ -10,6 +10,8 @@ class ScholarCourseworkController extends Controller
 {
     public function store(Request $request, Scholar $scholar)
     {
+        $this->authorize('scholars.coursework.store', $scholar);
+
         $request->validate([
             'course_ids' => ['required', 'array', 'max:3'],
             'course_ids.*' => ['required', 'numeric', 'exists:phd_courses,id'],
@@ -24,6 +26,8 @@ class ScholarCourseworkController extends Controller
 
     public function complete(Scholar $scholar, $courseId)
     {
+        $this->authorize('scholars.coursework.complete', $scholar);
+
         $scholar->courseworks()
             ->updateExistingPivot($courseId, ['completed_at' => now()]);
 

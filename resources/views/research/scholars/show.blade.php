@@ -58,7 +58,7 @@
                                                 Completed on {{ $course->pivot->completed_at->format('M d, Y') }}
                                             </div>
                                         </div>
-                                    @elseif(auth()->user()->is($scholar->supervisor))
+                                    @elsecan('scholars.coursework.complete', $scholar)
                                     <form action="{{ route('research.scholars.courseworks.complete', [$scholar, $course]) }}"
                                         method="POST" class="pl-4 leading-none">
                                         @csrf_token @method("PATCH")
@@ -71,7 +71,7 @@
                             </li>
                         @endforeach
                     </ul>
-                    @if(auth()->user()->is($scholar->supervisor))
+                    @can('scholars.courswork.store', $scholar)
                     <button class="w-full btn btn-magenta rounded-lg py-3" @click="$modal.show('add-coursework-modal')">
                         + Add Coursework
                     </button>
@@ -90,7 +90,7 @@
                             </div>
                         </div>
                     </v-modal>
-                    @endif
+                    @endcan
                 </div>
             </div>
         </div>
