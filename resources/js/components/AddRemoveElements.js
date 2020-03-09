@@ -1,7 +1,8 @@
 export default {
     props: {
         tag: {default: 'div'},
-    },
+        existingElements: {default: null, type: Array},
+    },  
     render(h) {
         return h(
             this.tag,
@@ -20,13 +21,22 @@ export default {
     methods: {
         addElement() {
             this.elements.push({
-                stub: ''
+                value: ''
             });
         },
         removeElement(index) {
-            console.log(index);
             this.elements.splice(index, 1);
+        },
+    },
+    created() {
+        if(this.existingElements !== null) {
+            this.existingElements.forEach($el => { 
+                this.elements.push({
+                    value: $el
+                })
+            });
         }
+        else this.addElement();
     }
 }
 

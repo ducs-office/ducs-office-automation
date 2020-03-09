@@ -26,6 +26,6 @@ class EditScholarPublicationTest extends TestCase
             ->get(route('scholars.profile.publication.edit', $publication))
             ->assertSuccessful()
             ->assertViewIs('scholars.publications.edit')
-            ->assertViewHas('publication');
+            ->assertViewHasAll(['publication', 'indexedIn']);
     }
 }

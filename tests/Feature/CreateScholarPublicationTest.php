@@ -18,6 +18,7 @@ class CreateScholarPublicationTest extends TestCase
         $this->withoutExceptionHandling()
             ->get(route('scholars.profile.publication.create'))
             ->assertSuccessful()
-            ->assertViewIs('scholars.publications.create');
+            ->assertViewIs('scholars.publications.create')
+            ->assertViewHas('indexedIn');
     }
 }

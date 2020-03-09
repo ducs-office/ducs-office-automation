@@ -82,10 +82,10 @@
                 </svg>
                 <p class="ml-2 text"> {{ $scholar->supervisor->name }}  </p>
             </div>
-            <div class="mt-4">
-                <h3 class="font-bold">Co-Supervisors</h3>
+            <h3 class="mt-4 font-bold">Co-Supervisors</h3>
+            <div class="flex flex-wrap">
                 @foreach ($scholar->co_supervisors as $coSupervisor)
-                    <div class="mt-2">
+                    <div class="mt-2 w-1/4">
                         <div class="flex">
                             <feather-icon name="pen-tool" class="h-current"></feather-icon>
                             <p class="ml-2"> {{ $coSupervisor['title'] }} {{ $coSupervisor['name'] }} </p>
@@ -95,10 +95,10 @@
                     </div>
                 @endforeach
             </div>
-            <div class="mt-4">
-                <h3 class="font-bold">Advisory Committee</h3>
+            <h3 class="mt-4 font-bold">Advisory Committee</h3>
+            <div class="flex flex-wrap">
                 @foreach ($scholar->advisory_committee as $adviser)
-                    <div class="mt-2">
+                    <div class="mt-2 w-1/4">
                         <div class="flex">
                             <feather-icon name="pen-tool" class="h-current"></feather-icon>
                             <p class="ml-2"> {{ $adviser['title'] }} {{ $adviser['name'] }} </p>

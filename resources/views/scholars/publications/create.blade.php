@@ -7,21 +7,21 @@
         <form action="{{ route('scholars.profile.publication.store')}}" method="post" class="px-6">
             @csrf_token
             <div class="mb-4">
-                <add-elements>
+                <add-remove-elements limit="10">
                     <template v-slot="{ elements, addElement, removeElement }">
                         <div class="flex items-baseline mb-2">
                             <label for="authors[]" class="form-label block mb-1">
-                                Authors <span class="text-red-600">*</span>
+                                Author(s) <span class="text-red-600">*</span>
                             </label>
                             <button v-on:click.prevent="addElement" class="ml-auto btn is-sm text-blue-700 bg-gray-300">+</button>
                         </div>
-                        <input type="text" value="{{ old('author') }}" name="authors[]" class="form-input block mb-2 w-full">
                         <div v-for="(element, index) in elements" :key="index" class="flex items-baseline">
-                            <input type="text" value="{{ old('author') }}" v-model= "element.stub" name="authors[]" class="form-input block mb-2 w-full">
-                            <button v-on:click.prevent="removeElement(index)" class="btn is-sm ml-2 text-red-600">x</button>
+                            <input type="text" value="{{ old('author') }}" v-model= "element.value" 
+                                name="authors[]" class="form-input block mb-2 w-full" placeholder="Author's name">
+                            <button v-on:click.prevent="removeElement(index)" v-if="elements.length > 1" class="btn is-sm ml-2 text-red-600">x</button>
                         </div>
                     </template>
-                </add-elements>
+                </add-remove-elements>
             </div>
             <div class="mb-4">
                 <label for="title" class="form-label block mb-1">
@@ -31,21 +31,21 @@
                     class="form-input w-full {{ $errors->has('title') ? ' border-red-600' : ''}}"
                     placeholder="Title of the publication">
             </div>
-            <div class="flex flex-wrap mb-4">
+            <div class="flex mb-4">
                 <div class="w-1/2">
                     <label for="date" class="form-label block mb-1">
                         Date <span class="text-red-600">*</span>
                     </label>
                     <input type="date" value="{{ old('date') }}" name="date" 
-                        class="form-input {{ $errors->has('date') ? ' border-red-600' : ''}}">
+                        class="form-input w-full {{ $errors->has('date') ? ' border-red-600' : ''}}">
                 </div>
-                <div class="ml-auto w-1/2">
+                <div class="ml-4 w-1/2">
                     <label for="volume" class="form-label block mb-1">
                         Volume 
                     </label>
                     <input type="number" value="{{ old('volume') }}" name="volume" 
-                        class="form-input {{ $errors->has('volume') ? ' border-red-600' : ''}}"
-                        placeholder="Volume of the publication">
+                        class="form-input w-full {{ $errors->has('volume') ? ' border-red-600' : ''}}"
+                        placeholder="Volume Number">
                 </div>
             </div>
             <div class="mb-4">
@@ -53,35 +53,29 @@
                     Venue <span class="text-red-600">*</span>
                 </label>
                 <div class="flex">
-                    <div class="flex items-baseline mt-1 ml-4">
-                        <label for="venue[city]" class="text-gray-700 text-sm mr-2">City</label>
-                        <input type="text" value="{{ old('venue[city]') }}" name="venue[city]" 
-                            class="form-input text-sm {{ $errors->has('venue[city]') ? ' border-red-600' : ''}}"
-                            placeholder="City">
-                    </div>
-                    <div class="flex items-baseline mt-1 ml-4">
-                        <label for="venue[Country]" class="text-gray-700 text-sm mr-2">Country</label>
-                        <input type="text" value="{{ old('venue[Country]') }}" name="venue[Country]" 
-                            class="form-input text-sm {{ $errors->has('venue[Country]') ? ' border-red-600' : ''}}"
-                            placeholder="Country">
-                    </div>
+                    <input type="text" value="{{ old('venue[city]') }}" name="venue[city]" 
+                        class="form-input text-sm w-1/2 {{ $errors->has('venue[city]') ? ' border-red-600' : ''}}"
+                        placeholder="City">
+                    <input type="text" value="{{ old('venue[Country]') }}" name="venue[Country]" 
+                        class="form-input text-sm w-1/2 ml-4 {{ $errors->has('venue[Country]') ? ' border-red-600' : ''}}"
+                        placeholder="Country">
                 </div>
             </div>
-            <div class="flex flex-wrap mb-4">
+            <div class="flex mb-4">
                 <div class="w-1/2">
                     <label for="number" class="form-label block mb-1">
                         Number 
                     </label>
                     <input type="number" value="{{ old('number') }}" name="number" 
-                        class="form-input {{ $errors->has('number') ? ' border-red-600' : ''}}"
-                        placeholder="Number of the publication">
+                        class="form-input w-full{{ $errors->has('number') ? ' border-red-600' : ''}}"
+                        placeholder="Number">
                 </div>
-                <div class="ml-auto w-1/2">
+                <div class="ml-4 w-1/2">
                     <label for="publisher" class="form-label block mb-1">
                         Publisher <span class="text-red-600">*</span>
                     </label>
                     <input type="text" value="{{ old('publisher') }}" name="publisher" 
-                        class="form-input {{ $errors->has('publisher') ? ' border-red-600' : ''}}"
+                        class="form-input w-full {{ $errors->has('publisher') ? ' border-red-600' : ''}}"
                         placeholder="Publisher">
                 </div>
             </div>
@@ -90,27 +84,24 @@
                     Page Numbers <span class="text-red-600">*</span>
                 </label>
                 <div class="flex">
-                    <div class="flex items-baseline mt-1 ml-4">
-                        <label for="page_numbers[from]" class="text-gray-700 text-sm mr-2">From</label>
-                        <input type="text" value="{{ old('page_numbers[from]') }}" name="page_numbers[from]" 
-                            class="form-input text-sm {{ $errors->has('page_numbers[from]') ? ' border-red-600' : ''}}"
-                            placeholder="Starting From">
-                    </div>
-                    <div class="flex items-baseline mt-1 ml-4">
-                        <label for="page_numbers[to]" class="text-gray-700 text-sm mr-2">To</label>
-                        <input type="text" value="{{ old('page_numbers[to]') }}" name="page_numbers[to]" 
-                            class="form-input text-sm {{ $errors->has('page_numbers[to]') ? ' border-red-600' : ''}}"
-                            placeholder="Ending To">
-                    </div>
+                    <input type="number" value="{{ old('page_numbers[from]') }}" name="page_numbers[from]" 
+                        class="form-input text-sm w-1/2 {{ $errors->has('page_numbers[from]') ? ' border-red-600' : ''}}"
+                        placeholder="Starting From">
+                    <input type="number" value="{{ old('page_numbers[to]') }}" name="page_numbers[to]" 
+                        class="form-input text-sm w-1/2 ml-4 {{ $errors->has('page_numbers[to]') ? ' border-red-600' : ''}}"
+                        placeholder="Ending To">
                 </div>
             </div>
             <div class="mb-4">
-                <label for="indexed_in[]" class="form-label block mb-1">
+                <label for="indexed_in[]" class="form-label block mb-2">
                     Indexed In <span class="text-red-600">*</span>
                 </label>
-                <div class="flex flex-wrap mt-2 justify-center">
-                    <input type="text" value="{{ old('indexed') }}" name="indexed_in[]" class="form-input block mb-2 ">
-                </div>
+                @foreach ($indexedIn as $acronym => $index)
+                    <div class="flex mb-1">
+                        <input type="checkbox" name="indexed_in[]" id="{{ $acronym }}" value="{{$acronym}}"> 
+                        <label for="{{ $acronym }}" class="ml-2 form-label is-sm"> {{ $index }}</label>
+                    </div>
+                @endforeach
             </div>
             <div class="mb-4">
                 <label for="conference" class="form-label block mb-1">
