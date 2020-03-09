@@ -37,6 +37,6 @@ export default {
             });
         }
         else this.addElement();
-    }
+    },
 }
 
