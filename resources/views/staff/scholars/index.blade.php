@@ -28,10 +28,6 @@
                 <h4 class="text-sm font-semibold text-gray-600 mr-2"> {{ $scholar->email }}</h4>
             </div>
             <div class="ml-auto px-2 flex items-center">
-                <a href="{{ route('staff.scholars.show', $scholar) }}"
-                    class="p-1 hover:text-blue-700 mr-2">
-                    <feather-icon class="h-4" name="eye" stroke-width="2.5">View</feather-icon>
-                </a>
                 @can('update', App\Scholar::class)
                 <button type="submit" class="p-1 hover:text-red-700 mr-2"
                     @click="

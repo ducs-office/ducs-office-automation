@@ -28,7 +28,7 @@ class SupervisorManagesScholarCoursework extends TestCase
         $courses = create(PhdCourse::class, 2, ['type' => 'E']);
 
         $this->withoutExceptionHandling()
-            ->post(route('teachers.scholars.courseworks.store', $scholar), [
+            ->post(route('research.scholars.courseworks.store', $scholar), [
                 'course_ids' => $courses->pluck('id')->toArray(),
             ])->assertRedirect();
 
@@ -91,7 +91,7 @@ class SupervisorManagesScholarCoursework extends TestCase
         $this->signInTeacher($teacher);
 
         $this->withoutExceptionHandling()
-            ->patch(route('teachers.scholars.courseworks.complete', [$scholar, $course->id]))
+            ->patch(route('research.scholars.courseworks.complete', [$scholar, $course->id]))
             ->assertRedirect();
 
         $pivot = $scholar->courseworks()->firstOrFail()->pivot;

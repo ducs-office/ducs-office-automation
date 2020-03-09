@@ -17,6 +17,25 @@ Route::get('/', 'Auth\LoginController@showLoginForm')->middleware(['guest', 'gue
 Route::post('/login', 'Auth\LoginController@login')->middleware(['guest', 'guest:teachers', 'guest:scholars'])->name('login');
 Route::post('/logout', 'Auth\LoginController@logout')->middleware('auth:web,teachers,scholars')->name('logout');
 
+Route::prefix('/research')
+    ->middleware(['auth:web,teachers', 'supervisor'])
+    ->namespace('Research')
+    ->as('research.')
+    ->group(static function () {
+        Route::get('/scholars', 'ScholarController@index')->name('scholars.index');
+        Route::get('/scholars/{scholar}', 'ScholarController@show')->name('scholars.show');
+
+        Route::post(
+            '/scholars/{scholar}/coursework',
+            'ScholarCourseworkController@store'
+        )->name('scholars.courseworks.store');
+
+        Route::patch(
+            '/scholars/{scholar}/coursework/{courseId}',
+            'ScholarCourseworkController@complete'
+        )->name('scholars.courseworks.complete');
+    });
+
 Route::prefix('/teachers')
     ->middleware('auth:teachers')
     ->namespace('Teachers')
@@ -27,9 +46,6 @@ Route::prefix('/teachers')
         Route::patch('/profile', 'ProfileController@update')->name('profile.update');
         Route::get('/profile/avatar', 'ProfileController@avatar')->name('profile.avatar');
         Route::post('/profile/submit', 'TeachingRecordsController@store')->name('profile.submit');
-        Route::get('/scholars', 'ScholarsController@index')->name('scholars.index');
-        Route::post('/scholars/{scholar}/coursework', 'ScholarCourseworkController@store')->name('scholars.courseworks.store');
-        Route::patch('/scholars/{scholar}/coursework/{courseId}', 'ScholarCourseworkController@complete')->name('scholars.courseworks.complete');
     });
 
 Route::prefix('/scholars')

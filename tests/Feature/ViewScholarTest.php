@@ -38,7 +38,7 @@ class ViewScholarTest extends TestCase
         $otherScholars = create(Scholar::class, 5);
 
         $scholars = $this->withoutExceptionHandling()
-            ->get(route('teachers.scholars.index'))
+            ->get(route('research.scholars.index'))
             ->assertViewHas('scholars')
             ->viewData('scholars');
 
@@ -56,7 +56,7 @@ class ViewScholarTest extends TestCase
         $scholars = create(Scholar::class, 5);
 
         $this->withExceptionHandling()
-            ->get(route('teachers.scholars.index'))
+            ->get(route('research.scholars.index'))
             ->assertForbidden();
     }
 }

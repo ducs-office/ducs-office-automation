@@ -61,7 +61,7 @@ module.exports = {
                 current: "1em"
             },
             minHeight: {
-                "12": "3rem",
+                "12": "3rem"
             },
             maxHeight: {
                 "24": "6rem",
@@ -76,7 +76,17 @@ module.exports = {
     },
     variants: {
         textColor: ["responsive", "focus", "hover", "group-hover"],
-        backgroundColor: ["responsive", "focus", "hover", "group-hover"],
+        backgroundColor: [
+            "responsive",
+            "focus",
+            "hover",
+            "group-hover",
+            "first",
+            "last"
+        ],
+        borderWidth: ["responsive", "hover", "first", "last"],
+        borderColor: ["responsive", "hover", "first", "last"],
+        borderRadius: ["responsive", "hover", "first", "last"],
         display: ["responsive", "focus", "hover", "group-hover"]
     },
     plugins: []

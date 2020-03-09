@@ -117,12 +117,12 @@ class DatabaseSeeder extends Seeder
             'email' => 'kaur.sharanjit@andc.du.ac.in',
         ]);
 
+        $this->call(PhdCourseSeeder::class);
+
         $scholar = factory(Scholar::class)->create([
             'first_name' => 'Pushkar',
             'last_name' => 'Sonkar',
             'email' => 'pushkar@cs.du.ac.in',
         ]);
-
-        $this->call(PhdCourseSeeder::class);
     }
 }

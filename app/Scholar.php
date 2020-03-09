@@ -40,7 +40,9 @@ class Scholar extends User
 
     public function courseworks()
     {
-        return $this->belongsToMany(PhdCourse::class)->withPivot(['completed_at']);
+        return $this->belongsToMany(PhdCourse::class)
+            ->withPivot(['completed_at'])
+            ->using(ScholarCourseworkPivot::class);
     }
 
     public function getNameAttribute()
