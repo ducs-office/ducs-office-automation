@@ -119,8 +119,9 @@
                     <template v-slot="{ elements, addElement, removeElement}">
                         <div class="flex w-1/6">
                             <label for="co_supervisors[]" class="font-bold block">Co-Supervisors</label>
-                            <button v-on:click.prevent="addElement" class="ml-auto btn is-sm text-blue-700 bg-gray-300">+</button>
+                            <button v-on:click.prevent="addElement" v-if="elements.length < 2"class="ml-auto btn is-sm text-blue-700 bg-gray-300">+</button>
                         </div>
+                        <h6 class="mt-2 text-gray-800 text-sm">You can add a maximum of 2 co-supervisors only.</h6>
                         <div class="flex w-2/3 mt-2">
                             <label for="co_supervisors[][title]" class="form-label block w-1/4">Title</label>
                             <label for="co_supervisors[][name]" class="form-label block w-1/4">Name</label>

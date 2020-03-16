@@ -51,7 +51,7 @@ class ProfileController extends Controller
             'supervisor_profile_id' => ['exists:supervisor_profiles,id'],
             'enrollment_date' => ['date', 'before:today'],
             'advisory_committee' => ['nullable', 'array', 'max: 4'],
-            'co_supervisors' => ['nullable', 'array'],
+            'co_supervisors' => ['nullable', 'array', 'max:2'],
         ]);
 
         $scholar->update($validData);
