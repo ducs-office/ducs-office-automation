@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\Leave;
 use App\PhdCourse;
 use App\Scholar;
 use App\ScholarProfile;
@@ -9,6 +10,7 @@ use App\SupervisorProfile;
 use App\User;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -74,6 +76,20 @@ class ScholarTest extends TestCase
         $scholar->courseworks()->attach(create(PhdCourse::class));
 
         $this->assertCount(1, $scholar->fresh()->courseworks);
+    }
+
+    /** @test */
+    public function scholar_has_many_leaves()
+    {
+        $scholar = create(Scholar::class);
+
+        $this->assertInstanceOf(HasMany::class, $scholar->leaves());
+        $this->assertCount(0, $scholar->leaves);
+
+        $leaves = create(Leave::class, 2, ['scholar_id' => $scholar->id]);
+
+        $this->assertCount(count($leaves), $scholar->fresh()->leaves);
+        $this->assertEquals($leaves->pluck('id'), $scholar->fresh()->leaves->pluck('id'));
     }
 
     /** @test */

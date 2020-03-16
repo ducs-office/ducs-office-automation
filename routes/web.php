@@ -34,6 +34,16 @@ Route::prefix('/research')
             '/scholars/{scholar}/coursework/{courseId}',
             'ScholarCourseworkController@complete'
         )->name('scholars.courseworks.complete');
+
+        Route::post(
+            '/scholars/{scholar}/leaves',
+            'ScholarLeavesController@store'
+        )->name('scholars.leaves.store');
+
+        Route::patch(
+            '/scholars/{scholar}/leaves/{leave}',
+            'ScholarLeavesController@update'
+        )->name('scholars.leaves.update');
     });
 
 Route::prefix('/teachers')
