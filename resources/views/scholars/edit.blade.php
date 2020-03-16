@@ -132,11 +132,11 @@
                                 <input type="text" :name="`co_supervisors[${index}][title]`" v-model="element.value.title" class="block form-input mr-2 h-10">
                                 <toggle-visibility>
                                     <template v-slot="{ isVisible, toggle}">
-                                        <div v-if="isVisible">
+                                        <div v-if="!isVisible">
                                             <input type="text" :name="`co_supervisors[${index}][name]`" v-model="element.value.name" class="block form-input mr-2 h-10">
                                             <a href="" class="mt-1 text-blue-900 is-sm underline" v-on:click.prevent="toggle">Select from supervisors</a>
                                         </div>
-                                        <div v-if="!isVisible">
+                                        <div v-if="isVisible">
                                             <select :name="`co_supervisors[${index}][name]`" class="block form-input rounded-full rounded-l-none h-10 mr-2 text-white bg-green-500 hover:bg-green-400">
                                                 <option value=""selected> 
                                                     Select your co-supervisor
@@ -158,21 +158,30 @@
                 </add-remove-elements>
             </div>
             <div class="mt-4">
-                <label for="advisory_committee[]" class="font-bold block">Advisory Committee</label>
-                <div class="flex w-2/3 mt-2">
-                    <label for="advisory_committee[][title]" class="form-label block w-1/4">Title</label>
-                    <label for="advisory_committee[][name]" class="form-label block w-1/4">Name</label>
-                    <label for="advisory_committee[][designation]" class="form-label block w-1/4">Designation</label>
-                    <label for="advisory_committee[][affiliation]" class="form-label block w-1/4">Affiliation</label>
-                </div>
-                @foreach ($scholar->advisory_committee as $i => $advisor)
-                    <div class="flex mt-2">
-                        <input type="text" name="advisory_committee[{{$i}}][title]" value={{ old("advisory_committee[$i][title]",$advisor['title']) }} class="block form-input mr-2">
-                        <input type="text" name="advisory_committee[{{$i}}][name]" value={{old("advisory_committee[$i]['name']",$advisor['name'])}} class="block form-input mr-2">
-                        <input type="text" name="advisory_committee[{{$i}}][designation]" value={{old("advisory_committee[$i]['designation']",$advisor['designation'])}} class="block form-input mr-2">
-                        <input type="text" name="advisory_committee[{{$i}}][affiliation]" value={{old("advisory_committee[$i]['affiliation']",$advisor['affiliation'])}} class="block form-input">
-                    </div>
-                @endforeach
+                <add-remove-elements :existing-elements="{{ json_encode($scholar->advisory_committee) }}" >
+                    <template v-slot="{ elements, addElement, removeElement}">
+                        <div class="flex w-1/6">
+                            <label for="co_supervisors[]" class="font-bold block">Advisory Committee</label>
+                            <button v-on:click.prevent="addElement" v-if="elements.length < 4" class="ml-auto btn is-sm text-blue-700 bg-gray-300">+</button>
+                        </div>
+                        <h6 class="mt-2 text-gray-800 text-sm">You can add a maximum of 4 advisors only.</h6>
+                        <div class="flex w-2/3 mt-2">
+                            <label for="advisory_committee[][title]" class="form-label block w-1/4">Title</label>
+                            <label for="advisory_committee[][name]" class="form-label block w-1/4">Name</label>
+                            <label for="advisory_committee[][designation]" class="form-label block w-1/4">Designation</label>
+                            <label for="advisory_committee[][affiliation]" class="form-label block w-1/4">Affiliation</label>
+                        </div>
+                        <div v-for="(element, index) in elements" :key="index" class="flex items-baseline mb-2">
+                            <div class="flex mt-2">
+                                <input type="text" :name="`advisory_committee[${index}][title]`" v-model="element.value.title" class="block form-input mr-2">
+                                <input type="text" :name="`advisory_committee[${index}][name]`" v-model="element.value.name"  class="block form-input mr-2">
+                                <input type="text" :name="`advisory_committee[${index}][designation]`" v-model="element.value.designation" class="block form-input mr-2">
+                                <input type="text" :name="`advisory_committee[${index}][affiliation]`" v-model="element.value.affiliation" class="block form-input">
+                            </div>
+                            <button v-on:click.prevent="removeElement(index)" v-if="elements.length > 1" class="btn is-sm ml-2 text-red-600">x</button>
+                        </div>
+                    </template>
+                </add-remove-elements>
             </div>
             <div class="mt-5">
                 <button type="submit" class="btn btn-magenta">Save Changes</button>
