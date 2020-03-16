@@ -38,6 +38,7 @@ class CreateTeacherTest extends TestCase
                 'first_name' => $firstName = 'Sharanjit',
                 'last_name' => $lastName = 'Kaur',
                 'email' => $email = 'kaur.sharanjit@andc.du.ac.in',
+                'is_supervisor' => false,
             ])
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'College Teacher created successfully!');
@@ -47,6 +48,35 @@ class CreateTeacherTest extends TestCase
         $this->assertEquals($firstName, $teacher->first_name);
         $this->assertEquals($lastName, $teacher->last_name);
         $this->assertEquals($email, $teacher->email);
+
+        $this->assertFalse($teacher->isSupervisor(), 'teacher shouldn\'t have made supervisor.');
+        $this->assertTrue($teacher->profile()->exists());
+        $this->assertEquals($teacher->id, $teacher->profile->teacher_id);
+
+        $this->assertEquals(1, Teacher::count());
+    }
+
+    /** @test */
+    public function new_teacher_can_be_created_as_supervisor()
+    {
+        $this->signIn();
+
+        $this->withoutExceptionHandling()
+            ->post(route('staff.teachers.store'), [
+                'first_name' => $firstName = 'Sharanjit',
+                'last_name' => $lastName = 'Kaur',
+                'email' => $email = 'kaur.sharanjit@andc.du.ac.in',
+                'is_supervisor' => true,
+            ])
+            ->assertRedirect()
+            ->assertSessionHasFlash('success', 'College Teacher created successfully!');
+
+        $teacher = Teacher::first();
+
+        $this->assertEquals($firstName, $teacher->first_name);
+        $this->assertEquals($lastName, $teacher->last_name);
+        $this->assertEquals($email, $teacher->email);
+        $this->assertTrue($teacher->isSupervisor(), 'teacher was not made a supervisor.');
 
         $this->assertTrue($teacher->profile()->exists());
         $this->assertEquals($teacher->id, $teacher->profile->teacher_id);

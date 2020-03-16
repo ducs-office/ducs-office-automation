@@ -7,6 +7,11 @@
             </a>
         </div>
         @auth('teachers')
+            <ul class="self-end -mb-2 flex">
+                @if(auth()->user()->isSupervisor())
+                <li><a class="inline-block font-bold pt-4 pb-3 px-4 mx-3 rounded-t border-b-4 border-transparent hover:border-magenta-600 hover:bg-gray-200" href="{{ route('research.scholars.index') }}">Manage Scholars</a></li>
+                @endif
+            </ul>
         @include('teachers.partials.users_menu')
         @include('teachers.partials.notifications')
         @endauth

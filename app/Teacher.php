@@ -2,13 +2,13 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Builder;
+use App\Concerns\SupervisesScholars;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Notifications\Notifiable;
 
 class Teacher extends User
 {
-    use Notifiable;
+    use Notifiable, SupervisesScholars;
 
     protected $guarded = [];
 
@@ -38,10 +38,5 @@ class Teacher extends User
     public function teachingRecords()
     {
         return $this->hasMany(TeachingRecord::class, 'teacher_id');
-    }
-
-    public function supervisorProfile()
-    {
-        return $this->morphOne(SupervisorProfile::class, 'supervisor');
     }
 }

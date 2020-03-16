@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Concerns\SupervisesScholars;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -9,7 +10,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use Notifiable, HasRoles;
+    use Notifiable, HasRoles, SupervisesScholars;
 
     /**
      * The attributes that are mass assignable.
@@ -71,10 +72,5 @@ class User extends Authenticatable
     public function createdIncomingLetters()
     {
         return $this->hasMany(IncomingLetter::class, 'creator_id');
-    }
-
-    public function supervisorProfile()
-    {
-        return $this->morphOne(SupervisorProfile::class, 'supervisor');
     }
 }

@@ -28,17 +28,28 @@
                 </h3>
                 <h4 class="text-sm font-semibold text-gray-600 mr-2">{{ $user->email }}</h4>
             </div>
-            <div class="px-2 flex flex-wrap items-center">
+            <div class="flex flex-1 flex-wrap items-center">
                 @foreach ($user->roles as $role)
                     <span class="mx-1 bg-blue-500 text-white p-1 rounded text-xs font-bold tracking-wide">{{ ucwords(str_replace('_', ' ', $role->name)) }}</span>
                 @endforeach
-            </div>
-            <div class="px-2 flex flex-wrap items-center">
                 <span class="mx-1 bg-green-500 text-white p-1 rounded text-xs font-bold tracking-wide">
                     {{ $categories[$user->category] }}
                 </span>
+                @if($user->isSupervisor())
+                <span class="mx-1 bg-gray-800 text-white py-1 px-2 rounded text-xs font-bold uppercase tracking-wide">
+                    Supervisor
+                </span>
+                @endif
             </div>
             <div class="ml-auto px-2 flex items-center">
+                @if(! $user->isSupervisor())
+                <form action="{{ route('staff.users.update', $user) }}" method="POST" class="mr-3"
+                    onsubmit="return confirm('Caution: This action cannot be undone. Are you sure?');">
+                    @csrf_token @method('PATCH')
+                    <input type="hidden" name="is_supervisor" value="true">
+                    <button class="btn btn-magenta text-sm px-3 py-1"> Make Supervisor</button>
+                </form>
+                @endif
                 @can('update', App\User::class)
                 <button type="submit" class="p-1 hover:text-red-700 mr-2"
                     @click="

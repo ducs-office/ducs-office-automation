@@ -54,6 +54,11 @@ Route::delete('/courses/{course}', 'CourseController@destroy')->name('courses.de
 Route::post('/courses/{course}/revisions', 'CourseRevisionController@store')->name('courses.revisions.store');
 Route::delete('/courses/{course}/revisions/{revision}', 'CourseRevisionController@destroy')->name('courses.revisions.destroy');
 
+Route::get('/phd-courses', 'PhdCourseController@index')->name('phd_courses.index');
+Route::post('/phd-courses', 'PhdCourseController@store')->name('phd_courses.store');
+Route::patch('/phd-courses/{course}', 'PhdCourseController@update')->name('phd_courses.update');
+Route::delete('/phd-courses/{course}', 'PhdCourseController@destroy')->name('phd_courses.destroy');
+
 Route::get('/colleges', 'CollegeController@index')->name('colleges.index');
 Route::post('/colleges', 'CollegeController@store')->name('colleges.store');
 Route::get('/colleges/create', 'CollegeController@create')->name('colleges.create');
@@ -88,7 +93,6 @@ Route::patch('/teaching-records/extend', 'AcceptTeachingRecordsController@extend
 
 Route::get('/scholars', 'ScholarController@index')->name('scholars.index');
 Route::post('/scholars', 'ScholarController@store')->name('scholars.store');
-Route::get('/scholars/{scholar}', 'ScholarController@show')->name('scholars.show');
 Route::get('/scholars/{scholar}/avatar', 'ScholarController@avatar')->name('scholars.avatar');
 Route::patch('/scholars/{scholar}', 'ScholarController@update')->name('scholars.update');
 Route::delete('/scholars/{scholar}', 'ScholarController@destroy')->name('scholars.destroy');

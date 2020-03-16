@@ -6,7 +6,12 @@
                 <img src="{{ route('teachers.profile.avatar') }}" class="w-24 h-24 object-cover mr-4 border rounded shadow">
                 <div>
                     <h3 class="text-2xl font-bold">{{ $teacher->name }}</h3>
-                    <h5 class="text-xl text-gray-700 font-medium mb-2">{{ $teacher->profile->getDesignation() }}</h5>
+                    <h5 class="text-xl text-gray-700 font-medium mb-2">
+                        {{ $teacher->profile->getDesignation() }}
+                        @if($teacher->isSupervisor())
+                            / <span class="italic">Supervisor</span>
+                        @endif
+                    </h5>
                     <div class="flex items-center text-xl text-gray-700 font-medium">
                         <svg viewBox="0 0 20 20" class="h-current">
                             <g stroke="none" stroke-width="1" fill="currentColor" fill-rule="evenodd">

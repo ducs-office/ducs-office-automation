@@ -17,6 +17,35 @@ Route::get('/', 'Auth\LoginController@showLoginForm')->middleware(['guest', 'gue
 Route::post('/login', 'Auth\LoginController@login')->middleware(['guest', 'guest:teachers', 'guest:scholars'])->name('login');
 Route::post('/logout', 'Auth\LoginController@logout')->middleware('auth:web,teachers,scholars')->name('logout');
 
+Route::prefix('/research')
+    ->middleware(['auth:web,teachers', 'supervisor'])
+    ->namespace('Research')
+    ->as('research.')
+    ->group(static function () {
+        Route::get('/scholars', 'ScholarController@index')->name('scholars.index');
+        Route::get('/scholars/{scholar}', 'ScholarController@show')->name('scholars.show');
+
+        Route::post(
+            '/scholars/{scholar}/coursework',
+            'ScholarCourseworkController@store'
+        )->name('scholars.courseworks.store');
+
+        Route::patch(
+            '/scholars/{scholar}/coursework/{courseId}',
+            'ScholarCourseworkController@complete'
+        )->name('scholars.courseworks.complete');
+
+        Route::post(
+            '/scholars/{scholar}/leaves',
+            'ScholarLeavesController@store'
+        )->name('scholars.leaves.store');
+
+        Route::patch(
+            '/scholars/{scholar}/leaves/{leave}',
+            'ScholarLeavesController@update'
+        )->name('scholars.leaves.update');
+    });
+
 Route::prefix('/teachers')
     ->middleware('auth:teachers')
     ->namespace('Teachers')

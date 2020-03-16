@@ -19,9 +19,7 @@ class CreateScholarsTable extends Migration
             $table->string('last_name');
             $table->string('email')->unique();
             $table->string('password', 60);
-            $table->unsignedBigInteger('supervisor_profile_id')->nullable()->index();
 
-            $table->foreign('supervisor_profile_id')->references('id')->on('supervisor_profiles')->onDelete('set null');
             $table->timestamps();
         });
     }

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class SupervisorTest extends TestCase
+class SupervisorProfileTest extends TestCase
 {
     use RefreshDatabase;
 

@@ -34,6 +34,15 @@ class Scholar extends User
         'co_supervisors' => 'array',
     ];
 
+    public static function boot()
+    {
+        parent::boot();
+
+        static::created(static function ($scholar) {
+            $scholar->courseworks()->attach(PhdCourse::core()->get());
+        });
+    }
+
     public function getNameAttribute()
     {
         return $this->first_name . ' ' . $this->last_name;
@@ -67,5 +76,17 @@ class Scholar extends User
     public function presentations()
     {
         return $this->academicDetails()->where('type', 'presentation');
+    }
+
+    public function courseworks()
+    {
+        return $this->belongsToMany(PhdCourse::class)
+            ->withPivot(['completed_at'])
+            ->using(ScholarCourseworkPivot::class);
+    }
+
+    public function leaves()
+    {
+        return $this->hasMany(Leave::class);
     }
 }

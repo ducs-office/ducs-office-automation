@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Staff;
 
 use App\Http\Controllers\Controller;
 use App\Mail\UserRegisteredMail;
+use App\PhdCourse;
 use App\Scholar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -18,15 +19,6 @@ class ScholarController extends Controller
     {
         return view('staff.scholars.index', [
             'scholars' => Scholar::all(),
-        ]);
-    }
-
-    public function show(Scholar $scholar)
-    {
-        return view('staff.scholars.show', [
-            'scholar' => $scholar->load(['profile']),
-            'categories' => config('options.scholars.categories'),
-            'admission_criterias' => config('options.scholars.admission_criterias'),
         ]);
     }
 

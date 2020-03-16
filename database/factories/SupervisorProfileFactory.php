@@ -7,19 +7,10 @@ use App\User;
 use Faker\Generator as Faker;
 
 $factory->define(SupervisorProfile::class, function (Faker $faker) {
-    $temp = rand(0, 1);
-
-    if ($temp == 1) {
-        $teacher = factory(Teacher::class)->create();
-        return [
-            'supervisor_id' => $teacher->id,
-            'supervisor_type' => Teacher::class,
-        ];
-    } else {
-        $faculty = factory(User::class)->create(['category' => 'faculty_teacher']);
-        return[
-            'supervisor_id' => $faculty->id,
-            'supervisor_type' => User::class,
-        ];
-    }
+    return [
+        'supervisor_type' => $type = $faker->randomElement([Teacher::class, User::class]),
+        'supervisor_id' => function () use ($type) {
+            return factory($type)->create()->id;
+        },
+    ];
 });
