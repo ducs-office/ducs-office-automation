@@ -22,7 +22,7 @@ class StoreScholarAcademicDetailTest extends TestCase
             'page_numbers' => ['from' => '23', 'to' => '80'],
             'date' => '2019-07-12',
             'number' => '221109',
-            'venue' => ['city' => 'Moscow', 'Country' => 'Russia'],
+            'venue' => ['city' => 'Moscow', 'country' => 'Russia'],
             'indexed_in' => ['Scopus', 'SCI'],
         ], $overrides);
     }

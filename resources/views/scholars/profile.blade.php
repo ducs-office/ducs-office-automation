@@ -80,7 +80,9 @@
                         <path d="M3.33333333,8 L10,12 L20,6 L10,0 L-5.55111512e-16,6 L10,6 L10,6.5 L10,8 L3.33333333,8 L3.33333333,8 Z M1.33226763e-15,8 L1.33226763e-15,16 L2,13.7777778 L2,9.2 L2,9.2 L1.33226763e-15,8 L1.11022302e-16,8 L1.33226763e-15,8 Z M10,20 L5,16.9999998 L3,15.8 L3,9.8 L10,14 L17,9.8 L17,15.8 L10,20 L10,20 Z"></path>
                     </g>
                 </svg>
-                <p class="ml-2 text"> {{ $scholar->supervisor->name }}  </p>
+                @if ($scholar->supervisorProfile)
+                    <p class="ml-2 text"> {{ $scholar->supervisor->name }}  </p>
+                @endif
             </div>
             <h3 class="mt-4 font-bold">Co-Supervisors</h3>
             <div class="flex flex-wrap">

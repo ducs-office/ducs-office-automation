@@ -23,7 +23,7 @@
                     <h5 class="ml-4 text-gray-700 font-bold">{{ $publication->date }}</h5>
                     <div class="ml-4 flex items-center">
                         <feather-icon name="globe" class="h-current text-blue-600 mx-2">Venue</feather-icon>
-                        <h5> {{ $publication->venue['city']}}, {{ $publication->venue['Country'] }}</h5>
+                        <h5> {{ $publication->venue['city']}}, {{ $publication->venue['country'] }}</h5>
                     </div>
                     <div class="ml-auto flex">
                         <a href="{{ route('scholars.profile.publication.edit', $publication) }}" target="_blank"

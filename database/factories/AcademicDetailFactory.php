@@ -25,7 +25,7 @@ $factory->define(AcademicDetail::class, function (Faker $faker) {
         },
         'date' => $faker->date,
         'number' => random_int(10000, 100000),
-        'venue' => ['city' => $faker->city, 'Country' => $faker->country],
+        'venue' => ['city' => $faker->city, 'country' => $faker->country],
         'indexed_in' => static function () use ($faker) {
             $size = random_int(1, 3);
             $indexed_in = array_fill(0, $size, 'NULL');

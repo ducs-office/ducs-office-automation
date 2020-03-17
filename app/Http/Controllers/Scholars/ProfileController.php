@@ -48,10 +48,18 @@ class ProfileController extends Controller
             'admission_via' => [Rule::requiredIf($scholar->admission_via != null)],
             'profile_picture' => ['nullable', 'image'],
             'research_area' => [Rule::requiredIf($scholar->research_area != null)],
-            'supervisor_profile_id' => ['exists:supervisor_profiles,id'],
-            'enrollment_date' => ['date', 'before:today'],
+            'supervisor_profile_id' => ['nullable', 'exists:supervisor_profiles,id'],
+            'enrollment_date' => ['nullable', 'date', 'before:today'],
             'advisory_committee' => ['nullable', 'array', 'max: 4'],
+            'advisory_committee.*.title' => ['required', 'string'],
+            'advisory_committee.*.name' => ['required', 'string'],
+            'advisory_committee.*.designation' => ['required', 'string'],
+            'advisory_committee.*.affiliation' => ['required', 'string'],
             'co_supervisors' => ['nullable', 'array', 'max:2'],
+            'co_supervisors.*.title' => ['required', 'string'],
+            'co_supervisors.*.name' => ['required', 'string'],
+            'co_supervisors.*.designation' => ['required', 'string'],
+            'co_supervisors.*.affiliation' => ['required', 'string'],
         ]);
 
         $scholar->update($validData);

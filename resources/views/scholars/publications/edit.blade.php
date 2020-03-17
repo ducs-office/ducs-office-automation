@@ -8,7 +8,7 @@
             @csrf_token
             @method('PATCH')
             <div class="mb-4">
-                <add-remove-elements :existing-elements ="{{ json_encode($publication->authors)}}">
+                <add-remove-elements :existing-elements ="{{ is_array(old('authors')) ? json_encode(old('authors')) : json_encode($publication->authors)}}">
                     <template v-slot="{ elements, addElement, removeElement }">
                         <div class="flex items-baseline mb-2">
                             <label for="authors[]" class="form-label block mb-1">
@@ -17,7 +17,7 @@
                             <button v-on:click.prevent="addElement" class="ml-auto btn is-sm text-blue-700 bg-gray-300">+</button>
                         </div>
                         <div v-for="(element, index) in elements" :key="index" class="flex items-baseline">
-                            <input type="text" value="{{ old('author') }}" v-model= "element.value" name="authors[]" class="form-input block mb-2 w-full">
+                            <input type="text" v-model= "element.value" name="authors[]" class="form-input block mb-2 w-full">
                             <button v-on:click.prevent="removeElement(index)" v-if="elements.length > 1" class="btn is-sm ml-2 text-red-600">x</button>
                         </div>
                     </template>
@@ -51,10 +51,10 @@
                     Venue <span class="text-red-600">*</span>
                 </label>
                 <div class="flex">
-                    <input type="text" value="{{ old('venue[city]', $publication->venue['city']) }}" name="venue[city]" 
+                    <input type="text" value="{{ old('venue.city', $publication->venue['city']) }}" name="venue[city]" 
                         class="form-input text-sm w-full {{ $errors->has('venue[city]') ? ' border-red-600' : ''}}">
-                    <input type="text" value="{{ old('venue[Country]', $publication->venue['Country']) }}" name="venue[Country]" 
-                        class="form-input text-sm w-full ml-4 {{ $errors->has('venue[Country]') ? ' border-red-600' : ''}}">
+                    <input type="text" value="{{ old('venue.country', $publication->venue['country']) }}" name="venue[country]" 
+                        class="form-input text-sm w-full ml-4 {{ $errors->has('venue[country]') ? ' border-red-600' : ''}}">
                 </div>
             </div>
             <div class="flex mb-4">
@@ -78,9 +78,9 @@
                     Page Numbers <span class="text-red-600">*</span>
                 </label>
                 <div class="flex">
-                    <input type="number" value="{{ old('page_numbers[from]', $publication->page_numbers['from']) }}" name="page_numbers[from]" 
+                    <input type="number" value="{{ old('page_numbers.from', $publication->page_numbers['from']) }}" name="page_numbers[from]" 
                         class="form-input text-sm w-1/2 {{ $errors->has('page_numbers[from]') ? ' border-red-600' : ''}}">
-                    <input type="number" value="{{ old('page_numbers[to]', $publication->page_numbers['to']) }}" name="page_numbers[to]" 
+                    <input type="number" value="{{ old('page_numbers.to', $publication->page_numbers['to']) }}" name="page_numbers[to]" 
                         class="form-input text-sm w-1/2 ml-4 {{ $errors->has('page_numbers[to]') ? ' border-red-600' : ''}}">
                 </div>
             </div>
