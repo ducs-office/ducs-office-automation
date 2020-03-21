@@ -114,5 +114,8 @@
         @include('scholars.publications.index', [
             'publications' => $scholar->publications
         ])
+        @include('scholars.presentations.index', [
+            'presentations' => $scholar->presentations
+        ])
     </div>
 @endsection
