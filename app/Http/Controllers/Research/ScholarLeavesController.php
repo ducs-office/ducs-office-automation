@@ -11,19 +11,6 @@ use Illuminate\Validation\Rule;
 
 class ScholarLeavesController extends Controller
 {
-    public function store(Request $request, Scholar $scholar)
-    {
-        $data = $request->validate([
-            'from' => ['required', 'date'],
-            'to' => ['required', 'date'],
-            'reason' => ['required', 'string'],
-        ]);
-
-        $scholar->leaves()->create($data);
-
-        return redirect()->back();
-    }
-
     public function update(Request $request, Scholar $scholar, Leave $leave)
     {
         $data = $request->validate([

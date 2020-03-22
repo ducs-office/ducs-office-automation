@@ -128,7 +128,7 @@ class ScholarTest extends TestCase
         $leaves = create(Leave::class, 2, ['scholar_id' => $scholar->id]);
 
         $this->assertCount(count($leaves), $scholar->fresh()->leaves);
-        $this->assertEquals($leaves->pluck('id'), $scholar->fresh()->leaves->pluck('id'));
+        $this->assertEquals($leaves->sortByDesc('to')->pluck('id'), $scholar->fresh()->leaves->pluck('id'));
     }
 
     /** @test */

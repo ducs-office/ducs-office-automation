@@ -165,43 +165,8 @@
                         <li class="px-4 py-3 border-b last:border-b-0 text-center text-gray-700 font-bold">No Leaves</li>
                         @endforelse
                     </ul>
-                    <button class="w-full btn btn-magenta rounded-lg py-3" @click="$modal.show('add-leave-modal')">
-                        + Add Leave
-                    </button>
-                    <v-modal name="add-leave-modal" height="auto">
-                        <div class="p-6">
-                            <h3 class="text-lg font-bold mb-4">Add Leave</h3>
-                            <form action="{{ route('research.scholars.leaves.store', $scholar) }}" method="POST">
-                                @csrf_token
-                                <div class="flex mb-2">
-                                    <div class="flex-1 mr-2">
-                                        <label for="from_date" class="w-full form-label mb-1">From Date</label>
-                                        <input type="date" name="from" id="from_date" placeholder="From Date"class="w-full form-input">
-                                    </div>
-                                    <div class="flex-1 ml-2">
-                                        <label for="to_date" class="w-full form-label mb-1">To Date</label>
-                                        <input type="date" name="to" id="to_date" placeholder="To Date" class="w-full form-input">
-                                    </div>
-                                </div>
-                                <div class="mb-2">
-                                    <label for="reason" class="w-full form-label mb-1">Reason</label>
-                                    <input type="text" name="reason" autocomplete="#reasons"
-                                        class="w-full form-input"
-                                        list="leave_reasons"
-                                        placeholder="e.g. Maternity Leave">
-                                    <datalist id="leave_reasons">
-                                        <option value="Maternity/Child Care Leave">
-                                        <option value="Medical">
-                                        <option value="For Work">
-                                    </datalist>
-                                </div>
-                                <button type="submit" class="px-5 btn btn-magenta text-sm">Add</button>
-                        </div>
                 </div>
-                </v-modal>
             </div>
-
         </div>
-
     </div>
 @endsection

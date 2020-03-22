@@ -87,6 +87,6 @@ class Scholar extends User
 
     public function leaves()
     {
-        return $this->hasMany(Leave::class);
+        return $this->hasMany(Leave::class)->orderBy('to', 'desc');
     }
 }
