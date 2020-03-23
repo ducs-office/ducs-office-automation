@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\AdvisoryMeeting;
 use App\Leave;
 use App\PhdCourse;
 use App\Scholar;
@@ -144,5 +145,18 @@ class ScholarTest extends TestCase
             $coreCourseworks->pluck('id'),
             $scholar->courseworks->pluck('id')
         );
+    }
+
+    /** @test */
+    public function scholar_has_many_advisory_meetings()
+    {
+        $scholar = create(Scholar::class);
+
+        $this->assertInstanceOf(HasMany::class, $scholar->advisoryMeetings());
+        $this->assertCount(0, $scholar->advisoryMeetings);
+
+        $meeting = create(AdvisoryMeeting::class, 1, ['scholar_id' => $scholar->id]);
+
+        $this->assertCount(1, $scholar->fresh()->advisoryMeetings);
     }
 }

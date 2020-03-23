@@ -39,6 +39,16 @@ Route::prefix('/research')
             '/scholars/{scholar}/leaves/{leave}',
             'ScholarLeavesController@update'
         )->name('scholars.leaves.update');
+
+        Route::post(
+            '/scholars/{scholar}/advisory-meetings',
+            'AdvisoryMeetingsController@store'
+        )->name('scholars.advisory_meetings.store');
+
+        Route::get(
+            '/advisory-meetings/{meeting}/minutes-of-meeting',
+            'AdvisoryMeetingsController@minutesOfMeeting'
+        )->name('advisory_meetings.minutes_of_meeting');
     });
 
 Route::prefix('/teachers')

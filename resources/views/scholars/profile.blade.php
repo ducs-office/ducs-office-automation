@@ -236,5 +236,30 @@
                 </div>
             </v-modal>
         </div>
-</div>
+
+        {{-- Meetings --}}
+        <div class="mb-16">
+            <h3 class="font-bold text-xl mb-4">
+                Advisory Meetings
+            </h3>
+            <ul class="border bg-white rounded-lg overflow-hidden mb-4">
+                @forelse ($scholar->advisoryMeetings as $meeting)
+                <li class="px-4 py-3 border-b last:border-b-0">
+                    <div class="flex items-center">
+                        <h5 class="font-bold flex-1">
+                            {{ $meeting->date->format('D M d, Y') }}
+                        </h5>
+                        <a href="{{ route('research.advisory_meetings.minutes_of_meeting', $meeting) }}"
+                            class="inline-flex items-center underline px-4 py-2 text-gray-900 rounded font-bold">
+                            <feather-icon name="paperclip" class="h-4 mr-2"></feather-icon>
+                            Minutes of Meeting
+                        </a>
+                    </div>
+                </li>
+                @empty
+                <li class="px-4 py-3 border-b last:border-b-0 text-center text-gray-700 font-bold">No Meetings yet.</li>
+                @endforelse
+            </ul>
+        </div>
+    </div>
 @endsection

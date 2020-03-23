@@ -89,4 +89,9 @@ class Scholar extends User
     {
         return $this->hasMany(Leave::class)->orderBy('to', 'desc');
     }
+
+    public function advisoryMeetings()
+    {
+        return $this->hasMany(AdvisoryMeeting::class)->orderBy('date', 'desc');
+    }
 }

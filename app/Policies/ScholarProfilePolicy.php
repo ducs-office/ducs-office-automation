@@ -23,4 +23,11 @@ class ScholarProfilePolicy
             $user->isSupervisor() &&
             $user->supervisorProfile->scholars->contains($scholar);
     }
+
+    public function addAdvisoryMeeting($user, Scholar $scholar)
+    {
+        return method_exists($user, 'isSupervisor') &&
+            $user->isSupervisor() &&
+            $user->supervisorProfile->scholars->contains($scholar);
+    }
 }
