@@ -70,12 +70,12 @@ class Scholar extends User
 
     public function publications()
     {
-        return $this->academicDetails()->where('type', 'publication');
+        return $this->academicDetails()->where('type', 'publication')->orderBy('date', 'DESC');
     }
 
     public function presentations()
     {
-        return $this->academicDetails()->where('type', 'presentation');
+        return $this->academicDetails()->where('type', 'presentation')->orderBy('date', 'DESC');
     }
 
     public function courseworks()

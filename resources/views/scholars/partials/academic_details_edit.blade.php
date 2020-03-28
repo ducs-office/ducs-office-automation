@@ -26,7 +26,7 @@
         <label for="date" class="form-label block mb-1">
             Date <span class="text-red-600">*</span>
         </label>
-        <input type="date" value="{{ old('date', $paper->date) }}" name="date" 
+        <input type="date" value="{{ old('date', $paper->date->format('Y-m-d')) }}" name="date" 
             class="form-input w-full {{ $errors->has('date') ? ' border-red-600' : ''}}">
     </div>
     <div class="ml-4 w-1/2">

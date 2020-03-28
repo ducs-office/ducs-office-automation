@@ -8,6 +8,8 @@ class AcademicDetail extends Model
 {
     protected $guarded = [];
 
+    protected $dates = ['date'];
+    
     protected $casts = [
         'venue' => 'array',
         'page_numbers' => 'array',
