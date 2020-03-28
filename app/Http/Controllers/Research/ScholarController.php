@@ -26,6 +26,7 @@ class ScholarController extends Controller
             'categories' => config('options.scholars.categories'),
             'admission_criterias' => config('options.scholars.admission_criterias'),
             'courses' => PhdCourse::whereNotIn('id', $scholar->courseworks()->allRelatedIds())->get(),
+            'genders' => config('options.scholars.genders'),
         ]);
     }
 }
