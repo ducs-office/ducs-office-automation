@@ -1,5 +1,5 @@
 <div class="mb-4">
-    <add-remove-elements :existing-elements ="{{ json_encode(old('authors')) }}">
+    <add-remove-elements :existing-elements ="{{ empty(old('authors')) ? json_encode([auth()->user()->name]) : json_encode(old('authors')) }}">
         <template v-slot="{ elements, addElement, removeElement }">
             <div class="flex items-baseline mb-2">
                 <label for="authors[]" class="form-label block mb-1">
