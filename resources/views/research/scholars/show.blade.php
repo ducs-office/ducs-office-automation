@@ -97,7 +97,7 @@
                 </div>
             </div>
 
-            <div class="mb-4 flex">
+            <div class="mb-16 flex">
                 <div class="w-64 pr-4 relative z-10 -ml-8 my-2">
                     <h3 class="relative z-20 pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
                         Leaves
@@ -199,6 +199,52 @@
                         </div>
                 </div>
                 </v-modal>
+            </div>
+
+            <div class="flex mb-16">
+                <div class="w-64 pr-4 relative z-10 -ml-8 my-2">
+                    <h3 class="relative z-20 pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
+                        Publications
+                    </h3>
+                    <svg class="absolute left-0 w-2 text-magenta-900" viewBox="0 0 10 10">
+                        <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
+                    </svg>
+                </div>
+                <div class="flex-1 pl-4">
+                    <ul class="border rounded-lg overflow-hidden mb-4">
+                        @foreach ($scholar->publications as $publication)
+                            <li class="border-b last:border-b-0 py-3">
+                                @include('research.scholars.partials.academic_details_show', [
+                                    'paper' => $publication,
+                                    'index' => $loop->iteration,
+                                ])
+                            </li>
+                        @endforeach
+                    </ul class="border rounded-lg overflow-hidden mb-4">
+                </div>
+            </div>
+
+            <div class="flex mb-4">
+                <div class="w-64 pr-4 relative z-10 -ml-8 my-2">
+                    <h3 class="relative z-20 pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
+                        Presentations
+                    </h3>
+                    <svg class="absolute left-0 w-2 text-magenta-900" viewBox="0 0 10 10">
+                        <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
+                    </svg>
+                </div>
+                <div class="flex-1 pl-4">
+                    <ul class="border rounded-lg overflow-hidden mb-4">
+                        @foreach ($scholar->presentations as $presentation)
+                            <li class="border-b last:border-b-0 py-3">
+                                @include('research.scholars.partials.academic_details_show', [
+                                    'paper' => $presentation,
+                                    'index' => $loop->iteration,
+                                ])
+                            </li>
+                        @endforeach
+                    </ul class="border rounded-lg overflow-hidden mb-4">
+                </div>
             </div>
 
         </div>
