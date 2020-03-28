@@ -4,7 +4,7 @@
         <form class="bg-white p-6 h-full shadow-md" action="{{ route('scholars.profile.update') }}"
             method="POST" enctype="multipart/form-data">
             @csrf_token @method('PATCH')
-            <div class="flex items-center mb-4">
+            <div class="flex items-center mb-6">
                 <image-upload-input id="profile_picture"
                     name="profile_picture"
                     class="relative group mr-4 cursor-pointer"
@@ -18,93 +18,101 @@
                     </template>
                 </image-upload-input>
             </div>
-            <div class="flex">
-                <div class="w-1/2">
-                    <div class="relative z-10 -ml-6 my-4 mt-8">
-                        <h5 class="relative z-20 pl-4 pr-4 py-2 inline-block font-bold bg-magenta-700 text-white shadow">
-                            Personal Details
-                        </h5>
-                    </div>
-                    <div class="flex items-baseline">
-                        <label for="gender" class="block form-label w-1/3"> Gender:</label>
-                        <select id="gender" name="gender" class="block form-input w-1/3">
-                            <option value="" class="text-gray-600" selected>Select your gender </option>
-                            @foreach ($genders as $acronym => $gender)
-                            <option value=" {{ $acronym }}"
-                                {{ $acronym === old("gender", $scholar->gender) ? 'selected': '' }}>
-                                {{ $gender }}
-                            </option>
-                            @endforeach
-                        </select>
+            <div class="w-1/3">
+                <div class="flex items-baseline">
+                    <label for="gender" class="block form-label flex-1"> Gender</label>
+                    <select id="gender" name="gender" class="block form-input flex-1">
+                        <option value="" class="text-gray-600" selected>Select your gender </option>
+                        @foreach ($genders as $acronym => $gender)
+                        <option value=" {{ $acronym }}"
+                            {{ $acronym === old("gender", $scholar->gender) ? 'selected': '' }}>
+                            {{ $gender }}
+                        </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="flex items-baseline mt-3">
+                    <label for="category" class="block form-label flex-1"> Category</label>
+                    <select id="category" name="category" class="block form-input flex-1 ">
+                        <option value="" class="text-gray-600" selected>Choose a category </option>
+                        @foreach ($categories as $acronym => $category)
+                        <option value=" {{ $acronym }}"
+                            {{ $acronym === old("category", $scholar->category) ? 'selected': '' }}>
+                            {{ $category }}
+                        </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="flex items-baseline mt-3">
+                    <label for="email" class="block form-label flex-1">Email:</label>
+                    <input id="email" type="email" name="email"
+                        class="block form-input flex-1"
+                        disabled
+                        value="{{ $scholar->email }}">
+                </div>
+                <div class="flex items-baseline mt-3">
+                    <label for="phone_no" class="block form-label flex-1">Phone Number:</label>
+                    <input id="phone_no" type="text" name="phone_no" class="block form-input flex-1" value="{{ old('phone_no', $scholar->phone_no) }}">
+                </div>
+                <div class="flex items-baseline mt-3">
+                    <label for="address" class="block form-label flex-1">Address:</label>
+                    <textarea id="address" name="address" class="block w-auto form-input flex-1">{{ old('address', $scholar->address) }}</textarea>
+                </div>
+            </div>
+            <div class="mt-6">
+                <div class="w-64 pr-4 relative z-10 -ml-8 my-6">
+                    <h3 class="relative z-20 pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
+                        Admission
+                    </h3>
+                    <svg class="absolute left-0 w-2 text-magenta-900" viewBox="0 0 10 10">
+                        <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
+                    </svg>
+                </div>
+                <div class="mt-4 w-1/3">
+                    <div class="mt-2 flex items-baseline ">
+                        <label for="enrollment_date" class="block form-label flex-1">Date of enrollment:</label>
+                        <input id="enrollment_date" type="date" name="enrollment_date" class="block w-auto form-input flex-1" value="{{ old('phone_no', $scholar->enrollment_date) }}">
                     </div>
                     <div class="flex items-baseline mt-2">
-                        <label for="category" class="block form-label w-1/3"> Category:</label>
-                        <select id="category" name="category" class="block form-input w-1/3">
-                            <option value="" class="text-gray-600" selected>Choose a category </option>
-                            @foreach ($categories as $acronym => $category)
+                        <label for="admission_via" class="block form-label flex-1">Admission Via:</label>
+                        <select id="admission_via" name="admission_via" class="block form-input flex-1">
+                            <option value="" selected> Choose the mode of admission </option>
+                            @foreach ($admissionCriterias as $acronym => $admission_via)
                             <option value=" {{ $acronym }}"
-                                {{ $acronym === old("category", $scholar->category) ? 'selected': '' }}>
-                                {{ $category }}
+                                {{ $acronym === old("admission_via", $scholar->admission_via) ? 'selected': '' }}>
+                                {{ $admission_via['mode'] }}
                             </option>
                             @endforeach
                         </select>
                     </div>
-                    <div class="mt-2 flex items-baseline ">
-                        <label for="email" class="block form-label w-1/3">Email:</label>
-                        <input id="email" type="email" name="email"
-                            class="block w-auto form-input w-1/3"
-                            disabled
-                            value="{{ $scholar->email }}">
-                    </div>
-                    <div class="mt-2 flex items-baseline ">
-                        <label for="phone_no" class="block form-label w-1/3">Phone Number:</label>
-                        <input id="phone_no" type="text" name="phone_no" class="block w-auto form-input w-1/3" value="{{ old('phone_no', $scholar->phone_no) }}">
-                    </div>
-                    <div class="mt-2 flex items-baseline ">
-                        <label for="address" class="block form-label mb-1 w-1/3">Address:</label>
-                        <textarea id="address" name="address" class="block w-auto form-input">{{ old('address', $scholar->address) }}</textarea>
-                    </div>
                 </div>
-                <div class="w-1/2">
-                    <div class="relative z-10 -ml-6 my-4 mt-8">
-                        <h5 class="relative z-20 pl-4 pr-4 py-2 inline-block font-bold bg-magenta-700 text-white shadow">
-                            Admission Details
-                        </h5>
-                    </div>
-                    <div class="mt-4">
-                        <div class="mt-2 flex items-baseline ">
-                            <label for="enrollment_date" class="block form-label w-1/3">Date of enrollment:</label>
-                            <input id="enrollment_date" type="date" name="enrollment_date" class="block w-auto form-input w-1/3" value="{{ old('phone_no', $scholar->enrollment_date) }}">
-                        </div>
-                        <div class="flex items-baseline mt-2">
-                            <label for="admission_via" class="block form-label w-1/3">Admission Via:</label>
-                            <select id="admission_via" name="admission_via" class="block form-input w-1/3">
-                                <option value="" selected> Choose the mode of admission </option>
-                                @foreach ($admissionCriterias as $acronym => $admission_via)
-                                <option value=" {{ $acronym }}"
-                                    {{ $acronym === old("admission_via", $scholar->admission_via) ? 'selected': '' }}>
-                                    {{ $admission_via['mode'] }}
-                                </option>
-                                @endforeach
-                            </select>
-                        </div>
+            </div>
+            <div class="mt-6">
+                <div class="w-64 pr-4 relative z-10 -ml-8 my-6">
+                    <h3 class="relative z-20 pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
+                        Research
+                    </h3>
+                    <svg class="absolute left-0 w-2 text-magenta-900" viewBox="0 0 10 10">
+                        <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
+                    </svg>
+                </div>
+                <div class="mt-4 w-1/3">
+                    <div class="mt-2 flex items-baseline ">
+                        <label for="research_area" class="block form-label flex-1"> Broad Area of Research: </label>
+                        <textarea id="research_area"  name="research_area" class="block form-input flex-1">{{ old('research_area', $scholar->research_area) }}</textarea>
                     </div>
                 </div>
             </div>
-            <div class="relative z-10 -ml-6 my-4 mt-8">
-                <h5 class="relative z-20 pl-4 pr-4 py-2 inline-block font-bold bg-magenta-700 text-white shadow">
-                    Research Details
-                </h5>
-            </div>
-            <div class="mt-4 w-1/3">
-                <div class="mt-2 flex items-baseline ">
-                    <label for="research_area" class="block form-label w-1/2"> Broad Area of Research: </label>
-                    <textarea id="research_area"  name="research_area" class="block w-auto form-input ml-2">{{ old('research_area', $scholar->research_area) }}</textarea>
+            <div class="w-1/3 mt-6">
+                <div class="w-64 pr-4 relative z-10 -ml-8 my-6">
+                    <h3 class="relative z-20 pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
+                        Supervisor
+                    </h3>
+                    <svg class="absolute left-0 w-2 text-magenta-900" viewBox="0 0 10 10">
+                        <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
+                    </svg>
                 </div>
-            </div>
-            <div class="mt-2 w-1/3 mt-4">
-                <label for="supervisor_profile_id" class="block font-semibold mb-2"> Supervisor</label>
-                <select name="supervisor_profile_id" id="supervisor" class="block form-input">
+                <select name="supervisor_profile_id" id="supervisor" class="block form-input w-full">
                     <option value="" class="text-gray-600" selected> Select your supervisor </option>
                     @foreach ($supervisorProfiles as $name => $id)
                         <option value=" {{ $id }} "
@@ -117,11 +125,22 @@
             <div class="mt-4">
                 <add-remove-elements :existing-elements="{{ json_encode($scholar->co_supervisors) }}">
                     <template v-slot="{ elements, addElement, removeElement}">
-                        <div class="flex w-1/6">
-                            <label for="co_supervisors[]" class="font-bold block">Co-Supervisors</label>
-                            <button v-on:click.prevent="addElement" v-if="elements.length < 2"class="ml-auto btn is-sm text-blue-700 bg-gray-300">+</button>
+                        <div class="flex w-2/6 items-center">
+                            <div class="w-64 pr-4 relative z-10 -ml-8 my-6">
+                                <h3 class="relative z-20 pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
+                                    Co-Supervisor(s)
+                                </h3>
+                                <svg class="absolute left-0 w-2 text-magenta-900" viewBox="0 0 10 10">
+                                    <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
+                                </svg>
+                            </div>
+                            <button v-on:click.prevent="addElement" 
+                                    v-if="elements.length < 2"
+                                    class="ml-auto text-blue-700 bg-gray-300 btn is-sm"
+                                > + 
+                            </button>
                         </div>
-                        <h6 class="mt-2 text-gray-800 text-sm">You can add a maximum of 2 co-supervisors only.</h6>
+                        <h6 class="mx-2 mb-6 text-gray-800 text-sm">You can add a maximum of 2 co-supervisors only.</h6>
                         <div class="flex w-2/3 mt-2">
                             <label for="co_supervisors[][title]" class="form-label block w-1/4">Title</label>
                             <label for="co_supervisors[][name]" class="form-label block w-1/4">Name</label>
@@ -158,15 +177,26 @@
                     </template>
                 </add-remove-elements>
             </div>
-            <div class="mt-4">
+            <div class="mt-6">
                 <add-remove-elements :existing-elements="{{ json_encode($scholar->advisory_committee) }}" >
                     <template v-slot="{ elements, addElement, removeElement}">
-                        <div class="flex w-1/6">
-                            <label for="co_supervisors[]" class="font-bold block">Advisory Committee</label>
-                            <button v-on:click.prevent="addElement" v-if="elements.length < 4" class="ml-auto btn is-sm text-blue-700 bg-gray-300">+</button>
+                        <div class="flex w-2/6 items-center">
+                            <div class="w-64 pr-4 relative z-10 -ml-8 my-6">
+                                <h3 class="relative z-20 pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
+                                    Advisory Committee
+                                </h3>
+                                <svg class="absolute left-0 w-2 text-magenta-900" viewBox="0 0 10 10">
+                                    <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
+                                </svg>
+                            </div>
+                            <button v-on:click.prevent="addElement" 
+                                    v-if="elements.length < 4"
+                                    class="ml-auto text-blue-700 bg-gray-300 btn is-sm"
+                                > + 
+                            </button>
                         </div>
-                        <h6 class="mt-2 text-gray-800 text-sm">You can add a maximum of 4 advisors only.</h6>
-                        <div class="flex w-2/3 mt-2">
+                        <h6 class="mx-2 mb-6 text-gray-800 text-sm">You can add a maximum of 4 advisors only.</h6>
+                        <div class="flex w-2/3">
                             <label for="advisory_committee[][title]" class="form-label block w-1/4">Title</label>
                             <label for="advisory_committee[][name]" class="form-label block w-1/4">Name</label>
                             <label for="advisory_committee[][designation]" class="form-label block w-1/4">Designation</label>
@@ -184,7 +214,7 @@
                     </template>
                 </add-remove-elements>
             </div>
-            <div class="mt-5">
+            <div class="mt-8">
                 <button type="submit" class="btn btn-magenta">Save Changes</button>
             </div>
         </form>
