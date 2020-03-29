@@ -109,7 +109,7 @@
                     </svg>
                 </div>
                 <div class="flex-1 pl-4">
-                    <ul class="border rounded-lg overflow-hidden mb-4">
+                    <ul class="w-full border rounded-lg overflow-hidden mb-4">
                         @forelse ($scholar->leaves as $leave)
                         <li class="px-4 py-3 border-b last:border-b-0">
                             <div class="flex items-center">
@@ -162,6 +162,56 @@
                                 </form>
                                 @endif
                             </div>
+                            @foreach($leave->extensions as $extensionLeave)
+                                <div class="flex items-center ml-6 mt-4">
+                                    <h5 class="font-bold flex-1">
+                                        {{ $extensionLeave->reason }}
+                                        <span class="text-sm text-gray-500 font-bold">
+                                            (extension till {{$extensionLeave->to->format('Y-m-d')}})
+                                        </span>
+                                    </h5>
+                                    <div class="flex items-center px-4">
+                                        <div class="
+                                                w-5 h-5 inline-flex items-center justify-center
+                                                {{ $extensionLeave->status === App\LeaveStatus::APPROVED ? 'bg-green-500' : (
+                                                    $extensionLeave->status === App\LeaveStatus::REJECTED ? 'bg-red-600' : 'bg-gray-700'
+                                                )}}
+                                                text-white font-extrabold leading-none rounded-full mr-2
+                                            ">
+                                            @if($extensionLeave->status == App\LeaveStatus::APPROVED)
+                                            &checkmark;
+                                            @elseif($extensionLeave->status == App\LeaveStatus::REJECTED)
+                                            &times;
+                                            @else
+                                            &HorizontalLine;
+                                            @endif
+                                        </div>
+                                        <div class="capitalize">
+                                            {{ $extensionLeave->status }}
+                                        </div>
+                                    </div>
+                                    @if($extensionLeave->status === App\LeaveStatus::APPLIED)
+                                    <button type="submit" class="px-4 py-2 mr-1 bg-green-500 hover:bg-green-600 text-white text-sm rounded font-bold"
+                                        form="approve-leave-{{ $extensionLeave->id }}-form">
+                                        Approve
+                                    </button>
+                                    <button type="submit" class="px-4 py-2 ml-1 bg-red-500 hover:bg-red-600 text-white text-sm rounded font-bold"
+                                        form="reject-leave-{{ $extensionLeave->id }}-form">
+                                        Reject
+                                    </button>
+                                    <form id="approve-leave-{{ $extensionLeave->id }}-form"
+                                        action="{{ route('research.scholars.leaves.update', [$scholar, $extensionLeave]) }}" method="POST" class="w-0">
+                                        @csrf_token @method("PATCH")
+                                        <input type="hidden" name="status" value="{{ App\LeaveStatus::APPROVED }}">
+                                    </form>
+                                    <form id="reject-leave-{{ $extensionLeave->id }}-form"
+                                        action="{{ route('research.scholars.leaves.update', [$scholar, $extensionLeave]) }}" method="POST" class="w-0">
+                                        @csrf_token @method("PATCH")
+                                        <input type="hidden" name="status" value="{{ App\LeaveStatus::REJECTED }}">
+                                    </form>
+                                    @endif
+                                </div>
+                            @endforeach
                         </li>
                         @empty
                         <li class="px-4 py-3 border-b last:border-b-0 text-center text-gray-700 font-bold">No Leaves</li>

@@ -13,6 +13,7 @@ class LeavesController extends Controller
             'from' => ['required', 'date'],
             'to' => ['required', 'date'],
             'reason' => ['required', 'string'],
+            'extended_leave_id' => ['sometimes', 'nullable', 'exists:leaves,id'],
         ]);
 
         $request->user()->leaves()->create($data);

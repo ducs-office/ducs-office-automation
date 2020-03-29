@@ -178,7 +178,7 @@
                                 ({{ $leave->from->format('Y-m-d') }} - {{$leave->to->format('Y-m-d')}})
                             </span>
                         </h5>
-                        <div class="flex items-center px-4">
+                        <div class="flex items-center px-4 mr-4">
                             <div class="
                                 w-5 h-5 inline-flex items-center justify-center
                                 {{ $leave->status === App\LeaveStatus::APPROVED ? 'bg-green-500' : (
@@ -198,6 +198,45 @@
                                 {{ $leave->status }}
                             </div>
                         </div>
+                        <button class="btn btn-magenta text-sm is-sm"
+                            @click="$modal.show('apply-for-leave-modal', {
+                                'extensionId': {{$leave->id}},
+                                'extension_from_date': '{{ $leave->to->format('Y-m-d') }}'
+                            })">
+                            Extend
+                        </button>
+                    </div>
+                    <div class="ml-6">
+                        @foreach($leave->extensions as $extensionLeave)
+                        <div class="flex items-center mt-4">
+                            <h5 class="font-bold flex-1">
+                                {{ $leave->reason }}
+                                <span class="text-sm text-gray-500 font-bold">
+                                    (extended to {{$leave->to->format('Y-m-d')}})
+                                </span>
+                            </h5>
+                            <div class="flex items-center pl-4">
+                                <div class="
+                                        w-5 h-5 inline-flex items-center justify-center
+                                        {{ $leave->status === App\LeaveStatus::APPROVED ? 'bg-green-500' : (
+                                            $leave->status === App\LeaveStatus::REJECTED ? 'bg-red-600' : 'bg-gray-700'
+                                        )}}
+                                        text-white font-extrabold leading-none rounded-full mr-2
+                                    ">
+                                    @if($leave->status == App\LeaveStatus::APPROVED)
+                                    &checkmark;
+                                    @elseif($leave->status == App\LeaveStatus::REJECTED)
+                                    &times;
+                                    @else
+                                    &HorizontalLine;
+                                    @endif
+                                </div>
+                                <div class="capitalize">
+                                    {{ $leave->status }}
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
                     </div>
                 </li>
                 @empty
@@ -206,15 +245,16 @@
             </ul>
 
             <v-modal name="apply-for-leave-modal" height="auto">
-                <div class="p-6">
-                    <h3 class="text-lg font-bold mb-4">Add Leave</h3>
-                    <form action="{{ route('scholars.leaves.store') }}" method="POST">
+                <template v-slot="{ data }">
+                    <form action="{{ route('scholars.leaves.store') }}" method="POST" class="p-6">
+                        <h3 class="text-lg font-bold mb-4">Add Leave</h3>
                         @csrf_token
+                        <input v-if="data('extensionId')" type="hidden" name="extended_leave_id" :value="data('extensionId')">
                         <div class="flex mb-2">
                             <div class="flex-1 mr-2">
                                 <label for="from_date" class="w-full form-label mb-1">From Date</label>
                                 <input type="date" name="from" id="from_date" placeholder="From Date"
-                                    class="w-full form-input">
+                                    class="w-full form-input" :value="data('extension_from_date', '')">
                             </div>
                             <div class="flex-1 ml-2">
                                 <label for="to_date" class="w-full form-label mb-1">To Date</label>
@@ -233,7 +273,7 @@
                         </div>
                         <button type="submit" class="px-5 btn btn-magenta text-sm">Add</button>
                     </form>
-                </div>
+                </template>
             </v-modal>
         </div>
 

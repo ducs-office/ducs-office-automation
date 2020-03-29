@@ -20,6 +20,8 @@ class CreateLeavesTable extends Migration
             $table->date('from');
             $table->date('to');
             $table->string('reason', 190);
+            $table->unsignedBigInteger('extended_leave_id')->nullable();
+
             $table->enum('status', LeaveStatus::values())->default(LeaveStatus::APPLIED);
             $table->timestamps();
         });
