@@ -23,23 +23,17 @@ class UpdateScholarAcademicDetailTest extends TestCase
             'scholar_id' => $Scholar->id,
             'volume' => $volume = '3',
         ]);
-        // dd($publication);
+
         $this->assertEquals($volume, $Scholar->fresh()->publications->first()->volume);
-        try {
-            $this->withoutExceptionHandling()
+
+        $this->withoutExceptionHandling()
             ->patch(route('scholars.profile.publication.update', $publication), [
                 'volume' => $newVolume = 4,
-                'venue' => $newVenue = ['city' => 'abc', 'country' => 'abc'],
-                'page_numbers' => ['from' => 123, 'to' => 123],
             ])
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'Publication updated successfully!');
-        } catch (ValidationException $e) {
-            dd($e->errors());
-        }
 
         $this->assertEquals($newVolume, $Scholar->fresh()->publications->first()->volume);
-        $this->assertEquals($newVenue, $Scholar->fresh()->publications->first()->venue);
     }
 
     /** @test */
@@ -58,8 +52,6 @@ class UpdateScholarAcademicDetailTest extends TestCase
         $this->withoutExceptionHandling()
         ->patch(route('scholars.profile.presentation.update', $presentation), [
             'volume' => $newVolume = 4,
-            'venue' => $newVenue = ['city' => 'abc', 'country' => 'abc'],
-            'page_numbers' => ['from' => 123, 'to' => 123],
         ])
         ->assertRedirect()
         ->assertSessionHasFlash('success', 'Presentation updated successfully!');

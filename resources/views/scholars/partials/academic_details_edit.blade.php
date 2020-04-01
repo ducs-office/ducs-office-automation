@@ -37,15 +37,20 @@
             class="form-input w-full {{ $errors->has('volume') ? ' border-red-600' : ''}}">
     </div>
 </div>
-<div class="mb-4">
-    <label for="venue[]" class="form-label block mb-1">
-        Venue <span class="text-red-600">*</span>
-    </label>
-    <div class="flex">
-        <input type="text" value="{{ old('venue.city', $paper->venue['city']) }}" name="venue[city]" 
-            class="form-input text-sm w-full {{ $errors->has('venue[city]') ? ' border-red-600' : ''}}">
-        <input type="text" value="{{ old('venue.country', $paper->venue['country']) }}" name="venue[country]" 
-            class="form-input text-sm w-full ml-4 {{ $errors->has('venue[country]') ? ' border-red-600' : ''}}">
+<div class="mb-4 flex">
+    <div class="w-1/2">
+        <label for="city[]" class="form-label block mb-1">
+            City <span class="text-red-600">*</span>
+        </label>
+        <input type="text" value="{{ old('city', $paper->city) }}" name="city" 
+        class="form-input text-sm w-full {{ $errors->has('city') ? ' border-red-600' : ''}}">
+    </div>
+    <div class="ml-4 w-1/2">
+        <label for="country" class="form-label block mb-1">
+            Country <span class="text-red-600">*</span>
+        </label>
+        <input type="text" value="{{ old('country', $paper->country) }}" name="country" 
+            class="form-input text-sm w-full {{ $errors->has('country') ? ' border-red-600' : ''}}">
     </div>
 </div>
 <div class="flex mb-4">
@@ -69,10 +74,10 @@
         Page Numbers <span class="text-red-600">*</span>
     </label>
     <div class="flex">
-        <input type="number" value="{{ old('page_numbers.from', $paper->page_numbers['from']) }}" name="page_numbers[from]" 
-            class="form-input text-sm w-1/2 {{ $errors->has('page_numbers[from]') ? ' border-red-600' : ''}}">
-        <input type="number" value="{{ old('page_numbers.to', $paper->page_numbers['to']) }}" name="page_numbers[to]" 
-            class="form-input text-sm w-1/2 ml-4 {{ $errors->has('page_numbers[to]') ? ' border-red-600' : ''}}">
+        <input type="number" value="{{ old('page_numbers.0', $paper->page_numbers[0]) }}" name="page_numbers[]" 
+            class="form-input text-sm w-1/2 {{ $errors->has('page_numbers[0]') ? ' border-red-600' : ''}}">
+        <input type="number" value="{{ old('page_numbers.to', $paper->page_numbers[1]) }}" name="page_numbers[]" 
+            class="form-input text-sm w-1/2 ml-4 {{ $errors->has('page_numbers[1]') ? ' border-red-600' : ''}}">
     </div>
 </div>
 <div class="mb-4">

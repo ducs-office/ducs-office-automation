@@ -24,8 +24,9 @@ class CreateAcademicDetailsTable extends Migration
             $table->date('date');
             $table->integer('number')->nullable();
             $table->string('indexed_in');
-            $table->json('venue');
-            $table->json('page_numbers');
+            $table->string('city');
+            $table->string('country');
+            $table->string('page_numbers');
             $table->unsignedBigInteger('scholar_id');
             $table->timestamps();
 

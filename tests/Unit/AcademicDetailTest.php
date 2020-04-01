@@ -49,4 +49,25 @@ class AcademicDetailTest extends TestCase
 
         $this->assertSame($indexed_in, $detail->indexed_in);
     }
+
+    /** @test */
+    public function array_of_page_numbers_is_stored_seperated_by_hyphen()
+    {
+        $detail = new AcademicDetail();
+        $page_numbers = ['23', '49'];
+
+        $detail->page_numbers = $page_numbers;
+
+        $this->assertEquals(implode('-', $page_numbers), $detail->getAttributes()['page_numbers']);
+    }
+
+    public function page_numbers_separated_by_hyphen_returned_as_array()
+    {
+        $detail = new AcademicDetail();
+        $page_numbers = ['23', '49'];
+
+        $detail->page_numbers = implode('-', $page_numbers);
+
+        $this->assertSame($page_numbers, $detail->page_numbers);
+    }
 }

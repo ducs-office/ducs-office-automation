@@ -19,10 +19,11 @@ class StoreScholarAcademicDetailTest extends TestCase
             'conference' => '8th Symposium on Catecholamines and Other Neurotransmitters in Stress',
             'volume' => '4',
             'publisher' => 'Apl. Phy. Lett.',
-            'page_numbers' => ['from' => '23', 'to' => '80'],
+            'page_numbers' => ['23', '80'],
             'date' => '2019-07-12',
             'number' => '221109',
-            'venue' => ['city' => 'Moscow', 'country' => 'Russia'],
+            'city' => 'Moscow',
+            'country' => 'Russia',
             'indexed_in' => ['Scopus', 'SCI'],
         ], $overrides);
     }

@@ -10,11 +10,6 @@ class AcademicDetail extends Model
 
     protected $dates = ['date'];
 
-    protected $casts = [
-        'venue' => 'array',
-        'page_numbers' => 'array',
-    ];
-
     public function setAuthorsAttribute($value)
     {
         if (is_array($value)) {
@@ -41,5 +36,15 @@ class AcademicDetail extends Model
     public function getIndexedInAttribute($value)
     {
         return explode('|', $value);
+    }
+
+    public function setPageNumbersAttribute($value)
+    {
+        $this->attributes['page_numbers'] = implode('-', $value);
+    }
+
+    public function getPageNumbersAttribute($value)
+    {
+        return explode('-', $value);
     }
 }

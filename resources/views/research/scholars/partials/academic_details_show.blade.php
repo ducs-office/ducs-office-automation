@@ -8,7 +8,7 @@
             {{ $paper->conference }}, 
             Volume {{ $paper->volume }}, 
             Number {{ $paper->number }}, 
-            pp: {{ $paper->page_numbers['from'] }}-{{ $paper->page_numbers['to'] }}
+            pp: {{ $paper->page_numbers[0] }}-{{ $paper->page_numbers[1] }}
         </p>
     </div> 
     <details class="ml-2">
@@ -35,7 +35,7 @@
                 </div>
                 <div class="flex m-2">
                     <h4 class="font-semibold"> Address: </h4> 
-                    <p class="ml-2"> {{ $paper->venue['city']}}, {{ $paper->venue['country'] }} </p>
+                    <p class="ml-2"> {{ $paper->city}}, {{ $paper->country }} </p>
                 </div>
                 <div class="flex m-2">
                     <h4 class="font-semibold"> Publisher: </h4>
@@ -61,7 +61,7 @@
                 </div>
                 <div class="flex m-2">
                     <h4 class="font-semibold"> Pages: </h4>
-                    <p class="ml-2"> {{ $paper->page_numbers['from'] }}-{{ $paper->page_numbers['to'] }} </p>
+                    <p class="ml-2"> {{ $paper->page_numbers[0] }}-{{ $paper->page_numbers[1] }} </p>
                 </div>
             </div>
         </div>
