@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\AdvisoryMeeting;
 use App\Leave;
 use App\PhdCourse;
 use App\Scholar;
@@ -127,9 +128,10 @@ class ScholarTest extends TestCase
         $this->assertCount(0, $scholar->leaves);
 
         $leaves = create(Leave::class, 2, ['scholar_id' => $scholar->id]);
+        create(Leave::class, 2, ['scholar_id' => $scholar->id, 'extended_leave_id' => $leaves[0]->id]);
 
         $this->assertCount(count($leaves), $scholar->fresh()->leaves);
-        $this->assertEquals($leaves->pluck('id'), $scholar->fresh()->leaves->pluck('id'));
+        $this->assertEquals($leaves->sortByDesc('to')->pluck('id'), $scholar->fresh()->leaves->pluck('id'));
     }
 
     /** @test */
@@ -145,5 +147,18 @@ class ScholarTest extends TestCase
             $coreCourseworks->pluck('id'),
             $scholar->courseworks->pluck('id')
         );
+    }
+
+    /** @test */
+    public function scholar_has_many_advisory_meetings()
+    {
+        $scholar = create(Scholar::class);
+
+        $this->assertInstanceOf(HasMany::class, $scholar->advisoryMeetings());
+        $this->assertCount(0, $scholar->advisoryMeetings);
+
+        $meeting = create(AdvisoryMeeting::class, 1, ['scholar_id' => $scholar->id]);
+
+        $this->assertCount(1, $scholar->fresh()->advisoryMeetings);
     }
 }

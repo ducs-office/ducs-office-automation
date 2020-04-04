@@ -1,11 +1,10 @@
 <?php
 
-use App\LeaveStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateLeavesTable extends Migration
+class CreateAdvisoryMeetingsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,15 +13,12 @@ class CreateLeavesTable extends Migration
      */
     public function up()
     {
-        Schema::create('leaves', function (Blueprint $table) {
+        Schema::create('advisory_meetings', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('scholar_id');
-            $table->date('from');
-            $table->date('to');
-            $table->string('reason', 190);
-            $table->unsignedBigInteger('extended_leave_id')->nullable();
-
-            $table->enum('status', LeaveStatus::values())->default(LeaveStatus::APPLIED);
+            $table->date('date');
+            $table->string('minutes_of_meeting_path');
+            $table->foreign('scholar_id')->references('id')->on('scholars')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -34,6 +30,6 @@ class CreateLeavesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('leaves');
+        Schema::dropIfExists('advisory_meetings');
     }
 }

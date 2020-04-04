@@ -79,7 +79,7 @@
                 </div>
                 <div class="my-6 flex-1 px-4 py-3 border rounded-lg">
                     <p class="ml-2 font-bold"> {{ $scholar->research_area }}</p>
-                </div> 
+                </div>
             </div>
             <div class="flex">
                 <div class="w-64 pr-4 relative z-10 -ml-8 my-6">
@@ -155,6 +155,8 @@
             </div>
         </div>
         <div class="bg-white p-6 h-full rounded shadow-md mb-8 mt-6">
+
+            {{-- Courseworks --}}
             <div class="mb-16 flex">
                 <div class="w-64 pr-4 relative z-10 -ml-8 my-2">
                     <h3 class="relative z-20 pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
@@ -219,6 +221,7 @@
                 </div>
             </div>
 
+            {{-- Leaves --}}
             <div class="mb-16 flex">
                 <div class="w-64 pr-4 relative z-10 -ml-8 my-2">
                     <h3 class="relative z-20 pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
@@ -229,7 +232,7 @@
                     </svg>
                 </div>
                 <div class="flex-1 pl-4">
-                    <ul class="border rounded-lg overflow-hidden mb-4">
+                    <ul class="w-full border rounded-lg overflow-hidden mb-4">
                         @forelse ($scholar->leaves as $leave)
                         <li class="px-4 py-3 border-b last:border-b-0">
                             <div class="flex items-center">
@@ -282,48 +285,112 @@
                                 </form>
                                 @endif
                             </div>
+                            @foreach($leave->extensions as $extensionLeave)
+                                <div class="flex items-center ml-6 mt-4">
+                                    <h5 class="font-bold flex-1">
+                                        {{ $extensionLeave->reason }}
+                                        <span class="text-sm text-gray-500 font-bold">
+                                            (extension till {{$extensionLeave->to->format('Y-m-d')}})
+                                        </span>
+                                    </h5>
+                                    <div class="flex items-center px-4">
+                                        <div class="
+                                                w-5 h-5 inline-flex items-center justify-center
+                                                {{ $extensionLeave->status === App\LeaveStatus::APPROVED ? 'bg-green-500' : (
+                                                    $extensionLeave->status === App\LeaveStatus::REJECTED ? 'bg-red-600' : 'bg-gray-700'
+                                                )}}
+                                                text-white font-extrabold leading-none rounded-full mr-2
+                                            ">
+                                            @if($extensionLeave->status == App\LeaveStatus::APPROVED)
+                                            &checkmark;
+                                            @elseif($extensionLeave->status == App\LeaveStatus::REJECTED)
+                                            &times;
+                                            @else
+                                            &HorizontalLine;
+                                            @endif
+                                        </div>
+                                        <div class="capitalize">
+                                            {{ $extensionLeave->status }}
+                                        </div>
+                                    </div>
+                                    @if($extensionLeave->status === App\LeaveStatus::APPLIED)
+                                    <button type="submit" class="px-4 py-2 mr-1 bg-green-500 hover:bg-green-600 text-white text-sm rounded font-bold"
+                                        form="approve-leave-{{ $extensionLeave->id }}-form">
+                                        Approve
+                                    </button>
+                                    <button type="submit" class="px-4 py-2 ml-1 bg-red-500 hover:bg-red-600 text-white text-sm rounded font-bold"
+                                        form="reject-leave-{{ $extensionLeave->id }}-form">
+                                        Reject
+                                    </button>
+                                    <form id="approve-leave-{{ $extensionLeave->id }}-form"
+                                        action="{{ route('research.scholars.leaves.update', [$scholar, $extensionLeave]) }}" method="POST" class="w-0">
+                                        @csrf_token @method("PATCH")
+                                        <input type="hidden" name="status" value="{{ App\LeaveStatus::APPROVED }}">
+                                    </form>
+                                    <form id="reject-leave-{{ $extensionLeave->id }}-form"
+                                        action="{{ route('research.scholars.leaves.update', [$scholar, $extensionLeave]) }}" method="POST" class="w-0">
+                                        @csrf_token @method("PATCH")
+                                        <input type="hidden" name="status" value="{{ App\LeaveStatus::REJECTED }}">
+                                    </form>
+                                    @endif
+                                </div>
+                            @endforeach
                         </li>
                         @empty
                         <li class="px-4 py-3 border-b last:border-b-0 text-center text-gray-700 font-bold">No Leaves</li>
                         @endforelse
                     </ul>
-                    <button class="w-full btn btn-magenta rounded-lg py-3" @click="$modal.show('add-leave-modal')">
-                        + Add Leave
-                    </button>
-                    <v-modal name="add-leave-modal" height="auto">
-                        <div class="p-6">
-                            <h3 class="text-lg font-bold mb-4">Add Leave</h3>
-                            <form action="{{ route('research.scholars.leaves.store', $scholar) }}" method="POST">
-                                @csrf_token
-                                <div class="flex mb-2">
-                                    <div class="flex-1 mr-2">
-                                        <label for="from_date" class="w-full form-label mb-1">From Date</label>
-                                        <input type="date" name="from" id="from_date" placeholder="From Date"class="w-full form-input">
-                                    </div>
-                                    <div class="flex-1 ml-2">
-                                        <label for="to_date" class="w-full form-label mb-1">To Date</label>
-                                        <input type="date" name="to" id="to_date" placeholder="To Date" class="w-full form-input">
-                                    </div>
-                                </div>
-                                <div class="mb-2">
-                                    <label for="reason" class="w-full form-label mb-1">Reason</label>
-                                    <input type="text" name="reason" autocomplete="#reasons"
-                                        class="w-full form-input"
-                                        list="leave_reasons"
-                                        placeholder="e.g. Maternity Leave">
-                                    <datalist id="leave_reasons">
-                                        <option value="Maternity/Child Care Leave">
-                                        <option value="Medical">
-                                        <option value="For Work">
-                                    </datalist>
-                                </div>
-                                <button type="submit" class="px-5 btn btn-magenta text-sm">Add</button>
-                            </form>
-                        </div>
-                    </v-modal>
                 </div>
             </div>
 
+            {{-- Meetings --}}
+            <div class="mb-4 flex">
+                <div class="w-64 pr-4 relative z-10 -ml-8 my-2">
+                    <h3 class="relative z-20 pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
+                        Advisory Meetings
+                    </h3>
+                    <svg class="absolute left-0 w-2 text-magenta-900" viewBox="0 0 10 10">
+                        <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
+                    </svg>
+                </div>
+                <div class="flex-1 pl-4">
+                    <ul class="border rounded-lg overflow-hidden mb-4">
+                        @forelse ($scholar->advisoryMeetings as $meeting)
+                        <li class="px-4 py-3 border-b last:border-b-0">
+                            <div class="flex items-center">
+                                <h5 class="font-bold flex-1">
+                                    {{ $meeting->date->format('D M d, Y') }}
+                                </h5>
+                                <a href="{{ route('research.advisory_meetings.minutes_of_meeting', $meeting) }}"
+                                    class="inline-flex items-center underline px-4 py-2 text-gray-900 rounded font-bold">
+                                    <feather-icon name="paperclip" class="h-4 mr-2"></feather-icon>
+                                    Minutes of Meeting
+                                </a>
+                            </div>
+                        </li>
+                        @empty
+                        <li class="px-4 py-3 border-b last:border-b-0 text-center text-gray-700 font-bold">No Meetings yet.</li>
+                        @endforelse
+                    </ul>
+                    @can('scholars.advisory_meetings.store', $scholar)
+                    <button class="mt-2 w-full btn btn-magenta rounded-lg py-3" @click="$modal.show('add-advisory-meetings-modal')">
+                        + Add Meetings
+                    </button>
+                    <v-modal name="add-advisory-meetings-modal" height="auto">
+                        <div class="p-6">
+                            <h3 class="text-lg font-bold mb-4">Add Advisory Meetings</h3>
+                            <form action="{{ route('research.scholars.advisory_meetings.store', $scholar) }}" method="POST"
+                                class="flex" enctype="multipart/form-data">
+                                @csrf_token
+                                <input id="date" name="date" type="date" class="form-input rounded-r-none">
+                                <input type="file" name="minutes_of_meeting" id="minutes_of_meeting" class="w-full flex-1 form-input rounded-none" accept="document/*">
+                                <button type="submit" class="px-5 btn btn-magenta text-sm rounded-l-none">Add</button>
+                            </form>
+                        </div>
+                    </v-modal>
+                    @endcan
+                </div>
+            </div>
             <div class="flex mb-16">
                 <div class="w-64 pr-4 relative z-10 -ml-8 my-2">
                     <h3 class="relative z-20 pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
@@ -336,12 +403,12 @@
                 <div class="flex-1 pl-4">
                     <ul class="border rounded-lg overflow-hidden mb-4">
                         @foreach ($scholar->publications as $publication)
-                            <li class="border-b last:border-b-0 py-3">
-                                @include('research.scholars.partials.academic_details_show', [
-                                    'paper' => $publication,
-                                    'index' => $loop->iteration,
-                                ])
-                            </li>
+                        <li class="border-b last:border-b-0 py-3">
+                            @include('research.scholars.partials.academic_details_show', [
+                            'paper' => $publication,
+                            'index' => $loop->iteration,
+                            ])
+                        </li>
                         @endforeach
                     </ul class="border rounded-lg overflow-hidden mb-4">
                 </div>
@@ -359,17 +426,16 @@
                 <div class="flex-1 pl-4">
                     <ul class="border rounded-lg overflow-hidden mb-4">
                         @foreach ($scholar->presentations as $presentation)
-                            <li class="border-b last:border-b-0 py-3">
-                                @include('research.scholars.partials.academic_details_show', [
-                                    'paper' => $presentation,
-                                    'index' => $loop->iteration,
-                                ])
-                            </li>
+                        <li class="border-b last:border-b-0 py-3">
+                            @include('research.scholars.partials.academic_details_show', [
+                            'paper' => $presentation,
+                            'index' => $loop->iteration,
+                            ])
+                        </li>
                         @endforeach
                     </ul class="border rounded-lg overflow-hidden mb-4">
                 </div>
             </div>
-
         </div>
     </div>
 @endsection

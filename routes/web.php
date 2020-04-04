@@ -35,15 +35,20 @@ Route::prefix('/research')
             'ScholarCourseworkController@complete'
         )->name('scholars.courseworks.complete');
 
-        Route::post(
-            '/scholars/{scholar}/leaves',
-            'ScholarLeavesController@store'
-        )->name('scholars.leaves.store');
-
         Route::patch(
             '/scholars/{scholar}/leaves/{leave}',
             'ScholarLeavesController@update'
         )->name('scholars.leaves.update');
+
+        Route::post(
+            '/scholars/{scholar}/advisory-meetings',
+            'AdvisoryMeetingsController@store'
+        )->name('scholars.advisory_meetings.store');
+
+        Route::get(
+            '/advisory-meetings/{meeting}/minutes-of-meeting',
+            'AdvisoryMeetingsController@minutesOfMeeting'
+        )->name('advisory_meetings.minutes_of_meeting');
     });
 
 Route::prefix('/teachers')
@@ -79,4 +84,9 @@ Route::prefix('/scholars')
         Route::get('/profile/presentation/{presentation}/edit', 'PresentationController@edit')->name('profile.presentation.edit');
         Route::patch('/profile/presentation/{presentation}', 'PresentationController@update')->name('profile.presentation.update');
         Route::delete('/profile/presentation/{presentation}', 'PresentationController@destroy')->name('profile.presentation.destroy');
+
+        Route::post(
+            '/leaves',
+            'LeavesController@store'
+        )->name('leaves.store');
     });
