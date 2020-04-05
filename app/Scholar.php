@@ -3,6 +3,7 @@
 namespace App;
 
 use App\AcademicDetail;
+use App\Publication;
 use App\ScholarProfile;
 use App\SupervisorProfile;
 use Illuminate\Database\Eloquent\Model;
@@ -70,12 +71,7 @@ class Scholar extends User
 
     public function publications()
     {
-        return $this->academicDetails()->where('type', 'publication')->orderBy('date', 'DESC');
-    }
-
-    public function presentations()
-    {
-        return $this->academicDetails()->where('type', 'presentation')->orderBy('date', 'DESC');
+        return $this->hasMany(Publication::class);
     }
 
     public function courseworks()

@@ -77,5 +77,10 @@ return [
                 'SCIE' => 'SCIE',
             ],
         ],
+        'presentation_venues' => [
+            'S' => 'Symposium',
+            'W' => 'Workshop',
+            'C' => 'Conference',
+        ],
     ],
 ];

@@ -7,9 +7,7 @@
         <form action="{{ route('scholars.profile.presentation.update' , $presentation )}}" method="post" class="px-6">
             @csrf_token
             @method('PATCH')
-            @include('scholars.partials.academic_details_edit', [
-                'paper' => $presentation,
-            ])
+            
         </form>
     </div>
 @endsection

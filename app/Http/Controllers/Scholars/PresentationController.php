@@ -4,8 +4,9 @@ namespace App\Http\Controllers\Scholars;
 
 use App\AcademicDetail;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Scholar\StoreAcademicDetail;
-use App\Http\Requests\Scholar\UpdateAcademicDetail;
+use App\Http\Requests\Scholar\StorePresentation;
+use App\Http\Requests\Scholar\UpdatePresentation;
+use App\Presentation;
 use App\SupervisorProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,54 +16,61 @@ use Illuminate\Validation\Rule;
 
 class PresentationController extends Controller
 {
-    public function create()
-    {
-        return view('scholars.presentations.create', [
-            'indexedIn' => config('options.scholars.academic_details.indexed_in'),
-        ]);
-    }
-
-    public function store(StoreAcademicDetail $request)
+    public function create(Request $request)
     {
         $scholar = $request->user();
 
+        return view('scholars.presentations.create', [
+            'publications' => $scholar->publications,
+            'venues' => config('options.scholars.presentation_venues'),
+        ]);
+    }
+
+    public function store(StorePresentation $request)
+    {
         $validData = $request->validated();
+        Presentation::create($validData);
 
-        $validData['type'] = 'presentation';
-
-        $scholar->academicDetails()->create($validData);
-
-        flash('Presentation added successfully!')->success();
+        flash('Presentation created successfully!')->success();
 
         return redirect(route('scholars.profile'));
     }
 
-    public function edit(AcademicDetail $presentation)
-    {
-        return view('scholars.presentations.edit', [
-            'presentation' => $presentation,
-            'indexedIn' => config('options.scholars.academic_details.indexed_in'),
-        ]);
-    }
-
-    public function update(UpdateAcademicDetail $request, AcademicDetail $presentation)
+    public function edit(Request $request, Presentation $presentation)
     {
         $scholar = $request->user();
+        if ($presentation->publication->scholar_id == $scholar->id) {
+            return view('scholars.presentations.edit', [
+                'presentation' => $presentation,
+                'publications' => $scholar->publications,
+                'venues' => config('options.scholars.presentation_venues'),
+            ]);
+        } else {
+            abort(403, 'You are not authorized to edit this presentation');
+            return back();
+        }
+    }
 
-        $validData = $request->validated();
-
-        $presentation->update($validData);
+    public function update(UpdatePresentation $request, Presentation $presentation)
+    {
+        $presentation->update($request->validated());
 
         flash('Presentation updated successfully!')->success();
 
         return redirect(route('scholars.profile'));
     }
 
-    public function destroy(AcademicDetail $presentation)
+    public function destroy(Request $request, Presentation $presentation)
     {
-        $presentation->delete();
+        $scholar = $request->user();
 
-        flash('Presentation deleted successfully!')->success();
+        if ($presentation->publication->scholar_id == $scholar->id) {
+            $presentation->delete();
+
+            flash('Presentation deleted successfully!')->success();
+        } else {
+            abort(403, 'You are not authorized to delete this presentation');
+        }
 
         return back();
     }

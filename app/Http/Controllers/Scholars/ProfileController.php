@@ -14,7 +14,10 @@ class ProfileController extends Controller
 {
     public function index(Request $request)
     {
-        $scholar = $request->user()->load(['presentations', 'publications']);
+        $scholar = $request->user()->load([
+            'publications',
+            'publications.presentations',
+        ]);
 
         return view('scholars.profile', [
             'scholar' => $scholar,

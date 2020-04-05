@@ -6,7 +6,7 @@
         </div>
         <form action="{{ route('scholars.profile.presentation.store')}}" method="post" class="px-6">
             @csrf_token
-            @include('scholars.partials.academic_details_create')
+            {{-- @include('scholars.partials.academic_details_create') --}}
         </form>
     </div>
 @endsection

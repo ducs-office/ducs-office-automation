@@ -158,13 +158,6 @@
             </div>
         </div>
 
-        @include('scholars.publications.index', [
-            'publications' => $scholar->publications
-        ])
-        @include('scholars.presentations.index', [
-            'presentations' => $scholar->presentations
-        ])
-
         {{-- Pre-PHD Course Work --}}
         <div class="mt-16 mb-16">
             <h3 class="font-bold text-xl mb-4">
