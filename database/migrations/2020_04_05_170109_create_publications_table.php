@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAcademicDetailsTable extends Migration
+class CreatePublicationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,24 +13,24 @@ class CreateAcademicDetailsTable extends Migration
      */
     public function up()
     {
-        Schema::create('academic_details', function (Blueprint $table) {
+        Schema::create('publications', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->enum('type', ['publication', 'presentation']);
+            $table->enum('type', ['journal', 'conference']);
+            $table->text('name');
+            $table->text('paper_title');
             $table->string('authors');
-            $table->text('title');
-            $table->text('conference');
-            $table->smallInteger('volume')->nullable();
-            $table->string('publisher');
             $table->date('date');
+            $table->smallInteger('volume');
+            $table->string('publisher')->nullable();
             $table->integer('number')->nullable();
             $table->string('indexed_in');
-            $table->string('city');
-            $table->string('country');
             $table->string('page_numbers');
+            $table->string('city')->nullable();
+            $table->string('country')->nullable();
             $table->unsignedBigInteger('scholar_id');
-            $table->timestamps();
 
             $table->foreign('scholar_id')->references('id')->on('scholars')->onDelete('cascade');
+            $table->timestamps();
         });
     }
 
@@ -41,6 +41,6 @@ class CreateAcademicDetailsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('academic_details');
+        Schema::dropIfExists('publications');
     }
 }

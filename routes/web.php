@@ -73,6 +73,18 @@ Route::prefix('/scholars')
         Route::patch('/profile', 'ProfileController@update')->name('profile.update');
         Route::get('/profile/avatar', 'ProfileController@avatar')->name('profile.avatar');
 
+        Route::get('/profile/publication/journal', 'JournalPublicationController@create')->name('profile.journal.create');
+        Route::post('/profile/publication/journal', 'JournalPublicationController@store')->name('profile.journal.store');
+        Route::get('/profile/publication/journal/{journal}/edit', 'JournalPublicationController@edit')->name('profile.journal.edit');
+        Route::patch('/profile/publication/journal/{journal}', 'JournalPublicationController@update')->name('profile.journal.update');
+        Route::delete('/profile/publication/journal/{journal}', 'JournalPublicationController@destroy')->name('profile.journal.destroy');
+
+        Route::get('/profile/publication/conference', 'ConferencePublicationController@create')->name('profile.conference.create');
+        Route::post('/profile/publication/conference', 'ConferencePublicationController@store')->name('profile.conference.store');
+        Route::get('/profile/publication/conference/{conference}/edit', 'ConferencePublicationController@edit')->name('profile.conference.edit');
+        Route::patch('/profile/publication/conference/{conference}', 'ConferencePublicationController@update')->name('profile.conference.update');
+        Route::delete('/profile/publication/conference/{conference}', 'ConferencePublicationController@destroy')->name('profile.conference.destroy');
+
         Route::get('/profile/publication', 'PublicationController@create')->name('profile.publication.create');
         Route::post('/profile/publication', 'PublicationController@store')->name('profile.publication.store');
         Route::get('/profile/publication/{publication}/edit', 'PublicationController@edit')->name('profile.publication.edit');
