@@ -20,7 +20,7 @@ class CreatePublicationsTable extends Migration
             $table->text('paper_title');
             $table->string('authors');
             $table->date('date');
-            $table->smallInteger('volume');
+            $table->smallInteger('volume')->nullable();
             $table->string('publisher')->nullable();
             $table->integer('number')->nullable();
             $table->string('indexed_in');
