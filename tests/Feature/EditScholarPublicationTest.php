@@ -23,7 +23,7 @@ class EditScholarJournalPublicationTest extends TestCase
         ]);
 
         $this->withoutExceptionHandling()
-            ->get(route('scholars.profile.journal.edit', $journal))
+            ->get(route('scholars.profile.publication.journal.edit', $journal))
             ->assertSuccessful()
             ->assertViewIs('scholars.publications.journals.edit')
             ->assertViewHasAll(['journal', 'indexedIn']);
@@ -41,7 +41,7 @@ class EditScholarJournalPublicationTest extends TestCase
         ]);
 
         $this->withoutExceptionHandling()
-            ->get(route('scholars.profile.conference.edit', $conference))
+            ->get(route('scholars.profile.publication.conference.edit', $conference))
             ->assertSuccessful()
             ->assertViewIs('scholars.publications.conferences.edit')
             ->assertViewHasAll(['conference', 'indexedIn']);

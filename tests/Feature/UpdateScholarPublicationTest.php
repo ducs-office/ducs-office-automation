@@ -25,7 +25,7 @@ class UpdateScholarJournalPublicationTest extends TestCase
         ]);
 
         $this->withoutExceptionHandling()
-            ->patch(route('scholars.profile.journal.update', $journal), [
+            ->patch(route('scholars.profile.publication.journal.update', $journal), [
                 'number' => $number = 987,
             ])
             ->assertRedirect()
@@ -47,7 +47,7 @@ class UpdateScholarJournalPublicationTest extends TestCase
         ]);
 
         $this->withoutExceptionHandling()
-            ->patch(route('scholars.profile.conference.update', $conference), [
+            ->patch(route('scholars.profile.publication.conference.update', $conference), [
                 'city' => $city = 'Agra',
             ])
             ->assertRedirect()

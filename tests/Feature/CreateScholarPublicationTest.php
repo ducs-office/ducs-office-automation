@@ -16,7 +16,7 @@ class CreateScholarJournalTest extends TestCase
         $this->signInScholar();
 
         $this->withoutExceptionHandling()
-        ->get(route('scholars.profile.journal.create'))
+        ->get(route('scholars.profile.publication.journal.create'))
         ->assertSuccessful()
         ->assertViewIs('scholars.publications.journals.create')
         ->assertViewHas('indexedIn');
@@ -28,7 +28,7 @@ class CreateScholarJournalTest extends TestCase
         $this->signInScholar();
 
         $this->withoutExceptionHandling()
-        ->get(route('scholars.profile.conference.create'))
+        ->get(route('scholars.profile.publication.conference.create'))
         ->assertSuccessful()
         ->assertViewIs('scholars.publications.conferences.create')
         ->assertViewHas('indexedIn');

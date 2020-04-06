@@ -42,7 +42,7 @@ class StoreScholarJournalPresentationTest extends TestCase
         ]);
 
         $this->withoutExceptionHandling()
-            ->post(route('scholars.profile.journal.store'), $journal)
+            ->post(route('scholars.profile.publication.journal.store'), $journal)
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'Journal Publication added successfully');
 
@@ -63,7 +63,7 @@ class StoreScholarJournalPresentationTest extends TestCase
         ]);
 
         $this->withoutExceptionHandling()
-            ->post(route('scholars.profile.conference.store'), $conference)
+            ->post(route('scholars.profile.publication.conference.store'), $conference)
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'Conference Publication added successfully');
 

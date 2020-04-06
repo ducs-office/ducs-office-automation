@@ -25,7 +25,7 @@ class DeleteScholarJournalPublicationTest extends TestCase
         $this->assertCount(1, $scholar->fresh()->journals);
 
         $this->withoutExceptionHandling()
-            ->delete(route('scholars.profile.journal.destroy', $journal))
+            ->delete(route('scholars.profile.publication.journal.destroy', $journal))
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'Journal Publication deleted successfully!');
 
@@ -46,7 +46,7 @@ class DeleteScholarJournalPublicationTest extends TestCase
         $this->assertCount(1, $scholar->fresh()->conferences);
 
         $this->withoutExceptionHandling()
-            ->delete(route('scholars.profile.conference.destroy', $conference))
+            ->delete(route('scholars.profile.publication.conference.destroy', $conference))
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'Conference Publication deleted successfully!');
 
