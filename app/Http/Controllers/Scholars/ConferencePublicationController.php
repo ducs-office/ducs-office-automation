@@ -53,7 +53,6 @@ class ConferencePublicationController extends Controller
 
     public function destroy(Publication $conference)
     {
-        // dd($conference);
         $conference->delete();
 
         flash('Conference Publication deleted successfully!')->success();
