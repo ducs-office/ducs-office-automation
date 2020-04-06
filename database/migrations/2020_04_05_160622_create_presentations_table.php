@@ -19,7 +19,7 @@ class CreatePresentationsTable extends Migration
             $table->string('city');
             $table->string('country');
             $table->date('date');
-            $table->boolean('scopus_indexed')->default('false');
+            $table->boolean('scopus_indexed')->default(0);
             $table->enum('venue', array_keys(config('options.scholars.presentation_venues')));
             $table->timestamps();
 

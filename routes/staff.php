@@ -96,3 +96,10 @@ Route::post('/scholars', 'ScholarController@store')->name('scholars.store');
 Route::get('/scholars/{scholar}/avatar', 'ScholarController@avatar')->name('scholars.avatar');
 Route::patch('/scholars/{scholar}', 'ScholarController@update')->name('scholars.update');
 Route::delete('/scholars/{scholar}', 'ScholarController@destroy')->name('scholars.destroy');
+
+Route::get('/cosupervisors', 'CosupervisorController@index')->name('cosupervisors.index');
+Route::post('/cosupervisors/{teacher}/teacher', 'CosupervisorController@storeTeacher')->name('cosupervisors.teachers.store');
+Route::post('/cosupervisors/{faculty}/faculty', 'CosupervisorController@storeFaculty')->name('cosupervisors.faculties.store');
+Route::post('/cosupervisors', 'CosupervisorController@store')->name('cosupervisors.store');
+Route::patch('/cosupervisors/{cosupervisor}', 'CosupervisorController@update')->name('cosupervisors.update');
+Route::delete('/cosupervisors/{cosupervisor}', 'CosupervisorController@destroy')->name('cosupervisors.destroy');

@@ -88,6 +88,12 @@
             </a>
         </li>
         @endcan
+        <li class="mb-1 last:mb-0">
+            <a href="{{ route('staff.cosupervisors.index') }}" class="flex items-center py-2 px-4 hover:bg-magenta-700 rounded">
+                <feather-icon name="users" class="h-4 mr-2">Co-supervisors</feather-icon>
+                Co-Supervisors
+            </a>
+        </li>
         @can('viewAny', App\Scholar::class)
         <li class="mb-1 last:mb-0">
             <a href="{{ route('staff.scholars.index') }}" class="flex items-center py-2 px-4 hover:bg-magenta-700 rounded">
