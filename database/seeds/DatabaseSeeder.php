@@ -125,15 +125,5 @@ class DatabaseSeeder extends Seeder
             'last_name' => 'Gole',
             'email' => 'pushkar@cs.du.ac.in',
         ]);
-
-        factory(AcademicDetail::class)->create([
-            'scholar_id' => $scholar->id,
-            'type' => 'publication',
-        ]);
-
-        factory(AcademicDetail::class)->create([
-            'scholar_id' => $scholar->id,
-            'type' => 'presentation',
-        ]);
     }
 }
