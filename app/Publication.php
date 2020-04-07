@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Presentation;
 use Illuminate\Database\Eloquent\Model;
 
 class Publication extends Model
@@ -46,5 +47,10 @@ class Publication extends Model
     public function getPageNumbersAttribute($value)
     {
         return explode('-', $value);
+    }
+
+    public function presentations()
+    {
+        return $this->hasMany(Presentation::class)->orderBy('date', 'desc');
     }
 }
