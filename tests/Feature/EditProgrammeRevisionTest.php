@@ -10,7 +10,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class EditprogrammeRevision extends TestCase
+class EditProgrammeRevisionTest extends TestCase
 {
     use RefreshDatabase;
 

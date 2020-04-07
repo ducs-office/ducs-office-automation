@@ -6,7 +6,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class CreateScholarJournalTest extends TestCase
+class CreateScholarJournalPublicationTest extends TestCase
 {
     use RefreshDatabase;
 

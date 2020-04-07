@@ -4,7 +4,7 @@ use Illuminate\Database\Seeder;
 // composer require laracasts/testdummy
 use Laracasts\TestDummy\Factory as TestDummy;
 
-class TeacherSeederTableSeeder extends Seeder
+class TeacherTableSeeder extends Seeder
 {
     public function run()
     {

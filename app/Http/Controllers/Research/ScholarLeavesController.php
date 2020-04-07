@@ -11,17 +11,41 @@ use Illuminate\Validation\Rule;
 
 class ScholarLeavesController extends Controller
 {
-    public function update(Request $request, Scholar $scholar, Leave $leave)
+    public function recommend(Request $request, Scholar $scholar, Leave $leave)
     {
-        $data = $request->validate([
-            'status' => ['required', Rule::in(LeaveStatus::values())],
-        ]);
+        $this->authorize('recommend', $leave);
 
         $leave->update([
-            'status' => new LeaveStatus($request->status),
+            'status' => LeaveStatus::RECOMMENDED,
         ]);
 
-        flash('Leave ' . $request->status . ' successfully!')->success();
+        flash('Leave was recommended!')->success();
+
+        return redirect()->back();
+    }
+
+    public function approve(Request $request, Scholar $scholar, Leave $leave)
+    {
+        $this->authorize('approve', $leave);
+
+        $leave->update([
+            'status' => LeaveStatus::APPROVED,
+        ]);
+
+        flash('Leave approved successfully!')->success();
+
+        return redirect()->back();
+    }
+
+    public function reject(Request $request, Scholar $scholar, Leave $leave)
+    {
+        $this->authorize('reject', $leave);
+
+        $leave->update([
+            'status' => LeaveStatus::REJECTED,
+        ]);
+
+        flash('Leave rejected successfully!')->success();
 
         return redirect()->back();
     }

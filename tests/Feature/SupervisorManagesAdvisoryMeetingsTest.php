@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
 
-class SupervisorAddsAdvisoryMeetingsTest extends TestCase
+class SupervisorManagesAdvisoryMeetingsTest extends TestCase
 {
     use RefreshDatabase;
 

@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Leave;
 use App\LeaveStatus;
 use App\Scholar;
+use App\SupervisorProfile;
 use App\Teacher;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -15,7 +16,7 @@ class SupervisorManagesScholarLeaves extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function supervisor_update_leave_status_for_scholar()
+    public function supervisor_recommends_leave_for_scholar()
     {
         $teacher = create(Teacher::class);
         $supervisorProfile = $teacher->supervisorProfile()->create();
@@ -26,33 +27,30 @@ class SupervisorManagesScholarLeaves extends TestCase
         $this->signInTeacher($teacher);
 
         $this->withoutExceptionHandling()
-            ->patch(route('research.scholars.leaves.update', [$scholar, $leave]), [
-                'status' => LeaveStatus::APPROVED,
-            ])
+            ->patch(route('research.scholars.leaves.recommend', [$scholar, $leave]))
             ->assertRedirect()
             ->assertSessionHasNoErrors();
 
-        $this->assertTrue($leave->fresh()->isApproved());
+        $this->assertTrue($leave->fresh()->isRecommended());
     }
 
     /** @test */
-    public function supervisor_update_leave_status_to_rejected_for_scholar()
+    public function superviser_cannot_recommend_leave_for_scholar_whom_they_donot_supervise()
     {
-        $teacher = create(Teacher::class);
-        $supervisorProfile = $teacher->supervisorProfile()->create();
+        $anotherSupervisor = create(Teacher::class);
+        $anotherSupervisorProfile = $anotherSupervisor->supervisorProfile()->create();
+        $actualSupervisorProfile = create(SupervisorProfile::class);
 
-        $scholar = create(Scholar::class, 1, ['supervisor_profile_id' => $supervisorProfile->id]);
+        $scholar = create(Scholar::class, 1, ['supervisor_profile_id' => $anotherSupervisorProfile->id]);
         $leave = create(Leave::class, 1, ['scholar_id' => $scholar->id]);
 
-        $this->signInTeacher($teacher);
+        $this->signInTeacher($anotherSupervisor);
 
-        $this->withoutExceptionHandling()
-            ->patch(route('research.scholars.leaves.update', [$scholar, $leave]), [
-                'status' => LeaveStatus::REJECTED,
-            ])
-            ->assertRedirect()
-            ->assertSessionHasNoErrors();
+        $this->withExceptionHandling()
+            ->patch(route('research.scholars.leaves.recommend', [$scholar, $leave]))
+            ->assertForbidden();
 
-        $this->assertEquals(LeaveStatus::REJECTED, $leave->fresh()->status);
+        $this->assertFalse($leave->fresh()->isRecommended());
+        $this->assertEquals($leave->status, $leave->fresh()->status);
     }
 }

@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
 
-class StoreIncomingLetters extends TestCase
+class StoreIncomingLettersTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 

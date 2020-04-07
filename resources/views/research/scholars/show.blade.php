@@ -244,6 +244,18 @@
             </div>
 
             {{-- Leaves --}}
+            @php($icons = [
+                App\LeaveStatus::APPROVED => 'check-circle',
+                App\LeaveStatus::REJECTED => 'x-circle',
+                App\LeaveStatus::RECOMMENDED => 'shield',
+                App\LeaveStatus::APPLIED => 'alert-circle'
+            ])
+            @php($colors = [
+                App\LeaveStatus::APPROVED => 'text-green-500',
+                App\LeaveStatus::REJECTED => 'text-red-600',
+                App\LeaveStatus::RECOMMENDED => 'text-blue-600',
+                App\LeaveStatus::APPLIED => 'text-gray-700'
+            ])
             <div class="mb-16 flex">
                 <div class="w-64 pr-4 relative z-10 -ml-8 my-2">
                     <h3 class="relative z-20 pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
@@ -254,6 +266,9 @@
                     </svg>
                 </div>
                 <div class="flex-1 pl-4">
+                    <form id="patch-form" method="POST" class="w-0">
+                        @csrf_token @method("PATCH")
+                    </form>
                     <ul class="w-full border rounded-lg overflow-hidden mb-4">
                         @forelse ($scholar->leaves as $leave)
                         <li class="px-4 py-3 border-b last:border-b-0">
@@ -265,47 +280,34 @@
                                     </span>
                                 </h5>
                                 <div class="flex items-center px-4">
-                                    <div class="
-                                        w-5 h-5 inline-flex items-center justify-center
-                                        {{ $leave->status === App\LeaveStatus::APPROVED ? 'bg-green-500' : (
-                                            $leave->status === App\LeaveStatus::REJECTED ? 'bg-red-600' : 'bg-gray-700'
-                                        )}}
-                                        text-white font-extrabold leading-none rounded-full mr-2
-                                    ">
-                                        @if($leave->status == App\LeaveStatus::APPROVED)
-                                        &checkmark;
-                                        @elseif($leave->status == App\LeaveStatus::REJECTED)
-                                        &times;
-                                        @else
-                                        &HorizontalLine;
-                                        @endif
-                                    </div>
+                                    <feather-icon name="{{ $icons[$leave->status] }}" class="h-current {{ $colors[$leave->status] }} mr-2" stroke-width="2.5"></feather-icon>
                                     <div class="capitalize">
                                         {{ $leave->status }}
                                     </div>
                                 </div>
-                                @if($leave->status === App\LeaveStatus::APPLIED)
-                                <button type="submit" class="px-4 py-2 mr-1 bg-green-500 hover:bg-green-600 text-white text-sm rounded font-bold"
-                                    form="approve-leave-{{ $leave->id }}-form">
+                                @can('recommend', $leave)
+                                <button type="submit" form="patch-form"
+                                    class="px-4 py-2 mr-1 bg-blue-500 hover:bg-blue-600 text-white text-sm rounded font-bold"
+                                    formaction="{{ route('research.scholars.leaves.recommend', [$scholar, $leave]) }}">
+                                    Recommend
+                                </button>
+                                @endcan
+                                @can('approve', $leave)
+                                <button type="submit"
+                                    form="patch-form"
+                                    class="px-4 py-2 mr-1 bg-green-500 hover:bg-green-600 text-white text-sm rounded font-bold"
+                                    formaction="{{ route('research.scholars.leaves.approve', [$scholar, $leave]) }}">
                                     Approve
                                 </button>
-                                <button type="submit" class="px-4 py-2 ml-1 bg-red-500 hover:bg-red-600 text-white text-sm rounded font-bold"
-                                    form="reject-leave-{{ $leave->id }}-form">
+                                @endcan
+                                @can('reject', $leave)
+                                <button type="submit"
+                                    form="patch-form"
+                                    class="px-4 py-2 ml-1 bg-red-500 hover:bg-red-600 text-white text-sm rounded font-bold"
+                                    formaction="{{ route('research.scholars.leaves.reject', [$scholar, $leave]) }}">
                                     Reject
                                 </button>
-                                <form id="approve-leave-{{ $leave->id }}-form"
-                                    action="{{ route('research.scholars.leaves.update', [$scholar, $leave]) }}"
-                                    method="POST" class="w-0">
-                                    @csrf_token @method("PATCH")
-                                    <input type="hidden" name="status" value="{{ App\LeaveStatus::APPROVED }}">
-                                </form>
-                                <form id="reject-leave-{{ $leave->id }}-form"
-                                    action="{{ route('research.scholars.leaves.update', [$scholar, $leave]) }}"
-                                    method="POST" class="w-0">
-                                    @csrf_token @method("PATCH")
-                                    <input type="hidden" name="status" value="{{ App\LeaveStatus::REJECTED }}">
-                                </form>
-                                @endif
+                                @endcan
                             </div>
                             @foreach($leave->extensions as $extensionLeave)
                                 <div class="flex items-center ml-6 mt-4">
@@ -316,45 +318,34 @@
                                         </span>
                                     </h5>
                                     <div class="flex items-center px-4">
-                                        <div class="
-                                                w-5 h-5 inline-flex items-center justify-center
-                                                {{ $extensionLeave->status === App\LeaveStatus::APPROVED ? 'bg-green-500' : (
-                                                    $extensionLeave->status === App\LeaveStatus::REJECTED ? 'bg-red-600' : 'bg-gray-700'
-                                                )}}
-                                                text-white font-extrabold leading-none rounded-full mr-2
-                                            ">
-                                            @if($extensionLeave->status == App\LeaveStatus::APPROVED)
-                                            &checkmark;
-                                            @elseif($extensionLeave->status == App\LeaveStatus::REJECTED)
-                                            &times;
-                                            @else
-                                            &HorizontalLine;
-                                            @endif
-                                        </div>
+                                    <feather-icon name="{{ $icons[$extensionLeave->status] }}" class="h-current {{ $colors[$extensionLeave->status] }} mr-2" stroke-width="2.5"></feather-icon>
                                         <div class="capitalize">
                                             {{ $extensionLeave->status }}
                                         </div>
                                     </div>
-                                    @if($extensionLeave->status === App\LeaveStatus::APPLIED)
-                                    <button type="submit" class="px-4 py-2 mr-1 bg-green-500 hover:bg-green-600 text-white text-sm rounded font-bold"
-                                        form="approve-leave-{{ $extensionLeave->id }}-form">
+                                    @can('recommend', $extensionLeave)
+                                    <button type="submit" form="patch-form"
+                                        class="px-4 py-2 mr-1 bg-blue-500 hover:bg-blue-600 text-white text-sm rounded font-bold"
+                                        formaction="{{ route('research.scholars.leaves.recommend', [$scholar, $extensionLeave]) }}">
+                                        Recommend
+                                    </button>
+                                    @endcan
+                                    @can('approve', $extensionLeave)
+                                    <button type="submit"
+                                        form="patch-form"
+                                        class="px-4 py-2 mr-1 bg-green-500 hover:bg-green-600 text-white text-sm rounded font-bold"
+                                        formaction="{{ route('research.scholars.leaves.approve', [$scholar, $extensionLeave]) }}">
                                         Approve
                                     </button>
-                                    <button type="submit" class="px-4 py-2 ml-1 bg-red-500 hover:bg-red-600 text-white text-sm rounded font-bold"
-                                        form="reject-leave-{{ $extensionLeave->id }}-form">
+                                    @endcan
+                                    @can('reject', $extensionLeave)
+                                    <button type="submit"
+                                        form="patch-form"
+                                        class="px-4 py-2 ml-1 bg-red-500 hover:bg-red-600 text-white text-sm rounded font-bold"
+                                        formaction="{{ route('research.scholars.leaves.reject', [$scholar, $extensionLeave]) }}">
                                         Reject
                                     </button>
-                                    <form id="approve-leave-{{ $extensionLeave->id }}-form"
-                                        action="{{ route('research.scholars.leaves.update', [$scholar, $extensionLeave]) }}" method="POST" class="w-0">
-                                        @csrf_token @method("PATCH")
-                                        <input type="hidden" name="status" value="{{ App\LeaveStatus::APPROVED }}">
-                                    </form>
-                                    <form id="reject-leave-{{ $extensionLeave->id }}-form"
-                                        action="{{ route('research.scholars.leaves.update', [$scholar, $extensionLeave]) }}" method="POST" class="w-0">
-                                        @csrf_token @method("PATCH")
-                                        <input type="hidden" name="status" value="{{ App\LeaveStatus::REJECTED }}">
-                                    </form>
-                                    @endif
+                                    @endcan
                                 </div>
                             @endforeach
                         </li>

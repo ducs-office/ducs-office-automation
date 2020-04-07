@@ -4,6 +4,7 @@ namespace Tests\Unit;
 
 use App\Leave;
 use App\LeaveStatus;
+use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -22,6 +23,18 @@ class LeaveTest extends TestCase
         $leave->approve();
 
         $this->assertTrue($leave->isApproved());
+    }
+
+    /** @test */
+    public function is_recommended_method_checks_leave_status_if_recommended_by_supervisor()
+    {
+        $leave = create(Leave::class, 1, ['status' => LeaveStatus::APPLIED]);
+
+        $this->assertFalse($leave->isRecommended());
+
+        $leave->recommend();
+
+        $this->assertTrue($leave->isRecommended());
     }
 
     /** @test */

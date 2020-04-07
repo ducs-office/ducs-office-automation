@@ -8,7 +8,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class ScholarAppliesForLeaves extends TestCase
+class ScholarAppliesForLeavesTest extends TestCase
 {
     use RefreshDatabase;
 

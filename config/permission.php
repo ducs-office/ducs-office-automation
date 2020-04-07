@@ -92,6 +92,7 @@ return [
             'users' => ['view', 'create', 'edit', 'delete'],
             'teachers' => ['view', 'create', 'edit', 'delete'],
             'scholars' => ['view', 'create', 'edit', 'delete'],
+            'leaves' => ['approve', 'reject'],
         ],
 
         'roles' => [
@@ -107,6 +108,10 @@ return [
                 'users' => ['view', 'create', 'edit', 'delete'],
                 'teachers' => ['view', 'create', 'edit', 'delete'],
                 'scholars' => ['view', 'create', 'edit', 'delete'],
+            ],
+            'DRC Member' => [
+                'scholars' => ['view', 'create', 'edit', 'delete'],
+                'leaves' => ['approve', 'reject'],
             ],
         ],
     ],

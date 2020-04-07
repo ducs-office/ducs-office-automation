@@ -19,9 +19,20 @@ class Leave extends Model
         return $this->save();
     }
 
+    public function recommend()
+    {
+        $this->status = LeaveStatus::RECOMMENDED;
+        return $this->save();
+    }
+
     public function isApproved()
     {
         return $this->status === LeaveStatus::APPROVED;
+    }
+
+    public function isRecommended()
+    {
+        return $this->status === LeaveStatus::RECOMMENDED;
     }
 
     public function extensions()
@@ -32,5 +43,12 @@ class Leave extends Model
     public function extendedLeave()
     {
         return $this->belongsTo(Leave::class, 'extended_leave_id');
+    }
+
+    public function nextExtensionFrom()
+    {
+        return $this->extensions->prepend($this)
+            ->filter->isApproved()
+            ->max('to')->addDay();
     }
 }
