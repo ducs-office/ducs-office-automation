@@ -18,12 +18,12 @@ Route::post('/login', 'Auth\LoginController@login')->middleware(['guest', 'guest
 Route::post('/logout', 'Auth\LoginController@logout')->middleware('auth:web,teachers,scholars')->name('logout');
 
 Route::prefix('/research')
-    ->middleware(['auth:web,teachers', 'supervisor'])
+    ->middleware(['auth:web,teachers'])
     ->namespace('Research')
     ->as('research.')
     ->group(static function () {
-        Route::get('/scholars', 'ScholarController@index')->name('scholars.index');
-        Route::get('/scholars/{scholar}', 'ScholarController@show')->name('scholars.show');
+        Route::get('/scholars', 'ScholarController@index')->name('scholars.index')->middleware('supervisor');
+        Route::get('/scholars/{scholar}', 'ScholarController@show')->name('scholars.show')->middleware('supervisor');
 
         Route::post(
             '/scholars/{scholar}/coursework',
@@ -36,9 +36,19 @@ Route::prefix('/research')
         )->name('scholars.courseworks.complete');
 
         Route::patch(
-            '/scholars/{scholar}/leaves/{leave}',
-            'ScholarLeavesController@update'
-        )->name('scholars.leaves.update');
+            '/scholars/{scholar}/leaves/{leave}/recommend',
+            'ScholarLeavesController@recommend'
+        )->name('scholars.leaves.recommend');
+
+        Route::patch(
+            '/scholars/{scholar}/leaves/{leave}/approve',
+            'ScholarLeavesController@approve'
+        )->name('scholars.leaves.approve');
+
+        Route::patch(
+            '/scholars/{scholar}/leaves/{leave}/reject',
+            'ScholarLeavesController@reject'
+        )->name('scholars.leaves.reject');
 
         Route::post(
             '/scholars/{scholar}/advisory-meetings',

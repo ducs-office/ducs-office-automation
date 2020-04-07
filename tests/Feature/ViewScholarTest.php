@@ -51,8 +51,6 @@ class ViewScholarTest extends TestCase
     {
         $this->signInTeacher($teacher = create(Teacher::class));
 
-        // $supervisorProfile = $teacher->supervisorProfile()->create();
-
         $scholars = create(Scholar::class, 5);
 
         $this->withExceptionHandling()

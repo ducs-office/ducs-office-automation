@@ -4,9 +4,10 @@ namespace App;
 
 class LeaveStatus
 {
-    const REJECTED = 'rejected';
     const APPLIED = 'applied';
+    const RECOMMENDED = 'recommended';
     const APPROVED = 'approved';
+    const REJECTED = 'rejected';
 
     protected $value;
 
@@ -22,6 +23,6 @@ class LeaveStatus
 
     public static function values()
     {
-        return [self::REJECTED, self::APPLIED, self::APPROVED];
+        return [self::APPLIED, self::RECOMMENDED, self::APPROVED, self::REJECTED];
     }
 }
