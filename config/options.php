@@ -74,6 +74,7 @@ return [
                 'Scopus' => 'Scopus',
                 'SCI' => 'SCI',
                 'SCIE' => 'SCIE',
+                'G' => 'Google Scholar',
             ],
         ],
         'presentation_venues' => [

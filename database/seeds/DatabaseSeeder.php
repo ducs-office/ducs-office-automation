@@ -120,24 +120,12 @@ class DatabaseSeeder extends Seeder
 
         $this->call(PhdCourseSeeder::class);
 
+        $this->call(PhdScholarSeeder::class);
+
         $scholar = factory(Scholar::class)->create([
             'first_name' => 'Pushkar',
             'last_name' => 'Gole',
             'email' => 'pushkar@cs.du.ac.in',
-        ]);
-
-        factory(Publication::class)->create([
-            'scholar_id' => $scholar->id,
-            'type' => 'journal',
-            'number' => 123,
-            'publisher' => 'India Science',
-        ]);
-
-        factory(Publication::class)->create([
-            'scholar_id' => $scholar->id,
-            'type' => 'conference',
-            'city' => 'Delhi',
-            'country' => 'India',
         ]);
     }
 }
