@@ -98,14 +98,14 @@ class CreateNewUserTest extends TestCase
 
         $this->signIn(create(User::class), 'admin');
 
-        $teacherRole = Role::firstOrCreate(['name' => 'teacher']);
+        $facultyTeacherRole = Role::firstOrCreate(['name' => 'faculty_teacher']);
 
         $this->withoutExceptionHandling()
             ->post(route('staff.users.store'), [
-                'name' => 'teacher',
-                'email' => 'contact@teacher.me',
-                'category' => 'teacher',
-                'roles' => [$teacherRole->id],
+                'name' => 'faculty_teacher',
+                'email' => 'contact@faculty_teacher.me',
+                'category' => 'faculty_teacher',
+                'roles' => [$facultyTeacherRole->id],
             ])->assertRedirect('/')
             ->assertSessionHasFlash('success', 'User created successfully!');
 

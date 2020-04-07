@@ -1,6 +1,5 @@
 <?php
 
-use App\AcademicDetail;
 use App\College;
 use App\Course;
 use App\CourseRevision;
@@ -10,6 +9,7 @@ use App\LetterReminder;
 use App\OutgoingLetter;
 use App\Programme;
 use App\ProgrammeRevision;
+use App\Publication;
 use App\Remark;
 use App\Scholar;
 use App\ScholarProfile;
@@ -124,6 +124,20 @@ class DatabaseSeeder extends Seeder
             'first_name' => 'Pushkar',
             'last_name' => 'Gole',
             'email' => 'pushkar@cs.du.ac.in',
+        ]);
+
+        factory(Publication::class)->create([
+            'scholar_id' => $scholar->id,
+            'type' => 'journal',
+            'number' => 123,
+            'publisher' => 'India Science',
+        ]);
+
+        factory(Publication::class)->create([
+            'scholar_id' => $scholar->id,
+            'type' => 'conference',
+            'city' => 'Delhi',
+            'country' => 'India',
         ]);
     }
 }

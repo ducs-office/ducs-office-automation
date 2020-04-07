@@ -74,7 +74,7 @@
             <div class="flex">
                 <div class="w-64 pr-4 relative z-10 -ml-8 my-6">
                     <h3 class="relative z-20 pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
-                        Research
+                        Broad Area of Research
                     </h3>
                     <svg class="absolute left-0 w-2 text-magenta-900" viewBox="0 0 10 10">
                         <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
@@ -157,6 +157,37 @@
                 </div>
             </div>
         </div>
+        
+        {{-- Publications and Presentations --}}
+        <div class="bg-white p-6 h-full shadow-md mt-8">
+            <div class="flex">
+                <div class="w-60 pr-4 relative z-10 -ml-8 my-2">
+                    <h3 class="relative z-20 pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
+                        Academic Details
+                    </h3>
+                    <svg class="absolute left-0 w-2 text-magenta-900" viewBox="0 0 10 10">
+                        <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
+                    </svg>
+                </div>
+                <div class="ml-auto flex items-center">
+                    <a class="ml-auto btn btn-magenta is-sm shadow-inset" 
+                        href="{{ route('scholars.profile.publication.journal.create')}}">
+                        New Journal  
+                    </a>
+                    <a class="ml-3 btn btn-magenta is-sm shadow-inset" 
+                        href="{{ route('scholars.profile.publication.conference.create')}}">
+                        New Conference  
+                    </a>
+                </div>
+            </div>
+
+        </div>
+         @include('scholars.publications.journals.index', [
+            'journals' => $scholar->journals
+        ])
+        @include('scholars.publications.conferences.index', [
+            'conferences' => $scholar->conferences
+        ])
 
         {{-- Pre-PHD Course Work --}}
         <div class="mt-16 mb-16">

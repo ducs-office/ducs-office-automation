@@ -19,7 +19,6 @@ return [
             'hod' => 'HOD',
             'office_staff' => 'Office Staff',
             'faculty_teacher' => 'Faculty Teacher',
-            'teacher' => 'College Teacher',
         ],
     ],
     'programmes' => [

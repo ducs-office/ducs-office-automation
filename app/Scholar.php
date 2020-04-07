@@ -64,14 +64,19 @@ class Scholar extends User
         return $this->supervisorProfile->supervisor();
     }
 
-    public function academicDetails()
-    {
-        return $this->hasMany(AcademicDetail::class);
-    }
-
     public function publications()
     {
         return $this->hasMany(Publication::class);
+    }
+
+    public function journals()
+    {
+        return $this->publications()->where('type', 'journal')->orderBy('date', 'DESC');
+    }
+
+    public function conferences()
+    {
+        return $this->publications()->where('type', 'conference')->orderBy('date', 'DESC');
     }
 
     public function courseworks()

@@ -18,6 +18,47 @@ class ScholarTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function fillPublication($overrides = [])
+    {
+        return $this->mergeFormFields([
+            'type' => null,
+            'name' => 'India CS Journal',
+            'authors' => ['JOhn Doe', 'Sally Brooke'],
+            'paper_title' => 'Lorem ipsum dolor sit amet consectetur adipisicing',
+            'date' => '2020-02-09',
+            'volume' => '1',
+            'page_numbers' => ['23', '80'],
+            'indexed_in' => ['Scopus', 'SCI'],
+            'number' => null,
+            'publisher' => null,
+            'city' => null,
+            'country' => null,
+        ], $overrides);
+    }
+
+    /** @test */
+    public function scholar_has_many_publications()
+    {
+        $scholar = create(Scholar::class);
+
+        $this->assertInstanceOf(HasMany::class, $scholar->publications());
+
+        $scholar->publications()->createMany([
+            $this->fillPublication([
+                'type' => 'journal',
+                'number' => 123,
+                'publisher' => 'O Reilly',
+            ]),
+            $this->fillPublication([
+                'type' => 'conference',
+                'city' => 'Delhi',
+                'country' => 'India',
+            ]),
+        ]);
+
+        $this->assertCount(2, $scholar->publications);
+    }
+
     /** @test */
     public function scholar_belongs_to_a_supervisor_profile()
     {
