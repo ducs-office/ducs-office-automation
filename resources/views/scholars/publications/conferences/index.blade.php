@@ -86,6 +86,9 @@
                                 </div>
                             </div>
                         </details>
+                        @include('scholars.presentations.show', [
+                            'presentations' => $conference->presentations,
+                        ])
                     </div>
                 </li>
             @endforeach

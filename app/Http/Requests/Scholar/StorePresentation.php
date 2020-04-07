@@ -33,7 +33,7 @@ class StorePresentation extends FormRequest
             'city' => ['required', 'string'],
             'country' => ['required', 'string'],
             'date' => ['required', 'date'],
-            'scopus_indexed' => ['required', 'boolean'],
+            'scopus_indexed' => ['nullable', 'boolean'],
             'venue' => ['required', 'in:' . $venues],
             'publication_id' => ['required', 'in:' . $ids],
         ];

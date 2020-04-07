@@ -9,6 +9,8 @@ class Presentation extends Model
 {
     protected $guarded = [];
 
+    protected $dates = ['date'];
+
     public function publication()
     {
         return $this->belongsTo(Publication::class);

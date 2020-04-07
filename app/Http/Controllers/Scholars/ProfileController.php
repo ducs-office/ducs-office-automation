@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Scholars;
 
+use App\Cosupervisor;
 use App\Http\Controllers\Controller;
 use App\SupervisorProfile;
 use Illuminate\Http\Request;
@@ -37,6 +38,7 @@ class ProfileController extends Controller
             'admissionCriterias' => config('options.scholars.admission_criterias'),
             'genders' => config('options.scholars.genders'),
             'supervisorProfiles' => SupervisorProfile::all()->pluck('id', 'supervisor.name'),
+            'cosupervisors' => Cosupervisor::all()->pluck('id', 'name', 'email'),
         ]);
     }
 
@@ -59,10 +61,7 @@ class ProfileController extends Controller
             'advisory_committee.*.designation' => ['required', 'string'],
             'advisory_committee.*.affiliation' => ['required', 'string'],
             'co_supervisors' => ['nullable', 'array', 'max:2'],
-            'co_supervisors.*.title' => ['required', 'string'],
-            'co_supervisors.*.name' => ['required', 'string'],
-            'co_supervisors.*.designation' => ['required', 'string'],
-            'co_supervisors.*.affiliation' => ['required', 'string'],
+            'co_supervisors.*' => ['required', 'integer', 'exists:cosupervisors,id'],
         ]);
 
         $scholar->update($validData);

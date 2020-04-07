@@ -71,7 +71,7 @@
                 <div class="mt-4 w-1/3">
                     <div class="mt-2 flex items-baseline ">
                         <label for="enrollment_date" class="block form-label flex-1">Date of enrollment:</label>
-                        <input id="enrollment_date" type="date" name="enrollment_date" class="block w-auto form-input flex-1" value="{{ old('phone_no', $scholar->enrollment_date) }}">
+                        <input id="enrollment_date" type="date" name="enrollment_date" class="block w-auto form-input flex-1" value="{{ old('date', $scholar->enrollment_date) }}">
                     </div>
                     <div class="flex items-baseline mt-2">
                         <label for="admission_via" class="block form-label flex-1">Admission Via:</label>

@@ -1,7 +1,6 @@
 <?php
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
-
 use App\Cosupervisor;
 use App\Scholar;
 use App\SupervisorProfile;

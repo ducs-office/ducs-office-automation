@@ -36,7 +36,7 @@ class StorePresentationTest extends TestCase
         $this->assertCount(1, $publication->fresh()->presentations);
         $this->assertEquals($city, $publication->fresh()->presentations()->first()->city);
         $this->assertEquals($country, $publication->fresh()->presentations()->first()->country);
-        $this->assertEquals($date, $publication->fresh()->presentations()->first()->date);
+        $this->assertEquals($date, $publication->fresh()->presentations()->first()->date->format('Y-m-d'));
         $this->assertEquals($scopusIndexed, $publication->fresh()->presentations()->first()->scopus_indexed);
         $this->assertEquals($venue, $publication->fresh()->presentations()->first()->venue);
         $this->assertEquals($publication->id, $publication->fresh()->presentations()->first()->publication->id);

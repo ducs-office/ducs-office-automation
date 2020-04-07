@@ -90,6 +90,9 @@
                                 </div>
                             </div>
                         </details>
+                        @include('scholars.presentations.show', [
+                            'presentations' => $journal->presentations,
+                        ])
                     </div>
                 </li>
             @endforeach

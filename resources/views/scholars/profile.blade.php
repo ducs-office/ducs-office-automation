@@ -178,11 +178,15 @@
                         href="{{ route('scholars.profile.publication.conference.create')}}">
                         New Conference  
                     </a>
+                    <a class="ml-3 btn btn-magenta is-sm shadow-inset" 
+                        href="{{ route('scholars.profile.presentation.create')}}">
+                        New Presentation  
+                     </a>
                 </div>
             </div>
 
         </div>
-         @include('scholars.publications.journals.index', [
+        @include('scholars.publications.journals.index', [
             'journals' => $scholar->journals
         ])
         @include('scholars.publications.conferences.index', [

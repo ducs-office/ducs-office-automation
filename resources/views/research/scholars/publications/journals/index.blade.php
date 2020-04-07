@@ -74,6 +74,9 @@
                                 </div>
                             </div>
                         </details>
+                        @include('research.scholars.partials.presentations_show', [
+                            'presentations' => $journal->presentations,
+                        ])
                     </div>
                 </li>
             @endforeach

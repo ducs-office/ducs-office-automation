@@ -60,16 +60,17 @@ class EditScholarProfileTest extends TestCase
                     'affiliation' => 'IP University',
                 ],
             ],
-            'co_supervisors' => [ $cosupervisor->id,],
+            'co_supervisors' => [$cosupervisor->id],
         ];
 
-       try{ $this->withoutExceptionHandling()
+        try {
+            $this->withoutExceptionHandling()
             ->patch(route('scholars.profile.update'), $updateDetails)
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'Profile updated successfully!');
-       } catch(ValidationException $e) {
-           dd($e->errors());
-       }
+        } catch (ValidationException $e) {
+            dd($e->errors());
+        }
         $this->assertEquals(1, Scholar::count());
 
         $this->assertEquals($updateDetails['phone_no'], $scholar->fresh()->phone_no);
@@ -89,19 +90,19 @@ class EditScholarProfileTest extends TestCase
         Storage::assertExists('scholar_attachments/profile_picture/' . $profilePicture->hashName());
     }
 
-     /** @test */
-     public function sholar_edit_view_has_a_unique_list_of_cosupervisors()
-     {
-         $cosupervisors = create(Cosupervisor::class, 3);
-         $this->signInScholar(create(Scholar::class));
- 
-         $viewData = $this->withoutExceptionHandling()
+    /** @test */
+    public function sholar_edit_view_has_a_unique_list_of_cosupervisors()
+    {
+        $cosupervisors = create(Cosupervisor::class, 3);
+        $this->signInScholar(create(Scholar::class));
+
+        $viewData = $this->withoutExceptionHandling()
              ->get(route('scholars.profile.edit'))
              ->assertSuccessful()
              ->assertViewIs('scholars.edit')
              ->assertViewHas('cosupervisors')
              ->viewData('cosupervisors');
- 
-         $this->assertCount(Cosupervisor::count(), $viewData);
-     }
+
+        $this->assertCount(Cosupervisor::count(), $viewData);
+    }
 }

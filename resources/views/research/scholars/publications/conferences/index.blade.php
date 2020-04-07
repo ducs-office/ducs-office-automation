@@ -70,6 +70,9 @@
                                 </div>
                             </div>
                         </details>
+                        @include('research.scholars.partials.presentations_show', [
+                            'presentations' => $conference->presentations,
+                        ])
                     </div>
                 </li>
             @endforeach
