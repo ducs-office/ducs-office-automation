@@ -22,8 +22,8 @@ Route::prefix('/research')
     ->namespace('Research')
     ->as('research.')
     ->group(static function () {
-        Route::get('/scholars', 'ScholarController@index')->name('scholars.index')->middleware('supervisor');
-        Route::get('/scholars/{scholar}', 'ScholarController@show')->name('scholars.show')->middleware('supervisor');
+        Route::get('/scholars', 'ScholarController@index')->name('scholars.index');
+        Route::get('/scholars/{scholar}', 'ScholarController@show')->name('scholars.show');
 
         Route::post(
             '/scholars/{scholar}/coursework',

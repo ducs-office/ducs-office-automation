@@ -9,12 +9,20 @@ use Illuminate\Http\Request;
 
 class ScholarController extends Controller
 {
+    public function __construct()
+    {
+        return $this->authorizeResource(Scholar::class, 'scholar');
+    }
+
     public function index(Request $request)
     {
-        $scholars = $request->user()
-            ->load('supervisorProfile.scholars')
-            ->supervisorProfile
-            ->scholars;
+        $profile = $request->user()->supervisorProfile;
+
+        if (! $profile) {
+            $scholars = Scholar::all();
+        } else {
+            $scholars = $profile->scholars;
+        }
 
         return view('research.scholars.index', ['scholars' => $scholars]);
     }

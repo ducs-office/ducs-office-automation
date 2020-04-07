@@ -4,6 +4,7 @@ namespace Tests\Unit;
 
 use App\Leave;
 use App\LeaveStatus;
+use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;

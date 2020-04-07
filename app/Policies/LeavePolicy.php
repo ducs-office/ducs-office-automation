@@ -73,11 +73,26 @@ class LeavePolicy
      * @param mixed $user
      * @param  \App\Leave  $leave
      *
-     * @return mixed
+      * @return mixed
      */
     public function reject($user, Leave $leave)
     {
         return $user->can('leaves:reject')
             && in_array($leave->status, [LeaveStatus::APPLIED, LeaveStatus::RECOMMENDED]);
+    }
+
+    /**
+     * Determine whether the user can extend a leave.
+     *
+     * @param \App\Scholar $scholar
+     * @param  \App\Leave  $leave
+     *
+      * @return mixed
+     */
+    public function extend(Scholar $scholar, Leave $leave)
+    {
+        return (int) $scholar->id === (int) $leave->scholar_id
+            && $leave->isApproved()
+            && $leave->extensions->every->isApproved();
     }
 }

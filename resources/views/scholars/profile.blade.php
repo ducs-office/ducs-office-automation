@@ -157,6 +157,18 @@
         </div>
 
         {{-- Leaves --}}
+        @php($icons = [
+            App\LeaveStatus::APPROVED => 'check-circle',
+            App\LeaveStatus::REJECTED => 'x-circle',
+            App\LeaveStatus::RECOMMENDED => 'shield',
+            App\LeaveStatus::APPLIED => 'alert-circle'
+        ])
+        @php($colors = [
+            App\LeaveStatus::APPROVED => 'text-green-500',
+            App\LeaveStatus::REJECTED => 'text-red-600',
+            App\LeaveStatus::RECOMMENDED => 'text-blue-600',
+            App\LeaveStatus::APPLIED => 'text-gray-700'
+        ])
         <div class="mb-16">
             <div class="mb-4 flex items-center justify-between">
                 <h3 class="font-bold text-xl mr-4">
@@ -178,61 +190,39 @@
                                 ({{ $leave->from->format('Y-m-d') }} - {{$leave->to->format('Y-m-d')}})
                             </span>
                         </h5>
-                        <div class="flex items-center px-4 mr-4">
-                            <div class="
-                                w-5 h-5 inline-flex items-center justify-center
-                                {{ $leave->status === App\LeaveStatus::APPROVED ? 'bg-green-500' : (
-                                    $leave->status === App\LeaveStatus::REJECTED ? 'bg-red-600' : 'bg-gray-700'
-                                )}}
-                                text-white font-extrabold leading-none rounded-full mr-2
-                            ">
-                                @if($leave->status == App\LeaveStatus::APPROVED)
-                                &checkmark;
-                                @elseif($leave->status == App\LeaveStatus::REJECTED)
-                                &times;
-                                @else
-                                &HorizontalLine;
-                                @endif
-                            </div>
+                        <div class="flex items-center px-4">
+                            <feather-icon name="{{ $icons[$leave->status] }}"
+                                class="h-current {{ $colors[$leave->status] }} mr-2"
+                                stroke-width="2.5"></feather-icon>
                             <div class="capitalize">
                                 {{ $leave->status }}
                             </div>
                         </div>
-                        <button class="btn btn-magenta text-sm is-sm"
+                        @can('extend', $leave)
+                        <button class="btn btn-magenta text-sm is-sm ml-4"
                             @click="$modal.show('apply-for-leave-modal', {
                                 'extensionId': {{$leave->id}},
-                                'extension_from_date': '{{ $leave->to->format('Y-m-d') }}'
+                                'extension_from_date': '{{ $leave->nextExtensionFrom()->format('Y-m-d') }}'
                             })">
                             Extend
                         </button>
+                        @endcan
                     </div>
-                    <div class="ml-6">
+                    <div class="ml-3 pl-6 border-l">
                         @foreach($leave->extensions as $extensionLeave)
                         <div class="flex items-center mt-4">
                             <h5 class="font-bold flex-1">
-                                {{ $leave->reason }}
+                                {{ $extensionLeave->reason }}
                                 <span class="text-sm text-gray-500 font-bold">
-                                    (extended to {{$leave->to->format('Y-m-d')}})
+                                    (extended to {{$extensionLeave->to->format('Y-m-d')}})
                                 </span>
                             </h5>
-                            <div class="flex items-center pl-4">
-                                <div class="
-                                        w-5 h-5 inline-flex items-center justify-center
-                                        {{ $leave->status === App\LeaveStatus::APPROVED ? 'bg-green-500' : (
-                                            $leave->status === App\LeaveStatus::REJECTED ? 'bg-red-600' : 'bg-gray-700'
-                                        )}}
-                                        text-white font-extrabold leading-none rounded-full mr-2
-                                    ">
-                                    @if($leave->status == App\LeaveStatus::APPROVED)
-                                    &checkmark;
-                                    @elseif($leave->status == App\LeaveStatus::REJECTED)
-                                    &times;
-                                    @else
-                                    &HorizontalLine;
-                                    @endif
-                                </div>
+                            <div class="flex items-center px-4">
+                                <feather-icon name="{{ $icons[$extensionLeave->status] }}"
+                                    class="h-current {{ $colors[$extensionLeave->status] }} mr-2"
+                                    stroke-width="2.5"></feather-icon>
                                 <div class="capitalize">
-                                    {{ $leave->status }}
+                                    {{ $extensionLeave->status }}
                                 </div>
                             </div>
                         </div>
@@ -243,7 +233,6 @@
                 <li class="px-4 py-3 border-b last:border-b-0 text-center text-gray-700 font-bold">No Leaves</li>
                 @endforelse
             </ul>
-
             <v-modal name="apply-for-leave-modal" height="auto">
                 <template v-slot="{ data }">
                     <form action="{{ route('scholars.leaves.store') }}" method="POST" class="p-6">
@@ -263,13 +252,19 @@
                         </div>
                         <div class="mb-2">
                             <label for="reason" class="w-full form-label mb-1">Reason</label>
-                            <input type="text" name="reason" autocomplete="#reasons" class="w-full form-input"
-                                list="leave_reasons" placeholder="e.g. Maternity Leave">
-                            <datalist id="leave_reasons">
-                                <option value="Maternity/Child Care Leave">
-                                <option value="Medical">
-                                <option value="For Work">
-                            </datalist>
+                            <select id="leave_reasons" name="reason" class="w-full form-input" onchange="
+                                if(reason.value === 'Other') {
+                                    reason_text.style = 'display: block;';
+                                } else {
+                                    reason_text.style = 'display: none;';
+                                }">
+                                <option value="Maternity/Child Care Leave">Maternity/Child Care Leave</option>
+                                <option value="Medical">Medical</option>
+                                <option value="For Work">Work</option>
+                                <option value="Deregistration">Deregistration</option>
+                                <option value="Other">Other</option>
+                            </select>
+                            <input type="text" name="reason_text" class="w-full form-input mt-2 hidden" placeholder="Please specify...">
                         </div>
                         <button type="submit" class="px-5 btn btn-magenta text-sm">Add</button>
                     </form>

@@ -44,4 +44,11 @@ class Leave extends Model
     {
         return $this->belongsTo(Leave::class, 'extended_leave_id');
     }
+
+    public function nextExtensionFrom()
+    {
+        return $this->extensions->prepend($this)
+            ->filter->isApproved()
+            ->max('to')->addDay();
+    }
 }
