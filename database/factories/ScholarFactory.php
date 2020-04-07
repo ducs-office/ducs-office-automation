@@ -1,6 +1,8 @@
 <?php
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
+
+use App\Cosupervisor;
 use App\Scholar;
 use App\SupervisorProfile;
 use Faker\Generator as Faker;
@@ -38,12 +40,7 @@ $factory->define(Scholar::class, function (Faker $faker) {
             $x = random_int(1, 2);
             $data = [];
             for ($i = 1; $i <= $x; $i++) {
-                array_push($data, [
-                    'title' => $faker->title,
-                    'name' => $faker->name,
-                    'designation' => $faker->jobTitle,
-                    'affiliation' => $faker->company,
-                ]);
+                array_push($data, factory(Cosupervisor::class)->create()->id);
             }
             return $data;
         },

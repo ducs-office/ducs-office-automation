@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Cosupervisor;
 use App\Scholar;
 use App\SupervisorProfile;
 use App\Teacher;
@@ -38,6 +39,7 @@ class EditScholarProfileTest extends TestCase
     public function scholar_can_edit_themselves()
     {
         $this->signInScholar($scholar = create(Scholar::class));
+        $cosupervisor = create(Cosupervisor::class);
 
         $supervisorProfile = create(SupervisorProfile::class);
 
@@ -58,21 +60,16 @@ class EditScholarProfileTest extends TestCase
                     'affiliation' => 'IP University',
                 ],
             ],
-            'co_supervisors' => [
-                [
-                    'title' => 'Dr.',
-                    'name' => 'Abdul Kalam',
-                    'designation' => 'Permanent',
-                    'affiliation' => 'DRDO',
-                ],
-            ],
+            'co_supervisors' => [ $cosupervisor->id,],
         ];
 
-        $this->withoutExceptionHandling()
+       try{ $this->withoutExceptionHandling()
             ->patch(route('scholars.profile.update'), $updateDetails)
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'Profile updated successfully!');
-
+       } catch(ValidationException $e) {
+           dd($e->errors());
+       }
         $this->assertEquals(1, Scholar::count());
 
         $this->assertEquals($updateDetails['phone_no'], $scholar->fresh()->phone_no);
@@ -83,7 +80,7 @@ class EditScholarProfileTest extends TestCase
         $this->assertEquals($updateDetails['research_area'], $scholar->fresh()->research_area);
         $this->assertEquals($updateDetails['supervisor_profile_id'], $scholar->fresh()->supervisor_profile_id);
         $this->assertEquals($updateDetails['advisory_committee'][0]['title'], $scholar->fresh()->advisory_committee[0]['title']);
-        $this->assertEquals($updateDetails['co_supervisors'][0]['title'], $scholar->fresh()->co_supervisors[0]['title']);
+        $this->assertEquals($updateDetails['co_supervisors'][0], $scholar->fresh()->co_supervisors[0]);
 
         $this->assertEquals(
             'scholar_attachments/profile_picture/' . $profilePicture->hashName(),
@@ -91,4 +88,20 @@ class EditScholarProfileTest extends TestCase
         );
         Storage::assertExists('scholar_attachments/profile_picture/' . $profilePicture->hashName());
     }
+
+     /** @test */
+     public function sholar_edit_view_has_a_unique_list_of_cosupervisors()
+     {
+         $cosupervisors = create(Cosupervisor::class, 3);
+         $this->signInScholar(create(Scholar::class));
+ 
+         $viewData = $this->withoutExceptionHandling()
+             ->get(route('scholars.profile.edit'))
+             ->assertSuccessful()
+             ->assertViewIs('scholars.edit')
+             ->assertViewHas('cosupervisors')
+             ->viewData('cosupervisors');
+ 
+         $this->assertCount(Cosupervisor::count(), $viewData);
+     }
 }
