@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Research;
 
+use App\Cosupervisor;
 use App\Http\Controllers\Controller;
 use App\PhdCourse;
 use App\Scholar;
@@ -29,12 +30,19 @@ class ScholarController extends Controller
 
     public function show(Scholar $scholar)
     {
+        $cosupervisors = [];
+
+        foreach ($scholar->co_supervisors as $coS) {
+            array_push($cosupervisors, Cosupervisor::find($coS)->name);
+        }
+
         return view('research.scholars.show', [
             'scholar' => $scholar->load(['courseworks']),
             'categories' => config('options.scholars.categories'),
             'admission_criterias' => config('options.scholars.admission_criterias'),
             'courses' => PhdCourse::whereNotIn('id', $scholar->courseworks()->allRelatedIds())->get(),
             'genders' => config('options.scholars.genders'),
+            'cosupervisors' => $cosupervisors,
         ]);
     }
 }

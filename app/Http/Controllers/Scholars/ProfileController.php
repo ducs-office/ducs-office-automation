@@ -25,6 +25,7 @@ class ProfileController extends Controller
         foreach ($scholar->co_supervisors as $coS) {
             array_push($cosupervisors, Cosupervisor::find($coS)->name);
         }
+
         return view('scholars.profile', [
             'scholar' => $scholar,
             'admissionCriterias' => config('options.scholars.admission_criterias'),

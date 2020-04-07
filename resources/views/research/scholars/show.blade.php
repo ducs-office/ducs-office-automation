@@ -116,15 +116,13 @@
                 </div>
                 <div class="flex-1 my-6">
                     <ul class="border flex flex-wrap rounded-lg overflow-hidden mb-4">
-                        @foreach ($scholar->co_supervisors as $coSupervisor)
-                            <li class="px-5 py-5 border-b last:border-b-0 w-1/2">
-                                <div class="flex mb-1">
-                                    <feather-icon name="pen-tool" class="h-current"></feather-icon>
-                                    <p class="ml-2 font-bold"> {{ $coSupervisor['title'] }} {{ $coSupervisor['name'] }} </p>
-                                </div>
-                                <p class="ml-6 text-gray-700 mb-1"> {{ $coSupervisor['designation'] }} </p>
-                                <p class="ml-6 text-gray-700"> {{ $coSupervisor['affiliation'] }} </p>
-                            </li>
+                        @foreach ($cosupervisors as $cosupervisor)
+                        <li class="px-5 py-5 border-b last:border-b-0 w-1/2">
+                            <div class="flex mb-1">
+                                <feather-icon name="pen-tool" class="h-current"></feather-icon>
+                                <p class="ml-2 font-bold"> {{$cosupervisor }} </p>
+                            </div>
+                        </li>
                         @endforeach
                     </ul>
                 </div>
