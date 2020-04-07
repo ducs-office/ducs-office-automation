@@ -141,36 +141,19 @@
                             </button>
                         </div>
                         <h6 class="mx-2 mb-6 text-gray-800 text-sm">You can add a maximum of 2 co-supervisors only.</h6>
-                        <div class="flex w-2/3 mt-2">
-                            <label for="co_supervisors[][title]" class="form-label block w-1/4">Title</label>
-                            <label for="co_supervisors[][name]" class="form-label block w-1/4">Name</label>
-                            <label for="co_supervisors[][designation]" class="form-label block w-1/4">Designation</label>
-                            <label for="co_supervisors[][affiliation]" class="form-label block w-1/4">Affiliation</label>
-                        </div>
                         <div v-for="(element, index) in elements" :key="index" class="flex items-baseline mb-2">
                             <div class="flex mt-2">
-                                <input type="text" :name="`co_supervisors[${index}][title]`" v-model="element.value.title" class="block form-input mr-2 h-10">
-                                <toggle-visibility>
-                                    <template v-slot="{ isVisible, toggle}">
-                                        <div v-if="!isVisible">
-                                            <input type="text" :name="`co_supervisors[${index}][name]`" v-model="element.value.name" class="block form-input mr-2 h-10">
-                                            <a href="" class="mt-1 text-blue-900 is-sm underline" v-on:click.prevent="toggle">Select from supervisors</a>
-                                        </div>
-                                        <div v-if="isVisible">
-                                            <select :name="`co_supervisors[${index}][name]`" class="block form-input rounded-full rounded-l-none h-10 mr-2 text-white bg-green-500 hover:bg-green-400">
-                                                <option value=""selected> 
-                                                    Select your co-supervisor
-                                                </option>
-                                                @foreach ($supervisorProfiles as $name => $id)
-                                                    <option value=" {{ $name }} "> {{ $name }} </option>
-                                                @endforeach
-                                            </select>
-                                            <a href="" class="mt-1 text-blue-900 is-sm underline"  v-on:click.prevent="toggle">Enter name</a>
-                                        </div>   
-                                    </template>
-                                </toggle-visibility>
-                                <input type="text" :name="`co_supervisors[${index}][designation]`"  v-model="element.value.designation" class="block form-input mr-2 h-10">
-                                <input type="text" :name="`co_supervisors[${index}][affiliation]`"  v-model="element.value.affiliation" class="block form-input mr-2 h-10">
+                            {{-- <label for="co_supervisors[]" class="form-label block w-1/4"> Name </label> --}}
+                                <select :name="`co_supervisors[]`" 
+                                    class="block form-input"
+                                    >
+                                    <option value=""selected> 
+                                        Select your co-supervisor
+                                    </option>
+                                    @foreach ($cosupervisors as $name => $id)
+                                        <option value=" {{ $id }} "> {{ $name }} </option>
+                                    @endforeach
+                                </select>
                             </div>
                             <button v-on:click.prevent="removeElement(index)" v-if="elements.length > 1" class="btn is-sm ml-2 text-red-600">x</button>
                         </div>

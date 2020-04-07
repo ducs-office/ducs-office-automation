@@ -20,11 +20,17 @@ class ProfileController extends Controller
             'publications.presentations',
         ]);
 
+        $cosupervisors = [];
+
+        foreach ($scholar->co_supervisors as $coS) {
+            array_push($cosupervisors, Cosupervisor::find($coS)->name);
+        }
         return view('scholars.profile', [
             'scholar' => $scholar,
             'admissionCriterias' => config('options.scholars.admission_criterias'),
             'genders' => config('options.scholars.genders'),
             'categories' => config('options.scholars.categories'),
+            'cosupervisors' => $cosupervisors,
         ]);
     }
 
