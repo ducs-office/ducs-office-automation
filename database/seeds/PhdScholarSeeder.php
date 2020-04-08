@@ -185,23 +185,21 @@ class PhdScholarSeeder extends Seeder
             'phd_course_id' => 3,
         ]);
 
-        $scholarSapna->publications()->create(
-            [
-                'type' => 'conference',
-                'name' => 'Foundations of Software Technology and Theoretical Computer Science (FSTTCS) 2018',
-                'paper_title' => 'Constant factor Approximation Algorithm for Uniform Hard Capacitated Knapsack Median Problem',
-                'authors' => [
-                    'Sapna Grover', 'Neelima Gupta',
-                    'Samir Khuller', 'Aditya Pancholi',
-                ],
-                'date' => '2018-12-11',
-                'volume' => 122,
-                'indexed_in' => 'Scopus',
-                'page_numbers' => [3, 37],
-                'city' => 'Ahmedabad, Gujarat',
-                'country' => 'India',
+        $scholarSapna->publications()->create([
+            'type' => 'conference',
+            'name' => 'Foundations of Software Technology and Theoretical Computer Science (FSTTCS) 2018',
+            'paper_title' => 'Constant factor Approximation Algorithm for Uniform Hard Capacitated Knapsack Median Problem',
+            'authors' => [
+                'Sapna Grover', 'Neelima Gupta',
+                'Samir Khuller', 'Aditya Pancholi',
             ],
-        );
+            'date' => '2018-12-11',
+            'volume' => 122,
+            'indexed_in' => 'Scopus',
+            'page_numbers' => [3, 37],
+            'city' => 'Ahmedabad, Gujarat',
+            'country' => 'India',
+        ]);
 
         //======================================
 
