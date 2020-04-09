@@ -55,7 +55,7 @@
                         </li>
                         <li class="px-4 py-3 border-b last:border-b-0">
                             <div class="flex mt-2">
-                                <p class="font-bold"> Admission via </p>
+                                <p class="font-bold"> Admission via</p>
                                 <p class="ml-4 text-gray-800"> {{ $admissionCriterias[$scholar->admission_via]['mode'] ?? '-'}}</p>
                             </div>
                         </li>
@@ -105,6 +105,7 @@
                 </div>
                 @endif
             </div>
+            @if (count($cosupervisors) > 0)
             <div class="flex">
                 <div class="w-64 pr-4 relative z-10 -ml-8 my-6">
                     <h3 class="relative z-20 pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
@@ -127,6 +128,7 @@
                     </ul>
                 </div>
             </div>
+            @endif
             <div class="flex">
                 <div class="w-64 pr-4 relative z-10 -ml-8 my-6">
                     <h3 class="relative z-20 pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
