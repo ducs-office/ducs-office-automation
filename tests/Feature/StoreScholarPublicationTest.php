@@ -8,21 +8,23 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class StoreScholarJournalPublicationTest extends TestCase
+class StoreScholarPublicationTest extends TestCase
 {
-    use RefreshDatabase;
+    use RefreshDatabase, WithFaker;
 
     protected function fillPublication($overrides = [])
     {
         return $this->mergeFormFields([
-            'type' => null,
-            'name' => 'India CS Journal',
-            'authors' => ['JOhn Doe', 'Sally Brooke'],
-            'paper_title' => 'Lorem ipsum dolor sit amet consectetur adipisicing',
-            'date' => '2020-02-09',
-            'volume' => '1',
-            'page_numbers' => ['23', '80'],
-            'indexed_in' => ['Scopus', 'SCI'],
+            'authors' => [$this->faker->name, $this->faker->name],
+            'paper_title' => $this->faker->sentence,
+            'name' => $this->faker->sentence,
+            'volume' => $this->faker->numberBetween(1, 20),
+            'page_numbers' => [random_int(1, 100), random_int(101, 1000)],
+            'date' => [
+                'month' => $this->faker->monthName(),
+                'year' => $this->faker->year(),
+            ],
+            'indexed_in' => [$this->faker->randomElement(array_keys(config('options.scholars.academic_details.indexed_in')))],
             'number' => null,
             'publisher' => null,
             'city' => null,

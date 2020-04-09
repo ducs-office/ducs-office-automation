@@ -57,6 +57,7 @@ class StoreCosupervisorTest extends TestCase
             'name' => 'Abhijeet',
             'email' => 'abhijeet@du.com',
             'designation' => 'teacher',
+            'affiliation' => 'DUCS, DU',
         ];
 
         $this->withoutExceptionHandling()
