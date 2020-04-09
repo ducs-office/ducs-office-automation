@@ -273,10 +273,14 @@
                             <div class="flex items-center">
                                 <h5 class="font-bold flex-1">
                                     {{ $leave->reason }}
-                                    <span class="text-sm text-gray-500 font-bold">
+                                    <div class="text-sm text-gray-500 font-bold">
                                         ({{ $leave->from->format('Y-m-d') }} - {{$leave->to->format('Y-m-d')}})
-                                    </span>
+                                    </div>
                                 </h5>
+                                <a target="_blank" href="{{ route('research.scholars.leaves.attachment', [$scholar, $leave]) }}" class="btn inline-flex items-center ml-2">
+                                    <feather-icon name="paperclip" class="h-current mr-2"></feather-icon>
+                                    Attached Document
+                                </a>
                                 <div class="flex items-center px-4">
                                     <feather-icon name="{{ $icons[$leave->status] }}" class="h-current {{ $colors[$leave->status] }} mr-2" stroke-width="2.5"></feather-icon>
                                     <div class="capitalize">
@@ -293,59 +297,65 @@
                                 @can('approve', $leave)
                                 <button type="submit"
                                     form="patch-form"
-                                    class="px-4 py-2 mr-1 bg-green-500 hover:bg-green-600 text-white text-sm rounded font-bold"
+                                    class="p-2 mr-1 bg-green-500 hover:bg-green-600 text-white text-sm rounded font-bold"
                                     formaction="{{ route('research.scholars.leaves.approve', [$scholar, $leave]) }}">
-                                    Approve
+                                    <feather-icon name="check" class="h-current" stroke-width="3">Approve</feather-icon>
                                 </button>
                                 @endcan
                                 @can('reject', $leave)
                                 <button type="submit"
                                     form="patch-form"
-                                    class="px-4 py-2 ml-1 bg-red-500 hover:bg-red-600 text-white text-sm rounded font-bold"
+                                    class="p-2 ml-1 bg-red-500 hover:bg-red-600 text-white text-sm rounded font-bold"
                                     formaction="{{ route('research.scholars.leaves.reject', [$scholar, $leave]) }}">
-                                    Reject
+                                    <feather-icon name="x" class="h-current" stroke-width="3">Reject</feather-icon>
                                 </button>
                                 @endcan
                             </div>
-                            @foreach($leave->extensions as $extensionLeave)
-                                <div class="flex items-center ml-6 mt-4">
-                                    <h5 class="font-bold flex-1">
-                                        {{ $extensionLeave->reason }}
-                                        <span class="text-sm text-gray-500 font-bold">
-                                            (extension till {{$extensionLeave->to->format('Y-m-d')}})
-                                        </span>
-                                    </h5>
-                                    <div class="flex items-center px-4">
-                                    <feather-icon name="{{ $icons[$extensionLeave->status] }}" class="h-current {{ $colors[$extensionLeave->status] }} mr-2" stroke-width="2.5"></feather-icon>
-                                        <div class="capitalize">
-                                            {{ $extensionLeave->status }}
+                            <div class="ml-3 border-l-4">
+                                @foreach($leave->extensions as $extensionLeave)
+                                    <div class="flex items-center ml-6 mt-4">
+                                        <h5 class="font-bold flex-1">
+                                            {{ $extensionLeave->reason }}
+                                            <div class="text-sm text-gray-500 font-bold">
+                                                (extension till {{$extensionLeave->to->format('Y-m-d')}})
+                                            </div>
+                                        </h5>
+                                        <a target="_blank" href="{{ route('research.scholars.leaves.attachment', [$scholar, $extensionLeave]) }}" class="btn inline-flex items-center ml-2">
+                                            <feather-icon name="paperclip" class="h-current mr-2"></feather-icon>
+                                            Attached Document
+                                        </a>
+                                        <div class="flex items-center px-4">
+                                            <feather-icon name="{{ $icons[$extensionLeave->status] }}" class="h-current {{ $colors[$extensionLeave->status] }} mr-2" stroke-width="2.5"></feather-icon>
+                                            <div class="capitalize">
+                                                {{ $extensionLeave->status }}
+                                            </div>
                                         </div>
+                                        @can('recommend', $extensionLeave)
+                                        <button type="submit" form="patch-form"
+                                            class="px-4 py-2 mr-1 bg-blue-500 hover:bg-blue-600 text-white text-sm rounded font-bold"
+                                            formaction="{{ route('research.scholars.leaves.recommend', [$scholar, $extensionLeave]) }}">
+                                            Recommend
+                                        </button>
+                                        @endcan
+                                        @can('approve', $extensionLeave)
+                                        <button type="submit"
+                                            form="patch-form"
+                                            class="p-2 mr-1 bg-green-500 hover:bg-green-600 text-white text-sm rounded font-bold"
+                                            formaction="{{ route('research.scholars.leaves.approve', [$scholar, $extensionLeave]) }}">
+                                            <feather-icon name="check" class="h-current" stroke-width="3">Approve</feather-icon>
+                                        </button>
+                                        @endcan
+                                        @can('reject', $extensionLeave)
+                                        <button type="submit"
+                                            form="patch-form"
+                                            class="p-2 ml-1 bg-red-500 hover:bg-red-600 text-white text-sm rounded font-bold"
+                                            formaction="{{ route('research.scholars.leaves.reject', [$scholar, $extensionLeave]) }}">
+                                            <feather-icon name="x" class="h-current" stroke-width="3">Reject</feather-icon>
+                                        </button>
+                                        @endcan
                                     </div>
-                                    @can('recommend', $extensionLeave)
-                                    <button type="submit" form="patch-form"
-                                        class="px-4 py-2 mr-1 bg-blue-500 hover:bg-blue-600 text-white text-sm rounded font-bold"
-                                        formaction="{{ route('research.scholars.leaves.recommend', [$scholar, $extensionLeave]) }}">
-                                        Recommend
-                                    </button>
-                                    @endcan
-                                    @can('approve', $extensionLeave)
-                                    <button type="submit"
-                                        form="patch-form"
-                                        class="px-4 py-2 mr-1 bg-green-500 hover:bg-green-600 text-white text-sm rounded font-bold"
-                                        formaction="{{ route('research.scholars.leaves.approve', [$scholar, $extensionLeave]) }}">
-                                        Approve
-                                    </button>
-                                    @endcan
-                                    @can('reject', $extensionLeave)
-                                    <button type="submit"
-                                        form="patch-form"
-                                        class="px-4 py-2 ml-1 bg-red-500 hover:bg-red-600 text-white text-sm rounded font-bold"
-                                        formaction="{{ route('research.scholars.leaves.reject', [$scholar, $extensionLeave]) }}">
-                                        Reject
-                                    </button>
-                                    @endcan
-                                </div>
-                            @endforeach
+                                @endforeach
+                            </div>
                         </li>
                         @empty
                         <li class="px-4 py-3 border-b last:border-b-0 text-center text-gray-700 font-bold">No Leaves</li>
