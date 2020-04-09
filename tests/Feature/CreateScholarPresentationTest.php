@@ -20,6 +20,6 @@ class CreateScholarPresentationTest extends TestCase
             ->get(route('scholars.profile.presentation.create'))
             ->assertSuccessful()
             ->assertViewIs('scholars.presentations.create')
-            ->assertViewHasAll(['publications', 'event_types']);
+            ->assertViewHasAll(['publications', 'eventTypes']);
     }
 }

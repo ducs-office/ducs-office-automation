@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Staff;
 
+use App\Cosupervisor;
 use App\Course;
 use App\Http\Controllers\Controller;
 use App\Mail\UserRegisteredMail;
@@ -106,6 +107,15 @@ class TeacherController extends Controller
 
         if ($request->is_supervisor) {
             $teacher->supervisorProfile()->create();
+
+            if ($teacher->profile->college) {
+                Cosupervisor::create([
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'designation' => 'Permanent Professor',
+                    'affiliation' => $teacher->profile->college,
+                ]);
+            }
         }
 
         flash('College teacher updated successfully')->success();
