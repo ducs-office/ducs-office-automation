@@ -14,13 +14,16 @@ class StoreJournalPublication extends FormRequest
     public function rules()
     {
         $indexedIn = implode(',', array_keys(config('options.scholars.academic_details.indexed_in')));
+        $months = implode(',', array_keys(config('options.scholars.academic_details.months')));
 
         return [
             'name' => ['required', 'string', 'max:400'],
             'authors' => ['required', 'array', 'max:10', 'min:1'],
             'authors.0' => ['required', 'string'],
             'paper_title' => ['required', 'string', 'max:400'],
-            'date' => ['required', 'date'],
+            'date' => ['required', 'array', 'size:2'],
+            'date.month' => ['required', 'in:' . $months],
+            'date.year' => ['required', 'numeric'],
             'volume' => ['nullable', 'integer'],
             'publisher' => ['required', 'string', 'max:100'],
             'number' => ['nullable', 'numeric'],
