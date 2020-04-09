@@ -7,6 +7,7 @@ use App\Publication;
 use App\Scholar;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
 
 class StorePresentationTest extends TestCase
@@ -24,8 +25,8 @@ class StorePresentationTest extends TestCase
             'city' => $city = 'Agra',
             'country' => $country = 'India',
             'date' => $date = '2019-09-01',
-            'scopus_indexed' => $scopusIndexed = true,
-            'venue' => $venue = 'C',
+            'event_type' => $eventType = 'C',
+            'event_name' => $eventName = 'Scholar\'s conference',
         ];
 
         $this->withoutExceptionHandling()
@@ -37,8 +38,8 @@ class StorePresentationTest extends TestCase
         $this->assertEquals($city, $publication->fresh()->presentations()->first()->city);
         $this->assertEquals($country, $publication->fresh()->presentations()->first()->country);
         $this->assertEquals($date, $publication->fresh()->presentations()->first()->date->format('Y-m-d'));
-        $this->assertEquals($scopusIndexed, $publication->fresh()->presentations()->first()->scopus_indexed);
-        $this->assertEquals($venue, $publication->fresh()->presentations()->first()->venue);
+        $this->assertEquals($eventType, $publication->fresh()->presentations()->first()->event_type);
+        $this->assertEquals($eventName, $publication->fresh()->presentations()->first()->event_name);
         $this->assertEquals($publication->id, $publication->fresh()->presentations()->first()->publication->id);
     }
 }

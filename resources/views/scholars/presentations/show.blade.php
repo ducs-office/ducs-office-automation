@@ -6,8 +6,7 @@
             <span class="font-bold px-1 ml-4 "> {{ $loop->iteration }}. </span>
             <div class="ml-2">
                 <p> Presented at <span class="font-bold italic"> {{ $presentation->city }}, {{ $presentation->country }}</span> 
-                    on <span class="font-bold italic"> {{ $presentation->date->format('d F Y') }} </span>. It is 
-                        <span class="font-bold italic"> {{ ($presentation->scopus_indexed) ? ' ': ' not' }} scopus indexed </span>    
+                    on <span class="font-bold italic"> {{ $presentation->date->format('d F Y') }} </span>.
                 </p>
             </div>
             <div class="ml-auto px-2 flex">
@@ -27,4 +26,7 @@
         </li>
     @endforeach
     </ol>
+    @if (!count($presentations))
+        <p class="text-gray-600 flex justify-center font-bold">No presentations to show!</p>
+    @endif
 </details>

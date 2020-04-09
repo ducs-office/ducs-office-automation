@@ -19,8 +19,8 @@ class CreatePresentationsTable extends Migration
             $table->string('city');
             $table->string('country');
             $table->date('date');
-            $table->boolean('scopus_indexed')->default(0);
-            $table->enum('venue', array_keys(config('options.scholars.presentation_venues')));
+            $table->enum('event_type', array_keys(config('options.scholars.academic_details.event_types')));
+            $table->string('event_name');
             $table->timestamps();
 
             $table->foreign('publication_id')->references('id')->on('publications')->onDelete('cascade');

@@ -76,11 +76,11 @@ return [
                 'SCIE' => 'SCIE',
                 'G' => 'Google Scholar',
             ],
-        ],
-        'presentation_venues' => [
-            'S' => 'Symposium',
-            'W' => 'Workshop',
-            'C' => 'Conference',
+            'event_types' => [
+                'S' => 'Symposium',
+                'W' => 'Workshop',
+                'C' => 'Conference',
+            ],
         ],
     ],
 ];

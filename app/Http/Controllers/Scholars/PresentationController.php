@@ -22,7 +22,7 @@ class PresentationController extends Controller
 
         return view('scholars.presentations.create', [
             'publications' => $scholar->publications,
-            'venues' => config('options.scholars.presentation_venues'),
+            'eventTypes' => config('options.scholars.academic_details.event_types'),
         ]);
     }
 
@@ -43,7 +43,7 @@ class PresentationController extends Controller
             return view('scholars.presentations.edit', [
                 'presentation' => $presentation,
                 'publications' => $scholar->publications,
-                'venues' => config('options.scholars.presentation_venues'),
+                'eventTypes' => config('options.scholars.academic_details.event_types'),
             ]);
         } else {
             abort(403, 'You are not authorized to edit this presentation');

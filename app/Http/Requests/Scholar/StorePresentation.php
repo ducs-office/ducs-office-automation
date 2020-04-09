@@ -28,13 +28,13 @@ class StorePresentation extends FormRequest
 
         $ids = implode(',', $publications->pluck('id')->toArray());
 
-        $venues = implode(',', array_keys(config('options.scholars.presentation_venues')));
+        $event_types = implode(',', array_keys(config('options.scholars.academic_details.event_types')));
         return [
             'city' => ['required', 'string'],
             'country' => ['required', 'string'],
             'date' => ['required', 'date'],
-            'scopus_indexed' => ['nullable', 'boolean'],
-            'venue' => ['required', 'in:' . $venues],
+            'event_type' => ['required', 'in:' . $event_types],
+            'event_name' => ['required', 'string'],
             'publication_id' => ['required', 'in:' . $ids],
         ];
     }

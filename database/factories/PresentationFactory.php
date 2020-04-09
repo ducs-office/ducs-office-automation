@@ -11,7 +11,7 @@ $factory->define(Presentation::class, function (Faker $faker) {
         'city' => $faker->city,
         'country' => $faker->country,
         'date' => $faker->date,
-        'scopus_indexed' => $faker->boolean,
-        'venue' => $faker->randomElement(array_keys(config('options.scholars.presentation_venues'))),
+        'event_type' => $faker->randomElement(array_keys(config('options.scholars.academic_details.event_types'))),
+        'event_name' => $faker->sentence,
     ];
 });

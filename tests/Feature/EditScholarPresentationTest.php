@@ -25,7 +25,7 @@ class EditScholarPresentationTest extends TestCase
             ->get(route('scholars.profile.presentation.edit', $presentation))
             ->assertSuccessful()
             ->assertViewIs('scholars.presentations.edit')
-            ->assertViewHas(['presentation', 'publications', 'venues']);
+            ->assertViewHasAll(['presentation', 'publications', 'event_types']);
     }
 
     /** @test */

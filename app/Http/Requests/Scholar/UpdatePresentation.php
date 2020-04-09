@@ -28,13 +28,13 @@ class UpdatePresentation extends FormRequest
 
         $ids = implode(',', $publications->pluck('id')->toArray());
 
-        $venues = implode(',', array_keys(config('options.scholars.presentation_venues')));
+        $event_types = implode(',', array_keys(config('options.scholars.academic_details.event_types')));
         return [
             'city' => ['sometimes', 'required', 'string'],
             'country' => ['sometimes', 'required', 'string'],
             'date' => ['sometimes', 'required', 'date'],
-            'scopus_indexed' => ['sometimes', 'required', 'boolean'],
-            'venue' => ['sometimes', 'required', 'in:' . $venues],
+            'event_type' => ['sometimes', 'required', 'in:' . $event_types],
+            'event_name' => ['sometimes', 'required', 'string'],
             'publication_id' => ['sometimes', 'required', 'in:' . $ids],
         ];
     }
