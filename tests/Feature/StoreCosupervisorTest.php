@@ -21,10 +21,10 @@ class StoreCosupervisorTest extends TestCase
         $this->signIn();
 
         $teacher = create(Teacher::class);
-        
+
         $college = create(College::class);
         $teacher->profile()->update([
-            'college_id' => $college->id
+            'college_id' => $college->id,
         ]);
 
         $this->withoutExceptionHandling()

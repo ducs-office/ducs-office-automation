@@ -7,6 +7,8 @@ use App\Leave;
 use App\LeaveStatus;
 use App\Scholar;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
 class ScholarLeavesController extends Controller
@@ -24,7 +26,7 @@ class ScholarLeavesController extends Controller
         return redirect()->back();
     }
 
-    public function approve(Request $request, Scholar $scholar, Leave $leave)
+    public function approve(Scholar $scholar, Leave $leave)
     {
         $this->authorize('approve', $leave);
 
@@ -37,7 +39,7 @@ class ScholarLeavesController extends Controller
         return redirect()->back();
     }
 
-    public function reject(Request $request, Scholar $scholar, Leave $leave)
+    public function reject(Scholar $scholar, Leave $leave)
     {
         $this->authorize('reject', $leave);
 
@@ -48,5 +50,17 @@ class ScholarLeavesController extends Controller
         flash('Leave rejected successfully!')->success();
 
         return redirect()->back();
+    }
+
+    public function viewAttachment(Scholar $scholar, Leave $leave)
+    {
+        $this->authorize('view', $scholar);
+
+        return Response::download(
+            Storage::path($leave->document_path),
+            str_after($leave->document_path, '/'),
+            [],
+            'inline'
+        );
     }
 }

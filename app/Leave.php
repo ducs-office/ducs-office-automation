@@ -6,7 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Leave extends Model
 {
-    protected $fillable = ['from', 'to', 'reason', 'scholar_id', 'status', 'extended_leave_id'];
+    protected $fillable = [
+        'from', 'to', 'reason',
+        'scholar_id', 'status',
+        'extended_leave_id',
+        'document_path',
+    ];
 
     protected $casts = [
         'from' => 'date',
@@ -47,7 +52,8 @@ class Leave extends Model
 
     public function nextExtensionFrom()
     {
-        return $this->extensions->prepend($this)
+        return collect([$this])
+            ->concat($this->extensions)
             ->filter->isApproved()
             ->max('to')->addDay();
     }

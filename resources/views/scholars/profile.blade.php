@@ -157,7 +157,7 @@
                 </div>
             </div>
         </div>
-        
+
         {{-- Publications and Presentations --}}
         <div class="bg-white p-6 h-full shadow-md mt-8">
             <div class="flex">
@@ -170,17 +170,17 @@
                     </svg>
                 </div>
                 <div class="ml-auto flex items-center">
-                    <a class="ml-auto btn btn-magenta is-sm shadow-inset" 
+                    <a class="ml-auto btn btn-magenta is-sm shadow-inset"
                         href="{{ route('scholars.profile.publication.journal.create')}}">
-                        New Journal  
+                        New Journal
                     </a>
-                    <a class="ml-3 btn btn-magenta is-sm shadow-inset" 
+                    <a class="ml-3 btn btn-magenta is-sm shadow-inset"
                         href="{{ route('scholars.profile.publication.conference.create')}}">
-                        New Conference  
+                        New Conference
                     </a>
-                    <a class="ml-3 btn btn-magenta is-sm shadow-inset" 
+                    <a class="ml-3 btn btn-magenta is-sm shadow-inset"
                         href="{{ route('scholars.profile.presentation.create')}}">
-                        New Presentation  
+                        New Presentation
                      </a>
                 </div>
             </div>
@@ -262,13 +262,18 @@
             <ul class="border rounded-lg shadow-md overflow-hidden bg-white mb-4">
                 @forelse ($scholar->leaves as $leave)
                 <li class="px-4 py-3 border-b last:border-b-0">
-                    <div class="flex items-center">
+                    <div class="flex items-center py-2">
                         <h5 class="font-bold flex-1">
                             {{ $leave->reason }}
-                            <span class="text-sm text-gray-500 font-bold">
+                            <div class="text-sm text-gray-500 font-bold">
                                 ({{ $leave->from->format('Y-m-d') }} - {{$leave->to->format('Y-m-d')}})
-                            </span>
+                            </div>
                         </h5>
+                        <a target="_blank" href="{{ route('scholars.leaves.attachment', $leave) }}"
+                            class="btn inline-flex items-center ml-2">
+                            <feather-icon name="paperclip" class="h-current mr-2"></feather-icon>
+                            Attached Document
+                        </a>
                         <div class="flex items-center px-4">
                             <feather-icon name="{{ $icons[$leave->status] }}"
                                 class="h-current {{ $colors[$leave->status] }} mr-2"
@@ -287,15 +292,20 @@
                         </button>
                         @endcan
                     </div>
-                    <div class="ml-3 pl-6 border-l">
+                    <div class="ml-3 pl-6 border-l-4">
                         @foreach($leave->extensions as $extensionLeave)
-                        <div class="flex items-center mt-4">
+                        <div class="flex items-center py-2">
                             <h5 class="font-bold flex-1">
                                 {{ $extensionLeave->reason }}
-                                <span class="text-sm text-gray-500 font-bold">
+                                <div class="text-sm text-gray-500 font-bold">
                                     (extended to {{$extensionLeave->to->format('Y-m-d')}})
-                                </span>
+                                </div>
                             </h5>
+                            <a target="_blank" href="{{ route('scholars.leaves.attachment', $extensionLeave) }}"
+                                class="btn inline-flex items-center ml-2">
+                                <feather-icon name="paperclip" class="h-current mr-2"></feather-icon>
+                                Attached Document
+                            </a>
                             <div class="flex items-center px-4">
                                 <feather-icon name="{{ $icons[$extensionLeave->status] }}"
                                     class="h-current {{ $colors[$extensionLeave->status] }} mr-2"
@@ -314,23 +324,37 @@
             </ul>
             <v-modal name="apply-for-leave-modal" height="auto">
                 <template v-slot="{ data }">
-                    <form action="{{ route('scholars.leaves.store') }}" method="POST" class="p-6">
+                    <form action="{{ route('scholars.leaves.store') }}" method="POST" class="p-6" enctype="multipart/form-data">
                         <h3 class="text-lg font-bold mb-4">Add Leave</h3>
                         @csrf_token
                         <input v-if="data('extensionId')" type="hidden" name="extended_leave_id" :value="data('extensionId')">
                         <div class="flex mb-2">
                             <div class="flex-1 mr-2">
-                                <label for="from_date" class="w-full form-label mb-1">From Date</label>
-                                <input type="date" name="from" id="from_date" placeholder="From Date"
-                                    class="w-full form-input" :value="data('extension_from_date', '')">
+                                <label for="from_date" class="w-full form-label mb-1">
+                                    From Date
+                                    <span class="text-red-600 font-bold">*</span>
+                                </label>
+                                <div v-if="data('extension_from_date')" class="w-full form-input cursor-not-allowed bg-gray-400 hover:bg-gray-400">
+                                    <span v-text="data('extension_from_date', '')"></span>
+                                    <input type="hidden" name="from" :value="data('extension_from_date', '')">
+                                </div>
+                                <input v-else id="from_date" type="date" name="from"
+                                    placeholder="From Date"
+                                    class="w-full form-input">
                             </div>
                             <div class="flex-1 ml-2">
-                                <label for="to_date" class="w-full form-label mb-1">To Date</label>
-                                <input type="date" name="to" id="to_date" placeholder="To Date" class="w-full form-input">
+                                <label for="to_date" class="w-full form-label mb-1">
+                                    To Date
+                                    <span class="text-red-600 font-bold">*</span>
+                                </label>
+                                <input type="date" name="to" id="to_date" placeholder="To Date" class="w-full form-input"
+                                    :min="data('extension_from_date', '')">
                             </div>
                         </div>
                         <div class="mb-2">
-                            <label for="reason" class="w-full form-label mb-1">Reason</label>
+                            <label for="reason" class="w-full form-label mb-1">
+                                Reason <span class="text-red-600 font-bold">*</span>
+                            </label>
                             <select id="leave_reasons" name="reason" class="w-full form-input" onchange="
                                 if(reason.value === 'Other') {
                                     reason_text.style = 'display: block;';
@@ -344,6 +368,13 @@
                                 <option value="Other">Other</option>
                             </select>
                             <input type="text" name="reason_text" class="w-full form-input mt-2 hidden" placeholder="Please specify...">
+                        </div>
+                        <div class="mb-2">
+                            <label for="document" class="w-full form-label mb-1">
+                                Attach Documents
+                                <span class="text-red-600 font-bold">*</span>
+                            </label>
+                            <input id="document" type="file" name="document" class="w-full form-input mt-2" accept="application/pdf,image/*">
                         </div>
                         <button type="submit" class="px-5 btn btn-magenta text-sm">Add</button>
                     </form>

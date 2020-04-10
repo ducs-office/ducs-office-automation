@@ -50,6 +50,11 @@ Route::prefix('/research')
             'ScholarLeavesController@reject'
         )->name('scholars.leaves.reject');
 
+        Route::get(
+            '/scholars/{scholar}/leaves/{leave}/attachment',
+            'ScholarLeavesController@viewAttachment'
+        )->name('scholars.leaves.attachment');
+
         Route::post(
             '/scholars/{scholar}/advisory-meetings',
             'AdvisoryMeetingsController@store'
@@ -107,8 +112,10 @@ Route::prefix('/scholars')
         Route::patch('/profile/presentation/{presentation}', 'PresentationController@update')->name('profile.presentation.update');
         Route::delete('/profile/presentation/{presentation}', 'PresentationController@destroy')->name('profile.presentation.destroy');
 
-        Route::post(
-            '/leaves',
-            'LeavesController@store'
-        )->name('leaves.store');
+        Route::post('/leaves', 'LeavesController@store')->name('leaves.store');
+
+        Route::get(
+            '/leaves/{leave}/attachment',
+            'LeavesController@attachment'
+        )->name('leaves.attachment');
     });
