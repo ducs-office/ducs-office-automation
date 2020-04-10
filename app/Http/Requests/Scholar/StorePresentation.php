@@ -36,6 +36,7 @@ class StorePresentation extends FormRequest
             'event_type' => ['required', 'in:' . $event_types],
             'event_name' => ['required', 'string'],
             'publication_id' => ['required', 'in:' . $ids],
+            'scopus_indexed' => ['accepted'],
         ];
     }
 }

@@ -27,6 +27,7 @@ class StorePresentationTest extends TestCase
             'date' => $date = '2019-09-01',
             'event_type' => $eventType = 'C',
             'event_name' => $eventName = 'Scholar\'s conference',
+            'scopus_indexed' => 1,
         ];
 
         $this->withoutExceptionHandling()
@@ -41,5 +42,33 @@ class StorePresentationTest extends TestCase
         $this->assertEquals($eventType, $publication->fresh()->presentations()->first()->event_type);
         $this->assertEquals($eventName, $publication->fresh()->presentations()->first()->event_name);
         $this->assertEquals($publication->id, $publication->fresh()->presentations()->first()->publication->id);
+    }
+
+    /** @test */
+    public function presentation_can_not_be_stored_if_it_is_not_scopus_indexed()
+    {
+        $this->signInScholar($scholar = create(Scholar::class));
+        $publication = create(Publication::class, 1, ['scholar_id' => $scholar->id]);
+
+        $this->assertEquals(0, Presentation::count());
+
+        $presentation = [
+            'publication_id' => $publication->id,
+            'city' => $city = 'Agra',
+            'country' => $country = 'India',
+            'date' => $date = '2019-09-01',
+            'event_type' => $eventType = 'C',
+            'event_name' => $eventName = 'Scholar\'s conference',
+            'scopus_indexed' => 0,
+        ];
+
+        try {
+            $this->withoutExceptionHandling()
+            ->post(route('scholars.profile.presentation.store'), $presentation);
+        } catch (ValidationException $e) {
+            $this->assertArrayHasKey('scopus_indexed', $e->errors());
+        }
+
+        $this->assertEquals(0, Presentation::count());
     }
 }
