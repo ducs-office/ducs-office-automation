@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use App\AdvisoryMeeting;
+use App\Cosupervisor;
 use App\Leave;
 use App\PhdCourse;
 use App\Scholar;
@@ -139,5 +140,22 @@ class ScholarTest extends TestCase
         $meeting = create(AdvisoryMeeting::class, 1, ['scholar_id' => $scholar->id]);
 
         $this->assertCount(1, $scholar->fresh()->advisoryMeetings);
+    }
+
+    /** @test */
+    public function scholar_belongs_to_many_cosupervisros()
+    {
+        $scholar = create(Scholar::class);
+
+        $this->assertInstanceOf(BelongsToMany::class, $scholar->cosupervisors());
+        $this->assertCount(0, $scholar->cosupervisors);
+
+        $cosupervisors = create(Cosupervisor::class, 2);
+
+        $scholar->cosupervisors()->attach([
+            $cosupervisors[0]->id, $cosupervisors[1]->id,
+        ]);
+
+        $this->assertCount(2, $scholar->fresh()->cosupervisors);
     }
 }

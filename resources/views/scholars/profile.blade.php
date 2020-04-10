@@ -108,7 +108,7 @@
                 </div>
                 @endif
             </div>
-            @if (count($cosupervisors) > 0)
+            @if($scholar->cosupervisors->count())
             <div class="flex">
                 <div class="w-64 pr-4 relative z-10 -ml-8 my-6">
                     <h3 class="relative z-20 pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
@@ -120,11 +120,11 @@
                 </div>
                 <div class="flex-1 my-6">
                     <ul class="border flex flex-wrap rounded-lg overflow-hidden mb-4">
-                        @foreach ($cosupervisors as $cosupervisor)
+                        @foreach ($scholar->cosupervisors as $cosupervisor)
                             <li class="px-5 py-5 border-b last:border-b-0 w-1/2">
                                 <div class="flex mb-1">
                                     <feather-icon name="pen-tool" class="h-current"></feather-icon>
-                                    <p class="ml-2 font-bold"> {{$cosupervisor }} </p>
+                                    <p class="ml-2 font-bold"> {{ $cosupervisor->name }} </p>
                                 </div>
                             </li>
                         @endforeach

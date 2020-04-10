@@ -81,7 +81,7 @@ class EditScholarProfileTest extends TestCase
         $this->assertEquals($updateDetails['research_area'], $scholar->fresh()->research_area);
         $this->assertEquals($updateDetails['supervisor_profile_id'], $scholar->fresh()->supervisor_profile_id);
         $this->assertEquals($updateDetails['advisory_committee'][0]['title'], $scholar->fresh()->advisory_committee[0]['title']);
-        $this->assertEquals($updateDetails['co_supervisors'][0], $scholar->fresh()->co_supervisors[0]);
+        $this->assertEquals($updateDetails['co_supervisors'][0], $scholar->fresh()->cosupervisors[0]->id);
 
         $this->assertEquals(
             'scholar_attachments/profile_picture/' . $profilePicture->hashName(),

@@ -30,19 +30,12 @@ class ScholarController extends Controller
 
     public function show(Scholar $scholar)
     {
-        $cosupervisors = [];
-
-        foreach ($scholar->co_supervisors as $coS) {
-            array_push($cosupervisors, Cosupervisor::find($coS)->name);
-        }
-
         return view('research.scholars.show', [
-            'scholar' => $scholar->load(['courseworks']),
+            'scholar' => $scholar->load(['courseworks', 'cosupervisors']),
             'categories' => config('options.scholars.categories'),
             'admissionCriterias' => config('options.scholars.admission_criterias'),
             'courses' => PhdCourse::whereNotIn('id', $scholar->courseworks()->allRelatedIds())->get(),
             'genders' => config('options.scholars.genders'),
-            'cosupervisors' => $cosupervisors,
         ]);
     }
 }

@@ -22,7 +22,6 @@ class AddColumnsToScholarTable extends Migration
             $table->enum('gender', array_keys(config('options.scholars.genders')))->nullable();
             $table->date('enrollment_date')->nullable();
             $table->json('advisory_committee')->nullable();
-            $table->json('co_supervisors')->nullable();
         });
     }
 

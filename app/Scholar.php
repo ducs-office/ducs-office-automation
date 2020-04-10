@@ -3,6 +3,7 @@
 namespace App;
 
 use App\AcademicDetail;
+use App\Cosupervisor;
 use App\Publication;
 use App\ScholarProfile;
 use App\SupervisorProfile;
@@ -27,12 +28,10 @@ class Scholar extends User
         'research_area',
         'enrollment_date',
         'advisory_committee',
-        'co_supervisors',
     ];
 
     protected $casts = [
         'advisory_committee' => 'array',
-        'co_supervisors' => 'array',
     ];
 
     public static function boot()
@@ -62,6 +61,11 @@ class Scholar extends User
     public function supervisor()
     {
         return $this->supervisorProfile->supervisor();
+    }
+
+    public function cosupervisors()
+    {
+        return $this->belongsToMany(Cosupervisor::class, 'cosupervisor_scholar_table');
     }
 
     public function publications()
