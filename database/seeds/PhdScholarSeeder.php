@@ -33,7 +33,6 @@ class PhdScholarSeeder extends Seeder
             'research_area' => 'Theoretical Computer Science',
             'enrollment_date' => '2019-11-11',
             'supervisor_profile_id' => $supervisorNeelima->id,
-            'co_supervisors' => [],
             'advisory_committee' => [
                 [
                     'name' => 'Neelima Gupta',
@@ -189,7 +188,8 @@ class PhdScholarSeeder extends Seeder
             'city' => 'Ahmedabad, Gujarat',
             'country' => 'India',
             'date' => '2018-12-11',
-            'venue' => 'C',
+            'event_type' => 'C',
+            'event_name' => 'Presentation',
         ]);
 
         //======================================
@@ -199,13 +199,6 @@ class PhdScholarSeeder extends Seeder
             'last_name' => 'Singhal',
             'email' => 'archanasinghal1970@gmail.com',
         ])->supervisorProfile()->create();
-
-        $cosupervisorMuttoo = factory(Cosupervisor::class)->create([
-            'name' => 'S.K Muttoo',
-            'email' => 'drskmuttoo@gmail.com',
-            'affiliation' => 'Department of Computer Science, University of Delhi',
-            'designation' => 'Permanent',
-        ]);
 
         $scholarNisha = factory(Scholar::class)->create([
             'first_name' => 'Nisha',
@@ -219,7 +212,6 @@ class PhdScholarSeeder extends Seeder
             'research_area' => 'Information Security',
             'enrollment_date' => '2018-11-26',
             'supervisor_profile_id' => $supervisorArchana->id,
-            'co_supervisors' => [$cosupervisorMuttoo->id],
             'advisory_committee' => [
                 [
                     'name' => 'Archana Singhal',
@@ -248,6 +240,15 @@ class PhdScholarSeeder extends Seeder
             ],
         ]);
 
+        $cosupervisorMuttoo = factory(Cosupervisor::class)->create([
+            'name' => 'S.K Muttoo',
+            'email' => 'drskmuttoo@gmail.com',
+            'affiliation' => 'Department of Computer Science, University of Delhi',
+            'designation' => 'Permanent',
+        ]);
+
+        $scholarNisha->cosupervisors()->attach([$cosupervisorMuttoo->id]);
+
         $scholarNisha->courseworks()->attach([
             'phd_course_id' => 8,
         ]);
@@ -259,13 +260,6 @@ class PhdScholarSeeder extends Seeder
             'last_name' => 'Sharma',
             'email' => 'asharma@ddu.du.ac.in',
         ])->supervisorProfile()->create();
-
-        $cosupervisorAnurag = factory(Cosupervisor::class)->create([
-            'name' => 'Anurag Mishra',
-            'email' => 'anurag_cse2003@yahoo.com',
-            'affiliation' => 'Deen Dayal Upadhyaya College, Delhi University',
-            'designation' => 'Permanent',
-        ]);
 
         $scholarMegha = factory(Scholar::class)->create([
             'first_name' => 'Megha',
@@ -279,7 +273,6 @@ class PhdScholarSeeder extends Seeder
             'research_area' => 'Information Security',
             'enrollment_date' => '2018-05-12',
             'supervisor_profile_id' => $supervisorArpita->id,
-            'co_supervisors' => [$cosupervisorAnurag->id],
             'advisory_committee' => [
                 [
                     'name' => 'Poonam Bedi',
@@ -295,6 +288,15 @@ class PhdScholarSeeder extends Seeder
                 ],
             ],
         ]);
+
+        $cosupervisorAnurag = factory(Cosupervisor::class)->create([
+            'name' => 'Anurag Mishra',
+            'email' => 'anurag_cse2003@yahoo.com',
+            'affiliation' => 'Deen Dayal Upadhyaya College, Delhi University',
+            'designation' => 'Permanent',
+        ]);
+
+        $scholarMegha->cosupervisors()->attach([$cosupervisorAnurag->id]);
 
         $scholarMegha->courseworks()->attach([
             'phd_course_id' => 8,
@@ -314,7 +316,6 @@ class PhdScholarSeeder extends Seeder
             'research_area' => 'Machine Learning',
             'enrollment_date' => '2019-06-11',
             'supervisor_profile_id' => $supervisorSangeeta->id,
-            'co_supervisors' => [],
             'advisory_committee' => [
                 [
                     'name' => 'Poonam Bedi',
