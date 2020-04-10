@@ -39,7 +39,7 @@ class ScholarController extends Controller
         return view('research.scholars.show', [
             'scholar' => $scholar->load(['courseworks']),
             'categories' => config('options.scholars.categories'),
-            'admission_criterias' => config('options.scholars.admission_criterias'),
+            'admissionCriterias' => config('options.scholars.admission_criterias'),
             'courses' => PhdCourse::whereNotIn('id', $scholar->courseworks()->allRelatedIds())->get(),
             'genders' => config('options.scholars.genders'),
             'cosupervisors' => $cosupervisors,

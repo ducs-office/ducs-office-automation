@@ -11,7 +11,7 @@
     </div>
     <div class="mt-4 px-6">
         <ul class="border rounded-lg overflow-hidden mb-4">
-            @foreach ($journals as $journal)
+            @forelse ($journals as $journal)
                 <li class="border-b last:border-b-0 py-3">
                     <p class="ml-2 p-2">  
                         {{ implode(',', $journal->authors) }}.
@@ -79,7 +79,9 @@
                         ])
                     </div>
                 </li>
-            @endforeach
+            @empty
+                <p class="px-4 py-3 text-center text-gray-700 font-bold">No Journals</p>
+            @endforelse
         </ul class="border rounded-lg overflow-hidden mb-4">
     </div>
 </div>

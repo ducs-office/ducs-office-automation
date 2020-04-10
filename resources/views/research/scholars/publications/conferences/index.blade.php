@@ -11,14 +11,14 @@
     </div>
     <div class="mt-4 px-6">
         <ul class="border rounded-lg overflow-hidden mb-4">
-            @foreach ($conferences as $conference)
+            @forelse ($conferences as $conference)
                 <li class="border-b last:border-b-0 py-3">
                     <p class="ml-2 p-2">  
                         {{ implode(',', $conference->authors) }}.
                         {{ $conference->date->format('F Y') }}. 
                         <span class="italic"> {{ $conference->paper_title }} </span>
                         {{ $conference->name }}, 
-                        Volume {{ $conference->volume }}, 
+                        Edition {{ $conference->volume }}, 
                         Number {{ $conference->number }}, 
                         pp: {{ $conference->page_numbers[0] }}-{{ $conference->page_numbers[1] }}
                     </p>
@@ -75,7 +75,9 @@
                         ])
                     </div>
                 </li>
-            @endforeach
+            @empty
+                <p class="px-4 py-3 text-center text-gray-700 font-bold">No Conferences</p>
+            @endforelse
         </ul class="border rounded-lg overflow-hidden mb-4">
     </div>
 </div>

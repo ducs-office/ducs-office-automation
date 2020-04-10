@@ -48,10 +48,10 @@ class CosupervisorController extends Controller
     public function store(Request $request)
     {
         $validData = $request->validate([
-            'name' => 'required|string',
-            'email' => 'required|email',
-            'designation' => 'string',
-            'affiliation' => 'string',
+            'name' => 'required| string',
+            'email' => 'required| email',
+            'designation' => 'required| string',
+            'affiliation' => 'required| string',
         ]);
         Cosupervisor::create($validData);
 
@@ -62,10 +62,10 @@ class CosupervisorController extends Controller
     public function update(Request $request, Cosupervisor $cosupervisor)
     {
         $validData = $request->validate([
-            'name' => 'sometimes|required|string',
-            'email' => 'sometimes|required|email',
-            'designation' => 'string',
-            'affiliation' => 'string',
+            'name' => 'sometimes| required| string',
+            'email' => 'sometimes| required| email',
+            'designation' => 'sometimes| required| string',
+            'affiliation' => 'sometimes| required| string',
         ]);
 
         $cosupervisor->update($validData);

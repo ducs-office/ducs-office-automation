@@ -13,11 +13,13 @@
             <input name="email" type="text" class="w-full form-input" placeholder="Enter Email">
         </div>
         <div class="mb-2">
-            <label for="designation" class="w-full form-label mb-1">Designation
+            <label for="designation" class="w-full form-label mb-1">Designation 
+                <span class="text-red-600">*</span></label>
             <input name="designation" type="text" class="w-full form-input" placeholder="Enter Designation">
         </div>
         <div class="mb-2">
             <label for="affiliation" class="w-full form-label mb-1">Affiliation
+                <span class="text-red-600">*</span></label>
             <input name="affiliation" type="text" class="w-full form-input" placeholder="Enter Affiliation">
         </div>
         <div class="mt-5">

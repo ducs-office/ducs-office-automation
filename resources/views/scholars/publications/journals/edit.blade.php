@@ -8,13 +8,6 @@
             @csrf_token
             @method('PATCH')
             <div class="mb-4">
-                <label for="name" class="form-label block mb-1">
-                    Journal <span class="text-red-600">*</span>
-                </label>
-                <input type="text" value="{{ old('name', $journal->name) }}" name="name" 
-                    class="form-input w-full {{ $errors->has('name') ? ' border-red-600' : ''}}">
-            </div>
-            <div class="mb-4">
                 <add-remove-elements :existing-elements ="{{ is_array(old('authors')) ? json_encode(old('authors')) : json_encode($journal->authors)}}">
                     <template v-slot="{ elements, addElement, removeElement }">
                         <div class="flex items-baseline mb-2">
@@ -37,13 +30,35 @@
                 <input type="text" value="{{ old('paper_title', $journal->paper_title) }}" name="paper_title" 
                     class="form-input w-full {{ $errors->has('paper_title') ? ' border-red-600' : ''}}">
             </div>
+            <div class="mb-4">
+                <label for="name" class="form-label block mb-1">
+                    Journal <span class="text-red-600">*</span>
+                </label>
+                <input type="text" value="{{ old('name', $journal->name) }}" name="name" 
+                    class="form-input w-full {{ $errors->has('name') ? ' border-red-600' : ''}}">
+            </div>
             <div class="flex mb-4">
                 <div class="w-1/2">
-                    <label for="date" class="form-label block mb-1">
+                    <label for="date[]" class="form-label block mb-1">
                         Date <span class="text-red-600">*</span>
                     </label>
-                    <input type="date" value="{{ old('date', $journal->date->format('Y-m-d')) }}" name="date" 
-                        class="form-input w-full {{ $errors->has('date') ? ' border-red-600' : ''}}">
+                    <div class="flex">
+                        <select name="date[month]" id="date_month" class="form-input flex-1">
+                            @foreach ($months as $name => $value)
+                            <option value="{{ $value }}" 
+                                {{ $value === old('date.month', $journal->date->format('F')) ? 'selected': ''}}> 
+                                {{$name}}
+                            </option>
+                            @endforeach
+                        </select>
+                        <select name="date[year]" id="date_year" class="form-input flex-1 ml-4">
+                            @for ($i = 0; $i < 10; $i++)
+                            <option value="{{ $currentYear - $i }}"
+                                {{ $currentYear - $i  == old('date.year', $journal->date->format('Y')) ? 'selected': ''}}> 
+                                {{$currentYear - $i }}</option>        
+                            @endfor
+                        </select>
+                    </div>
                 </div>
                 <div class="ml-4 w-1/2">
                     <label for="volume" class="form-label block mb-1">

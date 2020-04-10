@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Staff;
 
+use App\Cosupervisor;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Staff\StoreUserRequest;
 use App\Http\Requests\Staff\UpdateUserRequest;
@@ -47,6 +48,13 @@ class UserController extends Controller
 
         if ($request->is_supervisor) {
             $user->supervisorProfile()->create();
+
+            Cosupervisor::create([
+                'name' => $user->name,
+                'email' => $user->email,
+                'designation' => 'Permanent Professor',
+                'affiliation' => 'DUCS, University of Delhi',
+            ]);
         }
 
         DB::commit();
@@ -70,6 +78,13 @@ class UserController extends Controller
 
         if ($request->is_supervisor && ! $user->isSupervisor()) {
             $user->supervisorProfile()->create();
+
+            Cosupervisor::create([
+                'name' => $user->name,
+                'email' => $user->email,
+                'designation' => 'Permanent Professor',
+                'affiliation' => 'DUCS, University of Delhi',
+            ]);
         }
 
         DB::commit();

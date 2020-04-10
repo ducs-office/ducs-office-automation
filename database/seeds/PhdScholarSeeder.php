@@ -21,20 +21,6 @@ class PhdScholarSeeder extends Seeder
             'email' => 'ngupta.cs.du@gmail.com',
         ])->supervisorProfile()->create();
 
-        $cosupervisorNaveen = factory(Cosupervisor::class)->create([
-            'name' => 'Naveen Kumar',
-            'email' => 'nk.cs.du@gmail.com',
-            'affiliation' => 'Department of Computer Science, University of Delhi',
-            'designation' => 'Permanent',
-        ]);
-
-        $cosupervisorNaveenGarg = factory(Cosupervisor::class)->create([
-            'name' => 'Naveen Garg',
-            'email' => 'naveen@cse.iitd.ac.in',
-            'affiliation' => 'Indian Institute of Technology Delhi',
-            'designation' => 'Permanent',
-        ]);
-
         $scholarRajni = factory(Scholar::class)->create([
             'first_name' => 'Rajni',
             'last_name' => '.',
@@ -47,7 +33,7 @@ class PhdScholarSeeder extends Seeder
             'research_area' => 'Theoretical Computer Science',
             'enrollment_date' => '2019-11-11',
             'supervisor_profile_id' => $supervisorNeelima->id,
-            'co_supervisors' => [$cosupervisorNaveen->id, $cosupervisorNaveenGarg->id],
+            'co_supervisors' => [],
             'advisory_committee' => [
                 [
                     'name' => 'Neelima Gupta',
@@ -199,6 +185,11 @@ class PhdScholarSeeder extends Seeder
             'page_numbers' => [3, 37],
             'city' => 'Ahmedabad, Gujarat',
             'country' => 'India',
+        ])->presentations()->create([
+            'city' => 'Ahmedabad, Gujarat',
+            'country' => 'India',
+            'date' => '2018-12-11',
+            'venue' => 'C',
         ]);
 
         //======================================
@@ -307,6 +298,41 @@ class PhdScholarSeeder extends Seeder
 
         $scholarMegha->courseworks()->attach([
             'phd_course_id' => 8,
+        ]);
+
+        //=======================================
+
+        $scholarKountay = factory(Scholar::class)->create([
+            'first_name' => 'Kountay',
+            'last_name' => 'Dwivedi',
+            'email' => 'kdwivedi@cs.du.ac.in',
+            'phone_no' => '9650220569',
+            'gender' => 'M',
+            'address' => '76/59 Ganeshpuram, Prayagraj. U.P. 211002',
+            'category' => 'G',
+            'admission_via' => 'J',
+            'research_area' => 'Machine Learning',
+            'enrollment_date' => '2019-06-11',
+            'supervisor_profile_id' => $supervisorSangeeta->id,
+            'co_supervisors' => [],
+            'advisory_committee' => [
+                [
+                    'name' => 'Poonam Bedi',
+                    'title' => 'Prof',
+                    'affiliation' => 'Department of Computer Science, University of Delhi',
+                    'designation' => 'Permanent',
+                ],
+                [
+                    'name' => 'V.B. Singh',
+                    'title' => 'Dr',
+                    'affiliation' => 'Delhi College of Arts & Commerce, University of Delhi',
+                    'designation' => 'Permanent',
+                ],
+            ],
+        ]);
+
+        $scholarKountay->courseworks()->attach([
+            'phd_course_id' => 23,
         ]);
     }
 }
