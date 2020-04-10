@@ -4,7 +4,14 @@
         <div class="page-header flex items-baseline">
             <h2 class="mr-6">Create Presentation</h2>
         </div>
-        <form action="{{ route('scholars.profile.presentation.store')}}" method="post" class="px-6">
+        <form action="{{ route('scholars.profile.presentation.store')}}" method="post" class="px-6"
+            onsubmit="
+                if(! scopus_indexed.checked) {
+                    alert('You cannot create a presentation which is not scopus indexed!');
+                    return false;
+                }
+                return true;
+            ">
             @csrf_token
             <div class="mb-4">
                 <label for="publication" class="form-label block mb-1">
@@ -64,7 +71,7 @@
             </div>
             <div class="mb-4 mt-2 flex items-center pt-2">
                 <input type="checkbox" name="scopus_indexed"  id ="scopus_indexed" class="mr-2"
-                {{old('scopus_indexed') === "on" ? 'checked': ''}}>
+                value="1" {{old('scopus_indexed') === "1" ? 'checked': ''}}>
                 <label for="scopus_indexed" class="w-full form-label">
                     Scopus Indexed ?
                 </label>
