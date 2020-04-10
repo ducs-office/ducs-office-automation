@@ -35,11 +35,11 @@
     @foreach($cosupervisors as $cosupervisor)
         <div class="px-4 py-2 hover:bg-gray-100 border-b flex justify-between">
             <div class="px-2">
-                <h2 class="text-lg font-bold mb-2 flex items-center">
+                <h2 class="text-lg font-bold flex items-center">
                     {{ ucwords($cosupervisor->name) }}
-                    <span class="text-base font-bold ml-2"> ( {{ $cosupervisor->designation }} at {{ $cosupervisor->affiliation }} )</span>
                 </h2>
-                <h4 class="text-sm font-semibold text-gray-600 mr-2">{{ $cosupervisor->email }}</h4>
+                <h4 class="text-sm font-semibold text-gray-600 mb-1">{{ $cosupervisor->email }}</h4>
+                <h4 class="text-sm font-semibold text-gray-600"> {{ $cosupervisor->designation }} Professor <strong>at</strong> {{ $cosupervisor->affiliation }} </h4>
             </div>
             <div class="flex ml-auto items-center">
                 <button type="submit" class="p-1 hover:text-blue-700 mr-2"

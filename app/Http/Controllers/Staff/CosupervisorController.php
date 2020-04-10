@@ -25,7 +25,7 @@ class CosupervisorController extends Controller
             'name' => $teacher->name,
             'email' => $teacher->email,
             'designation' => $teacher->profile->designation,
-            'affiliation' => $teacher->profile->college,
+            'affiliation' => $teacher->profile->college->name,
         ]);
 
         flash('Co-supervisor added successfully')->success();

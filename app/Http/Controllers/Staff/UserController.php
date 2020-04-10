@@ -52,7 +52,7 @@ class UserController extends Controller
             Cosupervisor::create([
                 'name' => $user->name,
                 'email' => $user->email,
-                'designation' => 'Permanent Professor',
+                'designation' => 'Permanent',
                 'affiliation' => 'DUCS, University of Delhi',
             ]);
         }
@@ -82,7 +82,7 @@ class UserController extends Controller
             Cosupervisor::create([
                 'name' => $user->name,
                 'email' => $user->email,
-                'designation' => 'Permanent Professor',
+                'designation' => 'Permanent',
                 'affiliation' => 'DUCS, University of Delhi',
             ]);
         }

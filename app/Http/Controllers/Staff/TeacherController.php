@@ -110,10 +110,10 @@ class TeacherController extends Controller
 
             if ($teacher->profile->college) {
                 Cosupervisor::create([
-                    'name' => $request->name,
-                    'email' => $request->email,
-                    'designation' => 'Permanent Professor',
-                    'affiliation' => $teacher->profile->college,
+                    'name' => $teacher->name,
+                    'email' => $teacher->email,
+                    'designation' => 'Permanent',
+                    'affiliation' => $teacher->profile->college->name,
                 ]);
             }
         }

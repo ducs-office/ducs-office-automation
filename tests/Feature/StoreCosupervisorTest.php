@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\College;
 use App\Cosupervisor;
 use App\Teacher;
 use App\TeacherProfile;
@@ -20,6 +21,11 @@ class StoreCosupervisorTest extends TestCase
         $this->signIn();
 
         $teacher = create(Teacher::class);
+        
+        $college = create(College::class);
+        $teacher->profile()->update([
+            'college_id' => $college->id
+        ]);
 
         $this->withoutExceptionHandling()
             ->post(route('staff.cosupervisors.teachers.store', $teacher))
