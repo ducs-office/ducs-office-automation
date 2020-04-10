@@ -155,7 +155,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <button v-on:click.prevent="removeElement(index)" v-if="elements.length > 1" class="btn is-sm ml-2 text-red-600">x</button>
+                            <button v-on:click.prevent="removeElement(index)"  class="btn is-sm ml-2 text-red-600">x</button>
                         </div>
                     </template>
                 </add-remove-elements>

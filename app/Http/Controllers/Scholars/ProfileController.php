@@ -18,20 +18,14 @@ class ProfileController extends Controller
         $scholar = $request->user()->load([
             'publications',
             'publications.presentations',
+            'cosupervisors',
         ]);
-
-        $cosupervisors = [];
-
-        foreach ($scholar->co_supervisors as $coS) {
-            array_push($cosupervisors, Cosupervisor::find($coS)->name);
-        }
 
         return view('scholars.profile', [
             'scholar' => $scholar,
             'admissionCriterias' => config('options.scholars.admission_criterias'),
             'genders' => config('options.scholars.genders'),
             'categories' => config('options.scholars.categories'),
-            'cosupervisors' => $cosupervisors,
         ]);
     }
 
@@ -62,16 +56,20 @@ class ProfileController extends Controller
             'research_area' => [Rule::requiredIf($scholar->research_area != null)],
             'supervisor_profile_id' => ['nullable', 'exists:supervisor_profiles,id'],
             'enrollment_date' => ['nullable', 'date', 'before:today'],
-            'advisory_committee' => ['nullable', 'array', 'max: 4'],
-            'advisory_committee.*.title' => ['required', 'string'],
-            'advisory_committee.*.name' => ['required', 'string'],
-            'advisory_committee.*.designation' => ['required', 'string'],
-            'advisory_committee.*.affiliation' => ['required', 'string'],
-            'co_supervisors' => ['nullable', 'array', 'max:2'],
-            'co_supervisors.*' => ['required', 'integer', 'exists:cosupervisors,id'],
+            'advisory_committee' => ['sometimes', 'array', 'max: 4'],
+            'advisory_committee.*.title' => ['sometimes', 'string'],
+            'advisory_committee.*.name' => ['sometimes', 'string'],
+            'advisory_committee.*.designation' => ['sometimes', 'string'],
+            'advisory_committee.*.affiliation' => ['sometimes', 'string'],
+            'co_supervisors' => ['sometimes', 'array', 'max:2'],
+            'co_supervisors.*' => ['sometimes', 'required', 'integer', 'exists:cosupervisors,id'],
         ]);
 
         $scholar->update($validData);
+
+        if ($request->has('co_supervisors')) {
+            $scholar->cosupervisors()->sync($request->co_supervisors);
+        }
 
         if ($request->has('profile_picture')) {
             $scholar->profilePicture()->create([
