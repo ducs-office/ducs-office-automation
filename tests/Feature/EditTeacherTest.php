@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\College;
 use App\Teacher;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -110,11 +111,16 @@ class EditTeacherTest extends TestCase
     }
 
     /** @test */
-    public function teacher_can_be_made_a_supervisor()
+    public function teacher_can_be_made_a_supervisor_only_if_their_profile_has_a_college_set()
     {
         $this->signIn();
 
         $teacher = create(Teacher::class);
+        $college = create(College::class);
+
+        $teacher->profile()->update([
+            'college_id' => $college->id,
+        ]);
 
         $this->withoutExceptionHandling()
             ->patch(route('staff.teachers.update', $teacher), [

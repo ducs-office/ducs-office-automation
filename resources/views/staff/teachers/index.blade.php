@@ -31,7 +31,7 @@
                 <h4 class="text-sm font-semibold text-gray-600 mr-2">{{ $teacher->email }}</h4>
             </div>
             <div class="ml-auto px-2 flex items-center">
-                @if(! $teacher->isSupervisor())
+                @if(! $teacher->isSupervisor() && $teacher->profile->college)
                 <form action="{{ route('staff.teachers.update', $teacher) }}" method="POST" class="mr-3"
                     onsubmit="return confirm('Caution: This action cannot be undone. Are you sure?');">
                     @csrf_token @method('PATCH')

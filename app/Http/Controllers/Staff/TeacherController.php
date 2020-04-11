@@ -82,10 +82,6 @@ class TeacherController extends Controller
 
         $teacher = Teacher::create($validatedData + ['password' => bcrypt($plainPassword)]);
 
-        if ($request->is_supervisor) {
-            $teacher->supervisorProfile()->create();
-        }
-
         Mail::to($teacher)->send(new UserRegisteredMail($teacher, $plainPassword));
 
         flash('College Teacher created successfully!')->success();
@@ -105,17 +101,15 @@ class TeacherController extends Controller
 
         $teacher->update($validData);
 
-        if ($request->is_supervisor) {
+        if ($request->is_supervisor && $teacher->profile->college) {
             $teacher->supervisorProfile()->create();
 
-            if ($teacher->profile->college) {
-                Cosupervisor::create([
-                    'name' => $teacher->name,
-                    'email' => $teacher->email,
-                    'designation' => 'Permanent',
-                    'affiliation' => $teacher->profile->college->name,
-                ]);
-            }
+            Cosupervisor::create([
+                'name' => $teacher->name,
+                'email' => $teacher->email,
+                'designation' => 'Permanent',
+                'affiliation' => $teacher->profile->college->name,
+            ]);
         }
 
         flash('College teacher updated successfully')->success();

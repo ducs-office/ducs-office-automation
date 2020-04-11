@@ -21,12 +21,6 @@
                 <input id="email" type="email" name="email" class="w-full form-input"
                     placholder="Enter user's email here..." required>
             </div>
-            <div class="mb-2 flex items-center">
-                <input type="checkbox" name="is_supervisor" id="is_supervisor" class="mr-2" value="true">
-                <label for="is_supervisor" class="w-full form-label">
-                    Is a Supervisor ?
-                </label>
-            </div>
             <div class="mt-5">
                 <button class="btn btn-magenta">Create</button>
             </div>
