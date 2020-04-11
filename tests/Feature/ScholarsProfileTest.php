@@ -27,6 +27,7 @@ class ScholarsProfileTest extends TestCase
                 'admissionCriterias',
                 'genders',
                 'categories',
+                'eventTypes',
             ])
         ->assertSee($scholar->email);
     }

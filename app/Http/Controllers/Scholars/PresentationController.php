@@ -31,7 +31,7 @@ class PresentationController extends Controller
         $scholar = $request->user();
 
         $validData = $request->validated();
-        
+
         $scholar->presentations()->create($validData);
 
         flash('Presentation created successfully!')->success();

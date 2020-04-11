@@ -39,8 +39,8 @@
                         </div>
                     </div>
                     <div class="w-full px-4">
-                        <details class="ml-2 mt-4 cursor-pointer">
-                            <summary class="font-bold italic underline pb-4">Expand</summary>
+                        <details class="ml-2 mt-4 bg-gray-100 border rounded-t cursor-pointer outline-none">
+                            <summary class="underline p-2 bg-gray-200 outline-none">Expand</summary>
                             <div class="flex m-2">
                                 <div class="w-30 flex">
                                     <feather-icon name="users" class="h-current text-blue-600"></feather-icon>
@@ -90,9 +90,6 @@
                                 </div>
                             </div>
                         </details>
-                        @include('scholars.presentations.show', [
-                            'presentations' => $journal->presentations,
-                        ])
                     </div>
                 </li>
             @empty

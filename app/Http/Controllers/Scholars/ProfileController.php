@@ -17,7 +17,7 @@ class ProfileController extends Controller
     {
         $scholar = $request->user()->load([
             'publications',
-            'publications.presentations',
+            'presentations.publication',
             'cosupervisors',
         ]);
 
@@ -26,6 +26,7 @@ class ProfileController extends Controller
             'admissionCriterias' => config('options.scholars.admission_criterias'),
             'genders' => config('options.scholars.genders'),
             'categories' => config('options.scholars.categories'),
+            'eventTypes' => config('options.scholars.academic_details.event_types'),
         ]);
     }
 

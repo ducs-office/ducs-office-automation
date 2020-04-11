@@ -6,6 +6,7 @@ use App\AdvisoryMeeting;
 use App\Cosupervisor;
 use App\Leave;
 use App\PhdCourse;
+use App\Presentation;
 use App\Scholar;
 use App\SupervisorProfile;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -157,5 +158,19 @@ class ScholarTest extends TestCase
         ]);
 
         $this->assertCount(2, $scholar->fresh()->cosupervisors);
+    }
+
+    /** @test */
+    public function scholar_has_may_presentaions()
+    {
+        $scholar = create(Scholar::class);
+
+        $this->assertInstanceOf(HasMany::class, $scholar->presentations());
+
+        $this->assertCount(0, $scholar->presentations);
+
+        $presentation = create(Presentation::class, 1, ['scholar_id' => $scholar->id]);
+
+        $this->assertCount(1, $scholar->fresh()->presentations);
     }
 }

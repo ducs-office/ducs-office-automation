@@ -176,6 +176,24 @@
             'conferences' => $scholar->conferences
         ])
 
+        <div class="bg-white p-6 h-full shadow-md mt-8">
+            <div class="flex justify-between">
+                <div class="w-60 pr-4 relative z-10 -ml-8 my-2">
+                    <h3 class="relative z-20 pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
+                        Presentations
+                    </h3>
+                    <svg class="absolute left-0 w-2 text-magenta-900" viewBox="0 0 10 10">
+                        <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
+                    </svg>
+                </div>
+            </div>
+
+            @include('research.scholars.presentations.index', [
+                'presentations' => $scholar->presentations,
+                'eventTypes' => $eventTypes,
+            ])
+        </div>
+
         <div class="bg-white p-6 h-full rounded shadow-md mb-8 mt-6">
 
             {{-- Courseworks --}}

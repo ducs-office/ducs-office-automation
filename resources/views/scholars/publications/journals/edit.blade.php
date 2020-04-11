@@ -40,7 +40,7 @@
             <div class="flex mb-4">
                 <div class="w-1/2">
                     <label for="date[]" class="form-label block mb-1">
-                        Date <span class="text-red-600">*</span>
+                        Issue Date <span class="text-red-600">*</span>
                     </label>
                     <div class="flex">
                         <select name="date[month]" id="date_month" class="form-input flex-1">
