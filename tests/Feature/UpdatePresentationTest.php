@@ -21,6 +21,7 @@ class UpdatePresentationTest extends TestCase
         $publication = create(Publication::class, 1, ['scholar_id' => $scholar->id]);
 
         $presentation = create(Presentation::class, 1, [
+            'scholar_id' => $scholar->id,
             'publication_id' => $publication->id,
             'country' => $country = 'Australia',
         ]);

@@ -28,8 +28,11 @@ class PresentationController extends Controller
 
     public function store(StorePresentation $request)
     {
+        $scholar = $request->user();
+
         $validData = $request->validated();
-        Presentation::create($validData);
+        
+        $scholar->presentations()->create($validData);
 
         flash('Presentation created successfully!')->success();
 

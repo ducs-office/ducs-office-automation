@@ -185,6 +185,7 @@ class PhdScholarSeeder extends Seeder
             'city' => 'Ahmedabad, Gujarat',
             'country' => 'India',
         ])->presentations()->create([
+            'scholar_id' => $scholarSapna->id,
             'city' => 'Ahmedabad, Gujarat',
             'country' => 'India',
             'date' => '2018-12-11',

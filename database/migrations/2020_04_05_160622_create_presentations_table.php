@@ -16,6 +16,7 @@ class CreatePresentationsTable extends Migration
         Schema::create('presentations', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('publication_id');
+            $table->unsignedBigInteger('scholar_id');
             $table->string('city');
             $table->string('country');
             $table->date('date');
@@ -24,6 +25,7 @@ class CreatePresentationsTable extends Migration
             $table->timestamps();
 
             $table->foreign('publication_id')->references('id')->on('publications')->onDelete('cascade');
+            $table->foreign('scholar_id')->references('id')->on('scholars')->onDelete('cascade');
         });
     }
 

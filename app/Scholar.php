@@ -83,6 +83,11 @@ class Scholar extends User
         return $this->publications()->where('type', 'conference')->orderBy('date', 'DESC');
     }
 
+    public function presentations()
+    {
+        return $this->hasMany(Presentation::class)->orderBy('date', 'DESC');
+    }
+
     public function courseworks()
     {
         return $this->belongsToMany(PhdCourse::class)
