@@ -20,7 +20,6 @@
                             <span class="italic"> {{ $conference->paper_title }} </span>
                             {{ $conference->name }}, 
                             Edition {{ $conference->volume }}, 
-                            Number {{ $conference->number }}, 
                             pp: {{ $conference->page_numbers[0] }}-{{ $conference->page_numbers[1] }}
                         </p>
                         <div class="ml-auto p-2 flex">
@@ -72,7 +71,7 @@
                                 </div>
                                 <div class="w-2/5">
                                     <div class="flex m-2">
-                                        <h4 class="font-semibold"> Issue Date: </h4>
+                                        <h4 class="font-semibold"> Date: </h4>
                                         <p class="ml-2"> {{ $conference->date->format('F Y') }} </p>
                                     </div>
                                     <div class="flex m-2">

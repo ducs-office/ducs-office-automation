@@ -116,7 +116,7 @@
                     <option value="" class="text-gray-600" selected> Select your supervisor </option>
                     @foreach ($supervisorProfiles as $name => $id)
                         <option value=" {{ $id }} "
-                            {{ $id === old('supervisor_profile_id', $scholar->supervisor_profile_id)? 'selected':''}} >
+                            {{ $id == old('supervisor_profile_id', $scholar->supervisor_profile_id)? 'selected':''}} >
                             {{ $name }}
                         </option>
                     @endforeach

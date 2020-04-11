@@ -74,7 +74,6 @@ return [
                 'Scopus' => 'Scopus',
                 'SCI' => 'SCI',
                 'SCIE' => 'SCIE',
-                'G' => 'Google Scholar',
                 'MR' => 'MR',
             ],
             'event_types' => [

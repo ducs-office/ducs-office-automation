@@ -7,7 +7,7 @@
         <form action="{{ route('scholars.profile.presentation.store')}}" method="post" class="px-6"
             onsubmit="
                 if(! scopus_indexed.checked) {
-                    alert('You cannot create a presentation which is not scopus indexed!');
+                    alert('You cannot create a presentation whose event is not scopus indexed!');
                     return false;
                 }
                 return true;
@@ -39,12 +39,19 @@
                     @endforeach
                 </select>
             </div>
-            <div class="mb-4">
+            <div>
                 <label for="event_name" class="form-label block mb-1">
                     Event Name <span class="text-red-600">*</span>
                 </label>
                 <input type="text" name="event_name" class="form-input w-full {{ $errors->has('event_name') ? ' border-red-600' : ''}}"
                 placeholder="Enter Event Name" value="{{old('event_name')}}">
+            </div>
+            <div class="mb-4 flex items-center pt-2">
+                <input type="checkbox" name="scopus_indexed"  id ="scopus_indexed" class="mr-2"
+                value="1" {{old('scopus_indexed') === "1" ? 'checked': ''}}>
+                <label for="scopus_indexed" class="w-full form-label">
+                    Is the event scopus indexed ?
+                </label>
             </div>
             <div class="mb-4">
                 <label for="date" class="form-label block mb-1">
@@ -68,13 +75,6 @@
                     <input type="text" name="country" class="form-input w-full {{ $errors->has('country') ? ' border-red-600' : ''}}" placeholder="Enter Country"
                     value="{{old('country')}}">
                 </div>
-            </div>
-            <div class="mb-4 mt-2 flex items-center pt-2">
-                <input type="checkbox" name="scopus_indexed"  id ="scopus_indexed" class="mr-2"
-                value="1" {{old('scopus_indexed') === "1" ? 'checked': ''}}>
-                <label for="scopus_indexed" class="w-full form-label">
-                    Scopus Indexed ?
-                </label>
             </div>
             <div class="mt-6">
                 <input type="submit" class="w-full btn btn-magenta" value="Create">
