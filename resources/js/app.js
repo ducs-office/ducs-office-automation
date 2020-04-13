@@ -16,6 +16,7 @@ import ToggleVisibility from './components/ToggleVisibility';
 import ProgrammeForm from'./components/ProgrammeForm.js';
 import SemesterWiseCourseInput from './components/SemesterWiseCoursesInput.vue';
 import AddRemoveElements from './components/AddRemoveElements.js';
+import CourseProgrammeRevisionSelector from './components/CourseProgrammeRevisionSelector.vue';
 
 import ClickOutside from './click-outside.js';
 
@@ -37,6 +38,8 @@ Vue.component('toggle-visibility', ToggleVisibility);
 Vue.component('programme-form', ProgrammeForm);
 Vue.component("semester-wise-courses-input", SemesterWiseCourseInput);
 Vue.component('add-remove-elements', AddRemoveElements);
+Vue.component("course-programme-revision-selector", CourseProgrammeRevisionSelector);
+
 
 Vue.mixin({
     computed: {

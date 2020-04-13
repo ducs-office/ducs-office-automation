@@ -7,6 +7,7 @@ use App\Course;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Teacher\UpdateProfileRequest;
 use App\Programme;
+use App\TeacherProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
@@ -36,21 +37,10 @@ class ProfileController extends Controller
             'profile.teachingDetails',
         ]);
 
-        $programmes = Programme::withLatestRevision()->get()
-            ->mapWithKeys(static function ($programme) {
-                $latestRevisionId = $programme->latestRevision->id;
-                $name = $programme->code . ' - ' . $programme->name;
-                return [$latestRevisionId => $name];
-            });
-
-        $courses = Course::select(['id', 'code', 'name'])->get()
-            ->mapWithKeys(static function ($course) {
-                return [$course->id => $course->code . ' - ' . $course->name];
-            });
+        $programmes = Programme::withLatestRevision()->get();
 
         return view('teachers.edit', [
             'colleges' => College::all()->pluck('name', 'id'),
-            'courses' => $courses,
             'designations' => config('options.teachers.designations'),
             'programmes' => $programmes,
             'teacher' => $teacher,
@@ -60,13 +50,11 @@ class ProfileController extends Controller
     public function update(UpdateProfileRequest $request)
     {
         $validatedData = $request->validated();
-        $profile = $request->user()->profile;
+        $profile = $request->user()->profile->load('teachingDetails');
 
         $profile->update($validatedData);
 
-        if ($request->has('teaching_details')) {
-            $profile->teachingDetails()->createMany($request->getTeachingRecord());
-        }
+        $this->syncCreateTeachingDetails($profile, $request->getTeachingRecord());
 
         if ($request->has('profile_picture')) {
             $profile->profilePicture()->create($request->getProfilePicture());
@@ -75,6 +63,31 @@ class ProfileController extends Controller
         flash('Profile Updated Successfully!')->success();
 
         return redirect(route('teachers.profile'));
+    }
+
+    protected function syncCreateTeachingDetails(TeacherProfile $profile, array $records)
+    {
+        $currentDetails = $profile->teachingDetails->map->only([
+            'programme_revision_id',
+            'course_id',
+            'semester',
+        ])->mapWithKeys(function (array $detail) {
+            return [implode(',', $detail) => collect($detail)];
+        });
+
+        $newDetails = collect($records)->mapWithKeys(function (array $detail) {
+            return [implode(',', $detail) => collect($detail)];
+        });
+
+        $toBeCreated = $newDetails->diffKeys($currentDetails)->toArray();
+        $toBeDeleted = $currentDetails->diffKeys($newDetails);
+
+        $profile->teachingDetails()->createMany($toBeCreated);
+        $profile->teachingDetails()
+            ->whereIn('programme_revision_id', $toBeDeleted->pluck('programme_revision_id')->toArray())
+            ->whereIn('course_id', $toBeDeleted->pluck('course_id')->toArray())
+            ->whereIn('semester', $toBeDeleted->pluck('semester')->toArray())
+            ->delete();
     }
 
     public function avatar()

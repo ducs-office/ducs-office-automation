@@ -37,6 +37,6 @@ class Teacher extends User
 
     public function teachingRecords()
     {
-        return $this->hasMany(TeachingRecord::class, 'teacher_id');
+        return $this->hasMany(TeachingRecord::class, 'teacher_id')->orderBy('valid_from', 'desc');
     }
 }

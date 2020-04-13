@@ -19,27 +19,8 @@ class TeacherController extends Controller
 {
     public function index(Request $request)
     {
-//        $filters = $request->query('filters');
-//        $query = Teacher::applyFilter($filters)->with([
-//            'teachingRecords',
-//            'teachingRecords.course',
-//            'teachingRecords.programmeRevision.programme',
-//        ]);
-
-        $teachers = Teacher::latest()->get();
-//        $courses = Course::select(['id', 'code', 'name'])->get()
-//            ->map(static function ($course) {
-//                return [
-//                    'id' => $course->id,
-//                    'name' => $course->code . ' - ' . $course->name,
-//                ];
-//            })->pluck('name', 'id');
-//
-//        $startDate = TeachingRecord::getStartDate();
-//        $endDate = TeachingRecord::getEndDate();
-
         return view('staff.teachers.index', ([
-            'teachers' => $teachers,
+            'teachers' => Teacher::latest()->get(),
         ]));
     }
 

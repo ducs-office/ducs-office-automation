@@ -30,7 +30,7 @@ class OutgoingLettersController extends Controller
         }
 
         return view('staff.outgoing_letters.index', [
-            'letters' => $query->orderBy('date', 'DESC')->get(),
+            'letters' => $query->orderBy('date', 'DESC')->paginate(),
             'types' => OutgoingLetter::selectRaw('DISTINCT(type)')->get()->pluck('type', 'type'),
             'recipients' => OutgoingLetter::selectRaw('DISTINCT(recipient)')->get()->pluck('recipient', 'recipient'),
             'creators' => User::select('id', 'name')->whereIn('id', OutgoingLetter::selectRaw('DISTINCT(creator_id)'))->get()->pluck('name', 'id'),

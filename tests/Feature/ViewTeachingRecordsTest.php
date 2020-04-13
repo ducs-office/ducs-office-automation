@@ -29,8 +29,8 @@ class ViewTeachingRecordsTest extends TestCase
             ->viewData('records');
 
         $this->assertEquals(4, $viewRecords->count());
-        $this->assertEquals($records->pluck('teacher.id'), $viewRecords->pluck('teacher.id'));
-        $this->assertEquals($records->pluck('college.id'), $viewRecords->pluck('college.id'));
+        $this->assertEquals($records->sortByDesc('valid_from')->pluck('teacher.id'), $viewRecords->pluck('teacher.id'));
+        $this->assertEquals($records->sortByDesc('valid_from')->pluck('college.id'), $viewRecords->pluck('college.id'));
     }
 
     /** @test */
@@ -112,5 +112,28 @@ class ViewTeachingRecordsTest extends TestCase
         $this->assertCount(2, $viewRecords);
         $this->assertEquals($viewRecords->pluck('teacher.id'), $latestRecords->pluck('teacher.id'));
         $this->assertEquals($viewRecords->pluck('valid_from'), $latestRecords->pluck('valid_from'));
+    }
+
+    /** @test */
+    public function teachering_records_are_in_reverse_chronological_order()
+    {
+        $this->signIn();
+
+        $olderRecord = create(TeachingRecord::class, 1, ['valid_from' => now()->subYears(1)]);
+        $latestRecord = create(TeachingRecord::class, 1, ['valid_from' => now()]);
+        $midRecord = create(TeachingRecord::class, 1, ['valid_from' => now()->subMonths(6)]);
+
+        $viewRecords = $this->withoutExceptionHandling()
+            ->get(route('staff.teaching_records.index'))
+            ->assertSuccessful()
+            ->assertViewIs('staff.teaching_records.index')
+            ->assertViewHas('records')
+            ->viewData('records');
+
+        $this->assertEquals(
+            [$latestRecord->id, $midRecord->id, $olderRecord->id],
+            $viewRecords->pluck('id')->toArray(),
+            'records are not in reversed chronological order'
+        );
     }
 }

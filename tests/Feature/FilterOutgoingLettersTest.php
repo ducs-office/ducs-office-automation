@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\OutgoingLetter;
 use App\User;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Carbon;
@@ -34,14 +35,14 @@ class FilterOutgoingLettersTest extends TestCase
             ->assertViewHas('letters')
             ->viewData('letters');
 
-        $this->assertInstanceOf(Collection::class, $viewOutgoingLetters);
-        $this->assertCount(2, $viewOutgoingLetters, 'Only 2 letters were expected but :actual letters were returned');
+        $this->assertInstanceOf(LengthAwarePaginator::class, $viewOutgoingLetters);
+        $this->assertEquals(2, $viewOutgoingLetters->total(), 'Only 2 letters were expected but :actual letters were returned');
 
         $lettersAfterBeforeFilter = $viewOutgoingLetters->filter(function ($letter) use ($beforeFilter) {
             return Carbon::parse($beforeFilter)->lessThan($letter->date);
         });
 
-        $this->assertCount(0, $lettersAfterBeforeFilter, 'filtered logs do not respect `before` filter');
+        $this->assertCount(0, $lettersAfterBeforeFilter, 'filtered letter logs do not respect `before` filter');
     }
 
     /** @test */
@@ -64,8 +65,8 @@ class FilterOutgoingLettersTest extends TestCase
             ->assertViewHas('letters')
             ->viewData('letters');
 
-        $this->assertInstanceOf(Collection::class, $viewOutgoingLetters);
-        $this->assertCount(1, $viewOutgoingLetters, 'Only 1 letter was expected but :actual letters were returned');
+        $this->assertInstanceOf(LengthAwarePaginator::class, $viewOutgoingLetters);
+        $this->assertEquals(1, $viewOutgoingLetters->total(), 'Only 1 letter was expected but :actual letters were returned');
 
         $lettersBeforeAfterFilter = $viewOutgoingLetters->filter(function ($letter) use ($afterFilter) {
             return Carbon::parse($afterFilter)->greaterThan($letter->date);
@@ -101,8 +102,8 @@ class FilterOutgoingLettersTest extends TestCase
             ->assertViewHas('letters')
             ->viewData('letters');
 
-        $this->assertInstanceOf(Collection::class, $viewOutgoingLetters);
-        $this->assertCount(2, $viewOutgoingLetters, 'Only 2 letters were expected but :actual letters were returned');
+        $this->assertInstanceOf(LengthAwarePaginator::class, $viewOutgoingLetters);
+        $this->assertEquals(2, $viewOutgoingLetters->total(), 'Only 2 letters were expected but :actual letters were returned');
 
         $lettersOutOfFilterRange = $viewOutgoingLetters->filter(function ($letter) use ($afterFilter, $beforeFilter) {
             return Carbon::parse($beforeFilter)->lessThan($letter->date)

@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\College;
 use App\Course;
+use App\CourseProgrammeRevision;
 use App\Programme;
 use App\ProgrammeRevision;
 use App\Teacher;
@@ -40,8 +41,8 @@ class EditTeacherProfileTest extends TestCase
             'designation' => 'A',
             'college_id' => $college->id,
             'teaching_details' => [
-                ['programme_revision' => $revision->id, 'course' => $courses[0]->id],
-                ['programme_revision' => $revision->id, 'course' => $courses[1]->id],
+                ['programme_revision_id' => $revision->id, 'course_id' => $courses[0]->id],
+                ['programme_revision_id' => $revision->id, 'course_id' => $courses[1]->id],
             ],
             'profile_picture' => $profilePicture = UploadedFile::fake()->image('picture.jpeg'),
         ];
@@ -58,11 +59,13 @@ class EditTeacherProfileTest extends TestCase
         $this->assertEquals($update['designation'], $teacher->profile->fresh()->designation);
         $this->assertEquals($update['college_id'], $teacher->profile->fresh()->college_id);
 
-        $this->assertEquals($teacher->profile->teachingDetails->count(), 2);
-        $this->assertEquals($teacher->profile->teachingDetails[0]->programme_revision_id, $revision->id);
-        $this->assertEquals($teacher->profile->teachingDetails[1]->programme_revision_id, $revision->id);
-        $this->assertEquals($teacher->profile->teachingDetails[0]->course_id, $courses[0]->id);
-        $this->assertEquals($teacher->profile->teachingDetails[1]->course_id, $courses[1]->id);
+        $freshDetails = $teacher->profile->fresh()->teachingDetails;
+
+        $this->assertEquals(2, $freshDetails->count());
+        $this->assertEquals($freshDetails[0]->programme_revision_id, $revision->id);
+        $this->assertEquals($freshDetails[1]->programme_revision_id, $revision->id);
+        $this->assertEquals($freshDetails[0]->course_id, $courses[0]->id);
+        $this->assertEquals($freshDetails[1]->course_id, $courses[1]->id);
 
         $this->assertEquals(
             'teacher_attachments/profile_picture/' . $profilePicture->hashName(),
@@ -85,14 +88,14 @@ class EditTeacherProfileTest extends TestCase
 
         $update = [
             'teaching_details' => [
-                ['programme_revision' => $revision->id, 'course' => $unassignedCourse->id],
+                ['programme_revision_id' => $revision->id, 'course_id' => $unassignedCourse->id],
             ],
         ];
 
         $this->withExceptionHandling()
                 ->patch(route('teachers.profile.update'), $update)
                 ->assertRedirect()
-                ->assertSessionHasErrors('teaching_details.0.course');
+                ->assertSessionHasErrors('teaching_details.0.course_id');
 
         $this->assertEquals($teacher->profile->teachingDetails->count(), 0);
     }
@@ -112,7 +115,7 @@ class EditTeacherProfileTest extends TestCase
 
         $update = [
             'teaching_details' => [
-                ['programme_revision' => $revision->id],
+                ['programme_revision_id' => $revision->id],
             ],
         ];
 
@@ -165,8 +168,8 @@ class EditTeacherProfileTest extends TestCase
 
         $update = [
             'teaching_details' => [
-                ['programme_revision' => $revision->id, 'course' => $courses[0]->id],
-                ['programme_revision' => $revision->id, 'course' => $courses[1]->id],
+                ['programme_revision_id' => $revision->id, 'course_id' => $courses[0]->id],
+                ['programme_revision_id' => $revision->id, 'course_id' => $courses[1]->id],
             ],
         ];
 
@@ -177,6 +180,47 @@ class EditTeacherProfileTest extends TestCase
             ->assertSessionHasFlash('success', 'Profile Updated Successfully!');
 
         $this->assertEquals(1, TeacherProfile::count());
-        $this->assertEquals($teacher->profile->teachingDetails->count(), 2);
+        $this->assertEquals(2, $teacher->profile->teachingDetails()->count());
+    }
+
+    /** @test */
+    public function teaching_details_are_synced_with_already_teaching_details_other_details()
+    {
+        $this->signInTeacher($teacher = create(Teacher::class));
+
+        $otherCourseProgrammeDetails = create(CourseProgrammeRevision::class, 2);
+
+        $existingCourseProgrammeDetails = $teacher->profile->teachingDetails()
+            ->createMany(
+                create(CourseProgrammeRevision::class, 2)->map->only([
+                    'programme_revision_id',
+                    'course_id',
+                    'semester',
+                ])->toArray()
+            );
+
+        $update = [
+            'teaching_details' => $existingCourseProgrammeDetails->take(1)
+                ->concat($otherCourseProgrammeDetails->take(2))
+                ->map->only(['programme_revision_id', 'course_id', 'semester'])
+                ->toArray(),
+        ];
+
+        $this->withoutExceptionHandling()
+            ->patch(route('teachers.profile.update'), $update)
+            ->assertRedirect()
+            ->assertSessionHasNoErrors()
+            ->assertSessionHasFlash('success', 'Profile Updated Successfully!');
+
+        $this->assertEquals(1, TeacherProfile::count());
+        $this->assertEquals(3, $teacher->profile->teachingDetails()->count());
+        $this->assertEquals(
+            $update['teaching_details'],
+            $teacher->profile->fresh()->teachingDetails->map->only([
+                'programme_revision_id',
+                'course_id',
+                'semester',
+            ])->toArray()
+        );
     }
 }

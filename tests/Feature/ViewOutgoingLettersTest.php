@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\OutgoingLetter;
 use App\User;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
@@ -25,13 +26,9 @@ class ViewOutgoingLettersTest extends TestCase
     /** @test */
     public function user_cannot_view_any_outgoing_letter_if_permission_not_given()
     {
-        $user = create(User::class);
-        $role = Role::create(['name' => 'random role']);
-        $permission = Permission::firstOrCreate(['name' => 'view outgoing letters']);
+        $this->signIn($user = create(User::class));
 
-        $role->revokePermissionTo($permission);
-
-        $this->signIn($user, $role->name);
+        $user->roles->every->revokePermissionTo('outgoing letters:view');
 
         $this->withExceptionHandling()
             ->get(route('staff.outgoing_letters.index'))
@@ -51,7 +48,7 @@ class ViewOutgoingLettersTest extends TestCase
             ->assertViewHas('letters')
             ->viewData('letters');
 
-        $this->assertInstanceOf(Collection::class, $viewOutgoingLetters);
+        $this->assertInstanceOf(LengthAwarePaginator::class, $viewOutgoingLetters);
         $this->assertCount(3, $viewOutgoingLetters);
     }
 
@@ -71,7 +68,7 @@ class ViewOutgoingLettersTest extends TestCase
         $letters = $letters->sortByDesc('date');
         $sorted_letters_ids = $letters->pluck('id')->toArray();
         $view_data_ids = $view_data->pluck('id')->toArray();
-        $this->assertSame($sorted_letters_ids, $view_data_ids);
+        $this->assertEquals($sorted_letters_ids, $view_data_ids);
     }
 
     /** @test */

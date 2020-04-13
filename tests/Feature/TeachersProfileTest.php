@@ -53,11 +53,13 @@ class TeachersProfileTest extends TestCase
     }
 
     /** @test */
-    public function teaching_records_of_a_teacher_can_be_viewed()
+    public function teaching_records_of_a_teacher_can_be_viewed_in_reverse_chronological_order()
     {
         $this->signInTeacher($teacher = create(Teacher::class));
 
-        $records = create(TeachingRecord::class, 3, ['teacher_id' => $teacher->id]);
+        $oldRecord = create(TeachingRecord::class, 1, ['teacher_id' => $teacher->id, 'valid_from' => now()->subYear()]);
+        $newRecord = create(TeachingRecord::class, 1, ['teacher_id' => $teacher->id, 'valid_from' => now()]);
+        $midRecord = create(TeachingRecord::class, 1, ['teacher_id' => $teacher->id, 'valid_from' => now()->subMonths(6)]);
 
         $viewTeacher = $this->withoutExceptionHandling()
             ->get(route('teachers.profile'))
@@ -65,5 +67,10 @@ class TeachersProfileTest extends TestCase
             ->viewData('teacher');
 
         $this->assertCount(3, $viewTeacher->teachingRecords);
+        $this->assertEquals(
+            [$newRecord->id, $midRecord->id, $oldRecord->id],
+            $viewTeacher->teachingRecords->pluck('id')->toArray(),
+            'teaching details are not in reverse chronological order'
+        );
     }
 }
