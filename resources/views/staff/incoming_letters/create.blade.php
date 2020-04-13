@@ -105,7 +105,7 @@
                     @foreach ($priorities as $value => $name)
                         <option value="{{ $value }}"
                             {{ old('priority') === $value ? 'selected' : ''}}>
-                            $name
+                            {{ $name }}
                         </option>
                     @endforeach
                 </select>

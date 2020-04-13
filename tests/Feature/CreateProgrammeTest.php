@@ -18,6 +18,18 @@ class CreateProgrammeTest extends TestCase
     public function new_programme_can_be_created()
     {
         $this->signIn();
+
+        $this->withoutExceptionHandling()
+            ->get(route('staff.programmes.create'))
+            ->assertSuccessful()
+            ->assertViewIs('staff.programmes.create')
+            ->assertViewHas('types');
+    }
+
+    /** @test */
+    public function new_programme_can_be_stored()
+    {
+        $this->signIn();
         $this->withoutExceptionHandling();
         $this->post(route('staff.programmes.store'), [
             'code' => 'MCS',

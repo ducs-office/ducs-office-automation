@@ -37,6 +37,13 @@ class ProgrammesController extends Controller
         ]);
     }
 
+    public function create()
+    {
+        return view('staff.programmes.create', [
+            'types' => config('options.programmes.types'),
+        ]);
+    }
+
     public function store(StoreProgrammeRequest $request)
     {
         $programme = Programme::create($request->validated());

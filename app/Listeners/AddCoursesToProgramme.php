@@ -29,7 +29,7 @@ class AddCoursesToProgramme
         $programmeRevision = $event->programme->revisions()->create(['revised_at' => $event->programme->wef]);
 
         foreach ($event->semester_courses as $index => $courses) {
-            $programmeRevision->courses()->attach($courses, ['semester' => $index + 1]);
+            $programmeRevision->courses()->attach($courses, ['semester' => $index]);
         }
     }
 }
