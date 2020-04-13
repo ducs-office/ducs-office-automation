@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Staff\StoreProgrammeRequest;
 use App\Http\Requests\Staff\UpdateProgrammeRequest;
 use App\Models\Programme;
+use App\Types\ProgrammeType;
 
 class ProgrammesController extends Controller
 {
@@ -33,14 +34,14 @@ class ProgrammesController extends Controller
         return view('staff.programmes.index', [
             'programmes' => $programmes,
             'groupedCourses' => $groupedCourses,
-            'types' => config('options.programmes.types'),
+            'types' => ProgrammeType::values(),
         ]);
     }
 
     public function create()
     {
         return view('staff.programmes.create', [
-            'types' => config('options.programmes.types'),
+            'types' => ProgrammeType::values(),
         ]);
     }
 
@@ -59,7 +60,7 @@ class ProgrammesController extends Controller
     {
         return view('staff.programmes.edit', [
             'programme' => $programme,
-            'types' => config('options.programmes.types'),
+            'types' => ProgrammeType::values(),
         ]);
     }
 

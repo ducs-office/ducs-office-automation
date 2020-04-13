@@ -4,6 +4,7 @@
 use App\Models\Publication;
 use App\Models\Scholar;
 use App\Models\SupervisorProfile;
+use App\Types\CitationIndex;
 use Faker\Generator as Faker;
 
 $factory->define(Publication::class, function (Faker $faker) {
@@ -28,7 +29,7 @@ $factory->define(Publication::class, function (Faker $faker) {
             $size = random_int(1, 3);
             $indexed_in = array_fill(0, $size, 'NULL');
             return array_map(function () use ($faker) {
-                return $faker->randomElement(array_keys(config('options.scholars.academic_details.indexed_in')));
+                return $faker->randomElement(CitationIndex::values());
             }, $indexed_in);
         },
         'main_author_type' => $type = $faker->randomElement([Scholar::class, SupervisorProfile::class]),

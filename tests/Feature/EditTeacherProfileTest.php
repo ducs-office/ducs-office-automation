@@ -9,6 +9,7 @@ use App\Models\Programme;
 use App\Models\ProgrammeRevision;
 use App\Models\Teacher;
 use App\Models\TeacherProfile;
+use App\Types\TeacherStatus;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
@@ -38,7 +39,7 @@ class EditTeacherProfileTest extends TestCase
         $update = [
             'phone_no' => '9876543210',
             'address' => 'new address, New Delhi',
-            'designation' => 'A',
+            'designation' => TeacherStatus::AD_HOC,
             'college_id' => $college->id,
             'teaching_details' => [
                 ['programme_revision_id' => $revision->id, 'course_id' => $courses[0]->id],
@@ -207,10 +208,10 @@ class EditTeacherProfileTest extends TestCase
         ];
 
         $this->withoutExceptionHandling()
-            ->patch(route('teachers.profile.update'), $update)
-            ->assertRedirect()
-            ->assertSessionHasNoErrors()
-            ->assertSessionHasFlash('success', 'Profile Updated Successfully!');
+                ->patch(route('teachers.profile.update'), $update)
+                ->assertRedirect()
+                ->assertSessionHasNoErrors()
+                ->assertSessionHasFlash('success', 'Profile Updated Successfully!');
 
         $this->assertEquals(1, TeacherProfile::count());
         $this->assertEquals(3, $teacher->profile->teachingDetails()->count());

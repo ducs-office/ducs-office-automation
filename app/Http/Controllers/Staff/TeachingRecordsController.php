@@ -53,7 +53,7 @@ class TeachingRecordsController extends Controller
         return [
             'Year' => 'valid_from.year',
             'Teacher' => 'teacher.name',
-            'Designation' => 'fullDesignation',
+            'Designation' => 'designation',
             'College' => 'college.name',
             'Course' => 'course.name',
             'Semester' => 'semester',

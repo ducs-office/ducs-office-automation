@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Casts\CustomType;
+use App\Types\OutgoingLetterType;
 use Illuminate\Support\Facades\Cache;
 
 class OutgoingLetter extends Model
@@ -13,7 +15,10 @@ class OutgoingLetter extends Model
         'sender_id', 'creator_id',
     ];
 
-    protected $dates = ['date'];
+    protected $casts = [
+        'date' => 'datetime',
+        'type' => CustomType::class . ':' . OutgoingLetterType::class,
+    ];
 
     protected $allowedFilters = [
         'date' => 'less_than',
@@ -38,13 +43,7 @@ class OutgoingLetter extends Model
 
     public function assignSerialNumber()
     {
-        $prefixes = [
-            'Bill' => 'TR/',
-            'Notesheet' => 'NTS/',
-            'General' => '',
-        ];
-
-        $serial_no = 'CS/' . $prefixes[$this->type] . $this->date->format('Y');
+        $serial_no = 'CS/' . $this->type->serialPrefix() . $this->date->format('Y');
         $number_sequence = Cache::increment("letter_seq_{$serial_no}");
 
         $this->serial_no = $serial_no . '/' . str_pad($number_sequence, 4, '0', STR_PAD_LEFT);

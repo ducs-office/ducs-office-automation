@@ -9,11 +9,8 @@ use App\Models\AcademicDetail;
 use App\Models\Presentation;
 use App\Models\Scholar;
 use App\Models\SupervisorProfile;
+use App\Types\PresentationEventType;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Response;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Validation\Rule;
 
 class PresentationController extends Controller
 {
@@ -28,14 +25,13 @@ class PresentationController extends Controller
 
         return view('scholars.presentations.create', [
             'publications' => $scholar->publications,
-            'eventTypes' => config('options.scholars.academic_details.event_types'),
+            'eventTypes' => PresentationEventType::values(),
         ]);
     }
 
     public function store(StorePresentation $request)
     {
         $scholar = $request->user();
-
         $validData = $request->validated();
 
         $scholar->presentations()->create($validData);
@@ -52,7 +48,7 @@ class PresentationController extends Controller
         return view('scholars.presentations.edit', [
             'presentation' => $presentation,
             'publications' => $scholar->publications,
-            'eventTypes' => config('options.scholars.academic_details.event_types'),
+            'eventTypes' => PresentationEventType::values(),
         ]);
     }
 
@@ -67,10 +63,7 @@ class PresentationController extends Controller
 
     public function destroy(Request $request, Presentation $presentation)
     {
-        $scholar = $request->user();
-
         $presentation->delete();
-
         flash('Presentation deleted successfully!')->success();
 
         return back();

@@ -6,6 +6,7 @@ use App\Models\Course;
 use App\Models\CourseRevision;
 use App\Models\Programme;
 use App\Models\User;
+use App\Types\PrePhdCourseType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
@@ -21,7 +22,7 @@ class CreateCourseTest extends TestCase
         return $this->mergeFormFields([
             'code' => 'MCS-102',
             'name' => 'Design and Analysis of Algorithms',
-            'type' => 'C', // Core
+            'type' => PrePhdCourseType::CORE,
             'date' => now()->format('Y-m-d'),
             'attachments' => [
                 UploadedFile::fake()->create('syllabus.pdf'),

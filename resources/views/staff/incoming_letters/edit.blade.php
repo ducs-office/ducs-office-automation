@@ -105,13 +105,12 @@
             </div>
             <div class="mb-2">
                 <label for="priority" class="w-full form-label mb-1">Letter Priority</label>
-                @php($priority = old('priority', $letter->priority))
+                @php($oldPriority = old('priority', (string)$letter->priority))
                 <select class="w-full form-input" name="priority">
-                    <option value="" >None</option>
-                    @foreach ($priorities as $value => $name)
-                        <option value="{{ $value }}"
-                            {{ $priority === $value ? 'selected' : ''}}>
-                            $name
+                    @foreach ($priorities as $priority)
+                        <option value="{{ $priority }}"
+                            {{ $priority === $oldPriority ? 'selected' : ''}}>
+                            {{ $priority }}
                         </option>
                     @endforeach
                 </select>

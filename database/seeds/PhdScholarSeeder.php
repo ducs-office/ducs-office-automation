@@ -6,7 +6,12 @@ use App\Models\Scholar;
 use App\Models\ScholarEducationSubject;
 use App\Models\Teacher;
 use App\Models\User;
+use App\Types\AdmissionMode;
 use App\Types\AdvisoryCommitteeMember;
+use App\Types\CitationIndex;
+use App\Types\Gender;
+use App\Types\PresentationEventType;
+use App\Types\ReservationCategory;
 use Illuminate\Database\Seeder;
 
 class PhdScholarSeeder extends Seeder
@@ -35,10 +40,10 @@ class PhdScholarSeeder extends Seeder
             'last_name' => '.',
             'email' => 'rajni@cs.du.ac.in',
             'phone_no' => '9650361897',
-            'gender' => 'F',
+            'gender' => Gender::FEMALE,
             'address' => 'HNo. 313, VPO Rani Khera, Delhi-110081',
-            'category' => 'G',
-            'admission_via' => 'J',
+            'category' => ReservationCategory::GENERAL,
+            'admission_mode' => AdmissionMode::JRF,
             'research_area' => 'Theoretical Computer Science',
             'enrollment_date' => '2019-11-11',
             'supervisor_profile_id' => $supervisorNeelima->id,
@@ -91,10 +96,10 @@ class PhdScholarSeeder extends Seeder
             'last_name' => 'Gupta',
             'email' => 'cs.sudhirg@gmail.com',
             'phone_no' => '9891304971',
-            'gender' => 'M',
+            'gender' => Gender::MALE,
             'address' => 'D8-24, POCKET-2, SECTOR-G2, NARELA, DELHI-110040',
-            'category' => 'O',
-            'admission_via' => 'NET',
+            'category' => ReservationCategory::OBC,
+            'admission_mode' => AdmissionMode::UGC_NET,
             'research_area' => 'Mobile Specific Testing Strategies',
             'enrollment_date' => '2019-12-10',
             'supervisor_profile_id' => $supervisorSangeeta->id,
@@ -133,21 +138,8 @@ class PhdScholarSeeder extends Seeder
                 'date' => '2019-09-30',
                 'volume' => 8,
                 'number' => 3,
-                'indexed_in' => 'Scopus',
+                'indexed_in' => CitationIndex::SCOPUS,
                 'page_numbers' => [29, 43],
-            ],
-            [
-                'type' => 'journal',
-                'name' => 'International Journal of Computer Applications',
-                'paper_title' => 'Grid-based Image Encryption using RSA',
-                'authors' => [
-                    'Binay Kumar Singh', 'Sudhir Kumar Gupta',
-                ],
-                'date' => '2015-04-30',
-                'volume' => 115,
-                'number' => null,
-                'indexed_in' => 'G',
-                'page_numbers' => [2 - 6],
             ],
         ]);
 
@@ -158,10 +150,10 @@ class PhdScholarSeeder extends Seeder
             'last_name' => 'Grover',
             'email' => 'sapna.grover5@gmail.com',
             'phone_no' => '8447903161',
-            'gender' => 'F',
+            'gender' => Gender::FEMALE,
             'address' => '8/22, Third Floor, Subhash Nagar, New Delhi-110027',
-            'category' => 'G',
-            'admission_via' => 'T',
+            'category' => ReservationCategory::GENERAL,
+            'admission_mode' => AdmissionMode::DU_TEACHER,
             'research_area' => 'Approximation Algoriithms and their Analysis',
             'enrollment_date' => '2017-04-05',
             'supervisor_profile_id' => $supervisorNeelima->id,
@@ -191,7 +183,7 @@ class PhdScholarSeeder extends Seeder
             ],
             'date' => '2018-12-11',
             'volume' => 122,
-            'indexed_in' => 'Scopus',
+            'indexed_in' => CitationIndex::SCOPUS,
             'page_numbers' => [3, 37],
             'city' => 'Ahmedabad, Gujarat',
             'country' => 'India',
@@ -200,7 +192,7 @@ class PhdScholarSeeder extends Seeder
             'city' => 'Ahmedabad, Gujarat',
             'country' => 'India',
             'date' => '2018-12-11',
-            'event_type' => 'C',
+            'event_type' => PresentationEventType::CONFERENCE,
             'event_name' => 'Presentation',
         ]);
 
@@ -224,10 +216,10 @@ class PhdScholarSeeder extends Seeder
             'last_name' => '.',
             'email' => 'nisha1988.d@gmail.com',
             'phone_no' => '9868335426',
-            'gender' => 'F',
+            'gender' => Gender::FEMALE,
             'address' => 'WZ 247 Street no 7, Sadh Nagar Palam Colony, New Delhi- 110045',
-            'category' => 'SC',
-            'admission_via' => 'NET',
+            'category' => ReservationCategory::SC,
+            'admission_mode' => AdmissionMode::UGC_NET,
             'research_area' => 'Information Security',
             'enrollment_date' => '2018-11-26',
             'supervisor_profile_id' => $supervisorArchana->id,
@@ -273,10 +265,10 @@ class PhdScholarSeeder extends Seeder
             'last_name' => 'Bansal',
             'email' => 'megha.cs.du@gmail.com',
             'phone_no' => '9990278679',
-            'gender' => 'F',
+            'gender' => Gender::FEMALE,
             'address' => 'G-73, Saket, New Delhi-17',
-            'category' => 'G',
-            'admission_via' => 'NET',
+            'category' => ReservationCategory::GENERAL,
+            'admission_mode' => AdmissionMode::UGC_NET,
             'research_area' => 'Information Security',
             'enrollment_date' => '2018-05-12',
             'supervisor_profile_id' => $supervisorArpita->id,
@@ -298,10 +290,10 @@ class PhdScholarSeeder extends Seeder
             'last_name' => 'Dwivedi',
             'email' => 'kdwivedi@cs.du.ac.in',
             'phone_no' => '9650220569',
-            'gender' => 'M',
+            'gender' => Gender::MALE,
             'address' => '76/59 Ganeshpuram, Prayagraj. U.P. 211002',
-            'category' => 'G',
-            'admission_via' => 'J',
+            'category' => ReservationCategory::GENERAL,
+            'admission_mode' => AdmissionMode::JRF,
             'research_area' => 'Machine Learning',
             'enrollment_date' => '2019-06-11',
             'supervisor_profile_id' => $supervisorSangeeta->id,

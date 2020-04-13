@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\IncomingLetter;
 use App\Models\User;
+use App\Types\Priority;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Carbon;
@@ -178,15 +179,15 @@ class FilterAndSearchIncomingLettersTest extends TestCase
     /** @test */
     public function user_can_filter_based_on_priority()
     {
-        $prioritisedLetters = create(IncomingLetter::class, 2, ['priority' => 1]);
-        create(IncomingLetter::class, 1, ['priority' => 2]);
-        create(incomingLetter::class, 1, ['priority' => 3]);
+        $prioritisedLetters = create(IncomingLetter::class, 2, ['priority' => Priority::HIGH]);
+        create(IncomingLetter::class, 1, ['priority' => Priority::MEDIUM]);
+        create(incomingLetter::class, 1, ['priority' => Priority::LOW]);
 
         $this->signIn();
 
         $viewIncomingLetters = $this->withoutExceptionHandling()
                                 ->get(route('staff.incoming_letters.index', [
-                                    'filters' => ['priority' => ['equals' => 1]],
+                                    'filters' => ['priority' => ['equals' => Priority::HIGH]],
                                 ]))
                                 ->assertSuccessful()
                                 ->assertViewIs('staff.incoming_letters.index')

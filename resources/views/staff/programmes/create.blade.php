@@ -28,8 +28,11 @@
                         class="h-current text-red-500 text-lg">*</span></label>
                 <select class="w-full form-input" name="type" required>
                     <option value="" disabled :selected="form.type==''"> -- Programme Type -- </option>
-                    <option value="UG" :selected="form.type=='UG'">Under Graduate(U.G.)</option>
-                    <option value="PG" :selected="form.type=='PG'">Post Graduate(P.G.)</option>
+                    @foreach ($types as $type)
+                    <option value="{{ $type }}" :selected="form.type=='{{ $type }}'">
+                        {{ $type }}
+                    </option>
+                    @endforeach
                 </select>
             </div>
             <div class="w-48 ml-1">

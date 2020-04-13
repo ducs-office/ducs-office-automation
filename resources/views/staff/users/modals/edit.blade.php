@@ -30,14 +30,14 @@
                     </select>
                 </div>
                 <div class="mb-2">
-                    <label for="category" class="w-full form-label">Category<span
+                    <label for="type" class="w-full form-label">Category<span
                             class="h-current text-red-500 text-lg">*</span></label>
-                    <select name="category" id="category" class="w-full form-input" required>
-                        <option value="" selected disabled>Select a category for the user</option>
-                        @foreach ($categories as $key => $category)
-                        <option value="{{ $key }}"
-                            :selected="data('user.category') === '{{ $key }}'">
-                            {{ $category }}
+                    <select name="type" id="type" class="w-full form-input" required>
+                        <option value="" selected disabled>Select a type for the user</option>
+                        @foreach ($types as $type)
+                        <option value="{{ $type }}"
+                            :selected="data('user.type') === '{{ $type }}'">
+                            {{ $type }}
                         </option>
                         @endforeach
                     </select>

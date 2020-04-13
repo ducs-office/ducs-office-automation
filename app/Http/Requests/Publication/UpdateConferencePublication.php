@@ -2,7 +2,10 @@
 
 namespace App\Http\Requests\Publication;
 
+use App\Types\CitationIndex;
+use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateConferencePublication extends FormRequest
 {
@@ -13,8 +16,9 @@ class UpdateConferencePublication extends FormRequest
      */
     public function rules()
     {
-        $indexedIn = implode(',', array_keys(config('options.scholars.academic_details.indexed_in')));
-        $months = implode(',', array_keys(config('options.scholars.academic_details.months')));
+        $months = array_map(function ($m) {
+            return Carbon::createFromFormat('m', $m)->format('F');
+        }, range(1, 12));
 
         return [
             'authors' => ['sometimes', 'required', 'array', 'max:10', 'min:1'],
@@ -25,11 +29,11 @@ class UpdateConferencePublication extends FormRequest
             'page_numbers' => ['sometimes', 'required', 'array', 'size:2'],
             'page_numbers.0' => ['sometimes', 'required', 'integer'],
             'page_numbers.1' => ['sometimes', 'required', 'integer', 'gte:page_numbers.0'],
-            'date' => ['required', 'array', 'size:2'],
-            'date.month' => ['required', 'in:' . $months],
-            'date.year' => ['required', 'numeric'],
+            'date' => ['sometimes', 'required', 'array', 'size:2'],
+            'date.month' => ['sometimes', 'required', Rule::in($months)],
+            'date.year' => ['sometimes', 'required', 'numeric'],
             'indexed_in' => ['sometimes', 'required', 'array'],
-            'indexed_in.*' => ['in:' . $indexedIn],
+            'indexed_in.*' => [Rule::in(CitationIndex::values())],
             'city' => ['sometimes', 'required', 'string'],
             'country' => ['sometimes', 'required', 'string'],
         ];

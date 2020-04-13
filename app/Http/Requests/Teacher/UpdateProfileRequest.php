@@ -4,6 +4,7 @@ namespace App\Http\Requests\Teacher;
 
 use App\Models\CourseProgrammeRevision;
 use App\Models\ProgrammeRevision;
+use App\Types\TeacherStatus;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -16,13 +17,21 @@ class UpdateProfileRequest extends FormRequest
      */
     public function rules()
     {
-        $designations = array_keys(config('options.teachers.designations'));
+        $profile = $this->user()->profile;
 
         return [
-            'phone_no' => [Rule::requiredIf($this->user()->profile->phone_no != null)],
-            'address' => [Rule::requiredIf($this->user()->profile->address != null)],
-            'designation' => [Rule::requiredIf($this->user()->profile->designation != null),  Rule::in($designations)],
-            'college_id' => [Rule::requiredIf($this->user()->profile->college_id != null), 'numeric', 'exists:colleges,id'],
+            'phone_no' => ['sometimes', Rule::requiredIf($profile->phone_no != null)],
+            'address' => ['sometimes', Rule::requiredIf($profile->address != null)],
+            'designation' => [
+                'sometimes',
+                Rule::requiredIf($profile->designation != null),
+                Rule::in(TeacherStatus::values()),
+            ],
+            'college_id' => [
+                'sometimes',
+                Rule::requiredIf($profile->college_id != null),
+                'numeric', 'exists:colleges,id',
+            ],
             'teaching_details' => ['nullable', 'array'],
             'teaching_details.*.programme_revision_id' => ['nullable', 'numeric', 'exists:programme_revisions,id'],
             'teaching_details.*.course_id' => ['nullable', 'numeric', 'exists:course_programme_revision,course_id'],

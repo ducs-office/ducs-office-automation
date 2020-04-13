@@ -24,12 +24,7 @@
         </p>
         @forelse($letters as $letter)
             @include('staff.outgoing_letters.partials.letter', [
-                'letter' => $letter,
-                'typeColors' => [
-                    'General' => 'bg-magenta-700',
-                    'Notesheet' => 'bg-teal-600',
-                    'Bill' => 'bg-blue-600'
-                ]
+                'letter' => $letter
             ])
         @empty
             <div class="py-8 flex flex-col items-center justify-center text-gray-500">

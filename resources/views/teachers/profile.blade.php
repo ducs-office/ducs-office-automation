@@ -7,7 +7,7 @@
                 <div>
                     <h3 class="text-2xl font-bold">{{ $teacher->name }}</h3>
                     <h5 class="text-xl text-gray-700 font-medium mb-2">
-                        {{ $teacher->profile->getDesignation() }}
+                        {{ $teacher->profile->designation }}
                         @if($teacher->isSupervisor())
                             / <span class="italic">Supervisor</span>
                         @endif
@@ -82,7 +82,7 @@
                         under {{ $record->programmeRevision->programme->name }}
                         (w.e.f {{ $record->programmeRevision->revised_at->year }})
                         in <em class="underline">{{ $record->college->name }}</em> as
-                        <strong>{{ $record->getDesignation() }}</strong> teacher.
+                        <strong>{{ $record->designation }}</strong> teacher.
                     </li>
                     @endforeach
                 </ul>

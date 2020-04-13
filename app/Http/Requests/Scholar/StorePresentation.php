@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Scholar;
 
+use App\Types\PresentationEventType;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StorePresentation extends FormRequest
 {
@@ -23,17 +25,13 @@ class StorePresentation extends FormRequest
      */
     public function rules()
     {
-        $scholar = $this->user();
-        $publications = $scholar->publications();
+        $ids = $this->user()->publications->pluck('id')->implode(',');
 
-        $ids = implode(',', $publications->pluck('id')->toArray());
-
-        $event_types = implode(',', array_keys(config('options.scholars.academic_details.event_types')));
         return [
             'city' => ['required', 'string'],
             'country' => ['required', 'string'],
             'date' => ['required', 'date'],
-            'event_type' => ['required', 'in:' . $event_types],
+            'event_type' => ['required', Rule::in(PresentationEventType::values())],
             'event_name' => ['required', 'string'],
             'publication_id' => ['required', 'in:' . $ids],
             'scopus_indexed' => ['accepted'],

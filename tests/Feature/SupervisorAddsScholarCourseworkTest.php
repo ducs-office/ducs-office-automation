@@ -7,6 +7,7 @@ use App\Models\Scholar;
 use App\Models\SupervisorProfile;
 use App\Models\Teacher;
 use App\Models\User;
+use App\Types\PrePhdCourseType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
@@ -28,7 +29,7 @@ class SupervisorManagesScholarCourseworkTest extends TestCase
 
         $this->signInTeacher($teacher);
 
-        $courses = create(PhdCourse::class, 2, ['type' => 'E']);
+        $courses = create(PhdCourse::class, 2, ['type' => PrePhdCourseType::ELECTIVE]);
 
         $this->withoutExceptionHandling()
             ->post(route('research.scholars.courseworks.store', $scholar), [
@@ -49,7 +50,7 @@ class SupervisorManagesScholarCourseworkTest extends TestCase
 
         $this->signIn($user);
 
-        $courses = create(PhdCourse::class, 2, ['type' => 'E']);
+        $courses = create(PhdCourse::class, 2, ['type' => PrePhdCourseType::ELECTIVE]);
 
         $this->withoutExceptionHandling()
             ->post(route('research.scholars.courseworks.store', $scholar), [
@@ -76,7 +77,7 @@ class SupervisorManagesScholarCourseworkTest extends TestCase
             'supervisor_profile_id' => $profPoonamProfile->id,
         ]);
 
-        $electiveCourses = create(PhdCourse::class, 2, ['type' => 'E']);
+        $electiveCourses = create(PhdCourse::class, 2, ['type' => PrePhdCourseType::ELECTIVE]);
 
         $this->signIn($profPoonam);
 

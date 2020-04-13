@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Mail\UserRegisteredMail;
 use App\Models\User;
+use App\Types\UserType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
@@ -26,9 +27,9 @@ class CreateNewUserTest extends TestCase
 
         $this->withoutExceptionHandling()
             ->post(route('staff.users.store'), [
-                'name' => $name = 'HOD Faculty',
-                'email' => $email = 'hod@uni.ac.in',
-                'category' => 'hod',
+                'name' => $name = 'Naveen Kumar',
+                'email' => $email = 'naveen.k@uni.ac.in',
+                'type' => UserType::FACULTY_TEACHER,
                 'roles' => [$teacherRole->id],
             ])->assertRedirect('/')
             ->assertSessionHasFlash('success', 'User created successfully!');
@@ -52,9 +53,9 @@ class CreateNewUserTest extends TestCase
 
         $this->withoutExceptionHandling()
             ->post(route('staff.users.store'), [
-                'name' => $name = 'HOD Faculty',
-                'email' => $email = 'hod@uni.ac.in',
-                'category' => 'hod',
+                'name' => $name = 'PK Hazra',
+                'email' => $email = 'hazra.pk@uni.ac.in',
+                'type' => UserType::FACULTY_TEACHER,
                 'roles' => [$teacherRole->id],
                 'is_supervisor' => true,
             ])->assertRedirect('/')
@@ -77,9 +78,9 @@ class CreateNewUserTest extends TestCase
 
         $this->withoutExceptionHandling()
             ->post(route('staff.users.store'), [
-                'name' => $name = 'HOD Faculty',
-                'email' => $email = 'hod@uni.ac.in',
-                'category' => 'hod',
+                'name' => $name = 'Megha Khandelwal',
+                'email' => $email = 'megha@uni.ac.in',
+                'type' => UserType::FACULTY_TEACHER,
                 'roles' => [$facultyRole->id, $hodRole->id],
             ])->assertRedirect('/')
             ->assertSessionHasFlash('success', 'User created successfully!');
@@ -102,9 +103,9 @@ class CreateNewUserTest extends TestCase
 
         $this->withoutExceptionHandling()
             ->post(route('staff.users.store'), [
-                'name' => 'faculty_teacher',
-                'email' => 'contact@faculty_teacher.me',
-                'category' => 'faculty_teacher',
+                'name' => 'Sapna Vaarshney',
+                'email' => 'sapnav@cs.du.ac.in',
+                'type' => UserType::FACULTY_TEACHER,
                 'roles' => [$facultyTeacherRole->id],
             ])->assertRedirect('/')
             ->assertSessionHasFlash('success', 'User created successfully!');
@@ -128,7 +129,7 @@ class CreateNewUserTest extends TestCase
                 ->post(route('staff.users.store'), [
                     'name' => '',
                     'email' => 'hod@uni.ac.in',
-                    'category' => 'hod',
+                    'type' => 'hod',
                     'roles' => [$teacherRole->id],
                 ]);
         } catch (ValidationException $e) {
@@ -149,7 +150,7 @@ class CreateNewUserTest extends TestCase
                 ->post(route('staff.users.store'), [
                     'name' => 'HOD Faculty',
                     'email' => '',
-                    'category' => 'hod',
+                    'type' => 'hod',
                     'roles' => [$teacherRole->id],
                 ]);
         } catch (ValidationException $e) {
@@ -171,7 +172,7 @@ class CreateNewUserTest extends TestCase
                 ->post(route('staff.users.store'), [
                     'name' => 'HOD Faculty',
                     'email' => $user->email,
-                    'category' => 'hod',
+                    'type' => 'hod',
                     'roles' => [$teacherRole->id],
                 ]);
         } catch (ValidationException $e) {
@@ -181,7 +182,7 @@ class CreateNewUserTest extends TestCase
     }
 
     /** @test */
-    public function request_validates_category_field_is_not_null()
+    public function request_validates_type_field_is_not_null()
     {
         $this->signIn();
 
@@ -192,17 +193,17 @@ class CreateNewUserTest extends TestCase
                 ->post(route('staff.users.store'), [
                     'name' => 'HOD Faculty',
                     'email' => 'hod@uni.ac.in',
-                    'category' => '',
+                    'type' => '',
                     'roles' => [$teacherRole->id],
                 ]);
         } catch (ValidationException $e) {
-            $this->assertArrayHasKey('category', $e->errors());
+            $this->assertArrayHasKey('type', $e->errors());
         }
         $this->assertEquals(1, User::count());
     }
 
     /** @test */
-    public function request_validates_category_field_is_a_valid_value()
+    public function request_validates_type_field_is_a_valid_value()
     {
         $this->signIn();
 
@@ -213,11 +214,11 @@ class CreateNewUserTest extends TestCase
                 ->post(route('staff.users.store'), [
                     'name' => 'HOD Faculty',
                     'email' => 'hod@uni.ac.in',
-                    'category' => 'InvalidCategory123',
+                    'type' => 'InvalidCategory123',
                     'roles' => [$teacherRole->id],
                 ]);
         } catch (ValidationException $e) {
-            $this->assertArrayHasKey('category', $e->errors());
+            $this->assertArrayHasKey('type', $e->errors());
         }
         $this->assertEquals(1, User::count());
     }
@@ -232,9 +233,9 @@ class CreateNewUserTest extends TestCase
         try {
             $this->withoutExceptionHandling()
                 ->post(route('staff.users.store'), [
-                    'name' => 'HOD Faculty',
-                    'email' => 'hod@uni.ac.in',
-                    'category' => 'hod',
+                    'name' => 'Faculty Teacher',
+                    'email' => 'teacher@uni.ac.in',
+                    'type' => UserType::FACULTY_TEACHER,
                     'roles' => '',
                 ]);
         } catch (ValidationException $e) {

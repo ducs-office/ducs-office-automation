@@ -2,13 +2,12 @@
 
 namespace Tests\Feature;
 
-use App\Http\Controllers\IncomingLetterController;
 use App\Models\Handover;
 use App\Models\IncomingLetter;
+use App\Types\Priority;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Collection;
 use Tests\TestCase;
 
 class ViewIncomingLettersTest extends TestCase
@@ -111,10 +110,6 @@ class ViewIncomingLettersTest extends TestCase
     {
         $this->signIn();
 
-        create(IncomingLetter::class, 3, ['priority' => 1]);
-        create(IncomingLetter::class, 1, ['priority' => 2]);
-        create(IncomingLetter::class, 1, ['priority' => 3]);
-
         $priorities = $this->withoutExceptionHandling()
                         ->get(route('staff.incoming_letters.index'))
                         ->assertSuccessful()
@@ -122,6 +117,6 @@ class ViewIncomingLettersTest extends TestCase
                         ->assertViewHas('priorities')
                         ->viewData('priorities');
 
-        $this->assertSame(config('options.incoming_letters.priorities'), $priorities);
+        $this->assertEquals(Priority::values(), $priorities);
     }
 }

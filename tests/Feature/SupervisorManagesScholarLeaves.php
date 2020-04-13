@@ -7,6 +7,7 @@ use App\Models\LeaveStatus;
 use App\Models\Scholar;
 use App\Models\SupervisorProfile;
 use App\Models\Teacher;
+use App\Types\LeaveStatus;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;

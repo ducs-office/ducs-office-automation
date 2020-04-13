@@ -5,11 +5,8 @@ namespace Tests\Feature;
 use App\Models\Course;
 use App\Models\Programme;
 use App\Models\User;
+use App\Types\ProgrammeType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Validation\ValidationException;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 class UpdateProgrammeTest extends TestCase
@@ -79,14 +76,14 @@ class UpdateProgrammeTest extends TestCase
         $this->withoutExceptionHandling()
             ->signIn();
 
-        $programme = create(Programme::class, 1, ['type' => 'UG']);
+        $programme = create(Programme::class, 1, ['type' => ProgrammeType::UNDER_GRADUATE]);
 
         $response = $this->patch(route('staff.programmes.update', $programme), [
-            'type' => $newType = 'PG',
+            'type' => ProgrammeType::POST_GRADUATE,
         ])->assertRedirect()
         ->assertSessionHasFlash('success', 'Programme updated successfully!');
 
         $this->assertEquals(1, Programme::count());
-        $this->assertEquals($newType, $programme->fresh()->type);
+        $this->assertEquals(ProgrammeType::POST_GRADUATE, $programme->fresh()->type);
     }
 }

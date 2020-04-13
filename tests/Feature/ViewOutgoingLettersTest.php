@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\OutgoingLetter;
 use App\Models\User;
+use App\Types\OutgoingLetterType;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
@@ -99,11 +100,7 @@ class ViewOutgoingLettersTest extends TestCase
     {
         $this->signIn();
 
-        create(OutgoingLetter::class, 3, ['type' => 'Bill']);
-        create(OutgoingLetter::class, 1, ['type' => 'Notesheet']);
-        create(OutgoingLetter::class, 1, ['type' => 'General']);
-
-        $types = $this->withExceptionHandling()
+        $types = $this->withoutExceptionHandling()
                 ->get(route('staff.outgoing_letters.index'))
                 ->assertSuccessful()
                 ->assertViewIs('staff.outgoing_letters.index')
@@ -112,7 +109,7 @@ class ViewOutgoingLettersTest extends TestCase
 
         $this->assertCount(3, $types);
         $this->assertSame(
-            OutgoingLetter::all()->pluck('type', 'type')->toArray(),
+            array_combine(OutgoingLetterType::values(), OutgoingLetterType::values()),
             $types->toArray()
         );
     }

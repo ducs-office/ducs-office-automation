@@ -5,8 +5,8 @@ namespace Tests\Feature;
 use App\Models\Course;
 use App\Models\Programme;
 use App\Models\User;
+use App\Types\CourseType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
@@ -74,10 +74,10 @@ class UpdateCourseTest extends TestCase
         $this->withoutExceptionHandling()
             ->signIn();
 
-        $course = create(Course::class, 1, ['type' => 'C']);
+        $course = create(Course::class, 1, ['type' => CourseType::CORE]);
 
         $this->patch(route('staff.courses.update', $course), [
-            'type' => $newType = 'OE',
+            'type' => $newType = CourseType::OPEN_ELECTIVE,
         ])->assertRedirect()
         ->assertSessionHasFlash('success', 'Course updated successfully!');
 
@@ -93,7 +93,7 @@ class UpdateCourseTest extends TestCase
         $this->withoutExceptionHandling()
             ->signIn();
 
-        $course = create(Course::class, 1, ['type' => 'C']);
+        $course = create(Course::class, 1, ['type' => CourseType::CORE]);
 
         $oldRevision = $course->revisions()->create([
             'revised_at' => now()->subYears(2),

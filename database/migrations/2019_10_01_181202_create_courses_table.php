@@ -1,5 +1,6 @@
 <?php
 
+use App\Types\CourseType;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -17,7 +18,7 @@ class CreateCoursesTable extends Migration
             $table->bigIncrements('id');
             $table->string('code', 60)->unique();
             $table->string('name');
-            $table->enum('type', array_keys(config('options.courses.types')));
+            $table->enum('type', CourseType::values());
             $table->timestamps();
         });
     }

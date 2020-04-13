@@ -20,7 +20,7 @@ class UpdateProfileRequest extends FormRequest
             'phone_no' => [Rule::requiredIf($scholar->phone_no != null)],
             'address' => [Rule::requiredIf($scholar->address != null)],
             'category' => [Rule::requiredIf($scholar->category != null)],
-            'admission_via' => [Rule::requiredIf($scholar->admission_via != null)],
+            'admission_mode' => [Rule::requiredIf($scholar->admission_mode != null)],
             'profile_picture' => ['nullable', 'image'],
             'research_area' => [Rule::requiredIf($scholar->research_area != null)],
             'enrollment_date' => ['nullable', 'date', 'before:today'],

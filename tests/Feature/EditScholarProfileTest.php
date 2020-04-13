@@ -6,6 +6,7 @@ use App\Models\Cosupervisor;
 use App\Models\Scholar;
 use App\Models\SupervisorProfile;
 use App\Models\Teacher;
+use App\Types\AdmissionMode;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -22,12 +23,15 @@ class EditScholarProfileTest extends TestCase
         $this->withoutExceptionHandling()
             ->get(route('scholars.profile.edit'))
             ->assertSuccessful()
-            ->assertViewIs('scholars.edit')->assertViewHasAll([
+            ->assertViewIs('scholars.edit')
+            ->assertViewHasAll([
                 'scholar',
                 'categories',
-                'admissionCriterias',
-                'genders',
+                'degrees',
+                'institutes',
                 'subjects',
+                'admissionModes',
+                'genders',
             ]);
     }
 }

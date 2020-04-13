@@ -6,11 +6,12 @@ use App\Models\Course;
 use App\Models\ProgrammeRevision;
 use App\Models\Teacher;
 use App\Models\TeachingRecord;
+use App\Types\TeacherStatus;
 use Faker\Generator as Faker;
 
 $factory->define(TeachingRecord::class, function (Faker $faker) {
     return [
-        'designation' => $faker->randomElement(array_keys(config('options.teachers.designations'))),
+        'designation' => $faker->randomElement(TeacherStatus::values()),
         'college_id' => function () {
             return factory(College::class)->create()->id;
         },

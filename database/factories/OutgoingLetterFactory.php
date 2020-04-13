@@ -3,6 +3,7 @@
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 use App\Models\OutgoingLetter;
 use App\Models\User;
+use App\Types\OutgoingLetterType;
 use Faker\Generator as Faker;
 
 $factory->define(OutgoingLetter::class, static function (Faker $faker) {
@@ -11,7 +12,7 @@ $factory->define(OutgoingLetter::class, static function (Faker $faker) {
             return factory(User::class)->create()->id;
         },
         'date' => $faker->date('Y-m-d'),
-        'type' => $type = $faker->randomElement(['Bill', 'Notesheet', 'General']),
+        'type' => $type = $faker->randomElement(OutgoingLetterType::values()),
         'subject' => $faker->sentence,
         'recipient' => $faker->name,
         'sender_id' => static function () {

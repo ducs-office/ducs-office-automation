@@ -8,6 +8,7 @@ use App\Http\Requests\Staff\UpdateUserRequest;
 use App\Mail\UserRegisteredMail;
 use App\Models\Cosupervisor;
 use App\Models\User;
+use App\Types\UserType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -27,7 +28,7 @@ class UserController extends Controller
         return view('staff.users.index', [
             'users' => User::with('roles')->get(),
             'roles' => Role::all(),
-            'categories' => config('options.users.categories'),
+            'types' => UserType::values(),
         ]);
     }
 
@@ -40,7 +41,7 @@ class UserController extends Controller
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'category' => $request->category,
+            'type' => $request->type,
             'password' => bcrypt($plain_password),
         ]);
 
@@ -52,7 +53,7 @@ class UserController extends Controller
             Cosupervisor::create([
                 'name' => $user->name,
                 'email' => $user->email,
-                'designation' => 'Permanent',
+                'designation' => 'Professor',
                 'affiliation' => 'DUCS, University of Delhi',
             ]);
         }
@@ -70,7 +71,7 @@ class UserController extends Controller
     {
         DB::beginTransaction();
 
-        $user->update($request->only(['name', 'email', 'category']));
+        $user->update($request->only(['name', 'email', 'type']));
 
         if ($request->has('roles')) {
             $user->syncRoles($request->roles);

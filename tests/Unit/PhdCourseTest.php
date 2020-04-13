@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use App\Models\PhdCourse;
+use App\Types\PrePhdCourseType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -13,8 +14,8 @@ class PhdCourseTest extends TestCase
     /** @test */
     public function phd_Course_has_core_scope()
     {
-        $coreCourses = create(PhdCourse::class, 2, ['type' => 'C']);
-        $electiveCourses = create(PhdCourse::class, 2, ['type' => 'E']);
+        $coreCourses = create(PhdCourse::class, 2, ['type' => PrePhdCourseType::CORE]);
+        $electiveCourses = create(PhdCourse::class, 2, ['type' => PrePhdCourseType::ELECTIVE]);
 
         $this->assertCount(2, PhdCourse::core()->get());
     }

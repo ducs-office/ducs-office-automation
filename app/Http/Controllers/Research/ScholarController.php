@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers\Research;
 
-use App\Casts\AdvisoryCommittee;
 use App\Http\Controllers\Controller;
-use App\Models\Cosupervisor;
 use App\Models\PhdCourse;
 use App\Models\Scholar;
 use App\Models\User;
+use App\Types\AdmissionMode;
 use App\Types\AdvisoryCommitteeMember;
+use App\Types\Gender;
+use App\Types\PresentationEventType;
+use App\Types\ReservationCategory;
 use Illuminate\Http\Request;
 
 class ScholarController extends Controller
@@ -36,12 +38,12 @@ class ScholarController extends Controller
     public function show(Scholar $scholar)
     {
         return view('research.scholars.show', [
-            'scholar' => $scholar->load(['courseworks']),
-            'categories' => config('options.scholars.categories'),
-            'admissionCriterias' => config('options.scholars.admission_criterias'),
+            'scholar' => $scholar->load(['courseworks', 'cosupervisors']),
             'courses' => PhdCourse::whereNotIn('id', $scholar->courseworks()->allRelatedIds())->get(),
-            'genders' => config('options.scholars.genders'),
-            'eventTypes' => config('options.scholars.academic_details.event_types'),
+            'categories' => ReservationCategory::values(),
+            'admissionModes' => AdmissionMode::values(),
+            'genders' => Gender::values(),
+            'eventTypes' => PresentationEventType::values(),
             'faculty' => User::where('category', 'faculty_teacher')->get(),
         ]);
     }

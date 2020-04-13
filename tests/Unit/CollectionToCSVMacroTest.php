@@ -9,6 +9,7 @@ use App\Models\PastTeachersProfile;
 use App\Models\Programme;
 use App\Models\Teacher;
 use App\Models\TeachingRecord;
+use App\Types\CourseType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -23,8 +24,8 @@ class CollectionToCSVMacroTest extends TestCase
         $bscHonoursLatestRev = create(Programme::class, 1, ['name' => 'BSC (H) Computer Science'])
             ->revisions()->create(['revised_at' => now()->subMonths(6)]);
 
-        $javaCourse = create(Course::class, 1, ['name' => 'Programming in Java', 'type' => 'C']);
-        $phpCourse = create(Course::class, 1, ['name' => 'PHP Programming', 'type' => 'GE']);
+        $javaCourse = create(Course::class, 1, ['name' => 'Programming in Java', 'type' => CourseType::CORE]);
+        $phpCourse = create(Course::class, 1, ['name' => 'PHP Programming', 'type' => CourseType::GENERAL_ELECTIVE]);
 
         $bscHonoursLatestRev->courses()->sync([
             $javaCourse->id => ['semester' => 1],

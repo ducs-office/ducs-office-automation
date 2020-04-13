@@ -1,5 +1,6 @@
 <?php
 
+use App\Types\PrePhdCourseType;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
@@ -18,7 +19,7 @@ class CreatePhdCoursesTable extends Migration
             $table->bigIncrements('id');
             $table->string('code', 8);
             $table->string('name', 100);
-            $table->enum('type', array_keys(config('options.phd_courses.types')));
+            $table->enum('type', PrePhdCourseType::values());
             $table->timestamps();
         });
     }

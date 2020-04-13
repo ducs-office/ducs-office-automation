@@ -1,5 +1,6 @@
 <?php
 
+use App\Types\ProgrammeType;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -19,7 +20,7 @@ class CreateProgrammesTable extends Migration
             $table->string('name');
             $table->timestamp('wef');
             $table->unsignedTinyInteger('duration');
-            $table->enum('type', array_keys(config('options.programmes.types')));
+            $table->enum('type', ProgrammeType::values());
             $table->timestamps();
         });
     }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Types\OutgoingLetterType;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -17,7 +18,7 @@ class CreateOutgoingLettersTable extends Migration
             $table->bigIncrements('id');
             $table->string('serial_no')->unique();
             $table->date('date');
-            $table->enum('type', ['Bill', 'Notesheet', 'General']);
+            $table->enum('type', OutgoingLetterType::values());
             $table->unsignedBigInteger('sender_id');
             $table->string('recipient', 100);
             $table->string('subject', 100);

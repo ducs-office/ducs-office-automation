@@ -23,8 +23,8 @@
                     <label for="programme_type" class="w-full form-label mb-1">Type<span
                             class="h-current text-red-500 text-lg">*</span></label>
                     <select class="w-full form-input" name="type" required :value="data('programme.type')">
-                        @foreach($types as $value => $type)
-                            <option value="{{ $value }}">{{ $type }}</option>
+                        @foreach($types as $type)
+                            <option value="{{ $type }}">{{ $type }}</option>
                         @endforeach
                     </select>
                 </div>

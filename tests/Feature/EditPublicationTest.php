@@ -32,7 +32,7 @@ class EditlPublicationTest extends TestCase
             ->get(route('publications.journal.edit', $journal))
             ->assertSuccessful()
             ->assertViewIs('publications.journals.edit')
-            ->assertViewHasAll(['journal', 'indexedIn']);
+            ->assertViewHasAll(['journal', 'citationIndexes']);
     }
 
     /** @test */
@@ -59,7 +59,7 @@ class EditlPublicationTest extends TestCase
             ->get(route('publications.journal.edit', $journal))
             ->assertSuccessful()
             ->assertViewIs('publications.journals.edit')
-            ->assertViewHasAll(['journal', 'indexedIn']);
+            ->assertViewHasAll(['journal', 'citationIndexes']);
     }
 
     /** @test */
@@ -79,7 +79,7 @@ class EditlPublicationTest extends TestCase
             ->get(route('publications.conference.edit', $conference))
             ->assertSuccessful()
             ->assertViewIs('publications.conferences.edit')
-            ->assertViewHasAll(['conference', 'indexedIn']);
+            ->assertViewHasAll(['conference', 'citationIndexes']);
     }
 
     /** @test */
@@ -106,6 +106,6 @@ class EditlPublicationTest extends TestCase
             ->get(route('publications.conference.edit', $conference))
             ->assertSuccessful()
             ->assertViewIs('publications.conferences.edit')
-            ->assertViewHasAll(['conference', 'indexedIn']);
+            ->assertViewHasAll(['conference', 'citationIndexes']);
     }
 }

@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Casts\CustomType;
+use App\Types\TeacherStatus;
 use Illuminate\Database\Eloquent\Model;
 
 class TeacherProfile extends Model
 {
+    protected $table = 'teachers_profile';
     protected $primaryKey = 'teacher_id';
 
     protected $fillable = [
@@ -16,7 +19,9 @@ class TeacherProfile extends Model
         'teacher_id',
     ];
 
-    protected $table = 'teachers_profile';
+    protected $casts = [
+        'designation' => CustomType::class . ':' . TeacherStatus::class,
+    ];
 
     public function teacher()
     {
@@ -36,11 +41,6 @@ class TeacherProfile extends Model
     public function profilePicture()
     {
         return $this->morphOne(Attachment::class, 'attachable');
-    }
-
-    public function getDesignation()
-    {
-        return config('options.teachers.designations')[$this->designation] ?? 'Unknown';
     }
 
     public function isCompleted()

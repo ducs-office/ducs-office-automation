@@ -3,12 +3,16 @@
 namespace App\Models;
 
 use App\Casts\AdvisoryCommittee;
+use App\Casts\CustomType;
 use App\Casts\OldAdvisoryCommittee;
 use App\Models\AcademicDetail;
 use App\Models\Cosupervisor;
 use App\Models\Publication;
 use App\Models\ScholarProfile;
 use App\Models\SupervisorProfile;
+use App\Types\AdmissionMode;
+use App\Types\Gender;
+use App\Types\ReservationCategory;
 use App\Types\ScholarDocumentType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User;
@@ -25,7 +29,7 @@ class Scholar extends User
         'phone_no',
         'address',
         'category',
-        'admission_via',
+        'admission_mode',
         'supervisor_profile_id',
         'gender',
         'research_area',
@@ -41,6 +45,9 @@ class Scholar extends User
     protected $casts = [
         'advisory_committee' => AdvisoryCommittee::class,
         'old_advisory_committees' => OldAdvisoryCommittee::class,
+        'category' => CustomType::class . ':' . ReservationCategory::class,
+        'admission_mode' => CustomType::class . ':' . AdmissionMode::class,
+        'gender' => CustomType::class . ':' . Gender::class,
         'education' => 'array',
         'old_cosupervisors' => 'array',
         'old_supervisors' => 'array',
@@ -71,24 +78,6 @@ class Scholar extends User
     {
         return $this->first_name . ' ' . $this->last_name;
     }
-
-    // public function getAdvisoryCommitteeAttribute($value)
-    // {
-    //     // dd($value);
-    //     $value = $this->castAttribute('advisory_committee', $value);
-
-    //     $mentors = [
-    //         'supervisor' => $this->supervisor->name,
-    //     ];
-
-    //     if ($this->cosupervisor) {
-    //         $mentors = array_merge($mentors, [
-    //             'cosupervisor' => $this->cosupervisor->name,
-    //         ]);
-    //     }
-
-    //     return $value === null ? $mentors : array_merge($value, $mentors);
-    // }
 
     public function getEducationAttribute($value)
     {

@@ -12,7 +12,6 @@ class TeachingRecord extends Model
 
     protected $guarded = [];
     protected $dates = ['valid_from'];
-    protected $appends = ['fullDesignation'];
 
     public static function isAccepting()
     {
@@ -88,15 +87,5 @@ class TeachingRecord extends Model
     public function college()
     {
         return $this->belongsTo(College::class);
-    }
-
-    public function getDesignation()
-    {
-        return config('options.teachers.designations')[$this->designation] ?? 'Unknown';
-    }
-
-    public function getFullDesignationAttribute()
-    {
-        return $this->getDesignation();
     }
 }

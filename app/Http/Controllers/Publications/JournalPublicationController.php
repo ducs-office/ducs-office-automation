@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Publication\StoreJournalPublication;
 use App\Http\Requests\Publication\UpdateJournalPublication;
 use App\Models\Publication;
+use App\Types\CitationIndex;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -20,18 +21,10 @@ class JournalPublicationController extends Controller
     public function create()
     {
         return view('publications.journals.create', [
-            'indexedIn' => config('options.scholars.academic_details.indexed_in'),
-            'months' => config('options.scholars.academic_details.months'),
-            'currentYear' => now()->format('Y'),
-        ]);
-    }
-
-    public function edit(Publication $journal)
-    {
-        return view('publications.journals.edit', [
-            'journal' => $journal,
-            'indexedIn' => config('options.scholars.academic_details.indexed_in'),
-            'months' => config('options.scholars.academic_details.months'),
+            'citationIndexes' => CitationIndex::values(),
+            'months' => array_map(function ($m) {
+                return Carbon::createFromFormat('m', $m)->format('F');
+            }, range(1, 12)),
             'currentYear' => now()->format('Y'),
         ]);
     }
@@ -54,11 +47,19 @@ class JournalPublicationController extends Controller
 
         flash('Journal Publication added successfully')->success();
 
-        if (Auth::guard('scholars')->check()) {
-            return redirect(route('scholars.profile'));
-        } else {
-            return redirect(route('research.publications.index'));
-        }
+        return redirect(route('scholars.profile'));
+    }
+
+    public function edit(Publication $journal)
+    {
+        return view('publications.journals.edit', [
+            'journal' => $journal,
+            'citationIndexes' => CitationIndex::values(),
+            'months' => array_map(function ($m) {
+                return Carbon::createFromFormat('m', $m)->format('F');
+            }, range(1, 12)),
+            'currentYear' => now()->format('Y'),
+        ]);
     }
 
     public function update(UpdateJournalPublication $request, Publication $journal)

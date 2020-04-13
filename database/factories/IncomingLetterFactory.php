@@ -3,6 +3,7 @@
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 use App\Models\IncomingLetter;
 use App\Models\User;
+use App\Types\Priority;
 use Faker\Generator as Faker;
 
 $factory->define(IncomingLetter::class, static function (Faker $faker) {
@@ -16,7 +17,7 @@ $factory->define(IncomingLetter::class, static function (Faker $faker) {
         'creator_id' => static function () {
             return factory(User::class)->create()->id;
         },
-        'priority' => $faker->randomElement([1, 2, 3]),
+        'priority' => $faker->randomElement(Priority::values()),
         'subject' => $faker->sentence,
         'description' => $faker->paragraph,
     ];

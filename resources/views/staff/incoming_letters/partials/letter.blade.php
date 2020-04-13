@@ -40,9 +40,9 @@
             </div>
             <h4 class="text-xl font-bold flex items-baseline mb-3">
                 @isset($letter->priority)
-                <span class="font-bold text-xl {{ $priorityColors[$letter->priority] }} mr-2"
-                    title="{{ $priorities[$letter->priority] }}">
-                    {{ str_repeat('!', 4 - $letter->priority) }}
+                <span class="font-bold text-xl {{ $letter->priority->getContextCSS() }} mr-2"
+                    title="{{ $letter->priority }}">
+                    {{ str_repeat('!', $letter->priority->getDegree()) }}
                 </span>
                 @endisset
                 <span class="flex-1">{{ $letter->subject ?? 'Subject of Letter' }}</span>

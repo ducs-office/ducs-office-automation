@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Scholar;
 use App\Models\User;
 use App\Types\AdvisoryCommitteeMember;
+use App\Types\UserType;
 use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -19,7 +20,7 @@ class SupervisorManagesScholarAdvisoryCommiteeTest extends TestCase
     /** @test */
     public function scholar_advisory_committee_can_be_edited_by_their_supervisor()
     {
-        $this->signIn($faculty = create(User::class, 1, ['category' => 'faculty_teacher']));
+        $this->signIn($faculty = create(User::class, 1, ['type' => UserType::FACULTY_TEACHER]));
 
         $supervisor = $faculty->supervisorProfile()->create();
 
@@ -27,7 +28,7 @@ class SupervisorManagesScholarAdvisoryCommiteeTest extends TestCase
             'supervisor_profile_id' => $supervisor->id,
         ]);
 
-        $faculty_teacher = create(User::class, 1, ['category' => 'faculty_teacher']);
+        $faculty_teacher = create(User::class, 1, ['type' => UserType::FACULTY_TEACHER]);
 
         $this->withoutExceptionHandling()
             ->patch(route('research.scholars.advisory_committee.update', [
@@ -59,7 +60,7 @@ class SupervisorManagesScholarAdvisoryCommiteeTest extends TestCase
     /** @test */
     public function scholar_advisory_committee_can_be_replaced_by_their_supervisor()
     {
-        $this->signIn($faculty = create(User::class, 1, ['category' => 'faculty_teacher']));
+        $this->signIn($faculty = create(User::class, 1, ['type' => UserType::FACULTY_TEACHER]));
 
         $supervisor = $faculty->supervisorProfile()->create();
 
@@ -71,7 +72,7 @@ class SupervisorManagesScholarAdvisoryCommiteeTest extends TestCase
 
         $this->assertEquals(count($scholar->old_advisory_committees), 0);
 
-        $faculty_teacher = create(User::class, 1, ['category' => 'faculty_teacher']);
+        $faculty_teacher = create(User::class, 1, ['type' => UserType::FACULTY_TEACHER]);
 
         $this->withoutExceptionHandling()
             ->patch(route('research.scholars.advisory_committee.replace', [

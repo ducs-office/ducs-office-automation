@@ -1,19 +1,12 @@
 @extends('layouts.master')
 @section('body')
-@php
-$colors = [
-    'General' => 'bg-magenta-700',
-    'Notesheet' => 'bg-teal-600',
-    'Bill' => 'bg-blue-600'
-];
-@endphp
 <div class="page-card max-w-xl mx-auto my-4">
     <div class="page-header flex items-baseline">
         <h2 class="mr-6">Update Outgoing Letter</h2>
         <span class="px-2 py-1 rounded uppercase text-sm text-white ml-auto mr-1 font-bold font-mono bg-gray-800">
             {{ $letter->serial_no }}
         </span>
-        <span class="px-2 py-1 rounded uppercase text-sm text-white ml-1 font-bold {{$colors[$letter->type]}}">
+        <span class="px-2 py-1 rounded uppercase text-sm text-white ml-1 font-bold {{ $letter->type->contextCSS() }}">
             {{ $letter->type }}
         </span>
     </div>

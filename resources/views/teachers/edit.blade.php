@@ -20,9 +20,9 @@
             <div>
                 <h3 class="text-2xl font-bold mb-1">{{ $teacher->name }}</h3>
                 <select id="designation" type="text" name="designation" class="form-input font-bold mb-2">
-                    @foreach($designations as $value => $designation)
-                    <option value="{{ $value }}"
-                    {{ $value === old('designation', $teacher->profile->desingation) ? 'selected' : '' }}>
+                    @foreach($designations as $designation)
+                    <option value="{{ $designation }}"
+                    {{ $designation === old('designation', (string)$teacher->profile->desingation) ? 'selected' : '' }}>
                         {{ $designation }}
                     </option>
                     @endforeach

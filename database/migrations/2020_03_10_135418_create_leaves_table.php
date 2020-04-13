@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\LeaveStatus;
+use App\Types\LeaveStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;

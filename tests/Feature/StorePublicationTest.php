@@ -6,6 +6,7 @@ use App\Models\Publication;
 use App\Models\Scholar;
 use App\Models\SupervisorProfile;
 use App\Models\Teacher;
+use App\Types\CitationIndex;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -26,7 +27,7 @@ class StorePublicationTest extends TestCase
                 'month' => $this->faker->monthName(),
                 'year' => $this->faker->year(),
             ],
-            'indexed_in' => [$this->faker->randomElement(array_keys(config('options.scholars.academic_details.indexed_in')))],
+            'indexed_in' => $this->faker->randomElements(CitationIndex::values(), 2),
             'number' => null,
             'publisher' => null,
             'city' => null,

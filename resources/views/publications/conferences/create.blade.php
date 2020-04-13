@@ -46,20 +46,20 @@
                     </label>
                     <div class="flex">
                         <select name="date[month]" id="date_month" class="form-input flex-1">
-                            @foreach ($months as $name => $value)
-                            <option value="{{ $value }}"
-                                {{ $value === old('date.month', now()->format('F')) ? 'selected' : ''}}>
-                                {{$name}}
+                            @foreach($months as $month)
+                            <option value="{{ $month }}"
+                                {{ $month === old('date.month', now()->format('F')) ? 'selected' : ''}}>
+                                {{ $month }}
                             </option>
                             @endforeach
                         </select>
                         <select name="date[year]" id="date_year" class="form-input flex-1 ml-4">
-                            @for ($i = 0; $i < 10; $i++)
-                            <option value=" {{ $currentYear - $i }} "
-                                {{ $currentYear - $i == old('date.year', now()->format('Y')) ? 'selected' : ''}}>
-                                {{$currentYear - $i }}
+                            @foreach(range($currentYear-10, $currentYear) as $year)
+                            <option value="{{ $year}}"
+                                {{ $year== old('date.year', now()->format('Y')) ? 'selected' : ''}}>
+                                {{$year}}
                             </option>
-                            @endfor
+                            @endforeach
                         </select>
                     </div>
                 </div>
@@ -107,12 +107,11 @@
                 <label for="indexed_in[]" class="form-label block mb-2">
                     Indexed In <span class="text-red-600">*</span>
                 </label>
-                @foreach ($indexedIn as $acronym => $index)
+                @foreach ($citationIndexes as $index)
                     <div class="flex mb-1">
-                        <input type="checkbox" name="indexed_in[]" id="{{ $acronym }}" value="{{$acronym}}"
-                         {{ (is_array(old('indexed_in')) && in_array($acronym, old('indexed_in'))) ? 'checked' : '' }}
-                         >
-                        <label for="{{ $acronym }}" class="ml-2 form-label is-sm"> {{ $index }}</label>
+                        <input type="checkbox" name="indexed_in[]" id="indexed-in-{{ $index }}" value="{{$index}}"
+                            {{ in_array($index, old('indexed_in', [])) ? 'checked' : '' }}>
+                        <label for="indexed-in-{{ $index }}" class="ml-2 form-label is-sm"> {{ $index }}</label>
                     </div>
                 @endforeach
             </div>

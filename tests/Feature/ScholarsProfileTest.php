@@ -20,11 +20,12 @@ class ScholarsProfileTest extends TestCase
         $this->signInScholar($scholar = create(Scholar::class));
 
         $response = $this->withoutExceptionHandling()
-            ->get(route('scholars.profile'))
+
+        ->get(route('scholars.profile'))
             ->assertSuccessful()
             ->assertViewHasAll([
                 'scholar',
-                'admissionCriterias',
+                'admissionModes',
                 'genders',
                 'categories',
                 'eventTypes',

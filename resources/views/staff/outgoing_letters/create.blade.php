@@ -23,11 +23,15 @@
             </label>
             <select name="type"
                 class="w-full form-input{{ $errors->has('type') ? ' border-red-600' : '' }}"
-                onchange="value === 'General' ? amount.disabled = true : amount.disabled = false;"
+                onchange="value === '{{ App\Types\OutgoingLetterType::GENERAL }}' ? amount.disabled = true : amount.disabled = false;"
                 required>
-                <option value="General"{{ old('type', 'General') === 'General' ? ' selected' : '' }}>General</option>
-                <option value="Bill"{{ old('type') === 'Bill' ? ' selected' : '' }}>Bill</option>
-                <option value="Notesheet"{{ old('type') === 'Notesheet' ? ' selected' : '' }}>Notesheet</option>
+                @foreach ($types as $type)
+                <option value="{{ $type }}"
+                    {{ old('type', App\Types\OutgoingLetterType::GENERAL) === $type ? ' selected' : '' }}>
+                    {{ $type }}
+                </option>
+                @endforeach
+
             </select>
             @if($errors->has('type'))
                 <p class="mt-1 text-red-600">{{ $errors->first('type') }}</p>

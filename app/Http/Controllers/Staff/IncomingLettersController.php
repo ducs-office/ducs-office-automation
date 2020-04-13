@@ -7,6 +7,7 @@ use App\Http\Requests\Staff\StoreIncomingLetterRequest;
 use App\Http\Requests\Staff\UpdateIncomingLettersRequest;
 use App\Models\IncomingLetter;
 use App\Models\User;
+use App\Types\Priority;
 use Illuminate\Http\Request;
 
 class IncomingLettersController extends Controller
@@ -36,15 +37,14 @@ class IncomingLettersController extends Controller
             'incomingLetters' => $query->orderBy('date', 'DESC')->get(),
             'recipients' => $recipients,
             'senders' => IncomingLetter::selectRaw('DISTINCT(sender)')->get()->pluck('sender', 'sender'),
-            'priorities' => config('options.incoming_letters.priorities'),
-            'priorityColors' => config('options.incoming_letters.priority_colors'),
+            'priorities' => Priority::values(),
         ]);
     }
 
     public function create()
     {
         return view('staff.incoming_letters.create', [
-            'priorities' => config('options.incoming_letters.priorities'),
+            'priorities' => Priority::values(),
         ]);
     }
 
@@ -65,7 +65,7 @@ class IncomingLettersController extends Controller
     {
         return view('staff.incoming_letters.edit', [
             'letter' => $letter,
-            'priorities' => config('options.incoming_letters.priorities'),
+            'priorities' => Priority::values(),
         ]);
     }
 

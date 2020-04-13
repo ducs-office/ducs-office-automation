@@ -14,6 +14,7 @@ use App\Models\ScholarEducationInstitute;
 use App\Models\ScholarEducationSubject;
 use App\Models\SupervisorProfile;
 use App\Models\User;
+use App\Types\PrePhdCourseType;
 use App\Types\ScholarDocumentType;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -127,8 +128,8 @@ class ScholarTest extends TestCase
     /** @test */
     public function all_core_courseworks_are_added_to_scholar_when_scholar_is_created()
     {
-        $coreCourseworks = create(PhdCourse::class, 2, ['type' => 'C']);
-        $electiveCourseworks = create(PhdCourse::class, 2, ['type' => 'E']);
+        $coreCourseworks = create(PhdCourse::class, 2, ['type' => PrePhdCourseType::CORE]);
+        $electiveCourseworks = create(PhdCourse::class, 2, ['type' => PrePhdCourseType::ELECTIVE]);
 
         $scholar = create(Scholar::class);
 

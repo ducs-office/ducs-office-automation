@@ -3,7 +3,9 @@
 namespace App\Http\Requests\Staff;
 
 use App\Models\IncomingLetter;
+use App\Types\Priority;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateIncomingLettersRequest extends FormRequest
 {
@@ -24,8 +26,6 @@ class UpdateIncomingLettersRequest extends FormRequest
      */
     public function rules()
     {
-        $priorities = implode(',', array_keys(config('options.incoming_letters.priorities')));
-
         $rules = [
             'date' => ['sometimes', 'required', 'date', 'before_or_equal:today'],
             'received_id' => ['sometimes', 'required', 'string', 'min:3', 'max:190'],
@@ -33,7 +33,7 @@ class UpdateIncomingLettersRequest extends FormRequest
             'recipient_id' => ['sometimes', 'required', 'exists:users,id'],
             'handovers' => ['sometimes', 'nullable', 'array'],
             'handovers.*' => ['integer', 'exists:users,id'],
-            'priority' => ['nullable', 'in:' . $priorities],
+            'priority' => ['nullable', Rule::in(Priority::values())],
             'subject' => ['sometimes', 'required', 'string', 'min:5', 'max:100'],
             'description' => ['nullable', 'string', 'max:400'],
             'attachments' => ['required', 'array', 'max:2'],

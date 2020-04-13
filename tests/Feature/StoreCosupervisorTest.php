@@ -7,6 +7,7 @@ use App\Models\Cosupervisor;
 use App\Models\Teacher;
 use App\Models\TeacherProfile;
 use App\Models\User;
+use App\Types\UserType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -42,7 +43,7 @@ class StoreCosupervisorTest extends TestCase
     {
         $this->signIn();
 
-        $faculty = create(User::class, 1, ['category' => 'faculty_teacher']);
+        $faculty = create(User::class, 1, ['type' => UserType::FACULTY_TEACHER]);
 
         $this->withoutExceptionHandling()
             ->post(route('staff.cosupervisors.faculties.store', $faculty))

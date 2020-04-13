@@ -21,7 +21,7 @@ class CreatePublicationTest extends TestCase
         ->get(route('publications.journal.create'))
         ->assertSuccessful()
         ->assertViewIs('publications.journals.create')
-        ->assertViewHas('indexedIn');
+        ->assertViewHas('citationIndexes');
     }
 
     /** @test */
@@ -40,7 +40,7 @@ class CreatePublicationTest extends TestCase
         ->get(route('publications.journal.create'))
         ->assertSuccessful()
         ->assertViewIs('publications.journals.create')
-        ->assertViewHas('indexedIn');
+        ->assertViewHas('citationIndexes');
     }
 
     /** @test */
@@ -52,7 +52,7 @@ class CreatePublicationTest extends TestCase
         ->get(route('publications.conference.create'))
         ->assertSuccessful()
         ->assertViewIs('publications.conferences.create')
-        ->assertViewHas('indexedIn');
+        ->assertViewHas('citationIndexes');
     }
 
     /** @test */
@@ -71,6 +71,6 @@ class CreatePublicationTest extends TestCase
         ->get(route('publications.conference.create'))
         ->assertSuccessful()
         ->assertViewIs('publications.conferences.create')
-        ->assertViewHas('indexedIn');
+        ->assertViewHas('citationIndexes');
     }
 }

@@ -10,7 +10,7 @@
                 <div class="ml-auto">
                     <div class="mt-2 flex">
                         <h4 class="font-semibold"> Gender </h4>
-                        <p class="ml-2"> {{  $genders[$scholar->gender] ?? '-' }}</p>
+                        <p class="ml-2"> {{ $scholar->gender }}</p>
                     </div>
                     <div class="mt-2">
                         <p class="flex items-center mb-1">
@@ -24,7 +24,7 @@
                         <div class="flex">
                             <feather-icon name="home" class="h-current mr-2"></feather-icon>
                             <address>
-                                {{ $scholar->address}}
+                                {{ $scholar->address }}
                             </address>
                         </div>
                     </div>
@@ -44,7 +44,7 @@
                         <li class="px-4 py-3 border-b last:border-b-0">
                             <div class="flex mt-2">
                                 <p class="font-bold"> Category</p>
-                                <p class="ml-4 text-gray-800"> {{$categories[$scholar->category] ?? 'not set'}}</p>
+                                <p class="ml-4 text-gray-800">{{ $scholar->category ?? 'not set' }}</p>
                             </div>
                         </li>
                         <li class="px-4 py-3 border-b last:border-b-0">
@@ -56,13 +56,15 @@
                         <li class="px-4 py-3 border-b last:border-b-0">
                             <div class="flex mt-2">
                                 <p class="font-bold"> Admission via</p>
-                                <p class="ml-4 text-gray-800"> {{ $admissionCriterias[$scholar->admission_via]['mode'] ?? '-'}}</p>
+                                <p class="ml-4 text-gray-800"> {{ $scholar->admission_mode ?? '-'}}</p>
                             </div>
                         </li>
                         <li class="px-4 py-3 border-b last:border-b-0">
                             <div class="mt-2 flex">
                                 <p class="font-bold"> Funding </p>
-                                <p class="ml-4 text-gray-800"> {{ $admissionCriterias[$scholar->admission_via]['funding'] ?? '-'}}</p>
+                                <p class="ml-4 text-gray-800">
+                                    {{ optional($scholar->admission_mode)->getFunding() ?? '-'}}
+                                </p>
                             </div>
                         </li>
                     </ul>
@@ -326,11 +328,11 @@
                     <h2 class="text-lg font-bold mb-8">Mark Course Work Complete</h2>
                         <div class="flex mb-2">
                             <div class="flex-1 mr-2 items-baseline">
-                                <label for="completed_on" class="form-label mb-1 w-full"> 
+                                <label for="completed_on" class="form-label mb-1 w-full">
                                     Date of Completion
                                     <span class="text-red-600 font-bold">*</span>
                                 </label>
-                                <input type="date" name="completed_on" 
+                                <input type="date" name="completed_on"
                                 class="form-input w-full" id="completed_on">
                             </div>
                             <div class="flex-1 mb-2 items-baseline">
@@ -343,7 +345,7 @@
                             </div>
                         </div>
                         <button class="bg-green-500 hover:bg-green-600 text-white text-sm py-2 rounded font-bold btn">
-                            Mark Completed 
+                            Mark Completed
                         </button>
                     </form>
                 </template>
@@ -373,8 +375,8 @@
                                     @if ($course->pivot->completed_on)
                                         <div class="flex items-center pl-4">
 
-                                            <a target="_blank" 
-                                            href="{{ route('research.scholars.courseworks.marksheet', [ $scholar, $course->pivot])}}" 
+                                            <a target="_blank"
+                                            href="{{ route('research.scholars.courseworks.marksheet', [ $scholar, $course->pivot])}}"
                                             class="btn inline-flex items-center ml-2">
 
                                             <feather-icon name="paperclip" class="h-current mr-2"></feather-icon>
@@ -422,24 +424,11 @@
                     @endcan
                 </div>
             </div>
-            
+
 
             {{-- Leaves --}}
-            @php($icons = [
-                App\Models\LeaveStatus::APPROVED => 'check-circle',
-                App\Models\LeaveStatus::REJECTED => 'x-circle',
-                App\Models\LeaveStatus::RECOMMENDED => 'shield',
-                App\Models\LeaveStatus::APPLIED => 'alert-circle'
-            ])
-            @php($colors = [
-                App\Models\LeaveStatus::APPROVED => 'text-green-500',
-                App\Models\LeaveStatus::REJECTED => 'text-red-600',
-                App\Models\LeaveStatus::RECOMMENDED => 'text-blue-600',
-                App\Models\LeaveStatus::APPLIED => 'text-gray-700'
-            ])
-    
             <v-modal name="respond-to-leave" height="auto">
-                <template v-slot="{ data }"> 
+                <template v-slot="{ data }">
                     <form :action="route('research.scholars.leaves.respond', [data('scholar'), data('leave')])"
                     method="POST" class="p-6" enctype="multipart/form-data" >
                     @csrf_token @method("PATCH")
@@ -460,12 +449,12 @@
                                     Upload Response Letter
                                     <span class="text-red-600 font-bold">*</span>
                                 </label>
-                                <input id="response_letter" type="file" class="form-input w-full" 
+                                <input id="response_letter" type="file" class="form-input w-full"
                                     name="response_letter" accept="application/pdf,image/*">
                             </div>
                         </div>
                         <button class="btn btn-magenta">
-                            Respond 
+                            Respond
                         </button>
                     </form>
                 </template>
@@ -473,7 +462,7 @@
 
             <div class="mb-16 flex">
                 <div class="w-64 pr-4 relative z-10 -ml-8 my-2">
-                    <h3 class="relative 
+                    <h3 class="relative
                         z-20 pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
                         Leaves
                     </h3>
@@ -506,7 +495,9 @@
                                     </a>
                                 @endif
                                 <div class="flex items-center px-4">
-                                    <feather-icon name="{{ $icons[$leave->status] }}" class="h-current {{ $colors[$leave->status] }} mr-2" stroke-width="2.5"></feather-icon>
+                                    <feather-icon name="{{ $leave->status->getContextIcon() }}"
+                                        class="h-current {{ $leave->status->getContextCSS() }} mr-2"
+                                        stroke-width="2.5"></feather-icon>
                                     <div class="capitalize">
                                         {{ $leave->status }}
                                     </div>
@@ -548,7 +539,9 @@
                                             </a>
                                         @endif
                                         <div class="flex items-center px-4">
-                                            <feather-icon name="{{ $icons[$extensionLeave->status] }}" class="h-current {{ $colors[$extensionLeave->status] }} mr-2" stroke-width="2.5"></feather-icon>
+                                            <feather-icon name="{{ $extensionLeave->status->getContextIcon() }}"
+                                                class="h-current {{ $extensionLeave->status->getContextCSS() }} mr-2"
+                                                stroke-width="2.5"></feather-icon>
                                             <div class="capitalize">
                                                 {{ $extensionLeave->status }}
                                             </div>

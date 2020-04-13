@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Course;
 use App\Models\Programme;
 use App\Models\User;
+use App\Types\ProgrammeType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Validation\ValidationException;
@@ -35,7 +36,7 @@ class CreateProgrammeTest extends TestCase
             'code' => 'MCS',
             'wef' => '2019-08-12',
             'name' => 'M.Sc. Computer Science',
-            'type' => 'UG',
+            'type' => ProgrammeType::UNDER_GRADUATE,
             'duration' => 1,
             'semester_courses' => [
                 [create(Course::class)->id],
@@ -85,7 +86,7 @@ class CreateProgrammeTest extends TestCase
                 'code' => 'MCS',
                 'wef' => '2020-01-01',
                 'name' => 'M.C.A. Computer Science',
-                'type' => 'UG',
+                'type' => ProgrammeType::POST_GRADUATE,
                 'duration' => 1,
                 'semester_courses' => [
                     [$anotherUnassignedCourse->id],

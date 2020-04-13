@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Scholar;
 
+use App\Types\PresentationEventType;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdatePresentation extends FormRequest
 {
@@ -23,17 +25,13 @@ class UpdatePresentation extends FormRequest
      */
     public function rules()
     {
-        $scholar = $this->user();
-        $publications = $scholar->publications();
+        $ids = $this->user()->publications->pluck('id')->implode(',');
 
-        $ids = implode(',', $publications->pluck('id')->toArray());
-
-        $event_types = implode(',', array_keys(config('options.scholars.academic_details.event_types')));
         return [
             'city' => ['sometimes', 'required', 'string'],
             'country' => ['sometimes', 'required', 'string'],
             'date' => ['sometimes', 'required', 'date'],
-            'event_type' => ['sometimes', 'required', 'in:' . $event_types],
+            'event_type' => ['sometimes', 'required', Rule::in(PresentationEventType::values())],
             'event_name' => ['sometimes', 'required', 'string'],
             'publication_id' => ['sometimes', 'required', 'in:' . $ids],
         ];

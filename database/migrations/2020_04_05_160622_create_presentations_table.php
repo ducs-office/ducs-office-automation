@@ -1,5 +1,6 @@
 <?php
 
+use App\Types\PresentationEventType;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -20,7 +21,7 @@ class CreatePresentationsTable extends Migration
             $table->string('city');
             $table->string('country');
             $table->date('date');
-            $table->enum('event_type', array_keys(config('options.scholars.academic_details.event_types')));
+            $table->enum('event_type', PresentationEventType::values());
             $table->string('event_name');
             $table->timestamps();
 

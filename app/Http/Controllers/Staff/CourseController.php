@@ -7,6 +7,7 @@ use App\Http\Requests\Staff\StoreCourseRequest;
 use App\Http\Requests\Staff\UpdateCourseRequest;
 use App\Models\Course;
 use App\Models\Programme;
+use App\Types\CourseType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
@@ -34,7 +35,7 @@ class CourseController extends Controller
 
         return view('staff.courses.index', [
             'courses' => $courses,
-            'courseTypes' => config('options.courses.types'),
+            'courseTypes' => CourseType::values(),
         ]);
     }
 

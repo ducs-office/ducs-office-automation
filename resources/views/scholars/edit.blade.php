@@ -22,10 +22,10 @@
                 <div class="flex items-baseline">
                     <label for="gender" class="block form-label flex-1"> Gender</label>
                     <select id="gender" name="gender" class="block form-input flex-1">
-                        <option value="" class="text-gray-600" selected>Select your gender </option>
-                        @foreach ($genders as $acronym => $gender)
-                        <option value=" {{ $acronym }}"
-                            {{ $acronym === old("gender", $scholar->gender) ? 'selected': '' }}>
+                        <option value="" class="text-gray-600" selected disabled>Select your Gender</option>
+                        @foreach ($genders as $gender)
+                        <option value="{{ $gender }}"
+                            {{ $gender === old('gender', (string)$scholar->gender) ? 'selected': '' }}>
                             {{ $gender }}
                         </option>
                         @endforeach
@@ -34,10 +34,10 @@
                 <div class="flex items-baseline mt-3">
                     <label for="category" class="block form-label flex-1"> Category</label>
                     <select id="category" name="category" class="block form-input flex-1 ">
-                        <option value="" class="text-gray-600" selected>Choose a category </option>
-                        @foreach ($categories as $acronym => $category)
-                        <option value=" {{ $acronym }}"
-                            {{ $acronym === old("category", $scholar->category) ? 'selected': '' }}>
+                        <option value="" class="text-gray-600" selected disabled>Choose a category </option>
+                        @foreach ($categories as $category)
+                        <option value="{{ $category }}"
+                            {{ $category === old("category", (string)$scholar->category) ? 'selected': '' }}>
                             {{ $category }}
                         </option>
                         @endforeach
@@ -74,13 +74,13 @@
                         <input id="enrollment_date" type="date" name="enrollment_date" class="block w-auto form-input flex-1" value="{{ old('date', $scholar->enrollment_date) }}">
                     </div>
                     <div class="flex items-baseline mt-2">
-                        <label for="admission_via" class="block form-label flex-1">Admission Via:</label>
-                        <select id="admission_via" name="admission_via" class="block form-input flex-1">
+                        <label for="admission_mode" class="block form-label flex-1">Admission Via:</label>
+                        <select id="admission_mode" name="admission_mode" class="block form-input flex-1">
                             <option value="" selected> Choose the mode of admission </option>
-                            @foreach ($admissionCriterias as $acronym => $admission_via)
-                            <option value=" {{ $acronym }}"
-                                {{ $acronym === old("admission_via", $scholar->admission_via) ? 'selected': '' }}>
-                                {{ $admission_via['mode'] }}
+                            @foreach ($admissionModes as $admissionMode)
+                            <option value=" {{ $admissionMode }}"
+                                {{ $admissionMode === old("admission_mode", (string)$scholar->admissionMode) ? 'selected': '' }}>
+                                {{ $admissionMode }}
                             </option>
                             @endforeach
                         </select>
@@ -101,10 +101,10 @@
                                     <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
                                 </svg>
                             </div>
-                            <button v-on:click.prevent="addElement" 
+                            <button v-on:click.prevent="addElement"
                                     v-if="elements.length < 4"
                                     class="ml-auto text-blue-700 bg-gray-300 btn is-sm"
-                                > + 
+                                > +
                             </button>
                         </div>
                         <h6 class="mx-2 mb-6 text-gray-800 text-sm">You can add a maximum of 4 education records only. Minimum 1 is required. <span class="text-red-600">*</span></h6>
@@ -117,7 +117,7 @@
                         <div v-for="(element, index) in elements" :key="index" class="flex items-baseline mb-4 mt-2 w-2/3">
                             <div class="flex">
                                 <div class="w-1/4 mr-2">
-                                    <select-with-other 
+                                    <select-with-other
                                         :name="`education[${index}][degree]`"
                                         :other-name="`typedDegrees[${index}]`"
                                         :other-value="-1"
@@ -127,12 +127,12 @@
                                         @foreach($degrees as $degree => $id)
                                         <option value="{{ $id }}" :selected="element.value.degree === '{{ $degree }}'"> {{ $degree}} </option>
                                         @endforeach
-                                            
+
                                     </select-with-other>
                                 </div>
                                 <div class="w-1/4 mr-2">
 
-                                    <select-with-other 
+                                    <select-with-other
                                         :name="`education[${index}][subject]`"
                                         :other-name="`typedSubjects[${index}]`"
                                         other-value="-1"
@@ -142,11 +142,11 @@
                                         @foreach($subjects as $subject => $id)
                                         <option value="{{ $id }}" :selected="element.value.subject === '{{ $subject }}' "> {{ $subject}} </option>
                                         @endforeach
-                                            
+
                                     </select-with-other>
                                 </div>
                                 <div class="w-1/4 mr-2">
-                                    <select-with-other 
+                                    <select-with-other
                                         :name="`education[${index}][institute]`"
                                         :other-name="`typedInstitutes[${index}]`"
                                         :other-value="-1"
@@ -156,7 +156,7 @@
                                         @foreach($institutes as $institute => $id)
                                         <option value="{{ $id }}" :selected="element.value.institute === '{{ $institute }}' "> {{ $institute}} </option>
                                         @endforeach
-                                            
+
                                     </select-with-other>
                                 </div>
                                 <input type="text" :name="`education[${index}][year]`" v-model="element.value.year" class="form-input h-8 w-1/4">
@@ -182,7 +182,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="mt-8">
                 <button type="submit" class="btn btn-magenta">Save Changes</button>
             </div>

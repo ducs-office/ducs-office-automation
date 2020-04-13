@@ -101,11 +101,10 @@
                 <select id="priority"
                     name="priority"
                     class="w-full form-input{{ $errors->has('priority') ? ' border-red-600' : ''}}">
-                    <option value="" >None</option>
-                    @foreach ($priorities as $value => $name)
-                        <option value="{{ $value }}"
-                            {{ old('priority') === $value ? 'selected' : ''}}>
-                            {{ $name }}
+                    @foreach ($priorities as $priority)
+                        <option value="{{ $priority }}"
+                            {{ old('priority') === $priority ? 'selected' : ''}}>
+                            {{ $priority }}
                         </option>
                     @endforeach
                 </select>

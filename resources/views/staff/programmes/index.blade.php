@@ -44,7 +44,7 @@
                 </div>
             </div>
             <h3 class="italic mb-4">
-                    {{ $programme->type === 'UG' ? 'Under Graduate' : 'Post Graduate' }}
+                {{ $programme->type }}
             </h3>
             <p class="mb-1"><span class="italic font-bold">Duration:</span> {{ $programme->duration }} year(s)</p>
 
@@ -88,7 +88,6 @@
                     Show all revisions
                 </a>
             </div>
-
         </div>
     @endforeach
 </div>

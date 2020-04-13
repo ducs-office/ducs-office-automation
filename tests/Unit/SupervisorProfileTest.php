@@ -5,7 +5,6 @@ namespace Tests\Unit;
 use App\Models\Publication;
 use App\Models\SupervisorProfile;
 use App\Models\Teacher;
-use App\SupervisorProfile as AppSupervisorProfile;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -35,9 +34,9 @@ class SupervisorProfileTest extends TestCase
     {
         $supervisorProfile = create(SupervisorProfile::class);
 
-        $this->assertCount(0, $supervisorProfile->publications);
-
         $this->assertInstanceOf(MorphMany::class, $supervisorProfile->publications());
+
+        $this->assertCount(0, $supervisorProfile->publications);
 
         $publication = create(Publication::class, 1, [
             'main_author_type' => SupervisorProfile::class,

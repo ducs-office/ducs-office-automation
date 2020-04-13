@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use App\Types\PrePhdCourseType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Spatie\Permission\Models\Role;
@@ -21,7 +22,7 @@ class CreatePhdCourseTest extends TestCase
             ->post(route('staff.phd_courses.store'), $course = [
                 'code' => 'RSC001',
                 'name' => 'Research Methodology',
-                'type' => 'C', // Core
+                'type' => PrePhdCourseType::CORE,
             ])->assertRedirect()
             ->assertSessionHasFlash('success', 'PhD Course added successfully!');
 
@@ -39,7 +40,7 @@ class CreatePhdCourseTest extends TestCase
             ->post(route('staff.phd_courses.store'), $course = [
                 'code' => 'RSC001',
                 'name' => 'Research Methodology',
-                'type' => 'C', // Core
+                'type' => PrePhdCourseType::CORE,
             ])->assertForbidden();
 
         $this->assertDatabaseMissing('phd_courses', $course);

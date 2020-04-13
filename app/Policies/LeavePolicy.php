@@ -3,9 +3,8 @@
 namespace App\Policies;
 
 use App\Models\Leave;
-use App\Models\LeaveStatus;
 use App\Models\Scholar;
-use App\Models\User;
+use App\Types\LeaveStatus;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class LeavePolicy

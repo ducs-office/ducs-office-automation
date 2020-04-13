@@ -14,7 +14,7 @@
             <div class="mb-6">
                 <div class="mt-2 flex">
                     <h4 class="font-semibold"> Gender </h4>
-                    <p class="ml-2"> {{  $genders[$scholar->gender] ?? '-' }}</p>
+                    <p class="ml-2"> {{ $scholar->gender }}</p>
                 </div>
                 <div class="mt-2">
                     <p class="flex items-center mb-1">
@@ -47,7 +47,7 @@
                         <li class="px-4 py-3 border-b last:border-b-0">
                             <div class="flex mt-2">
                                 <p class="font-bold"> Category</p>
-                                <p class="ml-4 text-gray-800"> {{$categories[$scholar->category] ?? '-'}}</p>
+                                <p class="ml-4 text-gray-800"> {{ $scholar->category ?? 'not set'}}</p>
                             </div>
                         </li>
                         <li class="px-4 py-3 border-b last:border-b-0">
@@ -58,14 +58,14 @@
                         </li>
                         <li class="px-4 py-3 border-b last:border-b-0">
                             <div class="flex mt-2">
-                                <p class="font-bold"> Admission via </p>
-                                <p class="ml-4 text-gray-800"> {{ $admissionCriterias[$scholar->admission_via]['mode'] ?? '-'}}</p>
+                                <p class="font-bold">Admission via</p>
+                                <p class="ml-4 text-gray-800"> {{ $scholar->admission_mode ?? '-'}}</p>
                             </div>
                         </li>
                         <li class="px-4 py-3 border-b last:border-b-0">
                             <div class="mt-2 flex">
                                 <p class="font-bold"> Funding </p>
-                                <p class="ml-4 text-gray-800"> {{ $admissionCriterias[$scholar->admission_via]['funding'] ?? '-'}}</p>
+                                <p class="ml-4 text-gray-800"> {{ optional($scholar->admission_mode)->getFunding() ?? '-'}}</p>
                             </div>
                         </li>
                     </ul>
@@ -322,18 +322,6 @@
         </div>
 
         {{-- Leaves --}}
-        @php($icons = [
-            App\Models\LeaveStatus::APPROVED => 'check-circle',
-            App\Models\LeaveStatus::REJECTED => 'x-circle',
-            App\Models\LeaveStatus::RECOMMENDED => 'shield',
-            App\Models\LeaveStatus::APPLIED => 'alert-circle'
-        ])
-        @php($colors = [
-            App\Models\LeaveStatus::APPROVED => 'text-green-500',
-            App\Models\LeaveStatus::REJECTED => 'text-red-600',
-            App\Models\LeaveStatus::RECOMMENDED => 'text-blue-600',
-            App\Models\LeaveStatus::APPLIED => 'text-gray-700'
-        ])
         <div class="mb-16">
             <div class="mb-4 flex items-center justify-between">
                 <h3 class="font-bold text-xl mr-4">
@@ -367,8 +355,8 @@
                             </a>
                         @endif
                         <div class="flex items-center px-4">
-                            <feather-icon name="{{ $icons[$leave->status] }}"
-                                class="h-current {{ $colors[$leave->status] }} mr-2"
+                            <feather-icon name="{{ $leave->status->getContextIcon() }}"
+                                class="h-current {{ $leave->status->getContextCSS() }} mr-2"
                                 stroke-width="2.5"></feather-icon>
                             <div class="capitalize">
                                 {{ $leave->status }}
@@ -404,8 +392,8 @@
                                 </a>
                             @endif
                             <div class="flex items-center px-4">
-                                <feather-icon name="{{ $icons[$extensionLeave->status] }}"
-                                    class="h-current {{ $colors[$extensionLeave->status] }} mr-2"
+                                <feather-icon name="{{ $extensionLeave->status->getContextIcon() }}"
+                                    class="h-current {{ $extensiosLeave->status->getContextColor() }} mr-2"
                                     stroke-width="2.5"></feather-icon>
                                 <div class="capitalize">
                                     {{ $extensionLeave->status }}

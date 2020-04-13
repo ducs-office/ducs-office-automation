@@ -4,6 +4,7 @@ namespace App\Http\Requests\Staff;
 
 use App\Models\CourseProgrammeRevision;
 use App\Models\Programme;
+use App\Types\ProgrammeType;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -26,13 +27,11 @@ class StoreProgrammeRequest extends FormRequest
      */
     public function rules()
     {
-        $types = implode(',', array_keys(config('options.programmes.types')));
-
         return [
             'code' => ['required', 'min:3', 'max:60', 'unique:programmes,code'],
             'wef' => ['required', 'date'],
             'name' => ['required', 'min:3', 'max:190'],
-            'type' => ['required', 'in:' . $types],
+            'type' => ['required', Rule::in(ProgrammeType::values())],
             'duration' => ['required', 'integer'],
             'semester_courses' => ['required', 'array', 'size:' . ($this->duration * 2)],
             'semester_courses.*' => ['required', 'array', 'min:1'],

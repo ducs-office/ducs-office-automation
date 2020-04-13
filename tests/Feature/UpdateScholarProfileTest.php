@@ -8,6 +8,8 @@ use App\Models\ScholarEducationDegree;
 use App\Models\ScholarEducationInstitute;
 use App\Models\ScholarEducationSubject;
 use App\Models\SupervisorProfile;
+use App\Types\AdmissionMode;
+use App\Types\ReservationCategory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
@@ -34,8 +36,8 @@ class UpdateScholarProfileTest extends TestCase
         $updateDetails = [
             'phone_no' => '12345678',
             'address' => 'new address, new delhi',
-            'category' => 'SC',
-            'admission_via' => 'NET',
+            'category' => ReservationCategory::SC,
+            'admission_mode' => AdmissionMode::UGC_NET,
             'profile_picture' => $profilePicture = UploadedFile::fake()->image('picture.jpeg'),
             'enrollment_date' => now()->subMonth(1)->format('Y-m-d'),
             'research_area' => 'Artificial Intelligence',
@@ -59,7 +61,7 @@ class UpdateScholarProfileTest extends TestCase
         $this->assertEquals($updateDetails['phone_no'], $scholar->fresh()->phone_no);
         $this->assertEquals($updateDetails['address'], $scholar->fresh()->address);
         $this->assertEquals($updateDetails['category'], $scholar->fresh()->category);
-        $this->assertEquals($updateDetails['admission_via'], $scholar->fresh()->admission_via);
+        $this->assertEquals($updateDetails['admission_mode'], $scholar->fresh()->admission_mode);
         $this->assertEquals($updateDetails['enrollment_date'], $scholar->fresh()->enrollment_date);
         $this->assertEquals($updateDetails['research_area'], $scholar->fresh()->research_area);
         $this->assertEquals($updateDetails['education'][0]['year'], $scholar->fresh()->education[0]['year']);
@@ -85,7 +87,7 @@ class UpdateScholarProfileTest extends TestCase
                 'phone_no' => null,
                 'address' => null,
                 'category' => null,
-                'admission_via' => null,
+                'admission_mode' => null,
                 'research_area' => null,
             ])
         );
@@ -161,7 +163,7 @@ class UpdateScholarProfileTest extends TestCase
                 'phone_no' => null,
                 'address' => null,
                 'category' => null,
-                'admission_via' => null,
+                'admission_mode' => null,
                 'research_area' => null,
             ])
         );
@@ -203,13 +205,14 @@ class UpdateScholarProfileTest extends TestCase
     /** @test */
     public function scholar_each_education_array_must_contain_four_elements()
     {
+        // TODO: better name for test, it doesn't test exactly what it says.
         $this->signInScholar(
             $scholar = create(Scholar::class, 1, [
                 'education' => [],
                 'phone_no' => null,
                 'address' => null,
                 'category' => null,
-                'admission_via' => null,
+                'admission_mode' => null,
                 'research_area' => null,
             ])
         );

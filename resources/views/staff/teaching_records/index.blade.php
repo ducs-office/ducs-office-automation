@@ -119,7 +119,7 @@
             <tr class="hover:bg-gray-200">
                 <td class="pl-6 pr-4 py-2 border-b table-fit">{{ $record->valid_from->format('M, Y') }}</td>
                 <td class="px-4 py-2 border-b table-fit">{{ $record->teacher->name }}</td>
-                <td class="px-4 py-2 border-b table-fit">{{ $record->getDesignation() }}</td>
+                <td class="px-4 py-2 border-b table-fit">{{ $record->designation }}</td>
                 <td class="px-4 py-2 border-b">{{ $record->college->name }}</td>
                 <td class="px-4 py-2 border-b">
                     {{ $record->programmeRevision->programme->name }}

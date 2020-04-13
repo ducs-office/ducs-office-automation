@@ -9,6 +9,10 @@ use App\Models\ScholarEducationDegree;
 use App\Models\ScholarEducationInstitute;
 use App\Models\ScholarEducationSubject;
 use App\Models\SupervisorProfile;
+use App\Types\AdmissionMode;
+use App\Types\Gender;
+use App\Types\PresentationEventType;
+use App\Types\ReservationCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
@@ -25,10 +29,10 @@ class ProfileController extends Controller
 
         return view('scholars.profile', [
             'scholar' => $scholar,
-            'admissionCriterias' => config('options.scholars.admission_criterias'),
-            'genders' => config('options.scholars.genders'),
-            'categories' => config('options.scholars.categories'),
-            'eventTypes' => config('options.scholars.academic_details.event_types'),
+            'admissionModes' => AdmissionMode::values(),
+            'genders' => Gender::values(),
+            'categories' => ReservationCategory::values(),
+            'eventTypes' => PresentationEventType::values(),
         ]);
     }
 
@@ -38,12 +42,14 @@ class ProfileController extends Controller
 
         return view('scholars.edit', [
             'scholar' => $scholar,
-            'categories' => config('options.scholars.categories'),
-            'admissionCriterias' => config('options.scholars.admission_criterias'),
-            'genders' => config('options.scholars.genders'),
-            'subjects' => ScholarEducationSubject::all()->pluck('id', 'name')->toArray(),
-            'degrees' => ScholarEducationDegree::all()->pluck('id', 'name')->toArray(),
-            'institutes' => ScholarEducationInstitute::all()->pluck('id', 'name')->toArray(),
+            'categories' => ReservationCategory::values(),
+            'admissionModes' => AdmissionMode::values(),
+            'genders' => Gender::values(),
+            'supervisorProfiles' => SupervisorProfile::all()->pluck('id', 'supervisor.name'),
+            'cosupervisors' => Cosupervisor::all()->pluck('id', 'name', 'email'),
+            'degrees' => ScholarEducationDegree::select('name')->get(),
+            'institutes' => ScholarEducationInstitute::select('name')->get(),
+            'subjects' => ScholarEducationSubject::select('name')->get(),
         ]);
     }
 

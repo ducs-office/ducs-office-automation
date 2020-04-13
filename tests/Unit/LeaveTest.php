@@ -3,8 +3,8 @@
 namespace Tests\Unit;
 
 use App\Models\Leave;
-use App\Models\LeaveStatus;
-use Carbon\CarbonImmutable;
+use App\Models\Scholar;
+use App\Types\LeaveStatus;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -28,7 +28,11 @@ class LeaveTest extends TestCase
     /** @test */
     public function is_recommended_method_checks_leave_status_if_recommended_by_supervisor()
     {
-        $leave = create(Leave::class, 1, ['status' => LeaveStatus::APPLIED]);
+        $scholar = create(Scholar::class);
+        $leave = create(Leave::class, 1, [
+            'status' => LeaveStatus::APPLIED,
+            'scholar_id' => $scholar->id,
+        ]);
 
         $this->assertFalse($leave->isRecommended());
 
@@ -48,5 +52,46 @@ class LeaveTest extends TestCase
 
         $this->assertCount(3, $leave->fresh()->extensions);
         $this->assertEquals($extensionLeaves->pluck('id'), $leave->fresh()->extensions->pluck('id'));
+    }
+
+    /** @test */
+    public function nextExtensionsFrom_method_returns_next_date_of_last_approved_Extension()
+    {
+        $leave = create(Leave::class, 1, [
+            'from' => now(),
+            'status' => LeaveStatus::APPLIED,
+            'to' => $to = now()->addDays(2),
+        ]);
+
+        $this->assertNull($leave->nextExtensionFrom());
+
+        $leave->recommend();
+
+        $this->assertNull($leave->nextExtensionFrom());
+
+        $leave->approve();
+
+        $expectedNextDate = $to->addDay();
+        $this->assertEquals(
+            $expectedNextDate->toDateString(),
+            $leave->fresh()->nextExtensionFrom()->toDateString()
+        );
+
+        $extension = create(Leave::class, 1, [
+            'extended_leave_id' => $leave->id,
+            'to' => $leave->nextExtensionFrom()->addDays(5),
+        ]);
+        $this->assertEquals(
+            $expectedNextDate->toDateString(),
+            $leave->fresh()->nextExtensionFrom()->toDateString()
+        );
+
+        $extension->approve();
+
+        $expectedNextDate = $extension->to->addDay();
+        $this->assertEquals(
+            $expectedNextDate->toDateString(),
+            $leave->fresh()->nextExtensionFrom()->toDateString()
+        );
     }
 }

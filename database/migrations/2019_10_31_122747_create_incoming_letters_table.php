@@ -1,5 +1,6 @@
 <?php
 
+use App\Types\Priority;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -20,7 +21,7 @@ class CreateIncomingLettersTable extends Migration
             $table->string('received_id'); // ID on the received letter
             $table->string('sender', 100);
             $table->unsignedBigInteger('recipient_id');
-            $table->enum('priority', array_keys(config('options.incoming_letters.priorities')))->nullable();
+            $table->enum('priority', Priority::values())->nullable();
             $table->string('subject', 100);
             $table->text('description', 400)->nullable();
             $table->unsignedBigInteger('creator_id');

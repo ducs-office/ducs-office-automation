@@ -2,8 +2,8 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 use App\Models\Leave;
-use App\Models\LeaveStatus;
 use App\Models\Scholar;
+use App\Types\LeaveStatus;
 use Faker\Generator as Faker;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;

@@ -4,9 +4,9 @@ namespace Tests\Feature;
 
 use App\Models\IncomingLetter;
 use App\Models\User;
+use App\Types\Priority;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -53,7 +53,7 @@ class UpdateIncomingLettersTest extends TestCase
         $receiver = create(User::class);
         $handovers = [create(User::class)->id, create(User::class)->id];
         $letter = create(IncomingLetter::class, 1, [
-            'priority' => 2,
+            'priority' => Priority::MEDIUM,
             'creator_id' => auth()->id(),
         ]);
 
@@ -63,7 +63,7 @@ class UpdateIncomingLettersTest extends TestCase
             'sender' => 'Exam Office',
             'recipient_id' => $receiver->id,
             'handovers' => $handovers,
-            'priority' => 3,
+            'priority' => Priority::LOW,
             'subject' => 'foobar',
             'description' => 'lorem ipsum',
             'attachments' => [$file = UploadedFile::fake()->create('letter-scan.pdf')],
@@ -238,8 +238,7 @@ class UpdateIncomingLettersTest extends TestCase
 
         try {
             $this->withoutExceptionHandling()
-            ->patch(route('staff.incoming_letters.update', $letter), ['recipient_id' => 4]);
-
+                ->patch(route('staff.incoming_letters.update', $letter), ['recipient_id' => 4]);
             $this->fail("Failed to validate \'recipient_id\' is an existing user");
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('recipient_id', $e->errors());

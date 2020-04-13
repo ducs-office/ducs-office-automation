@@ -3,7 +3,9 @@
 namespace App\Http\Requests\Staff;
 
 use App\Models\Course;
+use App\Types\CourseType;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreCourseRequest extends FormRequest
 {
@@ -24,12 +26,10 @@ class StoreCourseRequest extends FormRequest
      */
     public function rules()
     {
-        $types = implode(',', array_keys(config('options.courses.types')));
-
         return [
             'code' => ['required', 'min:3', 'max:60', 'unique:courses'],
             'name' => ['required', 'min:3', 'max:190'],
-            'type' => ['required', 'in:' . $types],
+            'type' => ['required', Rule::in(CourseType::values())],
             'date' => ['required', 'date', 'before_or_equal:now'],
             'attachments' => ['required', 'array', 'max:5'],
             'attachments.*' => ['file', 'max:200', 'mimes:jpeg,jpg,png,pdf'],

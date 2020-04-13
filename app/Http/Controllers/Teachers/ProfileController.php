@@ -8,6 +8,7 @@ use App\Models\College;
 use App\Models\Course;
 use App\Models\Programme;
 use App\Models\TeacherProfile;
+use App\Types\TeacherStatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
@@ -24,7 +25,7 @@ class ProfileController extends Controller
         ]);
 
         return view('teachers.profile', [
-            'designations' => config('options.teachers.designations'),
+            'designations' => TeacherStatus::values(),
             'teacher' => $teacher,
         ]);
     }
@@ -41,7 +42,7 @@ class ProfileController extends Controller
 
         return view('teachers.edit', [
             'colleges' => College::all()->pluck('name', 'id'),
-            'designations' => config('options.teachers.designations'),
+            'designations' => TeacherStatus::values(),
             'programmes' => $programmes,
             'teacher' => $teacher,
         ]);
@@ -51,6 +52,8 @@ class ProfileController extends Controller
     {
         $validatedData = $request->validated();
         $profile = $request->user()->profile->load('teachingDetails');
+
+        // dd($validatedData);
 
         $profile->update($validatedData);
 

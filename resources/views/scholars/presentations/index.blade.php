@@ -1,7 +1,7 @@
 <div class="ml-2 mt-4 px-6">
     <ul class="border rounded-lg overflow-hidden mb-4">
     @foreach ($presentations as $presentation)
-        <li class="border-b last:border-b-0 py-3"> 
+        <li class="border-b last:border-b-0 py-3">
             <div class="flex">
                 <div class="ml-2 w-4/5">
                     <div class="flex m-2">
@@ -22,7 +22,7 @@
                         <div class="w-3/5">
                             <div class="flex m-2">
                                 <h4 class="font-semibold"> Event Type: </h4>
-                                <p class="ml-2"> {{ $eventTypes[$presentation->event_type] }} </p>
+                                <p class="ml-2"> {{ $presentation->event_type }} </p>
                             </div>
                             <div class="flex m-2">
                                 <h4 class="font-semibold"> Event Name: </h4>
@@ -35,7 +35,7 @@
                                 <p class="ml-2"> {{ $presentation->date->format('d F Y') }} </p>
                             </div>
                             <div class="flex m-2">
-                                <h4 class="font-semibold"> Address: </h4> 
+                                <h4 class="font-semibold"> Address: </h4>
                                 <p class="ml-2"> {{ $presentation->city}}, {{ $presentation->country }} </p>
                             </div>
                         </div>
@@ -43,7 +43,7 @@
                 </div>
                 <div class="ml-auto px-2 flex">
                     @can('update', $presentation)
-                    <a href="{{ route('scholars.presentation.edit', $presentation) }}" 
+                    <a href="{{ route('scholars.presentation.edit', $presentation) }}"
                         class="p-1 text-blue-600 hover:bg-gray-200 rounded mr-3 h-6" title="Edit">
                         <feather-icon name="edit-3" stroke-width="2.5" class="h-current">Edit</feather-icon>
                     </a>

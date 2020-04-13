@@ -8,6 +8,7 @@ use App\Models\Programme;
 use App\Models\ProgrammeRevision;
 use App\Models\Teacher;
 use App\Models\TeachingRecord;
+use App\Types\TeacherStatus;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\TestResponse;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -41,7 +42,7 @@ class ExportTeachingRecordToCsvTest extends TestCase
         $oldRecord = create(TeachingRecord::class, 1, [
             'valid_from' => now()->subMonths(8),
             'teacher_id' => $teacher->id,
-            'designation' => 'T',
+            'designation' => TeacherStatus::TEMPORARY,
             'college_id' => $college->id,
             'course_id' => $courses[0]->id,
             'semester' => 1,
@@ -51,7 +52,7 @@ class ExportTeachingRecordToCsvTest extends TestCase
         $newRecord = create(TeachingRecord::class, 1, [
             'valid_from' => now()->subMonths(2),
             'teacher_id' => $teacher->id,
-            'designation' => 'T',
+            'designation' => TeacherStatus::TEMPORARY,
             'college_id' => $college->id,
             'course_id' => $courses[1]->id,
             'semester' => 2,
@@ -60,8 +61,8 @@ class ExportTeachingRecordToCsvTest extends TestCase
 
         $expectedCSV = implode("\n", [
             'Year,Teacher,Designation,College,Course,Semester,Programme',
-            "{$newRecord->valid_from->year},{$teacher->name},{$newRecord->getDesignation()},{$college->name},{$courses[1]->name},{$newRecord->semester},{$programme->name}",
-            "{$oldRecord->valid_from->year},{$teacher->name},{$oldRecord->getDesignation()},{$college->name},{$courses[0]->name},{$oldRecord->semester},{$programme->name}",
+            "{$newRecord->valid_from->year},{$teacher->name},{$newRecord->designation},{$college->name},{$courses[1]->name},{$newRecord->semester},{$programme->name}",
+            "{$oldRecord->valid_from->year},{$teacher->name},{$oldRecord->designation},{$college->name},{$courses[0]->name},{$oldRecord->semester},{$programme->name}",
         ]);
 
         $response = $this->withoutExceptionHandling()

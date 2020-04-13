@@ -18,9 +18,9 @@
                     <label for="course_type" class="w-full form-label">Type<span
                             class="h-current text-red-500 text-lg">*</span></label>
                     <select class="w-full form-input" name="type" required :value="data('course.type')">
-                        @foreach ($courseTypes as $key => $type)
-                        <option value="{{ $key }}"
-                            {{ old('type', 'C') === $key ? 'selected' : ''}}>
+                        @foreach ($courseTypes as $type)
+                        <option value="{{ $type }}"
+                            {{ old('type') === $type ? 'selected' : ''}}>
                             {{ $type }}
                         </option>
                         @endforeach

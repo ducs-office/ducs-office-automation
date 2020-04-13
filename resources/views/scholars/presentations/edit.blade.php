@@ -23,11 +23,11 @@
             </div>
             <div class="mb-4">
                 <label for="event_type" class="form-label block mb-1">Event Type <span class="text-red-600">*</span> </label>
-                <select name="event_type" class="block form-input w-full {{ $errors->has('event_type') ? ' border-red-600' : ''}}"> 
-                    <option value="" class="text-gray-600" selected>Select Event Type </option>
-                    @foreach ($eventTypes as $acronym => $eventType)
-                    <option value=" {{ $acronym }}" class="text-gray-600"
-                        {{ old('event_type', $presentation->event_type) === $acronym ? 'selected': ''}}>
+                <select name="event_type" class="block form-input w-full {{ $errors->has('event_type') ? ' border-red-600' : ''}}">
+                    <option value="" class="text-gray-600" selected disabled>Select Event Type </option>
+                    @foreach ($eventTypes as $eventType)
+                    <option value="{{ $eventType }}" class="text-gray-600"
+                        {{ old('event_type', (string)$presentation->event_type) === $eventType ? 'selected': ''}}>
                         {{ $eventType }}
                     </option>
                     @endforeach

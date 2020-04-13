@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use App\Casts\CustomTypeArray;
 use App\Models\Presentation;
+use App\Types\CitationIndex;
 use Illuminate\Database\Eloquent\Model;
 
 class Publication extends Model
@@ -11,19 +13,11 @@ class Publication extends Model
 
     protected $dates = ['date'];
 
-    public function setAuthorsAttribute($value)
-    {
-        if (is_array($value)) {
-            $this->attributes['authors'] = implode('|', $value);
-        } else {
-            $this->attributes['authors'] = $value;
-        }
-    }
-
-    public function getAuthorsAttribute($value)
-    {
-        return explode('|', $value);
-    }
+    protected $casts = [
+        'authors' => 'array',
+        'indexed_in' => CustomTypeArray::class . ':' . CitationIndex::class,
+        'page_numbers' => 'array',
+    ];
 
     public function setIndexedInAttribute($value)
     {

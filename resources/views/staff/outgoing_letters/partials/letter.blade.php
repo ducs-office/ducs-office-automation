@@ -1,7 +1,7 @@
 <div class="page-card border-b mb-4 pt-6 pb-0 overflow-hidden">
     <div class="px-6">
         <div class="flex items-center mb-3">
-            <span class="px-2 py-1 rounded text-xs uppercase text-white {{$typeColors[$letter->type]}} mr-2 font-bold">
+            <span class="px-2 py-1 rounded text-xs uppercase text-white {{ $letter->type->contextCSS() }} mr-2 font-bold">
                 {{ $letter->type }}
             </span>
             <h5 class="mr-12 text-gray-700 font-bold font-mono">{{$letter->serial_no}}</h5>

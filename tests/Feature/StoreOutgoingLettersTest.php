@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\OutgoingLetter;
 use App\Models\User;
+use App\Types\OutgoingLetterType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
@@ -41,7 +42,7 @@ class StoreOutgoingLettersTest extends TestCase
             'date' => now()->format('Y-m-d'),
             'subject' => $this->faker->words(3, true),
             'recipient' => $this->faker->name(),
-            'type' => 'Bill',
+            'type' => OutgoingLetterType::BILL,
             'amount' => $this->faker->randomFloat,
             'sender_id' => create(User::class)->id,
             'attachments' => [
@@ -75,7 +76,7 @@ class StoreOutgoingLettersTest extends TestCase
                 // 'date' => now()->format('Y-m-d'),
                 'subject' => $this->faker->words(3, true),
                 'recipient' => $this->faker->name(),
-                'type' => 'Bill',
+                'type' => OutgoingLetterType::BILL,
                 'amount' => $this->faker->randomFloat,
                 'sender_id' => create(User::class)->id,
                 'attachments' => [UploadedFile::fake()->create('document.pdf')],
@@ -100,7 +101,7 @@ class StoreOutgoingLettersTest extends TestCase
             'date' => now()->format('Y-m-d'),
             'subject' => $this->faker->words(3, true),
             'recipient' => $this->faker->name(),
-            'type' => 'Bill',
+            'type' => OutgoingLetterType::BILL,
             'amount' => $this->faker->randomFloat,
             'sender_id' => create(User::class)->id,
             'attachments' => [UploadedFile::fake()->create('document.pdf')],
@@ -150,7 +151,7 @@ class StoreOutgoingLettersTest extends TestCase
             'date' => now()->addMonth(2)->format('Y-m-d'),
             'subject' => $this->faker->words(3, true),
             'recipient' => $this->faker->name(),
-            'type' => 'Bill',
+            'type' => OutgoingLetterType::BILL,
             'amount' => $this->faker->randomFloat,
             'sender_id' => create(User::class)->id,
             'attachments' => [UploadedFile::fake()->create('document.pdf')],
@@ -215,7 +216,7 @@ class StoreOutgoingLettersTest extends TestCase
                 'date' => now()->format('Y-m-d'),
                 'subject' => '', //Empty
                 'recipient' => $this->faker->name(),
-                'type' => 'Bill',
+                'type' => OutgoingLetterType::BILL,
                 'amount' => $this->faker->randomFloat,
                 'sender_id' => create(User::class)->id,
                 'attachments' => [UploadedFile::fake()->create('document.pdf')],
@@ -241,7 +242,7 @@ class StoreOutgoingLettersTest extends TestCase
                 'date' => now()->format('Y-m-d'),
                 'subject' => $this->faker->regexify('[A-Za-z0-9]{101}'),
                 'recipient' => $this->faker->name(),
-                'type' => 'Bill',
+                'type' => OutgoingLetterType::BILL,
                 'amount' => $this->faker->randomFloat,
                 'sender_id' => create(User::class)->id,
                 'attachments' => [UploadedFile::fake()->create('document.pdf')],
@@ -265,7 +266,7 @@ class StoreOutgoingLettersTest extends TestCase
                 'date' => now()->format('Y-m-d'),
                 'subject' => $this->faker->words(3, true),
                 'recipient' => '', // Empty
-                'type' => 'Bill',
+                'type' => OutgoingLetterType::BILL,
                 'amount' => $this->faker->randomFloat,
                 'sender_id' => create(User::class)->id,
                 'attachments' => [UploadedFile::fake()->create('document.pdf')],
@@ -292,7 +293,7 @@ class StoreOutgoingLettersTest extends TestCase
                 'date' => now()->format('Y-m-d'),
                 'subject' => $this->faker->words(3, true),
                 'recipient' => $this->faker->name(),
-                'type' => 'Bill',
+                'type' => OutgoingLetterType::BILL,
                 'amount' => $this->faker->randomFloat,
                 'sender_id' => '', // Empty type
                 'attachments' => [UploadedFile::fake()->create('document.pdf')],
@@ -319,7 +320,7 @@ class StoreOutgoingLettersTest extends TestCase
                 'date' => now()->format('Y-m-d'),
                 'subject' => $this->faker->words(3, true),
                 'recipient' => $this->faker->name(),
-                'type' => 'Bill',
+                'type' => OutgoingLetterType::BILL,
                 'amount' => $this->faker->randomFloat,
                 'sender_id' => 123,
                 'attachments' => [UploadedFile::fake()->create('document.pdf')],
@@ -346,7 +347,7 @@ class StoreOutgoingLettersTest extends TestCase
             'date' => now()->format('Y-m-d'),
             'subject' => $this->faker->words(3, true),
             'recipient' => $this->faker->name(),
-            'type' => 'Bill',
+            'type' => OutgoingLetterType::BILL,
             // 'description' => $this->faker->sentence(),
             'amount' => $this->faker->randomFloat,
             'sender_id' => create(User::class)->id,
@@ -369,7 +370,7 @@ class StoreOutgoingLettersTest extends TestCase
             'date' => now()->format('Y-m-d'),
             'subject' => $this->faker->words(3, true),
             'recipient' => $this->faker->name(),
-            'type' => 'Bill',
+            'type' => OutgoingLetterType::BILL,
             'amount' => '', // empty string amount
             'sender_id' => create(User::class)->id,
             'attachments' => [UploadedFile::fake()->create('document.pdf')],
@@ -392,7 +393,7 @@ class StoreOutgoingLettersTest extends TestCase
                 'date' => now()->format('Y-m-d'),
                 'subject' => $this->faker->words(3, true),
                 'recipient' => $this->faker->name(),
-                'type' => 'Bill',
+                'type' => OutgoingLetterType::BILL,
                 'amount' => 'some string',
                 'sender_id' => create(User::class)->id,
                 'attachments' => [UploadedFile::fake()->create('document.pdf')],

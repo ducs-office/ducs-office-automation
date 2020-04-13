@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Casts\CustomType;
+use App\Types\LeaveStatus;
 use Illuminate\Database\Eloquent\Model;
 
 class Leave extends Model
@@ -15,13 +17,20 @@ class Leave extends Model
     ];
 
     protected $casts = [
-        'from' => 'date',
-        'to' => 'date',
+        'from' => 'datetime',
+        'to' => 'datetime',
+        'status' => CustomType::class . ':' . LeaveStatus::class,
     ];
 
     public function approve()
     {
         $this->status = LeaveStatus::APPROVED;
+        return $this->save();
+    }
+
+    public function reject()
+    {
+        $this->status = LeaveStatus::REJECTED;
         return $this->save();
     }
 
@@ -33,12 +42,17 @@ class Leave extends Model
 
     public function isApproved()
     {
-        return $this->status === LeaveStatus::APPROVED;
+        return $this->status->equals(LeaveStatus::APPROVED);
+    }
+
+    public function isRejected()
+    {
+        return $this->status->equals(LeaveStatus::REJECTED);
     }
 
     public function isRecommended()
     {
-        return $this->status === LeaveStatus::RECOMMENDED;
+        return $this->status->equals(LeaveStatus::RECOMMENDED);
     }
 
     public function extensions()
@@ -53,10 +67,12 @@ class Leave extends Model
 
     public function nextExtensionFrom()
     {
-        return collect([$this])
-            ->concat($this->extensions)
-            ->filter->isApproved()
-            ->max('to')->addDay();
+        return optional(
+            collect($this->extensions)
+                ->push($this)
+                ->filter->isApproved()
+                ->max('to')
+        )->addDay();
     }
 
     public function scholar()

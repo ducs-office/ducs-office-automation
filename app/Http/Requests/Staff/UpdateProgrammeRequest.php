@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Staff;
 
+use App\Types\ProgrammeType;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -24,15 +25,13 @@ class UpdateProgrammeRequest extends FormRequest
      */
     public function rules()
     {
-        $types = implode(',', array_keys(config('options.programmes.types')));
-
         return [
             'code' => [
                 'sometimes', 'required', 'min:3', 'max:60',
                 Rule::unique('programmes')->ignore($this->programme),
             ],
             'wef' => ['sometimes', 'required', 'date'],
-            'type' => ['sometimes', 'required', 'in:' . $types],
+            'type' => ['sometimes', 'required', Rule::in(ProgrammeType::values())],
             'name' => ['sometimes', 'required', 'min:3', 'max:190'],
         ];
     }

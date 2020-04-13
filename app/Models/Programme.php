@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Casts\CustomType;
+use App\Types\ProgrammeType;
 use Illuminate\Database\Eloquent\Model;
 
 class Programme extends Model
@@ -12,6 +14,7 @@ class Programme extends Model
 
     protected $casts = [
         'wef' => 'date:Y-m-d',
+        'type' => CustomType::class . ':' . ProgrammeType::class,
     ];
 
     public function colleges()

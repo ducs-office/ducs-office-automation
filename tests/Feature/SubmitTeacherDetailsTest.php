@@ -11,6 +11,7 @@ use App\Models\Teacher;
 use App\Models\TeachingRecord;
 use App\Notifications\AcceptingTeachingRecordsStarted;
 use App\Notifications\TeachingRecordsSaved;
+use App\Types\TeacherStatus;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Notification;
@@ -25,7 +26,7 @@ class SubmitTeacherDetailsTest extends TestCase
         return $this->mergeFormFields([
             'phone_no' => $this->faker->phoneNumber,
             'address' => $this->faker->address,
-            'designation' => $this->faker->randomElement(array_keys(config('options.teachers.designations'))),
+            'designation' => $this->faker->randomElement(TeacherStatus::values()),
             'college_id' => function () {
                 return factory(College::class)->create()->id;
             },

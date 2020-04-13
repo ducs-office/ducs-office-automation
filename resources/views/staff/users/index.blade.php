@@ -33,7 +33,7 @@
                     <span class="mx-1 bg-blue-500 text-white p-1 rounded text-xs font-bold tracking-wide">{{ ucwords(str_replace('_', ' ', $role->name)) }}</span>
                 @endforeach
                 <span class="mx-1 bg-green-500 text-white p-1 rounded text-xs font-bold tracking-wide">
-                    {{ $categories[$user->category] }}
+                    {{ $user->type }}
                 </span>
                 @if($user->isSupervisor())
                 <span class="mx-1 bg-gray-800 text-white py-1 px-2 rounded text-xs font-bold uppercase tracking-wide">
@@ -59,7 +59,7 @@
                                 name: {{ json_encode($user->name) }},
                                 email: {{ json_encode($user->email) }},
                                 roles: {{ $user->roles->pluck('id')->toJson() }},
-                                category: {{ json_encode($user->category)}}
+                                type: {{ json_encode($user->type)}}
                             },
                         })">
                     <feather-icon class="h-current" name="edit">Edit</feather-icon>

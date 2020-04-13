@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Staff;
 
+use App\Types\UserType;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -24,8 +25,6 @@ class UpdateUserRequest extends FormRequest
      */
     public function rules()
     {
-        $categories = implode(',', array_keys(config('options.users.categories')));
-
         return [
             'name' => ['sometimes', 'required', 'string', 'min:3', 'max:190'],
             'email' => [
@@ -34,7 +33,7 @@ class UpdateUserRequest extends FormRequest
             ],
             'roles' => ['sometimes', 'required', 'array', 'min:1'],
             'roles.*' => ['sometimes', 'required', 'integer', 'exists:roles,id'],
-            'category' => ['sometimes', 'in:' . $categories],
+            'type' => ['sometimes', Rule::in(UserType::values())],
         ];
     }
 }

@@ -3,7 +3,9 @@
 namespace App\Http\Requests\Staff;
 
 use App\Models\IncomingLetter;
+use App\Types\Priority;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreIncomingLetterRequest extends FormRequest
 {
@@ -24,20 +26,18 @@ class StoreIncomingLetterRequest extends FormRequest
      */
     public function rules()
     {
-        $priorities = implode(',', array_keys(config('options.incoming_letters.priorities')));
-
         return [
-            'date' => 'required|date|before_or_equal:today',
-            'received_id' => 'required|string|min:3|max:190',
-            'sender' => 'required|string|min:5|max:100',
-            'recipient_id' => 'required|exists:users,id',
-            'handovers' => 'nullable|array',
-            'handovers.*' => 'integer|exists:users,id',
-            'priority' => 'nullable|in:' . $priorities,
-            'subject' => 'required|string|min:5|max:100',
-            'description' => 'nullable|string|min:4|max:400',
-            'attachments' => 'required|array|min:1|max:2',
-            'attachments.*' => 'file|max:200|mimes:jpeg,jpg,png,pdf',
+            'date' => ['required', 'date', 'before_or_equal:today'],
+            'received_id' => ['required', 'string', 'min:3', 'max:190'],
+            'sender' => ['required', 'string', 'min:5', 'max:100'],
+            'recipient_id' => ['required', 'exists:users,id'],
+            'handovers' => ['nullable', 'array'],
+            'handovers.*' => ['integer', 'exists:users,id'],
+            'priority' => ['nullable', Rule::in(Priority::values())],
+            'subject' => ['required', 'string', 'min:5', 'max:100'],
+            'description' => ['nullable', 'string', 'min:4', 'max:400'],
+            'attachments' => ['required', 'array', 'min:1', 'max:2'],
+            'attachments.*' => ['file', 'max:200', 'mimes:jpeg,jpg,png,pdf'],
         ];
     }
 

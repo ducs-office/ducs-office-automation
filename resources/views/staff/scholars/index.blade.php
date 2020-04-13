@@ -100,7 +100,7 @@
                         @if ($scholar->cosupervisor)
                         {{ $scholar->cosupervisor->name }}
                         @else
-                        {{ "No cosupervisor assigned" }}   
+                        {{ "No cosupervisor assigned" }}
                         @endif
                     </p>
                 </div>

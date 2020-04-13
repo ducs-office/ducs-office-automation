@@ -3,9 +3,9 @@
 namespace Tests\Feature;
 
 use App\Models\Leave;
-use App\Models\LeaveStatus;
 use App\Models\Scholar;
 use App\Models\User;
+use App\Types\LeaveStatus;
 use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;

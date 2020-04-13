@@ -2,6 +2,7 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 use App\Models\Programme;
+use App\Types\ProgrammeType;
 use Faker\Generator as Faker;
 
 $factory->define(Programme::class, static function (Faker $faker) {
@@ -10,6 +11,6 @@ $factory->define(Programme::class, static function (Faker $faker) {
         'name' => $faker->words(3, true),
         'wef' => $faker->dateTime(),
         'duration' => $faker->numberBetween(2, 4),
-        'type' => $faker->randomElement(array_keys(config('options.programmes.types'))),
+        'type' => $faker->randomElement(ProgrammeType::values()),
     ];
 });

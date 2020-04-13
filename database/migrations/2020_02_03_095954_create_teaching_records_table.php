@@ -1,5 +1,6 @@
 <?php
 
+use App\Types\TeacherStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -17,7 +18,7 @@ class CreateTeachingRecordsTable extends Migration
             $table->bigIncrements('id');
             $table->date('valid_from');
             $table->unsignedBigInteger('teacher_id');
-            $table->enum('designation', array_keys(config('options.teachers.designations')));
+            $table->enum('designation', TeacherStatus::values());
             $table->unsignedBigInteger('college_id');
             $table->unsignedBigInteger('programme_revision_id');
             $table->unsignedBigInteger('course_id');

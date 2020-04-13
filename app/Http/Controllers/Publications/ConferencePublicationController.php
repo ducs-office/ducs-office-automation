@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Publication\StoreConferencePublication;
 use App\Http\Requests\Publication\UpdateConferencePublication;
 use App\Models\Publication;
+use App\Types\CitationIndex;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -20,8 +21,10 @@ class ConferencePublicationController extends Controller
     public function create()
     {
         return view('publications.conferences.create', [
-            'indexedIn' => config('options.scholars.academic_details.indexed_in'),
-            'months' => config('options.scholars.academic_details.months'),
+            'citationIndexes' => CitationIndex::values(),
+            'months' => array_map(function ($m) {
+                return Carbon::createFromFormat('m', $m)->format('F');
+            }, range(1, 12)),
             'currentYear' => now()->format('Y'),
         ]);
     }
@@ -55,8 +58,10 @@ class ConferencePublicationController extends Controller
     {
         return view('publications.conferences.edit', [
             'conference' => $conference,
-            'indexedIn' => config('options.scholars.academic_details.indexed_in'),
-            'months' => config('options.scholars.academic_details.months'),
+            'citationIndexes' => CitationIndex::values(),
+            'months' => array_map(function ($m) {
+                return Carbon::createFromFormat('m', $m)->format('F');
+            }, range(1, 12)),
             'currentYear' => now()->format('Y'),
         ]);
     }

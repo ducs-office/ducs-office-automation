@@ -8,6 +8,7 @@ use App\Http\Requests\Staff\UpdateOutgoingLetterRequest;
 use App\Models\OutgoingLetter;
 use App\Models\Remark;
 use App\Models\User;
+use App\Types\OutgoingLetterType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -31,7 +32,7 @@ class OutgoingLettersController extends Controller
 
         return view('staff.outgoing_letters.index', [
             'letters' => $query->orderBy('date', 'DESC')->paginate(),
-            'types' => OutgoingLetter::selectRaw('DISTINCT(type)')->get()->pluck('type', 'type'),
+            'types' => collect(OutgoingLetterType::values())->combine(OutgoingLetterType::values()),
             'recipients' => OutgoingLetter::selectRaw('DISTINCT(recipient)')->get()->pluck('recipient', 'recipient'),
             'creators' => User::select('id', 'name')->whereIn('id', OutgoingLetter::selectRaw('DISTINCT(creator_id)'))->get()->pluck('name', 'id'),
             'senders' => User::select('id', 'name')->whereIn('id', OutgoingLetter::selectRaw('DISTINCT(sender_id)'))->get()->pluck('name', 'id'),
@@ -40,7 +41,9 @@ class OutgoingLettersController extends Controller
 
     public function create()
     {
-        return view('staff.outgoing_letters.create');
+        return view('staff.outgoing_letters.create', [
+            'types' => OutgoingLetterType::values(),
+        ]);
     }
 
     public function store(StoreOutgoingLetterRequest $request)

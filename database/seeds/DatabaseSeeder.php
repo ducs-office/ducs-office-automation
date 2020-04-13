@@ -19,6 +19,9 @@ use App\Models\ScholarProfile;
 use App\Models\Teacher;
 use App\Models\TeacherProfile;
 use App\Models\User;
+use App\Types\CourseType;
+use App\Types\ProgrammeType;
+use App\Types\UserType;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role;
@@ -36,7 +39,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Administrator',
             'email' => 'admin@cs.du.ac.in',
             'password' => bcrypt('password'),
-            'category' => 'Admin',
+            'type' => UserType::OFFICE_STAFF,
         ]);
 
         $admin->assignRole(Role::firstOrCreate(['name' => 'admin']));
@@ -51,10 +54,10 @@ class DatabaseSeeder extends Seeder
         });
 
         $programmes = collect([
-            factory(Programme::class)->create(['code' => 'BSCH', 'name' => 'B.Sc. (H) Computer Science', 'duration' => '3', 'type' => 'UG']),
-            factory(Programme::class)->create(['code' => 'BSCP', 'name' => 'B.Sc. (Prog) Computer Science', 'duration' => '3', 'type' => 'UG']),
-            factory(Programme::class)->create(['code' => 'MCA', 'name' => 'Masters in Computer Application', 'name' => 'MCA', 'duration' => '3', 'type' => 'PG']),
-            factory(Programme::class)->create(['code' => 'MCS', 'name' => 'M.Sc. Computer Science', 'duration' => '3', 'type' => 'PG']),
+            factory(Programme::class)->create(['code' => 'BSCH', 'name' => 'B.Sc. (H) Computer Science', 'duration' => '3', 'type' => ProgrammeType::UNDER_GRADUATE]),
+            factory(Programme::class)->create(['code' => 'BSCP', 'name' => 'B.Sc. (Prog) Computer Science', 'duration' => '3', 'type' => ProgrammeType::UNDER_GRADUATE]),
+            factory(Programme::class)->create(['code' => 'MCA', 'name' => 'Masters in Computer Application', 'name' => 'MCA', 'duration' => '3', 'type' => ProgrammeType::POST_GRADUATE]),
+            factory(Programme::class)->create(['code' => 'MCS', 'name' => 'M.Sc. Computer Science', 'duration' => '3', 'type' => ProgrammeType::POST_GRADUATE]),
         ]);
 
         $programme_revisions = $programmes->map(static function ($programme) {
@@ -65,7 +68,7 @@ class DatabaseSeeder extends Seeder
         });
 
         $courses = collect([
-            factory(Course::class)->create(['code' => 'MCS101', 'name' => 'Design and Analysis of Algorithms', 'type' => 'C']),
+            factory(Course::class)->create(['code' => 'MCS101', 'name' => 'Design and Analysis of Algorithms', 'type' => CourseType::CORE]),
             factory(Course::class)->create(['code' => 'MCS102', 'name' => 'Artificial Intelligence']),
             factory(Course::class)->create(['code' => 'MCS203', 'name' => 'Compiler Design']),
             factory(Course::class)->create(['code' => 'MCS204', 'name' => 'Data Mining']),

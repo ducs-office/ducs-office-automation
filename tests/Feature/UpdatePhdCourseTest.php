@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\PhdCourse;
+use App\Types\PrePhdCourseType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
@@ -72,10 +73,10 @@ class UpdatePhdCourseTest extends TestCase
         $this->withoutExceptionHandling()
             ->signIn();
 
-        $course = create(PhdCourse::class, 1, ['type' => 'C']);
+        $course = create(PhdCourse::class, 1, ['type' => PrePhdCourseType::CORE]);
 
         $this->patch(route('staff.phd_courses.update', $course), [
-            'type' => $newType = 'E',
+            'type' => $newType = PrePhdCourseType::ELECTIVE,
         ])->assertRedirect()
         ->assertSessionHasFlash('success', 'Course updated successfully!');
 

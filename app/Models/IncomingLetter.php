@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Casts\CustomType;
+use App\Types\Priority;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 
@@ -12,7 +14,10 @@ class IncomingLetter extends Model
         'recipient_id', 'creator_id',
     ];
 
-    protected $dates = ['date'];
+    protected $casts = [
+        'date' => 'datetime',
+        'priority' => CustomType::class . ':' . Priority::class,
+    ];
 
     protected $allowedFilters = [
         'date' => 'less_than',

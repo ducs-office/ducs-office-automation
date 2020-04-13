@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Presentation;
 use App\Models\Publication;
 use App\Models\Scholar;
+use App\Types\PresentationEventType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Validation\ValidationException;
@@ -28,7 +29,7 @@ class StorePresentationTest extends TestCase
             'city' => $city = 'Agra',
             'country' => $country = 'India',
             'date' => $date = '2019-09-01',
-            'event_type' => $eventType = 'C',
+            'event_type' => $eventType = PresentationEventType::CONFERENCE,
             'event_name' => $eventName = 'Scholar\'s conference',
             'scopus_indexed' => 1,
         ];
@@ -63,7 +64,7 @@ class StorePresentationTest extends TestCase
             'city' => $city = 'Agra',
             'country' => $country = 'India',
             'date' => $date = '2019-09-01',
-            'event_type' => $eventType = 'C',
+            'event_type' => $eventType = PresentationEventType::CONFERENCE,
             'event_name' => $eventName = 'Scholar\'s conference',
             'scopus_indexed' => 0,
         ];
