@@ -27,29 +27,30 @@ class DeleteProgrammeRevisionTest extends TestCase
     }
 
     /** @test */
-    public function programme_revision_can_be_deleted()
+    public function programme_revision_can_only_be_deleted_when_there_are_more_than_2_revisions()
     {
         $this->signIn();
 
         $programme = create('App\Programme');
-        $course = create('App\Course');
 
-        $revision = $programme->revisions()->create(['revised_at' => now()]);
-        $revision->courses()->attach($course, ['semester' => 1]);
+        $revisions = $programme->revisions()->createMany([
+            ['revised_at' => now()->subYear()],
+            ['revised_at' => now()],
+        ]);
 
         $this->withExceptionHandling()
             ->delete(route('staff.programmes.revisions.destroy', [
                 'programme' => $programme,
-                'revision' => $revision,
+                'revision' => $revisions[0],
             ]))
             ->assertRedirect();
 
-        $this->assertEquals(0, $revision->courses->count());
-        $this->assertEquals(0, ProgrammeRevision::count());
+        $this->assertNull($revisions[0]->fresh());
+        $this->assertEquals(1, ProgrammeRevision::count());
     }
 
     /** @test */
-    public function programme_is_deleted_if_all_its_revisions_have_been_deleted()
+    public function all_revisions_of_a_programme_cannot_be_deleted()
     {
         $this->signIn();
 
@@ -77,11 +78,13 @@ class DeleteProgrammeRevisionTest extends TestCase
             'programme' => $programme,
             'revision' => $revisions[1],
         ]))
-        ->assertRedirect();
+        ->assertForbidden();
 
         $this->assertEquals(0, $revisions[0]->courses()->count());
-        $this->assertEquals(0, $revisions[1]->courses()->count());
-        $this->assertEquals(0, ProgrammeRevision::count());
-        $this->assertEquals(0, Programme::count());
+        $this->assertNull($revisions[0]->fresh());
+        $this->assertEquals(1, $revisions[1]->courses()->count());
+        $this->assertNotNull($revisions[1]->fresh());
+        $this->assertEquals(1, ProgrammeRevision::count());
+        $this->assertEquals(1, Programme::count());
     }
 }

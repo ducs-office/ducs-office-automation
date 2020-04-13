@@ -12,6 +12,11 @@ use Illuminate\Support\Facades\DB;
 
 class ProgrammeRevisionController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(ProgrammeRevision::class, 'revision');
+    }
+
     public function index(Programme $programme)
     {
         $programme->load(['revisions.courses']);

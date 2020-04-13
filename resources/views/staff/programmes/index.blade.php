@@ -47,6 +47,7 @@
                     {{ $programme->type === 'UG' ? 'Under Graduate' : 'Post Graduate' }}
             </h3>
             <p class="mb-1"><span class="italic font-bold">Duration:</span> {{ $programme->duration }} year(s)</p>
+
             <div class="flex items-center">
                 <div class="relative z-10 -ml-8 my-4">
                     <h5 class="relative z-20 pl-8 pr-4 py-2 inline-block font-bold bg-magenta-700 text-white shadow">
@@ -56,9 +57,14 @@
                         <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
                     </svg>
                 </div>
+                @can('create', App\ProgrammeRevision::class)
                 <div class="ml-auto">
-                    <a href="{{ route('staff.programmes.revisions.create', $programme )}}" class="btn btn-magenta is-sm shadow-inset mr-2"> New Revision </a>
+                    <a href="{{ route('staff.programmes.revisions.create', $programme )}}"
+                        class="btn btn-magenta is-sm shadow-inset mr-2">
+                        New Revision
+                    </a>
                 </div>
+                @endcan
             </div>
             <details class="bg-gray-100 rounded-t border overflow-hidden mt-3">
                 <summary class="p-2 bg-gray-200 cursor-pointer outline-none">
@@ -77,8 +83,12 @@
                 </div>
             </details>
             <div class="mt-2">
-                <a href="{{ route('staff.programmes.revisions.show', $programme) }}" class=" text-magenta-600 underline">Show all revisions</a>
+                <a href="{{ route('staff.programmes.revisions.show', $programme) }}"
+                    class=" text-magenta-600 underline">
+                    Show all revisions
+                </a>
             </div>
+
         </div>
     @endforeach
 </div>
