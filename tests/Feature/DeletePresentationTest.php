@@ -18,7 +18,11 @@ class DeletePresentationTest extends TestCase
     public function presentation_can_be_deleted()
     {
         $this->signInScholar($scholar = create(Scholar::class));
-        $publication = create(Publication::class, 1, ['scholar_id' => $scholar->id]);
+
+        $publication = create(Publication::class, 1, [
+            'main_author_type' => Scholar::class,
+            'main_author_id' => $scholar->id,
+        ]);
         $presentation = create(Presentation::class, 1, ['publication_id' => $publication->id]);
 
         $this->assertCount(1, $publication->fresh()->presentations);
@@ -36,7 +40,12 @@ class DeletePresentationTest extends TestCase
     {
         $this->signInScholar($scholar = create(Scholar::class));
         $otherScholar = create(Scholar::class);
-        $publication = create(Publication::class, 1, ['scholar_id' => $otherScholar->id]);
+
+        $publication = create(Publication::class, 1, [
+            'main_author_type' => Scholar::class,
+            'main_author_id' => $otherScholar->id,
+        ]);
+
         $presentation = create(Presentation::class, 1, ['publication_id' => $publication->id]);
 
         $this->assertCount(1, $publication->fresh()->presentations);

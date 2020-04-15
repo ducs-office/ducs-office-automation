@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Scholar\StorePresentation;
 use App\Http\Requests\Scholar\UpdatePresentation;
 use App\Presentation;
+use App\Scholar;
 use App\SupervisorProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -42,7 +43,8 @@ class PresentationController extends Controller
     public function edit(Request $request, Presentation $presentation)
     {
         $scholar = $request->user();
-        if ($presentation->publication->scholar_id == $scholar->id) {
+        if ($presentation->publication->main_author_id == $scholar->id &&
+            $presentation->publication->main_author_type == Scholar::class) {
             return view('scholars.presentations.edit', [
                 'presentation' => $presentation,
                 'publications' => $scholar->publications,
@@ -67,7 +69,8 @@ class PresentationController extends Controller
     {
         $scholar = $request->user();
 
-        if ($presentation->publication->scholar_id == $scholar->id) {
+        if ($presentation->publication->main_author_id == $scholar->id &&
+            $presentation->publication->main_author_type == Scholar::class) {
             $presentation->delete();
 
             flash('Presentation deleted successfully!')->success();

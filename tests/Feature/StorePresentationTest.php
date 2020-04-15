@@ -18,7 +18,10 @@ class StorePresentationTest extends TestCase
     public function presentation_can_be_stored()
     {
         $this->signInScholar($scholar = create(Scholar::class));
-        $publication = create(Publication::class, 1, ['scholar_id' => $scholar->id]);
+        $publication = create(Publication::class, 1, [
+            'main_author_type' => Scholar::class,
+            'main_author_id' => $scholar->id,
+        ]);
 
         $presentation = [
             'publication_id' => $publication->id,
@@ -48,7 +51,10 @@ class StorePresentationTest extends TestCase
     public function presentation_can_not_be_stored_if_it_is_not_scopus_indexed()
     {
         $this->signInScholar($scholar = create(Scholar::class));
-        $publication = create(Publication::class, 1, ['scholar_id' => $scholar->id]);
+        $publication = create(Publication::class, 1, [
+            'main_author_type' => Scholar::class,
+            'main_author_id' => $scholar->id,
+        ]);
 
         $this->assertEquals(0, Presentation::count());
 

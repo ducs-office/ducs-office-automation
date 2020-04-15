@@ -3,6 +3,7 @@
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 use App\Publication;
 use App\Scholar;
+use App\SupervisorProfile;
 use Faker\Generator as Faker;
 
 $factory->define(Publication::class, function (Faker $faker) {
@@ -30,10 +31,8 @@ $factory->define(Publication::class, function (Faker $faker) {
                 return $faker->randomElement(array_keys(config('options.scholars.academic_details.indexed_in')));
             }, $indexed_in);
         },
-        'scholar_id' => static function () {
-            return factory(Scholar::class)->create()->id;
-        },
-
+        'main_author_type' => $type = $faker->randomElement([Scholar::class, SupervisorProfile::class]),
+        'main_author_id' => factory($type)->create()->id,
         'number' => null,
         'publisher' => null,
         'city' => null,

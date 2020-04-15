@@ -1,10 +1,10 @@
-@extends('layouts.scholars')
+@extends('layouts.research')
 @section('body')
     <div class="page-card max-w-xl mx-auto my-4">
         <div class="page-header flex items-baseline">
-            <h2 class="mr-6">Create Journal</h2>
+            <h2 class="mr-6">Create Conference</h2>
         </div>
-        <form action="{{ route('scholars.profile.publication.journal.store')}}" method="post" class="px-6">
+        <form action="{{ route('publications.conference.store')}}" method="post" class="px-6">
             @csrf_token
             <div class="mb-4">
                 <add-remove-elements :existing-elements ="{{ empty(old('authors')) ? json_encode([auth()->user()->name]) : json_encode(old('authors')) }}">
@@ -33,16 +33,16 @@
             </div>
             <div class="mb-4">
                 <label for="name" class="form-label block mb-1">
-                    Journal<span class="text-red-600">*</span>
+                    Conference<span class="text-red-600">*</span>
                 </label>
                 <input type="text" value="{{ old('name') }}" name="name" 
                     class="form-input w-full {{ $errors->has('name') ? ' border-red-600' : ''}}"
-                    placeholder="Name of the journal">
+                    placeholder="Name of the conference">
             </div>
             <div class="flex mb-4">
                 <div class="w-1/2">
                     <label for="date[]" class="form-label block mb-1">
-                        Issue Date <span class="text-red-600">*</span>
+                        Date <span class="text-red-600">*</span>
                     </label>
                     <div class="flex"> 
                         <select name="date[month]" id="date_month" class="form-input flex-1">
@@ -65,29 +65,29 @@
                 </div>
                 <div class="ml-4 w-1/2">
                     <label for="volume" class="form-label block mb-1">
-                        Volume 
+                        Edition 
                     </label>
                     <input type="number" value="{{ old('volume') }}" name="volume" 
                         class="form-input w-full {{ $errors->has('volume') ? ' border-red-600' : ''}}"
-                        placeholder="Volume Number">
+                        placeholder="Edition Number">
                 </div>
             </div>
-            <div class="flex mb-4">
+            <div class="mb-4 flex">
                 <div class="w-1/2">
-                    <label for="number" class="form-label block mb-1">
-                        Number 
+                    <label for="city" class="form-label block mb-1">
+                        City <span class="text-red-600">*</span>
                     </label>
-                    <input type="number" value="{{ old('number') }}" name="number" 
-                        class="form-input w-full{{ $errors->has('number') ? ' border-red-600' : ''}}"
-                        placeholder="Number">
+                    <input type="text" value="{{ old('city') }}" name="city" 
+                        class="form-input text-sm w-full {{ $errors->has('city') ? ' border-red-600' : ''}}"
+                        placeholder="City">
                 </div>
                 <div class="ml-4 w-1/2">
-                    <label for="publisher" class="form-label block mb-1">
-                        Publisher <span class="text-red-600">*</span>
+                    <label for="country" class="form-label block mb-1">
+                        Country <span class="text-red-600">*</span>
                     </label>
-                    <input type="text" value="{{ old('publisher') }}" name="publisher" 
-                        class="form-input w-full {{ $errors->has('publisher') ? ' border-red-600' : ''}}"
-                        placeholder="Publisher">
+                    <input type="text" value="{{ old('country') }}" name="country" 
+                        class="form-input text-sm w-full {{ $errors->has('country') ? ' border-red-600' : ''}}"
+                        placeholder="Country">
                 </div>
             </div>
             <div class="mb-4">

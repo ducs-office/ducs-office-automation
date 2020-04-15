@@ -12,6 +12,7 @@ use App\SupervisorProfile;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -43,7 +44,7 @@ class ScholarTest extends TestCase
     {
         $scholar = create(Scholar::class);
 
-        $this->assertInstanceOf(HasMany::class, $scholar->publications());
+        $this->assertInstanceOf(MorphMany::class, $scholar->publications());
 
         $scholar->publications()->createMany([
             $this->fillPublication([
@@ -161,7 +162,7 @@ class ScholarTest extends TestCase
     }
 
     /** @test */
-    public function scholar_has_may_presentaions()
+    public function scholar_has_many_presentations()
     {
         $scholar = create(Scholar::class);
 
@@ -169,7 +170,9 @@ class ScholarTest extends TestCase
 
         $this->assertCount(0, $scholar->presentations);
 
-        $presentation = create(Presentation::class, 1, ['scholar_id' => $scholar->id]);
+        $presentation = create(Presentation::class, 1, [
+            'scholar_id' => $scholar->id,
+        ]);
 
         $this->assertCount(1, $scholar->fresh()->presentations);
     }

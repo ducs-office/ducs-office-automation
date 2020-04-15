@@ -70,7 +70,7 @@ class Scholar extends User
 
     public function publications()
     {
-        return $this->hasMany(Publication::class);
+        return $this->morphMany(Publication::class, 'main_author');
     }
 
     public function journals()

@@ -49,6 +49,11 @@ class Publication extends Model
         return explode('-', $value);
     }
 
+    public function mainAuthor()
+    {
+        return $this->morphTo('main_author');
+    }
+
     public function presentations()
     {
         return $this->hasMany(Presentation::class)->orderBy('date', 'desc');

@@ -1,19 +1,30 @@
 <?php
 
-namespace App\Http\Controllers\Scholars;
+namespace App\Http\Controllers\Publications;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Scholar\StoreJournalPublication;
-use App\Http\Requests\Scholar\UpdateJournalPublication;
+use App\Http\Requests\Publication\StoreJournalPublication;
+use App\Http\Requests\Publication\UpdateJournalPublication;
 use App\Publication;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class JournalPublicationController extends Controller
 {
     public function create()
     {
-        return view('scholars.publications.journals.create', [
+        return view('publications.journals.create', [
+            'indexedIn' => config('options.scholars.academic_details.indexed_in'),
+            'months' => config('options.scholars.academic_details.months'),
+            'currentYear' => now()->format('Y'),
+        ]);
+    }
+
+    public function edit(Publication $journal)
+    {
+        return view('publications.journals.edit', [
+            'journal' => $journal,
             'indexedIn' => config('options.scholars.academic_details.indexed_in'),
             'months' => config('options.scholars.academic_details.months'),
             'currentYear' => now()->format('Y'),
@@ -22,7 +33,7 @@ class JournalPublicationController extends Controller
 
     public function store(StoreJournalPublication $request)
     {
-        $scholar = $request->user();
+        $user = $request->user();
 
         $validData = $request->validated();
         $date = $validData['date']['month'] . ' ' . $validData['date']['year'];
@@ -30,21 +41,19 @@ class JournalPublicationController extends Controller
         $validData['type'] = 'journal';
         $validData['date'] = new Carbon($date);
 
-        $scholar->publications()->create($validData);
+        if (Auth::guard('scholars')->check()) {
+            $user->publications()->create($validData);
+        } else {
+            $user->supervisorProfile->publications()->create($validData);
+        }
 
         flash('Journal Publication added successfully')->success();
 
-        return redirect(route('scholars.profile'));
-    }
-
-    public function edit(Publication $journal)
-    {
-        return view('scholars.publications.journals.edit', [
-            'journal' => $journal,
-            'indexedIn' => config('options.scholars.academic_details.indexed_in'),
-            'months' => config('options.scholars.academic_details.months'),
-            'currentYear' => now()->format('Y'),
-        ]);
+        if (Auth::guard('scholars')->check()) {
+            return redirect(route('scholars.profile'));
+        } else {
+            return redirect(route('research.publications.index'));
+        }
     }
 
     public function update(UpdateJournalPublication $request, Publication $journal)
@@ -58,7 +67,11 @@ class JournalPublicationController extends Controller
 
         flash('Journal Publication updated successfully!')->success();
 
-        return redirect(route('scholars.profile'));
+        if (Auth::guard('scholars')->check()) {
+            return redirect(route('scholars.profile'));
+        } else {
+            return redirect(route('research.publications.index'));
+        }
     }
 
     public function destroy(Publication $journal)

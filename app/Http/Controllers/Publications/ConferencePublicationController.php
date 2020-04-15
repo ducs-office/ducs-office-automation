@@ -1,19 +1,20 @@
 <?php
 
-namespace App\Http\Controllers\Scholars;
+namespace App\Http\Controllers\Publications;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Scholar\StoreConferencePublication;
-use App\Http\Requests\Scholar\UpdateConferencePublication;
+use App\Http\Requests\Publication\StoreConferencePublication;
+use App\Http\Requests\Publication\UpdateConferencePublication;
 use App\Publication;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class ConferencePublicationController extends Controller
 {
     public function create()
     {
-        return view('scholars.publications.conferences.create', [
+        return view('publications.conferences.create', [
             'indexedIn' => config('options.scholars.academic_details.indexed_in'),
             'months' => config('options.scholars.academic_details.months'),
             'currentYear' => now()->format('Y'),
@@ -22,7 +23,7 @@ class ConferencePublicationController extends Controller
 
     public function store(StoreConferencePublication $request)
     {
-        $scholar = $request->user();
+        $user = $request->user();
 
         $validData = $request->validated();
         $date = $validData['date']['month'] . ' ' . $validData['date']['year'];
@@ -30,16 +31,24 @@ class ConferencePublicationController extends Controller
         $validData['type'] = 'conference';
         $validData['date'] = new Carbon($date);
 
-        $scholar->publications()->create($validData);
+        if (Auth::guard('scholars')->check()) {
+            $user->publications()->create($validData);
+        } else {
+            $user->supervisorProfile->publications()->create($validData);
+        }
 
         flash('Conference Publication added successfully')->success();
 
-        return redirect(route('scholars.profile'));
+        if (Auth::guard('scholars')->check()) {
+            return redirect(route('scholars.profile'));
+        } else {
+            return redirect(route('research.publications.index'));
+        }
     }
 
     public function edit(Publication $conference)
     {
-        return view('scholars.publications.conferences.edit', [
+        return view('publications.conferences.edit', [
             'conference' => $conference,
             'indexedIn' => config('options.scholars.academic_details.indexed_in'),
             'months' => config('options.scholars.academic_details.months'),
@@ -59,7 +68,11 @@ class ConferencePublicationController extends Controller
 
         flash('Conference Publication updated successfully!')->success();
 
-        return redirect(route('scholars.profile'));
+        if (Auth::guard('scholars')->check()) {
+            return redirect(route('scholars.profile'));
+        } else {
+            return redirect(route('research.publications.index'));
+        }
     }
 
     public function destroy(Publication $conference)

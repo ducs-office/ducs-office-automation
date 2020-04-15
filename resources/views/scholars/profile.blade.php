@@ -159,39 +159,8 @@
         </div>
 
         {{-- Publications and Presentations --}}
-        <div class="bg-white p-6 h-full shadow-md mt-8">
-            <div class="flex">
-                <div class="w-60 pr-4 relative z-10 -ml-8 my-2">
-                    <h3 class="relative z-20 pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
-                       Publications
-                    </h3>
-                    <svg class="absolute left-0 w-2 text-magenta-900" viewBox="0 0 10 10">
-                        <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
-                    </svg>
-                </div>
-                <div class="ml-auto flex items-center">
-                    <select name="presentation_type" id="" 
-                        class="btn btn-magenta text-center outline-none cursor-pointer border-none"
-                        onchange="window.location.href = this.value;" >
-
-                        <option value="" disabled selected> New </option>
-                        <option value="{{ route('scholars.profile.publication.journal.create') }}">
-                            New Journal
-                        </option>
-                        <option value="{{ route('scholars.profile.publication.conference.create') }}">
-                            New Conference
-                        </option>
-                        
-                    </select>
-                </div>
-            </div>
-
-        </div>
-        @include('scholars.publications.journals.index', [
-            'journals' => $scholar->journals
-        ])
-        @include('scholars.publications.conferences.index', [
-            'conferences' => $scholar->conferences
+        @include('publications.partials.index', [
+            'user' => $scholar,
         ])
 
         <div class="bg-white p-6 h-full shadow-md mt-8">

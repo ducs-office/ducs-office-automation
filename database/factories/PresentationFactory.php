@@ -8,8 +8,11 @@ use Faker\Generator as Faker;
 
 $factory->define(Presentation::class, function (Faker $faker) {
     return [
-        'scholar_id' => $scholar_id = factory(Scholar::class)->create()->id,
-        'publication_id' => $publication = factory(Publication::class)->create(['scholar_id' => $scholar_id])->id,
+        'scholar_id' => $scholar = factory(Scholar::class)->create()->id,
+        'publication_id' => factory(Publication::class)->create([
+            'main_author_type' => Scholar::class,
+            'main_author_id' => $scholar,
+        ])->id,
         'city' => $faker->city,
         'country' => $faker->country,
         'date' => $faker->date,

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Scholar;
+namespace App\Http\Requests\Publication;
 
 use Illuminate\Foundation\Http\FormRequest;
 

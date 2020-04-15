@@ -18,7 +18,10 @@ class UpdatePresentationTest extends TestCase
     {
         $this->signInScholar($scholar = create(Scholar::class));
 
-        $publication = create(Publication::class, 1, ['scholar_id' => $scholar->id]);
+        $publication = create(Publication::class, 1, [
+            'main_author_type' => Scholar::class,
+            'main_author_id' => $scholar->id,
+        ]);
 
         $presentation = create(Presentation::class, 1, [
             'scholar_id' => $scholar->id,

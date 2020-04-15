@@ -15,4 +15,19 @@ class SupervisorProfile extends Model
     {
         return $this->hasMany(Scholar::class, 'supervisor_profile_id');
     }
+
+    public function publications()
+    {
+        return $this->morphMany(Publication::class, 'main_author');
+    }
+
+    public function journals()
+    {
+        return $this->publications()->where('type', 'journal')->orderBy('date', 'DESC');
+    }
+
+    public function conferences()
+    {
+        return $this->publications()->where('type', 'conference')->orderBy('date', 'DESC');
+    }
 }

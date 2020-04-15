@@ -27,9 +27,7 @@ class CreatePublicationsTable extends Migration
             $table->string('page_numbers');
             $table->string('city')->nullable();
             $table->string('country')->nullable();
-            $table->unsignedBigInteger('scholar_id');
-
-            $table->foreign('scholar_id')->references('id')->on('scholars')->onDelete('cascade');
+            $table->morphs('main_author');
             $table->timestamps();
         });
     }
