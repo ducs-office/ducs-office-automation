@@ -35,5 +35,18 @@ $factory->define(Scholar::class, function (Faker $faker) {
             }
             return $data;
         },
+        'education' => static function () use ($faker) {
+            $x = random_int(1, 4);
+            $data = [];
+            for ($i = 1; $i <= $x; $i++) {
+                array_push($data, [
+                    'degree' => $faker->sentence(3),
+                    'subject' => $faker->sentence(3),
+                    'institute' => $faker->company,
+                    'year' => $faker->date('Y', now()->subYear(1)),
+                ]);
+            }
+            return $data;
+        },
     ];
 });
