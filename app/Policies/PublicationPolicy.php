@@ -53,9 +53,9 @@ class PublicationPolicy
     public function update($user, Publication $publication)
     {
         if (Auth::guard('scholars')->check()) {
-            return $publication->mainAuthor->id === $user->id;
+            return (int) $publication->mainAuthor->id === (int) $user->id;
         } elseif (method_exists($user, 'isSupervisor') && $user->isSupervisor()) {
-            return $publication->mainAuthor->id === $user->supervisorProfile->id;
+            return (int) $publication->mainAuthor->id === (int) $user->supervisorProfile->id;
         } else {
             return false;
         }
@@ -72,9 +72,9 @@ class PublicationPolicy
     public function delete($user, Publication $publication)
     {
         if (Auth::guard('scholars')->check()) {
-            return $publication->mainAuthor->id === $user->id;
+            return (int) $publication->mainAuthor->id === (int) $user->id;
         } elseif (method_exists($user, 'isSupervisor') && $user->isSupervisor()) {
-            return $publication->mainAuthor->id === $user->supervisorProfile->id;
+            return (int) $publication->mainAuthor->id === (int) $user->supervisorProfile->id;
         } else {
             return false;
         }

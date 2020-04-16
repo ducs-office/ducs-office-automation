@@ -22,10 +22,10 @@ class EditScholarPresentationTest extends TestCase
             'main_author_type' => Scholar::class,
             'main_author_id' => $scholar->id,
         ]);
-        $presentation = create(Presentation::class, 1, ['publication_id' => $publication->id]);
+        $presentation = create(Presentation::class, 1, ['publication_id' => $publication->id, 'scholar_id' => $scholar->id]);
 
         $this->withoutExceptionHandling()
-            ->get(route('scholars.profile.presentation.edit', $presentation))
+            ->get(route('scholars.presentation.edit', $presentation))
             ->assertSuccessful()
             ->assertViewIs('scholars.presentations.edit')
             ->assertViewHasAll(['presentation', 'publications', 'eventTypes']);

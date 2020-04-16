@@ -26,11 +26,11 @@ class PresentationPolicy
 
     public function update(Scholar $scholar, Presentation $presentation)
     {
-        return $presentation->scholar_id === $scholar->id;
+        return (int) $presentation->scholar_id === (int) $scholar->id;
     }
 
     public function delete(Scholar $scholar, Presentation $presentation)
     {
-        return $presentation->scholar_id === $scholar->id;
+        return (int) $presentation->scholar_id === (int) $scholar->id;
     }
 }

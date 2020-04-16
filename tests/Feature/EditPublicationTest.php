@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Publication;
+use App\Scholar;
 use App\SupervisorProfile;
 use App\Teacher;
 use App\User;
@@ -10,19 +11,21 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class EditScholarlPublicationTest extends TestCase
+class EditlPublicationTest extends TestCase
 {
     use RefreshDatabase;
 
     /** @test */
     public function journal_publication_of_scholar_can_be_edited()
     {
-        $this->signInScholar();
+        $this->signInScholar($scholar = create(Scholar::class));
 
         $journal = create(Publication::class, 1, [
             'type' => 'journal',
             'number' => 1234,
             'publisher' => 'O Rielly',
+            'main_author_type' => Scholar::class,
+            'main_author_id' => $scholar->id,
         ]);
 
         $this->withoutExceptionHandling()
@@ -48,6 +51,8 @@ class EditScholarlPublicationTest extends TestCase
             'type' => 'journal',
             'number' => 1234,
             'publisher' => 'O Rielly',
+            'main_author_type' => SupervisorProfile::class,
+            'main_author_id' => $supervisorProfile->id,
         ]);
 
         $this->withoutExceptionHandling()
@@ -60,12 +65,14 @@ class EditScholarlPublicationTest extends TestCase
     /** @test */
     public function conference_publication_of_scholar_can_be_edited()
     {
-        $this->signInScholar();
+        $this->signInScholar($scholar = create(Scholar::class));
 
         $conference = create(Publication::class, 1, [
             'type' => 'conference',
             'city' => 'Delhi',
             'country' => 'India',
+            'main_author_type' => Scholar::class,
+            'main_author_id' => $scholar->id,
         ]);
 
         $this->withoutExceptionHandling()
@@ -91,6 +98,8 @@ class EditScholarlPublicationTest extends TestCase
             'type' => 'conference',
             'city' => 'Delhi',
             'country' => 'India',
+            'main_author_type' => SupervisorProfile::class,
+            'main_author_id' => $supervisorProfile->id,
         ]);
 
         $this->withoutExceptionHandling()

@@ -23,12 +23,12 @@ class DeletePresentationTest extends TestCase
             'main_author_type' => Scholar::class,
             'main_author_id' => $scholar->id,
         ]);
-        $presentation = create(Presentation::class, 1, ['publication_id' => $publication->id]);
+        $presentation = create(Presentation::class, 1, ['publication_id' => $publication->id, 'scholar_id' => $scholar->id]);
 
         $this->assertCount(1, $publication->fresh()->presentations);
 
         $this->withoutExceptionHandling()
-            ->delete(route('scholars.profile.presentation.destroy', $presentation))
+            ->delete(route('scholars.presentation.destroy', $presentation))
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'Presentation deleted successfully');
 

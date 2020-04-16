@@ -4,7 +4,7 @@
         <div class="page-header flex items-baseline">
             <h2 class="mr-6">Update Presentation</h2>
         </div>
-        <form action="{{ route('scholars.profile.presentation.update', $presentation)}}" method="post" class="px-6">
+        <form action="{{ route('scholars.presentation.update', $presentation)}}" method="post" class="px-6">
             @csrf_token
             @method('PATCH')
             <div class="mb-4">

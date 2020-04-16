@@ -168,7 +168,7 @@
                 <h1 class="page-header mb-0 px-0 mr-4">Presentations</h1>
                 @can('create', App\Presentation::class)
                 <div class="ml-auto">
-                    <a class="btn btn-magenta" href="{{ route('scholars.profile.presentation.create') }}">
+                    <a class="btn btn-magenta" href="{{ route('scholars.presentation.create') }}">
                         New
                     </a>
                 </div>

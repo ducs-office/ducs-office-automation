@@ -4,7 +4,7 @@
         <div class="page-header flex items-baseline">
             <h2 class="mr-6">Create Presentation</h2>
         </div>
-        <form action="{{ route('scholars.profile.presentation.store')}}" method="post" class="px-6"
+        <form action="{{ route('scholars.presentation.store')}}" method="post" class="px-6"
             onsubmit="
                 if(! scopus_indexed.checked) {
                     alert('You cannot create a presentation whose event is not scopus indexed!');

@@ -17,7 +17,7 @@ class CreateScholarPresentationTest extends TestCase
         $this->signInScholar($scholar = create(Scholar::class));
 
         $this->withoutExceptionHandling()
-            ->get(route('scholars.profile.presentation.create'))
+            ->get(route('scholars.presentation.create'))
             ->assertSuccessful()
             ->assertViewIs('scholars.presentations.create')
             ->assertViewHasAll(['publications', 'eventTypes']);

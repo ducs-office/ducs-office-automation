@@ -35,7 +35,7 @@ class UpdatePresentationTest extends TestCase
         $newCountry = 'India';
 
         $this->withoutExceptionHandling()
-        ->patch(route('scholars.profile.presentation.update', $presentation), ['country' => $newCountry])
+        ->patch(route('scholars.presentation.update', $presentation), ['country' => $newCountry])
         ->assertRedirect()
         ->assertSessionHasFlash('success', 'Presentation updated successfully!');
 
