@@ -111,11 +111,11 @@ Route::prefix('/scholars')
         Route::patch('/profile', 'ProfileController@update')->name('profile.update');
         Route::get('/profile/avatar', 'ProfileController@avatar')->name('profile.avatar');
 
-        Route::get('/profile/presentation', 'PresentationController@create')->name('profile.presentation.create');
-        Route::post('/profile/presentation', 'PresentationController@store')->name('profile.presentation.store');
-        Route::get('/profile/presentation/{presentation}/edit', 'PresentationController@edit')->name('profile.presentation.edit');
-        Route::patch('/profile/presentation/{presentation}', 'PresentationController@update')->name('profile.presentation.update');
-        Route::delete('/profile/presentation/{presentation}', 'PresentationController@destroy')->name('profile.presentation.destroy');
+        Route::get('/presentation', 'PresentationController@create')->name('presentation.create');
+        Route::post('/presentation', 'PresentationController@store')->name('presentation.store');
+        Route::get('/presentation/{presentation}/edit', 'PresentationController@edit')->name('presentation.edit');
+        Route::patch('/presentation/{presentation}', 'PresentationController@update')->name('presentation.update');
+        Route::delete('/presentation/{presentation}', 'PresentationController@destroy')->name('presentation.destroy');
 
         Route::post('/leaves', 'LeavesController@store')->name('leaves.store');
 
