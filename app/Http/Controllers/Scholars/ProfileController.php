@@ -4,12 +4,13 @@ namespace App\Http\Controllers\Scholars;
 
 use App\Cosupervisor;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Scholar\UpdateProfileRequest;
+use App\ScholarEducationSubject;
 use App\SupervisorProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Validation\Rule;
 
 class ProfileController extends Controller
 {
@@ -41,30 +42,31 @@ class ProfileController extends Controller
             'genders' => config('options.scholars.genders'),
             'supervisorProfiles' => SupervisorProfile::all()->pluck('id', 'supervisor.name'),
             'cosupervisors' => Cosupervisor::all()->pluck('id', 'name', 'email'),
+            'subjects' => ScholarEducationSubject::all()->pluck('name'),
         ]);
     }
 
-    public function update(Request $request)
+    public function update(UpdateProfileRequest $request)
     {
-        $scholar = Auth::user();
+        $scholar = $request->user();
+        $rules = $request->rules();
 
-        $validData = $request->validate([
-            'phone_no' => [Rule::requiredIf($scholar->phone_no != null)],
-            'address' => [Rule::requiredIf($scholar->address != null)],
-            'category' => [Rule::requiredIf($scholar->category != null)],
-            'admission_via' => [Rule::requiredIf($scholar->admission_via != null)],
-            'profile_picture' => ['nullable', 'image'],
-            'research_area' => [Rule::requiredIf($scholar->research_area != null)],
-            'supervisor_profile_id' => ['sometimes', 'required', 'exists:supervisor_profiles,id'],
-            'enrollment_date' => ['nullable', 'date', 'before:today'],
-            'advisory_committee' => ['sometimes', 'array', 'max: 4'],
-            'advisory_committee.*.title' => ['sometimes', 'string'],
-            'advisory_committee.*.name' => ['sometimes', 'string'],
-            'advisory_committee.*.designation' => ['sometimes', 'string'],
-            'advisory_committee.*.affiliation' => ['sometimes', 'string'],
-            'co_supervisors' => ['sometimes', 'array', 'max:2'],
-            'co_supervisors.*' => ['sometimes', 'required', 'integer', 'exists:cosupervisors,id'],
-        ]);
+        foreach ($request->education as $index => $edu) {
+            if ($edu['subject'] === 'Other') {
+                $rules['subject.' . $index] = ['required', 'bail', 'string', 'min:5'];
+            }
+        }
+
+        $validData = $request->validate($rules);
+
+        foreach ($request->education as $index => $edu) {
+            if ($edu['subject'] === 'Other') {
+                ScholarEducationSubject::firstOrCreate(
+                    ['name' => $request->subject[$index]],
+                );
+                $validData['education'][$index]['subject'] = $request->subject[$index];
+            }
+        }
 
         $scholar->update($validData);
 
@@ -78,6 +80,7 @@ class ProfileController extends Controller
                 'path' => $validData['profile_picture']->store('/scholar_attachments/profile_picture'),
             ]);
         }
+
         flash('Profile updated successfully!')->success();
 
         return redirect(route('scholars.profile'));

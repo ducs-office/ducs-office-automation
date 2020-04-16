@@ -28,10 +28,12 @@ class Scholar extends User
         'research_area',
         'enrollment_date',
         'advisory_committee',
+        'education',
     ];
 
     protected $casts = [
         'advisory_committee' => 'array',
+        'education' => 'array',
     ];
 
     public static function boot()

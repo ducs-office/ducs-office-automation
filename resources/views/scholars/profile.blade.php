@@ -14,7 +14,7 @@
             <div class="mb-6">
                 <div class="mt-2 flex">
                     <h4 class="font-semibold"> Gender </h4>
-                    <p class="ml-2"> {{ $genders[$scholar->gender] }}</p>
+                    <p class="ml-2"> {{  $genders[$scholar->gender] ?? '-' }}</p>
                 </div>
                 <div class="mt-2">
                     <p class="flex items-center mb-1">
@@ -47,13 +47,13 @@
                         <li class="px-4 py-3 border-b last:border-b-0">
                             <div class="flex mt-2">
                                 <p class="font-bold"> Category</p>
-                                <p class="ml-4 text-gray-800"> {{$categories[$scholar->category] ?? 'not set'}}</p>
+                                <p class="ml-4 text-gray-800"> {{$categories[$scholar->category] ?? '-'}}</p>
                             </div>
                         </li>
                         <li class="px-4 py-3 border-b last:border-b-0">
                             <div class="mt-2 flex">
                                 <h4 class="font-bold"> Date of enrollment </h4>
-                                <p class="ml-4 text-gray-800"> {{ $scholar->enrollment_date }}</p>
+                                <p class="ml-4 text-gray-800"> {{ $scholar->enrollment_date ?? '-' }}</p>
                             </div>
                         </li>
                         <li class="px-4 py-3 border-b last:border-b-0">
@@ -93,8 +93,9 @@
                         <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
                     </svg>
                 </div>
-                @if ($scholar->supervisorProfile)
+               
                 <div class="flex-1 my-6 px-4 py-3 border rounded-lg">
+                    @if ($scholar->supervisorProfile)
                     <div class="flex items-center">
                         <svg viewBox="0 0 20 20" class="h-current">
                             <g stroke="none" stroke-width="1" fill="currentColor" fill-rule="evenodd">
@@ -105,9 +106,10 @@
                             <p class="ml-2 font-bold"> {{ $scholar->supervisor->name }}</p>
                         </div>
                     </div>
+                    @endif
                 </div>
-                @endif
             </div>
+            
             @if($scholar->cosupervisors->count())
             <div class="flex">
                 <div class="w-64 pr-4 relative z-10 -ml-8 my-6">
@@ -132,6 +134,7 @@
                 </div>
             </div>
             @endif
+
             <div class="flex">
                 <div class="w-64 pr-4 relative z-10 -ml-8 my-6">
                     <h3 class="relative z-20 pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
@@ -143,6 +146,7 @@
                 </div>
                 <div class="flex-1 my-6">
                     <ul class="border flex flex-wrap rounded-lg overflow-hidden mb-4">
+                        @if ($scholar->advisory_committee)
                         @foreach ($scholar->advisory_committee as $adviser)
                             <li class="px-5 py-5 border-b last:border-b-0 w-1/2">
                                 <div class="flex mb-1">
@@ -153,33 +157,40 @@
                                 <p class="ml-6 text-gray-700"> {{ $adviser['affiliation'] }} </p>
                             </li>
                         @endforeach
+                        @endif
                     </ul>
                 </div>
             </div>
-        </div>
 
-        {{-- Publications and Presentations --}}
-        @include('publications.partials.index', [
-            'user' => $scholar,
-        ])
-
-        <div class="page-card m-6">
-            <div class="flex items-baseline px-6 mb-4">
-                <h1 class="page-header mb-0 px-0 mr-4">Presentations</h1>
-                @can('create', App\Presentation::class)
-                <div class="ml-auto">
-                    <a class="btn btn-magenta" href="{{ route('scholars.presentation.create') }}">
-                        New
-                    </a>
+            <div class="flex">
+                <div class="w-64 pr-4 relative z-10 -ml-8 my-6">
+                    <h3 class="relative z-20 pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
+                        Education
+                    </h3>
+                    <svg class="absolute left-0 w-2 text-magenta-900" viewBox="0 0 10 10">
+                        <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
+                    </svg>
                 </div>
-                @endcan
+                <div class="flex-1 my-6">
+                    <ul class="border flex flex-wrap rounded-lg overflow-hidden mb-4">
+                        @if ($scholar->education)
+                        @foreach ($scholar->education as $education)
+                            <li class="px-5 py-5 border-b last:border-b-0 w-1/2">
+                                <div class="flex mb-1">
+                                    <feather-icon name="book" class="h-current"></feather-icon>
+                                    <div class="flex items-baseline">
+                                        <p class="ml-2 font-bold"> {{ $education['degree'] }} </p>
+                                        <p class="ml-1 font-normal"> ( {{ $education['subject'] }} ) </p>
+                                    </div>
+                                </div>
+                                <p class="ml-6 text-gray-700 mb-1"> {{ $education['institute'] }} </p>
+                                <p class="ml-6 text-gray-700"> {{ $education['year'] }} </p>
+                            </li>
+                        @endforeach
+                        @endif
+                    </ul>
+                </div>
             </div>
-
-            @include('scholars.presentations.index', [
-                'presentations' => $scholar->presentations,
-                'eventTypes' => $eventTypes,
-            ])
-
         </div>
 
         {{-- Pre-PHD Course Work --}}
@@ -222,6 +233,30 @@
                 </li>
                 @endforeach
             </ul>
+        </div>
+
+        {{-- Publications and Presentations --}}
+        @include('publications.partials.index', [
+            'user' => $scholar,
+        ])
+
+        <div class="page-card m-6">
+            <div class="flex items-baseline px-6 mb-4">
+                <h1 class="page-header mb-0 px-0 mr-4">Presentations</h1>
+                @can('create', App\Presentation::class)
+                <div class="ml-auto">
+                    <a class="btn btn-magenta" href="{{ route('scholars.presentation.create') }}">
+                        New
+                    </a>
+                </div>
+                @endcan
+            </div>
+
+            @include('scholars.presentations.index', [
+                'presentations' => $scholar->presentations,
+                'eventTypes' => $eventTypes,
+            ])
+
         </div>
 
         {{-- Leaves --}}
