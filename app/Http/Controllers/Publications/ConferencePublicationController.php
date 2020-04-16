@@ -12,6 +12,11 @@ use Illuminate\Support\Facades\Auth;
 
 class ConferencePublicationController extends Controller
 {
+    public function __construct()
+    {
+        return $this->authorizeResource(Publication::class, 'conference');
+    }
+
     public function create()
     {
         return view('publications.conferences.create', [

@@ -22,10 +22,13 @@
                         pp: {{ $conference->page_numbers[0] }}-{{ $conference->page_numbers[1] }}
                     </p>
                     <div class="ml-auto p-2 flex">
+                        @can('update', $conference)
                         <a href="{{ route('publications.conference.edit', $conference) }}" 
                             class="p-1 text-blue-600 hover:bg-gray-200 rounded mr-3" title="Edit">
                             <feather-icon name="edit-3" stroke-width="2.5" class="h-current">Edit</feather-icon>
                         </a>
+                        @endcan
+                        @can('delete', $conference)
                         <form method="POST" action="{{ route('publications.conference.destroy', $conference->id) }}"
                             onsubmit="return confirm('Do you really want to delete this conference?');">
                             @csrf_token
@@ -34,6 +37,7 @@
                                 <feather-icon name="trash-2" stroke-width="2.5" class="h-current">Delete</feather-icon>
                             </button>
                         </form>
+                        @endcan
                     </div>
                 </div>
                 <div class="w-full px-4">

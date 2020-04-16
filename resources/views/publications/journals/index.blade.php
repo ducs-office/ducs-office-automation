@@ -23,10 +23,13 @@
                         pp: {{ $journal->page_numbers[0] }}-{{ $journal->page_numbers[1] }}
                     </p>
                     <div class="ml-auto p-2 flex">
+                        @can('update', $journal)
                         <a href="{{ route('publications.journal.edit', $journal) }}" 
                             class="p-1 text-blue-600 hover:bg-gray-200 rounded mr-3" title="Edit">
                             <feather-icon name="edit-3" stroke-width="2.5" class="h-current">Edit</feather-icon>
                         </a>
+                        @endcan
+                        @can('delete', $journal)
                         <form method="POST" action="{{ route('publications.journal.destroy', $journal->id) }}"
                             onsubmit="return confirm('Do you really want to delete this journal?');">
                             @csrf_token
@@ -35,6 +38,7 @@
                                 <feather-icon name="trash-2" stroke-width="2.5" class="h-current">Delete</feather-icon>
                             </button>
                         </form>
+                        @endcan
                     </div>
                 </div>
                 <div class="w-full px-4">
