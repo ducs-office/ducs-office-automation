@@ -1,4 +1,4 @@
-<div class="ml-2 mt-4">
+<div class="ml-2 mt-4 px-6">
     <ul class="border rounded-lg overflow-hidden mb-4">
     @foreach ($presentations as $presentation)
         <li class="border-b last:border-b-0 py-3"> 

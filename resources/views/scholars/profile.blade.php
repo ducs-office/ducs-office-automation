@@ -163,16 +163,9 @@
             'user' => $scholar,
         ])
 
-        <div class="bg-white p-6 h-full shadow-md mt-8">
-            <div class="flex justify-between">
-                <div class="w-60 pr-4 relative z-10 -ml-8 my-2">
-                    <h3 class="relative z-20 pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
-                        Presentations
-                    </h3>
-                    <svg class="absolute left-0 w-2 text-magenta-900" viewBox="0 0 10 10">
-                        <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
-                    </svg>
-                </div>
+        <div class="page-card m-6">
+            <div class="flex items-baseline px-6 mb-4">
+                <h1 class="page-header mb-0 px-0 mr-4">Presentations</h1>
                 @can('create', App\Presentation::class)
                 <div class="ml-auto">
                     <a class="btn btn-magenta" href="{{ route('scholars.profile.presentation.create') }}">
