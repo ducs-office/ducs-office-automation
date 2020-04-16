@@ -17,6 +17,11 @@ use Illuminate\Validation\Rule;
 
 class PresentationController extends Controller
 {
+    public function __construct()
+    {
+        return $this->authorizeResource(Presentation::class, 'presentation');
+    }
+
     public function create(Request $request)
     {
         $scholar = $request->user();
@@ -43,17 +48,12 @@ class PresentationController extends Controller
     public function edit(Request $request, Presentation $presentation)
     {
         $scholar = $request->user();
-        if ($presentation->publication->main_author_id == $scholar->id &&
-            $presentation->publication->main_author_type == Scholar::class) {
-            return view('scholars.presentations.edit', [
-                'presentation' => $presentation,
-                'publications' => $scholar->publications,
-                'eventTypes' => config('options.scholars.academic_details.event_types'),
-            ]);
-        } else {
-            abort(403, 'You are not authorized to edit this presentation');
-            return back();
-        }
+
+        return view('scholars.presentations.edit', [
+            'presentation' => $presentation,
+            'publications' => $scholar->publications,
+            'eventTypes' => config('options.scholars.academic_details.event_types'),
+        ]);
     }
 
     public function update(UpdatePresentation $request, Presentation $presentation)
@@ -69,14 +69,9 @@ class PresentationController extends Controller
     {
         $scholar = $request->user();
 
-        if ($presentation->publication->main_author_id == $scholar->id &&
-            $presentation->publication->main_author_type == Scholar::class) {
-            $presentation->delete();
+        $presentation->delete();
 
-            flash('Presentation deleted successfully!')->success();
-        } else {
-            abort(403, 'You are not authorized to delete this presentation');
-        }
+        flash('Presentation deleted successfully!')->success();
 
         return back();
     }

@@ -30,27 +30,4 @@ class EditScholarPresentationTest extends TestCase
             ->assertViewIs('scholars.presentations.edit')
             ->assertViewHasAll(['presentation', 'publications', 'eventTypes']);
     }
-
-    /** @test */
-    public function scholar_can_not_edited_others_presentation()
-    {
-        $this->signInScholar($scholar = create(Scholar::class));
-        $otherScholar = create(Scholar::class);
-        $publication = create(Publication::class, 1, [
-            'main_author_type' => Scholar::class,
-            'main_author_id' => $otherScholar->id,
-        ]);
-        $presentation = create(Presentation::class, 1, ['publication_id' => $publication->id]);
-
-        $this->assertCount(1, $publication->presentations);
-
-        try {
-            $this->withoutExceptionHandling()
-                ->get(route('scholars.profile.presentation.edit', $presentation));
-        } catch (HttpException $e) {
-            $this->assertEquals(new HttpException(403, 'You are not authorized to edit this presentation'), $e);
-        }
-
-        $this->assertTrue($presentation->is($publication->fresh()->presentations()->first()));
-    }
 }

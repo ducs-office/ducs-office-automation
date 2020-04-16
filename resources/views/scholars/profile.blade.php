@@ -173,11 +173,13 @@
                         <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
                     </svg>
                 </div>
+                @can('create', App\Presentation::class)
                 <div class="ml-auto">
                     <a class="btn btn-magenta" href="{{ route('scholars.profile.presentation.create') }}">
                         New
                     </a>
                 </div>
+                @endcan
             </div>
 
             @include('scholars.presentations.index', [

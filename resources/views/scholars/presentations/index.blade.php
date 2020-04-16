@@ -42,10 +42,13 @@
                     </div>
                 </div>
                 <div class="ml-auto px-2 flex">
+                    @can('update', $presentation)
                     <a href="{{ route('scholars.profile.presentation.edit', $presentation) }}" 
                         class="p-1 text-blue-600 hover:bg-gray-200 rounded mr-3 h-6" title="Edit">
                         <feather-icon name="edit-3" stroke-width="2.5" class="h-current">Edit</feather-icon>
                     </a>
+                    @endcan
+                    @can('delete', $presentation)
                     <form method="POST" action="{{ route('scholars.profile.presentation.destroy', $presentation->id) }}"
                         onsubmit="return confirm('Do you really want to delete this journal?');">
                         @csrf_token
@@ -54,6 +57,7 @@
                             <feather-icon name="trash-2" stroke-width="2.5" class="h-current">Delete</feather-icon>
                         </button>
                     </form>
+                    @endcan
                 </div>
             </div>
         </li>
