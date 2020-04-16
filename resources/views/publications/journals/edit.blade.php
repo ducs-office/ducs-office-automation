@@ -18,7 +18,7 @@
                         </div>
                         <div v-for="(element, index) in elements" :key="index" class="flex items-baseline">
                             <input type="text" v-model= "element.value" name="authors[]" class="form-input block mb-2 w-full">
-                            <button v-on:click.prevent="removeElement(index)" v-if="elements.length > 1" class="btn is-sm ml-2 text-red-600">x</button>
+                            <button v-on:click.prevent="removeElement(index)" class="btn is-sm ml-2 text-red-600">x</button>
                         </div>
                     </template>
                 </add-remove-elements>

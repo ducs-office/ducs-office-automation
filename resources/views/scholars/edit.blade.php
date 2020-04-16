@@ -192,7 +192,7 @@
                                 <input type="text" :name="`advisory_committee[${index}][designation]`" v-model="element.value.designation" class="block form-input mr-2">
                                 <input type="text" :name="`advisory_committee[${index}][affiliation]`" v-model="element.value.affiliation" class="block form-input">
                             </div>
-                            <button v-on:click.prevent="removeElement(index)" v-if="elements.length > 1" class="btn is-sm ml-2 text-red-600">x</button>
+                            <button v-on:click.prevent="removeElement(index)" class="btn is-sm ml-2 text-red-600">x</button>
                         </div>
                     </template>
                 </add-remove-elements>
