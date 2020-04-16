@@ -14,7 +14,7 @@
             <div class="mb-6">
                 <div class="mt-2 flex">
                     <h4 class="font-semibold"> Gender </h4>
-                    <p class="ml-2"> {{ $genders[$scholar->gender] }}</p>
+                    <p class="ml-2"> {{  $genders[$scholar->gender] ?? '-' }}</p>
                 </div>
                 <div class="mt-2">
                     <p class="flex items-center mb-1">
@@ -47,13 +47,13 @@
                         <li class="px-4 py-3 border-b last:border-b-0">
                             <div class="flex mt-2">
                                 <p class="font-bold"> Category</p>
-                                <p class="ml-4 text-gray-800"> {{$categories[$scholar->category] ?? 'not set'}}</p>
+                                <p class="ml-4 text-gray-800"> {{$categories[$scholar->category] ?? '-'}}</p>
                             </div>
                         </li>
                         <li class="px-4 py-3 border-b last:border-b-0">
                             <div class="mt-2 flex">
                                 <h4 class="font-bold"> Date of enrollment </h4>
-                                <p class="ml-4 text-gray-800"> {{ $scholar->enrollment_date }}</p>
+                                <p class="ml-4 text-gray-800"> {{ $scholar->enrollment_date ?? '-' }}</p>
                             </div>
                         </li>
                         <li class="px-4 py-3 border-b last:border-b-0">
@@ -93,8 +93,9 @@
                         <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
                     </svg>
                 </div>
-                @if ($scholar->supervisorProfile)
+               
                 <div class="flex-1 my-6 px-4 py-3 border rounded-lg">
+                    @if ($scholar->supervisorProfile)
                     <div class="flex items-center">
                         <svg viewBox="0 0 20 20" class="h-current">
                             <g stroke="none" stroke-width="1" fill="currentColor" fill-rule="evenodd">
@@ -105,9 +106,10 @@
                             <p class="ml-2 font-bold"> {{ $scholar->supervisor->name }}</p>
                         </div>
                     </div>
+                    @endif
                 </div>
-                @endif
             </div>
+            
             @if($scholar->cosupervisors->count())
             <div class="flex">
                 <div class="w-64 pr-4 relative z-10 -ml-8 my-6">
@@ -132,6 +134,7 @@
                 </div>
             </div>
             @endif
+
             <div class="flex">
                 <div class="w-64 pr-4 relative z-10 -ml-8 my-6">
                     <h3 class="relative z-20 pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
@@ -143,6 +146,7 @@
                 </div>
                 <div class="flex-1 my-6">
                     <ul class="border flex flex-wrap rounded-lg overflow-hidden mb-4">
+                        @if ($scholar->advisory_committee)
                         @foreach ($scholar->advisory_committee as $adviser)
                             <li class="px-5 py-5 border-b last:border-b-0 w-1/2">
                                 <div class="flex mb-1">
@@ -153,9 +157,82 @@
                                 <p class="ml-6 text-gray-700"> {{ $adviser['affiliation'] }} </p>
                             </li>
                         @endforeach
+                        @endif
                     </ul>
                 </div>
             </div>
+
+            <div class="flex">
+                <div class="w-64 pr-4 relative z-10 -ml-8 my-6">
+                    <h3 class="relative z-20 pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
+                        Education
+                    </h3>
+                    <svg class="absolute left-0 w-2 text-magenta-900" viewBox="0 0 10 10">
+                        <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
+                    </svg>
+                </div>
+                <div class="flex-1 my-6">
+                    <ul class="border flex flex-wrap rounded-lg overflow-hidden mb-4">
+                        @if ($scholar->education)
+                        @foreach ($scholar->education as $education)
+                            <li class="px-5 py-5 border-b last:border-b-0 w-1/2">
+                                <div class="flex mb-1">
+                                    <feather-icon name="book" class="h-current"></feather-icon>
+                                    <div class="flex items-baseline">
+                                        <p class="ml-2 font-bold"> {{ $education['degree'] }} </p>
+                                        <p class="ml-1 font-normal"> ( {{ $education['subject'] }} ) </p>
+                                    </div>
+                                </div>
+                                <p class="ml-6 text-gray-700 mb-1"> {{ $education['institute'] }} </p>
+                                <p class="ml-6 text-gray-700"> {{ $education['year'] }} </p>
+                            </li>
+                        @endforeach
+                        @endif
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        {{-- Pre-PHD Course Work --}}
+        <div class="mt-16 mb-16">
+            <h3 class="font-bold text-xl mb-4">
+                Pre-PhD Coursework
+            </h3>
+            <ul class="border rounded-lg shadow-md overflow-hidden mb-4 bg-white">
+                @foreach ($scholar->courseworks as $course)
+                <li class="px-4 py-3 border-b last:border-b-0">
+                    <div class="flex items-center">
+                        <div class="w-24">
+                            <span
+                                class="px-3 py-1 text-sm font-bold bg-magenta-200 text-magenta-800 rounded-full mr-4">{{ $course->type == 'C' ? 'Core' : 'Elective' }}</span>
+                        </div>
+                        <h5 class="font-bold flex-1">
+                            {{ $course->name }}
+                            <span class="text-sm text-gray-500 font-bold"> ({{ $course->code }}) </span>
+                        </h5>
+                        @if ($course->pivot->completed_at)
+                        <div class="flex items-center pl-4">
+                            <div
+                                class="w-5 h-5 inline-flex items-center justify-center bg-green-500 text-white font-extrabold leading-none rounded-full mr-2">
+                                &checkmark;</div>
+                            <div>
+                                Completed on {{ $course->pivot->completed_at->format('M d, Y') }}
+                            </div>
+                        </div>
+                        @else
+                        <div class="flex items-center pl-4">
+                            <div
+                                class="w-5 h-5 inline-flex items-center justify-center bg-gray-700 text-white font-extrabold leading-none rounded-full mr-2">
+                                &HorizontalLine;</div>
+                            <div>
+                                On Going
+                            </div>
+                        </div>
+                        @endif
+                    </div>
+                </li>
+                @endforeach
+            </ul>
         </div>
 
         {{-- Publications and Presentations --}}
@@ -216,48 +293,6 @@
                 'eventTypes' => $eventTypes,
             ])
 
-        </div>
-
-        {{-- Pre-PHD Course Work --}}
-        <div class="mt-16 mb-16">
-            <h3 class="font-bold text-xl mb-4">
-                Pre-PhD Coursework
-            </h3>
-            <ul class="border rounded-lg shadow-md overflow-hidden mb-4 bg-white">
-                @foreach ($scholar->courseworks as $course)
-                <li class="px-4 py-3 border-b last:border-b-0">
-                    <div class="flex items-center">
-                        <div class="w-24">
-                            <span
-                                class="px-3 py-1 text-sm font-bold bg-magenta-200 text-magenta-800 rounded-full mr-4">{{ $course->type == 'C' ? 'Core' : 'Elective' }}</span>
-                        </div>
-                        <h5 class="font-bold flex-1">
-                            {{ $course->name }}
-                            <span class="text-sm text-gray-500 font-bold"> ({{ $course->code }}) </span>
-                        </h5>
-                        @if ($course->pivot->completed_at)
-                        <div class="flex items-center pl-4">
-                            <div
-                                class="w-5 h-5 inline-flex items-center justify-center bg-green-500 text-white font-extrabold leading-none rounded-full mr-2">
-                                &checkmark;</div>
-                            <div>
-                                Completed on {{ $course->pivot->completed_at->format('M d, Y') }}
-                            </div>
-                        </div>
-                        @else
-                        <div class="flex items-center pl-4">
-                            <div
-                                class="w-5 h-5 inline-flex items-center justify-center bg-gray-700 text-white font-extrabold leading-none rounded-full mr-2">
-                                &HorizontalLine;</div>
-                            <div>
-                                On Going
-                            </div>
-                        </div>
-                        @endif
-                    </div>
-                </li>
-                @endforeach
-            </ul>
         </div>
 
         {{-- Leaves --}}
