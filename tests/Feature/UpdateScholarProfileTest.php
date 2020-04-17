@@ -146,6 +146,79 @@ class UpdateScholarProfileTest extends TestCase
         $this->assertEquals(ScholarEducationSubject::count(), 4);
         $this->assertEquals(count($scholar->education), 1);
         $this->assertEquals($scholar->education[0]['subject'], $newSubjectName);
+
+        $this->withoutExceptionHandling()
+            ->patch(route('scholars.profile.update'), [
+                'education' => [
+                    [
+                        'degree' => 'BSc(H)',
+                        'subject' => 'Other',
+                        'institute' => 'DU',
+                        'year' => '2012',
+                    ],
+                ],
+                'subject' => [
+                    $newSubjectName = $subjects[0]->name . 'New Subject',
+                ],
+                'advisory_committee' => [
+                    [
+                        'title' => 'Mr.',
+                        'name' => 'Dolittle',
+                        'designation' => 'Zoo',
+                        'affiliation' => 'Wildlife care',
+                    ],
+                ],
+            ])->assertRedirect()
+            ->assertSessionHasFlash('success', 'Profile updated successfully!');
+
+        $this->assertEquals(ScholarEducationSubject::count(), 4);
+        $this->assertEquals(count($scholar->education), 1);
+        $this->assertEquals($scholar->education[0]['subject'], $newSubjectName);
+    }
+
+    /** @test */
+    public function scholar_education_subjects_does_not_contain_duplicates_even_if_the_user_writes_the_same_as_already_present()
+    {
+        $subjects = create(ScholarEducationSubject::class, 3);
+
+        $this->signInScholar(
+            $scholar = create(Scholar::class, 1, [
+                'education' => [],
+                'phone_no' => null,
+                'address' => null,
+                'category' => null,
+                'admission_via' => null,
+                'research_area' => null,
+            ])
+        );
+
+        $this->withoutExceptionHandling()
+            ->patch(route('scholars.profile.update'), [
+                'education' => [
+                    [
+                        'degree' => 'BSc(H)',
+                        'subject' => 'Other',
+                        'institute' => 'DU',
+                        'year' => '2012',
+                    ],
+                ],
+                'subject' => [
+                    $subjects[0]->name,
+                ],
+                'advisory_committee' => [
+                    [
+                        'title' => 'Mr.',
+                        'name' => 'Dolittle',
+                        'designation' => 'Zoo',
+                        'affiliation' => 'Wildlife care',
+                    ],
+                ],
+            ])->assertRedirect()
+            ->assertSessionHasFlash('success', 'Profile updated successfully!');
+
+        $this->assertEquals(ScholarEducationSubject::count(), 3);
+        $this->assertEquals(count($scholar->education), 1);
+        $this->assertEquals($scholar->education[0]['subject'], $subjects[0]->name);
     }
 
     /** @test */

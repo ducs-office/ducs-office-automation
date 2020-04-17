@@ -62,7 +62,7 @@ class ProfileController extends Controller
         foreach ($request->education as $index => $edu) {
             if ($edu['subject'] === 'Other') {
                 ScholarEducationSubject::firstOrCreate(
-                    ['name' => $request->subject[$index]],
+                    ['name' => $request->subject[$index]]
                 );
                 $validData['education'][$index]['subject'] = $request->subject[$index];
             }

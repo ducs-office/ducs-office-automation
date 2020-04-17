@@ -107,7 +107,7 @@
                                 > + 
                             </button>
                         </div>
-                        <h6 class="mx-2 mb-6 text-gray-800 text-sm">You can add a maximum of 4 education records only.</h6>
+                        <h6 class="mx-2 mb-6 text-gray-800 text-sm">You can add a maximum of 4 education records only. Minimum 1 is required. <span class="text-red-600">*</span></h6>
                         <div class="flex w-2/3">
                             <label for="education[][degree]" class="form-label block w-1/4">Degree</label>
                             <label for="education[][subject]" class="form-label block w-1/4">Subject</label>
@@ -171,6 +171,7 @@
                         <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
                     </svg>
                 </div>
+                <h6 class="mx-2 mb-6 text-gray-800 text-sm">Required.<span class="text-red-600">*</span></h6>
                 <select name="supervisor_profile_id" id="supervisor" class="block form-input w-full">
                     <option value="" class="text-gray-600" selected> Select your supervisor </option>
                     @foreach ($supervisorProfiles as $name => $id)
@@ -232,7 +233,7 @@
                                 > + 
                             </button>
                         </div>
-                        <h6 class="mx-2 mb-6 text-gray-800 text-sm">You can add a maximum of 4 advisors only.</h6>
+                        <h6 class="mx-2 mb-6 text-gray-800 text-sm">You can add a maximum of 4 advisors only. Minimum 1 is required. <span class="text-red-600">*</span></h6>
                         <div class="flex w-2/3">
                             <label for="advisory_committee[][title]" class="form-label block w-1/4">Title</label>
                             <label for="advisory_committee[][name]" class="form-label block w-1/4">Name</label>

@@ -3,6 +3,7 @@
 use App\Cosupervisor;
 use App\PhdCourse;
 use App\Scholar;
+use App\ScholarEducationSubject;
 use App\Teacher;
 use App\User;
 use Illuminate\Database\Seeder;
@@ -51,6 +52,20 @@ class PhdScholarSeeder extends Seeder
                     'title' => 'Prof',
                     'affiliation' => 'Indian Institute of Technology Delhi',
                     'designation' => 'Permanent',
+                ],
+            ],
+            'education' => [
+                [
+                    'degree' => 'BSc(H)',
+                    'subject' => 'Computer Science',
+                    'institute' => 'Shyama Prasad Mukherji College, University of Delhi',
+                    'year' => '2017',
+                ],
+                [
+                    'degree' => 'Msc',
+                    'subject' => 'Computer Science',
+                    'institute' => 'Department of Computer Science, University of Delhi',
+                    'year' => '2019',
                 ],
             ],
         ]);
