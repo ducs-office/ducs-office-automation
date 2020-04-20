@@ -250,7 +250,9 @@
                                 @csrf_token
                                 <select id="course_ids" name="course_ids[]" class="w-full form-input rounded-r-none">
                                     @foreach ($courses as $course)
-                                        <option value="{{$course->id}}">{{ $course->name }}</option>
+                                        <option value="{{$course->id}}">
+                                            [{{ $course->code }}] {{ $course->name }}
+                                        </option>
                                     @endforeach
                                 </select>
                                 <button type="submit" class="px-5 btn btn-magenta text-sm rounded-l-none">Add</button>
