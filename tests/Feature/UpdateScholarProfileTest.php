@@ -22,6 +22,10 @@ class UpdateScholarProfileTest extends TestCase
     {
         $this->signInScholar($scholar = create(Scholar::class));
 
+        $cosupervisor = create(Cosupervisor::class);
+        $supervisorProfile = create(SupervisorProfile::class);
+        $educationSubject = create(ScholarEducationSubject::class);
+
         $updateDetails = [
             'phone_no' => '12345678',
             'address' => 'new address, new delhi',
@@ -41,7 +45,7 @@ class UpdateScholarProfileTest extends TestCase
             'education' => [
                 [
                     'degree' => 'BSc',
-                    'subject' => 'Computer Science',
+                    'subject' => $educationSubject->id,
                     'institute' => 'University of Delhi',
                     'year' => '2016',
                 ],
@@ -92,7 +96,7 @@ class UpdateScholarProfileTest extends TestCase
                 'education' => [
                     [
                         'degree' => 'BSc(H)',
-                        'subject' => $subjects[0]->name,
+                        'subject' => $subjects[0]->id,
                         'institute' => 'DU',
                         'year' => '2012',
                     ],
@@ -110,14 +114,42 @@ class UpdateScholarProfileTest extends TestCase
 
         $this->assertEquals(ScholarEducationSubject::count(), 3);
         $this->assertEquals(count($scholar->education), 1);
-        $this->assertEquals($scholar->education[0]['subject'], $subjects[0]->name);
+        $this->assertEquals($scholar->education[0]['subject'], $subjects[0]->id);
 
         $this->withoutExceptionHandling()
             ->patch(route('scholars.profile.update'), [
                 'education' => [
                     [
                         'degree' => 'BSc(H)',
-                        'subject' => 'Other',
+                        'subject' => -1,
+                        'institute' => 'DU',
+                        'year' => '2012',
+                    ],
+                ],
+                'subject' => [
+                    $subjects[0]->name . 'New Subject',
+                ],
+                'advisory_committee' => [
+                    [
+                        'title' => 'Mr.',
+                        'name' => 'Dolittle',
+                        'designation' => 'Zoo',
+                        'affiliation' => 'Wildlife care',
+                    ],
+                ],
+            ])->assertRedirect()
+            ->assertSessionHasFlash('success', 'Profile updated successfully!');
+
+        $this->assertEquals(ScholarEducationSubject::count(), 4);
+        $this->assertEquals(count($scholar->education), 1);
+        $this->assertEquals($scholar->education[0]['subject'], 4);
+
+        $this->withoutExceptionHandling()
+            ->patch(route('scholars.profile.update'), [
+                'education' => [
+                    [
+                        'degree' => 'BSc(H)',
+                        'subject' => -1,
                         'institute' => 'DU',
                         'year' => '2012',
                     ],
@@ -138,35 +170,7 @@ class UpdateScholarProfileTest extends TestCase
 
         $this->assertEquals(ScholarEducationSubject::count(), 4);
         $this->assertEquals(count($scholar->education), 1);
-        $this->assertEquals($scholar->education[0]['subject'], $newSubjectName);
-
-        $this->withoutExceptionHandling()
-            ->patch(route('scholars.profile.update'), [
-                'education' => [
-                    [
-                        'degree' => 'BSc(H)',
-                        'subject' => 'Other',
-                        'institute' => 'DU',
-                        'year' => '2012',
-                    ],
-                ],
-                'subject' => [
-                    $newSubjectName = $subjects[0]->name . 'New Subject',
-                ],
-                'advisory_committee' => [
-                    [
-                        'title' => 'Mr.',
-                        'name' => 'Dolittle',
-                        'designation' => 'Zoo',
-                        'affiliation' => 'Wildlife care',
-                    ],
-                ],
-            ])->assertRedirect()
-            ->assertSessionHasFlash('success', 'Profile updated successfully!');
-
-        $this->assertEquals(ScholarEducationSubject::count(), 4);
-        $this->assertEquals(count($scholar->education), 1);
-        $this->assertEquals($scholar->education[0]['subject'], $newSubjectName);
+        $this->assertEquals($scholar->education[0]['subject'], 4);
     }
 
     /** @test */
@@ -190,7 +194,7 @@ class UpdateScholarProfileTest extends TestCase
                 'education' => [
                     [
                         'degree' => 'BSc(H)',
-                        'subject' => 'Other',
+                        'subject' => -1,
                         'institute' => 'DU',
                         'year' => '2012',
                     ],
@@ -211,7 +215,7 @@ class UpdateScholarProfileTest extends TestCase
 
         $this->assertEquals(ScholarEducationSubject::count(), 3);
         $this->assertEquals(count($scholar->education), 1);
-        $this->assertEquals($scholar->education[0]['subject'], $subjects[0]->name);
+        $this->assertEquals($scholar->education[0]['subject'], $subjects[0]->id);
     }
 
     /** @test */

@@ -36,7 +36,7 @@ class UpdateProfileRequest extends FormRequest
             'education' => ['required', 'array', 'max: 4', 'min:1'],
             'education.*' => ['required', 'array', 'size:4'],
             'education.*.degree' => ['required', 'string'],
-            'education.*.subject' => ['required', 'string'],
+            'education.*.subject' => ['required', 'integer'],
             'education.*.institute' => ['required', 'string'],
             'education.*.year' => ['required', 'string'],
 

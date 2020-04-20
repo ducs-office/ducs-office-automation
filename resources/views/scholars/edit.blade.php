@@ -115,32 +115,18 @@
                             <label for="education[][year]" class="form-label block w-1/4">Year</label>
                         </div>
                         <div v-for="(element, index) in elements" :key="index" class="flex items-baseline mb-4 mt-2 w-2/3">
-                            <input type="text" :name="`education[${index}][degree]`" 
-                                v-model="element.value.degree" class="form-input mr-2 h-8 w-1/4">
-                            <div class="w-1/4 mr-2">
-                                <select :name="`education[${index}][subject]`"  :data-index="`${index}`"
-                                    class="form-input mr-2 h-8 p-1 w-full" v-model="element.value.subject" onchange="
+                            
+                                
+                                {{---- Vue component for education---}}
+                                <scholar-education class="mt-3"
+                                    :name="`education[${index}]`"
+                                    :subject-choices="{{ json_encode($subjects) }}" 
+                                    :element=element
+                                    :index=index>
+                                </scholar-education>
+                                
+                                {{--   --}}
 
-                                        let elementName = `education[${this.dataset.index}][subject]`;
-                                        
-                                        if(document.getElementsByName(elementName)[0].value === 'Other') {
-                                            document.getElementsByName(`subject[${this.dataset.index}]`)[0].style = 'display: block;';
-                                        }  else {
-                                            document.getElementsByName(`subject[${this.dataset.index}]`)[0].style = 'display: none;';
-                                            document.getElementsByName(`subject[${this.dataset.index}]`)[0].value = '';
-                                        } 
-                                        ">
-                                    
-                                    @foreach ($subjects as $subject)
-                                        <option value="{{ $subject }}"> {{ $subject }} </option>
-                                    @endforeach
-                                    <option value="Other">Other</option>
-
-                                </select>
-                                <input type="text" :name="`subject[${index}]`" class="form-input mt-2 hidden h-8 w-full" placeholder="Please specify...">
-                            </div>
-                            <input type="text" :name="`education[${index}][institute]`" v-model="element.value.institute" class="form-input mr-2 h-8 w-1/4">
-                            <input type="text" :name="`education[${index}][year]`" v-model="element.value.year" class="form-input h-8 w-1/4">
                             <button v-on:click.prevent="removeElement(index)" class="btn is-sm ml-2 text-red-600 h-8">x</button>
                         </div>
                     </template>
@@ -197,6 +183,8 @@
                     </template>
                 </add-remove-elements>
             </div>
+
+            
             <div class="mt-8">
                 <button type="submit" class="btn btn-magenta">Save Changes</button>
             </div>

@@ -17,6 +17,7 @@ import ProgrammeForm from'./components/ProgrammeForm.js';
 import SemesterWiseCourseInput from './components/SemesterWiseCoursesInput.vue';
 import AddRemoveElements from './components/AddRemoveElements.js';
 import CourseProgrammeRevisionSelector from './components/CourseProgrammeRevisionSelector.vue';
+import ScholarEducation from './components/ScholarEducation.vue';
 
 import ClickOutside from './click-outside.js';
 
@@ -39,6 +40,7 @@ Vue.component('programme-form', ProgrammeForm);
 Vue.component("semester-wise-courses-input", SemesterWiseCourseInput);
 Vue.component('add-remove-elements', AddRemoveElements);
 Vue.component("course-programme-revision-selector", CourseProgrammeRevisionSelector);
+Vue.component('scholar-education', ScholarEducation);
 
 
 Vue.mixin({

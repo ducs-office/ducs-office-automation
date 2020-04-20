@@ -39,7 +39,7 @@ class ProfileController extends Controller
             'categories' => config('options.scholars.categories'),
             'admissionCriterias' => config('options.scholars.admission_criterias'),
             'genders' => config('options.scholars.genders'),
-            'subjects' => ScholarEducationSubject::all()->pluck('name'),
+            'subjects' => ScholarEducationSubject::all()->pluck('id', 'name')->toArray(),
         ]);
     }
 
@@ -49,7 +49,7 @@ class ProfileController extends Controller
         $rules = $request->rules();
 
         foreach ($request->education as $index => $edu) {
-            if ($edu['subject'] === 'Other') {
+            if ($edu['subject'] == -1 ) {
                 $rules['subject.' . $index] = ['required', 'bail', 'string', 'min:5'];
             }
         }
@@ -57,11 +57,11 @@ class ProfileController extends Controller
         $validData = $request->validate($rules);
 
         foreach ($request->education as $index => $edu) {
-            if ($edu['subject'] === 'Other') {
-                ScholarEducationSubject::firstOrCreate(
+            if ($edu['subject'] == -1) {
+                $id = ScholarEducationSubject::firstOrCreate(
                     ['name' => $request->subject[$index]]
-                );
-                $validData['education'][$index]['subject'] = $request->subject[$index];
+                )->id;
+                $validData['education'][$index]['subject'] = $id;
             }
         }
 
