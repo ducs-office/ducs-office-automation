@@ -65,9 +65,9 @@ class Scholar extends User
         return $this->supervisorProfile->supervisor();
     }
 
-    public function cosupervisors()
+    public function cosupervisor()
     {
-        return $this->belongsToMany(Cosupervisor::class, 'cosupervisor_scholar_table');
+        return $this->belongsTo(Cosupervisor::class);
     }
 
     public function publications()

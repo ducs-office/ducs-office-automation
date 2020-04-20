@@ -48,5 +48,6 @@ $factory->define(Scholar::class, function (Faker $faker) {
             }
             return $data;
         },
+        'cosupervisor_id' => factory(Cosupervisor::class)->create()->id,
     ];
 });

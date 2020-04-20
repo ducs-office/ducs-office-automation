@@ -145,20 +145,13 @@ class ScholarTest extends TestCase
     }
 
     /** @test */
-    public function scholar_belongs_to_many_cosupervisros()
+    public function scholar_belongs_to_a_cosupervisor()
     {
-        $scholar = create(Scholar::class);
+        $cosupervisor = create(Cosupervisor::class);
+        $scholar = create(Scholar::class, 1, ['cosupervisor_id' => $cosupervisor->id]);
 
-        $this->assertInstanceOf(BelongsToMany::class, $scholar->cosupervisors());
-        $this->assertCount(0, $scholar->cosupervisors);
-
-        $cosupervisors = create(Cosupervisor::class, 2);
-
-        $scholar->cosupervisors()->attach([
-            $cosupervisors[0]->id, $cosupervisors[1]->id,
-        ]);
-
-        $this->assertCount(2, $scholar->fresh()->cosupervisors);
+        $this->assertInstanceOf(BelongsTo::class, $scholar->cosupervisor());
+        $this->assertTrue($cosupervisor->is($scholar->cosupervisor));
     }
 
     /** @test */
