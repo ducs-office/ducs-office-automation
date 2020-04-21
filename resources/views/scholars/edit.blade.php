@@ -162,7 +162,7 @@
                     </div>
                 </div>
             </div>
-            <div class="w-1/3 mt-6">
+            {{-- <div class="w-1/3 mt-6">
                 <div class="w-64 pr-4 relative z-10 -ml-8 my-6">
                     <h3 class="relative z-20 pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
                         Supervisor
@@ -181,8 +181,8 @@
                         </option>
                     @endforeach
                 </select>
-            </div>
-            <div class="mt-4">
+            </div> --}}
+            {{-- <div class="mt-4">
                 <add-remove-elements :existing-elements="{{ json_encode($scholar->cosupervisors) }}">
                     <template v-slot="{ elements, addElement, removeElement}">
                         <div class="flex w-2/6 items-center">
@@ -214,7 +214,7 @@
                         </div>
                     </template>
                 </add-remove-elements>
-            </div>
+            </div> --}}
             <div class="mt-6">
                 <add-remove-elements :existing-elements="{{ json_encode($scholar->advisory_committee) }}" >
                     <template v-slot="{ elements, addElement, removeElement}">

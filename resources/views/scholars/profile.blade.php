@@ -94,7 +94,7 @@
                     </svg>
                 </div>
                
-                <div class="flex-1 my-6 px-4 py-3 border rounded-lg">
+                {{-- <div class="flex-1 my-6 px-4 py-3 border rounded-lg">
                     @if ($scholar->supervisorProfile)
                     <div class="flex items-center">
                         <svg viewBox="0 0 20 20" class="h-current">
@@ -109,8 +109,8 @@
                     @endif
                 </div>
             </div>
-            
-            @if($scholar->cosupervisors->count())
+             --}}
+            {{-- @if($scholar->cosupervisors->count())
             <div class="flex">
                 <div class="w-64 pr-4 relative z-10 -ml-8 my-6">
                     <h3 class="relative z-20 pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
@@ -133,7 +133,7 @@
                     </ul>
                 </div>
             </div>
-            @endif
+            @endif --}}
 
             <div class="flex">
                 <div class="w-64 pr-4 relative z-10 -ml-8 my-6">

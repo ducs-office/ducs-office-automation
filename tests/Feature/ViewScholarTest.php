@@ -2,7 +2,9 @@
 
 namespace Tests\Feature;
 
+use App\Cosupervisor;
 use App\Scholar;
+use App\SupervisorProfile;
 use App\Teacher;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -56,5 +58,39 @@ class ViewScholarTest extends TestCase
         $this->withExceptionHandling()
             ->get(route('research.scholars.index'))
             ->assertForbidden();
+    }
+
+    /** @test */
+    public function view_has_a_unique_list_of_supervisors()
+    {
+        $supervisorProfiles = create(SupervisorProfile::class, 3);
+
+        $this->signIn();
+
+        $viewData = $this->withoutExceptionHandling()
+            ->get(route('staff.scholars.index'))
+            ->assertSuccessful()
+            ->assertViewIs('staff.scholars.index')
+            ->assertViewHas('supervisors')
+            ->viewData('supervisors');
+
+        $this->assertCount(3, $viewData);
+        $this->assertSame($supervisorProfiles->pluck('id', 'supervisor.name')->toArray(), $viewData->toArray());
+    }
+
+    /** @test */
+    public function view_has_a_unique_list_of_cosupervisors()
+    {
+        $cosupervisors = create(Cosupervisor::class, 3);
+        $this->signIn();
+
+        $viewData = $this->withoutExceptionHandling()
+             ->get(route('staff.scholars.index'))
+             ->assertSuccessful()
+             ->assertViewIs('staff.scholars.index')
+             ->assertViewHas('cosupervisors')
+             ->viewData('cosupervisors');
+
+        $this->assertCount(Cosupervisor::count(), $viewData);
     }
 }

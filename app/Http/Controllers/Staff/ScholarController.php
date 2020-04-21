@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Staff;
 
+use App\Cosupervisor;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Scholar\StoreJournalPublication;
 use App\Mail\UserRegisteredMail;
 use App\PhdCourse;
 use App\Scholar;
+use App\SupervisorProfile;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -21,6 +23,8 @@ class ScholarController extends Controller
     {
         return view('staff.scholars.index', [
             'scholars' => Scholar::all(),
+            'supervisors' => SupervisorProfile::all()->pluck('id', 'supervisor.name'),
+            'cosupervisors' => Cosupervisor::all()->pluck('id', 'name', 'email'),
         ]);
     }
 
@@ -45,7 +49,9 @@ class ScholarController extends Controller
         $validData = $request->validate([
             'first_name' => 'required|string',
             'last_name' => 'required|string',
-            'email' => 'required| unique:scholars',
+            'email' => 'required|unique:scholars',
+            'supervisor_profile_id' => 'required|exists:supervisor_profiles,id',
+            'cosupervisor_id' => 'nullable|exists:cosupervisors,id',
         ]);
 
         $plainPassword = Str::random(8);
@@ -65,6 +71,8 @@ class ScholarController extends Controller
             'first_name' => 'sometimes|required|string',
             'last_name' => 'sometimes|required|string',
             'email' => 'sometimes|required|' . Rule::unique('scholars')->ignore($scholar),
+            'supervisor_profile_id' => 'sometimes|required|exists:supervisor_profiles,id',
+            'cosupervisor_id' => 'nullable|exists:cosupervisors,id',
         ]);
 
         $scholar->update($validData);

@@ -22,9 +22,6 @@ class UpdateScholarProfileTest extends TestCase
     {
         $this->signInScholar($scholar = create(Scholar::class));
 
-        $cosupervisor = create(Cosupervisor::class);
-        $supervisorProfile = create(SupervisorProfile::class);
-
         $updateDetails = [
             'phone_no' => '12345678',
             'address' => 'new address, new delhi',
@@ -32,7 +29,6 @@ class UpdateScholarProfileTest extends TestCase
             'admission_via' => 'NET',
             'profile_picture' => $profilePicture = UploadedFile::fake()->image('picture.jpeg'),
             'enrollment_date' => now()->subMonth(1)->format('Y-m-d'),
-            'supervisor_profile_id' => $supervisorProfile->id,
             'research_area' => 'Artificial Intelligence',
             'advisory_committee' => [
                 [
@@ -42,7 +38,6 @@ class UpdateScholarProfileTest extends TestCase
                     'affiliation' => 'IP University',
                 ],
             ],
-            'co_supervisors' => [$cosupervisor->id],
             'education' => [
                 [
                     'degree' => 'BSc',
@@ -66,9 +61,7 @@ class UpdateScholarProfileTest extends TestCase
         $this->assertEquals($updateDetails['admission_via'], $scholar->fresh()->admission_via);
         $this->assertEquals($updateDetails['enrollment_date'], $scholar->fresh()->enrollment_date);
         $this->assertEquals($updateDetails['research_area'], $scholar->fresh()->research_area);
-        $this->assertEquals($updateDetails['supervisor_profile_id'], $scholar->fresh()->supervisor_profile_id);
         $this->assertEquals($updateDetails['advisory_committee'][0]['title'], $scholar->fresh()->advisory_committee[0]['title']);
-        $this->assertEquals($updateDetails['co_supervisors'][0], $scholar->fresh()->cosupervisors[0]->id);
         $this->assertEquals($updateDetails['education'][0]['year'], $scholar->fresh()->education[0]['year']);
 
         $this->assertEquals(

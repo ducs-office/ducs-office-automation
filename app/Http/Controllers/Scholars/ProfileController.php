@@ -19,7 +19,6 @@ class ProfileController extends Controller
         $scholar = $request->user()->load([
             'publications',
             'presentations.publication',
-            'cosupervisors',
         ]);
 
         return view('scholars.profile', [
@@ -40,8 +39,6 @@ class ProfileController extends Controller
             'categories' => config('options.scholars.categories'),
             'admissionCriterias' => config('options.scholars.admission_criterias'),
             'genders' => config('options.scholars.genders'),
-            'supervisorProfiles' => SupervisorProfile::all()->pluck('id', 'supervisor.name'),
-            'cosupervisors' => Cosupervisor::all()->pluck('id', 'name', 'email'),
             'subjects' => ScholarEducationSubject::all()->pluck('name'),
         ]);
     }
@@ -69,10 +66,6 @@ class ProfileController extends Controller
         }
 
         $scholar->update($validData);
-
-        if ($request->has('co_supervisors')) {
-            $scholar->cosupervisors()->sync($request->co_supervisors);
-        }
 
         if ($request->has('profile_picture')) {
             $scholar->profilePicture()->create([

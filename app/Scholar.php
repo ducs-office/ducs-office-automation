@@ -29,6 +29,7 @@ class Scholar extends User
         'enrollment_date',
         'advisory_committee',
         'education',
+        'cosupervisor_id',
     ];
 
     protected $casts = [

@@ -24,7 +24,6 @@ class UpdateProfileRequest extends FormRequest
             'admission_via' => [Rule::requiredIf($scholar->admission_via != null)],
             'profile_picture' => ['nullable', 'image'],
             'research_area' => [Rule::requiredIf($scholar->research_area != null)],
-            'supervisor_profile_id' => ['sometimes', 'required', 'exists:supervisor_profiles,id'],
             'enrollment_date' => ['nullable', 'date', 'before:today'],
 
             'advisory_committee' => ['required', 'array', 'max: 4'],
@@ -33,9 +32,6 @@ class UpdateProfileRequest extends FormRequest
             'advisory_committee.*.name' => ['required', 'string'],
             'advisory_committee.*.designation' => ['required', 'string'],
             'advisory_committee.*.affiliation' => ['required', 'string'],
-
-            'co_supervisors' => ['sometimes', 'array', 'max:2'],
-            'co_supervisors.*' => ['sometimes', 'required', 'integer', 'exists:cosupervisors,id'],
 
             'education' => ['required', 'array', 'max: 4', 'min:1'],
             'education.*' => ['required', 'array', 'size:4'],
