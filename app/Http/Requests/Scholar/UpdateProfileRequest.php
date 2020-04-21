@@ -14,7 +14,6 @@ class UpdateProfileRequest extends FormRequest
      */
     public function rules()
     {
-        // dd($this->subject);
         $scholar = $this->user();
 
         return [
@@ -35,12 +34,14 @@ class UpdateProfileRequest extends FormRequest
 
             'education' => ['required', 'array', 'max: 4', 'min:1'],
             'education.*' => ['required', 'array', 'size:4'],
-            'education.*.degree' => ['required', 'string'],
+            'education.*.degree' => ['required', 'integer'],
             'education.*.subject' => ['required', 'integer'],
-            'education.*.institute' => ['required', 'string'],
+            'education.*.institute' => ['required', 'integer'],
             'education.*.year' => ['required', 'string'],
 
-            'subject' => ['sometimes', 'required', 'array', 'max:4'],
+            'typedSubjects' => ['sometimes', 'required', 'array', 'max:4'],
+            'typedDegrees' => ['sometimes', 'required', 'array', 'max:4'],
+            'typedInstitutes' => ['sometimes', 'required', 'array', 'max:4'],
         ];
     }
 }

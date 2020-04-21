@@ -56,15 +56,15 @@ class PhdScholarSeeder extends Seeder
             ],
             'education' => [
                 [
-                    'degree' => 'BSc(H)',
-                    'subject' => 'Computer Science',
-                    'institute' => 'Shyama Prasad Mukherji College, University of Delhi',
+                    'degree' => 1,
+                    'subject' => 1,
+                    'institute' => 1,
                     'year' => '2017',
                 ],
                 [
-                    'degree' => 'Msc',
-                    'subject' => 'Computer Science',
-                    'institute' => 'Department of Computer Science, University of Delhi',
+                    'degree' => 2,
+                    'subject' => 1,
+                    'institute' => 2,
                     'year' => '2019',
                 ],
             ],

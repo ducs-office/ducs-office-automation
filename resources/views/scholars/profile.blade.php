@@ -226,18 +226,18 @@
                 </div>
                 <div class="flex-1 my-6">
                     <ul class="border flex flex-wrap rounded-lg overflow-hidden mb-4">
-                        @if ($scholar->education)
-                        @foreach ($scholar->education as $education)
+                        @if ($education)
+                        @foreach ($education as $edu)
                             <li class="px-5 py-5 border-b last:border-b-0 w-1/2">
                                 <div class="flex mb-1">
                                     <feather-icon name="book" class="h-current"></feather-icon>
                                     <div class="flex items-baseline">
-                                        <p class="ml-2 font-bold"> {{ $education['degree'] }} </p>
-                                        <p class="ml-1 font-normal"> ( {{ $education['subject'] }} ) </p>
+                                        <p class="ml-2 font-bold"> {{ $edu['degree'] }} </p>
+                                        <p class="ml-1 font-normal"> ( {{ $edu['subject'] }} ) </p>
                                     </div>
                                 </div>
-                                <p class="ml-6 text-gray-700 mb-1"> {{ $education['institute'] }} </p>
-                                <p class="ml-6 text-gray-700"> {{ $education['year'] }} </p>
+                                <p class="ml-6 text-gray-700 mb-1"> {{ $edu['institute'] }} </p>
+                                <p class="ml-6 text-gray-700"> {{ $edu['year'] }} </p>
                             </li>
                         @endforeach
                         @endif

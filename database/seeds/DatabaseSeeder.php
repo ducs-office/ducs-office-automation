@@ -12,6 +12,8 @@ use App\ProgrammeRevision;
 use App\Publication;
 use App\Remark;
 use App\Scholar;
+use App\ScholarEducationDegree;
+use App\ScholarEducationInstitute;
 use App\ScholarEducationSubject;
 use App\ScholarProfile;
 use App\Teacher;
@@ -123,17 +125,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call(PhdScholarSeeder::class);
 
-        factory(ScholarEducationSubject::class)->create([
-            'name' => 'Computer Science',
-        ]);
-
-        factory(ScholarEducationSubject::class)->create([
-            'name' => 'Mathematics',
-        ]);
-
-        factory(ScholarEducationSubject::class)->create([
-            'name' => 'Mathematical Science',
-        ]);
+        $this->call(ScholarEducationSeeder::class);
 
         $scholar = factory(Scholar::class)->create([
             'first_name' => 'Pushkar',

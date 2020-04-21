@@ -121,6 +121,8 @@
                                 <scholar-education class="mt-3"
                                     :name="`education[${index}]`"
                                     :subject-choices="{{ json_encode($subjects) }}" 
+                                    :degree-choices="{{ json_encode($degrees) }}" 
+                                    :institute-choices="{{ json_encode($institutes) }}" 
                                     :element=element
                                     :index=index>
                                 </scholar-education>

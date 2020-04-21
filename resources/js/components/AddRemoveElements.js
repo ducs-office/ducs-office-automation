@@ -16,12 +16,13 @@ export default {
     data() {
         return {
             elements: [],
+            newElement: {},
         }
     },
     methods: {
         addElement() {
             this.elements.push({
-                value: ''
+                value: this.newElement
             });
         },
         removeElement(index) {
@@ -29,12 +30,23 @@ export default {
         },
     },
     created() {
-        if(this.existingElements !== null) {
-            this.existingElements.forEach($el => { 
+        if(this.existingElements.length ) {
+            this.existingElements.forEach(el => { 
                 this.elements.push({
-                    value: $el
+                    value: el
                 })
             });
+
+            const el = JSON.parse(JSON.stringify(this.existingElements[0]));
+
+            if(typeof(this.existingElements[0]) == "object") {
+                Object.keys(el).map((type) => {
+                    el[type] = '';
+                });
+                this.newElement = el;
+            }
+            else    
+                this.newElement = "";
         }
     },
 }

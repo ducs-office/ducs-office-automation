@@ -3,6 +3,9 @@
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 use App\Cosupervisor;
 use App\Scholar;
+use App\ScholarEducationDegree;
+use App\ScholarEducationInstitute;
+use App\ScholarEducationSubject;
 use App\SupervisorProfile;
 use Faker\Generator as Faker;
 
@@ -39,10 +42,14 @@ $factory->define(Scholar::class, function (Faker $faker) {
             $x = random_int(1, 4);
             $data = [];
             for ($i = 1; $i <= $x; $i++) {
+                $degree = factory(ScholarEducationDegree::class)->create()->id;
+                $subject = factory(ScholarEducationSubject::class)->create()->id;
+                $institute = factory(ScholarEducationInstitute::class)->create()->id;
+
                 array_push($data, [
-                    'degree' => $faker->sentence(3),
-                    'subject' => $faker->sentence(3),
-                    'institute' => $faker->company,
+                    'degree' => $degree,
+                    'subject' => $subject,
+                    'institute' => $institute,
                     'year' => $faker->date('Y', now()->subYear(1)),
                 ]);
             }
