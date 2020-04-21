@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Staff;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Staff\StoreOutgoingLetterRequest;
 use App\Http\Requests\Staff\UpdateOutgoingLetterRequest;
-use App\OutgoingLetter;
-use App\Remark;
-use App\User;
+use App\Models\OutgoingLetter;
+use App\Models\Remark;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 

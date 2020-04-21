@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests\Teacher;
 
-use App\CourseProgrammeRevision;
-use App\ProgrammeRevision;
+use App\Models\CourseProgrammeRevision;
+use App\Models\ProgrammeRevision;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 

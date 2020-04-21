@@ -2,13 +2,13 @@
 
 namespace Tests\Unit;
 
-use App\AdvisoryMeeting;
-use App\Cosupervisor;
-use App\Leave;
-use App\PhdCourse;
-use App\Presentation;
-use App\Scholar;
-use App\SupervisorProfile;
+use App\Models\AdvisoryMeeting;
+use App\Models\Cosupervisor;
+use App\Models\Leave;
+use App\Models\PhdCourse;
+use App\Models\Presentation;
+use App\Models\Scholar;
+use App\Models\SupervisorProfile;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;

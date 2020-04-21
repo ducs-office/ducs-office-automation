@@ -2,9 +2,9 @@
 
 namespace Tests\Feature;
 
-use App\Handover;
 use App\Http\Controllers\IncomingLetterController;
-use App\IncomingLetter;
+use App\Models\Handover;
+use App\Models\IncomingLetter;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;

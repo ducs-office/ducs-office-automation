@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Staff;
 
 use App\Http\Controllers\Controller;
-use App\LetterReminder;
-use App\OutgoingLetter;
+use App\Models\LetterReminder;
+use App\Models\OutgoingLetter;
 use Illuminate\Http\Request;
 
 class OutgoingLetterRemindersController extends Controller

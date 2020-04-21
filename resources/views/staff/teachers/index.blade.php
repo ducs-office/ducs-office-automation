@@ -3,7 +3,7 @@
 <div class="page-card m-6">
     <div class="flex items-center px-6 pb-4 border-b">
         <h1 class="page-header mb-0 px-0 mr-4">College Teacher</h1>
-        @can('create', App\Teacher::class)
+        @can('create', App\Models\Teacher::class)
         <button class="btn btn-magenta is-sm shadow-inner"
             @click.prevent="$modal.show('create-teacher-modal')">
             New
@@ -14,7 +14,7 @@
         @endcan
     </div>
 
-    @can('update', App\Teacher::class)
+    @can('update', App\Models\Teacher::class)
     @include('staff.teachers.modals.edit', [
         'modalName' => 'edit-teacher-modal',
     ])
@@ -43,7 +43,7 @@
                     class="p-1 hover:text-blue-700 mr-2">
                     <feather-icon class="h-4" name="eye" stroke-width="2.5">View</feather-icon>
                 </a>
-                @can('update', App\Teacher::class)
+                @can('update', App\Models\Teacher::class)
                 <button type="submit" class="p-1 hover:text-red-700 mr-2"
                     @click="
                         $modal.show('edit-teacher-modal', {

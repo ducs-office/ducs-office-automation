@@ -2,9 +2,9 @@
 
 namespace App\Policies;
 
-use App\Attachment;
-use App\Course;
-use App\User;
+use App\Models\Attachment;
+use App\Models\Course;
+use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class AttachmentPolicy
@@ -14,8 +14,8 @@ class AttachmentPolicy
     /**
      * Determine whether the user can view the attachment.
      *
-     * @param  \App\User  $user
-     * @param  \App\Attachment  $attachment
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Attachment  $attachment
      *
      * @return mixed
      */
@@ -27,8 +27,8 @@ class AttachmentPolicy
     /**
      * Determine whether the user can delete the attachment.
      *
-     * @param  \App\User  $user
-     * @param  \App\Attachment  $attachment
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Attachment  $attachment
      *
      * @return mixed
      */

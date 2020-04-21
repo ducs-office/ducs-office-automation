@@ -1,8 +1,8 @@
 <?php
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
-use App\Publication;
-use App\Scholar;
+use App\Models\Publication;
+use App\Models\Scholar;
 use Faker\Generator as Faker;
 
 $factory->define(Publication::class, function (Faker $faker) {

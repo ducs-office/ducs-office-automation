@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Staff;
 
-use App\Course;
 use App\Http\Controllers\Controller;
-use App\TeachingRecord;
+use App\Models\Course;
+use App\Models\TeachingRecord;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Response;

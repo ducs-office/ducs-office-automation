@@ -12,7 +12,7 @@
                 Dashboard
             </a>
         </li>
-        @can('viewAny', \App\OutgoingLetter::class)
+        @can('viewAny', \App\Models\OutgoingLetter::class)
         <li class="mb-1 last:mb-0">
             <a href="{{ route('staff.outgoing_letters.index') }}" class="flex items-center py-2 px-4 hover:bg-magenta-700 rounded">
                 <feather-icon name="mail" class="h-4 mr-2">Outgoing Letters</feather-icon>
@@ -20,7 +20,7 @@
             </a>
         </li>
         @endcan
-        @can('viewAny', App\IncomingLetter::class)
+        @can('viewAny', App\Models\IncomingLetter::class)
             <li class="mb-1 last:mb-0">
                 <a href="{{ route('staff.incoming_letters.index') }}" class="flex items-center py-2 px-4 hover:bg-magenta-700 rounded">
                     <feather-icon name="mail" class="h-4 mr-2">Incoming Letters</feather-icon>
@@ -28,7 +28,7 @@
                 </a>
             </li>
         @endcan
-        @can('viewAny', App\Programme::class)
+        @can('viewAny', App\Models\Programme::class)
         <li class="mb-1 last:mb-0">
             <a href="{{ route('staff.programmes.index') }}" class="flex items-center py-2 px-4 hover:bg-magenta-700 rounded">
                 <feather-icon name="book" class="h-4 mr-2">Academic Programmes</feather-icon>
@@ -36,7 +36,7 @@
             </a>
         </li>
         @endcan
-        @can('viewAny', App\Course::class)
+        @can('viewAny', App\Models\Course::class)
         <li class="mb-1 last:mb-0">
             <a href="{{ route('staff.courses.index') }}" class="flex items-center py-2 px-4 hover:bg-magenta-700 rounded">
                 <feather-icon name="file-text" class="h-4 mr-2">Programme Courses</feather-icon>
@@ -50,7 +50,7 @@
             </a>
         </li>
         @endcan
-        @can('viewAny', App\College::class)
+        @can('viewAny', App\Models\College::class)
         <li class="mb-1 last:mb-0">
             <a href="{{ route('staff.colleges.index') }}" class="flex items-center py-2 px-4 hover:bg-magenta-700 rounded">
                 <feather-icon name="home" class="h-4 mr-2">Colleges</feather-icon>
@@ -58,7 +58,7 @@
             </a>
         </li>
         @endcan
-        @can('viewAny', App\User::class)
+        @can('viewAny', App\Models\User::class)
         <li class="mb-1 last:mb-0">
             <a href="{{ route('staff.users.index') }}" class="flex items-center py-2 px-4 hover:bg-magenta-700 rounded">
                 <feather-icon name="user" class="h-4 mr-2">User</feather-icon>
@@ -74,7 +74,7 @@
             </a>
         </li>
         @endcan
-        @can('viewAny', App\Teacher::class)
+        @can('viewAny', App\Models\Teacher::class)
         <li class="mb-1 last:mb-0">
             <a href="{{ route('staff.teachers.index') }}" class="flex items-center py-2 px-4 hover:bg-magenta-700 rounded">
                 <feather-icon name="users" class="h-4 mr-2">College Teacher</feather-icon>
@@ -94,7 +94,7 @@
                 Co-Supervisors
             </a>
         </li>
-        @can('viewAny', App\Scholar::class)
+        @can('viewAny', App\Models\Scholar::class)
         <li class="mb-1 last:mb-0">
             <a href="{{ route('staff.scholars.index') }}" class="flex items-center py-2 px-4 hover:bg-magenta-700 rounded">
                 <feather-icon name="users" class="h-4 mr-2">Scholar</feather-icon>
@@ -102,7 +102,7 @@
             </a>
         </li>
         @endcan
-        @can('viewAny', App\Scholar::class)
+        @can('viewAny', App\Models\Scholar::class)
         <li class="mb-1 last:mb-0">
             <a href="{{ route('research.scholars.index') }}" class="flex items-center py-2 px-4 hover:bg-magenta-700 rounded">
                 <feather-icon name="users" class="h-4 mr-2">Scholar</feather-icon>

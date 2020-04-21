@@ -2,8 +2,8 @@
 
 namespace Tests\Unit;
 
-use App\Presentation;
-use App\Publication;
+use App\Models\Presentation;
+use App\Models\Publication;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;

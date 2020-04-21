@@ -1,10 +1,10 @@
 <?php
 
-use App\Cosupervisor;
-use App\PhdCourse;
-use App\Scholar;
-use App\Teacher;
-use App\User;
+use App\Models\Cosupervisor;
+use App\Models\PhdCourse;
+use App\Models\Scholar;
+use App\Models\Teacher;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class PhdScholarSeeder extends Seeder

@@ -2,7 +2,7 @@
 
 namespace Tests\Unit;
 
-use App\CourseRevision;
+use App\Models\CourseRevision;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;

@@ -5,7 +5,7 @@
     ])
     @endif
     <div class="border-b px-6 py-2">
-        @can('create', App\Remark::class)
+        @can('create', App\Models\Remark::class)
         <form action="{{ route('staff.outgoing_letters.remarks.store', $letter) }}" method="POST">
             @csrf_token
             <div class="flex items-start">

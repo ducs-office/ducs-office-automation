@@ -3,7 +3,7 @@
     <div class="m-6">
         <div class="flex items-baseline px-6 pb-4">
             <h1 class="page-header mb-0 px-0 mr-4">Pre-PhD Courses</h1>
-            @can('create', App\PhdCourse::class)
+            @can('create', App\Models\PhdCourse::class)
             <button class="btn btn-magenta is-sm shadow-inset" @click="$modal.show('create-courses-modal')">
                 New
             </button>
@@ -13,7 +13,7 @@
             ])
             @endcan
         </div>
-        @can('update', App\PhdCourse::class)
+        @can('update', App\Models\PhdCourse::class)
         @include('staff.phd_courses.modals.edit', [
             'modalName' => 'edit-course-modal',
             'courseTypes' => $courseTypes,
@@ -29,7 +29,7 @@
                     <h3 class="font-bold text-lg capitalize mx-4">{{ $course->name }}</h3>
 
                     <div class="ml-auto flex items-center">
-                        @can('update', App\PhdCourse::class)
+                        @can('update', App\Models\PhdCourse::class)
                         <button class="p-1 hover:text-blue-500 mr-2"
                         @click.prevent="$modal.show('edit-course-modal', {
                             course: {{ $course->toJson() }}
@@ -37,7 +37,7 @@
                             <feather-icon name="edit" class="h-current">Edit</feather-icon>
                         </button>
                         @endcan
-                        @can('delete', App\PhdCourse::class)
+                        @can('delete', App\Models\PhdCourse::class)
                         <form action="{{ route('staff.phd_courses.destroy', $course) }}" method="POST"
                             onsubmit="return confirm('Do you really want to delete course?');">
                             @csrf_token

@@ -9,7 +9,7 @@
                 {{ ucwords($programme->name) }}
             </h3>
             <span class="ml-2 py-2 px-4 rounded bg-black font-bold font-mono text-sm text-white mr-2 text-center leading-none"> {{ $programme->code }}</span>
-            @can('create', App\ProgrammeRevision::class)
+            @can('create', App\Models\ProgrammeRevision::class)
                 <a href="{{ route('staff.programmes.revisions.create', $programme )}}"
                     class="ml-auto btn btn-magenta is-sm shadow-inset mr-2">
                     New Revision

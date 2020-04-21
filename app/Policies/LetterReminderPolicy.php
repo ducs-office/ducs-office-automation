@@ -2,9 +2,9 @@
 
 namespace App\Policies;
 
-use App\LetterReminder;
-use App\OutgoingLetter;
-use App\User;
+use App\Models\LetterReminder;
+use App\Models\OutgoingLetter;
+use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class LetterReminderPolicy
@@ -14,7 +14,7 @@ class LetterReminderPolicy
     /**
      * Determine whether the user can view any letter reminders.
      *
-     * @param  \App\User  $user
+     * @param  \App\Models\User  $user
      *
      * @return mixed
      */
@@ -26,8 +26,8 @@ class LetterReminderPolicy
     /**
      * Determine whether the user can view the letter reminder.
      *
-     * @param  \App\User  $user
-     * @param  \App\LetterReminder  $letterReminder
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\LetterReminder  $letterReminder
      *
      * @return mixed
      */
@@ -39,7 +39,7 @@ class LetterReminderPolicy
     /**
      * Determine whether the user can create letter reminders.
      *
-     * @param  \App\User  $user
+     * @param  \App\Models\User  $user
      *
      * @return mixed
      */
@@ -52,8 +52,8 @@ class LetterReminderPolicy
     /**
      * Determine whether the user can update the letter reminder.
      *
-     * @param  \App\User  $user
-     * @param  \App\LetterReminder  $letterReminder
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\LetterReminder  $letterReminder
      *
      * @return mixed
      */
@@ -66,8 +66,8 @@ class LetterReminderPolicy
     /**
      * Determine whether the user can delete the letter reminder.
      *
-     * @param  \App\User  $user
-     * @param  \App\LetterReminder  $letterReminder
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\LetterReminder  $letterReminder
      *
      * @return mixed
      */

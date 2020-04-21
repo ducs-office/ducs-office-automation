@@ -2,8 +2,8 @@
 
 namespace Tests\Feature;
 
-use App\OutgoingLetter;
-use App\User;
+use App\Models\OutgoingLetter;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;

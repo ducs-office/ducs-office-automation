@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Models\Course;
+use App\Models\Programme;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -13,7 +15,7 @@ class ViewProgrammeRevisionsTest extends TestCase
     /** @test*/
     public function guest_cannot_view_programme_revisions()
     {
-        $programme = create('App\Programme');
+        $programme = create(Programme::class);
 
         $this->withExceptionHandling()
             ->get(route('staff.programmes.revisions.show', $programme))
@@ -24,8 +26,8 @@ class ViewProgrammeRevisionsTest extends TestCase
     public function programme_revisions_can_be_viewed()
     {
         $this->signIn();
-        $programme = create('App\Programme');
-        $courses = create('App\Course', 2);
+        $programme = create(Programme::class);
+        $courses = create(Course::class, 2);
         $revisions = $programme->revisions()->createMany([
             ['revised_at' => now()],
             ['revised_at' => now()->addYear(1)->format('Y-m-d')],

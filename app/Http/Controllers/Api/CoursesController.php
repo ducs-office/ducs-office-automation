@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Course;
 use App\Http\Controllers\Controller;
+use App\Models\Course;
 use Illuminate\Http\Request;
 
 class CoursesController extends Controller

@@ -2,8 +2,8 @@
 
 namespace Tests\Feature;
 
-use App\College;
-use App\Programme;
+use App\Models\College;
+use App\Models\Programme;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 use Tests\TestCase;

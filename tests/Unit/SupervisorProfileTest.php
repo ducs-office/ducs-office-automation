@@ -2,7 +2,8 @@
 
 namespace Tests\Unit;
 
-use App\Teacher;
+use App\Models\SupervisorProfile;
+use App\Models\Teacher;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -16,7 +17,7 @@ class SupervisorProfileTest extends TestCase
     {
         $teacher = create(Teacher::class);
 
-        $supervisorProfile = create('App\SupervisorProfile', 1, [
+        $supervisorProfile = create(SupervisorProfile::class, 1, [
             'supervisor_type' => Teacher::class,
             'supervisor_id' => $teacher->id,
         ]);

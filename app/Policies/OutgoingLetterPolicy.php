@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\OutgoingLetter;
-use App\User;
+use App\Models\OutgoingLetter;
+use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class OutgoingLetterPolicy
@@ -13,7 +13,7 @@ class OutgoingLetterPolicy
     /**
      * Determine whether the user can view any outgoing letters.
      *
-     * @param  \App\User  $user
+     * @param  \App\Models\User  $user
      *
      * @return mixed
      */
@@ -25,8 +25,8 @@ class OutgoingLetterPolicy
     /**
      * Determine whether the user can view the outgoing letter.
      *
-     * @param  \App\User  $user
-     * @param  \App\OutgoingLetter  $letter
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\OutgoingLetter  $letter
      *
      * @return mixed
      */
@@ -38,7 +38,7 @@ class OutgoingLetterPolicy
     /**
      * Determine whether the user can create outgoing letters.
      *
-     * @param  \App\User  $user
+     * @param  \App\Models\User  $user
      *
      * @return mixed
      */
@@ -50,8 +50,8 @@ class OutgoingLetterPolicy
     /**
      * Determine whether the user can update the outgoing letter.
      *
-     * @param  \App\User  $user
-     * @param  \App\OutgoingLetter  $letter
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\OutgoingLetter  $letter
      *
      * @return mixed
      */
@@ -64,8 +64,8 @@ class OutgoingLetterPolicy
     /**
      * Determine whether the user can delete the outgoing letter.
      *
-     * @param  \App\User  $user
-     * @param  \App\OutgoingLetter  $letter
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\OutgoingLetter  $letter
      *
      * @return mixed
      */

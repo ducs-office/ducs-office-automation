@@ -80,17 +80,17 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => App\User::class,
+            'model' => App\Models\User::class,
         ],
 
         'teachers' => [
             'driver' => 'eloquent',
-            'model' => App\Teacher::class,
+            'model' => App\Models\Teacher::class,
         ],
 
         'scholars' => [
             'driver' => 'eloquent',
-            'model' => App\Scholar::class,
+            'model' => App\Models\Scholar::class,
         ],
         // 'users' => [
         //     'driver' => 'database',

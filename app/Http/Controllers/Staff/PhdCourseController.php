@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Staff;
 
 use App\Http\Controllers\Controller;
-use App\PhdCourse;
+use App\Models\PhdCourse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 

@@ -1,21 +1,21 @@
 <?php
 
-use App\College;
-use App\Course;
-use App\CourseRevision;
-use App\Handover;
-use App\IncomingLetter;
-use App\LetterReminder;
-use App\OutgoingLetter;
-use App\Programme;
-use App\ProgrammeRevision;
-use App\Publication;
-use App\Remark;
-use App\Scholar;
-use App\ScholarProfile;
-use App\Teacher;
-use App\TeacherProfile;
-use App\User;
+use App\Models\College;
+use App\Models\Course;
+use App\Models\CourseRevision;
+use App\Models\Handover;
+use App\Models\IncomingLetter;
+use App\Models\LetterReminder;
+use App\Models\OutgoingLetter;
+use App\Models\Programme;
+use App\Models\ProgrammeRevision;
+use App\Models\Publication;
+use App\Models\Remark;
+use App\Models\Scholar;
+use App\Models\ScholarProfile;
+use App\Models\Teacher;
+use App\Models\TeacherProfile;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 

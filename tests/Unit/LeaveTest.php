@@ -2,8 +2,8 @@
 
 namespace Tests\Unit;
 
-use App\Leave;
-use App\LeaveStatus;
+use App\Models\Leave;
+use App\Models\LeaveStatus;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Testing\RefreshDatabase;

@@ -23,7 +23,7 @@
                     </div>
                 </div>
                 <div class="ml-auto self-start">
-                    @can('update', App\Teacher::class)
+                    @can('update', App\Models\Teacher::class)
                         @include('staff.teachers.modals.edit', [
                             'modalName' => 'edit-teacher-modal',
                         ])

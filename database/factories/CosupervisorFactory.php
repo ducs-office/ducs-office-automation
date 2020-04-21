@@ -1,7 +1,7 @@
 <?php
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
-use App\Cosupervisor;
+use App\Models\Cosupervisor;
 use Faker\Generator as Faker;
 
 $factory->define(Cosupervisor::class, function (Faker $faker) {

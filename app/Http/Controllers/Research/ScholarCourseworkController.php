@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Research;
 
 use App\Http\Controllers\Controller;
-use App\Scholar;
+use App\Models\Scholar;
 use Illuminate\Http\Request;
 
 class ScholarCourseworkController extends Controller

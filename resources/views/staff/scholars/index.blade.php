@@ -3,7 +3,7 @@
 <div class="page-card m-6">
     <div class="flex items-center px-6 pb-4 border-b">
         <h1 class="page-header mb-0 px-0 mr-4">Scholars</h1>
-        @can('create', App\Scholar::class)
+        @can('create', App\Models\Scholar::class)
         <button class="btn btn-magenta is-sm shadow-inner"
             @click.prevent="$modal.show('create-scholar-modal')">
             New
@@ -14,7 +14,7 @@
         @endcan
     </div>
 
-    @can('update', App\Scholar::class)
+    @can('update', App\Models\Scholar::class)
     @include('staff.scholars.modals.edit', [
         'modalName' => 'edit-scholar-modal'
     ])
@@ -28,7 +28,7 @@
                 <h4 class="text-sm font-semibold text-gray-600 mr-2"> {{ $scholar->email }}</h4>
             </div>
             <div class="ml-auto px-2 flex items-center">
-                @can('update', App\Scholar::class)
+                @can('update', App\Models\Scholar::class)
                 <button type="submit" class="p-1 hover:text-red-700 mr-2"
                     @click="
                         $modal.show('edit-scholar-modal', {

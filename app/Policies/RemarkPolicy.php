@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\Remark;
-use App\User;
+use App\Models\Remark;
+use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class RemarkPolicy
@@ -13,7 +13,7 @@ class RemarkPolicy
     /**
      * Determine whether the user can view any remarks.
      *
-     * @param  \App\User  $user
+     * @param  \App\Models\User  $user
      *
      * @return mixed
      */
@@ -25,8 +25,8 @@ class RemarkPolicy
     /**
      * Determine whether the user can view the remark.
      *
-     * @param  \App\User  $user
-     * @param  \App\Remark  $remark
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Remark  $remark
      *
      * @return mixed
      */
@@ -38,7 +38,7 @@ class RemarkPolicy
     /**
      * Determine whether the user can create remarks.
      *
-     * @param  \App\User  $user
+     * @param  \App\Models\User  $user
      *
      * @return mixed
      */
@@ -50,8 +50,8 @@ class RemarkPolicy
     /**
      * Determine whether the user can update the remark.
      *
-     * @param  \App\User  $user
-     * @param  \App\Remark  $remark
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Remark  $remark
      *
      * @return mixed
      */
@@ -64,8 +64,8 @@ class RemarkPolicy
     /**
      * Determine whether the user can delete the remark.
      *
-     * @param  \App\User  $user
-     * @param  \App\Remark  $remark
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Remark  $remark
      *
      * @return mixed
      */

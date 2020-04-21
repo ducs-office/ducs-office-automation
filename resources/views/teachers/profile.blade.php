@@ -58,7 +58,7 @@
             @else
             <p class="text-gray-600 font-bold">Nothing to show here.</p>
             @endif
-            @can('create', App\TeachingRecord::class)
+            @can('create', App\Models\TeachingRecord::class)
                 <form action="{{ route('teachers.profile.submit') }}" method="POST">
                     @csrf_token
                     <button type="submit" class="btn btn-magenta mt-6" enabled> Submit Details </button>

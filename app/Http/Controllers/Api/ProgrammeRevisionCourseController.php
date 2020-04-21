@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\ProgrammeRevision;
+use App\Models\ProgrammeRevision;
 
 class ProgrammeRevisionCourseController extends Controller
 {

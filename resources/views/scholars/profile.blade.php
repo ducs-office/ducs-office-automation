@@ -170,7 +170,7 @@
                     </svg>
                 </div>
                 <div class="ml-auto flex items-center">
-                    <select name="presentation_type" id="" 
+                    <select name="presentation_type" id=""
                         class="btn btn-magenta text-center outline-none cursor-pointer border-none"
                         onchange="window.location.href = this.value;" >
 
@@ -181,7 +181,7 @@
                         <option value="{{ route('scholars.profile.publication.conference.create') }}">
                             New Conference
                         </option>
-                        
+
                     </select>
                 </div>
             </div>
@@ -262,16 +262,16 @@
 
         {{-- Leaves --}}
         @php($icons = [
-            App\LeaveStatus::APPROVED => 'check-circle',
-            App\LeaveStatus::REJECTED => 'x-circle',
-            App\LeaveStatus::RECOMMENDED => 'shield',
-            App\LeaveStatus::APPLIED => 'alert-circle'
+            App\Models\LeaveStatus::APPROVED => 'check-circle',
+            App\Models\LeaveStatus::REJECTED => 'x-circle',
+            App\Models\LeaveStatus::RECOMMENDED => 'shield',
+            App\Models\LeaveStatus::APPLIED => 'alert-circle'
         ])
         @php($colors = [
-            App\LeaveStatus::APPROVED => 'text-green-500',
-            App\LeaveStatus::REJECTED => 'text-red-600',
-            App\LeaveStatus::RECOMMENDED => 'text-blue-600',
-            App\LeaveStatus::APPLIED => 'text-gray-700'
+            App\Models\LeaveStatus::APPROVED => 'text-green-500',
+            App\Models\LeaveStatus::REJECTED => 'text-red-600',
+            App\Models\LeaveStatus::RECOMMENDED => 'text-blue-600',
+            App\Models\LeaveStatus::APPLIED => 'text-gray-700'
         ])
         <div class="mb-16">
             <div class="mb-4 flex items-center justify-between">

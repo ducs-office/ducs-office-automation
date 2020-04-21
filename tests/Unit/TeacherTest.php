@@ -2,7 +2,7 @@
 
 namespace Tests\Unit;
 
-use App\Teacher;
+use App\Models\Teacher;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Foundation\Testing\RefreshDatabase;

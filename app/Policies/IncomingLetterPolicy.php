@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\IncomingLetter;
-use App\User;
+use App\Models\IncomingLetter;
+use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class IncomingLetterPolicy
@@ -13,7 +13,7 @@ class IncomingLetterPolicy
     /**
      * Determine whether the user can view any incoming letters.
      *
-     * @param  \App\User  $user
+     * @param  \App\Models\User  $user
      *
      * @return mixed
      */
@@ -25,8 +25,8 @@ class IncomingLetterPolicy
     /**
      * Determine whether the user can view the incoming letter.
      *
-     * @param  \App\User  $user
-     * @param  \App\IncomingLetter  $incomingLetter
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\IncomingLetter  $incomingLetter
      *
      * @return mixed
      */
@@ -38,7 +38,7 @@ class IncomingLetterPolicy
     /**
      * Determine whether the user can create incoming letters.
      *
-     * @param  \App\User  $user
+     * @param  \App\Models\User  $user
      *
      * @return mixed
      */
@@ -50,8 +50,8 @@ class IncomingLetterPolicy
     /**
      * Determine whether the user can update the incoming letter.
      *
-     * @param  \App\User  $user
-     * @param  \App\IncomingLetter  $incomingLetter
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\IncomingLetter  $incomingLetter
      *
      * @return mixed
      */
@@ -64,8 +64,8 @@ class IncomingLetterPolicy
     /**
      * Determine whether the user can delete the incoming letter.
      *
-     * @param  \App\User  $user
-     * @param  \App\IncomingLetter  $incomingLetter
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\IncomingLetter  $incomingLetter
      *
      * @return mixed
      */

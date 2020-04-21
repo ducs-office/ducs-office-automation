@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Teacher;
+use App\Models\Teacher;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 

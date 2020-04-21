@@ -2,8 +2,9 @@
 
 namespace Tests\Feature;
 
-use App\Programme;
-use App\ProgrammeRevision;
+use App\Models\Course;
+use App\Models\Programme;
+use App\Models\ProgrammeRevision;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -15,7 +16,7 @@ class DeleteProgrammeRevisionTest extends TestCase
     /** @test */
     public function guest_can_not_deleted_a_programme_revision()
     {
-        $programme = create('App\Programme');
+        $programme = create(Programme::class);
         $revision = $programme->revisions()->create(['revised_at' => now()]);
 
         $this->withExceptionHandling()
@@ -31,7 +32,7 @@ class DeleteProgrammeRevisionTest extends TestCase
     {
         $this->signIn();
 
-        $programme = create('App\Programme');
+        $programme = create(Programme::class);
 
         $revisions = $programme->revisions()->createMany([
             ['revised_at' => now()->subYear()],
@@ -54,8 +55,8 @@ class DeleteProgrammeRevisionTest extends TestCase
     {
         $this->signIn();
 
-        $programme = create('App\Programme');
-        $courses = create('App\Course', 2);
+        $programme = create(Programme::class);
+        $courses = create(Course::class, 2);
 
         $revisions = $programme->revisions()->createMany([
             ['revised_at' => $programme->wef],

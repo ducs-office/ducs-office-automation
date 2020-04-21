@@ -2,13 +2,13 @@
 
 namespace Tests\Feature;
 
-use App\College;
-use App\Course;
-use App\CourseProgrammeRevision;
-use App\Programme;
-use App\ProgrammeRevision;
-use App\Teacher;
-use App\TeacherProfile;
+use App\Models\College;
+use App\Models\Course;
+use App\Models\CourseProgrammeRevision;
+use App\Models\Programme;
+use App\Models\ProgrammeRevision;
+use App\Models\Teacher;
+use App\Models\TeacherProfile;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;

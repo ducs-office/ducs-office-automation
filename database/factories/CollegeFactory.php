@@ -1,8 +1,8 @@
 <?php
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
-use App\College;
-use App\Programme;
+use App\Models\College;
+use App\Models\Programme;
 use Faker\Generator as Faker;
 
 $factory->define(College::class, static function (Faker $faker) {

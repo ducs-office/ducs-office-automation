@@ -1,8 +1,8 @@
 <?php
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
-use App\OutgoingLetter;
-use App\User;
+use App\Models\OutgoingLetter;
+use App\Models\User;
 use Faker\Generator as Faker;
 
 $factory->define(OutgoingLetter::class, static function (Faker $faker) {

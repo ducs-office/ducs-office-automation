@@ -1,9 +1,9 @@
 <?php
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
-use App\Leave;
-use App\LeaveStatus;
-use App\Scholar;
+use App\Models\Leave;
+use App\Models\LeaveStatus;
+use App\Models\Scholar;
 use Faker\Generator as Faker;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use App\Concerns\Filterable;
 use Illuminate\Database\Eloquent\Model as BaseModel;

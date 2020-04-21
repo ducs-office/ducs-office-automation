@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Staff;
 
 use App\Http\Controllers\Controller;
+use App\Models\Teacher;
+use App\Models\TeachingRecord;
 use App\Notifications\AcceptingTeachingRecordsStarted;
-use App\Teacher;
-use App\TeachingRecord;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Notification;

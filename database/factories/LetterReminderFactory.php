@@ -1,8 +1,8 @@
 <?php
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
-use App\LetterReminder;
-use App\OutgoingLetter;
+use App\Models\LetterReminder;
+use App\Models\OutgoingLetter;
 use Faker\Generator as Faker;
 
 $factory->define(LetterReminder::class, static function (Faker $faker) {

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Staff;
 
 use App\Http\Controllers\Controller;
-use App\Remark;
+use App\Models\Remark;
 
 class RemarksController extends Controller
 {

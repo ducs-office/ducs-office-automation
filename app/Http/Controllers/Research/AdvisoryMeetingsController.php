@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Research;
 
-use App\AdvisoryMeeting;
-use App\Attachment;
 use App\Http\Controllers\Controller;
-use App\Scholar;
+use App\Models\AdvisoryMeeting;
+use App\Models\Attachment;
+use App\Models\Scholar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -20,12 +20,12 @@ class TeacherProfile extends Model
 
     public function teacher()
     {
-        return $this->belongsTo('App\Teacher');
+        return $this->belongsTo(Teacher::class);
     }
 
     public function college()
     {
-        return $this->belongsTo('App\College');
+        return $this->belongsTo(College::class);
     }
 
     public function teachingDetails()

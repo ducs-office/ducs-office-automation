@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\Teacher;
-use App\User;
+use App\Models\Teacher;
+use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class TeacherPolicy
@@ -13,7 +13,7 @@ class TeacherPolicy
     /**
      * Determine whether the user can view any teachers.
      *
-     * @param  \App\User  $user
+     * @param  \App\Models\User  $user
      *
      * @return mixed
      */
@@ -25,8 +25,8 @@ class TeacherPolicy
     /**
      * Determine whether the user can view the teacher.
      *
-     * @param  \App\User  $user
-     * @param  \App\Teacher  $teacher
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Teacher  $teacher
      *
      * @return mixed
      */
@@ -38,7 +38,7 @@ class TeacherPolicy
     /**
      * Determine whether the user can create teachers.
      *
-     * @param  \App\User  $user
+     * @param  \App\Models\User  $user
      *
      * @return mixed
      */
@@ -50,8 +50,8 @@ class TeacherPolicy
     /**
      * Determine whether the user can update the teacher.
      *
-     * @param  \App\User  $user
-     * @param  \App\Teacher  $teacher
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Teacher  $teacher
      *
      * @return mixed
      */
@@ -63,8 +63,8 @@ class TeacherPolicy
     /**
      * Determine whether the user can delete the teacher.
      *
-     * @param  \App\User  $user
-     * @param  \App\Teacher  $teacher
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Teacher  $teacher
      *
      * @return mixed
      */

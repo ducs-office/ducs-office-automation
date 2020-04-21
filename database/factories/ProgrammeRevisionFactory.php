@@ -1,9 +1,9 @@
 <?php
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
-use App\Model;
-use App\Programme;
-use App\ProgrammeRevision;
+use App\Models\Model;
+use App\Models\Programme;
+use App\Models\ProgrammeRevision;
 use Faker\Generator as Faker;
 
 $factory->define(ProgrammeRevision::class, static function (Faker $faker) {

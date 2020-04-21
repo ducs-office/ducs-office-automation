@@ -2,9 +2,9 @@
 
 namespace Tests\Feature;
 
-use App\Presentation;
-use App\Publication;
-use App\Scholar;
+use App\Models\Presentation;
+use App\Models\Publication;
+use App\Models\Scholar;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;

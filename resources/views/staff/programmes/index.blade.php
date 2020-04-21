@@ -3,13 +3,13 @@
 <div class="m-6 pb-0">
     <div class="flex items-baseline px-6 pb-4 border-b">
         <h1 class="page-header mb-0 px-0 mr-4">Programmes</h1>
-        @can('create', App\Programme::class)
+        @can('create', App\Models\Programme::class)
         <a href="{{route('staff.programmes.create')}}" class="btn btn-magenta is-sm shadow-inset">
             New
         </a>
         @endcan
     </div>
-    @can('update', App\Programme::class)
+    @can('update', App\Models\Programme::class)
     @include('staff.programmes.modals.edit',[
         'modalName' => 'edit-programme-modal'
     ])
@@ -32,7 +32,7 @@
                         <feather-icon class="h-current" name="edit">Edit</feather-icon>
                     </button>
                     @endcan
-                    @can('delete', App\Programme::class)
+                    @can('delete', App\Models\Programme::class)
                     <form action="{{ route('staff.programmes.destroy', $programme) }}" method="POST"
                         onsubmit="return confirm('Do you really want to delete programme?');">
                         @csrf_token @method('delete')
@@ -57,7 +57,7 @@
                         <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
                     </svg>
                 </div>
-                @can('create', App\ProgrammeRevision::class)
+                @can('create', App\Models\ProgrammeRevision::class)
                 <div class="ml-auto">
                     <a href="{{ route('staff.programmes.revisions.create', $programme )}}"
                         class="btn btn-magenta is-sm shadow-inset mr-2">

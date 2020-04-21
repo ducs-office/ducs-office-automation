@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Staff;
 
-use App\IncomingLetter;
+use App\Models\IncomingLetter;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateIncomingLettersRequest extends FormRequest

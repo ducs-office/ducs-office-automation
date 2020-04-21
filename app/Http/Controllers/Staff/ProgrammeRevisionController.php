@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Staff;
 
-use App\Course;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Staff\StoreProgrammeRevisionRequest;
 use App\Http\Requests\Staff\UpdateProgrammeRevisionRequest;
-use App\Programme;
-use App\ProgrammeRevision;
+use App\Models\Course;
+use App\Models\Programme;
+use App\Models\ProgrammeRevision;
 use Illuminate\Support\Facades\DB;
 
 class ProgrammeRevisionController extends Controller

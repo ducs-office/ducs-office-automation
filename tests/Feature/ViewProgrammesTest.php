@@ -2,7 +2,9 @@
 
 namespace Tests\Feature;
 
-use App\User;
+use App\Models\Course;
+use App\Models\Programme;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -14,7 +16,7 @@ class ViewProgrammesTest extends TestCase
     /** @test */
     public function guest_cannot_view_programmes()
     {
-        create('App\Programme', 3);
+        create(Programme::class, 3);
 
         $this->withExceptionHandling();
 
@@ -26,8 +28,8 @@ class ViewProgrammesTest extends TestCase
     {
         $this->signIn();
 
-        $programmes = create('App\Programme', 3);
-        $courses = create('App\Course', 3);
+        $programmes = create(Programme::class, 3);
+        $courses = create(Course::class, 3);
 
         foreach ($programmes as $index => $programme) {
             $programmeRevision = $programme->revisions()->create(['revised_at' => $programme->wef]);

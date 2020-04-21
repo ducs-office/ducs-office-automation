@@ -1,8 +1,8 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
-use App\Publication;
+use App\Models\Publication;
 use Illuminate\Database\Eloquent\Model;
 
 class Presentation extends Model

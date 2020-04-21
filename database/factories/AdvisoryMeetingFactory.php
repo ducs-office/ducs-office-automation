@@ -1,8 +1,8 @@
 <?php
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
-use App\AdvisoryMeeting;
-use App\Scholar;
+use App\Models\AdvisoryMeeting;
+use App\Models\Scholar;
 use Faker\Generator as Faker;
 use Illuminate\Http\UploadedFile;
 

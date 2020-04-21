@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\Teacher;
-use App\TeachingRecord;
+use App\Models\Teacher;
+use App\Models\TeachingRecord;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class TeachingRecordPolicy

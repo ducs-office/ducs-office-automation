@@ -1,9 +1,9 @@
 <?php
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
-use App\Course;
-use App\CourseProgrammeRevision;
-use App\ProgrammeRevision;
+use App\Models\Course;
+use App\Models\CourseProgrammeRevision;
+use App\Models\ProgrammeRevision;
 use Faker\Generator as Faker;
 
 $factory->define(CourseProgrammeRevision::class, function (Faker $faker) {

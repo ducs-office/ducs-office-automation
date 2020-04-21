@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Scholars;
 
-use App\Cosupervisor;
 use App\Http\Controllers\Controller;
-use App\SupervisorProfile;
+use App\Models\Cosupervisor;
+use App\Models\SupervisorProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;

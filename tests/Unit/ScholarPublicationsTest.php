@@ -2,7 +2,7 @@
 
 namespace Tests\Unit;
 
-use App\Publication;
+use App\Models\Publication;
 use Tests\TestCase;
 
 class ScholarPublicationsTest extends TestCase

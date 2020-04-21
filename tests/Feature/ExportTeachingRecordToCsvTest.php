@@ -2,12 +2,12 @@
 
 namespace Tests\Feature;
 
-use App\College;
-use App\Course;
-use App\Programme;
-use App\ProgrammeRevision;
-use App\Teacher;
-use App\TeachingRecord;
+use App\Models\College;
+use App\Models\Course;
+use App\Models\Programme;
+use App\Models\ProgrammeRevision;
+use App\Models\Teacher;
+use App\Models\TeachingRecord;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\TestResponse;
 use Illuminate\Foundation\Testing\WithFaker;

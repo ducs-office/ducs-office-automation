@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Scholars;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Scholar\StoreConferencePublication;
 use App\Http\Requests\Scholar\UpdateConferencePublication;
-use App\Publication;
+use App\Models\Publication;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 

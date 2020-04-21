@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\PhdCourse;
-use App\User;
+use App\Models\PhdCourse;
+use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class PhdCoursePolicy
@@ -13,7 +13,7 @@ class PhdCoursePolicy
     /**
      * Determine whether the user can view any phd courses.
      *
-     * @param  \App\User  $user
+     * @param  \App\Models\User  $user
      *
      * @return mixed
      */
@@ -25,7 +25,7 @@ class PhdCoursePolicy
     /**
      * Determine whether the user can view the phd course.
      *
-     * @param  \App\User  $user
+     * @param  \App\Models\User  $user
      *
      * @return mixed
      */
@@ -37,7 +37,7 @@ class PhdCoursePolicy
     /**
      * Determine whether the user can create phd courses.
      *
-     * @param  \App\User  $user
+     * @param  \App\Models\User  $user
      *
      * @return mixed
      */
@@ -49,7 +49,7 @@ class PhdCoursePolicy
     /**
      * Determine whether the user can update the phd course.
      *
-     * @param  \App\User  $user
+     * @param  \App\Models\User  $user
      *
      * @return mixed
      */
@@ -61,7 +61,7 @@ class PhdCoursePolicy
     /**
      * Determine whether the user can delete the phd course.
      *
-     * @param  \App\User  $user
+     * @param  \App\Models\User  $user
      *
      * @return mixed
      */
