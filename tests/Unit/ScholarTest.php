@@ -8,7 +8,11 @@ use App\Leave;
 use App\PhdCourse;
 use App\Presentation;
 use App\Scholar;
+use App\ScholarEducationDegree;
+use App\ScholarEducationInstitute;
+use App\ScholarEducationSubject;
 use App\SupervisorProfile;
+use App\User;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -179,5 +183,74 @@ class ScholarTest extends TestCase
         $registerOn = $createdAt->format('d F Y');
 
         $this->assertEquals($registerOn, $scholar->register_on);
+    }
+    
+    public function scholar_advisory_committee_is_returned_as_an_array_containing_supervisor_and_cosupervisor()
+    {
+        $faculty = create(User::class, 1, ['category' => 'faculty_teacher']);
+        $supervisor = $faculty->supervisorProfile()->create();
+
+        $scholar = create(Scholar::class, 1, [
+            'supervisor_profile_id' => $supervisor->id,
+        ]);
+
+        $cosupervisor = create(Cosupervisor::class);
+
+        $scholar->cosupervisors()->attach([
+            'cosupervisor_id' => $cosupervisor->id,
+        ]);
+
+        $advisoryCommittee = $scholar->advisory_committee;
+
+        $this->assertArrayHasKey('supervisor', $advisoryCommittee);
+        $this->assertEquals($faculty->name, $advisoryCommittee['supervisor']);
+
+        $this->assertArrayHasKey('cosupervisor', $advisoryCommittee);
+        $this->assertEquals($cosupervisor->name, $advisoryCommittee['cosupervisor']);
+    }
+
+    /** @test */
+    public function scholar_advisory_committee_does_not_have_a_cosupervisor_field_if_the_scholar_has_no_cosupervisors()
+    {
+        $scholar = create(Scholar::class);
+
+        $advisoryCommittee = $scholar->advisory_committee;
+
+        $this->assertArrayNotHasKey('cosupervisor', $advisoryCommittee);
+    }
+
+    /** @test */
+    public function scholar_education_is_returned_as_an_empty_array_if_it_is_null()
+    {
+        $this->signInScholar($scholar = create(Scholar::class, 1, ['education' => null]));
+
+        $this->assertEquals([], $scholar->education);
+        $this->assertEquals(count($scholar->education), 0);
+    }
+
+    /** @test */
+    public function scholar_education_is_returned_as_an_array_containing_the_names_of_each_field_in_place_of_their_corresponding_ids()
+    {
+        $degree = create(ScholarEducationDegree::class);
+        $subject = create(ScholarEducationSubject::class);
+        $institute = create(ScholarEducationInstitute::class);
+
+        $scholar = create(Scholar::class, 1, [
+            'education' => [
+                [
+                    'degree' => $degree->id,
+                    'subject' => $subject->id,
+                    'institute' => $institute->id,
+                    'year' => $year = '2012',
+                ],
+            ],
+        ]);
+
+        $this->assertEquals(count($scholar->education), 1);
+
+        $this->assertEquals($subject->name, $scholar->education[0]['subject']);
+        $this->assertEquals($degree->name, $scholar->education[0]['degree']);
+        $this->assertEquals($institute->name, $scholar->education[0]['institute']);
+        $this->assertEquals($year, $scholar->education[0]['year']);
     }
 }

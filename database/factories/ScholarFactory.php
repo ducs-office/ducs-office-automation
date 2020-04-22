@@ -7,9 +7,13 @@ use App\ScholarEducationDegree;
 use App\ScholarEducationInstitute;
 use App\ScholarEducationSubject;
 use App\SupervisorProfile;
+use App\User;
 use Faker\Generator as Faker;
+use Faker\Provider\bg_BG\PhoneNumber;
 
 $factory->define(Scholar::class, function (Faker $faker) {
+    $faculty_teacher = factory(User::class)->create(['category' => 'faculty_teacher']);
+
     return [
         'first_name' => $faker->firstName(),
         'last_name' => $faker->lastName(),
@@ -25,31 +29,28 @@ $factory->define(Scholar::class, function (Faker $faker) {
             return factory(SupervisorProfile::class)->create()->id;
         },
         'enrollment_date' => $faker->date($format = 'Y-m-d', $max = now()),
-        'advisory_committee' => static function () use ($faker) {
-            $x = random_int(1, 4);
-            $data = [];
-            for ($i = 1; $i <= $x; $i++) {
-                array_push($data, [
-                    'title' => $faker->title,
-                    'name' => $faker->name,
-                    'designation' => $faker->jobTitle,
-                    'affiliation' => $faker->company,
-                ]);
-            }
-            return $data;
-        },
+        'advisory_committee' => [
+            'faculty_teacher' => $faculty_teacher->name,
+            'external' => [
+                'name' => $faker->name,
+                'designation' => $faker->jobTitle,
+                'affiliation' => $faker->company,
+                'email' => $faker->email,
+                'phone_no' => $faker->PhoneNumber,
+            ],
+        ],
         'education' => static function () use ($faker) {
             $x = random_int(1, 4);
             $data = [];
             for ($i = 1; $i <= $x; $i++) {
-                $degree = factory(ScholarEducationDegree::class)->create()->id;
-                $subject = factory(ScholarEducationSubject::class)->create()->id;
-                $institute = factory(ScholarEducationInstitute::class)->create()->id;
+                $degree = factory(ScholarEducationDegree::class)->create();
+                $subject = factory(ScholarEducationSubject::class)->create();
+                $institute = factory(ScholarEducationInstitute::class)->create();
 
                 array_push($data, [
-                    'degree' => $degree,
-                    'subject' => $subject,
-                    'institute' => $institute,
+                    'degree' => $degree->id,
+                    'subject' => $subject->id,
+                    'institute' => $institute->id,
                     'year' => $faker->date('Y', now()->subYear(1)),
                 ]);
             }

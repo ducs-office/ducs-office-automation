@@ -65,6 +65,41 @@ class Scholar extends User
         return $this->first_name . ' ' . $this->last_name;
     }
 
+    public function getAdvisoryCommitteeAttribute($value)
+    {
+        $value = $this->castAttribute('advisory_committee', $value);
+
+        $mentors = [
+            'supervisor' => $this->supervisor->name,
+        ];
+
+        if ($this->cosupervisors->count()) {
+            $mentors = array_merge($mentors, [
+                'cosupervisor' => $this->cosupervisors[0]->name,
+            ]);
+        }
+
+        return $value === null ? $mentors : array_merge($value, $mentors);
+    }
+
+    public function getEducationAttribute($value)
+    {
+        $value = $this->castAttribute('education', $value);
+
+        if ($value === null) {
+            return [];
+        }
+
+        foreach ($value as $index => $education) {
+            $value[$index]['subject'] = ScholarEducationSubject::find($education['subject'])->name;
+            $value[$index]['degree'] = ScholarEducationDegree::find($education['degree'])->name;
+            $value[$index]['institute'] = ScholarEducationInstitute::find($education['institute'])->name;
+            $value[$index]['year'] = $education['year'];
+        }
+
+        return $value;
+    }
+
     public function profilePicture()
     {
         return $this->morphOne(Attachment::class, 'attachable');

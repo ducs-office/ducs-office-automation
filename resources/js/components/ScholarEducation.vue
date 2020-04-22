@@ -2,10 +2,10 @@
     <div class="flex">
         <div class="w-1/4 mr-2">
             <select :name="`${name}[degree]`" class="form-input mr-2 h-8 p-1 w-full" 
-            v-model="element.value.degree" @change="toggleDegree">
+             @change="toggleDegree">
 
                 <option v-for="(id, degree) in degreeChoices" :key="id" 
-                :value="id" :slected="id == element.value.degree">{{ degree }}</option>
+                :value="id" :selected="degree === element.value.degree">{{ degree }}</option>
                 <option :value="-1">Other</option>
 
             </select>
@@ -13,10 +13,10 @@
         </div>
         <div class="w-1/4 mr-2">
             <select :name="`${name}[subject]`" class="form-input mr-2 h-8 p-1 w-full" 
-            v-model="element.value.subject" @change="toggleSubject">
+             @change="toggleSubject">
 
                 <option v-for="(id, subject) in subjectChoices" :key="id" 
-                :value="id" :slected="id == element.value.subject">{{ subject }}</option>
+                :value="id" :selected="subject === element.value.subject">{{ subject }}</option>
                 <option :value="-1">Other</option>
 
             </select>
@@ -24,10 +24,10 @@
         </div>
         <div class="w-1/4 mr-2">
             <select :name="`${name}[institute]`" class="form-input mr-2 h-8 p-1 w-full" 
-            v-model="element.value.institute" @change="toggleInstitute">
+             @change="toggleInstitute">
 
                 <option v-for="(id, institute) in instituteChoices" :key="id" 
-                :value="id" :slected="id == element.value.institute">{{ institute }}</option>
+                :value="id" :selected="institute === element.value.institute">{{ institute }}</option>
                 <option :value="-1">Other</option>
 
             </select>
@@ -76,6 +76,6 @@ export default {
             else
                 this.isInputInstituteVisible = false;
         }
-    },
+    }
 }
 </script>
