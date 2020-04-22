@@ -25,13 +25,6 @@ class UpdateProfileRequest extends FormRequest
             'research_area' => [Rule::requiredIf($scholar->research_area != null)],
             'enrollment_date' => ['nullable', 'date', 'before:today'],
 
-            'advisory_committee' => ['required', 'array', 'max: 4'],
-            'advisory_committee.*' => ['required', 'array', 'size:4'],
-            'advisory_committee.*.title' => ['required', 'string'],
-            'advisory_committee.*.name' => ['required', 'string'],
-            'advisory_committee.*.designation' => ['required', 'string'],
-            'advisory_committee.*.affiliation' => ['required', 'string'],
-
             'education' => ['required', 'array', 'max: 4', 'min:1'],
             'education.*' => ['required', 'array', 'size:4'],
             'education.*.degree' => ['required', 'integer'],

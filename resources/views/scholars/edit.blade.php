@@ -150,42 +150,6 @@
                     </div>
                 </div>
             </div>
-            <div class="mt-6">
-                <add-remove-elements :existing-elements="{{ json_encode($scholar->advisory_committee) }}" >
-                    <template v-slot="{ elements, addElement, removeElement}">
-                        <div class="flex w-2/6 items-center">
-                            <div class="w-64 pr-4 relative z-10 -ml-8 my-6">
-                                <h3 class="relative z-20 pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
-                                    Advisory Committee
-                                </h3>
-                                <svg class="absolute left-0 w-2 text-magenta-900" viewBox="0 0 10 10">
-                                    <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
-                                </svg>
-                            </div>
-                            <button v-on:click.prevent="addElement" 
-                                    v-if="elements.length < 4"
-                                    class="ml-auto text-blue-700 bg-gray-300 btn is-sm"
-                                > + 
-                            </button>
-                        </div>
-                        <h6 class="mx-2 mb-6 text-gray-800 text-sm">You can add a maximum of 4 advisors only. Minimum 1 is required. <span class="text-red-600">*</span></h6>
-                        <div class="flex w-2/3">
-                            <label for="advisory_committee[][title]" class="form-label block w-1/4">Title</label>
-                            <label for="advisory_committee[][name]" class="form-label block w-1/4">Name</label>
-                            <label for="advisory_committee[][designation]" class="form-label block w-1/4">Designation</label>
-                            <label for="advisory_committee[][affiliation]" class="form-label block w-1/4">Affiliation</label>
-                        </div>
-                        <div v-for="(element, index) in elements" :key="index" class="flex items-baseline mb-2">
-                            <input type="text" :name="`advisory_committee[${index}][title]`" v-model="element.value.title" class="block form-input mr-2">
-                            <input type="text" :name="`advisory_committee[${index}][name]`" v-model="element.value.name"  class="block form-input mr-2">
-                            <input type="text" :name="`advisory_committee[${index}][designation]`" v-model="element.value.designation" class="block form-input mr-2">
-                            <input type="text" :name="`advisory_committee[${index}][affiliation]`" v-model="element.value.affiliation" class="block form-input">
-                            <button v-on:click.prevent="removeElement(index)"  class="btn is-sm ml-2 text-red-600">x</button>
-                        </div>
-                    </template>
-                </add-remove-elements>
-            </div>
-
             
             <div class="mt-8">
                 <button type="submit" class="btn btn-magenta">Save Changes</button>

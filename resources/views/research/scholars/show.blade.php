@@ -10,7 +10,7 @@
                 <div class="ml-auto">
                     <div class="mt-2 flex">
                         <h4 class="font-semibold"> Gender </h4>
-                        <p class="ml-2"> {{ $genders[$scholar->gender] }}</p>
+                        <p class="ml-2"> {{  $genders[$scholar->gender] ?? '-' }}</p>
                     </div>
                     <div class="mt-2">
                         <p class="flex items-center mb-1">
@@ -68,6 +68,38 @@
                     </ul>
                 </div>
             </div>
+
+            <div class="flex">
+                <div class="w-64 pr-4 relative z-10 -ml-8 my-6">
+                    <h3 class="relative z-20 pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
+                        Education
+                    </h3>
+                    <svg class="absolute left-0 w-2 text-magenta-900" viewBox="0 0 10 10">
+                        <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
+                    </svg>
+                </div>
+                <div class="flex-1 my-6">
+                    <ul class="border flex flex-wrap rounded-lg overflow-hidden mb-4">
+                        @if (count($scholar->education))
+                        @foreach ($scholar->education as $education)
+                            <li class="px-5 py-5 border-b last:border-b-0 w-1/2">
+                                <div class="flex mb-1">
+                                    <feather-icon name="book" class="h-current"></feather-icon>
+                                    <div class="flex items-baseline">
+                                        <p class="ml-2 font-bold"> {{ $education['degree'] }} </p>
+                                        <p class="ml-1 font-normal"> ( {{ $education['subject'] }} ) </p>
+                                    </div>
+                                </div>
+                                <p class="ml-6 text-gray-700 mb-1"> {{ $education['institute'] }} </p>
+                                <p class="ml-6 text-gray-700"> {{ $education['year'] }} </p>
+                            </li>
+                        @endforeach
+                        @endif
+                    </ul>
+                </div>
+            </div>
+
+
             <div class="flex">
                 <div class="w-64 pr-4 relative z-10 -ml-8 my-6">
                     <h3 class="relative z-20 pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
@@ -184,7 +216,12 @@
                     </li>
                 </ul>
             </div>
+        </div>
 
+
+        {{-- Advisory Commitee--}}
+
+        <div class="bg-white p-6 h-full shadow-md mt-8">
             <div class="flex">
                 <div class="w-64 pr-4 relative z-10 -ml-8 my-6">
                     <h3 class="relative z-20 pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
@@ -194,22 +231,59 @@
                         <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
                     </svg>
                 </div>
-                <div class="flex-1 my-6">
-                    <ul class="border flex flex-wrap rounded-lg overflow-hidden mb-4">
-                        @foreach ($scholar->advisory_committee as $adviser)
-                            <li class="px-5 py-5 border-b last:border-b-0 w-1/2">
-                                <div class="flex mb-1">
-                                    <feather-icon name="pen-tool" class="h-current"></feather-icon>
-                                    <p class="ml-2 font-bold"> {{ $adviser['title'] }} {{ $adviser['name'] }} </p>
+                <div class="my-6 flex-1">
+                    <ul class="border rounded-lg overflow-hidden mb-4">
+                        <li class="px-4 py-3 border-b last:border-b-0">
+                            <h3>{{$scholar->advisory_committee['supervisor']}}</h3>
+                        </li>
+                        @if(array_key_exists('cosupervisor', $scholar->advisory_committee))
+                        <li class="px-4 py-3 border-b last:border-b-0">
+                            <h3>{{$scholar->advisory_committee['cosupervisor']}}</h3>
+                        </li>
+                        @endif
+                        @if (array_key_exists('faculty_teacher', $scholar->advisory_committee))
+                        <li class="px-4 py-3 border-b last:border-b-0">
+                            <h3>{{$scholar->advisory_committee['faculty_teacher']}}, DUCS</h3>
+                        </li>
+                        @endif
+                        @if (array_key_exists('external', $scholar->advisory_committee))
+                        <li class="px-4 py-3 border-b last:border-b-0">
+                            <h3 class="mb-1">
+                                {{$scholar->advisory_committee['external']['name']}}, {{$scholar->advisory_committee['external']['designation']}}, {{$scholar->advisory_committee['external']['affiliation']}}
+                            </h3>
+                            <div class="flex items-center">
+                                <feather-icon name="at-sign" class="text-gray-800 h-3 mr-2"></feather-icon>
+                                <h4 class="text-gray-800">
+                                    {{$scholar->advisory_committee['external']['email']}}
+                                </h4>
+                            </div>
+                            @if($scholar->advisory_committee['external']['phone_no'])
+                                <div class="flex items-center">
+                                    <feather-icon name="phone" class="text-gray-800 h-3 mr-2"></feather-icon>
+                                    <h4 class="text-gray-800">
+                                        {{$scholar->advisory_committee['external']['phone_no']}}
+                                    </h4>
                                 </div>
-                                <p class="ml-6 text-gray-700 mb-1"> {{ $adviser['designation'] }} </p>
-                                <p class="ml-6 text-gray-700"> {{ $adviser['affiliation'] }} </p>
-                            </li>
-                        @endforeach
+                            @endif
+                        </li>
+                        @endif
                     </ul>
                 </div>
             </div>
+            @include('research.scholars.modals.edit_advisory_committee', [
+                'modalName' => 'edit-advisory-committee-modal',
+                'faculty' => $faculty
+            ])
+            <div class="flex justify-end">
+                <button class="btn btn-magenta is-sm shadow-inner"
+                    @click.prevent="$modal.show('edit-advisory-committee-modal', {
+                        scholar: {{ $scholar->toJson()}}
+                    })">
+                    Edit
+                </button>
+            </div>
         </div>
+
 
         {{-- Publications and Presentations --}}
         <div class="bg-white p-6 h-full shadow-md mt-8">

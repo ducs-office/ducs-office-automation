@@ -87,6 +87,11 @@ Route::prefix('/research')
             '/publications',
             'ShowPublications'
         )->name('publications.index');
+
+        Route::patch(
+            '/scholars/{scholar}/advisory_commitee',
+            'ScholarController@updateAdvisoryCommittee'
+        )->name('scholars.advisory_committee.update');
     });
 
 Route::prefix('/teachers')
