@@ -169,4 +169,15 @@ class ScholarTest extends TestCase
 
         $this->assertCount(1, $scholar->fresh()->presentations);
     }
+
+    /** @test */
+    public function register_on_attribute_return_date_when_scholar_is_created()
+    {
+        $scholar = new Scholar();
+
+        $scholar->created_at = $createdAt = now();
+        $registerOn = $createdAt->format('d F Y');
+
+        $this->assertEquals($registerOn, $scholar->register_on);
+    }
 }

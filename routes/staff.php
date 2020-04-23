@@ -97,6 +97,9 @@ Route::get('/scholars/{scholar}/avatar', 'ScholarController@avatar')->name('scho
 Route::patch('/scholars/{scholar}', 'ScholarController@update')->name('scholars.update');
 Route::delete('/scholars/{scholar}', 'ScholarController@destroy')->name('scholars.destroy');
 
+Route::patch('/scholars/{scholar}/replace-cosupervisor', 'ScholarController@replaceCosupervisor')->name('scholars.replace_cosupervisor');
+Route::patch('/scholars/{scholar}/replace-supervisor', 'ScholarController@replaceSupervisor')->name('scholars.replace_supervisor');
+
 Route::get('/cosupervisors', 'CosupervisorController@index')->name('cosupervisors.index');
 Route::post('/cosupervisors/{teacher}/teacher', 'CosupervisorController@storeTeacher')->name('cosupervisors.teachers.store');
 Route::post('/cosupervisors/{faculty}/faculty', 'CosupervisorController@storeFaculty')->name('cosupervisors.faculties.store');

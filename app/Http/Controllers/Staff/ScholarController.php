@@ -11,6 +11,7 @@ use App\Scholar;
 use App\SupervisorProfile;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Response as Response;
 use Illuminate\Support\Facades\Storage;
@@ -89,5 +90,57 @@ class ScholarController extends Controller
         flash('Scholar deleted successfully!')->success();
 
         return redirect(route('staff.scholars.index'));
+    }
+
+    public function replaceCosupervisor(Scholar $scholar, Request $request)
+    {
+        $value = ($scholar->cosupervisor) ? $scholar->cosupervisor_id : null;
+
+        $validCosupervisorId = $request->validate([
+            'cosupervisor_id' => 'nullable|exists:cosupervisors,id|not In:' . $value . '|' .
+                                Rule::requiredIf(function () use ($scholar) {
+                                    return ! $scholar->cosupervisor;
+                                }),
+        ]);
+
+        $oldCosupervisor = $scholar->cosupervisor;
+
+        $oldCosupervisors = $scholar->old_cosupervisors;
+
+        array_push($oldCosupervisors, [
+            'name' => ($oldCosupervisor) ? $oldCosupervisor->name : null,
+            'email' => ($oldCosupervisor) ? $oldCosupervisor->email : null,
+            'designation' => ($oldCosupervisor) ? $oldCosupervisor->designation : null,
+            'affiliation' => ($oldCosupervisor) ? $oldCosupervisor->affiliation : null,
+            'date' => now()->format('d F Y'),
+        ]);
+
+        $scholar->update($validCosupervisorId + ['old_cosupervisors' => $oldCosupervisors]);
+
+        flash('Co-Supervisor replaced successfully!')->success();
+
+        return back();
+    }
+
+    public function replaceSupervisor(Scholar $scholar, Request $request)
+    {
+        $validSupervisorProfileId = $request->validate([
+            'supervisor_profile_id' => 'required|exists:supervisor_profiles,id|not In:' . $scholar->supervisor_profile_id,
+        ]);
+
+        $oldSupervisor = $scholar->supervisor;
+        $oldSupervisors = $scholar->old_supervisors;
+
+        array_push($oldSupervisors, [
+            'name' => $oldSupervisor->name,
+            'email' => $oldSupervisor->email,
+            'date' => now()->format('d F Y'),
+        ]);
+
+        $scholar->update($validSupervisorProfileId + ['old_supervisors' => $oldSupervisors]);
+
+        flash('Supervisor replaced successfully!')->success();
+
+        return back();
     }
 }

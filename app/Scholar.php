@@ -30,20 +30,34 @@ class Scholar extends User
         'advisory_committee',
         'education',
         'cosupervisor_id',
+        'old_cosupervisors',
+        'old_supervisors',
     ];
 
     protected $casts = [
         'advisory_committee' => 'array',
         'education' => 'array',
+        'old_cosupervisors' => 'array',
+        'old_supervisors' => 'array',
     ];
 
     public static function boot()
     {
         parent::boot();
 
+        static::creating(static function ($scholar) {
+            $scholar->old_cosupervisors = [];
+            $scholar->old_supervisors = [];
+        });
+
         static::created(static function ($scholar) {
             $scholar->courseworks()->attach(PhdCourse::core()->get());
         });
+    }
+
+    public function getRegisterOnAttribute()
+    {
+        return $this->created_at->format('d F Y');
     }
 
     public function getNameAttribute()
