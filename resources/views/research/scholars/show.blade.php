@@ -123,6 +123,7 @@
                     </svg> 
                 </div>
                
+                @if (count($scholar->old_supervisors))
                 <ul class="flex-col-reverse flex my-6 flex-1 border rounded-lg overflow-hidden">
                     @php
                         $prevDate = $scholar->registerOn
@@ -157,6 +158,7 @@
                         </div>
                     </li>
                 </ul>
+                @endif
             </div>
              
             <div class="flex">
@@ -168,6 +170,7 @@
                         <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
                     </svg> 
                 </div>
+               
                
                 <ul class="flex-col-reverse flex my-6 flex-1 border rounded-lg overflow-hidden">
                     @php
@@ -191,7 +194,7 @@
                             </div>
                             <p class="w-1/2 mr-4 font-bold"> {{ $prevDate }} - {{ $old_cosupervisor['date']}}</p>    
                             @php
-                                $prevDate = $old_supervisor['date']
+                                $prevDate = $old_cosupervisor['date']
                             @endphp
                         <div>
                     </li>
@@ -221,6 +224,14 @@
 
         {{-- Advisory Commitee--}}
 
+        @include('research.scholars.modals.edit_advisory_committee', [
+            'modalName' => 'edit-advisory-committee-modal',
+            'faculty' => $faculty
+        ])
+        @include('research.scholars.modals.replace_advisory_committee', [
+            'modalName' => 'replace-advisory-committee-modal',
+            'faculty' => $faculty
+        ])
         <div class="bg-white p-6 h-full shadow-md mt-8">
             <div class="flex">
                 <div class="w-64 pr-4 relative z-10 -ml-8 my-6">
@@ -231,57 +242,51 @@
                         <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
                     </svg>
                 </div>
-                <div class="my-6 flex-1">
-                    <ul class="border rounded-lg overflow-hidden mb-4">
-                        <li class="px-4 py-3 border-b last:border-b-0">
-                            <h3>{{$scholar->advisory_committee['supervisor']}}</h3>
-                        </li>
-                        @if(array_key_exists('cosupervisor', $scholar->advisory_committee))
-                        <li class="px-4 py-3 border-b last:border-b-0">
-                            <h3>{{$scholar->advisory_committee['cosupervisor']}}</h3>
-                        </li>
-                        @endif
-                        @if (array_key_exists('faculty_teacher', $scholar->advisory_committee))
-                        <li class="px-4 py-3 border-b last:border-b-0">
-                            <h3>{{$scholar->advisory_committee['faculty_teacher']}}, DUCS</h3>
-                        </li>
-                        @endif
-                        @if (array_key_exists('external', $scholar->advisory_committee))
-                        <li class="px-4 py-3 border-b last:border-b-0">
-                            <h3 class="mb-1">
-                                {{$scholar->advisory_committee['external']['name']}}, {{$scholar->advisory_committee['external']['designation']}}, {{$scholar->advisory_committee['external']['affiliation']}}
-                            </h3>
-                            <div class="flex items-center">
-                                <feather-icon name="at-sign" class="text-gray-800 h-3 mr-2"></feather-icon>
-                                <h4 class="text-gray-800">
-                                    {{$scholar->advisory_committee['external']['email']}}
-                                </h4>
-                            </div>
-                            @if($scholar->advisory_committee['external']['phone_no'])
-                                <div class="flex items-center">
-                                    <feather-icon name="phone" class="text-gray-800 h-3 mr-2"></feather-icon>
-                                    <h4 class="text-gray-800">
-                                        {{$scholar->advisory_committee['external']['phone_no']}}
-                                    </h4>
-                                </div>
-                            @endif
-                        </li>
-                        @endif
-                    </ul>
-                </div>
+                @include('scholars.partials.advisory_committee',[
+                    'advisoryCommittee' => $scholar->advisory_committee
+                ])
             </div>
-            @include('research.scholars.modals.edit_advisory_committee', [
-                'modalName' => 'edit-advisory-committee-modal',
-                'faculty' => $faculty
-            ])
             <div class="flex justify-end">
-                <button class="btn btn-magenta is-sm shadow-inner"
+                <button class="btn btn-magenta is-sm shadow-inner ml-auto mr-2"
                     @click.prevent="$modal.show('edit-advisory-committee-modal', {
                         scholar: {{ $scholar->toJson()}}
                     })">
                     Edit
                 </button>
+                <button class="btn btn-magenta is-sm shadow-inner"
+                    @click.prevent="$modal.show('replace-advisory-committee-modal', {
+                        scholar: {{ $scholar->toJson()}}
+                    })">
+                    Replace
+                </button>
             </div>
+
+            @if ($scholar->old_advisory_committees)
+            <div class="mt-6">
+                <h2 class="font-bold text-lg mb-5"> Previous Advisory Committees</h2>
+                @for ($i = 0; $i < count($scholar->old_advisory_committees) - 1; $i++)
+                <details class="ml-2 mt-4 bg-gray-100 border rounded-t cursor-pointer outline-none">
+                    <summary class="underline p-2 bg-gray-200 outline-none">
+                        {{$scholar->old_advisory_committees[$i + 1]['date']}} - {{$scholar->old_advisory_committees[$i]['date']}}
+                    </summary>
+                    @include('scholars.partials.advisory_committee',[
+                        'advisoryCommittee' => $scholar->old_advisory_committees[$i]
+                    ])
+                </details>
+                @endfor
+                @php
+                    $i = count($scholar->old_advisory_committees) - 1;
+                @endphp
+                <details class="ml-2 mt-4 bg-gray-100 border rounded-t cursor-pointer outline-none">
+                    <summary class="underline p-2 bg-gray-200 outline-none">
+                    {{$scholar->registerOn}} - {{$scholar->old_advisory_committees[$i]['date']}}
+                    </summary>
+                    @include('scholars.partials.advisory_committee',[
+                        'advisoryCommittee' => $scholar->old_advisory_committees[$i]
+                    ])
+                </details>
+            </div>
+            @endif
         </div>
 
 
