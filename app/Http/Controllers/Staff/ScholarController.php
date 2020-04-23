@@ -115,6 +115,8 @@ class ScholarController extends Controller
             'date' => now()->format('d F Y'),
         ]);
 
+        $this->replaceAdvisoryCommittee($scholar);
+
         $scholar->update($validCosupervisorId + ['old_cosupervisors' => $oldCosupervisors]);
 
         flash('Co-Supervisor replaced successfully!')->success();
@@ -137,10 +139,26 @@ class ScholarController extends Controller
             'date' => now()->format('d F Y'),
         ]);
 
+        $this->replaceAdvisoryCommittee($scholar);
+
         $scholar->update($validSupervisorProfileId + ['old_supervisors' => $oldSupervisors]);
 
         flash('Supervisor replaced successfully!')->success();
 
         return back();
+    }
+
+    public function replaceAdvisoryCommittee(Scholar $scholar)
+    {
+        $currentAdvisoryCommittee = array_merge(
+            $scholar->advisory_committee,
+            ['date' => now()->format('d F Y')]
+        );
+
+        $oldAdvisoryCommittees = $scholar->old_advisory_committees;
+
+        array_unshift($oldAdvisoryCommittees, $currentAdvisoryCommittee);
+
+        $scholar->update(['old_advisory_committees' => $oldAdvisoryCommittees]);
     }
 }

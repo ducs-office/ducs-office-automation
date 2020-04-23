@@ -220,12 +220,11 @@ class ScholarTest extends TestCase
     }
 
     /** @test */
-    public function scholar_education_is_returned_as_an_empty_array_if_it_is_null()
+    public function scholar_education_is_as_an_empty_array_onscholar_creation()
     {
-        $this->signInScholar($scholar = create(Scholar::class, 1, ['education' => null]));
+        $this->signInScholar($scholar = create(Scholar::class));
 
         $this->assertEquals([], $scholar->education);
-        $this->assertEquals(count($scholar->education), 0);
     }
 
     /** @test */
@@ -235,7 +234,9 @@ class ScholarTest extends TestCase
         $subject = create(ScholarEducationSubject::class);
         $institute = create(ScholarEducationInstitute::class);
 
-        $scholar = create(Scholar::class, 1, [
+        $scholar = create(Scholar::class, );
+
+        $scholar->update([
             'education' => [
                 [
                     'degree' => $degree->id,

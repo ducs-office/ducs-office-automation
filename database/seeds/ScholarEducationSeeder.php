@@ -1,8 +1,8 @@
 <?php
 
-use App\ScholarEducationDegree;
-use App\ScholarEducationInstitute;
-use App\ScholarEducationSubject;
+use App\Models\ScholarEducationDegree;
+use App\Models\ScholarEducationInstitute;
+use App\Models\ScholarEducationSubject;
 use Illuminate\Database\Seeder;
 
 class ScholarEducationSeeder extends Seeder

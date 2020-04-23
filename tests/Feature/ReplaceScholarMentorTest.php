@@ -144,4 +144,63 @@ class ReplaceScholarMentorTest extends TestCase
 
         $this->assertEquals(0, count($scholar->fresh()->old_supervisors));
     }
+
+    /** @test */
+    public function current_advisory_committee_is_replaced_if_the_scholar_supervisor_is_replaced()
+    {
+        $this->signIn();
+
+        $scholar = create(Scholar::class);
+        $newSupervisorProfile = create(SupervisorProfile::class);
+
+        $beforeSupervisorReplaceAdvisoryCommittee = $scholar->advisory_committee;
+
+        $this->assertEquals([], $scholar->old_advisory_committees);
+
+        $this->withoutExceptionHandling()
+            ->patch(route('staff.scholars.replace_supervisor', $scholar), [
+                'supervisor_profile_id' => $newSupervisorProfile->id,
+            ])
+            ->assertSessionHasFlash('success', 'Supervisor replaced successfully!');
+
+        $this->assertEquals(1, count($scholar->fresh()->old_supervisors));
+
+        $this->assertEquals(count($scholar->fresh()->old_advisory_committees), 1);
+
+        $this->assertEquals(
+            array_merge(
+                $beforeSupervisorReplaceAdvisoryCommittee,
+                ['date' => now()->format('d F Y')]
+            ),
+            $scholar->fresh()->old_advisory_committees[0]
+        );
+    }
+
+    /** @test */
+    public function current_advisory_committee_is_replaced_if_the_scholar_cosupervisor_is_replaced()
+    {
+        $this->signIn();
+        $scholar = create(Scholar::class);
+        $newCosupervisor = create(Cosupervisor::class);
+
+        $beforeCosupervisorReplaceAdvisoryCommittee = $scholar->advisory_committee;
+
+        $this->withoutExceptionHandling()
+            ->patch(route('staff.scholars.replace_cosupervisor', $scholar), [
+                'cosupervisor_id' => $newCosupervisor->id,
+            ])
+            ->assertSessionHasFlash('success', 'Co-Supervisor replaced successfully!');
+
+        $this->assertEquals(1, count($scholar->fresh()->old_cosupervisors));
+
+        $this->assertEquals(count($scholar->fresh()->old_advisory_committees), 1);
+
+        $this->assertEquals(
+            array_merge(
+                $beforeCosupervisorReplaceAdvisoryCommittee,
+                ['date' => now()->format('d F Y')]
+            ),
+            $scholar->fresh()->old_advisory_committees[0]
+        );
+    }
 }

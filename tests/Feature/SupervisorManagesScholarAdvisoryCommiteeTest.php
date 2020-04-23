@@ -10,7 +10,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
 
-class SupervisorUpdatesScholarAdvisoryCommiteeTest extends TestCase
+class SupervisorManagesScholarAdvisoryCommiteeTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -41,6 +41,47 @@ class SupervisorUpdatesScholarAdvisoryCommiteeTest extends TestCase
                 ],
             ])->assertRedirect()
             ->assertSessionHasFlash('success', 'Advisory Committee Updated SuccessFully!');
+
+        $this->assertEquals($scholar->fresh()->advisory_committee['faculty_teacher'], $faculty_teacher->name);
+        $this->assertEquals($scholar->fresh()->advisory_committee['external'], $external);
+    }
+
+    /** @test */
+    public function scholar_advisory_committee_can_be_replaced_by_their_supervisor()
+    {
+        $this->signIn($faculty = create(User::class, 1, ['category' => 'faculty_teacher']));
+
+        $supervisor = $faculty->supervisorProfile()->create();
+
+        $scholar = create(Scholar::class, 1, [
+            'supervisor_profile_id' => $supervisor->id,
+        ]);
+
+        $beforeReplaceAdvisoryCommittee = $scholar->advisory_committee;
+
+        $this->assertEquals(count($scholar->old_advisory_committees), 0);
+
+        $faculty_teacher = create(User::class, 1, ['category' => 'faculty_teacher']);
+
+        $this->withoutExceptionHandling()
+            ->post(route('research.scholars.advisory_committee.replace', [
+                'scholar' => $scholar,
+            ]), [
+                'faculty_teacher' => $faculty_teacher->name,
+                'external' => $external = [
+                    'name' => 'Rakesh Sharma',
+                    'designation' => 'astronaut',
+                    'affiliation' => 'IAF',
+                    'email' => 'rakesh@gmail.com',
+                    'phone_no' => '9469297632',
+                ],
+            ])->assertRedirect()
+            ->assertSessionHasFlash('success', 'Advisory Committee Replaced SuccessFully!');
+
+        $this->assertEquals(count($scholar->fresh()->old_advisory_committees), 1);
+        $this->assertEquals($scholar->fresh()->old_advisory_committees[0]['faculty_teacher'], $beforeReplaceAdvisoryCommittee['faculty_teacher']);
+        $this->assertEquals($scholar->fresh()->old_advisory_committees[0]['external'], $beforeReplaceAdvisoryCommittee['external']);
+        $this->assertEquals($scholar->fresh()->old_advisory_committees[0]['date'], now()->format('d F Y'));
 
         $this->assertEquals($scholar->fresh()->advisory_committee['faculty_teacher'], $faculty_teacher->name);
         $this->assertEquals($scholar->fresh()->advisory_committee['external'], $external);

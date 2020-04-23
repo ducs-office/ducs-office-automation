@@ -26,6 +26,7 @@ class AddColumnsToScholarTable extends Migration
             $table->json('education')->nullable();
             $table->json('old_cosupervisors')->nullable();
             $table->json('old_supervisors')->nullable();
+            $table->json('old_advisory_committees')->nullable();
 
             $table->foreign('cosupervisor_id')->references('id')->on('cosupervisors')->onDelete('set null');
         });

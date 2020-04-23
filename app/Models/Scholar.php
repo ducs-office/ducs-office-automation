@@ -32,6 +32,7 @@ class Scholar extends User
         'cosupervisor_id',
         'old_cosupervisors',
         'old_supervisors',
+        'old_advisory_committees',
     ];
 
     protected $casts = [
@@ -39,6 +40,7 @@ class Scholar extends User
         'education' => 'array',
         'old_cosupervisors' => 'array',
         'old_supervisors' => 'array',
+        'old_advisory_committees' => 'array',
     ];
 
     public static function boot()
@@ -48,6 +50,8 @@ class Scholar extends User
         static::creating(static function ($scholar) {
             $scholar->old_cosupervisors = [];
             $scholar->old_supervisors = [];
+            $scholar->education = [];
+            $scholar->old_advisory_committees = [];
         });
 
         static::created(static function ($scholar) {
@@ -85,10 +89,6 @@ class Scholar extends User
     public function getEducationAttribute($value)
     {
         $value = $this->castAttribute('education', $value);
-
-        if ($value === null) {
-            return [];
-        }
 
         foreach ($value as $index => $education) {
             $value[$index]['subject'] = ScholarEducationSubject::find($education['subject'])->name;
