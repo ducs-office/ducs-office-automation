@@ -22,6 +22,35 @@
                     </label>
                     <input id="email" type="email" name="email" class="w-full form-input" :value="data('Scholar.email')">
                 </div>
+                <div class="flex mb-2 w-full">
+                    <div class="w-1/2 mr-2">
+                        <label for="supervisor" class="w-full form-label">Supervisor
+                            <span class="h-current text-red-500 text-lg">*</span>
+                        </label>
+                        <select class="form-input w-full block" name="supervisor_profile_id" id="supervisor" required>
+                            @foreach ($supervisors as $name => $id)
+                                <option class="text-gray-600" value="{{ $id }}" :selected="data('Scholar.supervisor_profile_id') === {{ $id }}"> 
+                                    {{ $name }} 
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="w-1/2 ml-2">
+                        <label for="cosupervisor" class="w-full form-label">Co-Supervisor
+                            <span class="h-current text-red-500 text-lg">*</span>
+                        </label>
+                        <select class="form-input w-full block" name="cosupervisor_id" id="cosupervisor">
+                            <option class="text-gray-600" value="" selected> 
+                                No cosupervisor assigned 
+                            </option>
+                            @foreach ($cosupervisors as $name => $id)
+                                <option class="text-gray-600" value="{{ $id }}" :selected="data('Scholar.cosupervisor_id') === {{ $id }}"> 
+                                    {{ $name }} 
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
                 <div class="mt-5">
                     <button type="submit" class="btn btn-magenta">Update</button>
                 </div>
