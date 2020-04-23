@@ -162,59 +162,6 @@
                     </div>
                 </div>
             </div>
-            {{-- <div class="w-1/3 mt-6">
-                <div class="w-64 pr-4 relative z-10 -ml-8 my-6">
-                    <h3 class="relative z-20 pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
-                        Supervisor
-                    </h3>
-                    <svg class="absolute left-0 w-2 text-magenta-900" viewBox="0 0 10 10">
-                        <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
-                    </svg>
-                </div>
-                <h6 class="mx-2 mb-6 text-gray-800 text-sm">Required.<span class="text-red-600">*</span></h6>
-                <select name="supervisor_profile_id" id="supervisor" class="block form-input w-full">
-                    <option value="" class="text-gray-600" selected> Select your supervisor </option>
-                    @foreach ($supervisorProfiles as $name => $id)
-                        <option value=" {{ $id }} "
-                            {{ $id == old('supervisor_profile_id', $scholar->supervisor_profile_id)? 'selected':''}} >
-                            {{ $name }}
-                        </option>
-                    @endforeach
-                </select>
-            </div> --}}
-            {{-- <div class="mt-4">
-                <add-remove-elements :existing-elements="{{ json_encode($scholar->cosupervisors) }}">
-                    <template v-slot="{ elements, addElement, removeElement}">
-                        <div class="flex w-2/6 items-center">
-                            <div class="w-64 pr-4 relative z-10 -ml-8 my-6">
-                                <h3 class="relative z-20 pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
-                                    Co-Supervisor(s)
-                                </h3>
-                                <svg class="absolute left-0 w-2 text-magenta-900" viewBox="0 0 10 10">
-                                    <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
-                                </svg>
-                            </div>
-                            <button v-on:click.prevent="addElement" 
-                                    v-if="elements.length < 2"
-                                    class="ml-auto text-blue-700 bg-gray-300 btn is-sm"
-                                > + 
-                            </button>
-                        </div>
-                        <h6 class="mx-2 mb-6 text-gray-800 text-sm">You can add a maximum of 2 co-supervisors only.</h6>
-                        <div v-for="(element, index) in elements" :key="index" class="flex items-baseline mb-2">
-                            <select :name="`co_supervisors[]`" 
-                                class="block form-input"
-                                v-model="element.value.id"
-                                >
-                                @foreach ($cosupervisors as $name => $id)
-                                    <option value="{{ $id }}" > {{ $name }} </option>
-                                @endforeach
-                            </select>
-                            <button v-on:click.prevent="removeElement(index)"  class="btn is-sm ml-2 text-red-600">x</button>
-                        </div>
-                    </template>
-                </add-remove-elements>
-            </div> --}}
             <div class="mt-6">
                 <add-remove-elements :existing-elements="{{ json_encode($scholar->advisory_committee) }}" >
                     <template v-slot="{ elements, addElement, removeElement}">

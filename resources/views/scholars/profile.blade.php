@@ -91,49 +91,102 @@
                     </h3>
                     <svg class="absolute left-0 w-2 text-magenta-900" viewBox="0 0 10 10">
                         <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
-                    </svg>
+                    </svg> 
                 </div>
                
-                {{-- <div class="flex-1 my-6 px-4 py-3 border rounded-lg">
-                    @if ($scholar->supervisorProfile)
-                    <div class="flex items-center">
-                        <svg viewBox="0 0 20 20" class="h-current">
-                            <g stroke="none" stroke-width="1" fill="currentColor" fill-rule="evenodd">
-                                <path d="M3.33333333,8 L10,12 L20,6 L10,0 L-5.55111512e-16,6 L10,6 L10,6.5 L10,8 L3.33333333,8 L3.33333333,8 Z M1.33226763e-15,8 L1.33226763e-15,16 L2,13.7777778 L2,9.2 L2,9.2 L1.33226763e-15,8 L1.11022302e-16,8 L1.33226763e-15,8 Z M10,20 L5,16.9999998 L3,15.8 L3,9.8 L10,14 L17,9.8 L17,15.8 L10,20 L10,20 Z"></path>
-                            </g>
-                        </svg>
+                <ul class="flex-col-reverse flex my-6 flex-1 border rounded-lg overflow-hidden">
+                    @php
+                        $prevDate = $scholar->registerOn
+                    @endphp
+                    @foreach ($scholar->old_supervisors as $old_supervisor)
+                    <li class="border-b first:border-b-0 px-5 p-2">
+                        <div class="flex justify-between items-center"> 
+                            <div class="w-1/2">
+                                <p class="font-bold"> {{ $old_supervisor['name'] }} </p>
+                                <div class="flex mt-1 items-center text-gray-700">
+                                    <feather-icon name="at-sign" class="h-current">Email</feather-icon>
+                                    <p class="ml-1 italic"> {{ $old_supervisor['email'] }} </p>
+                                </div>
+                            </div>
+                            <p class="w-1/2 mr-4 font-bold"> {{ $prevDate }} - {{ $old_supervisor['date']}}</p>    
+                            @php
+                                $prevDate = $old_supervisor['date']
+                            @endphp
                         <div>
-                            <p class="ml-2 font-bold"> {{ $scholar->supervisor->name }}</p>
+                    </li>
+                    @endforeach
+                    <li class="border-b first:border-b-0 px-5 p-2">
+                        <div class="flex justify-between items-center"> 
+                            <div class="w-1/2">
+                                <p class="font-bold"> {{ $scholar->supervisor->name }} </p>
+                                <div class="flex mt-1 items-center text-gray-700">
+                                    <feather-icon name="at-sign" class="h-current">Email</feather-icon>
+                                    <p class="ml-1 italic"> {{ $scholar->supervisor->email }} </p>
+                                </div>
+                            </div>
+                            <p class="w-1/2 mr-4 font-bold"> {{ $prevDate }} - Present</p>
                         </div>
-                    </div>
-                    @endif
-                </div>
+                    </li>
+                </ul>
             </div>
-             --}}
-            {{-- @if($scholar->cosupervisors->count())
+             
             <div class="flex">
                 <div class="w-64 pr-4 relative z-10 -ml-8 my-6">
                     <h3 class="relative z-20 pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
-                        Co-Supervisor(s)
+                        Cosupervisor
                     </h3>
                     <svg class="absolute left-0 w-2 text-magenta-900" viewBox="0 0 10 10">
                         <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
-                    </svg>
+                    </svg> 
                 </div>
-                <div class="flex-1 my-6">
-                    <ul class="border flex flex-wrap rounded-lg overflow-hidden mb-4">
-                        @foreach ($scholar->cosupervisors as $cosupervisor)
-                            <li class="px-5 py-5 border-b last:border-b-0 w-1/2">
-                                <div class="flex mb-1">
-                                    <feather-icon name="pen-tool" class="h-current"></feather-icon>
-                                    <p class="ml-2 font-bold"> {{ $cosupervisor->name }} </p>
+               
+                <ul class="flex-col-reverse flex my-6 flex-1 border rounded-lg overflow-hidden">
+                    @php
+                        $prevDate = $scholar->registerOn
+                    @endphp
+                    @foreach ($scholar->old_cosupervisors as $old_cosupervisor)
+                    <li class="border-b first:border-b-0 px-5 p-2">
+                        <div class="flex justify-between items-center"> 
+                            <div class="w-1/2">
+                                @if ($old_cosupervisor['name'])
+                                <p class="font-bold"> {{ $old_cosupervisor['name'] }} </p>
+                                <p class="text-gray-700 mt-1"> {{ $old_cosupervisor['designation'] }} </p>
+                                <p class="text-gray-700 mt-1"> {{ $old_cosupervisor['affiliation'] }} </p>
+                                <div class="flex mt-1 items-center text-gray-700">
+                                    <feather-icon name="at-sign" class="h-current">Email</feather-icon>
+                                    <p class="ml-1 italic"> {{ $old_cosupervisor['email'] }} </p>
                                 </div>
-                            </li>
-                        @endforeach
-                    </ul>
-                </div>
+                                @else
+                                <p class="font-bold"> Cosupervisor Not Assigned </p>
+                                @endif
+                            </div>
+                            <p class="w-1/2 mr-4 font-bold"> {{ $prevDate }} - {{ $old_cosupervisor['date']}}</p>    
+                            @php
+                                $prevDate = $old_supervisor['date']
+                            @endphp
+                        <div>
+                    </li>
+                    @endforeach
+                    <li class="border-b first:border-b-0 px-5 p-2">
+                        <div class="flex justify-between items-center"> 
+                            <div class="w-1/2">
+                                @if ($scholar->cosupervisor)
+                                <p class="font-bold"> {{ $scholar->cosupervisor->name }} </p>
+                                <p class="text-gray-700 mt-1"> {{ $scholar->cosupervisor->designation }} </p>
+                                <p class="text-gray-700 mt-1"> {{ $scholar->cosupervisor->affiliation }} </p>
+                                <div class="flex mt-1 items-center text-gray-700">
+                                    <feather-icon name="at-sign" class="h-current">Email</feather-icon>
+                                    <p class="ml-1 italic"> {{ $scholar->cosupervisor->email }} </p>
+                                </div>
+                                @else
+                                <p class="font-bold"> Cosupervisor Not Assigned </p>
+                                @endif
+                            </div>
+                            <p class="w-1/2 mr-4 font-bold"> {{ $prevDate }} - Present</p>
+                        </div>
+                    </li>
+                </ul>
             </div>
-            @endif --}}
 
             <div class="flex">
                 <div class="w-64 pr-4 relative z-10 -ml-8 my-6">
