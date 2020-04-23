@@ -16,41 +16,94 @@
 
     @can('update', App\Scholar::class)
     @include('staff.scholars.modals.edit', [
-        'modalName' => 'edit-scholar-modal'
+        'modalName' => 'edit-scholar-modal',
     ])
     @endcan
+
+    @include('staff.scholars.modals.replace_supervisor', [
+        'modalName' => 'replace-scholar-supervisor-modal',
+    ])
+
+    @include('staff.scholars.modals.replace_cosupervisor', [
+        'modalName' => 'replace-scholar-cosupervisor-modal',
+    ])
+
     @forelse($scholars as $scholar)
-        <div class="px-4 py-2 hover:bg-gray-100 border-b flex">
-            <div class="px-2 w-64">
-                <h3 class="text-lg font-bold mr-2">
-                    {{ ucwords($scholar->name) }}
-                </h3>
-                <h4 class="text-sm font-semibold text-gray-600 mr-2"> {{ $scholar->email }}</h4>
-            </div>
-            <div class="ml-auto px-2 flex items-center">
-                @can('update', App\Scholar::class)
-                <button type="submit" class="p-1 hover:text-red-700 mr-2"
-                    @click="
-                        $modal.show('edit-scholar-modal', {
-                            Scholar: {
-                                id: {{ $scholar->id }},
-                                first_name: {{ json_encode($scholar->first_name) }},
-                                last_name: {{ json_encode($scholar->last_name) }},
-                                email: {{ json_encode($scholar->email) }},
-                            }
-                        })">
-                    <feather-icon class="h-current" name="edit">Edit</feather-icon>
-                </button>
-                @endcan
-                @can('delete', $scholar)
-                <form action="{{ route('staff.scholars.destroy', $scholar) }}" method="POST"
-                    onsubmit="return confirm('Do you really want to delete scholar \' {{ $scholar->name }}\'?');">
-                    @csrf_token @method('delete')
-                    <button type="submit" class="p-1 hover:text-red-700">
-                        <feather-icon class="h-current" name="trash-2">Trash</feather-icon>
+        <div class="hover:bg-gray-100 border-b">
+            <div class="flex px-4 py-2 ">
+                <div class="px-2 w-64">
+                    <h3 class="text-lg font-bold mr-2">
+                        {{ ucwords($scholar->name) }}
+                    </h3>
+                    <h4 class="text-sm font-semibold text-gray-600 mr-2"> {{ $scholar->email }}</h4>
+                </div>
+                <div class="ml-auto px-2 flex items-center">
+                    @can('update', App\Scholar::class)
+                    <button type="submit" class="p-1 hover:text-red-700 mr-2"
+                        @click="
+                            $modal.show('edit-scholar-modal', {
+                                Scholar: {
+                                    id: {{ $scholar->id }},
+                                    first_name: {{ json_encode($scholar->first_name) }},
+                                    last_name: {{ json_encode($scholar->last_name) }},
+                                    email: {{ json_encode($scholar->email) }},
+                                    supervisor_profile_id: {{ json_encode($scholar->supervisor_profile_id) }},
+                                    cosupervisor_id: {{ json_encode($scholar->cosupervisor_id) }},
+                                }
+                            })">
+                        <feather-icon class="h-current" name="edit">Edit</feather-icon>
                     </button>
-                </form>
-                @endcan
+                    @endcan
+                    @can('delete', $scholar)
+                    <form action="{{ route('staff.scholars.destroy', $scholar) }}" method="POST"
+                        onsubmit="return confirm('Do you really want to delete scholar \' {{ $scholar->name }}\'?');">
+                        @csrf_token @method('delete')
+                        <button type="submit" class="p-1 hover:text-red-700">
+                            <feather-icon class="h-current" name="trash-2">Trash</feather-icon>
+                        </button>
+                    </form>
+                    @endcan
+                </div>
+            </div>
+            <div class="flex mb-2">
+                <div class="px-6 mr-4 w-1/2">
+                    <div class="flex">
+                        <h2 class="font-bold underline"> Supervisor </h2>
+                        <button type="submit" class="ml-2 text-blue-500"
+                            @click ="
+                            $modal.show('replace-scholar-supervisor-modal', {
+                                scholar: {
+                                    id: {{ $scholar->id }},
+                                    supervisor_profile_id: {{ json_encode($scholar->supervisor_profile_id) }}
+                                }
+                            })">
+                            <feather-icon class="h-current" name="refresh-cw">Replace Supervisor</feather-icon>
+                        </button>
+                    </div>
+                    <p class="pt-1">{{ $scholar->supervisor->name }}</p>
+                </div>
+                <div class="px-4 mx-4 w-1/2">
+                    <div class="flex">
+                        <h2 class="font-bold underline"> Co-Supervisor </h2>
+                        <button type="submit" class="ml-2 text-blue-500"
+                            @click ="
+                            $modal.show('replace-scholar-cosupervisor-modal', {
+                                scholar: {
+                                    id: {{ $scholar->id }},
+                                    cosupervisor_id: {{ json_encode($scholar->cosupervisor_id) }}
+                                }
+                            })">
+                            <feather-icon class="h-current" name="refresh-cw">Replace Co-Supervisor</feather-icon>
+                        </button>
+                    </div>
+                    <p class="pt-1">
+                        @if ($scholar->cosupervisor)
+                        {{ $scholar->cosupervisor->name }}
+                        @else
+                        {{ "No cosupervisor assigned" }}   
+                        @endif
+                    </p>
+                </div>
             </div>
         </div>
     @empty
