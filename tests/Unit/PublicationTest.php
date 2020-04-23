@@ -2,10 +2,10 @@
 
 namespace Tests\Unit;
 
-use App\Presentation;
-use App\Publication;
-use App\Scholar;
-use App\SupervisorProfile;
+use App\Models\Presentation;
+use App\Models\Publication;
+use App\Models\Scholar;
+use App\Models\SupervisorProfile;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;

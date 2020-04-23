@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Publications;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Publication\StoreJournalPublication;
 use App\Http\Requests\Publication\UpdateJournalPublication;
-use App\Publication;
+use App\Models\Publication;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;

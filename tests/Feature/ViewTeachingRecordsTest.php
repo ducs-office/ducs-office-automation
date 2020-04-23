@@ -2,9 +2,9 @@
 
 namespace Tests\Feature;
 
-use App\Course;
-use App\ProgrammeRevision;
-use App\TeachingRecord;
+use App\Models\Course;
+use App\Models\ProgrammeRevision;
+use App\Models\TeachingRecord;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Collection;

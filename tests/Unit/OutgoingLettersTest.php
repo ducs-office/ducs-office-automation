@@ -2,8 +2,8 @@
 
 namespace Tests\Unit;
 
-use App\OutgoingLetter;
-use App\User;
+use App\Models\OutgoingLetter;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Testing\RefreshDatabase;

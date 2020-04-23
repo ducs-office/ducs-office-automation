@@ -3,7 +3,7 @@
 <div class="page-card m-6">
     <div class="flex items-baseline px-6 pb-4 border-b">
         <h1 class="page-header mb-0 px-0 mr-4">Users</h1>
-        @can('create', App\User::class)
+        @can('create', App\Models\User::class)
         <button class="btn btn-magenta is-sm shadow-inner"
             @click.prevent="$modal.show('create-user-modal')">
             New
@@ -14,7 +14,7 @@
         ])
         @endcan
     </div>
-    @can('update', App\User::class)
+    @can('update', App\Models\User::class)
     @include('staff.users.modals.edit', [
         'modalName' => 'edit-user-modal',
         'roles' => $roles,
@@ -50,7 +50,7 @@
                     <button class="btn btn-magenta text-sm px-3 py-1"> Make Supervisor</button>
                 </form>
                 @endif
-                @can('update', App\User::class)
+                @can('update', App\Models\User::class)
                 <button type="submit" class="p-1 hover:text-red-700 mr-2"
                     @click="
                         $modal.show('edit-user-modal', {

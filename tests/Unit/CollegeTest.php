@@ -2,7 +2,7 @@
 
 namespace Tests\Unit;
 
-use App\College;
+use App\Models\College;
 use Illuminate\Foundation\Testing\WithFaker;
 use PHPUnit\Framework\TestCase;
 

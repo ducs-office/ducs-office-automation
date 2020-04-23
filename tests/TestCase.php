@@ -2,9 +2,9 @@
 
 namespace Tests;
 
-use App\Scholar;
-use App\Teacher;
-use App\User;
+use App\Models\Scholar;
+use App\Models\Teacher;
+use App\Models\User;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Support\Facades\Session;
 use Spatie\Permission\Models\Role;

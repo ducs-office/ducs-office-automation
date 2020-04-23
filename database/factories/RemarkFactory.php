@@ -1,9 +1,9 @@
 <?php
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
-use App\OutgoingLetter;
-use App\Remark;
-use App\User;
+use App\Models\OutgoingLetter;
+use App\Models\Remark;
+use App\Models\User;
 use Faker\Generator as Faker;
 
 $factory->define(Remark::class, static function (Faker $faker) {

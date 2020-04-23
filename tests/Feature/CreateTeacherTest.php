@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use App\Mail\UserRegisteredMail;
-use App\Teacher;
+use App\Models\Teacher;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Mail;

@@ -2,7 +2,7 @@
 
 namespace App\Concerns;
 
-use App\SupervisorProfile;
+use App\Models\SupervisorProfile;
 
 trait SupervisesScholars
 {

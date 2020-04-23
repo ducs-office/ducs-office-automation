@@ -2,8 +2,8 @@
 
 namespace Tests\Feature;
 
-use App\IncomingLetter;
-use App\User;
+use App\Models\IncomingLetter;
+use App\Models\User;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;

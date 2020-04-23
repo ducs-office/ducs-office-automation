@@ -1,7 +1,7 @@
 <?php
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
-use App\Programme;
+use App\Models\Programme;
 use Faker\Generator as Faker;
 
 $factory->define(Programme::class, static function (Faker $faker) {

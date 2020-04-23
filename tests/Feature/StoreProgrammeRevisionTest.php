@@ -2,9 +2,9 @@
 
 namespace Tests\Feature;
 
-use App\Course;
-use App\Programme;
-use App\ProgrammeRevision;
+use App\Models\Course;
+use App\Models\Programme;
+use App\Models\ProgrammeRevision;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Validation\ValidationException;

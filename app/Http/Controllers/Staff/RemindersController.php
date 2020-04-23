@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Staff;
 
 use App\Http\Controllers\Controller;
-use App\LetterReminder;
+use App\Models\LetterReminder;
 
 class RemindersController extends Controller
 {

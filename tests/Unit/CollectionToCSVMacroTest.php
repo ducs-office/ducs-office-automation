@@ -2,13 +2,13 @@
 
 namespace Tests\Unit;
 
-use App\College;
-use App\Course;
-use App\CourseProgrammeRevision;
-use App\PastTeachersProfile;
-use App\Programme;
-use App\Teacher;
-use App\TeachingRecord;
+use App\Models\College;
+use App\Models\Course;
+use App\Models\CourseProgrammeRevision;
+use App\Models\PastTeachersProfile;
+use App\Models\Programme;
+use App\Models\Teacher;
+use App\Models\TeachingRecord;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 

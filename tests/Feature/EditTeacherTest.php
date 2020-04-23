@@ -2,8 +2,8 @@
 
 namespace Tests\Feature;
 
-use App\College;
-use App\Teacher;
+use App\Models\College;
+use App\Models\Teacher;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Validation\ValidationException;

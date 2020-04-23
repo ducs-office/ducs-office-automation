@@ -2,9 +2,9 @@
 
 namespace Tests\Feature;
 
-use App\Scholar;
-use App\Teacher;
-use App\User;
+use App\Models\Scholar;
+use App\Models\Teacher;
+use App\Models\User;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;

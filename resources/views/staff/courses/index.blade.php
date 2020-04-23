@@ -3,7 +3,7 @@
     <div class="m-6">
         <div class="flex items-baseline px-6 pb-4">
             <h1 class="page-header mb-0 px-0 mr-4">Courses</h1>
-            @can('create', App\Course::class)
+            @can('create', App\Models\Course::class)
             <button class="btn btn-magenta is-sm shadow-inset" @click="$modal.show('create-courses-modal')">
                 New
             </button>
@@ -13,7 +13,7 @@
             ])
             @endcan
         </div>
-        @can('update', App\Course::class)
+        @can('update', App\Models\Course::class)
         @include('staff.courses.modals.edit', [
             'modalName' => 'edit-course-modal',
             'courseTypes' => $courseTypes,
@@ -139,7 +139,7 @@
                         </ul>
                     </details>
                     <div class="absolute top-0 right-0 mt-4 mr-4 flex items-center">
-                        @can('update', App\Course::class)
+                        @can('update', App\Models\Course::class)
                         <button class="p-1 hover:text-blue-500 mr-2"
                         @click.prevent="$modal.show('edit-course-modal', {
                             course: {{ $course->toJson() }}
@@ -147,7 +147,7 @@
                             <feather-icon name="edit" class="h-current">Edit</feather-icon>
                         </button>
                         @endcan
-                        @can('delete', App\Course::class)
+                        @can('delete', App\Models\Course::class)
                         <form action="{{ route('staff.courses.destroy', $course) }}" method="POST"
                             onsubmit="return confirm('Do you really want to delete course?');">
                             @csrf_token

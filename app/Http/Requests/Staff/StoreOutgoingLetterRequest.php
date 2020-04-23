@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Staff;
 
-use App\OutgoingLetter;
+use App\Models\OutgoingLetter;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreOutgoingLetterRequest extends FormRequest

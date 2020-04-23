@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Staff;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Staff\StoreIncomingLetterRequest;
 use App\Http\Requests\Staff\UpdateIncomingLettersRequest;
-use App\IncomingLetter;
-use App\User;
+use App\Models\IncomingLetter;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class IncomingLettersController extends Controller

@@ -2,9 +2,9 @@
 
 namespace Tests\Unit;
 
-use App\Publication;
-use App\SupervisorProfile;
-use App\Teacher;
+use App\Models\Publication;
+use App\Models\SupervisorProfile;
+use App\Models\Teacher;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -20,7 +20,7 @@ class SupervisorProfileTest extends TestCase
     {
         $teacher = create(Teacher::class);
 
-        $supervisorProfile = create('App\SupervisorProfile', 1, [
+        $supervisorProfile = create(SupervisorProfile::class, 1, [
             'supervisor_type' => Teacher::class,
             'supervisor_id' => $teacher->id,
         ]);

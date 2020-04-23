@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Scholars;
 
 use App\Http\Controllers\Controller;
-use App\Leave;
+use App\Models\Leave;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;

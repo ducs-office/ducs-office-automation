@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Staff;
 
-use App\Course;
-use App\CourseRevision;
 use App\Http\Controllers\Controller;
+use App\Models\Course;
+use App\Models\CourseRevision;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
@@ -51,7 +51,7 @@ class CourseRevisionController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\CourseRevision  $revision
+     * @param  \App\Models\CourseRevision  $revision
      *
      * @return \Illuminate\Http\Response
      */

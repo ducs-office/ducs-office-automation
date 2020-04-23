@@ -4,7 +4,7 @@
     <h2 class="text-lg font-bold mb-2">Manage Record Submission</h1>
     <form method="POST">
         @csrf_token
-        @if(App\TeachingRecord::isAccepting())
+        @if(App\Models\TeachingRecord::isAccepting())
             @method('PATCH')
             <p class="mb-4">We've started accepting submissions, you can extend the deadline.</p>
             <div class="flex items-end">

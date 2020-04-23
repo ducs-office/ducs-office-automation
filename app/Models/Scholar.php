@@ -1,12 +1,12 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
-use App\AcademicDetail;
-use App\Cosupervisor;
-use App\Publication;
-use App\ScholarProfile;
-use App\SupervisorProfile;
+use App\Models\AcademicDetail;
+use App\Models\Cosupervisor;
+use App\Models\Publication;
+use App\Models\ScholarProfile;
+use App\Models\SupervisorProfile;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User;
 

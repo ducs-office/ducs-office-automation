@@ -2,11 +2,11 @@
 
 namespace Tests\Feature;
 
-use App\Leave;
-use App\LeaveStatus;
-use App\Scholar;
-use App\SupervisorProfile;
-use App\Teacher;
+use App\Models\Leave;
+use App\Models\LeaveStatus;
+use App\Models\Scholar;
+use App\Models\SupervisorProfile;
+use App\Models\Teacher;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;

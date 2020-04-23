@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Staff;
 
-use App\Attachment;
 use App\Http\Controllers\Controller;
+use App\Models\Attachment;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 

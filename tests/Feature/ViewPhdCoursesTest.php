@@ -2,10 +2,10 @@
 
 namespace Tests\Feature;
 
-use App\Course;
-use App\PhdCourse;
-use App\Programme;
-use App\User;
+use App\Models\Course;
+use App\Models\PhdCourse;
+use App\Models\Programme;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Collection;

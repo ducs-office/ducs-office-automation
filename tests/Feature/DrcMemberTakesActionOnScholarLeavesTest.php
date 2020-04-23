@@ -2,9 +2,9 @@
 
 namespace Tests\Feature;
 
-use App\Leave;
-use App\LeaveStatus;
-use App\User;
+use App\Models\Leave;
+use App\Models\LeaveStatus;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;

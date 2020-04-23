@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Staff;
 
-use App\College;
+use App\Models\College;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 

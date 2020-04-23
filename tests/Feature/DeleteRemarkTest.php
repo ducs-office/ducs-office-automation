@@ -2,8 +2,8 @@
 
 namespace Tests\Feature;
 
-use App\Remark;
-use App\User;
+use App\Models\Remark;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Spatie\Permission\Models\Permission;

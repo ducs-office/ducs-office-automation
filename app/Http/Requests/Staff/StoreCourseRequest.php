@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Staff;
 
-use App\Course;
+use App\Models\Course;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreCourseRequest extends FormRequest

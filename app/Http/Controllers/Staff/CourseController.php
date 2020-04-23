@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Staff;
 
-use App\Course;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Staff\StoreCourseRequest;
 use App\Http\Requests\Staff\UpdateCourseRequest;
-use App\Programme;
+use App\Models\Course;
+use App\Models\Programme;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
@@ -68,7 +68,7 @@ class CourseController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \App\Http\Requests\Staff\UpdateCourseRequest  $request
-     * @param  \App\Course  $course
+     * @param  \App\Models\Course  $course
      *
      * @return \Illuminate\Http\Response
      */
@@ -93,7 +93,7 @@ class CourseController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Course  $course
+     * @param  \App\Models\Course  $course
      *
      * @return \Illuminate\Http\Response
      */

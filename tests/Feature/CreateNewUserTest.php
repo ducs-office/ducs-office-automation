@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use App\Mail\UserRegisteredMail;
-use App\User;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;

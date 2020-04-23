@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Teachers;
 
-use App\College;
-use App\Course;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Teacher\UpdateProfileRequest;
-use App\Programme;
-use App\TeacherProfile;
+use App\Models\College;
+use App\Models\Course;
+use App\Models\Programme;
+use App\Models\TeacherProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;

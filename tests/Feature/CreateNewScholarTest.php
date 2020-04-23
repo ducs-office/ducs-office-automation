@@ -2,10 +2,10 @@
 
 namespace Tests\Feature;
 
-use App\Cosupervisor;
 use App\Mail\UserRegisteredMail;
-use App\Scholar;
-use App\SupervisorProfile;
+use App\Models\Scholar;
+use App\Models\SupervisorProfile;
+use App\ModelsCosupervisor;
 use App\Teacher;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;

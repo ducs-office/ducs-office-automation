@@ -1,7 +1,7 @@
 <?php
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
-use App\PhdCourse;
+use App\Models\PhdCourse;
 use Faker\Generator as Faker;
 
 $factory->define(PhdCourse::class, function (Faker $faker) {

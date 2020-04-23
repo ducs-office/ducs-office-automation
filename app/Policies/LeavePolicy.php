@@ -2,10 +2,10 @@
 
 namespace App\Policies;
 
-use App\Leave;
-use App\LeaveStatus;
-use App\Scholar;
-use App\User;
+use App\Models\Leave;
+use App\Models\LeaveStatus;
+use App\Models\Scholar;
+use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class LeavePolicy
@@ -16,7 +16,7 @@ class LeavePolicy
      * Determine whether the user can view the leave.
      *
      * @param mixed $user
-     * @param  \App\Leave  $leave
+     * @param  \App\Models\Leave  $leave
      *
      * @return mixed
      */
@@ -41,7 +41,7 @@ class LeavePolicy
      * Determine whether the user can recommend a leave.
      *
      * @param mixed $user
-     * @param  \App\Leave  $leave
+     * @param  \App\Models\Leave  $leave
      *
      * @return mixed
      */
@@ -57,7 +57,7 @@ class LeavePolicy
      * Determine whether the user can approve a leave.
      *
      * @param mixed $user
-     * @param  \App\Leave  $leave
+     * @param  \App\Models\Leave  $leave
      *
      * @return mixed
      */
@@ -71,7 +71,7 @@ class LeavePolicy
      * Determine whether the user can reject a leave.
      *
      * @param mixed $user
-     * @param  \App\Leave  $leave
+     * @param  \App\Models\Leave  $leave
      *
       * @return mixed
      */
@@ -84,8 +84,8 @@ class LeavePolicy
     /**
      * Determine whether the user can extend a leave.
      *
-     * @param \App\Scholar $scholar
-     * @param  \App\Leave  $leave
+     * @param \App\Models\Scholar $scholar
+     * @param  \App\Models\Leave  $leave
      *
       * @return mixed
      */

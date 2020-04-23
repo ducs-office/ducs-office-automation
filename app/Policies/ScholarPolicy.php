@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\Scholar;
-use App\User;
+use App\Models\Scholar;
+use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class ScholarPolicy

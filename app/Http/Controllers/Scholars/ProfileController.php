@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Scholars;
 
-use App\Cosupervisor;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Scholar\UpdateProfileRequest;
-use App\ScholarEducationDegree;
-use App\ScholarEducationInstitute;
-use App\ScholarEducationSubject;
-use App\SupervisorProfile;
+use App\Models\Cosupervisor;
+use App\Models\ScholarEducationDegree;
+use App\Models\ScholarEducationInstitute;
+use App\Models\ScholarEducationSubject;
+use App\Models\SupervisorProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;

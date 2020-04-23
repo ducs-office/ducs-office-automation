@@ -3,7 +3,7 @@
     <div class="m-6">
         <div class="flex items-baseline px-4 mb-4">
             <h1 class="page-header mb-0 px-0 mr-4">Incoming Letters</h1>
-            @can('create', 'App\IncomingLetter')
+            @can('create', \App\Models\IncomingLetter::class)
                 <a href="{{ route('staff.incoming_letters.create') }}" class="btn btn-magenta is-sm shadow-inset">
                     New
                 </a>

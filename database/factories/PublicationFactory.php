@@ -1,9 +1,9 @@
 <?php
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
-use App\Publication;
-use App\Scholar;
-use App\SupervisorProfile;
+use App\Models\Publication;
+use App\Models\Scholar;
+use App\Models\SupervisorProfile;
 use Faker\Generator as Faker;
 
 $factory->define(Publication::class, function (Faker $faker) {

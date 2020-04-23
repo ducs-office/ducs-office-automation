@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers\Research;
 
-use App\Cosupervisor;
 use App\Http\Controllers\Controller;
-use App\PhdCourse;
-use App\Scholar;
-use App\User;
+use App\Models\Cosupervisor;
+use App\Models\PhdCourse;
+use App\Models\Scholar;
 use Illuminate\Http\Request;
 
 class ScholarController extends Controller

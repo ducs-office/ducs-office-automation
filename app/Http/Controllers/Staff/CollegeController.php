@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Staff;
 
-use App\College;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Staff\StoreCollegeRequest;
 use App\Http\Requests\Staff\UpdateCollegeRequest;
-use App\Programme;
+use App\Models\College;
+use App\Models\Programme;
 
 class CollegeController extends Controller
 {

@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Staff;
 
-use App\Cosupervisor;
 use App\Http\Controllers\Controller;
-use App\Teacher;
-use App\User;
+use App\Models\Cosupervisor;
+use App\Models\Teacher;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class CosupervisorController extends Controller

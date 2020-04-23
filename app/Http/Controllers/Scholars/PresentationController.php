@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Scholars;
 
-use App\AcademicDetail;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Scholar\StorePresentation;
 use App\Http\Requests\Scholar\UpdatePresentation;
-use App\Presentation;
-use App\Scholar;
-use App\SupervisorProfile;
+use App\Models\AcademicDetail;
+use App\Models\Presentation;
+use App\Models\Scholar;
+use App\Models\SupervisorProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;

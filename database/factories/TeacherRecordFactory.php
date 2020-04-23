@@ -1,11 +1,11 @@
 <?php
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
-use App\College;
-use App\Course;
-use App\ProgrammeRevision;
-use App\Teacher;
-use App\TeachingRecord;
+use App\Models\College;
+use App\Models\Course;
+use App\Models\ProgrammeRevision;
+use App\Models\Teacher;
+use App\Models\TeachingRecord;
 use Faker\Generator as Faker;
 
 $factory->define(TeachingRecord::class, function (Faker $faker) {

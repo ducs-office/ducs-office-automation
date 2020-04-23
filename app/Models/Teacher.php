@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use App\Concerns\SupervisesScholars;
 use Illuminate\Foundation\Auth\User;

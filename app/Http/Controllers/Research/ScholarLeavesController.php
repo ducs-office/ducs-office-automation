@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Research;
 
 use App\Http\Controllers\Controller;
-use App\Leave;
-use App\LeaveStatus;
-use App\Scholar;
+use App\Models\Leave;
+use App\Models\LeaveStatus;
+use App\Models\Scholar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;

@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Staff;
 
-use App\Cosupervisor;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Staff\StoreUserRequest;
 use App\Http\Requests\Staff\UpdateUserRequest;
 use App\Mail\UserRegisteredMail;
-use App\User;
+use App\Models\Cosupervisor;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;

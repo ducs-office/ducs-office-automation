@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Teachers;
 
 use App\Exceptions\TeacherProfileNotCompleted;
 use App\Http\Controllers\Controller;
+use App\Models\TeachingRecord;
 use App\Notifications\TeacherDetailsAccepted;
 use App\Notifications\TeachingRecordsSaved;
-use App\TeachingRecord;
 use Illuminate\Http\Request;
 
 class TeachingRecordsController extends Controller

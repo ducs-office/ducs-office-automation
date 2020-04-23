@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Staff;
 
-use App\Cosupervisor;
-use App\Course;
 use App\Http\Controllers\Controller;
 use App\Mail\UserRegisteredMail;
-use App\Teacher;
-use App\TeachingRecord;
+use App\Models\Cosupervisor;
+use App\Models\Course;
+use App\Models\Teacher;
+use App\Models\TeachingRecord;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Response;

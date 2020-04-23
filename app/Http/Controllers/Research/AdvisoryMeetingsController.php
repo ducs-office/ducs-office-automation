@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Research;
 
-use App\AdvisoryMeeting;
-use App\Attachment;
 use App\Http\Controllers\Controller;
-use App\Scholar;
+use App\Models\AdvisoryMeeting;
+use App\Models\Attachment;
+use App\Models\Scholar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class AdvisoryMeetingsController extends Controller
 {
@@ -20,7 +21,7 @@ class AdvisoryMeetingsController extends Controller
         ]);
 
         $filename = strtotime($request->date)
-            . '_' . str_slug($scholar->name, '_') . 'minutes_of_meeting.'
+            . '_' . Str::slug($scholar->name, '_') . 'minutes_of_meeting.'
             . '_' . $request->file('minutes_of_meeting')->getClientOriginalExtension();
 
         $filePath = $request->file('minutes_of_meeting')->storeAs('advisory_meetings', $filename);

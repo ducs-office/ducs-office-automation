@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\Programme;
-use App\User;
+use App\Models\Programme;
+use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class ProgrammePolicy
@@ -13,7 +13,7 @@ class ProgrammePolicy
     /**
      * Determine whether the user can view any programmes.
      *
-     * @param  \App\User  $user
+     * @param  \App\Models\User  $user
      *
      * @return mixed
      */
@@ -25,7 +25,7 @@ class ProgrammePolicy
     /**
      * Determine whether the user can view the programme.
      *
-     * @param  \App\User  $user
+     * @param  \App\Models\User  $user
      *
      * @return mixed
      */
@@ -37,7 +37,7 @@ class ProgrammePolicy
     /**
      * Determine whether the user can create programmes.
      *
-     * @param  \App\User  $user
+     * @param  \App\Models\User  $user
      *
      * @return mixed
      */
@@ -49,7 +49,7 @@ class ProgrammePolicy
     /**
      * Determine whether the user can update the programme.
      *
-     * @param  \App\User  $user
+     * @param  \App\Models\User  $user
      *
      * @return mixed
      */
@@ -61,7 +61,7 @@ class ProgrammePolicy
     /**
      * Determine whether the user can delete the programme.
      *
-     * @param  \App\User  $user
+     * @param  \App\Models\User  $user
      *
      * @return mixed
      */

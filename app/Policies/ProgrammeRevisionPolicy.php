@@ -2,9 +2,9 @@
 
 namespace App\Policies;
 
-use App\Programme;
-use App\ProgrammeRevision;
-use App\User;
+use App\Models\Programme;
+use App\Models\ProgrammeRevision;
+use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class ProgrammeRevisionPolicy
@@ -14,7 +14,7 @@ class ProgrammeRevisionPolicy
     /**
      * Determine whether the user can view any programme revisions.
      *
-     * @param  \App\User  $user
+     * @param  \App\Models\User  $user
      *
      * @return mixed
      */
@@ -26,8 +26,8 @@ class ProgrammeRevisionPolicy
     /**
      * Determine whether the user can view the programme revision.
      *
-     * @param  \App\User  $user
-     * @param  \App\ProgrammeRevision  $programmeRevision
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\ProgrammeRevision  $programmeRevision
      *
      * @return mixed
      */
@@ -39,7 +39,7 @@ class ProgrammeRevisionPolicy
     /**
      * Determine whether the user can create programme revisions.
      *
-     * @param  \App\User  $user
+     * @param  \App\Models\User  $user
      *
      * @return mixed
      */
@@ -51,8 +51,8 @@ class ProgrammeRevisionPolicy
     /**
      * Determine whether the user can update the programme revision.
      *
-     * @param  \App\User  $user
-     * @param  \App\ProgrammeRevision  $programmeRevision
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\ProgrammeRevision  $programmeRevision
      *
      * @return mixed
      */
@@ -64,8 +64,8 @@ class ProgrammeRevisionPolicy
     /**
      * Determine whether the user can delete the programme revision.
      *
-     * @param  \App\User  $user
-     * @param  \App\ProgrammeRevision  $programmeRevision
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\ProgrammeRevision  $programmeRevision
      *
      * @return mixed
      */

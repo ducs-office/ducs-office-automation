@@ -1,13 +1,13 @@
 <?php
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
-use App\Cosupervisor;
-use App\Scholar;
-use App\ScholarEducationDegree;
-use App\ScholarEducationInstitute;
-use App\ScholarEducationSubject;
-use App\SupervisorProfile;
-use App\User;
+use App\Models\Cosupervisor;
+use App\Models\Scholar;
+use App\Models\ScholarEducationDegree;
+use App\Models\ScholarEducationInstitute;
+use App\Models\ScholarEducationSubject;
+use App\Models\SupervisorProfile;
+use App\Models\User;
 use Faker\Generator as Faker;
 use Faker\Provider\bg_BG\PhoneNumber;
 

@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\TeachingRecord;
+use App\Models\TeachingRecord;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Validation\ValidationException;

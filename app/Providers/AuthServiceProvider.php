@@ -19,6 +19,8 @@ class AuthServiceProvider extends ServiceProvider
         Role::class => RolePolicy::class,
     ];
 
+    protected $policiesNamespace = 'App\\Policies';
+
     /**
      * Register any authentication / authorization services.
      *
@@ -26,6 +28,10 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Gate::guessPolicyNamesUsing(function ($class) {
+            return $this->policiesNamespace . '\\' . class_basename($class) . 'Policy';
+        });
+
         $this->registerPolicies();
 
         Gate::define('scholars.coursework.store', ScholarProfilePolicy::class . '@addCoursework');

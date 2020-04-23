@@ -6,7 +6,7 @@ use App\Events\ProgrammeCreated;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Staff\StoreProgrammeRequest;
 use App\Http\Requests\Staff\UpdateProgrammeRequest;
-use App\Programme;
+use App\Models\Programme;
 
 class ProgrammesController extends Controller
 {
