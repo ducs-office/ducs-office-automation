@@ -184,7 +184,7 @@ class ScholarTest extends TestCase
 
         $this->assertEquals($registerOn, $scholar->register_on);
     }
-    
+
     public function scholar_advisory_committee_is_returned_as_an_array_containing_supervisor_and_cosupervisor()
     {
         $faculty = create(User::class, 1, ['category' => 'faculty_teacher']);
@@ -210,9 +210,9 @@ class ScholarTest extends TestCase
     }
 
     /** @test */
-    public function scholar_advisory_committee_does_not_have_a_cosupervisor_field_if_the_scholar_has_no_cosupervisors()
+    public function scholar_advisory_committee_does_not_have_a_cosupervisor_field_if_the_scholar_does_mot_have_a_cosupervisor()
     {
-        $scholar = create(Scholar::class);
+        $scholar = create(Scholar::class, 1, ['cosupervisor_id' => null]);
 
         $advisoryCommittee = $scholar->advisory_committee;
 

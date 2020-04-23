@@ -73,9 +73,9 @@ class Scholar extends User
             'supervisor' => $this->supervisor->name,
         ];
 
-        if ($this->cosupervisors->count()) {
+        if ($this->cosupervisor) {
             $mentors = array_merge($mentors, [
-                'cosupervisor' => $this->cosupervisors[0]->name,
+                'cosupervisor' => $this->cosupervisor->name,
             ]);
         }
 

@@ -28,7 +28,7 @@ class UpdateScholarProfileTest extends TestCase
         $cosupervisor = create(Cosupervisor::class);
         $supervisorProfile = create(SupervisorProfile::class);
         $subject = create(ScholarEducationSubject::class);
-        $degree = create(ScholarducationDegree::class);
+        $degree = create(ScholarEducationDegree::class);
         $institute = create(ScholarEducationInstitute::class);
 
         $updateDetails = [
@@ -39,7 +39,6 @@ class UpdateScholarProfileTest extends TestCase
             'profile_picture' => $profilePicture = UploadedFile::fake()->image('picture.jpeg'),
             'enrollment_date' => now()->subMonth(1)->format('Y-m-d'),
             'research_area' => 'Artificial Intelligence',
-            'co_supervisors' => [$cosupervisor->id],
             'education' => [
                 [
                     'degree' => $degree->id,
@@ -63,7 +62,6 @@ class UpdateScholarProfileTest extends TestCase
         $this->assertEquals($updateDetails['admission_via'], $scholar->fresh()->admission_via);
         $this->assertEquals($updateDetails['enrollment_date'], $scholar->fresh()->enrollment_date);
         $this->assertEquals($updateDetails['research_area'], $scholar->fresh()->research_area);
-        $this->assertEquals($updateDetails['advisory_committee'][0]['title'], $scholar->fresh()->advisory_committee[0]['title']);
         $this->assertEquals($updateDetails['education'][0]['year'], $scholar->fresh()->education[0]['year']);
         $this->assertEquals($degree->name, $scholar->fresh()->education[0]['degree']);
 
