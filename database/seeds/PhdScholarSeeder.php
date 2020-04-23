@@ -35,23 +35,12 @@ class PhdScholarSeeder extends Seeder
             'enrollment_date' => '2019-11-11',
             'supervisor_profile_id' => $supervisorNeelima->id,
             'advisory_committee' => [
-                [
-                    'name' => 'Neelima Gupta',
-                    'title' => 'Prof',
-                    'affiliation' => 'University of Delhi',
-                    'designation' => 'Permanent',
-                ],
-                [
-                    'name' => 'Naveen kumar',
-                    'title' => 'Prof',
-                    'affiliation' => 'University of Delhi',
-                    'designation' => 'Permanent',
-                ],
-                [
+                'faculty_teacher' => 'Naveen kumar',
+                'external' => [
                     'name' => 'Naveen Garg',
-                    'title' => 'Prof',
                     'affiliation' => 'Indian Institute of Technology Delhi',
-                    'designation' => 'Permanent',
+                    'designation' => 'Prof.',
+                    'email' => 'naveengarg@iitd.ac.in',
                 ],
             ],
             'education' => [
@@ -95,24 +84,19 @@ class PhdScholarSeeder extends Seeder
             'enrollment_date' => '2019-12-10',
             'supervisor_profile_id' => $supervisorSangeeta->id,
             'advisory_committee' => [
-                [
-                    'name' => 'Punam Bedi',
-                    'title' => 'Prof',
-                    'affiliation' => 'University of Delhi',
-                    'designation' => 'Permanent',
-                ],
-                [
+                'faculty_teacher' => 'Punam Bedi',
+                'external' => [
                     'name' => 'V.B. Singh',
-                    'title' => 'Dr',
                     'affiliation' => 'Delhi College of Arts & Commerce, University of Delhi',
-                    'designation' => 'Permanent',
+                    'designation' => 'Dr.',
+                    'email' => 'vbsingh@gmail.com',
                 ],
-                [
-                    'name' => 'Naveen Garg',
-                    'title' => 'Prof',
-                    'affiliation' => 'Indian Institute of Technology Delhi',
-                    'designation' => 'Permanent',
-                ],
+                // [
+                //     'name' => 'Naveen Garg',
+                //     'title' => 'Prof',
+                //     'affiliation' => 'Indian Institute of Technology Delhi',
+                //     'designation' => 'Permanent',
+                // ],
             ],
         ]);
 
@@ -166,17 +150,12 @@ class PhdScholarSeeder extends Seeder
             'enrollment_date' => '2017-04-05',
             'supervisor_profile_id' => $supervisorNeelima->id,
             'advisory_committee' => [
-                [
-                    'name' => 'Naveen Kumar',
-                    'title' => 'Prof',
-                    'affiliation' => 'University of Delhi',
-                    'designation' => 'Permanent',
-                ],
-                [
+                'faculty_teacher' => 'Naveen Kumar',
+                'external' => [
                     'name' => 'Naveen Garg',
-                    'title' => 'Prof',
                     'affiliation' => 'Department of Computer Science and Engineering IIT Delhi',
-                    'designation' => 'Permanent',
+                    'designation' => 'Prof.',
+                    'email' => 'naveengarg@iitd.ac.in',
                 ],
             ],
         ]);
@@ -237,30 +216,18 @@ class PhdScholarSeeder extends Seeder
             'supervisor_profile_id' => $supervisorArchana->id,
             'cosupervisor_id' => $cosupervisorMuttoo->id,
             'advisory_committee' => [
-                [
+                'faculty_teacher' => 'Poonam Bedi',
+                'external' => [
                     'name' => 'Archana Singhal',
-                    'title' => 'Dr',
                     'affiliation' => 'Ip college, University of Delhi',
-                    'designation' => 'Permanent',
+                    'designation' => 'Dr.',
                 ],
-                [
-                    'name' => 'S.K Muttoo',
-                    'title' => 'Dr',
-                    'affiliation' => 'Indian Institute of Technology Delhi',
-                    'designation' => 'Permanent',
-                ],
-                [
-                    'name' => 'Poonam Bedi',
-                    'title' => 'Prof',
-                    'affiliation' => 'Department of Computer Science, University of Delhi',
-                    'designation' => 'Permanent',
-                ],
-                [
-                    'name' => 'Harmeet Kaur',
-                    'title' => 'Dr',
-                    'affiliation' => 'Hansraj college, University of Delhi',
-                    'designation' => 'Permanent',
-                ],
+                // [
+                //     'name' => 'Harmeet Kaur',
+                //     'title' => 'Dr',
+                //     'affiliation' => 'Hansraj college, University of Delhi',
+                //     'designation' => 'Permanent',
+                // ],
             ],
         ]);
 
@@ -297,18 +264,7 @@ class PhdScholarSeeder extends Seeder
             'supervisor_profile_id' => $supervisorArpita->id,
             'cosupervisor_id' => $cosupervisorAnurag->id,
             'advisory_committee' => [
-                [
-                    'name' => 'Poonam Bedi',
-                    'title' => 'Prof',
-                    'affiliation' => 'Department of Computer Science, University of Delhi',
-                    'designation' => 'Permanent',
-                ],
-                [
-                    'name' => 'Naveen kumar',
-                    'title' => 'Prof',
-                    'affiliation' => 'University of Delhi',
-                    'designation' => 'Permanent',
-                ],
+                'faculty_teacher' => 'Poonam Bedi',
             ],
         ]);
 
@@ -331,17 +287,12 @@ class PhdScholarSeeder extends Seeder
             'enrollment_date' => '2019-06-11',
             'supervisor_profile_id' => $supervisorSangeeta->id,
             'advisory_committee' => [
-                [
-                    'name' => 'Poonam Bedi',
-                    'title' => 'Prof',
-                    'affiliation' => 'Department of Computer Science, University of Delhi',
-                    'designation' => 'Permanent',
-                ],
-                [
+                'faculty_teacher' => 'Poonam Bedi',
+                'external' => [
                     'name' => 'V.B. Singh',
-                    'title' => 'Dr',
                     'affiliation' => 'Delhi College of Arts & Commerce, University of Delhi',
-                    'designation' => 'Permanent',
+                    'designation' => 'Dr.',
+                    'email' => 'vbsingh@gmail.com',
                 ],
             ],
         ]);

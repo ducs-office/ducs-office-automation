@@ -20,6 +20,7 @@ use App\Models\Teacher;
 use App\Models\TeacherProfile;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role;
 
 class DatabaseSeeder extends Seeder
@@ -82,7 +83,7 @@ class DatabaseSeeder extends Seeder
 
         $programme_revisions->each(function ($revision) use ($courses) {
             return $courses->filter(function ($course) use ($revision) {
-                return starts_with($course->code, $revision->programme->code);
+                return Str::startsWith($course->code, $revision->programme->code);
             })->each(function ($course) use ($revision) {
                 $matches = [];
                 preg_match('/([1-9])[0-9]*$/', $course->code, $matches);
