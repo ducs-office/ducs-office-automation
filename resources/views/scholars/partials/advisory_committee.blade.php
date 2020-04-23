@@ -25,7 +25,7 @@
                     {{$advisoryCommittee['external']['email']}}
                 </h4>
             </div>
-            @if($advisoryCommittee['external']['phone_no'])
+            @if (array_key_exists('phone_no', $advisoryCommittee['external']))
                 <div class="flex items-center">
                     <feather-icon name="phone" class="text-gray-800 h-3 mr-2"></feather-icon>
                     <h4 class="text-gray-800">
