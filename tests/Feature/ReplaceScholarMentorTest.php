@@ -2,11 +2,9 @@
 
 namespace Tests\Feature;
 
-use App\Cosupervisor;
-use App\Scholar;
-use App\SupervisorProfile;
-use App\TrackScholarCosupervisor;
-use App\TrackScholarSupervisor;
+use App\Models\Cosupervisor;
+use App\Models\Scholar;
+use App\Models\SupervisorProfile;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Validation\ValidationException;

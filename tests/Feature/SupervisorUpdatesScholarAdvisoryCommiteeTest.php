@@ -2,8 +2,8 @@
 
 namespace Tests\Feature;
 
-use App\Scholar;
-use App\User;
+use App\Models\Scholar;
+use App\Models\User;
 use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;

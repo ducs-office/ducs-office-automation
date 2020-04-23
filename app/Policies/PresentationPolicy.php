@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\Presentation;
-use App\Scholar;
+use App\Models\Presentation;
+use App\Models\Scholar;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Support\Facades\Auth;
 

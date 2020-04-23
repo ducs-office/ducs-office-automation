@@ -2,12 +2,12 @@
 
 namespace Tests\Feature;
 
-use App\Cosupervisor;
-use App\Scholar;
-use App\ScholarEducationDegree;
-use App\ScholarEducationInstitute;
-use App\ScholarEducationSubject;
-use App\SupervisorProfile;
+use App\Models\Cosupervisor;
+use App\Models\Scholar;
+use App\Models\ScholarEducationDegree;
+use App\Models\ScholarEducationInstitute;
+use App\Models\ScholarEducationSubject;
+use App\Models\SupervisorProfile;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;

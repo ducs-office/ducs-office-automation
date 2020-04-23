@@ -2,9 +2,9 @@
 
 namespace App\Policies;
 
-use App\Publication;
-use App\Scholar;
-use App\User;
+use App\Models\Publication;
+use App\Models\Scholar;
+use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Support\Facades\Auth;
 

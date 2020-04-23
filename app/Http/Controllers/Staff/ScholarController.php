@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Staff;
 
-use App\Cosupervisor;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Scholar\StoreJournalPublication;
 use App\Mail\UserRegisteredMail;
+use App\Models\Cosupervisor;
 use App\Models\PhdCourse;
 use App\Models\Scholar;
 use App\Models\SupervisorProfile;

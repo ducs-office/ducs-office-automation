@@ -2,10 +2,10 @@
 
 namespace Tests\Feature;
 
-use App\Publication;
-use App\Scholar;
-use App\SupervisorProfile;
-use App\Teacher;
+use App\Models\Publication;
+use App\Models\Scholar;
+use App\Models\SupervisorProfile;
+use App\Models\Teacher;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;

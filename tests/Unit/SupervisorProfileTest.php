@@ -5,6 +5,7 @@ namespace Tests\Unit;
 use App\Models\Publication;
 use App\Models\SupervisorProfile;
 use App\Models\Teacher;
+use App\SupervisorProfile as AppSupervisorProfile;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -32,7 +33,7 @@ class SupervisorProfileTest extends TestCase
     /** @test */
     public function supervisor_profile_has_many_publications()
     {
-        $supervisorProfile = create('App\SupervisorProfile');
+        $supervisorProfile = create(SupervisorProfile::class);
 
         $this->assertCount(0, $supervisorProfile->publications);
 

@@ -1,7 +1,7 @@
 <?php
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
-use App\ScholarEducationDegree;
+use App\Models\ScholarEducationDegree;
 use Faker\Generator as Faker;
 
 $factory->define(ScholarEducationDegree::class, function (Faker $faker) {
