@@ -242,7 +242,7 @@
                         <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
                     </svg>
                 </div>
-                @include('scholars.partials.advisory_committee',[
+                @include('research.scholars.partials.advisory_committee',[
                     'advisoryCommittee' => $scholar->advisory_committee
                 ])
             </div>
@@ -269,7 +269,7 @@
                     <summary class="underline p-2 bg-gray-200 outline-none">
                         {{$scholar->old_advisory_committees[$i + 1]['date']}} - {{$scholar->old_advisory_committees[$i]['date']}}
                     </summary>
-                    @include('scholars.partials.advisory_committee',[
+                    @include('research.scholars.partials.advisory_committee',[
                         'advisoryCommittee' => $scholar->old_advisory_committees[$i]
                     ])
                 </details>
@@ -281,7 +281,7 @@
                     <summary class="underline p-2 bg-gray-200 outline-none">
                     {{$scholar->registerOn}} - {{$scholar->old_advisory_committees[$i]['date']}}
                     </summary>
-                    @include('scholars.partials.advisory_committee',[
+                    @include('research.scholars.partials.advisory_committee',[
                         'advisoryCommittee' => $scholar->old_advisory_committees[$i]
                     ])
                 </details>
