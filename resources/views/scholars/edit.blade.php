@@ -115,20 +115,52 @@
                             <label for="education[][year]" class="form-label block w-1/4">Year</label>
                         </div>
                         <div v-for="(element, index) in elements" :key="index" class="flex items-baseline mb-4 mt-2 w-2/3">
-                            
-                                
-                                {{---- Vue component for education---}}
-                                <scholar-education class="mt-3"
-                                    :name="`education[${index}]`"
-                                    :subject-choices="{{ json_encode($subjects) }}" 
-                                    :degree-choices="{{ json_encode($degrees) }}" 
-                                    :institute-choices="{{ json_encode($institutes) }}" 
-                                    :element=element
-                                    :index=index>
-                                </scholar-education>
-                                
-                                {{--   --}}
+                            <div class="flex">
+                                <div class="w-1/4 mr-2">
+                                    <select-with-other 
+                                        :name="`education[${index}][degree]`"
+                                        :other-name="`typedDegrees[${index}]`"
+                                        :other-value="-1"
+                                        placeholder="Plase Specify...">
 
+                                        <option value="">---- Choose option ----- </option>
+                                        @foreach($degrees as $degree => $id)
+                                        <option value="{{ $id }}" :selected="element.value.degree === '{{ $degree }}'"> {{ $degree}} </option>
+                                        @endforeach
+                                            
+                                    </select-with-other>
+                                </div>
+                                <div class="w-1/4 mr-2">
+
+                                    <select-with-other 
+                                        :name="`education[${index}][subject]`"
+                                        :other-name="`typedSubjects[${index}]`"
+                                        other-value="-1"
+                                        placeholder="Plase Specify...">
+
+                                        <option value="">---- Choose option ----- </option>
+                                        @foreach($subjects as $subject => $id)
+                                        <option value="{{ $id }}" :selected="element.value.subject === '{{ $subject }}' "> {{ $subject}} </option>
+                                        @endforeach
+                                            
+                                    </select-with-other>
+                                </div>
+                                <div class="w-1/4 mr-2">
+                                    <select-with-other 
+                                        :name="`education[${index}][institute]`"
+                                        :other-name="`typedInstitutes[${index}]`"
+                                        :other-value="-1"
+                                        placeholder="Plase Specify...">
+
+                                        <option value="">---- Choose option ----- </option>
+                                        @foreach($institutes as $institute => $id)
+                                        <option value="{{ $id }}" :selected="element.value.institute === '{{ $institute }}' "> {{ $institute}} </option>
+                                        @endforeach
+                                            
+                                    </select-with-other>
+                                </div>
+                                <input type="text" :name="`education[${index}][year]`" v-model="element.value.year" class="form-input h-8 w-1/4">
+                            </div>
                             <button v-on:click.prevent="removeElement(index)" class="btn is-sm ml-2 text-red-600 h-8">x</button>
                         </div>
                     </template>

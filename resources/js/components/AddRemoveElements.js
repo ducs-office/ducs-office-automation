@@ -22,12 +22,19 @@ export default {
     methods: {
         addElement() {
             this.elements.push({
-                value: this.newElement
+                value: this.createNewElement
             });
         },
         removeElement(index) {
             this.elements.splice(index, 1);
         },
+        createNewElement() {
+            const el = JSON.parse(JSON.stringify(this.newElement));
+            Object.keys(el).map((key) => {
+                el[key] = '';
+            });
+            return el;
+        }
     },
     created() {
         if(this.existingElements.length ) {
@@ -39,15 +46,16 @@ export default {
 
             const el = JSON.parse(JSON.stringify(this.existingElements[0]));
 
+
             if(typeof(this.existingElements[0]) == "object") {
-                Object.keys(el).map((type) => {
-                    el[type] = '';
+                Object.keys(el).map((key) => {
+                    el[key] = '';
                 });
                 this.newElement = el;
             }
             else    
                 this.newElement = "";
         }
-    },
+    }
 }
 
