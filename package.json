@@ -27,7 +27,7 @@
         "vuedraggable": "^2.23.2"
     },
     "dependencies": {
-        "tailwindcss": "^1.1.4",
+        "tailwindcss": "^1.3.5",
         "vue": "^2.6.11"
     }
 }
