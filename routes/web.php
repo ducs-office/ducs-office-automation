@@ -93,7 +93,7 @@ Route::prefix('/research')
             'ScholarController@updateAdvisoryCommittee'
         )->name('scholars.advisory_committee.update');
 
-        Route::post(
+        Route::patch(
             '/scholars/{scholar}/replace-advisory-committee',
             'ScholarController@replaceAdvisoryCommittee'
         )->name('scholars.advisory_committee.replace');

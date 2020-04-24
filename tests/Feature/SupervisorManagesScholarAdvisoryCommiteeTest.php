@@ -64,7 +64,7 @@ class SupervisorManagesScholarAdvisoryCommiteeTest extends TestCase
         $faculty_teacher = create(User::class, 1, ['category' => 'faculty_teacher']);
 
         $this->withoutExceptionHandling()
-            ->post(route('research.scholars.advisory_committee.replace', [
+            ->patch(route('research.scholars.advisory_committee.replace', [
                 'scholar' => $scholar,
             ]), [
                 'faculty_teacher' => $faculty_teacher->name,

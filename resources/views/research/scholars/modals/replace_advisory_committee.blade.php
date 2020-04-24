@@ -3,7 +3,7 @@
         <div class="p-6">
             <h2 class="text-lg font-bold mb-8">Replace Scholar's Advisory Committee</h2>
             <form :action="route('research.scholars.advisory_committee.replace', data('scholar', ''))" method="POST">
-                @csrf_token 
+                @csrf_token @method('PATCH')
                 <div class="mb-2">
                     <label for="name" class="w-full form-label mb-1">
                         Supervisor
