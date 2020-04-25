@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Staff;
 
+use App\Events\ScholarCreated;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Scholar\StoreJournalPublication;
+use App\Mail\FillAdvisoryCommitteeMail;
 use App\Mail\UserRegisteredMail;
 use App\Models\Cosupervisor;
 use App\Models\PhdCourse;
@@ -59,7 +61,7 @@ class ScholarController extends Controller
 
         $scholar = Scholar::create($validData + ['password' => bcrypt($plainPassword)]);
 
-        Mail::to($scholar)->send(new UserRegisteredMail($scholar, $plainPassword));
+        event(new ScholarCreated($scholar, $plainPassword));
 
         flash('New scholar added succesfully!')->success();
 

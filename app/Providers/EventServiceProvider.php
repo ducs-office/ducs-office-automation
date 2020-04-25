@@ -3,7 +3,10 @@
 namespace App\Providers;
 
 use App\Events\ProgrammeCreated;
+use App\Events\ScholarCreated;
 use App\Listeners\AddCoursesToProgramme;
+use App\Listeners\SendFillAdvisoryCommitteeEmail;
+use App\Listeners\SendRegisteredEmail;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -22,6 +25,10 @@ class EventServiceProvider extends ServiceProvider
         ],
         ProgrammeCreated::class => [
             AddCoursesToProgramme::class,
+        ],
+        ScholarCreated::class => [
+            SendRegisteredEmail::class,
+            SendFillAdvisoryCommitteeEmail::class,
         ],
     ];
 

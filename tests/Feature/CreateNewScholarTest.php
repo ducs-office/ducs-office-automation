@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Mail\FillAdvisoryCommitteeMail;
 use App\Mail\UserRegisteredMail;
 use App\Models\Cosupervisor;
 use App\Models\Scholar;
@@ -58,7 +59,7 @@ class CreateNewScholarTest extends TestCase
         $this->assertEquals($scholar['last_name'], Scholar::first()->last_name);
         $this->assertEquals($scholar['email'], Scholar::first()->email);
         $this->assertEquals($scholar['cosupervisor_id'], Scholar::first()->cosupervisor->id);
-        $this->assertEquals($scholar['supervisor_profile_id'], Scholar::first()->supervisor->supervisorProfile->id);
+        $this->assertEquals($scholar['supervisor_profile_id'], Scholar::first()->supervisorProfile->id);
     }
 
     /** @test */
@@ -87,6 +88,36 @@ class CreateNewScholarTest extends TestCase
             $this->assertArrayHasKey('user', $data);
             $this->assertArrayHasKey('password', $data);
             return (int) $data['user']->id === (int) $scholar->id;
+        });
+    }
+
+    /** @test */
+    public function mail_is_sent_to_supervisor_of_scholar_to_fill_advisory_committee()
+    {
+        Mail::fake();
+
+        $this->signIn();
+
+        $supervisorProfile = create(SupervisorProfile::class);
+
+        $this->withoutExceptionHandling()
+            ->post(route('staff.scholars.store'), [
+                'first_name' => 'Pushkar',
+                'last_name' => 'Sonkar',
+                'email' => 'pushkar@cs.du.ac.in',
+                'supervisor_profile_id' => $supervisorProfile->id,
+            ])
+            ->assertRedirect()
+            ->assertSessionHasFlash('success', 'New scholar added succesfully!');
+
+        $scholar = Scholar::first();
+
+        Mail::assertQueued(FillAdvisoryCommitteeMail::class, function ($mail) use ($scholar) {
+            $data = $mail->build()->viewData;
+            $this->assertArrayHasKey('supervisor', $data);
+            $this->assertArrayHasKey('scholarName', $data);
+            $this->assertArrayHasKey('deadline', $data);
+            return (int) $data['supervisor']->id === (int) $scholar->supervisor->id;
         });
     }
 
