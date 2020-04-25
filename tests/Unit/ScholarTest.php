@@ -234,7 +234,7 @@ class ScholarTest extends TestCase
         $subject = create(ScholarEducationSubject::class);
         $institute = create(ScholarEducationInstitute::class);
 
-        $scholar = create(Scholar::class, );
+        $scholar = create(Scholar::class);
 
         $scholar->update([
             'education' => [
