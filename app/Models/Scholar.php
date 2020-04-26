@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\AdvisoryCommittee;
 use App\Models\AcademicDetail;
 use App\Models\Cosupervisor;
 use App\Models\Publication;
@@ -36,7 +37,7 @@ class Scholar extends User
     ];
 
     protected $casts = [
-        'advisory_committee' => 'array',
+        'advisory_committee' => AdvisoryCommittee::class,
         'education' => 'array',
         'old_cosupervisors' => 'array',
         'old_supervisors' => 'array',
@@ -69,22 +70,23 @@ class Scholar extends User
         return $this->first_name . ' ' . $this->last_name;
     }
 
-    public function getAdvisoryCommitteeAttribute($value)
-    {
-        $value = $this->castAttribute('advisory_committee', $value);
+    // public function getAdvisoryCommitteeAttribute($value)
+    // {
+    //     // dd($value);
+    //     $value = $this->castAttribute('advisory_committee', $value);
 
-        $mentors = [
-            'supervisor' => $this->supervisor->name,
-        ];
+    //     $mentors = [
+    //         'supervisor' => $this->supervisor->name,
+    //     ];
 
-        if ($this->cosupervisor) {
-            $mentors = array_merge($mentors, [
-                'cosupervisor' => $this->cosupervisor->name,
-            ]);
-        }
+    //     if ($this->cosupervisor) {
+    //         $mentors = array_merge($mentors, [
+    //             'cosupervisor' => $this->cosupervisor->name,
+    //         ]);
+    //     }
 
-        return $value === null ? $mentors : array_merge($value, $mentors);
-    }
+    //     return $value === null ? $mentors : array_merge($value, $mentors);
+    // }
 
     public function getEducationAttribute($value)
     {

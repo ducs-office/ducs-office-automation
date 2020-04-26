@@ -8,6 +8,7 @@ use App\Models\ScholarEducationInstitute;
 use App\Models\ScholarEducationSubject;
 use App\Models\SupervisorProfile;
 use App\Models\User;
+use App\Types\AdvisoryCommitteeMember;
 use Faker\Generator as Faker;
 use Faker\Provider\bg_BG\PhoneNumber;
 
@@ -30,14 +31,19 @@ $factory->define(Scholar::class, function (Faker $faker) {
         },
         'enrollment_date' => $faker->date($format = 'Y-m-d', $max = now()),
         'advisory_committee' => [
-            'faculty_teacher' => $faculty_teacher->name,
-            'external' => [
+            new AdvisoryCommitteeMember('faculty_teacher', [
+                'name' => $faculty_teacher->name,
+                'designation' => 'Professor',
+                'affiliation' => 'Department of Computer Science',
+                'email' => $faculty_teacher->email,
+            ]),
+            new AdvisoryCommitteeMember('external', [
                 'name' => $faker->name,
                 'designation' => $faker->jobTitle,
                 'affiliation' => $faker->company,
                 'email' => $faker->email,
-                'phone_no' => $faker->PhoneNumber,
-            ],
+                'phone' => $faker->PhoneNumber,
+            ]),
         ],
         'education' => static function () use ($faker) {
             $x = random_int(1, 4);

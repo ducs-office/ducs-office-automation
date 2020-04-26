@@ -167,11 +167,13 @@ class ReplaceScholarMentorTest extends TestCase
 
         $this->assertEquals(count($scholar->fresh()->old_advisory_committees), 1);
 
+        $expectedOldCommittee = collect($beforeSupervisorReplaceAdvisoryCommittee)
+            ->map->toArray()
+            ->merge(['date' => now()->format('d F Y')])
+            ->toArray();
+
         $this->assertEquals(
-            array_merge(
-                $beforeSupervisorReplaceAdvisoryCommittee,
-                ['date' => now()->format('d F Y')]
-            ),
+            $expectedOldCommittee,
             $scholar->fresh()->old_advisory_committees[0]
         );
     }
@@ -195,11 +197,13 @@ class ReplaceScholarMentorTest extends TestCase
 
         $this->assertEquals(count($scholar->fresh()->old_advisory_committees), 1);
 
+        $expectedOldCommittee = collect($beforeCosupervisorReplaceAdvisoryCommittee)
+            ->map->toArray()
+            ->merge(['date' => now()->format('d F Y')])
+            ->toArray();
+
         $this->assertEquals(
-            array_merge(
-                $beforeCosupervisorReplaceAdvisoryCommittee,
-                ['date' => now()->format('d F Y')]
-            ),
+            $expectedOldCommittee,
             $scholar->fresh()->old_advisory_committees[0]
         );
     }

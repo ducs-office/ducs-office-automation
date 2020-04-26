@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Research;
 
+use App\Casts\AdvisoryCommittee;
 use App\Http\Controllers\Controller;
 use App\Models\Cosupervisor;
 use App\Models\PhdCourse;
 use App\Models\Scholar;
 use App\Models\User;
+use App\Types\AdvisoryCommitteeMember;
 use Illuminate\Http\Request;
 
 class ScholarController extends Controller
@@ -47,16 +49,24 @@ class ScholarController extends Controller
     public function updateAdvisoryCommittee(Request $request, Scholar $scholar)
     {
         $validData = $request->validate([
-            'faculty_teacher' => ['required', 'string'],
-            'external' => ['required', 'array', 'size: 5'],
-            'external.name' => ['required', 'string'],
-            'external.designation' => ['required', 'string'],
-            'external.affiliation' => ['required', 'string'],
-            'external.email' => ['required', 'email'],
-            'external.phone_no' => ['nullable', 'string'],
+            'committee' => ['required', 'array', 'max:5'],
+            'committee.*.type' => ['required', 'string', 'in:faculty_teacher,external'],
+            'committee.*.id' => ['required_if:commmitte.*.type,faculty_teacher', 'integer'],
+            'committee.*.name' => ['required_if:commmitte.*.type,external', 'string'],
+            'committee.*.designation' => ['required_if:commmitte.*.type,external', 'string'],
+            'committee.*.affiliation' => ['required_if:commmitte.*.type,external', 'string'],
+            'committee.*.email' => ['required_if:commmitte.*.type,external', 'email'],
+            'committee.*.phone' => ['nullable', 'string'],
         ]);
 
-        $scholar->update(['advisory_committee' => $validData]);
+        $committee = collect($validData['committee'])->map(function ($item) {
+            if ($item['type'] == 'faculty_teacher') {
+                return AdvisoryCommitteeMember::fromFacultyTeacher(User::find($item['id']));
+            }
+            return new AdvisoryCommitteeMember($item['type'], $item);
+        })->toArray();
+
+        $scholar->update(['advisory_committee' => $committee]);
 
         flash("Scholar's Advisory Committee Updated SuccessFully!")->success();
 
@@ -66,13 +76,14 @@ class ScholarController extends Controller
     public function replaceAdvisoryCommittee(Request $request, Scholar $scholar)
     {
         $validData = $request->validate([
-            'faculty_teacher' => ['required', 'string'],
-            'external' => ['required', 'array', 'size: 5'],
-            'external.name' => ['required', 'string'],
-            'external.designation' => ['required', 'string'],
-            'external.affiliation' => ['required', 'string'],
-            'external.email' => ['required', 'email'],
-            'external.phone_no' => ['nullable', 'string'],
+            'committee' => ['required', 'array', 'max:5'],
+            'committee.*.type' => ['required', 'string', 'in:faculty_teacher,external'],
+            'committee.*.id' => ['required_if:commmitte.*.type,faculty_teacher', 'integer'],
+            'committee.*.name' => ['required_if:commmitte.*.type,external', 'string'],
+            'committee.*.designation' => ['required_if:commmitte.*.type,external', 'string'],
+            'committee.*.affiliation' => ['required_if:commmitte.*.type,external', 'string'],
+            'committee.*.email' => ['required_if:commmitte.*.type,external', 'email'],
+            'committee.*.phone' => ['nullable', 'string'],
         ]);
 
         $currentAdvisoryCommittee = array_merge(
@@ -84,8 +95,15 @@ class ScholarController extends Controller
 
         array_unshift($oldAdvisoryCommittees, $currentAdvisoryCommittee);
 
+        $newCommittee = collect($validData['committee'])->map(function ($item) {
+            if ($item['type'] == 'faculty_teacher') {
+                return AdvisoryCommitteeMember::fromFacultyTeacher(User::find($item['id']));
+            }
+            return new AdvisoryCommitteeMember($item['type'], $item);
+        })->toArray();
+
         $scholar->update([
-            'advisory_committee' => $validData,
+            'advisory_committee' => $newCommittee,
             'old_advisory_committees' => $oldAdvisoryCommittees,
         ]);
 

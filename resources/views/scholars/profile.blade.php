@@ -83,9 +83,8 @@
                 </div>
                 <div class="flex-1 my-6">
                     <ul class="border flex flex-wrap rounded-lg overflow-hidden mb-4">
-                        @if (count($scholar->education))
-                        @foreach ($scholar->education as $education)
-                            <li class="px-5 py-5 border-b last:border-b-0 w-1/2">
+                        @forelse ($scholar->education as $education)
+                            <li class="p-5 border-b last:border-b-0 w-1/2">
                                 <div class="flex mb-1">
                                     <feather-icon name="book" class="h-current"></feather-icon>
                                     <div class="flex items-baseline">
@@ -96,12 +95,15 @@
                                 <p class="ml-6 text-gray-700 mb-1"> {{ $education['institute'] }} </p>
                                 <p class="ml-6 text-gray-700"> {{ $education['year'] }} </p>
                             </li>
-                        @endforeach
-                        @endif
+                        @empty
+                            <li class="px-4 py-2">
+                                <p class="font-bold text-gray-600">Nothing to show here.</p>
+                            </li>
+                        @endforelse
                     </ul>
                 </div>
             </div>
-            
+
             <div class="flex">
                 <div class="w-64 pr-4 relative z-10 -ml-8 my-6">
                     <h3 class="relative z-20 pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
@@ -122,16 +124,15 @@
                     </h3>
                     <svg class="absolute left-0 w-2 text-magenta-900" viewBox="0 0 10 10">
                         <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
-                    </svg> 
+                    </svg>
                 </div>
-                @if (count($scholar->old_supervisors))
                 <ul class="flex-col-reverse flex my-6 flex-1 border rounded-lg overflow-hidden">
                     @php
                         $prevDate = $scholar->registerOn
                     @endphp
                     @foreach ($scholar->old_supervisors as $old_supervisor)
                     <li class="border-b first:border-b-0 px-5 p-2">
-                        <div class="flex justify-between items-center"> 
+                        <div class="flex justify-between items-center">
                             <div class="w-1/2">
                                 <p class="font-bold"> {{ $old_supervisor['name'] }} </p>
                                 <div class="flex mt-1 items-center text-gray-700">
@@ -139,7 +140,7 @@
                                     <p class="ml-1 italic"> {{ $old_supervisor['email'] }} </p>
                                 </div>
                             </div>
-                            <p class="w-1/2 mr-4 font-bold"> {{ $prevDate }} - {{ $old_supervisor['date']}}</p>    
+                            <p class="w-1/2 mr-4 font-bold"> {{ $prevDate }} - {{ $old_supervisor['date']}}</p>
                             @php
                                 $prevDate = $old_supervisor['date']
                             @endphp
@@ -147,7 +148,7 @@
                     </li>
                     @endforeach
                     <li class="border-b first:border-b-0 px-5 p-2">
-                        <div class="flex justify-between items-center"> 
+                        <div class="flex justify-between items-center">
                             <div class="w-1/2">
                                 <p class="font-bold"> {{ $scholar->supervisor->name }} </p>
                                 <div class="flex mt-1 items-center text-gray-700">
@@ -159,9 +160,8 @@
                         </div>
                     </li>
                 </ul>
-                @endif
             </div>
-             
+
             <div class="flex">
                 <div class="w-64 pr-4 relative z-10 -ml-8 my-6">
                     <h3 class="relative z-20 pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
@@ -169,16 +169,16 @@
                     </h3>
                     <svg class="absolute left-0 w-2 text-magenta-900" viewBox="0 0 10 10">
                         <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
-                    </svg> 
+                    </svg>
                 </div>
-               
+
                 <ul class="flex-col-reverse flex my-6 flex-1 border rounded-lg overflow-hidden">
                     @php
                         $prevDate = $scholar->registerOn
                     @endphp
                     @foreach ($scholar->old_cosupervisors as $old_cosupervisor)
                     <li class="border-b first:border-b-0 px-5 p-2">
-                        <div class="flex justify-between items-center"> 
+                        <div class="flex justify-between items-center">
                             <div class="w-1/2">
                                 @if ($old_cosupervisor['name'])
                                 <p class="font-bold"> {{ $old_cosupervisor['name'] }} </p>
@@ -192,7 +192,7 @@
                                 <p class="font-bold"> Cosupervisor Not Assigned </p>
                                 @endif
                             </div>
-                            <p class="w-1/2 mr-4 font-bold"> {{ $prevDate }} - {{ $old_cosupervisor['date']}}</p>    
+                            <p class="w-1/2 mr-4 font-bold"> {{ $prevDate }} - {{ $old_cosupervisor['date']}}</p>
                             @php
                                 $prevDate = $old_cosupervisor['date']
                             @endphp
@@ -200,7 +200,7 @@
                     </li>
                     @endforeach
                     <li class="border-b first:border-b-0 px-5 p-2">
-                        <div class="flex justify-between items-center"> 
+                        <div class="flex justify-between items-center">
                             <div class="w-1/2">
                                 @if ($scholar->cosupervisor)
                                 <p class="font-bold"> {{ $scholar->cosupervisor->name }} </p>
@@ -220,7 +220,7 @@
                 </ul>
             </div>
         </div>
-            
+
         <div class="bg-white p-6 h-full shadow-md mt-8">
             <div class="flex">
                 <div class="w-64 pr-4 relative z-10 -ml-8 my-6">
@@ -234,8 +234,8 @@
                 @include('scholars.partials.advisory_committee',[
                     'advisoryCommittee' => $scholar->advisory_committee
                 ])
-            </div>  
-            
+            </div>
+
             @if ($scholar->old_advisory_committees)
             <div class="mt-6">
                 <h2 class="font-bold text-lg mb-5"> Previous Advisory Committees</h2>
