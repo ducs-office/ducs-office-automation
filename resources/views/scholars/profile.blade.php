@@ -503,5 +503,55 @@
                 @endforelse
             </ul>
         </div>
+
+        {{--Progress Reports--}}
+        <div class="mb-16">
+            <h3 class="font-bold text-xl mb-4">
+                Progress Reports
+            </h3>
+            <ul class="border rounded-lg bg-white overflow-hidden mb-4">
+                @forelse ($scholar->progressReports() as $progressReport)
+                    <li class="px-4 py-3 border-b last:border-b-0">
+                        <div class="flex items-center">
+                            <p class="font-bold flex-1">
+                                {{ $progressReport->description }}
+                            </p>
+                            <a href="{{ route('scholars.progress_reports.attachment', $progressReport) }}"
+                                class="inline-flex items-center underline px-4 py-2 text-gray-900 rounded font-bold">
+                            <feather-icon name="paperclip" class="h-4 mr-2"></feather-icon>
+                                Attachment
+                            </a>
+                        </div>
+                    </li>
+                @empty
+                    <li class="px-4 py-3 text-center text-gray-700 font-bold">No Progress Reports yet.</li>
+                @endforelse
+            </ul>
+        </div>
+
+        {{--Other Documents--}}
+        <div class="mb-16">
+            <h3 class="font-bold text-xl mb-4">
+                Other Documents
+            </h3>
+            <ul class="border rounded-lg bg-white overflow-hidden mb-4">
+                @forelse ($scholar->otherDocuments() as $otherDocument)
+                    <li class="px-4 py-3 border-b last:border-b-0">
+                        <div class="flex items-center">
+                            <p class="font-bold flex-1">
+                                {{ $otherDocument->description }}
+                            </p>
+                            <a href="{{ route('scholars.documents.attachment', $otherDocument) }}"
+                                class="inline-flex items-center underline px-4 py-2 text-gray-900 rounded font-bold">
+                            <feather-icon name="paperclip" class="h-4 mr-2"></feather-icon>
+                                Attachment
+                            </a>
+                        </div>
+                    </li>
+                @empty
+                    <li class="px-4 py-3 text-center text-gray-700 font-bold">No Documents</li>
+                @endforelse
+            </ul>
+        </div>
     </div>
 @endsection
