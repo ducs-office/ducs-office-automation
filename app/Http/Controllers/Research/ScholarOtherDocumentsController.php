@@ -7,28 +7,27 @@ use App\Models\Scholar;
 use App\Models\ScholarDocument;
 use App\Models\ScholarDocumentType;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Response as Response;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 
-class ProgressReportsController extends Controller
+class ScholarOtherDocumentsController extends Controller
 {
     public function store(Request $request, Scholar $scholar)
     {
-        $this->authorize('scholars.progress_reports.store', $scholar);
+        $this->authorize('scholars.other_documents.store', $scholar);
 
         $request->validate([
-            'progress_report' => ['required', 'file', 'mimetypes:application/pdf, image/*', 'max:200'],
+            'document' => ['required', 'file', 'mimetypes:application/pdf, image/*', 'max:200'],
             'description' => ['required', 'string', 'min:5', 'max:250'],
         ]);
 
         $scholar->documents()->create([
-            'type' => ScholarDocumentType::PROGRESS_REPORT,
-            'path' => $request->file('progress_report')->store('scholar_documents'),
+            'type' => ScholarDocumentType::OTHER_DOCUMENT,
+            'path' => $request->file('document')->store('scholar_documents'),
             'description' => $request->input('description'),
         ]);
 
-        flash('Progress Report added successfully!')->success();
+        flash('Document added successfully!')->success();
 
         return back();
     }

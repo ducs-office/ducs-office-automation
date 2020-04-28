@@ -110,22 +110,22 @@ Route::prefix('/research')
 
         Route::post(
             '/scholars/{scholar}/progress-report',
-            'ProgressReportsController@store'
+            'ScholarProgressReportsController@store'
         )->name('scholars.progress_reports.store');
 
         Route::get(
             'scholars/{scholar}/progress-report/{document}/attachment',
-            'ProgressReportsController@viewAttachment'
+            'ScholarProgressReportsController@viewAttachment'
         )->name('scholars.progress_reports.attachment');
 
         Route::post(
             '/scholars/{scholar}/document',
-            'OtherDocumentsController@store'
+            'ScholarOtherDocumentsController@store'
         )->name('scholars.documents.store');
 
         Route::get(
             'scholars/{scholar}/document/{document}/attachment',
-            'OtherDocumentsController@viewAttachment'
+            'ScholarOtherDocumentsController@viewAttachment'
         )->name('scholars.documents.attachment');
     });
 
