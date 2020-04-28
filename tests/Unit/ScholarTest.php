@@ -8,6 +8,8 @@ use App\Models\Leave;
 use App\Models\PhdCourse;
 use App\Models\Presentation;
 use App\Models\Scholar;
+use App\Models\ScholarDocument;
+use App\Models\ScholarDocumentType;
 use App\Models\ScholarEducationDegree;
 use App\Models\ScholarEducationInstitute;
 use App\Models\ScholarEducationSubject;
@@ -253,5 +255,47 @@ class ScholarTest extends TestCase
         $this->assertEquals($degree->name, $scholar->education[0]['degree']);
         $this->assertEquals($institute->name, $scholar->education[0]['institute']);
         $this->assertEquals($year, $scholar->education[0]['year']);
+    }
+
+    /** @test */
+    public function scholar_has_many_documents()
+    {
+        $scholar = create(Scholar::class);
+
+        $this->assertInstanceOf(HasMany::class, $scholar->documents());
+        $this->assertCount(0, $scholar->documents);
+
+        $documents = create(ScholarDocument::class, 2, ['scholar_id' => $scholar->id]);
+
+        $this->assertCount(count($documents), $scholar->fresh()->documents);
+        $this->assertEquals($documents->sortByDesc('created_at')->pluck('id'), $scholar->fresh()->documents->pluck('id'));
+    }
+
+    /** @test */
+    public function progress_report_method_return_documents_of_type_progress_report()
+    {
+        $scholar = create(Scholar::class);
+
+        $this->assertCount(0, $scholar->progressReports());
+
+        $progressReports = create(ScholarDocument::class, 2, ['type' => ScholarDocumentType::PROGRESS_REPORT, 'scholar_id' => $scholar->id]);
+        $otherDocuments = create(ScholarDocument::class, 1, ['type' => ScholarDocumentType::OTHER_DOCUMENT, 'scholar_id' => $scholar->id]);
+
+        $this->assertCount(count($progressReports), $scholar->fresh()->progressReports());
+        $this->assertEquals($progressReports->sortByDesc('created_at')->pluck('id'), $scholar->fresh()->progressReports()->pluck('id'));
+    }
+
+    /** @test */
+    public function other_documents_method_return_documents_of_type_other_document()
+    {
+        $scholar = create(Scholar::class);
+
+        $this->assertCount(0, $scholar->otherDocuments());
+
+        $otherDocuments = create(ScholarDocument::class, 2, ['type' => ScholarDocumentType::OTHER_DOCUMENT, 'scholar_id' => $scholar->id]);
+        $progressReports = create(ScholarDocument::class, 1, ['type' => ScholarDocumentType::PROGRESS_REPORT, 'scholar_id' => $scholar->id]);
+
+        $this->assertCount(count($otherDocuments), $scholar->fresh()->otherDocuments());
+        $this->assertEquals($otherDocuments->sortByDesc('created_at')->pluck('id'), $scholar->fresh()->otherDocuments()->pluck('id'));
     }
 }

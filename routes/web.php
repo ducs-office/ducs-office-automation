@@ -107,6 +107,26 @@ Route::prefix('/research')
             '/scholars/{scholar}/replace-advisory-committee',
             'ScholarController@replaceAdvisoryCommittee'
         )->name('scholars.advisory_committee.replace');
+
+        Route::post(
+            '/scholars/{scholar}/progress-report',
+            'ProgressReportsController@store'
+        )->name('scholars.progress_reports.store');
+
+        Route::get(
+            'scholars/{scholar}/progress-report/{document}/attachment',
+            'ProgressReportsController@viewAttachment'
+        )->name('scholars.progress_reports.attachment');
+
+        Route::post(
+            '/scholars/{scholar}/document',
+            'OtherDocumentsController@store'
+        )->name('scholars.documents.store');
+
+        Route::get(
+            'scholars/{scholar}/document/{document}/attachment',
+            'OtherDocumentsController@viewAttachment'
+        )->name('scholars.documents.attachment');
     });
 
 Route::prefix('/teachers')
@@ -158,4 +178,14 @@ Route::prefix('/scholars')
             '/advisory-meetings/{meeting}/minutes-of-meeting',
             'AdvisoryMeetingsController@minutesOfMeeting'
         )->name('advisory_meetings.minutes_of_meeting');
+
+        Route::get(
+            '/progress-reports/{document}/attachment',
+            'ProgressReportsController'
+        )->name('progress_reports.attachment');
+
+        Route::get(
+            '/document/{document}/attachment',
+            'OtherDocumentsController'
+        )->name('documents.attachment');
     });

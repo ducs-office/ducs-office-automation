@@ -161,4 +161,19 @@ class Scholar extends User
     {
         return $this->hasMany(AdvisoryMeeting::class)->orderBy('date', 'desc');
     }
+
+    public function documents()
+    {
+        return $this->hasMany(ScholarDocument::class)->orderBy('created_at', 'desc');
+    }
+
+    public function progressReports()
+    {
+        return $this->documents->where('type', ScholarDocumentType::PROGRESS_REPORT);
+    }
+
+    public function otherDocuments()
+    {
+        return $this->documents->where('type', ScholarDocumentType::OTHER_DOCUMENT);
+    }
 }

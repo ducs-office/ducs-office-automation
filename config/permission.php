@@ -94,6 +94,8 @@ return [
             'scholars' => ['view', 'create', 'edit', 'delete'],
             'leaves' => ['approve', 'reject'],
             'phd course work' => ['mark completed'],
+            'scholar progress reports' => ['add'],
+            'scholar other documents' => ['add'],
         ],
 
         'roles' => [
@@ -114,6 +116,8 @@ return [
                 'scholars' => ['view', 'create', 'edit', 'delete'],
                 'leaves' => ['approve', 'reject'],
                 'phd course work' => ['mark completed'],
+                'scholar progress reports' => ['add'],
+                'scholar other documents' => ['add'],
             ],
         ],
     ],

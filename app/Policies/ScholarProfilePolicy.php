@@ -28,4 +28,14 @@ class ScholarProfilePolicy
             $user->isSupervisor() &&
             $user->supervisorProfile->scholars->contains($scholar);
     }
+
+    public function addProgressReports($user, Scholar $scholar)
+    {
+        return ($user instanceof User && $user->can('scholar progress reports:add'));
+    }
+
+    public function addOtherDocuments($user, Scholar $scholar)
+    {
+        return ($user instanceof User && $user->can('scholar other documents:add'));
+    }
 }

@@ -589,7 +589,7 @@
             </div>
 
             {{-- Meetings --}}
-            <div class="mb-4 flex">
+            <div class="mb-16 flex">
                 <div class="w-64 pr-4 relative z-10 -ml-8 my-2">
                     <h3 class="relative z-20 pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
                         Advisory Meetings
@@ -629,6 +629,126 @@
                                 @csrf_token
                                 <input id="date" name="date" type="date" class="form-input rounded-r-none">
                                 <input type="file" name="minutes_of_meeting" id="minutes_of_meeting" class="w-full flex-1 form-input rounded-none" accept="document/*">
+                                <button type="submit" class="px-5 btn btn-magenta text-sm rounded-l-none">Add</button>
+                            </form>
+                        </div>
+                    </v-modal>
+                    @endcan
+                </div>
+            </div>
+
+            {{--Progress Reports--}}
+            <div class="mb-16 flex">
+                <div class="w-64 pr-4 relative z-10 -ml-8 my-2">
+                    <h3 class="relative z-20 pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
+                        Progress Reports
+                    </h3>
+                    <svg class="absolute left-0 w-2 text-magenta-900" viewBox="0 0 10 10">
+                        <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
+                    </svg>
+                </div>
+                <div class="flex-1 pl-4">
+                    <ul class="border rounded-lg overflow-hidden mb-4">
+                        @forelse ($scholar->progressReports() as $progressReport)
+                            <li class="px-4 py-3 border-b last:border-b-0">
+                                <div class="flex items-center">
+                                    <p class="font-bold flex-1">
+                                        {{ $progressReport->description }}
+                                    </p>
+                                    <a href="{{ route('research.scholars.progress_reports.attachment', [$scholar, $progressReport]) }}"
+                                        class="inline-flex items-center underline px-4 py-2 text-gray-900 rounded font-bold">
+                                    <feather-icon name="paperclip" class="h-4 mr-2"></feather-icon>
+                                        Attachment
+                                    </a>
+                                </div>
+                            </li>
+                        @empty
+                           <li class="px-4 py-3 text-center text-gray-700 font-bold">No Progress Reports yet.</li>
+                        @endforelse
+                    </ul>
+                    @can('scholars.progress_reports.store', $scholar)
+                    <button class="mt-2 w-full btn btn-magenta rounded-lg py-3" @click="$modal.show('add-progress-reports-modal')">
+                        + Add Progress Reports
+                    </button>
+                    <v-modal name="add-progress-reports-modal" height="auto">
+                        <div class="p-6">
+                            <h3 class="text-lg font-bold mb-4">Add Progress Report</h3>
+                            <form action="{{ route('research.scholars.progress_reports.store', $scholar) }}" method="POST"
+                                class="p-6" enctype="multipart/form-data">
+                                @csrf_token
+                                <div class="mb-2">
+                                    <label for="description" class="mb-1 w-full form-label">Description
+                                        <span class="text-red-600">*</span>
+                                    </label>
+                                    <textarea id="description" name="description" type="" class="w-full form-input" placeholder="Enter Description">
+                                    </textarea>
+                                </div>
+                                <div class="mb-2">
+                                    <label for="progress_report" class="w-full form-label mb-1">Upload Progress Report
+                                        <span class="text-red-600">*</span>
+                                    </label>
+                                    <input type="file" name="progress_report" id="progress_report" class="w-full mb-1" accept="document/*">
+                                </div>
+                                <button type="submit" class="px-5 btn btn-magenta text-sm rounded-l-none">Add</button>
+                            </form>
+                        </div>
+                    </v-modal>
+                    @endcan
+                </div>
+            </div>
+
+            {{--Other Documents--}}
+            <div class="mb-4 flex">
+                <div class="w-64 pr-4 relative z-10 -ml-8 my-2">
+                    <h3 class="relative z-20 pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
+                        Other Documents
+                    </h3>
+                    <svg class="absolute left-0 w-2 text-magenta-900" viewBox="0 0 10 10">
+                        <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
+                    </svg>
+                </div>
+                <div class="flex-1 pl-4">
+                    <ul class="border rounded-lg overflow-hidden mb-4">
+                        @forelse ($scholar->otherDocuments() as $otherDocument)
+                            <li class="px-4 py-3 border-b last:border-b-0">
+                                <div class="flex items-center">
+                                    <p class="font-bold flex-1">
+                                        {{ $otherDocument->description }}
+                                    </p>
+                                    <a href="{{ route('research.scholars.documents.attachment', [$scholar, $otherDocument]) }}"
+                                        class="inline-flex items-center underline px-4 py-2 text-gray-900 rounded font-bold">
+                                    <feather-icon name="paperclip" class="h-4 mr-2"></feather-icon>
+                                        Attachment
+                                    </a>
+                                </div>
+                            </li>
+                        @empty
+                           <li class="px-4 py-3 text-center text-gray-700 font-bold">No Documents</li>
+                        @endforelse
+                    </ul>
+                    @can('scholars.other_documents.store', $scholar)
+                    <button class="mt-2 w-full btn btn-magenta rounded-lg py-3" @click="$modal.show('add-other-documents-modal')">
+                        + Add Documents
+                    </button>
+                    <v-modal name="add-other-documents-modal" height="auto">
+                        <div class="p-6">
+                            <h3 class="text-lg font-bold mb-4">Add Documents</h3>
+                            <form action="{{ route('research.scholars.documents.store', $scholar) }}" method="POST"
+                                class="p-6" enctype="multipart/form-data">
+                                @csrf_token
+                                <div class="mb-2">
+                                    <label for="description" class="mb-1 w-full form-label">Description
+                                        <span class="text-red-600">*</span>
+                                    </label>
+                                    <textarea id="description" name="description" type="" class="w-full form-input" placeholder="Enter Description">
+                                    </textarea>
+                                </div>
+                                <div class="mb-2">
+                                    <label for="document" class="w-full form-label mb-1">Upload Document
+                                        <span class="text-red-600">*</span>
+                                    </label>
+                                    <input type="file" name="document" id="document" class="w-full mb-1" accept="document/*">
+                                </div>
                                 <button type="submit" class="px-5 btn btn-magenta text-sm rounded-l-none">Add</button>
                             </form>
                         </div>
