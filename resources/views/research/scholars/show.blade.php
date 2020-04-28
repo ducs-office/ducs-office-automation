@@ -318,6 +318,34 @@
         <div class="bg-white p-6 h-full rounded shadow-md mb-8 mt-6">
 
             {{-- Courseworks --}}
+            <v-modal name="mark-coursework-completed" height="auto">
+                <template v-slot="{ data }">
+                    <form :action="route('research.scholars.courseworks.complete', [data('scholar'), data('course')])"
+                    method="POST" class="p-6" enctype="multipart/form-data">
+                    @csrf_token @method("PATCH")
+                    <h2 class="text-lg font-bold mb-8">Mark Course Work Complete</h2>
+                        <div class="flex mb-4 items-baseline">
+                            <label for="completed_on" class="form-label mr-2"> Date of Completion
+                                <span class="text-red-600 font-bold">*</span>
+                            </label>
+                            <input type="date" name="completed_on" 
+                            class="form-input" id="completed_on">
+                        </div>
+                        <div class="flex mb-4 items-baseline">
+                            <label for="marksheet" class="form-label mr-2">
+                                Upload Marksheet
+                                <span class="text-red-600 font-bold">*</span>
+                            </label>
+                            <input id="marksheet" type="file" name="marksheet"
+                             class="form-input" accept="application/pdf,image/*">
+                        </div>
+                        <button class="bg-green-500 hover:bg-green-600 text-white text-sm py-2 rounded font-bold btn">
+                            Mark Completed 
+                        </button>
+                    </form>
+                </template>
+            </v-modal>
+
             <div class="mb-16 flex">
                 <div class="w-64 pr-4 relative z-10 -ml-8 my-2">
                     <h3 class="relative z-20 pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
@@ -339,21 +367,25 @@
                                         {{ $course->name }}
                                         <span class="text-sm text-gray-500 font-bold"> ({{ $course->code }}) </span>
                                     </h5>
-                                    @if ($course->pivot->completed_at)
+                                    @if ($course->pivot->completed_on)
                                         <div class="flex items-center pl-4">
+                                            <a target="_blank" href="{{ route('research.scholars.courseworks.marksheet', [$scholar, 'course' => $course]) }}" class="btn inline-flex items-center ml-2">
+                                                <feather-icon name="paperclip" class="h-current mr-2"></feather-icon>
+                                                Marksheet
+                                            </a>
                                             <div class="w-5 h-5 inline-flex items-center justify-center bg-green-500 text-white font-extrabold leading-none rounded-full mr-2">&checkmark;</div>
                                             <div>
-                                                Completed on {{ $course->pivot->completed_at->format('M d, Y') }}
+                                                Completed on {{ $course->pivot->completed_on->format('d M, Y') }}
                                             </div>
                                         </div>
                                     @elsecan('scholars.coursework.complete', $scholar)
-                                    <form action="{{ route('research.scholars.courseworks.complete', [$scholar, $course]) }}"
-                                        method="POST" class="pl-4 leading-none">
-                                        @csrf_token @method("PATCH")
-                                        <button type="submit" class="px-4 py-2 bg-green-500 hover:bg-green-600 text-white text-sm rounded font-bold">
+                                        <button class="btn btn-magenta bg-green-500 hover:bg-green-600 text-white text-sm rounded-lg"
+                                            @click="$modal.show('mark-coursework-completed', {
+                                                'scholar': {{ $scholar }},
+                                                'course': {{ $course }}
+                                            })">
                                             Mark Completed
                                         </button>
-                                    </form>
                                     @endif
                                 </div>
                             </li>
@@ -383,6 +415,7 @@
                     @endcan
                 </div>
             </div>
+            
 
             {{-- Leaves --}}
             @php($icons = [
@@ -397,6 +430,26 @@
                 App\Models\LeaveStatus::RECOMMENDED => 'text-blue-600',
                 App\Models\LeaveStatus::APPLIED => 'text-gray-700'
             ])
+
+            <v-modal name="respond-to-leave" height="auto">
+                <template v-slot="{ data }"> 
+                    <form :action="route(data('route-name'), [data('scholar'), data('leave')])"
+                    method="POST" class="p-6" enctype="multipart/form-data">
+                    @csrf_token @method("PATCH")
+                    
+                    <h2 class="text-lg font-bold mb-8">Respond To Leave</h2>
+                        <label for="response_letter" class="form-label">
+                            Upload Response Letter
+                            <span class="text-red-600 font-bold">*</span>
+                        </label>
+                        <input id="response_letter" type="file" class="form-input" name="response_letter" accept="application/pdf,image/*">
+                        <button class="btn btn-magenta">
+                            Respond 
+                        </button>
+                    </form>
+                </template>
+            </v-modal>
+
             <div class="mb-16 flex">
                 <div class="w-64 pr-4 relative z-10 -ml-8 my-2">
                     <h3 class="relative z-20 pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
@@ -420,10 +473,16 @@
                                         ({{ $leave->from->format('Y-m-d') }} - {{$leave->to->format('Y-m-d')}})
                                     </div>
                                 </h5>
-                                <a target="_blank" href="{{ route('research.scholars.leaves.attachment', [$scholar, $leave]) }}" class="btn inline-flex items-center ml-2">
+                                <a target="_blank" href="{{ route('research.scholars.leaves.application', [$scholar, $leave]) }}" class="btn inline-flex items-center ml-2">
                                     <feather-icon name="paperclip" class="h-current mr-2"></feather-icon>
-                                    Attached Document
+                                    Application
                                 </a>
+                                @if ($leave->status === 'approved' || $leave->status === 'rejected')
+                                    <a target="_blank" href="{{ route('research.scholars.leaves.response_letter', [$scholar, $leave]) }}" class="btn inline-flex items-center ml-2">
+                                        <feather-icon name="paperclip" class="h-current mr-2"></feather-icon>
+                                        Response
+                                    </a>
+                                @endif
                                 <div class="flex items-center px-4">
                                     <feather-icon name="{{ $icons[$leave->status] }}" class="h-current {{ $colors[$leave->status] }} mr-2" stroke-width="2.5"></feather-icon>
                                     <div class="capitalize">
@@ -439,17 +498,25 @@
                                 @endcan
                                 @can('approve', $leave)
                                 <button type="submit"
-                                    form="patch-form"
+                                    form="leave-response"
                                     class="p-2 mr-1 bg-green-500 hover:bg-green-600 text-white text-sm rounded font-bold"
-                                    formaction="{{ route('research.scholars.leaves.approve', [$scholar, $leave]) }}">
+                                    @click="$modal.show('respond-to-leave', {
+                                        'leave': {{ $leave }},
+                                        'scholar': {{ $scholar }},
+                                        'route-name':'research.scholars.leaves.approve'
+                                    })">
                                     <feather-icon name="check" class="h-current" stroke-width="3">Approve</feather-icon>
                                 </button>
                                 @endcan
                                 @can('reject', $leave)
                                 <button type="submit"
-                                    form="patch-form"
+                                    form="leave-response"
                                     class="p-2 ml-1 bg-red-500 hover:bg-red-600 text-white text-sm rounded font-bold"
-                                    formaction="{{ route('research.scholars.leaves.reject', [$scholar, $leave]) }}">
+                                    @click="$modal.show('respond-to-leave', {
+                                        'leave': {{ $leave }},
+                                        'scholar': {{ $scholar }},
+                                        'route-name':'research.scholars.leaves.reject'
+                                    })">
                                     <feather-icon name="x" class="h-current" stroke-width="3">Reject</feather-icon>
                                 </button>
                                 @endcan
@@ -463,10 +530,16 @@
                                                 (extension till {{$extensionLeave->to->format('Y-m-d')}})
                                             </div>
                                         </h5>
-                                        <a target="_blank" href="{{ route('research.scholars.leaves.attachment', [$scholar, $extensionLeave]) }}" class="btn inline-flex items-center ml-2">
+                                        <a target="_blank" href="{{ route('research.scholars.leaves.application', [$scholar, $extensionLeave]) }}" class="btn inline-flex items-center ml-2">
                                             <feather-icon name="paperclip" class="h-current mr-2"></feather-icon>
-                                            Attached Document
+                                            Application
                                         </a>
+                                        @if ($extensionLeave->status === 'approved' || $extensionLeave->status === 'rejected')
+                                            <a target="_blank" href="{{ route('research.scholars.leaves.response_letter', [$scholar, $leave]) }}" class="btn inline-flex items-center ml-2">
+                                                <feather-icon name="paperclip" class="h-current mr-2"></feather-icon>
+                                                Response
+                                            </a>
+                                        @endif
                                         <div class="flex items-center px-4">
                                             <feather-icon name="{{ $icons[$extensionLeave->status] }}" class="h-current {{ $colors[$extensionLeave->status] }} mr-2" stroke-width="2.5"></feather-icon>
                                             <div class="capitalize">
@@ -482,17 +555,25 @@
                                         @endcan
                                         @can('approve', $extensionLeave)
                                         <button type="submit"
-                                            form="patch-form"
+                                            form="leave-response"
                                             class="p-2 mr-1 bg-green-500 hover:bg-green-600 text-white text-sm rounded font-bold"
-                                            formaction="{{ route('research.scholars.leaves.approve', [$scholar, $extensionLeave]) }}">
+                                            @click="$modal.show('respond-to-leave', {
+                                                'leave': {{ $extensionLeave }},
+                                                'scholar': {{ $scholar }},
+                                                'route-name':'research.scholars.leaves.approve'
+                                            })">
                                             <feather-icon name="check" class="h-current" stroke-width="3">Approve</feather-icon>
                                         </button>
                                         @endcan
                                         @can('reject', $extensionLeave)
                                         <button type="submit"
-                                            form="patch-form"
+                                            form="leave-response"
                                             class="p-2 ml-1 bg-red-500 hover:bg-red-600 text-white text-sm rounded font-bold"
-                                            formaction="{{ route('research.scholars.leaves.reject', [$scholar, $extensionLeave]) }}">
+                                            @click="$modal.show('respond-to-leave', {
+                                                'leave': {{ $extensionLeave }},
+                                                'scholar': {{ $scholar }},
+                                                'route-name':'research.scholars.leaves.reject'
+                                            })">
                                             <feather-icon name="x" class="h-current" stroke-width="3">Reject</feather-icon>
                                         </button>
                                         @endcan

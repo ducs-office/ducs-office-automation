@@ -268,13 +268,17 @@
                             {{ $course->name }}
                             <span class="text-sm text-gray-500 font-bold"> ({{ $course->code }}) </span>
                         </h5>
-                        @if ($course->pivot->completed_at)
+                        @if ($course->pivot->completed_on)
                         <div class="flex items-center pl-4">
+                            <a target="_blank" href="{{ route('scholars.courseworks.marksheet', [$scholar, 'course' => $course]) }}" class="btn inline-flex items-center ml-2">
+                                <feather-icon name="paperclip" class="h-current mr-2"></feather-icon>
+                                Marksheet
+                            </a>
                             <div
                                 class="w-5 h-5 inline-flex items-center justify-center bg-green-500 text-white font-extrabold leading-none rounded-full mr-2">
                                 &checkmark;</div>
                             <div>
-                                Completed on {{ $course->pivot->completed_at->format('M d, Y') }}
+                                Completed on {{ $course->pivot->completed_on->format('M d, Y') }}
                             </div>
                         </div>
                         @else
@@ -351,11 +355,17 @@
                                 ({{ $leave->from->format('Y-m-d') }} - {{$leave->to->format('Y-m-d')}})
                             </div>
                         </h5>
-                        <a target="_blank" href="{{ route('scholars.leaves.attachment', $leave) }}"
+                        <a target="_blank" href="{{ route('scholars.leaves.application', $leave) }}"
                             class="btn inline-flex items-center ml-2">
                             <feather-icon name="paperclip" class="h-current mr-2"></feather-icon>
-                            Attached Document
+                            Application
                         </a>
+                        @if ($leave->status === 'approved' || $leave->status === 'rejected')
+                            <a target="_blank" href="{{ route('scholars.leaves.response_letter', $leave) }}" class="btn inline-flex items-center ml-2">
+                                <feather-icon name="paperclip" class="h-current mr-2"></feather-icon>
+                                Response
+                            </a>
+                        @endif
                         <div class="flex items-center px-4">
                             <feather-icon name="{{ $icons[$leave->status] }}"
                                 class="h-current {{ $colors[$leave->status] }} mr-2"
@@ -383,11 +393,16 @@
                                     (extended to {{$extensionLeave->to->format('Y-m-d')}})
                                 </div>
                             </h5>
-                            <a target="_blank" href="{{ route('scholars.leaves.attachment', $extensionLeave) }}"
-                                class="btn inline-flex items-center ml-2">
+                            <a target="_blank" href="{{ route('scholars.leaves.application', $extensionLeave) }}" class="btn inline-flex items-center ml-2">
                                 <feather-icon name="paperclip" class="h-current mr-2"></feather-icon>
-                                Attached Document
+                                Application
                             </a>
+                            @if ($extensionLeave->status === 'approved' || $extensionLeave->status === 'rejected')
+                                <a target="_blank" href="{{ route('scholars.leaves.response_letter', $extensionLeave) }}" class="btn inline-flex items-center ml-2">
+                                    <feather-icon name="paperclip" class="h-current mr-2"></feather-icon>
+                                    Response
+                                </a>
+                            @endif
                             <div class="flex items-center px-4">
                                 <feather-icon name="{{ $icons[$extensionLeave->status] }}"
                                     class="h-current {{ $colors[$extensionLeave->status] }} mr-2"
@@ -452,11 +467,11 @@
                             <input type="text" name="reason_text" class="w-full form-input mt-2 hidden" placeholder="Please specify...">
                         </div>
                         <div class="mb-2">
-                            <label for="document" class="w-full form-label mb-1">
-                                Attach Documents
+                            <label for="application" class="w-full form-label mb-1">
+                                Attach Application
                                 <span class="text-red-600 font-bold">*</span>
                             </label>
-                            <input id="document" type="file" name="document" class="w-full form-input mt-2" accept="application/pdf,image/*">
+                            <input id="application" type="file" name="application" class="w-full form-input mt-2" accept="application/pdf,image/*">
                         </div>
                         <button type="submit" class="px-5 btn btn-magenta text-sm">Add</button>
                     </form>
@@ -476,7 +491,7 @@
                         <h5 class="font-bold flex-1">
                             {{ $meeting->date->format('D M d, Y') }}
                         </h5>
-                        <a href="{{ route('research.advisory_meetings.minutes_of_meeting', $meeting) }}"
+                        <a target="__blank" href="{{ route('scholars.advisory_meetings.minutes_of_meeting', $meeting) }}"
                             class="inline-flex items-center underline px-4 py-2 text-gray-900 rounded font-bold">
                             <feather-icon name="paperclip" class="h-4 mr-2"></feather-icon>
                             Minutes of Meeting
