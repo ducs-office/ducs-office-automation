@@ -65,7 +65,7 @@ class SupervisorManagesAdvisoryMeetingsTest extends TestCase
         $this->signInTeacher($teacher);
 
         $this->withoutExceptionHandling()
-            ->get(route('research.advisory_meetings.minutes_of_meeting', [$meeting]))
+            ->get(route('research.scholars.advisory_meetings.minutes_of_meeting', [$meeting]))
             ->assertSuccessful();
     }
 }

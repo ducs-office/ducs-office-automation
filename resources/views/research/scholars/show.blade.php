@@ -606,7 +606,7 @@
                                 <h5 class="font-bold flex-1">
                                     {{ $meeting->date->format('D M d, Y') }}
                                 </h5>
-                                <a href="{{ route('research.advisory_meetings.minutes_of_meeting', $meeting) }}"
+                                <a href="{{ route('research.scholars.advisory_meetings.minutes_of_meeting', $meeting) }}"
                                     class="inline-flex items-center underline px-4 py-2 text-gray-900 rounded font-bold">
                                     <feather-icon name="paperclip" class="h-4 mr-2"></feather-icon>
                                     Minutes of Meeting

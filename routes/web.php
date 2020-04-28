@@ -91,7 +91,7 @@ Route::prefix('/research')
         Route::get(
             '/advisory-meetings/{meeting}/minutes-of-meeting',
             'ScholarAdvisoryMeetingsController@minutesOfMeeting'
-        )->name('advisory_meetings.minutes_of_meeting');
+        )->name('scholars.advisory_meetings.minutes_of_meeting');
 
         Route::get(
             '/publications',
