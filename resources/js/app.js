@@ -18,6 +18,7 @@ import SemesterWiseCourseInput from './components/SemesterWiseCoursesInput.vue';
 import AddRemoveElements from './components/AddRemoveElements.js';
 import CourseProgrammeRevisionSelector from './components/CourseProgrammeRevisionSelector.vue';
 import SelectWithOther from './components/SelectWithOther.vue';
+import AdvisoryCommitteeMemberElement from './components/AdvisoryCommitteeMemberElement.vue';
 
 
 import ClickOutside from './click-outside.js';
@@ -42,7 +43,7 @@ Vue.component("semester-wise-courses-input", SemesterWiseCourseInput);
 Vue.component('add-remove-elements', AddRemoveElements);
 Vue.component("course-programme-revision-selector", CourseProgrammeRevisionSelector);
 Vue.component('select-with-other', SelectWithOther);
-
+Vue.component('advisory-committee-member', AdvisoryCommitteeMemberElement);
 
 
 Vue.mixin({

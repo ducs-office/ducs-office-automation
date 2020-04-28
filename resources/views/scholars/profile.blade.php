@@ -231,37 +231,24 @@
                         <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
                     </svg>
                 </div>
-                @include('scholars.partials.advisory_committee',[
+                <div class="flex-1">
+                    @include('scholars.partials.advisory_committee',[
                     'advisoryCommittee' => $scholar->advisory_committee
-                ])
-            </div>
-
-            @if ($scholar->old_advisory_committees)
-            <div class="mt-6">
-                <h2 class="font-bold text-lg mb-5"> Previous Advisory Committees</h2>
-                @for ($i = 0; $i < count($scholar->old_advisory_committees) - 1; $i++)
-                <details class="ml-2 mt-4 bg-gray-100 border rounded-t cursor-pointer outline-none">
-                    <summary class="underline p-2 bg-gray-200 outline-none">
-                        {{$scholar->old_advisory_committees[$i + 1]['date']}} - {{$scholar->old_advisory_committees[$i]['date']}}
-                    </summary>
-                    @include('scholars.partials.advisory_committee',[
-                        'advisoryCommittee' => $scholar->old_advisory_committees[$i]
                     ])
-                </details>
-                @endfor
-                @php
-                    $i = count($scholar->old_advisory_committees) - 1;
-                @endphp
-                <details class="ml-2 mt-4 bg-gray-100 border rounded-t cursor-pointer outline-none">
-                    <summary class="underline p-2 bg-gray-200 outline-none">
-                    {{$scholar->registerOn}} - {{$scholar->old_advisory_committees[$i]['date']}}
-                    </summary>
-                    @include('scholars.partials.advisory_committee',[
-                        'advisoryCommittee' => $scholar->old_advisory_committees[$i]
-                    ])
-                </details>
+                    @foreach ($scholar->old_advisory_committees as $oldCommittee)
+                    <details class="mt-1">
+                        <summary class="p-2 bg-gray-200 rounded">
+                            {{ $oldCommittee['from_date']->format('d F Y') }} - {{ $oldCommittee['to_date']->format('d F Y') }}
+                        </summary>
+                        <div class="ml-2 pl-4 py-2 border-l">
+                            @include('scholars.partials.advisory_committee',[
+                            'advisoryCommittee' => $oldCommittee['committee']
+                            ])
+                        </div>
+                    </details>
+                    @endforeach
+                </div>
             </div>
-            @endif
         </div>
 
         {{-- Pre-PHD Course Work --}}

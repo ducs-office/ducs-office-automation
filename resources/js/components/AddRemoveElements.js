@@ -2,7 +2,7 @@ export default {
     props: {
         tag: {default: 'div'},
         existingElements: {default: null, type: Array},
-    },  
+    },
     render(h) {
         return h(
             this.tag,
@@ -21,9 +21,7 @@ export default {
     },
     methods: {
         addElement() {
-            this.elements.push({
-                value: this.createNewElement
-            });
+            this.elements.push(this.createNewElement());
         },
         removeElement(index) {
             this.elements.splice(index, 1);
@@ -38,23 +36,20 @@ export default {
     },
     created() {
         if(this.existingElements.length ) {
-            this.existingElements.forEach(el => { 
-                this.elements.push({
-                    value: el
-                })
+            this.existingElements.forEach(el => {
+                this.elements.push(el)
             });
 
             const el = JSON.parse(JSON.stringify(this.existingElements[0]));
 
+            this.newElement = "";
 
             if(typeof(this.existingElements[0]) == "object") {
-                Object.keys(el).map((key) => {
+                Object.keys(el).forEach((key) => {
                     el[key] = '';
                 });
                 this.newElement = el;
             }
-            else    
-                this.newElement = "";
         }
     }
 }

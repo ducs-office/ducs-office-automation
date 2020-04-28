@@ -29,6 +29,7 @@ class AdvisoryCommittee implements CastsAttributes
     private function getFacultyTeacher($value)
     {
         return new AdvisoryCommitteeMember('faculty_teacher', [
+            'id' => $value['id'],
             'name' => $value['name'],
             'designation' => $value['designation'],
             'affiliation' => $value['affiliation'],

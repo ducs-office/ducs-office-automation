@@ -17,7 +17,7 @@
                             <button v-on:click.prevent="addElement" class="ml-auto btn is-sm text-blue-700 bg-gray-300">+</button>
                         </div>
                         <div v-for="(element, index) in elements" :key="index" class="flex items-baseline">
-                            <input type="text" v-model= "element.value" name="authors[]" class="form-input block mb-2 w-full">
+                            <input type="text" v-model= "element" name="authors[]" class="form-input block mb-2 w-full">
                             <button v-on:click.prevent="removeElement(index)" class="btn is-sm ml-2 text-red-600">x</button>
                         </div>
                     </template>
@@ -27,14 +27,14 @@
                 <label for="paper_title" class="form-label block mb-1">
                     Paper Title <span class="text-red-600">*</span>
                 </label>
-                <input type="text" value="{{ old('paper_title', $conference->paper_title) }}" name="paper_title" 
+                <input type="text" value="{{ old('paper_title', $conference->paper_title) }}" name="paper_title"
                     class="form-input w-full {{ $errors->has('paper_title') ? ' border-red-600' : ''}}">
             </div>
             <div class="mb-4">
                 <label for="name" class="form-label block mb-1">
                     Conference <span class="text-red-600">*</span>
                 </label>
-                <input type="text" value="{{ old('name', $conference->name) }}" name="name" 
+                <input type="text" value="{{ old('name', $conference->name) }}" name="name"
                     class="form-input w-full {{ $errors->has('name') ? ' border-red-600' : ''}}">
             </div>
             <div class="flex mb-4">
@@ -45,8 +45,8 @@
                     <div class="flex">
                         <select name="date[month]" id="date_month" class="form-input flex-1">
                             @foreach ($months as $name => $value)
-                            <option value="{{ $value }}" 
-                                {{ $value === old('date.month', $conference->date->format('F')) ? 'selected': ''}}> 
+                            <option value="{{ $value }}"
+                                {{ $value === old('date.month', $conference->date->format('F')) ? 'selected': ''}}>
                                 {{$name}}
                             </option>
                             @endforeach
@@ -54,17 +54,17 @@
                         <select name="date[year]" id="date_year" class="form-input flex-1 ml-4">
                             @for ($i = 0; $i < 10; $i++)
                             <option value="{{ $currentYear - $i }}"
-                                {{ $currentYear - $i  == old('date.year', $conference->date->format('Y')) ? 'selected': ''}}> 
-                                {{$currentYear - $i }}</option>        
+                                {{ $currentYear - $i  == old('date.year', $conference->date->format('Y')) ? 'selected': ''}}>
+                                {{$currentYear - $i }}</option>
                             @endfor
                         </select>
                     </div>
                 </div>
                 <div class="ml-4 w-1/2">
                     <label for="volume" class="form-label block mb-1">
-                        Edition 
+                        Edition
                     </label>
-                    <input type="number" value="{{ old('volume', $conference->volume) }}" name="volume" 
+                    <input type="number" value="{{ old('volume', $conference->volume) }}" name="volume"
                         class="form-input w-full {{ $errors->has('volume') ? ' border-red-600' : ''}}">
                 </div>
             </div>
@@ -73,14 +73,14 @@
                     <label for="city[]" class="form-label block mb-1">
                         City <span class="text-red-600">*</span>
                     </label>
-                    <input type="text" value="{{ old('city', $conference->city) }}" name="city" 
+                    <input type="text" value="{{ old('city', $conference->city) }}" name="city"
                     class="form-input text-sm w-full {{ $errors->has('city') ? ' border-red-600' : ''}}">
                 </div>
                 <div class="ml-4 w-1/2">
                     <label for="country" class="form-label block mb-1">
                         Country <span class="text-red-600">*</span>
                     </label>
-                    <input type="text" value="{{ old('country', $conference->country) }}" name="country" 
+                    <input type="text" value="{{ old('country', $conference->country) }}" name="country"
                         class="form-input text-sm w-full {{ $errors->has('country') ? ' border-red-600' : ''}}">
                 </div>
             </div>
@@ -89,9 +89,9 @@
                     Page Numbers <span class="text-red-600">*</span>
                 </label>
                 <div class="flex">
-                    <input type="number" value="{{ old('page_numbers.0', $conference->page_numbers[0]) }}" name="page_numbers[]" 
+                    <input type="number" value="{{ old('page_numbers.0', $conference->page_numbers[0]) }}" name="page_numbers[]"
                         class="form-input text-sm w-1/2 {{ $errors->has('page_numbers[0]') ? ' border-red-600' : ''}}">
-                    <input type="number" value="{{ old('page_numbers.to', $conference->page_numbers[1]) }}" name="page_numbers[]" 
+                    <input type="number" value="{{ old('page_numbers.to', $conference->page_numbers[1]) }}" name="page_numbers[]"
                         class="form-input text-sm w-1/2 ml-4 {{ $errors->has('page_numbers[1]') ? ' border-red-600' : ''}}">
                 </div>
             </div>
@@ -101,10 +101,10 @@
                 </label>
                 @foreach ($indexedIn as $acronym => $index)
                     <div class="flex mb-1">
-                        <input type="checkbox" name="indexed_in[]" value="{{$acronym}}" 
-                            {{ in_array($acronym, $conference->indexed_in) || 
-                                (is_array(old('indexed_in')) && in_array( $acronym, old('indexed_in'))) 
-                                ? 'checked': ''}} > 
+                        <input type="checkbox" name="indexed_in[]" value="{{$acronym}}"
+                            {{ in_array($acronym, $conference->indexed_in) ||
+                                (is_array(old('indexed_in')) && in_array( $acronym, old('indexed_in')))
+                                ? 'checked': ''}} >
                         <label for="{{ $acronym }}" class="ml-2 form-label is-sm"> {{ $index }}</label>
                     </div>
                 @endforeach

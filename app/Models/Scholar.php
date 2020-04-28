@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Casts\AdvisoryCommittee;
+use App\Casts\OldAdvisoryCommittee;
 use App\Models\AcademicDetail;
 use App\Models\Cosupervisor;
 use App\Models\Publication;
@@ -38,10 +39,10 @@ class Scholar extends User
 
     protected $casts = [
         'advisory_committee' => AdvisoryCommittee::class,
+        'old_advisory_committees' => OldAdvisoryCommittee::class,
         'education' => 'array',
         'old_cosupervisors' => 'array',
         'old_supervisors' => 'array',
-        'old_advisory_committees' => 'array',
     ];
 
     public static function boot()

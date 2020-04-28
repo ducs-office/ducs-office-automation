@@ -120,17 +120,15 @@
                     </h3>
                     <svg class="absolute left-0 w-2 text-magenta-900" viewBox="0 0 10 10">
                         <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
-                    </svg> 
+                    </svg>
                 </div>
-               
-                @if (count($scholar->old_supervisors))
                 <ul class="flex-col-reverse flex my-6 flex-1 border rounded-lg overflow-hidden">
                     @php
                         $prevDate = $scholar->registerOn
                     @endphp
                     @foreach ($scholar->old_supervisors as $old_supervisor)
                     <li class="border-b first:border-b-0 px-5 p-2">
-                        <div class="flex justify-between items-center"> 
+                        <div class="flex justify-between items-center">
                             <div class="w-1/2">
                                 <p class="font-bold"> {{ $old_supervisor['name'] }} </p>
                                 <div class="flex mt-1 items-center text-gray-700">
@@ -138,7 +136,7 @@
                                     <p class="ml-1 italic"> {{ $old_supervisor['email'] }} </p>
                                 </div>
                             </div>
-                            <p class="w-1/2 mr-4 font-bold"> {{ $prevDate }} - {{ $old_supervisor['date']}}</p>    
+                            <p class="w-1/2 mr-4 font-bold"> {{ $prevDate }} - {{ $old_supervisor['date']}}</p>
                             @php
                                 $prevDate = $old_supervisor['date']
                             @endphp
@@ -146,7 +144,7 @@
                     </li>
                     @endforeach
                     <li class="border-b first:border-b-0 px-5 p-2">
-                        <div class="flex justify-between items-center"> 
+                        <div class="flex justify-between items-center">
                             <div class="w-1/2">
                                 <p class="font-bold"> {{ $scholar->supervisor->name }} </p>
                                 <div class="flex mt-1 items-center text-gray-700">
@@ -158,9 +156,8 @@
                         </div>
                     </li>
                 </ul>
-                @endif
             </div>
-             
+
             <div class="flex">
                 <div class="w-64 pr-4 relative z-10 -ml-8 my-6">
                     <h3 class="relative z-20 pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
@@ -168,17 +165,17 @@
                     </h3>
                     <svg class="absolute left-0 w-2 text-magenta-900" viewBox="0 0 10 10">
                         <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
-                    </svg> 
+                    </svg>
                 </div>
-               
-               
+
+
                 <ul class="flex-col-reverse flex my-6 flex-1 border rounded-lg overflow-hidden">
                     @php
                         $prevDate = $scholar->registerOn
                     @endphp
                     @foreach ($scholar->old_cosupervisors as $old_cosupervisor)
                     <li class="border-b first:border-b-0 px-5 p-2">
-                        <div class="flex justify-between items-center"> 
+                        <div class="flex justify-between items-center">
                             <div class="w-1/2">
                                 @if ($old_cosupervisor['name'])
                                 <p class="font-bold"> {{ $old_cosupervisor['name'] }} </p>
@@ -192,7 +189,7 @@
                                 <p class="font-bold"> Cosupervisor Not Assigned </p>
                                 @endif
                             </div>
-                            <p class="w-1/2 mr-4 font-bold"> {{ $prevDate }} - {{ $old_cosupervisor['date']}}</p>    
+                            <p class="w-1/2 mr-4 font-bold"> {{ $prevDate }} - {{ $old_cosupervisor['date']}}</p>
                             @php
                                 $prevDate = $old_cosupervisor['date']
                             @endphp
@@ -200,7 +197,7 @@
                     </li>
                     @endforeach
                     <li class="border-b first:border-b-0 px-5 p-2">
-                        <div class="flex justify-between items-center"> 
+                        <div class="flex justify-between items-center">
                             <div class="w-1/2">
                                 @if ($scholar->cosupervisor)
                                 <p class="font-bold"> {{ $scholar->cosupervisor->name }} </p>
@@ -226,11 +223,13 @@
 
         @include('research.scholars.modals.edit_advisory_committee', [
             'modalName' => 'edit-advisory-committee-modal',
-            'faculty' => $faculty
+            'faculty' => $faculty,
+            'scholar' => $scholar
         ])
         @include('research.scholars.modals.replace_advisory_committee', [
             'modalName' => 'replace-advisory-committee-modal',
-            'faculty' => $faculty
+            'faculty' => $faculty,
+            'scholar' => $scholar
         ])
         <div class="bg-white p-6 h-full shadow-md mt-8">
             <div class="flex">
@@ -241,52 +240,39 @@
                     <svg class="absolute left-0 w-2 text-magenta-900" viewBox="0 0 10 10">
                         <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
                     </svg>
+                    <div class="flex justify-center mt-4">
+                        <button class="btn btn-magenta is-sm shadow-inner ml-auto mr-2" @click.prevent="$modal.show('edit-advisory-committee-modal', {
+                            actionUrl: '{{ route('research.scholars.advisory_committee.update', $scholar) }}',
+                            actionName: 'Update'
+                        })">
+                            Edit
+                        </button>
+                        <button class="btn btn-magenta is-sm shadow-inner" @click.prevent="$modal.show('edit-advisory-committee-modal', {
+                            actionUrl: '{{ route('research.scholars.advisory_committee.replace', $scholar) }}',
+                            actionName: 'Replace'
+                        })">
+                            Replace
+                        </button>
+                    </div>
                 </div>
-                @include('research.scholars.partials.advisory_committee',[
-                    'advisoryCommittee' => $scholar->advisory_committee
-                ])
-            </div>
-            <div class="flex justify-end">
-                <button class="btn btn-magenta is-sm shadow-inner ml-auto mr-2"
-                    @click.prevent="$modal.show('edit-advisory-committee-modal', {
-                        scholar: {{ $scholar->toJson()}}
-                    })">
-                    Edit
-                </button>
-                <button class="btn btn-magenta is-sm shadow-inner"
-                    @click.prevent="$modal.show('replace-advisory-committee-modal', {
-                        scholar: {{ $scholar->toJson()}}
-                    })">
-                    Replace
-                </button>
-            </div>
-
-            @if ($scholar->old_advisory_committees)
-            <div class="mt-6">
-                <h2 class="font-bold text-lg mb-5"> Previous Advisory Committees</h2>
-                @for ($i = 0; $i < count($scholar->old_advisory_committees) - 1; $i++)
-                <details class="ml-2 mt-4 bg-gray-100 border rounded-t cursor-pointer outline-none">
-                    <summary class="underline p-2 bg-gray-200 outline-none">
-                        {{$scholar->old_advisory_committees[$i + 1]['date']}} - {{$scholar->old_advisory_committees[$i]['date']}}
-                    </summary>
+                <div class="flex-1">
                     @include('research.scholars.partials.advisory_committee',[
-                        'advisoryCommittee' => $scholar->old_advisory_committees[$i]
+                        'advisoryCommittee' => $scholar->advisory_committee
                     ])
-                </details>
-                @endfor
-                @php
-                    $i = count($scholar->old_advisory_committees) - 1;
-                @endphp
-                <details class="ml-2 mt-4 bg-gray-100 border rounded-t cursor-pointer outline-none">
-                    <summary class="underline p-2 bg-gray-200 outline-none">
-                    {{$scholar->registerOn}} - {{$scholar->old_advisory_committees[$i]['date']}}
-                    </summary>
-                    @include('research.scholars.partials.advisory_committee',[
-                        'advisoryCommittee' => $scholar->old_advisory_committees[$i]
-                    ])
-                </details>
+                    @foreach ($scholar->old_advisory_committees as $oldCommittee)
+                    <details class="mt-1">
+                        <summary class="p-2 bg-gray-200 rounded">
+                            {{ $oldCommittee['from_date']->format('d F Y') }} - {{ $oldCommittee['to_date']->format('d F Y') }}
+                        </summary>
+                        <div class="ml-2 pl-4 py-2 border-l">
+                            @include('research.scholars.partials.advisory_committee',[
+                            'advisoryCommittee' => $oldCommittee['committee']
+                            ])
+                        </div>
+                    </details>
+                    @endforeach
+                </div>
             </div>
-            @endif
         </div>
 
 

@@ -86,12 +86,15 @@ class ScholarController extends Controller
             'committee.*.phone' => ['nullable', 'string'],
         ]);
 
-        $currentAdvisoryCommittee = array_merge(
-            $scholar->advisory_committee,
-            ['date' => now()->format('d F Y')]
-        );
-
         $oldAdvisoryCommittees = $scholar->old_advisory_committees;
+
+        $currentAdvisoryCommittee = [
+            'committee' => $scholar->advisory_committee,
+            'to_date' => now(),
+            'from_date' => count($oldAdvisoryCommittees) > 0 ?
+                $oldAdvisoryCommittees[count($oldAdvisoryCommittees) - 1]['to_date'] :
+                $scholar->created_at,
+        ];
 
         array_unshift($oldAdvisoryCommittees, $currentAdvisoryCommittee);
 

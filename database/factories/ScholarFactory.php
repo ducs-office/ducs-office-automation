@@ -31,12 +31,7 @@ $factory->define(Scholar::class, function (Faker $faker) {
         },
         'enrollment_date' => $faker->date($format = 'Y-m-d', $max = now()),
         'advisory_committee' => [
-            new AdvisoryCommitteeMember('faculty_teacher', [
-                'name' => $faculty_teacher->name,
-                'designation' => 'Professor',
-                'affiliation' => 'Department of Computer Science',
-                'email' => $faculty_teacher->email,
-            ]),
+            AdvisoryCommitteeMember::fromFacultyTeacher($faculty_teacher),
             new AdvisoryCommitteeMember('external', [
                 'name' => $faker->name,
                 'designation' => $faker->jobTitle,

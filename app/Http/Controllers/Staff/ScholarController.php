@@ -117,7 +117,7 @@ class ScholarController extends Controller
             'date' => now()->format('d F Y'),
         ]);
 
-        $this->replaceAdvisoryCommittee($scholar);
+        $this->rememberOldAdvisoryCommittee($scholar);
 
         $scholar->update($validCosupervisorId + ['old_cosupervisors' => $oldCosupervisors]);
 
@@ -141,7 +141,7 @@ class ScholarController extends Controller
             'date' => now()->format('d F Y'),
         ]);
 
-        $this->replaceAdvisoryCommittee($scholar);
+        $this->rememberOldAdvisoryCommittee($scholar);
 
         $scholar->update($validSupervisorProfileId + ['old_supervisors' => $oldSupervisors]);
 
@@ -150,14 +150,17 @@ class ScholarController extends Controller
         return back();
     }
 
-    public function replaceAdvisoryCommittee(Scholar $scholar)
+    public function rememberOldAdvisoryCommittee(Scholar $scholar)
     {
-        $currentAdvisoryCommittee = array_merge(
-            $scholar->advisory_committee,
-            ['date' => now()->format('d F Y')]
-        );
-
         $oldAdvisoryCommittees = $scholar->old_advisory_committees;
+
+        $currentAdvisoryCommittee = [
+            'committee' => $scholar->advisory_committee,
+            'to_date' => now(),
+            'from_date' => count($oldAdvisoryCommittees) > 0 ?
+                $oldAdvisoryCommittees[count($oldAdvisoryCommittees) - 1]['to_date'] :
+                $scholar->created_at,
+        ];
 
         array_unshift($oldAdvisoryCommittees, $currentAdvisoryCommittee);
 
