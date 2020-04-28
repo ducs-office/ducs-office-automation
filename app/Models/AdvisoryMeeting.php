@@ -13,4 +13,9 @@ class AdvisoryMeeting extends Model
     protected $casts = [
         'date' => 'date',
     ];
+
+    public function scholar()
+    {
+        return $this->belongsTo(Scholar::class);
+    }
 }

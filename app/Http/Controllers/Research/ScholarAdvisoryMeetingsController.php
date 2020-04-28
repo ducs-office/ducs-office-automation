@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
-class AdvisoryMeetingsController extends Controller
+class ScholarAdvisoryMeetingsController extends Controller
 {
     public function store(Request $request, Scholar $scholar)
     {
