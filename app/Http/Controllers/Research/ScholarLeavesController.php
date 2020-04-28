@@ -9,6 +9,7 @@ use App\Models\Scholar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
 class ScholarLeavesController extends Controller
@@ -26,12 +27,17 @@ class ScholarLeavesController extends Controller
         return redirect()->back();
     }
 
-    public function approve(Scholar $scholar, Leave $leave)
+    public function approve(Scholar $scholar, Leave $leave, Request $request)
     {
         $this->authorize('approve', $leave);
 
+        $request->validate([
+            'response_letter' => ['required', 'file', 'mimetypes:application/pdf,image/*', 'max:200'],
+        ]);
+
         $leave->update([
             'status' => LeaveStatus::APPROVED,
+            'response_letter_path' => $request->file('response_letter')->store('scholar_leaves/response_letters'),
         ]);
 
         flash('Leave approved successfully!')->success();
@@ -39,12 +45,17 @@ class ScholarLeavesController extends Controller
         return redirect()->back();
     }
 
-    public function reject(Scholar $scholar, Leave $leave)
+    public function reject(Scholar $scholar, Leave $leave, Request $request)
     {
         $this->authorize('reject', $leave);
 
+        $request->validate([
+            'response_letter' => ['required', 'file', 'mimetypes:application/pdf,image/*', 'max:200'],
+        ]);
+
         $leave->update([
             'status' => LeaveStatus::REJECTED,
+            'response_letter_path' => $request->file('response_letter')->store('scholar_leaves/response_letters'),
         ]);
 
         flash('Leave rejected successfully!')->success();
@@ -52,13 +63,25 @@ class ScholarLeavesController extends Controller
         return redirect()->back();
     }
 
-    public function viewAttachment(Scholar $scholar, Leave $leave)
+    public function viewApplication(Scholar $scholar, Leave $leave)
     {
         $this->authorize('view', $scholar);
 
         return Response::download(
-            Storage::path($leave->document_path),
-            str_after($leave->document_path, '/'),
+            Storage::path($leave->application_path),
+            Str::after($leave->application_path, 'scholar_leaves/'),
+            [],
+            'inline'
+        );
+    }
+
+    public function viewResponseLetter(Scholar $scholar, Leave $leave)
+    {
+        $this->authorize('view', $scholar);
+
+        return Response::download(
+            Storage::path($leave->response_letter_path),
+            Str::after($leave->response_letter_path, 'scholar_leaves/response_letters/'),
             [],
             'inline'
         );

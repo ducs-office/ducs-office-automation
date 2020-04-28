@@ -24,8 +24,7 @@ class ScholarPolicy
         if (method_exists($user, 'isSupervisor') && $user->isSupervisor()) {
             return true;
         }
-
-        return $user->can('scholars:view');
+        return ($user->can('scholars:view'));
     }
 
     public function create($user)

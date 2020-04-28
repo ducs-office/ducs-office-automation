@@ -6,7 +6,9 @@ use Illuminate\Database\Eloquent\Relations\Pivot as Pivot;
 
 class ScholarCourseworkPivot extends Pivot
 {
-    protected $casts = [
-        'completed_at' => 'datetime',
+    protected $table = 'phd_course_scholar';
+
+    protected $dates = [
+        'completed_on',
     ];
 }

@@ -53,6 +53,11 @@ Route::prefix('/research')
             'ScholarCourseworkController@complete'
         )->name('scholars.courseworks.complete');
 
+        Route::get(
+            '/scholars/{scholar}/courseworks/{course}/marksheet',
+            'ScholarCourseworkController@viewMarksheet'
+        )->name('scholars.courseworks.marksheet');
+
         Route::patch(
             '/scholars/{scholar}/leaves/{leave}/recommend',
             'ScholarLeavesController@recommend'
@@ -69,18 +74,23 @@ Route::prefix('/research')
         )->name('scholars.leaves.reject');
 
         Route::get(
-            '/scholars/{scholar}/leaves/{leave}/attachment',
-            'ScholarLeavesController@viewAttachment'
-        )->name('scholars.leaves.attachment');
+            '/scholars/{scholar}/leaves/{leave}/response-letter',
+            'ScholarLeavesController@viewResponseLetter'
+        )->name('scholars.leaves.response_letter');
+
+        Route::get(
+            '/scholars/{scholar}/leaves/{leave}/application',
+            'ScholarLeavesController@viewApplication'
+        )->name('scholars.leaves.application');
 
         Route::post(
             '/scholars/{scholar}/advisory-meetings',
-            'AdvisoryMeetingsController@store'
+            'ScholarAdvisoryMeetingsController@store'
         )->name('scholars.advisory_meetings.store');
 
         Route::get(
             '/advisory-meetings/{meeting}/minutes-of-meeting',
-            'AdvisoryMeetingsController@minutesOfMeeting'
+            'ScholarAdvisoryMeetingsController@minutesOfMeeting'
         )->name('advisory_meetings.minutes_of_meeting');
 
         Route::get(
@@ -130,7 +140,22 @@ Route::prefix('/scholars')
         Route::post('/leaves', 'LeavesController@store')->name('leaves.store');
 
         Route::get(
-            '/leaves/{leave}/attachment',
-            'LeavesController@attachment'
-        )->name('leaves.attachment');
+            '/leaves/{leave}/application',
+            'LeavesController@viewApplication'
+        )->name('leaves.application');
+
+        Route::get(
+            '/leaves/{leave}/response-letter',
+            'LeavesController@viewResponseLetter'
+        )->name('leaves.response_letter');
+
+        Route::get(
+            '/courseworks/{course}/marksheet',
+            'CourseworkController@viewMarksheet'
+        )->name('courseworks.marksheet');
+
+        Route::get(
+            '/advisory-meetings/{meeting}/minutes-of-meeting',
+            'AdvisoryMeetingsController@minutesOfMeeting'
+        )->name('advisory_meetings.minutes_of_meeting');
     });

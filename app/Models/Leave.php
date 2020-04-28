@@ -10,7 +10,8 @@ class Leave extends Model
         'from', 'to', 'reason',
         'scholar_id', 'status',
         'extended_leave_id',
-        'document_path',
+        'application_path',
+        'response_letter_path',
     ];
 
     protected $casts = [
@@ -56,5 +57,10 @@ class Leave extends Model
             ->concat($this->extensions)
             ->filter->isApproved()
             ->max('to')->addDay();
+    }
+
+    public function scholar()
+    {
+        return $this->belongsTo(Scholar::class);
     }
 }

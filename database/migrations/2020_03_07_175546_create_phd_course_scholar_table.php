@@ -17,7 +17,8 @@ class CreatePhdCourseScholarTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('phd_course_id');
             $table->unsignedBigInteger('scholar_id');
-            $table->timestamp('completed_at')->nullable();
+            $table->date('completed_on')->nullable();
+            $table->string('marksheet_path')->nullable();
             $table->timestamps();
 
             $table->foreign('phd_course_id')->references('id')->on('phd_courses')->onDelete('cascade');

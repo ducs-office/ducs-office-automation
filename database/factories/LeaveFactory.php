@@ -14,7 +14,7 @@ $factory->define(Leave::class, function (Faker $faker) {
         'to' => $faker->date('Y-m-d'),
         'reason' => $faker->sentence,
         'status' => LeaveStatus::APPLIED,
-        'document_path' => function () {
+        'application_path' => function () {
             Storage::fake();
             return UploadedFile::fake()
                 ->create('file.pdf', 100, 'application/pdf')
