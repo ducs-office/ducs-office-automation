@@ -4,7 +4,7 @@
 
 use App\Models\Scholar;
 use App\Models\ScholarDocument;
-use App\Models\ScholarDocumentType;
+use App\Types\ScholarDocumentType;
 use Faker\Generator as Faker;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;

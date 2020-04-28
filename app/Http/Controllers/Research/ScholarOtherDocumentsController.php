@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Research;
 use App\Http\Controllers\Controller;
 use App\Models\Scholar;
 use App\Models\ScholarDocument;
-use App\Models\ScholarDocumentType;
+use App\Types\ScholarDocumentType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;

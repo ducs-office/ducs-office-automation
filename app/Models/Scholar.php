@@ -9,6 +9,7 @@ use App\Models\Cosupervisor;
 use App\Models\Publication;
 use App\Models\ScholarProfile;
 use App\Models\SupervisorProfile;
+use App\Types\ScholarDocumentType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User;
 

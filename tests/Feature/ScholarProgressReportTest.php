@@ -4,8 +4,8 @@ namespace Tests\Feature;
 
 use App\Models\Scholar;
 use App\Models\ScholarDocument;
-use App\Models\ScholarDocumentType;
 use App\Models\User;
+use App\Types\ScholarDocumentType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
