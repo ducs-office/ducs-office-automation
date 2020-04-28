@@ -93,6 +93,7 @@ return [
             'teachers' => ['view', 'create', 'edit', 'delete'],
             'scholars' => ['view', 'create', 'edit', 'delete'],
             'leaves' => ['approve', 'reject'],
+            'phd course work' => ['mark completed'],
         ],
 
         'roles' => [
@@ -112,6 +113,7 @@ return [
             'DRC Member' => [
                 'scholars' => ['view', 'create', 'edit', 'delete'],
                 'leaves' => ['approve', 'reject'],
+                'phd course work' => ['mark completed'],
             ],
         ],
     ],

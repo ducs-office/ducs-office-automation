@@ -19,9 +19,7 @@ class ScholarProfilePolicy
 
     public function markCourseworkCompleted($user, Scholar $scholar)
     {
-        return method_exists($user, 'isSupervisor') &&
-            $user->isSupervisor() &&
-            $user->supervisorProfile->scholars->contains($scholar);
+        return $user->can('phd course work:mark completed');
     }
 
     public function addAdvisoryMeeting($user, Scholar $scholar)
