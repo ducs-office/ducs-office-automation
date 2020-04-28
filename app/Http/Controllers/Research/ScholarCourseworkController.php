@@ -55,7 +55,7 @@ class ScholarCourseworkController extends Controller
         $this->authorize('view', $scholar);
 
         $pivot = ScholarCourseworkPivot::where('scholar_id', $scholar->id)
-                ->where('phd_Course_id', $course->id)->get()[0];
+                ->where('phd_course_id', $course->id)->get()[0];
 
         return Response::download(
             Storage::path($pivot->marksheet_path),

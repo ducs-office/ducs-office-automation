@@ -122,10 +122,10 @@ class DrcMemberMarksScholarCourseWorkCompletedTest extends TestCase
 
         $scholar = create(Scholar::class);
 
-        $marksheet = UploadedFile::fake()->create('fakefile.pdf', 20, 'application/pdf')->store('scholar_marksheets');
+        $marksheetPath = UploadedFile::fake()->create('fakefile.pdf', 20, 'application/pdf')->store('scholar_marksheets');
 
         $scholar->courseworks()->attach($course->id, [
-            'marksheet_path' => $marksheet,
+            'marksheet_path' => $marksheetPath,
             'completed_on' => now()->format('Y-m-d'),
         ]);
 
@@ -147,10 +147,10 @@ class DrcMemberMarksScholarCourseWorkCompletedTest extends TestCase
 
         $scholar = create(Scholar::class);
 
-        $marksheet = UploadedFile::fake()->create('fakefile.pdf', 20, 'application/pdf')->store('scholar_marksheets');
+        $marksheetPath = UploadedFile::fake()->create('fakefile.pdf', 20, 'application/pdf')->store('scholar_marksheets');
 
         $scholar->courseworks()->attach($course->id, [
-            'marksheet_path' => $marksheet,
+            'marksheet_path' => $marksheetPath,
             'completed_on' => now()->format('Y-m-d'),
         ]);
 

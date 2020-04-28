@@ -20,7 +20,7 @@ class CourseworkController extends Controller
         abort_unless($scholar->courseworks->contains($course), 403, 'You cannot view this file!');
 
         $pivot = ScholarCourseworkPivot::where('scholar_id', $scholar->id)
-                ->where('phd_Course_id', $course->id)->get()[0];
+                ->where('phd_course_id', $course->id)->get()[0];
 
         return Response::download(
             Storage::path($pivot->marksheet_path),
