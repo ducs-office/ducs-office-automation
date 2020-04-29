@@ -460,7 +460,7 @@
                                 }">
                                 <option value="Maternity/Child Care Leave">Maternity/Child Care Leave</option>
                                 <option value="Medical">Medical</option>
-                                <option value="For Work">Work</option>
+                                <option value="Duty Leave">Duty Leave</option>
                                 <option value="Deregistration">Deregistration</option>
                                 <option value="Other">Other</option>
                             </select>

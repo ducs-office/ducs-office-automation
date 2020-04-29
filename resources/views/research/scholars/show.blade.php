@@ -324,20 +324,23 @@
                     method="POST" class="p-6" enctype="multipart/form-data">
                     @csrf_token @method("PATCH")
                     <h2 class="text-lg font-bold mb-8">Mark Course Work Complete</h2>
-                        <div class="flex mb-4 items-baseline">
-                            <label for="completed_on" class="form-label mr-2"> Date of Completion
-                                <span class="text-red-600 font-bold">*</span>
-                            </label>
-                            <input type="date" name="completed_on" 
-                            class="form-input" id="completed_on">
-                        </div>
-                        <div class="flex mb-4 items-baseline">
-                            <label for="marksheet" class="form-label mr-2">
-                                Upload Marksheet
-                                <span class="text-red-600 font-bold">*</span>
-                            </label>
-                            <input id="marksheet" type="file" name="marksheet"
-                             class="form-input" accept="application/pdf,image/*">
+                        <div class="flex mb-2">
+                            <div class="flex-1 mr-2 items-baseline">
+                                <label for="completed_on" class="form-label mb-1 w-full"> 
+                                    Date of Completion
+                                    <span class="text-red-600 font-bold">*</span>
+                                </label>
+                                <input type="date" name="completed_on" 
+                                class="form-input w-full" id="completed_on">
+                            </div>
+                            <div class="flex-1 mb-2 items-baseline">
+                                <label for="marksheet" class="form-label mb-1 w-full">
+                                    Upload Marksheet
+                                    <span class="text-red-600 font-bold">*</span>
+                                </label>
+                                <input id="marksheet" type="file" name="marksheet"
+                                 class="form-input w-full" accept="application/pdf,image/*">
+                            </div>
                         </div>
                         <button class="bg-green-500 hover:bg-green-600 text-white text-sm py-2 rounded font-bold btn">
                             Mark Completed 
@@ -435,19 +438,33 @@
                 App\Models\LeaveStatus::RECOMMENDED => 'text-blue-600',
                 App\Models\LeaveStatus::APPLIED => 'text-gray-700'
             ])
-
+    
             <v-modal name="respond-to-leave" height="auto">
                 <template v-slot="{ data }"> 
-                    <form :action="route(data('route-name'), [data('scholar'), data('leave')])"
-                    method="POST" class="p-6" enctype="multipart/form-data">
+                    <form :action="route('research.scholars.leaves.respond', [data('scholar'), data('leave')])"
+                    method="POST" class="p-6" enctype="multipart/form-data" >
                     @csrf_token @method("PATCH")
-                    
-                    <h2 class="text-lg font-bold mb-8">Respond To Leave</h2>
-                        <label for="response_letter" class="form-label">
-                            Upload Response Letter
-                            <span class="text-red-600 font-bold">*</span>
-                        </label>
-                        <input id="response_letter" type="file" class="form-input" name="response_letter" accept="application/pdf,image/*">
+                        <h2 class="text-lg font-bold mb-8">Respond To Leave</h2>
+                        <div class="flex mb-2">
+                            <div class="flex-1 mr-2 items-baseline">
+                                <label for="response" class="form-label w-full mb-1">
+                                    Response <span class="text-red-600 font-bold">*</span>
+                                </label>
+                                <select name="response" id="" class="form-input w-full">
+                                    <option value="">---Choose response type---</option>
+                                    <option value="{{ App\Models\LeaveStatus::APPROVED }}">Approve</option>
+                                    <option value="{{ App\Models\LeaveStatus::REJECTED }}">Reject</option>
+                                </select>
+                            </div>
+                            <div class="flex-1 items-baseline">
+                                <label for="response_letter" class="form-label w-full mb-1">
+                                    Upload Response Letter
+                                    <span class="text-red-600 font-bold">*</span>
+                                </label>
+                                <input id="response_letter" type="file" class="form-input w-full" 
+                                    name="response_letter" accept="application/pdf,image/*">
+                            </div>
+                        </div>
                         <button class="btn btn-magenta">
                             Respond 
                         </button>
@@ -457,7 +474,8 @@
 
             <div class="mb-16 flex">
                 <div class="w-64 pr-4 relative z-10 -ml-8 my-2">
-                    <h3 class="relative z-20 pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
+                    <h3 class="relative 
+                        z-20 pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
                         Leaves
                     </h3>
                     <svg class="absolute left-0 w-2 text-magenta-900" viewBox="0 0 10 10">
@@ -482,7 +500,7 @@
                                     <feather-icon name="paperclip" class="h-current mr-2"></feather-icon>
                                     Application
                                 </a>
-                                @if ($leave->status === 'approved' || $leave->status === 'rejected')
+                                @if ($leave->status === App\Models\LeaveStatus::APPROVED || $leave->status === App\Models\LeaveStatus::REJECTED)
                                     <a target="_blank" href="{{ route('research.scholars.leaves.response_letter', [$scholar, $leave]) }}" class="btn inline-flex items-center ml-2">
                                         <feather-icon name="paperclip" class="h-current mr-2"></feather-icon>
                                         Response
@@ -501,28 +519,13 @@
                                     Recommend
                                 </button>
                                 @endcan
-                                @can('approve', $leave)
-                                <button type="submit"
-                                    form="leave-response"
-                                    class="p-2 mr-1 bg-green-500 hover:bg-green-600 text-white text-sm rounded font-bold"
+                                @can('respond', $leave)
+                                <button
+                                    class="btn btn-magenta bg-green-500 hover:bg-green-600 text-white text-sm rounded-lg"
                                     @click="$modal.show('respond-to-leave', {
                                         'leave': {{ $leave }},
                                         'scholar': {{ $scholar }},
-                                        'route-name':'research.scholars.leaves.approve'
-                                    })">
-                                    <feather-icon name="check" class="h-current" stroke-width="3">Approve</feather-icon>
-                                </button>
-                                @endcan
-                                @can('reject', $leave)
-                                <button type="submit"
-                                    form="leave-response"
-                                    class="p-2 ml-1 bg-red-500 hover:bg-red-600 text-white text-sm rounded font-bold"
-                                    @click="$modal.show('respond-to-leave', {
-                                        'leave': {{ $leave }},
-                                        'scholar': {{ $scholar }},
-                                        'route-name':'research.scholars.leaves.reject'
-                                    })">
-                                    <feather-icon name="x" class="h-current" stroke-width="3">Reject</feather-icon>
+                                    })"> Respond
                                 </button>
                                 @endcan
                             </div>
@@ -539,7 +542,7 @@
                                             <feather-icon name="paperclip" class="h-current mr-2"></feather-icon>
                                             Application
                                         </a>
-                                        @if ($extensionLeave->status === 'approved' || $extensionLeave->status === 'rejected')
+                                        @if ($extensionLeave->status === App\Models\LeaveStatus::APPROVED || $extensionLeave->status === App\Models\LeaveStatus::REJECTED)
                                             <a target="_blank" href="{{ route('research.scholars.leaves.response_letter', [$scholar, $leave]) }}" class="btn inline-flex items-center ml-2">
                                                 <feather-icon name="paperclip" class="h-current mr-2"></feather-icon>
                                                 Response
@@ -558,28 +561,13 @@
                                             Recommend
                                         </button>
                                         @endcan
-                                        @can('approve', $extensionLeave)
-                                        <button type="submit"
-                                            form="leave-response"
-                                            class="p-2 mr-1 bg-green-500 hover:bg-green-600 text-white text-sm rounded font-bold"
+                                        @can('respond', $extensionLeave)
+                                        <button
+                                            class="btn btn-magenta bg-green-500 hover:bg-green-600 text-white text-sm rounded-lg"
                                             @click="$modal.show('respond-to-leave', {
                                                 'leave': {{ $extensionLeave }},
                                                 'scholar': {{ $scholar }},
-                                                'route-name':'research.scholars.leaves.approve'
-                                            })">
-                                            <feather-icon name="check" class="h-current" stroke-width="3">Approve</feather-icon>
-                                        </button>
-                                        @endcan
-                                        @can('reject', $extensionLeave)
-                                        <button type="submit"
-                                            form="leave-response"
-                                            class="p-2 ml-1 bg-red-500 hover:bg-red-600 text-white text-sm rounded font-bold"
-                                            @click="$modal.show('respond-to-leave', {
-                                                'leave': {{ $extensionLeave }},
-                                                'scholar': {{ $scholar }},
-                                                'route-name':'research.scholars.leaves.reject'
-                                            })">
-                                            <feather-icon name="x" class="h-current" stroke-width="3">Reject</feather-icon>
+                                            })"> Respond
                                         </button>
                                         @endcan
                                     </div>
