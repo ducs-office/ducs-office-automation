@@ -15,7 +15,7 @@ class CourseworkController extends Controller
 {
     public function viewMarksheet(ScholarCourseworkPivot $course)
     {
-        abort_unless($course->scholar_id === auth()->id(), 403, 'You cannot view this file!');
+        abort_unless($course->scholar_id == auth()->id(), 403, 'You cannot view this file!');
 
         return Response::download(
             Storage::path($course->marksheet_path),
