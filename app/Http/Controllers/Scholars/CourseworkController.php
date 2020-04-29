@@ -13,18 +13,13 @@ use Illuminate\Support\Str;
 
 class CourseworkController extends Controller
 {
-    public function viewMarksheet(PhdCourse $course)
+    public function viewMarksheet(ScholarCourseworkPivot $course)
     {
-        $scholar = Auth::user();
-
-        abort_unless($scholar->courseworks->contains($course), 403, 'You cannot view this file!');
-
-        $pivot = ScholarCourseworkPivot::where('scholar_id', $scholar->id)
-                ->where('phd_course_id', $course->id)->get()[0];
+        abort_unless($course->scholar_id === auth()->id(), 403, 'You cannot view this file!');
 
         return Response::download(
-            Storage::path($pivot->marksheet_path),
-            Str::after($pivot->marksheet_path, '/'),
+            Storage::path($course->marksheet_path),
+            Str::after($course->marksheet_path, '/'),
             [],
             'inline'
         );

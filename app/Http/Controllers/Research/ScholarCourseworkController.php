@@ -31,7 +31,6 @@ class ScholarCourseworkController extends Controller
 
     public function complete(Scholar $scholar, $courseId, Request $request)
     {
-        // dd($request->completed_on, now()->format('d-m-y'));
         $this->authorize('phd course work:mark completed');
 
         $request->validate([
@@ -50,16 +49,13 @@ class ScholarCourseworkController extends Controller
         return redirect()->back();
     }
 
-    public function viewMarksheet(Scholar $scholar, PhdCourse $course)
+    public function viewMarksheet(Scholar $scholar, ScholarCourseworkPivot $course)
     {
         $this->authorize('view', $scholar);
 
-        $pivot = ScholarCourseworkPivot::where('scholar_id', $scholar->id)
-                ->where('phd_course_id', $course->id)->get()[0];
-
         return Response::download(
-            Storage::path($pivot->marksheet_path),
-            Str::after($pivot->marksheet_path, '/'),
+            Storage::path($course->marksheet_path),
+            Str::after($course->marksheet_path, '/'),
             [],
             'inline'
         );

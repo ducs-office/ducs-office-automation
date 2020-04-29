@@ -358,6 +358,7 @@
                 <div class="flex-1 pl-4">
                     <ul class="border rounded-lg overflow-hidden mb-4">
                         @foreach ($scholar->courseworks as $course)
+                        {{-- @dd($course->pivot->marksheet_path) --}}
                             <li class="px-4 py-3 border-b last:border-b-0">
                                 <div class="flex items-center">
                                     <div class="w-24">
@@ -369,8 +370,12 @@
                                     </h5>
                                     @if ($course->pivot->completed_on)
                                         <div class="flex items-center pl-4">
-                                            <a target="_blank" href="{{ route('research.scholars.courseworks.marksheet', [$scholar, 'course' => $course]) }}" class="btn inline-flex items-center ml-2">
-                                                <feather-icon name="paperclip" class="h-current mr-2"></feather-icon>
+
+                                            <a target="_blank" 
+                                            href="{{ route('research.scholars.courseworks.marksheet', [ $scholar, $course])}}" 
+                                            class="btn inline-flex items-center ml-2">
+
+                                            <feather-icon name="paperclip" class="h-current mr-2"></feather-icon>
                                                 Marksheet
                                             </a>
                                             <div class="w-5 h-5 inline-flex items-center justify-center bg-green-500 text-white font-extrabold leading-none rounded-full mr-2">&checkmark;</div>

@@ -19,7 +19,7 @@ class ScholarProfilePolicy
 
     public function markCourseworkCompleted($user, Scholar $scholar)
     {
-        return $user->can('phd course work:mark completed');
+        return $user instanceof User && $user->can('phd course work:mark completed');
     }
 
     public function addAdvisoryMeeting($user, Scholar $scholar)
