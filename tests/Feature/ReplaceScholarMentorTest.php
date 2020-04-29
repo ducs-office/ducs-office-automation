@@ -5,8 +5,10 @@ namespace Tests\Feature;
 use App\Models\Cosupervisor;
 use App\Models\Scholar;
 use App\Models\SupervisorProfile;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Carbon as SupportCarbon;
 use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
 
@@ -150,7 +152,9 @@ class ReplaceScholarMentorTest extends TestCase
     {
         $this->signIn();
 
-        $scholar = create(Scholar::class);
+        $scholar = create(Scholar::class, 1, [
+            'created_at' => now()->subMonths(3),
+        ]);
         $newSupervisorProfile = create(SupervisorProfile::class);
 
         $beforeSupervisorReplaceAdvisoryCommittee = $scholar->advisory_committee;
@@ -167,10 +171,11 @@ class ReplaceScholarMentorTest extends TestCase
 
         $this->assertEquals(count($scholar->fresh()->old_advisory_committees), 1);
 
-        $expectedOldCommittee = collect($beforeSupervisorReplaceAdvisoryCommittee)
-            ->map->toArray()
-            ->merge(['date' => now()->format('d F Y')])
-            ->toArray();
+        $expectedOldCommittee = [
+            'committee' => $beforeSupervisorReplaceAdvisoryCommittee,
+            'to_date' => today(),
+            'from_date' => Carbon::parse($scholar->created_at->format('d F Y')),
+        ];
 
         $this->assertEquals(
             $expectedOldCommittee,
@@ -197,10 +202,11 @@ class ReplaceScholarMentorTest extends TestCase
 
         $this->assertEquals(count($scholar->fresh()->old_advisory_committees), 1);
 
-        $expectedOldCommittee = collect($beforeCosupervisorReplaceAdvisoryCommittee)
-            ->map->toArray()
-            ->merge(['date' => now()->format('d F Y')])
-            ->toArray();
+        $expectedOldCommittee = [
+            'committee' => $beforeCosupervisorReplaceAdvisoryCommittee,
+            'to_date' => today(),
+            'from_date' => Carbon::parse($scholar->created_at->format('d F Y')),
+        ];
 
         $this->assertEquals(
             $expectedOldCommittee,

@@ -4,8 +4,8 @@ namespace App\Casts;
 
 use App\Models\User;
 use App\Types\AdvisoryCommitteeMember;
-use Carbon\Carbon;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
+use Illuminate\Support\Carbon;
 
 class OldAdvisoryCommittee implements CastsAttributes
 {
@@ -21,8 +21,8 @@ class OldAdvisoryCommittee implements CastsAttributes
 
             return [
                 'committee' => $committee,
-                'from_date' => Carbon::createFromFormat('d F Y', $fromDate),
-                'to_date' => Carbon::createFromFormat('d F Y', $toDate),
+                'from_date' => Carbon::parse($fromDate),
+                'to_date' => Carbon::parse($toDate),
             ];
         }, json_decode($value, true));
     }

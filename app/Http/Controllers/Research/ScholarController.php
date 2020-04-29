@@ -90,7 +90,7 @@ class ScholarController extends Controller
 
         $currentAdvisoryCommittee = [
             'committee' => $scholar->advisory_committee,
-            'to_date' => now(),
+            'to_date' => today(),
             'from_date' => count($oldAdvisoryCommittees) > 0 ?
                 $oldAdvisoryCommittees[count($oldAdvisoryCommittees) - 1]['to_date'] :
                 $scholar->created_at,

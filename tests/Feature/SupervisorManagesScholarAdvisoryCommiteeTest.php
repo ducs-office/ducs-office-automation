@@ -8,6 +8,7 @@ use App\Types\AdvisoryCommitteeMember;
 use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Carbon;
 use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
 
@@ -93,12 +94,25 @@ class SupervisorManagesScholarAdvisoryCommiteeTest extends TestCase
             ])->assertRedirect()
             ->assertSessionHasFlash('success', 'Advisory Committee Replaced SuccessFully!');
 
-        $this->assertContains($external, collect($scholar->fresh()->advisory_committee)->map->toArray()->toArray());
+        $expectedAddedMembers = [
+            AdvisoryCommitteeMember::fromFacultyTeacher($faculty_teacher),
+            new AdvisoryCommitteeMember('external', $external),
+        ];
 
-        $expectOldCommittee = collect($beforeReplaceAdvisoryCommittee)->map->toArray()
-            ->put('date', now()->format('d F Y'))->toArray();
+        list($permanent, $added) = collect($scholar->fresh()->advisory_committee)
+            ->partition(function ($item) {
+                return in_array($item->type, ['supervisor', 'cosupervisor']);
+            })->map->values()->toArray();
 
-        $this->assertEquals(count($scholar->fresh()->old_advisory_committees), 1);
+        $this->assertEquals($expectedAddedMembers, $added);
+
+        $expectOldCommittee = [
+            'committee' => $beforeReplaceAdvisoryCommittee,
+            'from_date' => today(),
+            'to_date' => Carbon::parse($scholar->created_at->format('d F Y')),
+        ];
+
+        $this->assertCount(1, $scholar->fresh()->old_advisory_committees);
 
         $this->assertEquals(
             $expectOldCommittee,
