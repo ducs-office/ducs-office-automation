@@ -6,6 +6,7 @@ use App\Models\Scholar;
 use App\Models\ScholarEducationSubject;
 use App\Models\Teacher;
 use App\Models\User;
+use App\Types\AdvisoryCommitteeMember;
 use Illuminate\Database\Seeder;
 
 class PhdScholarSeeder extends Seeder
@@ -20,7 +21,14 @@ class PhdScholarSeeder extends Seeder
         $supervisorNeelima = factory(User::class)->create([
             'name' => 'Neelima Gupta',
             'email' => 'ngupta.cs.du@gmail.com',
+            'category' => 'faculty_teacher',
         ])->supervisorProfile()->create();
+
+        $facultyNaveen = factory(User::class)->create([
+            'name' => 'Naveen Kumar',
+            'email' => 'naveen@cs.du.ac.in',
+            'category' => 'faculty_teacher',
+        ]);
 
         $scholarRajni = factory(Scholar::class)->create([
             'first_name' => 'Rajni',
@@ -34,14 +42,15 @@ class PhdScholarSeeder extends Seeder
             'research_area' => 'Theoretical Computer Science',
             'enrollment_date' => '2019-11-11',
             'supervisor_profile_id' => $supervisorNeelima->id,
+            'cosupervisor_id' => null,
             'advisory_committee' => [
-                'faculty_teacher' => 'Naveen kumar',
-                'external' => [
+                AdvisoryCommitteeMember::fromFacultyTeacher($facultyNaveen),
+                new AdvisoryCommitteeMember('external', [
                     'name' => 'Naveen Garg',
+                    'designation' => 'Professor',
                     'affiliation' => 'Indian Institute of Technology Delhi',
-                    'designation' => 'Prof.',
                     'email' => 'naveengarg@iitd.ac.in',
-                ],
+                ]),
             ],
             'education' => [
                 [
@@ -71,6 +80,12 @@ class PhdScholarSeeder extends Seeder
             'email' => 'sangeeta.srivastava@cas.du.ac.in',
         ])->supervisorProfile()->create();
 
+        $facultyPoonam = factory(User::class)->create([
+            'name' => 'Poonam Bedi',
+            'email' => 'pbedi@cs.du.ac.in',
+            'category' => 'faculty_teacher',
+        ]);
+
         $scholarSudhir = factory(Scholar::class)->create([
             'first_name' => 'Sudhir Kumar',
             'last_name' => 'Gupta',
@@ -83,20 +98,21 @@ class PhdScholarSeeder extends Seeder
             'research_area' => 'Mobile Specific Testing Strategies',
             'enrollment_date' => '2019-12-10',
             'supervisor_profile_id' => $supervisorSangeeta->id,
+            'cosupervisor_id' => null,
             'advisory_committee' => [
-                'faculty_teacher' => 'Punam Bedi',
-                'external' => [
+                AdvisoryCommitteeMember::fromFacultyTeacher($facultyPoonam),
+                new AdvisoryCommitteeMember('external', [
                     'name' => 'V.B. Singh',
-                    'affiliation' => 'Delhi College of Arts & Commerce, University of Delhi',
                     'designation' => 'Dr.',
+                    'affiliation' => 'Delhi College of Arts & Commerce, University of Delhi',
                     'email' => 'vbsingh@gmail.com',
-                ],
-                // [
-                //     'name' => 'Naveen Garg',
-                //     'title' => 'Prof',
-                //     'affiliation' => 'Indian Institute of Technology Delhi',
-                //     'designation' => 'Permanent',
-                // ],
+                ]),
+                new AdvisoryCommitteeMember('external', [
+                    'name' => 'Naveen Garg',
+                    'designation' => 'Professor',
+                    'affiliation' => 'Indian Institute of Technology Delhi',
+                    'email' => 'naveen@.iitd.ac.in',
+                ]),
             ],
         ]);
 
@@ -149,14 +165,15 @@ class PhdScholarSeeder extends Seeder
             'research_area' => 'Approximation Algoriithms and their Analysis',
             'enrollment_date' => '2017-04-05',
             'supervisor_profile_id' => $supervisorNeelima->id,
+            'cosupervisor_id' => null,
             'advisory_committee' => [
-                'faculty_teacher' => 'Naveen Kumar',
-                'external' => [
+                AdvisoryCommitteeMember::fromFacultyTeacher($facultyNaveen),
+                new AdvisoryCommitteeMember('external', [
                     'name' => 'Naveen Garg',
                     'affiliation' => 'Department of Computer Science and Engineering IIT Delhi',
                     'designation' => 'Prof.',
                     'email' => 'naveengarg@iitd.ac.in',
-                ],
+                ]),
             ],
         ]);
 
@@ -216,18 +233,19 @@ class PhdScholarSeeder extends Seeder
             'supervisor_profile_id' => $supervisorArchana->id,
             'cosupervisor_id' => $cosupervisorMuttoo->id,
             'advisory_committee' => [
-                'faculty_teacher' => 'Poonam Bedi',
-                'external' => [
+                AdvisoryCommitteeMember::fromFacultyTeacher($facultyPoonam),
+                new AdvisoryCommitteeMember('external', [
                     'name' => 'Archana Singhal',
                     'affiliation' => 'Ip college, University of Delhi',
                     'designation' => 'Dr.',
-                ],
-                // [
-                //     'name' => 'Harmeet Kaur',
-                //     'title' => 'Dr',
-                //     'affiliation' => 'Hansraj college, University of Delhi',
-                //     'designation' => 'Permanent',
-                // ],
+                    'email' => 'archana@ip.du.ac.in',
+                ]),
+                new AdvisoryCommitteeMember('external', [
+                    'name' => 'Harmeet Kaur',
+                    'designation' => 'Professor',
+                    'affiliation' => 'Hansraj college, University of Delhi',
+                    'email' => 'harmeet@hc.du.ac.in',
+                ]),
             ],
         ]);
 
@@ -262,9 +280,10 @@ class PhdScholarSeeder extends Seeder
             'research_area' => 'Information Security',
             'enrollment_date' => '2018-05-12',
             'supervisor_profile_id' => $supervisorArpita->id,
+            'cosupervisor_id' => null,
             'cosupervisor_id' => $cosupervisorAnurag->id,
             'advisory_committee' => [
-                'faculty_teacher' => 'Poonam Bedi',
+                AdvisoryCommitteeMember::fromFacultyTeacher($facultyPoonam),
             ],
         ]);
 
@@ -287,13 +306,13 @@ class PhdScholarSeeder extends Seeder
             'enrollment_date' => '2019-06-11',
             'supervisor_profile_id' => $supervisorSangeeta->id,
             'advisory_committee' => [
-                'faculty_teacher' => 'Poonam Bedi',
-                'external' => [
+                AdvisoryCommitteeMember::fromFacultyTeacher($facultyPoonam),
+                new AdvisoryCommitteeMember('external', [
                     'name' => 'V.B. Singh',
-                    'affiliation' => 'Delhi College of Arts & Commerce, University of Delhi',
                     'designation' => 'Dr.',
+                    'affiliation' => 'Delhi College of Arts & Commerce, University of Delhi',
                     'email' => 'vbsingh@gmail.com',
-                ],
+                ]),
             ],
         ]);
 
