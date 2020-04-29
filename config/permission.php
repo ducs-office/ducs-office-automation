@@ -92,7 +92,7 @@ return [
             'users' => ['view', 'create', 'edit', 'delete'],
             'teachers' => ['view', 'create', 'edit', 'delete'],
             'scholars' => ['view', 'create', 'edit', 'delete'],
-            'leaves' => ['approve', 'reject'],
+            'leaves' => ['respond'],
             'phd course work' => ['mark completed'],
             'scholar progress reports' => ['add'],
             'scholar other documents' => ['add'],
@@ -114,7 +114,7 @@ return [
             ],
             'DRC Member' => [
                 'scholars' => ['view', 'create', 'edit', 'delete'],
-                'leaves' => ['approve', 'reject'],
+                'leaves' => ['respond'],
                 'phd course work' => ['mark completed'],
                 'scholar progress reports' => ['add'],
                 'scholar other documents' => ['add'],

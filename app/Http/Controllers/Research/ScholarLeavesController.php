@@ -27,38 +27,23 @@ class ScholarLeavesController extends Controller
         return redirect()->back();
     }
 
-    public function approve(Scholar $scholar, Leave $leave, Request $request)
+    public function respond(Scholar $scholar, Leave $leave, Request $request)
     {
-        $this->authorize('approve', $leave);
+        $this->authorize('respond', $leave);
+
+        $validResponseTypes = LeaveStatus::APPROVED . ',' . LeaveStatus::REJECTED;
 
         $request->validate([
+            'response' => ['required', 'in:' . $validResponseTypes],
             'response_letter' => ['required', 'file', 'mimetypes:application/pdf,image/*', 'max:200'],
         ]);
 
         $leave->update([
-            'status' => LeaveStatus::APPROVED,
+            'status' => $request->response,
             'response_letter_path' => $request->file('response_letter')->store('scholar_leaves/response_letters'),
         ]);
 
-        flash('Leave approved successfully!')->success();
-
-        return redirect()->back();
-    }
-
-    public function reject(Scholar $scholar, Leave $leave, Request $request)
-    {
-        $this->authorize('reject', $leave);
-
-        $request->validate([
-            'response_letter' => ['required', 'file', 'mimetypes:application/pdf,image/*', 'max:200'],
-        ]);
-
-        $leave->update([
-            'status' => LeaveStatus::REJECTED,
-            'response_letter_path' => $request->file('response_letter')->store('scholar_leaves/response_letters'),
-        ]);
-
-        flash('Leave rejected successfully!')->success();
+        flash('Leave ' . $request->response . ' successfully!')->success();
 
         return redirect()->back();
     }

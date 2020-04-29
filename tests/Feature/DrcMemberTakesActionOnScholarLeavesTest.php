@@ -31,19 +31,21 @@ class DrcMemberTakesActionOnScholarLeavesTest extends TestCase
     }
 
     /** @test */
-    public function user_can_approve_leaves_when_they_have_permission_to_approve()
+    public function user_can_approve_leaves_when_they_have_permission_to_respond()
     {
         $this->signIn($user = create(User::class));
 
-        $user->givePermissionTo('leaves:approve');
+        $user->givePermissionTo('leaves:respond');
 
         $leave = create(Leave::class, 1, ['status' => LeaveStatus::APPLIED]);
 
         $this->withoutExceptionHandling()
-            ->patch(route('research.scholars.leaves.approve', [$leave->scholar_id, $leave]), [
+            ->patch(route('research.scholars.leaves.respond', [$leave->scholar_id, $leave]), [
+                'response' => LeaveStatus::APPROVED,
                 'response_letter' => $this->responseLetter,
             ])
-            ->assertRedirect();
+            ->assertRedirect()
+            ->assertSessionHasFlash('success', 'Leave approved successfully!');
 
         $this->assertTrue($leave->fresh()->isApproved());
         $this->assertEquals($this->responseLetter->hashName('scholar_leaves/response_letters'), $leave->fresh()->response_letter_path);
@@ -54,66 +56,70 @@ class DrcMemberTakesActionOnScholarLeavesTest extends TestCase
     {
         $this->signIn($user = create(User::class));
 
-        $user->revokePermissionTo('leaves:approve');
+        $user->roles->every->revokePermissionTo('leaves:respond');
 
         $leave = create(Leave::class, 1, ['status' => LeaveStatus::APPLIED]);
 
         $this->withExceptionHandling()
-            ->patch(route('research.scholars.leaves.approve', [$leave->scholar_id, $leave]))
+            ->patch(route('research.scholars.leaves.respond', [$leave->scholar_id, $leave]))
             ->assertForbidden();
 
         $this->assertFalse($leave->fresh()->isApproved());
     }
 
     /** @test */
-    public function user_can_reject_leaves_when_they_have_permission_to_reject()
+    public function user_can_reject_leaves_when_they_have_permission_to_respond()
     {
         $this->signIn($user = create(User::class));
 
-        $user->givePermissionTo('leaves:reject');
+        $user->givePermissionTo('leaves:respond');
 
         $leave = create(Leave::class, 1, ['status' => LeaveStatus::APPLIED]);
 
         $this->withoutExceptionHandling()
-            ->patch(route('research.scholars.leaves.reject', [$leave->scholar_id, $leave]), [
+            ->patch(route('research.scholars.leaves.respond', [$leave->scholar_id, $leave]), [
+                'response' => LeaveStatus::REJECTED,
                 'response_letter' => $this->responseLetter,
             ])
-            ->assertRedirect();
+            ->assertRedirect()
+            ->assertSessionHasFlash('success', 'Leave rejected successfully!');
 
         $this->assertEquals(LeaveStatus::REJECTED, $leave->fresh()->status);
         $this->assertEquals($this->responseLetter->hashName('scholar_leaves/response_letters'), $leave->fresh()->response_letter_path);
     }
 
     /** @test */
-    public function user_cannot_reject_leaves_when_they_donot_have_permission_to_reject()
+    public function user_cannot_reject_leaves_when_they_do_not_have_permission_to_respond()
     {
         $this->signIn($user = create(User::class));
 
-        $user->revokePermissionTo('leaves:reject');
+        $user->revokePermissionTo('leaves:respond');
 
         $leave = create(Leave::class, 1, ['status' => LeaveStatus::APPLIED]);
 
         $this->withExceptionHandling()
-            ->patch(route('research.scholars.leaves.reject', [$leave->scholar_id, $leave]))
+            ->patch(route('research.scholars.leaves.respond', [$leave->scholar_id, $leave]))
             ->assertForbidden();
 
         $this->assertNotEquals(LeaveStatus::REJECTED, $leave->fresh()->status);
     }
 
     /** @test */
-    public function document_upload_is_required_on_approving_a_leave()
+    public function response_letter_upload_is_required_on_responding_to_a_leave()
     {
         Storage::fake();
 
         $this->signIn($user = create(User::class));
 
-        $user->givePermissionTo('leaves:approve');
+        $user->givePermissionTo('leaves:respond');
 
         $leave = create(Leave::class, 1, ['status' => LeaveStatus::APPLIED]);
 
         try {
             $this->withoutExceptionHandling()
-                ->patch(route('research.scholars.leaves.approve', [$leave->scholar_id, $leave]));
+                ->patch(route('research.scholars.leaves.respond', [$leave->scholar_id, $leave]), [
+                    'response' => LeaveStatus::APPROVED,
+                ]);
 
             $this->fail('Response letter is required was not validated');
         } catch (ValidationException $e) {
@@ -122,23 +128,25 @@ class DrcMemberTakesActionOnScholarLeavesTest extends TestCase
     }
 
     /** @test */
-    public function document_upload_is_required_on_rejecting_a_leave()
+    public function response_is_required_on_responding_to_a_leave()
     {
         Storage::fake();
 
         $this->signIn($user = create(User::class));
 
-        $user->givePermissionTo('leaves:reject');
+        $user->givePermissionTo('leaves:respond');
 
         $leave = create(Leave::class, 1, ['status' => LeaveStatus::APPLIED]);
 
         try {
             $this->withoutExceptionHandling()
-                ->patch(route('research.scholars.leaves.reject', [$leave->scholar_id, $leave]));
+                ->patch(route('research.scholars.leaves.respond', [$leave->scholar_id, $leave]), [
+                    'response_letter' => $this->responseLetter,
+                ]);
 
-            $this->fail('Response letter is required was not validated');
+            $this->fail('Response is required was not validated');
         } catch (ValidationException $e) {
-            $this->assertArrayHasKey('response_letter', $e->errors());
+            $this->assertArrayHasKey('response', $e->errors());
         }
     }
 

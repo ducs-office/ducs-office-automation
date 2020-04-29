@@ -54,30 +54,16 @@ class LeavePolicy
     }
 
     /**
-     * Determine whether the user can approve a leave.
+     * Determine whether the user can respond to a leave.
      *
      * @param mixed $user
      * @param  \App\Models\Leave  $leave
      *
      * @return mixed
      */
-    public function approve($user, Leave $leave)
+    public function respond($user, Leave $leave)
     {
-        return $user->can('leaves:approve')
-            && in_array($leave->status, [LeaveStatus::APPLIED, LeaveStatus::RECOMMENDED]);
-    }
-
-    /**
-     * Determine whether the user can reject a leave.
-     *
-     * @param mixed $user
-     * @param  \App\Models\Leave  $leave
-     *
-      * @return mixed
-     */
-    public function reject($user, Leave $leave)
-    {
-        return $user->can('leaves:reject')
+        return $user->can('leaves:respond')
             && in_array($leave->status, [LeaveStatus::APPLIED, LeaveStatus::RECOMMENDED]);
     }
 

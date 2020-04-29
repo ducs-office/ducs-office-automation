@@ -64,14 +64,9 @@ Route::prefix('/research')
         )->name('scholars.leaves.recommend');
 
         Route::patch(
-            '/scholars/{scholar}/leaves/{leave}/approve',
-            'ScholarLeavesController@approve'
-        )->name('scholars.leaves.approve');
-
-        Route::patch(
-            '/scholars/{scholar}/leaves/{leave}/reject',
-            'ScholarLeavesController@reject'
-        )->name('scholars.leaves.reject');
+            '/scholars/{scholar}/leaves/{leave}/respond',
+            'ScholarLeavesController@respond'
+        )->name('scholars.leaves.respond');
 
         Route::get(
             '/scholars/{scholar}/leaves/{leave}/response-letter',
