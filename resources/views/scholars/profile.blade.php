@@ -270,7 +270,7 @@
                         </h5>
                         @if ($course->pivot->completed_on)
                         <div class="flex items-center pl-4">
-                            <a target="_blank" href="{{ route('scholars.courseworks.marksheet', [$scholar, $course]) }}" class="btn inline-flex items-center ml-2">
+                            <a target="_blank" href="{{ route('scholars.courseworks.marksheet', [$scholar, $course->pivot]) }}" class="btn inline-flex items-center ml-2">
                                 <feather-icon name="paperclip" class="h-current mr-2"></feather-icon>
                                 Marksheet
                             </a>

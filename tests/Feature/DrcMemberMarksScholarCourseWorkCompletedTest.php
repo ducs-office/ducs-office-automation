@@ -153,13 +153,15 @@ class DrcMemberMarksScholarCourseWorkCompletedTest extends TestCase
 
         $marksheetPath = UploadedFile::fake()->create('fakefile.pdf', 20, 'application/pdf')->store('scholar_marksheets');
 
-        $scholar->courseworks()->attach($course->id, [
+        $scholar->courseworks()->attach($course, [
             'marksheet_path' => $marksheetPath,
             'completed_on' => now()->format('Y-m-d'),
         ]);
 
+        $courseCompleted = $scholar->courseworks[0];
+
         $this->withoutExceptionHandling()
-            ->get(route('research.scholars.courseworks.marksheet', [$scholar, $course]))
+            ->get(route('research.scholars.courseworks.marksheet', [$scholar, $courseCompleted->pivot]))
             ->assertSuccessful();
     }
 
@@ -178,13 +180,15 @@ class DrcMemberMarksScholarCourseWorkCompletedTest extends TestCase
 
         $marksheetPath = UploadedFile::fake()->create('fakefile.pdf', 20, 'application/pdf')->store('scholar_marksheets');
 
-        $scholar->courseworks()->attach($course->id, [
+        $scholar->courseworks()->attach($course, [
             'marksheet_path' => $marksheetPath,
             'completed_on' => now()->format('Y-m-d'),
         ]);
 
+        $courseCompleted = $scholar->courseworks[0];
+
         $this->withExceptionHandling()
-            ->get(route('research.scholars.courseworks.marksheet', [$scholar, $course]))
+            ->get(route('research.scholars.courseworks.marksheet', [$scholar, $courseCompleted->pivot]))
             ->assertForbidden();
     }
 }
