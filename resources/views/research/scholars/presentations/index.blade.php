@@ -1,7 +1,6 @@
-<div class="ml-2 mt-4 px-6">
-    <ul class="border rounded-lg overflow-hidden mb-4">
+<ul class="border rounded-lg overflow-hidden mb-4">
     @foreach ($presentations as $presentation)
-        <li class="border-b last:border-b-0 py-3"> 
+        <li class="border-b last:border-b-0 py-3">
             <div class="ml-2">
                 <div class="flex m-2">
                     <div class="w-30 flex">
@@ -34,7 +33,7 @@
                             <p class="ml-2"> {{ $presentation->date->format('d F Y') }} </p>
                         </div>
                         <div class="flex m-2">
-                            <h4 class="font-semibold"> Address: </h4> 
+                            <h4 class="font-semibold"> Address: </h4>
                             <p class="ml-2"> {{ $presentation->city}}, {{ $presentation->country }} </p>
                         </div>
                     </div>
@@ -45,5 +44,4 @@
     @if (!count($presentations))
         <p class="text-gray-600 flex justify-center font-bold py-3 items-center">No presentations to show!</p>
     @endif
-    </ul>
-</div>
+</ul>

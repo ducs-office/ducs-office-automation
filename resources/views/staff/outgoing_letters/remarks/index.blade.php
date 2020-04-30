@@ -1,10 +1,10 @@
-<div class="bg-gray-100 justify-between overflow-y-auto">
+<div class="justify-between overflow-y-auto">
     @if(isset($loop) && $loop->first)
     @include('staff.outgoing_letters.remarks.modals.edit', [
         'modalName' => 'edit-remark-modal'
     ])
     @endif
-    <div class="border-b px-6 py-2">
+    <div class="bg-gray-100 border-b px-6 py-2">
         @can('create', App\Models\Remark::class)
         <form action="{{ route('staff.outgoing_letters.remarks.store', $letter) }}" method="POST">
             @csrf_token
@@ -28,7 +28,7 @@
         @endcan
     </div>
     @forelse($letter->remarks as $i => $remark)
-    <div class="relative hover:bg-gray-200 px-6 py-4">
+    <div class="relative hover:bg-gray-100 px-6 py-4">
         <div class="flex items-center mb-2">
             <img src="https://gravatar.com/avatar/{{ md5(strtolower(trim($remark->user->email))) }}?s=48&d=identicon"
                 alt="{{ $remark->user->name }}" width="32" height="32"

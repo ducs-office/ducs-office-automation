@@ -9,23 +9,23 @@
         @endcan
     </div>
 
-    @can('update', App\Models\College::class)
-    {{-- @include('staff.colleges.modals.edit', [
-        'modalName' => 'edit-college-modal',
-        'programmes' => $programmes
-    ]) --}}
-    @endcan
-    <div class="bg-gray-200 px-6 py-4">
+    {{-- @can('update', App\Models\College::class)
+        @include('staff.colleges.modals.edit', [
+            'modalName' => 'edit-college-modal',
+            'programmes' => $programmes
+        ])
+    @endcan --}}
+    <div class="bg-gray-200 py-4 space-y-6">
         @foreach($colleges as $college)
-            <div class="relative px-6 py-8 bg-white transition hover:shadow-lg border rounded-lg -mx-4 mb-4">
+            <div class="relative px-6 py-8 page-card">
                 <h3 class="flex items-center text-lg font-bold mb-1">
-                    {{ucwords($college->name)}}
+                    {{ ucwords($college->name) }}
                     <span class="ml-2 px-2 py-1 bg-gray-900 text-white rounded text-sm font-mono">{{ $college->code }}</span>
                 </h3>
                 <address class="mb-4">
                     {{ $college->address }}
                 </address>
-                <a class="text-magenta-700 underline flex items-center my-2" href="{{$college->website}}" target="__blank">
+                <a class="text-magenta-700 underline flex items-center my-2" href="{{ $college->website }}" target="__blank">
                     <feather-icon name="link" class="h-current mr-2 text-gray-700">External Link</feather-icon>
                     <span>Goto College Website</span>
                 </a>

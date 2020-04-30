@@ -43,7 +43,7 @@
                         Issue Date <span class="text-red-600">*</span>
                     </label>
                     <div class="flex">
-                        <select name="date[month]" id="date_month" class="form-input flex-1">
+                        <select name="date[month]" id="date_month" class="form-select flex-1">
                             @foreach($months as $month)
                             <option value="{{ $month }}"
                                 {{ $month === old('date.month', $journal->date->format('F')) ? 'selected' : ''}}>
@@ -51,7 +51,7 @@
                             </option>
                             @endforeach
                         </select>
-                        <select name="date[year]" id="date_year" class="form-input flex-1 ml-4">
+                        <select name="date[year]" id="date_year" class="form-select flex-1 ml-4">
                             @foreach(range($currentYear-10, $currentYear) as $year)
                             <option value="{{$year}}"
                                 {{ $year== old('date.year', $journal->date->format('Y')) ? 'selected' : ''}}>
@@ -107,6 +107,7 @@
                     <div class="flex mb-1">
                         <input id="indexed-in-{{ $index }}"
                             type="checkbox"
+                            class="form-checkbox"
                             name="indexed_in[]"
                             value="{{ $index }}"
                             {{ $checked ? 'checked': ''}} >

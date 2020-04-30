@@ -26,7 +26,7 @@
             <div class="flex-1 mr-1">
                 <label for="programme_type" class="w-full form-label">Type<span
                         class="h-current text-red-500 text-lg">*</span></label>
-                <select class="w-full form-input" name="type" required>
+                <select class="w-full form-select" name="type" required>
                     <option value="" disabled :selected="form.type==''"> -- Programme Type -- </option>
                     @foreach ($types as $type)
                     <option value="{{ $type }}" :selected="form.type=='{{ $type }}'">

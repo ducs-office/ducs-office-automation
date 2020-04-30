@@ -29,7 +29,7 @@
         <div class="mb-2">
             <label for="programme" class="w-full form-label mb-1">Programmes <span
                     class="h-current text-red-500 text-lg">*</span></label>
-            <select name="programmes[]" id="programme" class="w-full form-input" multiple>
+            <select name="programmes[]" id="programme" class="w-full form-multiselect" multiple>
                 @foreach ($programmes as $programme)
                 <option value="{{$programme->id}}">{{$programme->code}} - {{ucwords($programme->name)}}</option>
                 @endforeach

@@ -1,10 +1,11 @@
 <template>
     <div>
-        <select :name="name"  class="form-input mr-2 h-8 p-1 w-full" @change="onChange">
+        <select :name="name" :class="selectClass" @change="onChange">
             <slot></slot>
             <option :value="otherValue">Other</option>
         </select>
-        <input type="text" v-if="showOtherInput" :name="otherName" 
+        <input type="text" v-if="showOtherInput" :name="otherName"
+        :class="inputClass"
         placeholder="placeholder" class="form-input mt-2 h-8 w-full">
     </div>
 </template>
@@ -15,6 +16,8 @@ export default {
         name: {required: true},
         otherName: {required: true},
         otherValue: {required: true},
+        selectClass: {default: ''},
+        inputClass: {default: ''},
         placeholder: {required: true},
     },
     data() {

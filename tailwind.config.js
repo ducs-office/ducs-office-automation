@@ -1,5 +1,24 @@
 module.exports = {
     theme: {
+        customForms: theme => ({
+            default: {
+                "checkbox, radio": {
+                    color: theme("colors.magenta.600")
+                },
+                "input, select, multiselect, textarea, checkbox, radio": {
+                    "&:disabled": {
+                        backgroundColor: theme("colors.gray.200"),
+                        cursor: 'not-allowed',
+                    },
+                    "&:hover, &:focus, &:focus-within": {
+                        borderColor: theme("colors.magenta.600")
+                    },
+                    "&:focus, &:focus-within": {
+                        boxShadow: "0 0 3px 1px rgba(118, 0, 118, 0.4)"
+                    }
+                }
+            }
+        }),
         container: {
             center: true,
             padding: "2rem"
@@ -89,5 +108,5 @@ module.exports = {
         borderRadius: ["responsive", "hover", "first", "last"],
         display: ["responsive", "focus", "hover", "group-hover"]
     },
-    plugins: []
+    plugins: [require("@tailwindcss/custom-forms")]
 };

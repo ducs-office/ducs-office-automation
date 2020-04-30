@@ -22,7 +22,7 @@
                 Letter Type <span class="text-red-600">*</span>
             </label>
             <select name="type"
-                class="w-full form-input{{ $errors->has('type') ? ' border-red-600' : '' }}"
+                class="w-full form-select{{ $errors->has('type') ? ' border-red-600' : '' }}"
                 onchange="value === '{{ App\Types\OutgoingLetterType::GENERAL }}' ? amount.disabled = true : amount.disabled = false;"
                 required>
                 @foreach ($types as $type)
@@ -31,7 +31,6 @@
                     {{ $type }}
                 </option>
                 @endforeach
-
             </select>
             @if($errors->has('type'))
                 <p class="mt-1 text-red-600">{{ $errors->first('type') }}</p>
@@ -90,7 +89,7 @@
                 <p class="mt-1 text-red-600">{{ $errors->first('description') }}</p>
             @endif
         </div>
-        <div class="mb-2">
+        <div class="mb-3">
             <label for="amount" class="w-full form-label mb-1">Amount</label>
             <input type="number" name="amount" step="0.01"
                 class=" w-full form-input"
@@ -102,29 +101,33 @@
             @endif
         </div>
         <div class="mb-2">
-            <label for="attachments" class="w-full form-label mb-1">
-                Attachments <span class="text-red-600">*</span>
+            <label class="form-label mb-1">
+                Attachments (Min: 1) <span class="text-red-600">*</span>
             </label>
-            <div class="flex items-center -mx-2">
-                <div class="mx-2">
-                <label for="pdf"
-                    class="w-full form-label {{ $errors->has('attachments') ? 'border-red-600 ' : '' }}mb-1">
-                    Upload PDF copy
-                </label>
-                    <input type="file" name="attachments[]" accept="application/pdf" class="w-full">
-                </div>
-                <div class="mx-2">
-                    <label for="scan"
-                        class="w-full form-label {{ $errors->has('attachments') ? 'border-red-600 ' : '' }}mb-1">
-                        Upload scanned copy
-                    </label>
-                    <input type="file" name="attachments[]" accept="image/*" class="w-full">
-                </div>
+            <div class="flex items-center">
+                <v-file-input id="pdf" name="attachments[]" accept="application/pdf" class="flex-1 form-input overflow-hidden mr-2"
+                    placeholder="Choose a PDF file">
+                    <template v-slot="{ label }">
+                        <div class="w-full inline-flex items-center">
+                            <feather-icon name="upload" class="h-4 mr-2 text-gray-700 flex-shrink-0"></feather-icon>
+                            <span v-text="label" class="truncate"></span>
+                        </div>
+                    </template>
+                </v-file-input>
+                <v-file-input id="scan" name="attachments[]" accept="image/*" class="flex-1 form-input overflow-hidden"
+                    placeholder="Choose a Scanned Image">
+                    <template v-slot="{ label }">
+                        <div class="w-full inline-flex items-center">
+                            <feather-icon name="upload" class="h-4 mr-2 text-gray-700 flex-shrink-0"></feather-icon>
+                            <span v-text="label" class="truncate"></span>
+                        </div>
+                    </template>
+                </v-file-input>
             </div>
             @if($errors->has('attachments'))
                 <p class="mt-1 text-red-600">{{ $errors->first('attachments') }}</p>
             @endif
-        </div>
+        </fieldset>
         <div class="mt-6">
             <button type="submit" class="w-full btn btn-magenta">Create</button>
         </div>

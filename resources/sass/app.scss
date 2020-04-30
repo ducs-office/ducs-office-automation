@@ -6,24 +6,6 @@
     @apply bg-pink-700 text-white;
 }
 
-input[type='text'],
-input[type='date'],
-input[type='number'],
-textarea,
-select {
-    min-width: 5em;
-    &::placeholder {
-        @apply opacity-75;
-    }
-    :disabled {
-        @apply cursor-not-allowed;
-    }
-}
-
-select {
-    appearance: none;
-}
-
 @tailwind components;
 
 .link {
@@ -33,7 +15,7 @@ select {
     }
 }
 .page-card {
-    @apply bg-white text-gray-900 py-6 rounded-lg shadow;
+    @apply bg-white text-gray-900 py-6 rounded-lg shadow-lg overflow-hidden;
 }
 .page-header {
     @apply px-6 text-2xl font-bold mb-6;
@@ -41,29 +23,6 @@ select {
 
 .form-label {
     @apply inline-block text-sm font-bold text-gray-700;
-}
-
-.form-input {
-    @apply bg-gray-200 text-gray-700 px-3 py-2 border border-gray-200 rounded;
-    &:hover, &:focus {
-        @apply bg-white border-gray-400;
-    }
-    &:focus {
-        @apply border-magenta-700 text-gray-900;
-    }
-    &.is-sm {
-        @apply px-2 py-1;
-    }
-    &.is-xs {
-        @apply px-2 py-1 text-sm;
-    }
-    &:disabled {
-        @apply bg-gray-400 border-gray-500 text-gray-200 cursor-not-allowed;
-    }
-}
-
-.disable-input {
-    @apply px-3 py-2 border border-gray-400 rounded;
 }
 
 .btn {
@@ -125,71 +84,4 @@ select {
 .absolute-y-center {
     top: 50%;
     transform: translateY(-50%);
-}
-
-.transition {
-    transition: all .3s linear;
-}
-.transition-opacity {
-    transition: opacity .3s linear;
-}
-.transition-transform {
-    transition: transform .3s linear;
-}
-
-
-.translate-100 {
-    transform: translate(100%, 100%);
-}
-.translate-0 {
-    transform: translate(0%, 0%);
-}
-.translate-x-100 {
-    transform: translateX(100%);
-}
-.translate-x-back-100 {
-    transform: translateX(-100%);
-}
-.translate-x-0 {
-    transform: translateX(0%);
-}
-.translate-y-100 {
-    transform: translateY(100%);
-}
-.translate-y-n50 {
-    transform: translateY(-50%);
-}
-.translate-y-50 {
-    transform: translateY(50%);
-}
-.translate-y-0 {
-    transform: translateY(0%);
-}
-.scale-0 {
-    transform: scale(0);
-}
-.scale-100 {
-    transform: scale(1);
-}
-.scale-x-0 {
-    transform: scaleX(0);
-}
-.scale-x-100 {
-    transform: scaleX(1);
-}
-.scale-y-0 {
-    transform: scaleY(0);
-}
-.scale-y-100 {
-    transform: scaleY(1);
-}
-
-.transform-top-left {
-    transform-origin: 0% 0%;
-}
-transform-center {
-    transform-origin: center;
-}
-.transform-bottom-right {
-    transform-origin: 100% 100%;
 }

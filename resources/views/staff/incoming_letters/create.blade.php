@@ -124,10 +124,18 @@
                 @endif
             </div>
             <div class="mb-2">
-                <label for="file" class="w-full form-label mb-1">
+                <label for="files" class="w-full form-label mb-1">
                     Upload Letter <span class="text-red-600">*</span>
                 </label>
-                <input type="file" name="attachments[]" accept="image/*, application/pdf" class="w-full" multiple required>
+                <v-file-input id="files" name="attachments[]" accept="application/pdf, image/*" class="w-full block form-input overflow-hidden"
+                    placeholder="Choose multiple Image/PDF files" multiple required>
+                    <template v-slot="{ label }">
+                        <div class="w-full inline-flex items-center">
+                            <feather-icon name="upload" class="h-4 mr-2 text-gray-700 flex-shrink-0"></feather-icon>
+                            <span v-text="label" class="truncate"></span>
+                        </div>
+                    </template>
+                </v-file-input>
                 @if($errors->has('file'))
                     <p class="mt-1 text-red-600">{{ $errors->first('file') }}</p>
                 @endif

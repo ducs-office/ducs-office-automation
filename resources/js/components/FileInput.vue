@@ -1,9 +1,9 @@
 <template>
-    <label :for="id">
-        <input v-bind="$attrs" :id="id" type="file"
+    <label :for="id" tabindex="0">
+        <input tabindex="-1" v-bind="$attrs" :id="id" type="file"
             @input="fileSelected"
             :name="name"
-            :accept="accept" style="height: 0; width: 0;">
+            :accept="accept" style="position:absolute; height: 0; width: 0;">
         <slot :label="label"></slot>
     </label>
 </template>

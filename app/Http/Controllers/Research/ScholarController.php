@@ -11,6 +11,7 @@ use App\Types\AdvisoryCommitteeMember;
 use App\Types\Gender;
 use App\Types\PresentationEventType;
 use App\Types\ReservationCategory;
+use App\Types\UserType;
 use Illuminate\Http\Request;
 
 class ScholarController extends Controller
@@ -38,13 +39,13 @@ class ScholarController extends Controller
     public function show(Scholar $scholar)
     {
         return view('research.scholars.show', [
-            'scholar' => $scholar->load(['courseworks', 'cosupervisors']),
+            'scholar' => $scholar->load(['courseworks', 'cosupervisor']),
             'courses' => PhdCourse::whereNotIn('id', $scholar->courseworks()->allRelatedIds())->get(),
             'categories' => ReservationCategory::values(),
             'admissionModes' => AdmissionMode::values(),
             'genders' => Gender::values(),
             'eventTypes' => PresentationEventType::values(),
-            'faculty' => User::where('category', 'faculty_teacher')->get(),
+            'faculty' => User::where('type', UserType::FACULTY_TEACHER)->get(),
         ]);
     }
 

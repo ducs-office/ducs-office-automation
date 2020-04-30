@@ -8,13 +8,13 @@
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     @routes
 </head>
-<body class="font-sans leading-tight bg-magenta-800 text-sm">
+<body class="font-sans leading-tight bg-magenta-800">
     <div id="app" class="min-h-screen px-4">
-        <header class="flex items-center w-full max-w-lg mx-auto py-8 px-4">
-            <img src="{{ asset('images/university-logo.png') }}" alt="University of Delhi - Logo" class="w-16 flex-shrink mr-3" style="min-width: 100px;">
-            <div class="flex-grow text-white leading-none">
-                <h2 class="text-2xl mb-2">Department of Computer Science</h2>
-                <h4 class="text-lg font-bold">University of Delhi</h4>
+        <header class="flex items-center max-w-lg mx-auto py-8 px-4">
+            <img src="{{ asset('images/university-logo.png') }}" alt="University of Delhi - Logo" class="w-16 sm:w-20 flex-shrink-0 mr-3">
+            <div class="flex-1 text-white leading-none">
+                <h2 class="text-lg sm:text-2xl mb-1 sm:mb-2 text-">Department of Computer Science</h2>
+                <h4 class="text-base sm:text-lg text-white-80">University of Delhi</h4>
             </div>
         </header>
         <main>

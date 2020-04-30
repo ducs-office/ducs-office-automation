@@ -440,7 +440,7 @@
                             <label for="reason" class="w-full form-label mb-1">
                                 Reason <span class="text-red-600 font-bold">*</span>
                             </label>
-                            <select id="leave_reasons" name="reason" class="w-full form-input" onchange="
+                            <select id="leave_reasons" name="reason" class="w-full form-select" onchange="
                                 if(reason.value === 'Other') {
                                     reason_text.style = 'display: block;';
                                 } else {

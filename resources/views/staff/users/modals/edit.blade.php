@@ -20,7 +20,7 @@
                     <label for="roles" class="w-full form-label mb-1">
                         Roles <span class="h-current text-red-500 text-lg">*</span>
                     </label>
-                    <select id="roles" name="roles[]" class="w-full form-input" :value="data('user.roles', [])" multiple>
+                    <select id="roles" name="roles[]" class="w-full form-multiselect" :value="data('user.roles', [])" multiple>
                         @foreach ($roles as $role)
                             <option value="{{ $role->id }}"
                                 :selected="data('user.roles', []).includes({{ $role->id }})">
@@ -32,7 +32,7 @@
                 <div class="mb-2">
                     <label for="type" class="w-full form-label">Category<span
                             class="h-current text-red-500 text-lg">*</span></label>
-                    <select name="type" id="type" class="w-full form-input" required>
+                    <select name="type" id="type" class="w-full form-select" required>
                         <option value="" selected disabled>Select a type for the user</option>
                         @foreach ($types as $type)
                         <option value="{{ $type }}"

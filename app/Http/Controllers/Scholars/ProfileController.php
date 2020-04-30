@@ -47,9 +47,9 @@ class ProfileController extends Controller
             'genders' => Gender::values(),
             'supervisorProfiles' => SupervisorProfile::all()->pluck('id', 'supervisor.name'),
             'cosupervisors' => Cosupervisor::all()->pluck('id', 'name', 'email'),
-            'degrees' => ScholarEducationDegree::select('name')->get(),
-            'institutes' => ScholarEducationInstitute::select('name')->get(),
-            'subjects' => ScholarEducationSubject::select('name')->get(),
+            'degrees' => ScholarEducationDegree::select(['id', 'name'])->get(),
+            'institutes' => ScholarEducationInstitute::select(['id', 'name'])->get(),
+            'subjects' => ScholarEducationSubject::select(['id', 'name'])->get(),
         ]);
     }
 

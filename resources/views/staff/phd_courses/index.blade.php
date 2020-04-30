@@ -19,9 +19,9 @@
             'courseTypes' => $courseTypes,
         ])
         @endcan
-        <div>
+        <div class="space-y-5 leading-none">
             @foreach ($courses as $course)
-                <div class="relative px-6 py-4 page-card shadow hover:bg-gray-100 hover:shadow-lg mb-2 leading-none flex items-center">
+                <div class="relative px-6 py-4 page-card flex items-center">
                     <span class="px-2 py-1 rounded text-sm uppercase text-white bg-black font-bold font-mono">
                         {{ $course->type }}
                     </span>

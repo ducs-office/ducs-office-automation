@@ -18,7 +18,7 @@
             <div class="mb-2">
                 <label for="role" class="w-full form-label">Role<span
                         class="h-current text-red-500 text-lg">*</span></label>
-                <select id="role" name="roles[]" class="w-full form-input" multiple>
+                <select id="role" name="roles[]" class="w-full form-multiselect" multiple>
                     @foreach ($roles as $role)
                     <option value="{{ $role->id }}">{{ ucwords(str_replace('_', ' ', $role->name)) }}</option>
                     @endforeach
@@ -27,7 +27,7 @@
             <div class="mb-2">
                 <label for="type" class="w-full form-label">Category<span
                         class="h-current text-red-500 text-lg">*</span></label>
-                <select name="type" id="type" class="w-full form-input" required>
+                <select name="type" id="type" class="w-full form-select" required>
                     <option value="" selected disabled>Select a Category:</option>
                     @foreach($types as $type)
                         <option value="{{ $type }}">{{ $type }} </option>
@@ -35,7 +35,7 @@
                 </select>
             </div>
             <div class="mb-2 flex items-center">
-                <input type="checkbox" name="is_supervisor" id="is_supervisor" class="mr-2" value="true">
+                <input type="checkbox" name="is_supervisor" id="is_supervisor" class="form-checkbox mr-2" value="true">
                 <label for="is_supervisor" class="w-full form-label">
                     Is a Supervisor ?
                 </label>

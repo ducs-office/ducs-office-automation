@@ -19,7 +19,7 @@
             </image-upload-input>
             <div>
                 <h3 class="text-2xl font-bold mb-1">{{ $teacher->name }}</h3>
-                <select id="designation" type="text" name="designation" class="form-input font-bold mb-2">
+                <select id="designation" type="text" name="designation" class="form-select font-bold mb-2">
                     @foreach($designations as $designation)
                     <option value="{{ $designation }}"
                     {{ $designation === old('designation', (string)$teacher->profile->desingation) ? 'selected' : '' }}>
@@ -35,7 +35,7 @@
                             </path>
                         </g>
                     </svg>
-                    <select id="college_id" type="text" name="college_id" class="form-input ml-2">
+                    <select id="college_id" type="text" name="college_id" class="form-select ml-2">
                         @foreach($colleges as $id => $college)
                         <option value="{{ $id }}"
                             {{ $id === old('college_id', $teacher->profile->college_id) ? 'selected' : '' }}>

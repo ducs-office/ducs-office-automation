@@ -23,7 +23,7 @@
                                 <label for="permission-{{ $permission->id }}"
                                     class="px-2 py-1 border rounded inline-flex items-center mr-3">
                                     <input id="permission-{{ $permission->id }}" type="checkbox" name="permissions[]"
-                                        class="mr-1"
+                                        class="form-checkbox mr-1"
                                         :checked="data('role.permissions', []).includes({{ $permission->id }})"
                                         value="{{ $permission->id }}">
                                     <span>{{ explode(':', $permission->name, 2)[1] }}</span>

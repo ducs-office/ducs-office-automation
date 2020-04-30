@@ -12,6 +12,7 @@ use App\Types\CitationIndex;
 use App\Types\Gender;
 use App\Types\PresentationEventType;
 use App\Types\ReservationCategory;
+use App\Types\UserType;
 use Illuminate\Database\Seeder;
 
 class PhdScholarSeeder extends Seeder
@@ -26,13 +27,13 @@ class PhdScholarSeeder extends Seeder
         $supervisorNeelima = factory(User::class)->create([
             'name' => 'Neelima Gupta',
             'email' => 'ngupta.cs.du@gmail.com',
-            'category' => 'faculty_teacher',
+            'type' => UserType::FACULTY_TEACHER,
         ])->supervisorProfile()->create();
 
         $facultyNaveen = factory(User::class)->create([
             'name' => 'Naveen Kumar',
             'email' => 'naveen@cs.du.ac.in',
-            'category' => 'faculty_teacher',
+            'type' => UserType::FACULTY_TEACHER,
         ]);
 
         $scholarRajni = factory(Scholar::class)->create([
@@ -88,7 +89,7 @@ class PhdScholarSeeder extends Seeder
         $facultyPoonam = factory(User::class)->create([
             'name' => 'Poonam Bedi',
             'email' => 'pbedi@cs.du.ac.in',
-            'category' => 'faculty_teacher',
+            'type' => UserType::FACULTY_TEACHER,
         ]);
 
         $scholarSudhir = factory(Scholar::class)->create([

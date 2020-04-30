@@ -1,4 +1,4 @@
-<div class="page-card border-b mb-4 pt-6 pb-0 overflow-hidden">
+<div class="page-card pt-6 pb-0 overflow-hidden">
         <div class="px-6">
             <div class="flex items-baseline mb-3">
                 <div class="font-mono">
@@ -7,7 +7,7 @@
                 </div>
                 <h5 class="mr-12 text-gray-700 font-bold">{{ $letter->date->format('M d, Y') }}</h5>
                 <div class="flex items-center text-gray-700">
-                    {{ $letter->sender}}
+                    {{ $letter->sender }}
                     <feather-icon name="arrow-down-right"
                     stroke-width="3"
                     class="h-current text-green-600 mx-2">Recipient</feather-icon>

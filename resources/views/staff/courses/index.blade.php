@@ -19,9 +19,9 @@
             'courseTypes' => $courseTypes,
         ])
         @endcan
-        <div>
+        <div class="space-y-5 leading-none">
             @foreach ($courses as $course)
-                <div class="relative p-6 page-card shadow hover:bg-gray-100 hover:shadow-lg mb-2 leading-none">
+                <div class="relative p-6 page-card">
                     <div class="flex items-center mb-2">
                         <span class="px-2 py-1 rounded text-sm uppercase text-white bg-black font-bold font-mono">
                             {{ $course->type }}
@@ -61,12 +61,12 @@
                         </div>
                     </div>
                     @endif
-                    <details class="bg-gray-100 rounded-t border overflow-hidden mb-1">
+                    <details class="bg-gray-100 rounded border overflow-hidden mb-1">
                         <summary class="p-2 bg-gray-200 cursor-pointer outline-none">
                             <span class="mr-2">Add New Revision</span>
                         </summary>
                         <form action="{{ route('staff.courses.revisions.store', $course) }}"
-                            method="POST" class="px-4"
+                            method="POST" class="p-4"
                             enctype="multipart/form-data">
                             @csrf_token
                             <div class="flex items-end mb-2">
@@ -78,15 +78,15 @@
                                 </div>
                                 <v-file-input id="revision_attachments" name="attachments[]"
                                     accept="application/pdf, image/*"
-                                    class="flex-1 ml-1"
+                                    class="flex-1 ml-1 overflow-x-hidden"
                                     placeholder="Select multiple files" multiple required>
                                     <template v-slot="{ label }">
                                         <span class="w-full form-label mb-1">
                                             Upload Syllabus <span class="text-red-600">*</span>
                                         </span>
-                                        <div class="w-full form-input inline-flex items-center" tabindex="0">
+                                        <div class="w-full form-input flex items-center" tabindex="0">
                                             <feather-icon name="upload" class="h-4 mr-2 text-gray-700 flex-shrink-0"></feather-icon>
-                                            @{{ label }}
+                                            <span class="truncate" v-text="label"></span>
                                         </div>
                                     </template>
                                 </v-file-input>
@@ -96,7 +96,7 @@
                             </div>
                         </form>
                     </details>
-                    <details class="bg-gray-100 rounded-t border overflow-hidden">
+                    <details class="bg-gray-100 rounded border overflow-hidden">
                         <summary class="p-2 bg-gray-200 cursor-pointer outline-none">
                             <span class="mr-2">Older Revisions</span>
                         </summary>

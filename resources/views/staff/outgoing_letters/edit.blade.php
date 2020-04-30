@@ -117,21 +117,25 @@
                 Upload Attachments <span class="text-red-600">*</span>
             </label>
             @endif
-            <div class="flex -mx-2 mb-1">
-                <div class="mx-2">
-                    <label for="pdf" class="w-full form-label mb-1">Upload PDF copy</label>
-                    <input id="pdf" type="file"
-                        name="attachments[]"
-                        accept="application/pdf"
-                        class="w-full">
-                </div>
-                <div class="mx-2">
-                    <label for="scan" class="w-full form-label mb-1">Upload scanned copy</label>
-                    <input id="scan" type="file"
-                        name="attachments[]"
-                        accept="image/*"
-                        class="w-full">
-                </div>
+            <div class="flex mb-1">
+                <v-file-input id="pdf" name="attachments[]" accept="application/pdf" class="flex-1 form-input overflow-hidden mr-2"
+                    placeholder="Choose a PDF file">
+                    <template v-slot="{ label }">
+                        <div class="w-full inline-flex items-center">
+                            <feather-icon name="upload" class="h-4 mr-2 text-gray-700 flex-shrink-0"></feather-icon>
+                            <span v-text="label" class="truncate"></span>
+                        </div>
+                    </template>
+                </v-file-input>
+                <v-file-input id="scan" name="attachments[]" accept="image/*" class="flex-1 form-input overflow-hidden"
+                    placeholder="Choose a Scanned Image">
+                    <template v-slot="{ label }">
+                        <div class="w-full inline-flex items-center">
+                            <feather-icon name="upload" class="h-4 mr-2 text-gray-700 flex-shrink-0"></feather-icon>
+                            <span v-text="label" class="truncate"></span>
+                        </div>
+                    </template>
+                </v-file-input>
             </div>
             @if($errors->has('attachments'))
                 <p class="mt-1 text-red-600">{{ $errors->first('attachments') }}</p>

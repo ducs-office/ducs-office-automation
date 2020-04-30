@@ -17,10 +17,10 @@
     <div id="app">
         <toggle-visibility :shown="$window.innerWidth > 800" class="flex h-screen">
             <template v-slot="sidebar">
-                    <transition enter-class="translate-x-back-100"
-                        leave-to-class="translate-x-back-100"
-                        enter-active-class="transition-transform"
-                        leave-active-class="transition-transform">
+                    <transition enter-class="transform -translate-x-full"
+                        leave-to-class="transform -translate-x-full"
+                        enter-active-class="transition-transform duration-300"
+                        leave-active-class="transition-transform duration-300">
                         <div v-show="sidebar.isVisible"
                             class="bg-magenta-800 text-white w-80 flex flex-col flex-shrink-0">
                             @auth @include('staff.partials.sidebar') @endauth

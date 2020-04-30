@@ -17,7 +17,7 @@
                 <label for="publication" class="form-label block mb-1">
                     Publication <span class="text-red-600">*</span>
                 </label>
-                <select name="publication_id" class="block form-input w-full {{ $errors->has('publication_id') ? ' border-red-600' : ''}}">
+                <select name="publication_id" class="block form-select w-full {{ $errors->has('publication_id') ? ' border-red-600' : ''}}">
                     <option value="" class="text-gray-600 " selected> Select Publication </option>
                     @foreach ($publications as $publication)
                         <option value=" {{ $publication->id }} "
@@ -29,7 +29,7 @@
             </div>
             <div class="mb-4">
                 <label for="event_type" class="form-label block mb-1">Event Type <span class="text-red-600">*</span> </label>
-                <select name="event_type" class="block form-input w-full {{ $errors->has('event_type') ? ' border-red-600' : ''}}">
+                <select name="event_type" class="block form-select w-full {{ $errors->has('event_type') ? ' border-red-600' : ''}}">
                     <option value="" class="text-gray-600" selected>Select Event Type </option>
                     @foreach ($eventTypes as $eventType)
                     <option value="{{ $eventType }}" class="text-gray-600"
@@ -70,7 +70,7 @@
                 </div>
             </div>
             <div class="mb-4 flex items-center pt-2">
-                <input type="checkbox" name="scopus_indexed"  id ="scopus_indexed" class="mr-2"
+                <input type="checkbox" name="scopus_indexed"  id ="scopus_indexed" class="form-checkbox mr-2"
                 value="1" {{old('scopus_indexed') === "1" ? 'checked': ''}}>
                 <label for="scopus_indexed" class="w-full form-label">
                     Is the event scopus indexed ?

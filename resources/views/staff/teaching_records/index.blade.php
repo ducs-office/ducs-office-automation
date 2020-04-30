@@ -73,7 +73,7 @@
         </div>
         <div class="max-w-sm mr-2">
             <label for="course_filters" class="w-full form-label mb-1">By Course</label>
-            <select id="course_filters" name="filters[course_id]" type="text" class="w-full form-input">
+            <select id="course_filters" name="filters[course_id]" type="text" class="w-full form-select">
                 <option value="" {{ isset($filters['course_id']) ? '' : 'selected' }}>All</option>
                 @foreach ($courses as $course)
                 <option value="{{ $course->id }}" {{ ($filters['course_id'] ?? null) == $course->id ? 'selected' : '' }}>

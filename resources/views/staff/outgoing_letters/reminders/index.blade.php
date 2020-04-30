@@ -1,30 +1,36 @@
 
-<div class="bg-gray-100">
+<div>
     @include('staff.outgoing_letters.reminders.modals.edit', [
         'modalName' => 'edit-reminder-modal'
     ])
     @can('create', [\App\Models\LetterReminder::class, $letter])
-    <form action="{{ route('staff.outgoing_letters.reminders.store', $letter) }}" method="POST" enctype="multipart/form-data" class="px-6 py-2 border-b">
+    <form action="{{ route('staff.outgoing_letters.reminders.store', $letter) }}" method="POST" enctype="multipart/form-data" class="px-6 py-2 bg-gray-100 border-b">
         @csrf_token
-        <div class="flex items-center">
-            <div class="flex-1">
-                <label for="scan" class="w-full form-label">Scanned Copy</label>
-                <input id="scan"
-                    class="w-full"
-                    type="file"
-                    name="attachments[]"
-                    accept="image/*"/>
-            </div>
-            <div class="flex-1">
-                <label for="pdf" class="w-full form-label">PDF Copy</label>
-                <input id="pdf" class="w-full" type="file" name="attachments[]" accept="application/pdf" />
-            </div>
+        <div class="flex items-stretch">
+            <v-file-input id="pdf" name="attachments[]" accept="application/pdf" class="flex-1 form-input overflow-hidden mr-2"
+                placeholder="Choose a PDF file">
+                <template v-slot="{ label }">
+                    <div class="w-full inline-flex items-center">
+                        <feather-icon name="upload" class="h-4 mr-2 text-gray-700 flex-shrink-0"></feather-icon>
+                        <span v-text="label" class="truncate"></span>
+                    </div>
+                </template>
+            </v-file-input>
+            <v-file-input id="scan" name="attachments[]" accept="image/*" class="flex-1 form-input overflow-hidden mr-2"
+                placeholder="Choose a Scanned Image">
+                <template v-slot="{ label }">
+                    <div class="w-full inline-flex items-center">
+                        <feather-icon name="upload" class="h-4 mr-2 text-gray-700 flex-shrink-0"></feather-icon>
+                        <span v-text="label" class="truncate"></span>
+                    </div>
+                </template>
+            </v-file-input>
             <button type="submit" class="btn btn-magenta is-sm">Add Reminder</button>
         </div>
     </form>
     @endcan
     @forelse($letter->reminders as $i => $reminder)
-    <div class="flex items-center py-3 hover:bg-white px-6">
+    <div class="flex items-center py-3 hover:bg-gray-100 px-6">
         <h4 class="text-sm w-32 px-2">{{ $reminder->updated_at->format('M d, h:i a') }}</h4>
         <h4 class="px-2 text-sm text-gray-800 font-bold">{{ $reminder->serial_no }}</h4>
         <div class="px-2 flex flex-wrap -mx-2">
@@ -43,7 +49,7 @@
             </div>
             @endforeach
         </div>
-        <div class="px-2 flex items-baseline">
+        <div class="ml-auto px-2 flex items-baseline">
             @can('update', $reminder)
             <button class="p-1 text-gray-500 hover:bg-gray-200 text-blue-600 rounded mr-3" title="Edit"
                 @click.prevent="$modal.show('edit-reminder-modal',{

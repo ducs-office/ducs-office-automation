@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Cosupervisor;
 use App\Models\Teacher;
 use App\Models\User;
+use App\Types\UserType;
 use Illuminate\Http\Request;
 
 class CosupervisorController extends Controller
@@ -15,7 +16,7 @@ class CosupervisorController extends Controller
         return view('staff.cosupervisors.index', [
             'cosupervisors' => Cosupervisor::all(),
             'teachers' => Teacher::all(),
-            'faculties' => User::where('category', 'faculty_teacher')->get(),
+            'faculties' => User::where('type', UserType::FACULTY_TEACHER)->get(),
         ]);
     }
 

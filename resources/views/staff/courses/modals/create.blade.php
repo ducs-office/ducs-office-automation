@@ -18,7 +18,7 @@
             <label for="course_type" class="w-full form-label">
                 Type <span class="text-red-600">*</span>
             </label>
-            <select class="w-full form-input" name="type" required>
+            <select class="w-full form-select" name="type" required>
                 @foreach ($courseTypes as $type)
                 <option value="{{ $type }}" {{ old('type') === $type ? 'selected' : ''}}>
                     {{ $type }}

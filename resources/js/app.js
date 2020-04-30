@@ -1,5 +1,4 @@
 require('./bootstrap');
-
 import Vue from 'vue';
 import VueJsModal from 'vue-js-modal';
 

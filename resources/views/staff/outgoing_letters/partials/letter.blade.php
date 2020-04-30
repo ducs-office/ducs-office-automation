@@ -1,4 +1,4 @@
-<div class="page-card border-b mb-4 pt-6 pb-0 overflow-hidden">
+<div class="page-card pt-6 pb-0 overflow-hidden">
     <div class="px-6">
         <div class="flex items-center mb-3">
             <span class="px-2 py-1 rounded text-xs uppercase text-white {{ $letter->type->contextCSS() }} mr-2 font-bold">

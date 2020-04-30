@@ -45,7 +45,7 @@
                         Date <span class="text-red-600">*</span>
                     </label>
                     <div class="flex">
-                        <select name="date[month]" id="date_month" class="form-input flex-1">
+                        <select name="date[month]" id="date_month" class="form-select flex-1">
                             @foreach($months as $month)
                             <option value="{{ $month }}"
                                 {{ $month === old('date.month', now()->format('F')) ? 'selected' : ''}}>
@@ -53,7 +53,7 @@
                             </option>
                             @endforeach
                         </select>
-                        <select name="date[year]" id="date_year" class="form-input flex-1 ml-4">
+                        <select name="date[year]" id="date_year" class="form-select flex-1 ml-4">
                             @foreach(range($currentYear-10, $currentYear) as $year)
                             <option value="{{ $year}}"
                                 {{ $year== old('date.year', now()->format('Y')) ? 'selected' : ''}}>
@@ -109,7 +109,9 @@
                 </label>
                 @foreach ($citationIndexes as $index)
                     <div class="flex mb-1">
-                        <input type="checkbox" name="indexed_in[]" id="indexed-in-{{ $index }}" value="{{$index}}"
+                        <input type="checkbox" name="indexed_in[]" id="indexed-in-{{ $index }}"
+                            class="form-checkbox"
+                            value="{{$index}}"
                             {{ in_array($index, old('indexed_in', [])) ? 'checked' : '' }}>
                         <label for="indexed-in-{{ $index }}" class="ml-2 form-label is-sm"> {{ $index }}</label>
                     </div>
