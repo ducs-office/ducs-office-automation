@@ -144,21 +144,19 @@ class DrcMemberMarksScholarCourseWorkCompletedTest extends TestCase
         Storage::fake();
 
         $this->signIn($user = create(User::class));
-
         $user->givePermissionTo('scholars:view');
 
-        $course = create(PhdCourse::class);
-
         $scholar = create(Scholar::class);
+        $course = create(PhdCourse::class);
+        $marksheetPath = UploadedFile::fake()->create('fakefile.pdf', 20, 'application/pdf')
+            ->store('scholar_marksheets');
 
-        $marksheetPath = UploadedFile::fake()->create('fakefile.pdf', 20, 'application/pdf')->store('scholar_marksheets');
-
-        $scholar->courseworks()->attach($course, [
+        $scholar->addCourse($course, [
             'marksheet_path' => $marksheetPath,
             'completed_on' => now()->format('Y-m-d'),
         ]);
 
-        $courseCompleted = $scholar->courseworks[0];
+        $courseCompleted = $scholar->courseworks()->first();
 
         $this->withoutExceptionHandling()
             ->get(route('research.scholars.courseworks.marksheet', [$scholar, $courseCompleted->pivot]))

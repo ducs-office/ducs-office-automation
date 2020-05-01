@@ -151,6 +151,11 @@ class Scholar extends User
             ->using(ScholarCourseworkPivot::class);
     }
 
+    public function addCourse(PhdCourse $course, $attributes = [])
+    {
+        return $this->courseworks()->syncWithoutDetaching([$course->id => $attributes]);
+    }
+
     public function leaves()
     {
         return $this->hasMany(Leave::class)

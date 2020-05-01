@@ -53,6 +53,8 @@ class ScholarCourseworkController extends Controller
     {
         $this->authorize('view', $scholar);
 
+        abort_unless($course->marksheet_path != null, 404, 'File Not Found!');
+
         return Response::download(
             Storage::path($course->marksheet_path),
             Str::after($course->marksheet_path, '/'),

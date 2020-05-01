@@ -21,6 +21,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class ScholarTest extends TestCase
@@ -297,5 +299,43 @@ class ScholarTest extends TestCase
 
         $this->assertCount(count($otherDocuments), $scholar->fresh()->otherDocuments());
         $this->assertEquals($otherDocuments->sortByDesc('created_at')->pluck('id'), $scholar->fresh()->otherDocuments()->pluck('id'));
+    }
+
+    /** @test */
+    public function addCourse_methods_assigns_pivot_attributes()
+    {
+        Storage::fake();
+        $marksheetPath = UploadedFile::fake()->create('fakefile.pdf', 20, 'application/pdf')->store('scholar_marksheets');
+
+        $course = create(PhdCourse::class);
+        $scholar = create(Scholar::class);
+
+        $scholar->addCourse($course, [
+            'marksheet_path' => $marksheetPath,
+            'completed_on' => $completeDate = now()->format('Y-m-d'),
+        ]);
+
+        $scholar = $scholar->fresh();
+
+        $this->assertCount(1, $scholar->courseworks);
+        $this->assertEquals($course->id, $scholar->courseworks->first()->pivot->phd_course_id);
+        $this->assertEquals($marksheetPath, $scholar->courseworks->first()->pivot->marksheet_path);
+        $this->assertEquals($completeDate, $scholar->courseworks->first()->pivot->completed_on->format('Y-m-d'));
+    }
+
+    /** @test */
+    public function addCourse_methods_add_course_without_pivot_attributes()
+    {
+        $scholar = create(Scholar::class);
+        $course = create(PhdCourse::class);
+
+        $scholar->addCourse($course);
+
+        $scholar = $scholar->fresh();
+
+        $this->assertCount(1, $scholar->courseworks);
+        $this->assertEquals($course->id, $scholar->courseworks->first()->pivot->phd_course_id);
+        $this->assertNull($scholar->courseworks->first()->pivot->marksheet_path);
+        $this->assertNull($scholar->courseworks->first()->pivot->completed_on);
     }
 }
