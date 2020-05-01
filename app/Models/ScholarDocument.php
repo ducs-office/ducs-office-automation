@@ -8,6 +8,8 @@ class ScholarDocument extends Model
 {
     protected $guarded = [];
 
+    protected $dates = ['date'];
+
     public function scholar()
     {
         return $this->belongsTo(Scholar::class);

@@ -37,6 +37,7 @@ class ScholarProgressReportTest extends TestCase
             ->post(route('research.scholars.progress_reports.store', $scholar), [
                 'progress_report' => $progressReport,
                 'description' => $description = Arr::random(array_values(ProgressReportRecommendation::values())),
+                'date' => $date = '2019-09-12',
             ])
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'Progress Report added successfully!');
@@ -47,6 +48,7 @@ class ScholarProgressReportTest extends TestCase
 
         $this->assertEquals($expectedPath, $scholar->fresh()->progressReports()->first()->path);
         $this->assertEquals($description, $scholar->fresh()->progressReports()->first()->description);
+        $this->assertEquals($date, $scholar->fresh()->progressReports()->first()->date->format('Y-m-d'));
 
         Storage::assertExists($scholar->fresh()->progressReports()->first()->path);
     }
@@ -69,6 +71,7 @@ class ScholarProgressReportTest extends TestCase
             ->post(route('research.scholars.progress_reports.store', $scholar), [
                 'progress_report' => $progressReport,
                 'description' => $description = Arr::random(array_values(ProgressReportRecommendation::values())),
+                'date' => $date = '2019-09-12',
             ])
             ->assertForbidden();
 
@@ -94,6 +97,7 @@ class ScholarProgressReportTest extends TestCase
                 ->post(route('research.scholars.progress_reports.store', $scholar), [
                     'progress_report' => $progressReport,
                     'description' => $description = 'Progress Report Description',
+                    'date' => $date = '2019-09-12',
                 ]);
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('description', $e->errors());
@@ -105,6 +109,7 @@ class ScholarProgressReportTest extends TestCase
             ->post(route('research.scholars.progress_reports.store', $scholar), [
                 'progress_report' => $progressReport,
                 'description' => $description = ProgressReportRecommendation::CONTINUE,
+                'date' => $date = '2019-09-12',
             ]);
 
         $this->assertCount(1, $scholar->fresh()->progressReports());

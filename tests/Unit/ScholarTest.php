@@ -271,7 +271,7 @@ class ScholarTest extends TestCase
         $documents = create(ScholarDocument::class, 2, ['scholar_id' => $scholar->id]);
 
         $this->assertCount(count($documents), $scholar->fresh()->documents);
-        $this->assertEquals($documents->sortByDesc('created_at')->pluck('id'), $scholar->fresh()->documents->pluck('id'));
+        $this->assertEquals($documents->sortByDesc('date')->pluck('id'), $scholar->fresh()->documents->pluck('id'));
     }
 
     /** @test */
@@ -285,7 +285,7 @@ class ScholarTest extends TestCase
         $otherDocuments = create(ScholarDocument::class, 1, ['type' => ScholarDocumentType::OTHER_DOCUMENT, 'scholar_id' => $scholar->id]);
 
         $this->assertCount(count($progressReports), $scholar->fresh()->progressReports());
-        $this->assertEquals($progressReports->sortByDesc('created_at')->pluck('id'), $scholar->fresh()->progressReports()->pluck('id'));
+        $this->assertEquals($progressReports->sortByDesc('date')->pluck('id'), $scholar->fresh()->progressReports()->pluck('id'));
     }
 
     /** @test */
@@ -299,7 +299,7 @@ class ScholarTest extends TestCase
         $progressReports = create(ScholarDocument::class, 1, ['type' => ScholarDocumentType::PROGRESS_REPORT, 'scholar_id' => $scholar->id]);
 
         $this->assertCount(count($otherDocuments), $scholar->fresh()->otherDocuments());
-        $this->assertEquals($otherDocuments->sortByDesc('created_at')->pluck('id'), $scholar->fresh()->otherDocuments()->pluck('id'));
+        $this->assertEquals($otherDocuments->sortByDesc('date')->pluck('id'), $scholar->fresh()->otherDocuments()->pluck('id'));
     }
 
     /** @test */

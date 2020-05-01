@@ -23,12 +23,14 @@ class ScholarProgressReportsController extends Controller
         $request->validate([
             'progress_report' => ['required', 'file', 'mimetypes:application/pdf, image/*', 'max:200'],
             'description' => ['required', 'in:' . $recommendations],
+            'date' => ['required', 'date', 'before_or_equal:today'],
         ]);
 
         $scholar->documents()->create([
             'type' => ScholarDocumentType::PROGRESS_REPORT,
             'path' => $request->file('progress_report')->store('scholar_documents'),
             'description' => $request->input('description'),
+            'date' => $request->input('date'),
         ]);
 
         flash('Progress Report added successfully!')->success();

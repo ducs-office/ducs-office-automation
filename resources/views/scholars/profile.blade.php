@@ -493,18 +493,28 @@
         </div>
 
         {{--Progress Reports--}}
+        @php($recommendationColors = [
+                App\Types\ProgressReportRecommendation::CANCELLATION => 'bg-red-600',
+                App\Types\ProgressReportRecommendation::WARNING => 'bg-yellow-400',
+                App\Types\ProgressReportRecommendation::CONTINUE => 'bg-green-400',
+            ])
+
         <div class="mb-16">
             <h3 class="font-bold text-xl mb-4">
                 Progress Reports
             </h3>
             <ul class="border rounded-lg bg-white overflow-hidden mb-4">
-                @forelse ($scholar->progressReports() as $progressReport)
+               @forelse ($scholar->progressReports() as $progressReport)
                     <li class="px-4 py-3 border-b last:border-b-0">
-                        <div class="flex items-center">
-                            <p class="font-bold flex-1 capitalize">
-                                {{ $progressReport->description }}
-                            </p>
-                            <a href="{{ route('scholars.progress_reports.attachment', $progressReport) }}"
+                        <div class="flex items-center justify-between">
+                            <div class="p-4 flex items-center">
+                                <p class="font-bold mr-2 w-40">{{ $progressReport->date->format('d F Y') }}</p>
+                                <div class="font-bold text-white capitalize rounded-full p-2 ml-2
+                                    {{ $recommendationColors[$progressReport->description] }}">
+                                    {{ $progressReport->description }}
+                                </div>
+                            </div>
+                            <a href="{{ route('research.scholars.progress_reports.attachment', [$scholar, $progressReport]) }}"
                                 class="inline-flex items-center underline px-4 py-2 text-gray-900 rounded font-bold">
                             <feather-icon name="paperclip" class="h-4 mr-2"></feather-icon>
                                 Attachment
@@ -526,10 +536,11 @@
                 @forelse ($scholar->otherDocuments() as $otherDocument)
                     <li class="px-4 py-3 border-b last:border-b-0">
                         <div class="flex items-center">
-                            <p class="font-bold flex-1">
-                                {{ $otherDocument->description }}
-                            </p>
-                            <a href="{{ route('scholars.documents.attachment', $otherDocument) }}"
+                            <div class="flex-1">
+                                <p class="font-bold mr-2">{{ $otherDocument->date->format('d F Y') }}</p>
+                                <p>{{ $otherDocument->description }}</p>
+                            </div>
+                            <a href="{{ route('research.scholars.documents.attachment', [$scholar, $otherDocument]) }}"
                                 class="inline-flex items-center underline px-4 py-2 text-gray-900 rounded font-bold">
                             <feather-icon name="paperclip" class="h-4 mr-2"></feather-icon>
                                 Attachment

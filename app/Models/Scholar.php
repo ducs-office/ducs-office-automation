@@ -159,7 +159,7 @@ class Scholar extends User
 
     public function documents()
     {
-        return $this->hasMany(ScholarDocument::class)->orderBy('created_at', 'desc');
+        return $this->hasMany(ScholarDocument::class)->orderBy('date', 'desc');
     }
 
     public function progressReports()

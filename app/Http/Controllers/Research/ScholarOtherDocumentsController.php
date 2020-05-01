@@ -19,12 +19,14 @@ class ScholarOtherDocumentsController extends Controller
         $request->validate([
             'document' => ['required', 'file', 'mimetypes:application/pdf, image/*', 'max:200'],
             'description' => ['required', 'string', 'min:5', 'max:250'],
+            'date' => ['required', 'date', 'before_or_equal:today'],
         ]);
 
         $scholar->documents()->create([
             'type' => ScholarDocumentType::OTHER_DOCUMENT,
             'path' => $request->file('document')->store('scholar_documents'),
             'description' => $request->input('description'),
+            'date' => $request->input('date'),
         ]);
 
         flash('Document added successfully!')->success();

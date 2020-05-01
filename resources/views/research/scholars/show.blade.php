@@ -598,7 +598,15 @@
             </div>
         </div>
 
+
+
         {{--Progress Reports--}}
+        @php($recommendationColors = [
+            App\Types\ProgressReportRecommendation::CANCELLATION => 'bg-red-300 text-red-900',
+            App\Types\ProgressReportRecommendation::WARNING => 'bg-yellow-300 text-yellow-900',
+            App\Types\ProgressReportRecommendation::CONTINUE => 'bg-green-300 text-green-900',
+        ])
+
         <div class="page-card p-6 flex overflow-visible space-x-6">
             <div class="w-64 pr-4 relative z-10 -ml-8 my-2">
                 <h3 class="relative z-20 pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
@@ -609,22 +617,26 @@
                 </svg>
             </div>
             <div class="flex-1">
-                <ul class="border rounded-lg overflow-hidden mb-4">
+                <ul class="border rounded-lg overflow-hidden mb-4 divide-y">
                     @forelse ($scholar->progressReports() as $progressReport)
-                        <li class="px-4 py-3 border-b last:border-b-0">
+                        <li class="px-4 py-3">
                             <div class="flex items-center">
-                                <p class="font-bold flex-1 capitalize">
+                                <div class="flex items-center space-x-4 mr-4">
+                                    <p class="font-bold w-32">{{ $progressReport->date->format('d F Y') }}</p>
+                                    <a href="{{ route('research.scholars.progress_reports.attachment', [$scholar, $progressReport]) }}"
+                                        class="inline-flex items-center underline px-3 py-1 bg-gray-100 text-gray-900 rounded font-bold">
+                                        <feather-icon name="paperclip" class="h-4 mr-2">Attachment</feather-icon>
+                                        Attachment
+                                    </a>
+                                </div>
+                                <span class="px-3 py-1 text-sm font-bold rounded-full ml-auto flex-shrink-0
+                                    {{ $recommendationColors[$progressReport->description] }}">
                                     {{ $progressReport->description }}
-                                </p>
-                                <a href="{{ route('research.scholars.progress_reports.attachment', [$scholar, $progressReport]) }}"
-                                    class="inline-flex items-center underline px-4 py-2 text-gray-900 rounded font-bold">
-                                <feather-icon name="paperclip" class="h-4 mr-2"></feather-icon>
-                                    Attachment
-                                </a>
+                                </span>
                             </div>
                         </li>
                     @empty
-                       <li class="px-4 py-3 text-center text-gray-700 font-bold">No Progress Reports yet.</li>
+                        <li class="px-4 py-3 text-center text-gray-700 font-bold">No Progress Reports yet.</li>
                     @endforelse
                 </ul>
                 @can('scholars.progress_reports.store', $scholar)
@@ -637,16 +649,24 @@
                         <form action="{{ route('research.scholars.progress_reports.store', $scholar) }}" method="POST"
                             class="px-6" enctype="multipart/form-data">
                             @csrf_token
-                            <div class="mb-2">
-                                <label for="description" class="mb-1 w-full form-label">Recommendation
-                                    <span class="text-red-600">*</span>
-                                </label>
-                                <select class="w-full form-input block" name="description" required>
-                                    <option class="text-gray-600" selected disabled value="">Select Recommendation</option>
-                                    @foreach (App\Types\ProgressReportRecommendation::values() as $recommendation)
-                                        <option value="{{ $recommendation }}" class="text-gray-600"> {{ $recommendation }} </option>
-                                    @endforeach
-                                </select>
+                            <div class="mb-2 flex items-center">
+                                <div class="w-1/2 mr-1">
+                                    <label for="date" class="mb-1 w-full form-label">Date
+                                        <span class="text-red-600">*</span>
+                                    </label>
+                                    <input type="date" name="date" id="date" class="w-full form-input" required>
+                                </div>
+                                <div class="w-1/2 ml-1">
+                                    <label for="description" class="mb-1 w-full form-label">Recommendation
+                                        <span class="text-red-600">*</span>
+                                    </label>
+                                    <select class="w-full form-input block" name="description" required>
+                                        <option class="text-gray-600" selected disabled value="">Select Recommendation</option>
+                                        @foreach (App\Types\ProgressReportRecommendation::values() as $recommendation)
+                                            <option value="{{ $recommendation }}" class="text-gray-600"> {{ $recommendation }} </option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
                             <div class="mb-2">
                                 <label for="progress_report" class="w-full form-label mb-1">Upload Progress Report
@@ -673,22 +693,23 @@
                 </svg>
             </div>
             <div class="flex-1">
-                <ul class="border rounded-lg overflow-hidden mb-4">
+                <ul class="border rounded-lg overflow-hidden mb-4 divide-y">
                     @forelse ($scholar->otherDocuments() as $otherDocument)
-                        <li class="px-4 py-3 border-b last:border-b-0">
+                        <li class="px-4 py-3">
                             <div class="flex items-center">
-                                <p class="font-bold flex-1">
-                                    {{ $otherDocument->description }}
-                                </p>
+                                <div class="flex-1">
+                                    <p class="font-bold mr-2">{{ $otherDocument->date->format('d F Y') }}</p>
+                                    <p class="text-gray-700">{{ $otherDocument->description }}</p>
+                                </div>
                                 <a href="{{ route('research.scholars.documents.attachment', [$scholar, $otherDocument]) }}"
-                                    class="inline-flex items-center underline px-4 py-2 text-gray-900 rounded font-bold">
+                                    class="inline-flex items-center underline px-3 py-1 bg-gray-100 text-gray-900 rounded font-bold">
                                 <feather-icon name="paperclip" class="h-4 mr-2"></feather-icon>
                                     Attachment
                                 </a>
                             </div>
                         </li>
                     @empty
-                       <li class="px-4 py-3 text-center text-gray-700 font-bold">No Documents</li>
+                        <li class="px-4 py-3 text-center text-gray-700 font-bold">No Documents</li>
                     @endforelse
                 </ul>
                 @can('scholars.other_documents.store', $scholar)
@@ -708,11 +729,19 @@
                                 <textarea id="description" name="description" type="" class="w-full form-input" placeholder="Enter Description" required>
                                 </textarea>
                             </div>
-                            <div class="mb-2">
-                                <label for="document" class="w-full form-label mb-1">Upload Document
-                                    <span class="text-red-600">*</span>
-                                </label>
-                                <input type="file" name="document" id="document" class="w-full mb-1" accept="document/*" required>
+                            <div class="flex mb-2 items-center">
+                                <div class="w-1/2 mr-1">
+                                    <label for="date" class="mb-1 w-full form-label">Date
+                                        <span class="text-red-600">*</span>
+                                    </label>
+                                    <input type="date" name="date" id="date" class="w-full form-input" required>
+                                </div>
+                                <div class="w-1/2 ml-1">
+                                    <label for="document" class="w-full form-label mb-1">Upload Document
+                                        <span class="text-red-600">*</span>
+                                    </label>
+                                    <input type="file" name="document" id="document" class="w-full mb-1 items-center" accept="document/*" required>
+                                </div>
                             </div>
                             <button type="submit" class="px-5 btn btn-magenta text-sm rounded-l-none">Add</button>
                         </form>

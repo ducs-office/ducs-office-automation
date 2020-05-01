@@ -2,28 +2,18 @@
 
 namespace App\Types;
 
-use Illuminate\Database\Eloquent\Model;
-
-class ProgressReportRecommendation extends Model
+class ProgressReportRecommendation extends BaseEnumType
 {
     const CONTINUE = 'Continue';
     const CANCELLATION = 'Cancellation';
     const WARNING = 'Warning';
 
-    protected $value;
-
-    public function __construct($value)
+    public function getContextCSS()
     {
-        $this->value = $value;
-    }
-
-    public function _toString()
-    {
-        return $this->value;
-    }
-
-    public static function values()
-    {
-        return [self::CONTINUE, self::CANCELLATION, self::WARNING];
+        return [
+            self::CANCELLATION => 'bg-red-600',
+            self::WARNING => 'bg-yellow-400',
+            self::CONTINUE => 'bg-green-400',
+        ][$this->value];
     }
 }

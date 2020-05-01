@@ -35,6 +35,7 @@ class ScholarOtherDocumentsTest extends TestCase
             ->post(route('research.scholars.documents.store', $scholar), [
                 'document' => $document,
                 'description' => $description = 'Document description',
+                'date' => $date = '2019-09-12',
             ])
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'Document added successfully!');
@@ -42,6 +43,7 @@ class ScholarOtherDocumentsTest extends TestCase
         $this->assertCount(1, $scholar->fresh()->otherDocuments());
         $this->assertEquals($document->hashName('scholar_documents'), $scholar->fresh()->otherDocuments()->first()->path);
         $this->assertEquals($description, $scholar->fresh()->otherDocuments()->first()->description);
+        $this->assertEquals($date, $scholar->fresh()->otherDocuments()->first()->date->format('Y-m-d'));
 
         Storage::assertExists($scholar->fresh()->otherDocuments()->first()->path);
     }
@@ -65,6 +67,7 @@ class ScholarOtherDocumentsTest extends TestCase
             ->post(route('research.scholars.documents.store', $scholar), [
                 'document' => $document,
                 'description' => 'Document Description',
+                'date' => $date = '2019-09-12',
             ])
             ->assertForbidden();
 

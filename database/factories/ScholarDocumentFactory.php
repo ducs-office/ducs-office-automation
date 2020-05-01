@@ -24,5 +24,6 @@ $factory->define(ScholarDocument::class, function (Faker $faker) {
         'description' => ($type === ScholarDocumentType::PROGRESS_REPORT) ?
                  $faker->randomElement(ProgressReportRecommendation::values()) :
                  $faker->sentence,
+        'date' => $faker->date('Y-m-d'),
     ];
 });

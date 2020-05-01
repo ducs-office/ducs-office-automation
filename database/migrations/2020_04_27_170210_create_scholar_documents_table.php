@@ -21,6 +21,7 @@ class CreateScholarDocumentsTable extends Migration
             $table->enum('type', ScholarDocumentType::values());
             $table->string('path');
             $table->string('description');
+            $table->date('date');
             $table->timestamps();
         });
     }
