@@ -501,7 +501,7 @@
                 @forelse ($scholar->progressReports() as $progressReport)
                     <li class="px-4 py-3 border-b last:border-b-0">
                         <div class="flex items-center">
-                            <p class="font-bold flex-1">
+                            <p class="font-bold flex-1 capitalize">
                                 {{ $progressReport->description }}
                             </p>
                             <a href="{{ route('scholars.progress_reports.attachment', $progressReport) }}"

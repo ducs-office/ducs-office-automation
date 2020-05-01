@@ -4,6 +4,7 @@
 
 use App\Models\Scholar;
 use App\Models\ScholarDocument;
+use App\Types\ProgressReportRecommendation;
 use App\Types\ScholarDocumentType;
 use Faker\Generator as Faker;
 use Illuminate\Http\UploadedFile;
@@ -12,7 +13,7 @@ use Illuminate\Support\Facades\Storage;
 $factory->define(ScholarDocument::class, function (Faker $faker) {
     return [
         'scholar_id' => factory(Scholar::class)->create()->id,
-        'type' => $faker->randomElement(ScholarDocumentType::values()),
+        'type' => $type = $faker->randomElement(ScholarDocumentType::values()),
         'path' => function () {
             Storage::fake();
 
@@ -20,6 +21,8 @@ $factory->define(ScholarDocument::class, function (Faker $faker) {
                     ->create('document.pdf', 100, 'application/pdf')
                     ->store('scholar_documents');
         },
-        'description' => $faker->sentence,
+        'description' => ($type === ScholarDocumentType::PROGRESS_REPORT) ?
+                 $faker->randomElement(ProgressReportRecommendation::values()) :
+                 $faker->sentence,
     ];
 });

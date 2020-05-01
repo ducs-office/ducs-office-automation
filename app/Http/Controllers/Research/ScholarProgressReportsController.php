@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Research;
 use App\Http\Controllers\Controller;
 use App\Models\Scholar;
 use App\Models\ScholarDocument;
+use App\Types\ProgressReportRecommendation;
 use App\Types\ScholarDocumentType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,9 +18,11 @@ class ScholarProgressReportsController extends Controller
     {
         $this->authorize('scholars.progress_reports.store', $scholar);
 
+        $recommendations = implode(',', ProgressReportRecommendation::values());
+
         $request->validate([
             'progress_report' => ['required', 'file', 'mimetypes:application/pdf, image/*', 'max:200'],
-            'description' => ['required', 'string', 'min:5', 'max:250'],
+            'description' => ['required', 'in:' . $recommendations],
         ]);
 
         $scholar->documents()->create([

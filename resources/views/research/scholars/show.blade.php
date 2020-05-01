@@ -613,7 +613,7 @@
                     @forelse ($scholar->progressReports() as $progressReport)
                         <li class="px-4 py-3 border-b last:border-b-0">
                             <div class="flex items-center">
-                                <p class="font-bold flex-1">
+                                <p class="font-bold flex-1 capitalize">
                                     {{ $progressReport->description }}
                                 </p>
                                 <a href="{{ route('research.scholars.progress_reports.attachment', [$scholar, $progressReport]) }}"
@@ -624,7 +624,7 @@
                             </div>
                         </li>
                     @empty
-                        <li class="px-4 py-3 text-center text-gray-700 font-bold">No Progress Reports yet.</li>
+                       <li class="px-4 py-3 text-center text-gray-700 font-bold">No Progress Reports yet.</li>
                     @endforelse
                 </ul>
                 @can('scholars.progress_reports.store', $scholar)
@@ -635,20 +635,24 @@
                     <div class="p-6">
                         <h3 class="text-lg font-bold mb-4">Add Progress Report</h3>
                         <form action="{{ route('research.scholars.progress_reports.store', $scholar) }}" method="POST"
-                            class="p-6" enctype="multipart/form-data">
+                            class="px-6" enctype="multipart/form-data">
                             @csrf_token
                             <div class="mb-2">
-                                <label for="description" class="mb-1 w-full form-label">Description
+                                <label for="description" class="mb-1 w-full form-label">Recommendation
                                     <span class="text-red-600">*</span>
                                 </label>
-                                <textarea id="description" name="description" type="" class="w-full form-input" placeholder="Enter Description">
-                                </textarea>
+                                <select class="w-full form-input block" name="description" required>
+                                    <option class="text-gray-600" selected disabled value="">Select Recommendation</option>
+                                    @foreach (App\Types\ProgressReportRecommendation::values() as $recommendation)
+                                        <option value="{{ $recommendation }}" class="text-gray-600"> {{ $recommendation }} </option>
+                                    @endforeach
+                                </select>
                             </div>
                             <div class="mb-2">
                                 <label for="progress_report" class="w-full form-label mb-1">Upload Progress Report
                                     <span class="text-red-600">*</span>
                                 </label>
-                                <input type="file" name="progress_report" id="progress_report" class="w-full mb-1" accept="document/*">
+                                <input type="file" name="progress_report" id="progress_report" class="w-full mb-1" accept="document/*" required>
                             </div>
                             <button type="submit" class="px-5 btn btn-magenta text-sm rounded-l-none">Add</button>
                         </form>
@@ -684,7 +688,7 @@
                             </div>
                         </li>
                     @empty
-                        <li class="px-4 py-3 text-center text-gray-700 font-bold">No Documents</li>
+                       <li class="px-4 py-3 text-center text-gray-700 font-bold">No Documents</li>
                     @endforelse
                 </ul>
                 @can('scholars.other_documents.store', $scholar)
@@ -695,20 +699,20 @@
                     <div class="p-6">
                         <h3 class="text-lg font-bold mb-4">Add Documents</h3>
                         <form action="{{ route('research.scholars.documents.store', $scholar) }}" method="POST"
-                            class="p-6" enctype="multipart/form-data">
+                            class="px-6" enctype="multipart/form-data">
                             @csrf_token
                             <div class="mb-2">
                                 <label for="description" class="mb-1 w-full form-label">Description
                                     <span class="text-red-600">*</span>
                                 </label>
-                                <textarea id="description" name="description" type="" class="w-full form-input" placeholder="Enter Description">
+                                <textarea id="description" name="description" type="" class="w-full form-input" placeholder="Enter Description" required>
                                 </textarea>
                             </div>
                             <div class="mb-2">
                                 <label for="document" class="w-full form-label mb-1">Upload Document
                                     <span class="text-red-600">*</span>
                                 </label>
-                                <input type="file" name="document" id="document" class="w-full mb-1" accept="document/*">
+                                <input type="file" name="document" id="document" class="w-full mb-1" accept="document/*" required>
                             </div>
                             <button type="submit" class="px-5 btn btn-magenta text-sm rounded-l-none">Add</button>
                         </form>

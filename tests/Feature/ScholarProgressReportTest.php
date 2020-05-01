@@ -5,11 +5,14 @@ namespace Tests\Feature;
 use App\Models\Scholar;
 use App\Models\ScholarDocument;
 use App\Models\User;
+use App\Types\ProgressReportRecommendation;
 use App\Types\ScholarDocumentType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
@@ -33,7 +36,7 @@ class ScholarProgressReportTest extends TestCase
         $this->withoutExceptionHandling()
             ->post(route('research.scholars.progress_reports.store', $scholar), [
                 'progress_report' => $progressReport,
-                'description' => $description = 'Progres Report May-2019',
+                'description' => $description = Arr::random(array_values(ProgressReportRecommendation::values())),
             ])
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'Progress Report added successfully!');
@@ -65,11 +68,46 @@ class ScholarProgressReportTest extends TestCase
         $this->withExceptionHandling()
             ->post(route('research.scholars.progress_reports.store', $scholar), [
                 'progress_report' => $progressReport,
-                'description' => $description = 'Progress Report Description',
+                'description' => $description = Arr::random(array_values(ProgressReportRecommendation::values())),
             ])
             ->assertForbidden();
 
         $this->assertCount(0, $scholar->fresh()->progressReports());
+    }
+
+    /** @test */
+    public function request_validates_description_is_valid_description()
+    {
+        $this->signIn($user = create(User::class));
+
+        $user->givePermissionTo('scholar progress reports:add');
+
+        storage::fake();
+        $progressReport = UploadedFile::fake()->create('fake_progress_report.pdf', 50, 'application/pdf');
+
+        $scholar = create(Scholar::class);
+
+        $this->assertCount(0, $scholar->progressReports());
+
+        try {
+            $this->withoutExceptionHandling()
+                ->post(route('research.scholars.progress_reports.store', $scholar), [
+                    'progress_report' => $progressReport,
+                    'description' => $description = 'Progress Report Description',
+                ]);
+        } catch (ValidationException $e) {
+            $this->assertArrayHasKey('description', $e->errors());
+        }
+
+        $this->assertCount(0, $scholar->fresh()->progressReports());
+
+        $this->withoutExceptionHandling()
+            ->post(route('research.scholars.progress_reports.store', $scholar), [
+                'progress_report' => $progressReport,
+                'description' => $description = ProgressReportRecommendation::CONTINUE,
+            ]);
+
+        $this->assertCount(1, $scholar->fresh()->progressReports());
     }
 
     /** @test */
