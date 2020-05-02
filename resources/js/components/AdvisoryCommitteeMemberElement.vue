@@ -1,19 +1,24 @@
 <template>
     <fieldset>
         <legend class="px-2">Advisory Committee Member</legend>
-        <div>
+        <div class="mb-2">
             <label class="w-full form-label">Type</label>
             <div class="flex">
-                <select class="w-full form-input" v-model="member.type" :name="typeName">
+                <select class="w-full form-select" v-model="member.type" :name="typeName">
                     <option v-for="(type, value) in types" :key="value" :value="value" v-text="type"></option>
                 </select>
                 <slot></slot>
             </div>
         </div>
+        <div v-if="member.type=='existing_supervisor'">
+            <slot name="existing_supervisor" :member="member"></slot>
+        </div>
         <div v-if="member.type=='faculty_teacher'">
             <slot name="faculty" :member="member"></slot>
         </div>
-        <slot v-else name="external" :member="member"></slot>
+        <div v-if="member.type=='external'">
+            <slot name="external" :member="member"></slot>
+        </div>
     </fieldset>
 </template>
 <script>
@@ -35,7 +40,8 @@ export default {
         return {
             types: {
                 faculty_teacher: 'Faculty Teacher',
-                external: 'External'
+                external: 'External',
+                existing_supervisor: 'Existing Supervisor',
             },
             member: this.dataMember,
         };

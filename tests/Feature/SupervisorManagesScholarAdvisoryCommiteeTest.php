@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Scholar;
+use App\Models\SupervisorProfile;
 use App\Models\User;
 use App\Types\AdvisoryCommitteeMember;
 use App\Types\UserType;
@@ -29,6 +30,7 @@ class SupervisorManagesScholarAdvisoryCommiteeTest extends TestCase
         ]);
 
         $faculty_teacher = create(User::class, 1, ['type' => UserType::FACULTY_TEACHER]);
+        $otherSupervisorProfile = create(SupervisorProfile::class);
 
         $this->withoutExceptionHandling()
             ->patch(route('research.scholars.advisory_committee.update', [
@@ -47,14 +49,26 @@ class SupervisorManagesScholarAdvisoryCommiteeTest extends TestCase
                         'email' => 'rakesh@gmail.com',
                         'phone' => '9469297632',
                     ],
+                    $existingSupervisor = [
+                        'type' => 'existing_supervisor',
+                        'id' => $otherSupervisorProfile->id,
+                    ],
                 ],
             ])->assertRedirect()
             ->assertSessionHasFlash('success', 'Advisory Committee Updated SuccessFully!');
 
-        // TODO: change assertions
-        // $this->assertEquals()
-        // $this->assertEquals($scholar->fresh()->advisory_committee['faculty_teacher'], $faculty_teacher->name);
-        // $this->assertEquals($scholar->fresh()->advisory_committee['external'], $external);
+        $expectedAddedMembers = [
+            AdvisoryCommitteeMember::fromFacultyTeacher($faculty_teacher),
+            new AdvisoryCommitteeMember('external', $external),
+            AdvisoryCommitteeMember::fromExistingSupervisors($otherSupervisorProfile),
+        ];
+
+        list($permanent, $added) = collect($scholar->fresh()->advisory_committee)
+                ->partition(function ($item) {
+                    return in_array($item->type, ['supervisor', 'cosupervisor']);
+                })->map->values()->toArray();
+
+        $this->assertEquals($expectedAddedMembers, $added);
     }
 
     /** @test */
@@ -67,6 +81,8 @@ class SupervisorManagesScholarAdvisoryCommiteeTest extends TestCase
         $scholar = create(Scholar::class, 1, [
             'supervisor_profile_id' => $supervisor->id,
         ]);
+
+        $otherSupervisorProfile = create(SupervisorProfile::class);
 
         $beforeReplaceAdvisoryCommittee = $scholar->advisory_committee;
 
@@ -91,6 +107,10 @@ class SupervisorManagesScholarAdvisoryCommiteeTest extends TestCase
                         'email' => 'rakesh@gmail.com',
                         'phone' => '9469297632',
                     ],
+                    $existingSupervisor = [
+                        'type' => 'existing_supervisor',
+                        'id' => $otherSupervisorProfile->id,
+                    ],
                 ],
             ])->assertRedirect()
             ->assertSessionHasFlash('success', 'Advisory Committee Replaced SuccessFully!');
@@ -98,6 +118,7 @@ class SupervisorManagesScholarAdvisoryCommiteeTest extends TestCase
         $expectedAddedMembers = [
             AdvisoryCommitteeMember::fromFacultyTeacher($faculty_teacher),
             new AdvisoryCommitteeMember('external', $external),
+            AdvisoryCommitteeMember::fromExistingSupervisors($otherSupervisorProfile),
         ];
 
         list($permanent, $added) = collect($scholar->fresh()->advisory_committee)

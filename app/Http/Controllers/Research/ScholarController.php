@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Research;
 use App\Http\Controllers\Controller;
 use App\Models\PhdCourse;
 use App\Models\Scholar;
+use App\Models\SupervisorProfile;
 use App\Models\User;
 use App\Types\AdmissionMode;
 use App\Types\AdvisoryCommitteeMember;
@@ -38,6 +39,9 @@ class ScholarController extends Controller
 
     public function show(Scholar $scholar)
     {
+        $existingSupervisors = SupervisorProfile::all()->pluck('supervisor.name', 'id')
+                                ->forget($scholar->supervisor_profile_id);
+
         return view('research.scholars.show', [
             'scholar' => $scholar->load(['courseworks', 'cosupervisor']),
             'courses' => PhdCourse::whereNotIn('id', $scholar->courseworks()->allRelatedIds())->get(),
@@ -46,6 +50,7 @@ class ScholarController extends Controller
             'genders' => Gender::values(),
             'eventTypes' => PresentationEventType::values(),
             'faculty' => User::where('type', UserType::FACULTY_TEACHER)->get(),
+            'existingSupervisors' => $existingSupervisors,
         ]);
     }
 
@@ -53,8 +58,8 @@ class ScholarController extends Controller
     {
         $validData = $request->validate([
             'committee' => ['required', 'array', 'max:5'],
-            'committee.*.type' => ['required', 'string', 'in:faculty_teacher,external'],
-            'committee.*.id' => ['required_if:commmitte.*.type,faculty_teacher', 'integer'],
+            'committee.*.type' => ['required', 'string', 'in:faculty_teacher,external,existing_supervisor'],
+            'committee.*.id' => ['required_if:commmitte.*.type,faculty_teacher, existing_supervisor', 'integer'],
             'committee.*.name' => ['required_if:commmitte.*.type,external', 'string'],
             'committee.*.designation' => ['required_if:commmitte.*.type,external', 'string'],
             'committee.*.affiliation' => ['required_if:commmitte.*.type,external', 'string'],
@@ -65,6 +70,8 @@ class ScholarController extends Controller
         $committee = collect($validData['committee'])->map(function ($item) {
             if ($item['type'] == 'faculty_teacher') {
                 return AdvisoryCommitteeMember::fromFacultyTeacher(User::find($item['id']));
+            } elseif ($item['type'] == 'existing_supervisor') {
+                return AdvisoryCommitteeMember::fromExistingSupervisors(SupervisorProfile::find($item['id']));
             }
             return new AdvisoryCommitteeMember($item['type'], $item);
         })->toArray();
@@ -80,8 +87,8 @@ class ScholarController extends Controller
     {
         $validData = $request->validate([
             'committee' => ['required', 'array', 'max:5'],
-            'committee.*.type' => ['required', 'string', 'in:faculty_teacher,external'],
-            'committee.*.id' => ['required_if:commmitte.*.type,faculty_teacher', 'integer'],
+            'committee.*.type' => ['required', 'string', 'in:faculty_teacher,external,existing_supervisor'],
+            'committee.*.id' => ['required_if:commmitte.*.type,faculty_teacher, existing_supervisor', 'integer'],
             'committee.*.name' => ['required_if:commmitte.*.type,external', 'string'],
             'committee.*.designation' => ['required_if:commmitte.*.type,external', 'string'],
             'committee.*.affiliation' => ['required_if:commmitte.*.type,external', 'string'],
@@ -104,6 +111,8 @@ class ScholarController extends Controller
         $newCommittee = collect($validData['committee'])->map(function ($item) {
             if ($item['type'] == 'faculty_teacher') {
                 return AdvisoryCommitteeMember::fromFacultyTeacher(User::find($item['id']));
+            } elseif ($item['type'] == 'existing_supervisor') {
+                return AdvisoryCommitteeMember::fromExistingSupervisors(SupervisorProfile::find($item['id']));
             }
             return new AdvisoryCommitteeMember($item['type'], $item);
         })->toArray();

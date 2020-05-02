@@ -225,17 +225,12 @@
 
 
         {{-- Advisory Commitee--}}
-        @include('research.scholars.modals.edit_advisory_committee', [
-            'modalName' => 'edit-advisory-committee-modal',
-            'faculty' => $faculty,
-            'scholar' => $scholar
-        ])
-        @include('research.scholars.modals.replace_advisory_committee', [
-            'modalName' => 'replace-advisory-committee-modal',
-            'faculty' => $faculty,
-            'scholar' => $scholar
-        ])
         <div class="page-card p-6 flex overflow-visible space-x-6">
+            @include('research.scholars.modals.edit_advisory_committee', [
+                'modalName' => 'edit-advisory-committee-modal',
+                'faculty' => $faculty,
+                'scholar' => $scholar
+            ])
             <div class="w-64 pr-4 relative z-10 -ml-8 my-6">
                 <h3 class="relative z-20 pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
                     Advisory Committee
@@ -313,37 +308,37 @@
 
 
         {{-- Courseworks --}}
-        <v-modal name="mark-coursework-completed" height="auto">
-            <template v-slot="{ data }">
-                <form :action="route('research.scholars.courseworks.complete', [data('scholar'), data('course')])"
-                method="POST" class="p-6" enctype="multipart/form-data">
-                @csrf_token @method("PATCH")
-                <h2 class="text-lg font-bold mb-8">Mark Course Work Complete</h2>
-                    <div class="flex mb-2">
-                        <div class="flex-1 mr-2 items-baseline">
-                            <label for="completed_on" class="form-label mb-1 w-full">
-                                Date of Completion
-                                <span class="text-red-600 font-bold">*</span>
-                            </label>
-                            <input type="date" name="completed_on"
-                            class="form-input w-full" id="completed_on">
-                        </div>
-                        <div class="flex-1 mb-2 items-baseline">
-                            <label for="marksheet" class="form-label mb-1 w-full">
-                                Upload Marksheet
-                                <span class="text-red-600 font-bold">*</span>
-                            </label>
-                            <input id="marksheet" type="file" name="marksheet"
-                                class="form-input w-full" accept="application/pdf,image/*">
-                        </div>
-                    </div>
-                    <button class="bg-green-500 hover:bg-green-600 text-white text-sm py-2 rounded font-bold btn">
-                        Mark Completed
-                    </button>
-                </form>
-            </template>
-        </v-modal>
         <div class="page-card p-6 flex overflow-visible space-x-6">
+            <v-modal name="mark-coursework-completed" height="auto">
+                <template v-slot="{ data }">
+                    <form :action="route('research.scholars.courseworks.complete', [data('scholar'), data('course')])"
+                    method="POST" class="p-6" enctype="multipart/form-data">
+                    @csrf_token @method("PATCH")
+                    <h2 class="text-lg font-bold mb-8">Mark Course Work Complete</h2>
+                        <div class="flex mb-2">
+                            <div class="flex-1 mr-2 items-baseline">
+                                <label for="completed_on" class="form-label mb-1 w-full">
+                                    Date of Completion
+                                    <span class="text-red-600 font-bold">*</span>
+                                </label>
+                                <input type="date" name="completed_on"
+                                class="form-input w-full" id="completed_on">
+                            </div>
+                            <div class="flex-1 mb-2 items-baseline">
+                                <label for="marksheet" class="form-label mb-1 w-full">
+                                    Upload Marksheet
+                                    <span class="text-red-600 font-bold">*</span>
+                                </label>
+                                <input id="marksheet" type="file" name="marksheet"
+                                    class="form-input w-full" accept="application/pdf,image/*">
+                            </div>
+                        </div>
+                        <button class="bg-green-500 hover:bg-green-600 text-white text-sm py-2 rounded font-bold btn">
+                            Mark Completed
+                        </button>
+                    </form>
+                </template>
+            </v-modal>
             <div class="w-64 pr-4 relative z-10 -ml-8 my-2">
                 <h3 class="relative z-20 pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
                     Pre-PhD Coursework
@@ -419,39 +414,39 @@
 
 
         {{-- Leaves --}}
-        <v-modal name="respond-to-leave" height="auto">
-            <template v-slot="{ data }">
-                <form :action="route('research.scholars.leaves.respond', [data('scholar'), data('leave')])"
-                method="POST" class="p-6" enctype="multipart/form-data" >
-                @csrf_token @method("PATCH")
-                    <h2 class="text-lg font-bold mb-8">Respond To Leave</h2>
-                    <div class="flex mb-2">
-                        <div class="flex-1 mr-2 items-baseline">
-                            <label for="response" class="form-label w-full mb-1">
-                                Response <span class="text-red-600 font-bold">*</span>
-                            </label>
-                            <select name="response" id="" class="form-input w-full">
-                                <option value="">---Choose response type---</option>
-                                <option value="{{ App\Models\LeaveStatus::APPROVED }}">Approve</option>
-                                <option value="{{ App\Models\LeaveStatus::REJECTED }}">Reject</option>
-                            </select>
-                        </div>
-                        <div class="flex-1 items-baseline">
-                            <label for="response_letter" class="form-label w-full mb-1">
-                                Upload Response Letter
-                                <span class="text-red-600 font-bold">*</span>
-                            </label>
-                            <input id="response_letter" type="file" class="form-input w-full"
-                                name="response_letter" accept="application/pdf,image/*">
-                        </div>
-                    </div>
-                    <button class="btn btn-magenta">
-                        Respond
-                    </button>
-                </form>
-            </template>
-        </v-modal>
         <div class="page-card p-6 flex overflow-visible space-x-6">
+            <v-modal name="respond-to-leave" height="auto">
+                <template v-slot="{ data }">
+                    <form :action="route('research.scholars.leaves.respond', [data('scholar'), data('leave')])"
+                    method="POST" class="p-6" enctype="multipart/form-data" >
+                    @csrf_token @method("PATCH")
+                        <h2 class="text-lg font-bold mb-8">Respond To Leave</h2>
+                        <div class="flex mb-2">
+                            <div class="flex-1 mr-2 items-baseline">
+                                <label for="response" class="form-label w-full mb-1">
+                                    Response <span class="text-red-600 font-bold">*</span>
+                                </label>
+                                <select name="response" id="" class="form-input w-full">
+                                    <option value="">---Choose response type---</option>
+                                    <option value="{{ App\Models\LeaveStatus::APPROVED }}">Approve</option>
+                                    <option value="{{ App\Models\LeaveStatus::REJECTED }}">Reject</option>
+                                </select>
+                            </div>
+                            <div class="flex-1 items-baseline">
+                                <label for="response_letter" class="form-label w-full mb-1">
+                                    Upload Response Letter
+                                    <span class="text-red-600 font-bold">*</span>
+                                </label>
+                                <input id="response_letter" type="file" class="form-input w-full"
+                                    name="response_letter" accept="application/pdf,image/*">
+                            </div>
+                        </div>
+                        <button class="btn btn-magenta">
+                            Respond
+                        </button>
+                    </form>
+                </template>
+            </v-modal>
             <div class="w-64 pr-4 relative z-10 -ml-8 my-2">
                 <h3 class="relative z-20 pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
                     Leaves

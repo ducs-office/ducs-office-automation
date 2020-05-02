@@ -38,6 +38,18 @@ class AdvisoryCommittee implements CastsAttributes
         ]);
     }
 
+    private function getExistingSupervisor($value)
+    {
+        return new AdvisoryCommitteeMember('existing_supervisor', [
+            'id' => $value['id'],
+            'name' => $value['name'],
+            'designation' => $value['designation'],
+            'affiliation' => $value['affiliation'],
+            'email' => $value['email'],
+            'phone' => $value['phone'] ?? null,
+        ]);
+    }
+
     private function getExternal($value)
     {
         return new AdvisoryCommitteeMember('external', [
@@ -72,7 +84,7 @@ class AdvisoryCommittee implements CastsAttributes
     public function set($model, string $key, $value, array $attributes)
     {
         return collect($value)->filter(function ($item) {
-            return in_array($item->type, ['faculty_teacher', 'external']);
+            return in_array($item->type, ['faculty_teacher', 'external', 'existing_supervisor']);
         })->map->toArray()
         ->toJson();
     }

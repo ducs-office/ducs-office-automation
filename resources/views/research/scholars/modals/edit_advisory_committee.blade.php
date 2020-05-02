@@ -25,9 +25,18 @@ list($permanentMembers, $addedMembers) = collect($scholar->advisory_committee)
                         :type-name="`committee[${index}][type]`"
                         :key="data.type"
                         class="border rounded p-2 mb-3">
+                        <template v-slot:existing_supervisor="{ member }">
+                            <label :for="`existing_supervisor.${index}`" class="w-full form-label">Existing Supervisor</label>
+                            <select :id="`existing_supervisor.${index}`" :name="`committee[${index}][id]`" class="w-full form-select" v-model="member.id">
+                                <option :value="null" disabled>-- Select an Existing Supervisor --</option>
+                                @foreach($existingSupervisors as $id => $name)
+                                    <option value="{{ $id }}">{{ $name }}</option>
+                                @endforeach
+                            </select>
+                        </template>
                         <template v-slot:faculty="{ member }">
                             <label :for="`faculty.${index}`" class="w-full form-label">Faculty</label>
-                            <select :id="`faculty.${index}`" :name="`committee[${index}][id]`" class="w-full form-input" v-model="member.id">
+                            <select :id="`faculty.${index}`" :name="`committee[${index}][id]`" class="w-full form-select" v-model="member.id">
                                 <option :value="null" disabled>-- Select a Faculty Teacher --</option>
                                 @foreach($faculty as $teacher)
                                     <option value="{{ $teacher->id }}">{{ $teacher->name }}</option>
@@ -36,25 +45,33 @@ list($permanentMembers, $addedMembers) = collect($scholar->advisory_committee)
                         </template>
                         <template v-slot:external="{ member }">
                             <div class="mb-2">
-                                <label :for="`committe.${index}.name`" class="w-full form-label">Name</label>
+                                <label :for="`committe.${index}.name`" class="w-full form-label">
+                                    Name <span class="text-red-600">*</span>
+                                </label>
                                 <input :id="`committe.${index}.name`" :name="`committee[${index}][name]`" type="text" class="w-full form-input" placeholder="e.g. John Doe"
                                     v-model="member.name" required>
                             </div>
                             <div class="flex mb-2 -mx-2">
                                 <div class="mx-2 flex-1">
-                                    <label :for="`committe.${index}.designation`" class="w-full form-label">Designation</label>
+                                    <label :for="`committe.${index}.designation`" class="w-full form-label">
+                                        Designation <span class="text-red-600">*</span>
+                                    </label>
                                     <input :id="`committe.${index}.designation`" :name="`committee[${index}][designation]`" type="text" class="w-full form-input"
                                         placeholder="e.g. Head of Department" v-model="member.designation" required>
                                 </div>
                                 <div class="mx-2 flex-1">
-                                    <label :for="`committe.${index}.affiliation`" class="w-full form-label">Affiliation</label>
+                                    <label :for="`committe.${index}.affiliation`" class="w-full form-label">
+                                        Affiliation <span class="text-red-600">*</span>
+                                    </label>
                                     <input :id="`committe.${index}.affiliation`" :name="`committee[${index}][affiliation]`" type="text" class="w-full form-input"
                                         placeholder="e.g. Department of Mathematics" v-model="member.affiliation" required>
                                 </div>
                             </div>
                             <div class="flex mb-2 -mx-2">
                                 <div class="mx-2 flex-1">
-                                    <label :for="`committe.${index}.email`" class="w-full form-label">Email</label>
+                                    <label :for="`committe.${index}.email`" class="w-full form-label">
+                                        Email <span class="text-red-600">*</span>
+                                    </label>
                                     <input :id="`committe.${index}.email`" :name="`committee[${index}][email]`" type="email" class="w-full form-input"
                                         placeholder="e.g. johndoe@gmail.com" v-model="member.email" required>
                                 </div>

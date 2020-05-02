@@ -2,6 +2,7 @@
 
 namespace App\Types;
 
+use App\Models\SupervisorProfile;
 use App\Models\User;
 
 class AdvisoryCommitteeMember
@@ -34,6 +35,22 @@ class AdvisoryCommitteeMember
             'designation' => 'Professor',
             'affiliation' => 'Department of Computer Science',
             'email' => $facultyTeacher->email,
+        ]);
+    }
+
+    public static function fromExistingSupervisors(SupervisorProfile $supervisorProfile)
+    {
+        $affiliation = $supervisorProfile->supervisor instanceof User ?
+            'Department of Computer Science' :
+            $supervisorProfile->supervisor->profile->college->name ??
+            'Affiliation Not Set';
+
+        return new self('existing_supervisor', [
+            'id' => $supervisorProfile->id,
+            'name' => $supervisorProfile->supervisor->name,
+            'designation' => 'Professor',
+            'affiliation' => $affiliation,
+            'email' => $supervisorProfile->supervisor->email,
         ]);
     }
 
