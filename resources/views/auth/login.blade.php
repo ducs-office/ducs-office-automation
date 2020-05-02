@@ -11,7 +11,7 @@
                     <input type="radio" name="type" id="web"
                         value="web" class="form-radio"
                         {{ old('type', 'web') === 'web' ? 'checked' : '' }}>
-                    <span for="web" class="form-label ml-2">Faculty/Staff</span>
+                    <span for="web" class="form-label ml-2">Department</span>
                 </label>
                 <label class="inline-flex items-center mx-3 my-1">
                     <input type="radio" name="type" id="teachers"
