@@ -9,6 +9,7 @@ use App\Models\ScholarEducationInstitute;
 use App\Models\ScholarEducationSubject;
 use App\Models\SupervisorProfile;
 use App\Types\AdmissionMode;
+use App\Types\EducationInfo;
 use App\Types\ReservationCategory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -41,35 +42,39 @@ class UpdateScholarProfileTest extends TestCase
             'profile_picture' => $profilePicture = UploadedFile::fake()->image('picture.jpeg'),
             'enrollment_date' => now()->subMonth(1)->format('Y-m-d'),
             'research_area' => 'Artificial Intelligence',
-            'education' => [
+            'education_details' => [
                 [
-                    'degree' => $degree->id,
-                    'subject' => $subject->id,
-                    'institute' => $institute->id,
+                    'degree' => $degree->name,
+                    'subject' => $subject->name,
+                    'institute' => $institute->name,
                     'year' => '2016',
                 ],
             ],
         ];
-
-        $this->withoutExceptionHandling()
-            ->patch(route('scholars.profile.update'), $updateDetails)
-            ->assertRedirect()
-            ->assertSessionHasFlash('success', 'Profile updated successfully!');
+        try {
+            $this->withoutExceptionHandling()
+                ->patch(route('scholars.profile.update'), $updateDetails)
+                ->assertRedirect()
+                ->assertSessionHasFlash('success', 'Profile updated successfully!');
+        } catch (ValidationException $e) {
+            dd($e->errors(), $degree->name, $subject->name);
+        }
 
         $this->assertEquals(1, Scholar::count());
 
-        $this->assertEquals($updateDetails['phone_no'], $scholar->fresh()->phone_no);
-        $this->assertEquals($updateDetails['address'], $scholar->fresh()->address);
-        $this->assertEquals($updateDetails['category'], $scholar->fresh()->category);
-        $this->assertEquals($updateDetails['admission_mode'], $scholar->fresh()->admission_mode);
-        $this->assertEquals($updateDetails['enrollment_date'], $scholar->fresh()->enrollment_date);
-        $this->assertEquals($updateDetails['research_area'], $scholar->fresh()->research_area);
-        $this->assertEquals($updateDetails['education'][0]['year'], $scholar->fresh()->education[0]['year']);
-        $this->assertEquals($degree->name, $scholar->fresh()->education[0]['degree']);
+        $freshScholar = $scholar->fresh();
+        $this->assertEquals($updateDetails['phone_no'], $freshScholar->phone_no);
+        $this->assertEquals($updateDetails['address'], $freshScholar->address);
+        $this->assertEquals($updateDetails['category'], $freshScholar->category);
+        $this->assertEquals($updateDetails['admission_mode'], $freshScholar->admission_mode);
+        $this->assertEquals($updateDetails['enrollment_date'], $freshScholar->enrollment_date);
+        $this->assertEquals($updateDetails['research_area'], $freshScholar->research_area);
+        $this->assertEquals($updateDetails['education_details'][0]['year'], $freshScholar->education_details[0]->year);
+        $this->assertEquals($degree->name, $freshScholar->education_details[0]->degree);
 
         $this->assertEquals(
             'scholar_attachments/profile_picture/' . $profilePicture->hashName(),
-            $scholar->fresh()->profilePicture->path
+            $freshScholar->profilePicture->path
         );
         Storage::assertExists('scholar_attachments/profile_picture/' . $profilePicture->hashName());
     }
@@ -83,7 +88,7 @@ class UpdateScholarProfileTest extends TestCase
 
         $this->signInScholar(
             $scholar = create(Scholar::class, 1, [
-                'education' => [],
+                'education_details' => [],
                 'phone_no' => null,
                 'address' => null,
                 'category' => null,
@@ -94,121 +99,63 @@ class UpdateScholarProfileTest extends TestCase
 
         $this->withoutExceptionHandling()
             ->patch(route('scholars.profile.update'), [
-                'education' => [
+                'education_details' => [
                     [
-                        'degree' => $degrees[0]->id,
-                        'subject' => $subjects[0]->id,
-                        'institute' => $institutes[0]->id,
+                        'degree' => $degrees[0]->name,
+                        'subject' => $subjects[0]->name,
+                        'institute' => $institutes[0]->name,
                         'year' => '2012',
                     ],
                 ],
             ])->assertRedirect()
             ->assertSessionHasFlash('success', 'Profile updated successfully!');
 
-        $this->assertEquals(count($scholar->education), 1);
+        $freshScholar = $scholar->fresh();
+        $this->assertCount(1, $freshScholar->education_details);
+        $education = $freshScholar->education_details[0];
 
-        $this->assertEquals(ScholarEducationDegree::count(), 3);
-        $this->assertEquals($scholar->education[0]['degree'], $degrees[0]->name);
+        $this->assertEquals(3, ScholarEducationDegree::count());
+        $this->assertEquals($degrees[0]->name, $education->degree);
 
-        $this->assertEquals(ScholarEducationSubject::count(), 3);
-        $this->assertEquals($scholar->education[0]['subject'], $subjects[0]->name);
+        $this->assertEquals(3, ScholarEducationSubject::count());
+        $this->assertEquals($subjects[0]->name, $education->subject);
 
-        $this->assertEquals(ScholarEducationInstitute::count(), 3);
-        $this->assertEquals($scholar->education[0]['institute'], $institutes[0]->name);
+        $this->assertEquals(3, ScholarEducationInstitute::count());
+        $this->assertEquals($institutes[0]->name, $education->institute);
 
         $this->withoutExceptionHandling()
             ->patch(route('scholars.profile.update'), [
-                'education' => [
+                'education_details' => [
                     [
-                        'degree' => -1,
-                        'subject' => -1,
-                        'institute' => -1,
+                        'degree' => 'New Degree',
+                        'subject' => 'New Subject',
+                        'institute' => 'New Institute',
                         'year' => '2012',
                     ],
-                ],
-                'typedSubjects' => [
-                    $typedSubject = $this->faker->sentence(2),
-                ],
-                'typedDegrees' => [
-                    $typedDegree = $this->faker->sentence(2),
-                ],
-                'typedInstitutes' => [
-                    $typedInstitute = $this->faker->sentence(2),
                 ],
             ])->assertRedirect()
             ->assertSessionHasFlash('success', 'Profile updated successfully!');
 
-        $this->assertEquals(count($scholar->education), 1);
+        $freshScholar = $scholar->fresh();
+        $this->assertCount(1, $freshScholar->education_details);
+        $education = $freshScholar->education_details[0];
 
-        $this->assertEquals(ScholarEducationDegree::count(), 4);
-        $this->assertEquals($scholar->fresh()->education[0]['degree'], ScholarEducationDegree::find(4)->name);
+        $this->assertEquals(4, ScholarEducationDegree::count());
+        $this->assertTrue(ScholarEducationDegree::whereName($education->degree)->exists(), 'new degree wasn\'t created.');
 
-        $this->assertEquals(ScholarEducationSubject::count(), 4);
-        $this->assertEquals($scholar->fresh()->education[0]['subject'], ScholarEducationSubject::find(4)->name);
+        $this->assertEquals(4, ScholarEducationSubject::count());
+        $this->assertTrue(ScholarEducationSubject::whereName($education->subject)->exists(), 'new subject wasn\'t created');
 
-        $this->assertEquals(ScholarEducationInstitute::count(), 4);
-        $this->assertEquals($scholar->fresh()->education[0]['institute'], ScholarEducationInstitute::find(4)->name);
-    }
-
-    /** @test */
-    public function scholar_education_degree_subject_and_institute_table_do_not_contain_duplicates_even_if_the_user_writes_the_same_as_already_present()
-    {
-        $subjects = create(ScholarEducationSubject::class, 3);
-        $degrees = create(ScholarEducationDegree::class, 3);
-        $institutes = create(ScholarEducationInstitute::class, 3);
-
-        $this->signInScholar(
-            $scholar = create(Scholar::class, 1, [
-                'education' => [],
-                'phone_no' => null,
-                'address' => null,
-                'category' => null,
-                'admission_mode' => null,
-                'research_area' => null,
-            ])
-        );
-
-        $this->withoutExceptionHandling()
-            ->patch(route('scholars.profile.update'), [
-                'education' => [
-                    [
-                        'degree' => -1,
-                        'subject' => -1,
-                        'institute' => -1,
-                        'year' => '2012',
-                    ],
-                ],
-                'typedSubjects' => [
-                    $subjects[0]->name,
-                ],
-                'typedDegrees' => [
-                    $degrees[0]->name,
-                ],
-                'typedInstitutes' => [
-                    $institutes[0]->name,
-                ],
-            ])->assertRedirect()
-            ->assertSessionHasFlash('success', 'Profile updated successfully!');
-
-        $this->assertEquals(count($scholar->education), 1);
-
-        $this->assertEquals(ScholarEducationSubject::count(), 3);
-        $this->assertEquals($scholar->education[0]['subject'], $subjects[0]->name);
-
-        $this->assertEquals(ScholarEducationSubject::count(), 3);
-        $this->assertEquals($scholar->education[0]['degree'], $degrees[0]->name);
-
-        $this->assertEquals(ScholarEducationSubject::count(), 3);
-        $this->assertEquals($scholar->education[0]['institute'], $institutes[0]->name);
+        $this->assertEquals(4, ScholarEducationInstitute::count());
+        $this->assertTrue(ScholarEducationInstitute::whereName($education->institute)->exists(), 'new institute wasn\'t created');
     }
 
     /** @test */
     public function scholar_each_education_array_must_contain_four_elements()
     {
-        // TODO: better name for test, it doesn't test exactly what it says.
         $this->signInScholar(
             $scholar = create(Scholar::class, 1, [
-                'education' => [],
+                'education_details' => [],
                 'phone_no' => null,
                 'address' => null,
                 'category' => null,
@@ -220,7 +167,7 @@ class UpdateScholarProfileTest extends TestCase
         try {
             $this->withoutExceptionHandling()
                 ->patch(route('scholars.profile.update'), [
-                    'education' => [
+                    'education_details' => [
                         [
                             'degree' => 'BSc(H)',
                             'subject' => 'Computer Science',
@@ -229,9 +176,9 @@ class UpdateScholarProfileTest extends TestCase
                     ],
                 ]);
         } catch (ValidationException $e) {
-            $this->assertArrayHasKey('education.0', $e->errors());
+            $this->assertArrayHasKey('education_details.0', $e->errors());
         }
 
-        $this->assertEquals(count($scholar->education), 0);
+        $this->assertCount(0, $scholar->education_details);
     }
 }

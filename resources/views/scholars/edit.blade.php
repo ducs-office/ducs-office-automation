@@ -4,7 +4,7 @@
         <form class="page-card p-6 overflow-visible space-y-6" action="{{ route('scholars.profile.update') }}"
             method="POST" enctype="multipart/form-data">
             @csrf_token @method('PATCH')
-            <div class="flex items-center mb-6">
+            <div class="flex items-center">
                 <image-upload-input id="profile_picture"
                     name="profile_picture"
                     class="relative group mr-4 cursor-pointer"
@@ -93,7 +93,7 @@
 
 
 
-            <add-remove-elements :existing-elements="{{ json_encode($scholar->education) }}">
+            <add-remove-elements :existing-elements="{{ collect($scholar->education)->map->toArray()->toJson() }}">
                 <template v-slot="{ elements, addElement, removeElement}">
                     <div class="flex w-2/6 items-center">
                         <div class="w-64 pr-4 relative z-10 -ml-8 mb-4">

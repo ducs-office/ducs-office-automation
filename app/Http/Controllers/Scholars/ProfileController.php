@@ -10,11 +10,13 @@ use App\Models\ScholarEducationInstitute;
 use App\Models\ScholarEducationSubject;
 use App\Models\SupervisorProfile;
 use App\Types\AdmissionMode;
+use App\Types\EducationInfo;
 use App\Types\Gender;
 use App\Types\PresentationEventType;
 use App\Types\ReservationCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 
@@ -47,53 +49,26 @@ class ProfileController extends Controller
             'genders' => Gender::values(),
             'supervisorProfiles' => SupervisorProfile::all()->pluck('id', 'supervisor.name'),
             'cosupervisors' => Cosupervisor::all()->pluck('id', 'name', 'email'),
-            'degrees' => ScholarEducationDegree::select(['id', 'name'])->get(),
-            'institutes' => ScholarEducationInstitute::select(['id', 'name'])->get(),
-            'subjects' => ScholarEducationSubject::select(['id', 'name'])->get(),
+            'subjects' => ScholarEducationSubject::all()->pluck('name')->toArray(),
+            'degrees' => ScholarEducationDegree::all()->pluck('name')->toArray(),
+            'institutes' => ScholarEducationInstitute::all()->pluck('name')->toArray(),
         ]);
     }
 
     public function update(UpdateProfileRequest $request)
     {
         $scholar = $request->user();
-        $rules = $request->rules();
 
-        foreach ($request->education as $index => $education) {
-            if ($education['subject'] == -1) {
-                $rules['typedSubjects.' . $index] = ['required', 'bail', 'string', 'min:5'];
-            }
-            if ($education['degree'] == -1) {
-                $rules['typedDegrees.' . $index] = ['required', 'bail', 'string', 'min:5'];
-            }
-            if ($education['institute'] == -1) {
-                $rules['typedInstitutes.' . $index] = ['required', 'bail', 'string', 'min:5'];
-            }
-        }
+        DB::beginTransaction();
 
-        $validData = $request->validate($rules);
-
-        foreach ($request->education as $index => $education) {
-            if ($education['subject'] == -1) {
-                $id = ScholarEducationSubject::firstOrCreate(
-                    ['name' => $request->typedSubjects[$index]]
-                )->id;
-                $validData['education'][$index]['subject'] = $id;
-            }
-
-            if ($education['degree'] == -1) {
-                $id = ScholarEducationDegree::firstOrCreate(
-                    ['name' => $request->typedDegrees[$index]]
-                )->id;
-                $validData['education'][$index]['degree'] = $id;
-            }
-
-            if ($education['institute'] == -1) {
-                $id = ScholarEducationInstitute::firstOrCreate(
-                    ['name' => $request->typedInstitutes[$index]]
-                )->id;
-                $validData['education'][$index]['institute'] = $id;
-            }
-        }
+        $validData = $request->validated();
+        $validData['education_details'] = collect($request->education_details)
+            ->map(function ($education) {
+                ScholarEducationSubject::firstOrCreate(['name' => $education['subject']]);
+                ScholarEducationDegree::firstOrCreate(['name' => $education['degree']]);
+                ScholarEducationInstitute::firstOrCreate(['name' => $education['institute']]);
+                return new EducationInfo($education);
+            })->toArray();
 
         $scholar->update($validData);
 
@@ -103,6 +78,8 @@ class ProfileController extends Controller
                 'path' => $validData['profile_picture']->store('/scholar_attachments/profile_picture'),
             ]);
         }
+
+        DB::commit();
 
         flash('Profile updated successfully!')->success();
 

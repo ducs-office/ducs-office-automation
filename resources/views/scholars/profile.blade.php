@@ -83,7 +83,7 @@
                 </div>
                 <div class="flex-1 my-6">
                     <ul class="border flex flex-wrap rounded-lg overflow-hidden mb-4">
-                        @forelse ($scholar->education as $education)
+                        @forelse ($scholar->education_details as $education)
                             <li class="p-5 border-b last:border-b-0 w-1/2">
                                 <div class="flex mb-1">
                                     <feather-icon name="book" class="h-current"></feather-icon>

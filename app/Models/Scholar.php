@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Casts\AdvisoryCommittee;
 use App\Casts\CustomType;
+use App\Casts\EducationDetails;
 use App\Casts\OldAdvisoryCommittee;
 use App\Models\AcademicDetail;
 use App\Models\Cosupervisor;
@@ -35,7 +36,7 @@ class Scholar extends User
         'research_area',
         'enrollment_date',
         'advisory_committee',
-        'education',
+        'education_details',
         'cosupervisor_id',
         'old_cosupervisors',
         'old_supervisors',
@@ -48,7 +49,7 @@ class Scholar extends User
         'category' => CustomType::class . ':' . ReservationCategory::class,
         'admission_mode' => CustomType::class . ':' . AdmissionMode::class,
         'gender' => CustomType::class . ':' . Gender::class,
-        'education' => 'array',
+        'education_details' => EducationDetails::class,
         'old_cosupervisors' => 'array',
         'old_supervisors' => 'array',
     ];
@@ -60,7 +61,7 @@ class Scholar extends User
         static::creating(static function ($scholar) {
             $scholar->old_cosupervisors = [];
             $scholar->old_supervisors = [];
-            $scholar->education = [];
+            $scholar->education_details = [];
             $scholar->old_advisory_committees = [];
         });
 
@@ -79,33 +80,20 @@ class Scholar extends User
         return $this->first_name . ' ' . $this->last_name;
     }
 
-    public function getEducationAttribute($value)
-    {
-        $value = $this->castAttribute('education', $value);
-
-        foreach ($value as $index => $education) {
-            $value[$index]['subject'] = ScholarEducationSubject::find($education['subject'])->name;
-            $value[$index]['degree'] = ScholarEducationDegree::find($education['degree'])->name;
-            $value[$index]['institute'] = ScholarEducationInstitute::find($education['institute'])->name;
-            $value[$index]['year'] = $education['year'];
-        }
-
-        return $value;
-    }
-
     public function profilePicture()
     {
         return $this->morphOne(Attachment::class, 'attachable');
-    }
-
-    public function supervisorProfile()
-    {
         return $this->belongsTo(SupervisorProfile::class);
     }
 
     public function supervisor()
     {
         return $this->supervisorProfile->supervisor();
+    }
+
+    public function supervisorProfile()
+    {
+        return $this->belongsTo(SupervisorProfile::class);
     }
 
     public function cosupervisor()

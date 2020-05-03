@@ -14,6 +14,7 @@ use App\Models\ScholarEducationInstitute;
 use App\Models\ScholarEducationSubject;
 use App\Models\SupervisorProfile;
 use App\Models\User;
+use App\Types\EducationInfo;
 use App\Types\PrePhdCourseType;
 use App\Types\ScholarDocumentType;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -229,35 +230,7 @@ class ScholarTest extends TestCase
     {
         $this->signInScholar($scholar = create(Scholar::class));
 
-        $this->assertEquals([], $scholar->education);
-    }
-
-    /** @test */
-    public function scholar_education_is_returned_as_an_array_containing_the_names_of_each_field_in_place_of_their_corresponding_ids()
-    {
-        $degree = create(ScholarEducationDegree::class);
-        $subject = create(ScholarEducationSubject::class);
-        $institute = create(ScholarEducationInstitute::class);
-
-        $scholar = create(Scholar::class);
-
-        $scholar->update([
-            'education' => [
-                [
-                    'degree' => $degree->id,
-                    'subject' => $subject->id,
-                    'institute' => $institute->id,
-                    'year' => $year = '2012',
-                ],
-            ],
-        ]);
-
-        $this->assertEquals(count($scholar->education), 1);
-
-        $this->assertEquals($subject->name, $scholar->education[0]['subject']);
-        $this->assertEquals($degree->name, $scholar->education[0]['degree']);
-        $this->assertEquals($institute->name, $scholar->education[0]['institute']);
-        $this->assertEquals($year, $scholar->education[0]['year']);
+        $this->assertEquals([], $scholar->education_details);
     }
 
     /** @test */

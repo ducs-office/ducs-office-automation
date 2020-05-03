@@ -15,7 +15,6 @@ class UpdateProfileRequest extends FormRequest
     public function rules()
     {
         $scholar = $this->user();
-
         return [
             'phone_no' => [Rule::requiredIf($scholar->phone_no != null)],
             'address' => [Rule::requiredIf($scholar->address != null)],
@@ -25,16 +24,12 @@ class UpdateProfileRequest extends FormRequest
             'research_area' => [Rule::requiredIf($scholar->research_area != null)],
             'enrollment_date' => ['nullable', 'date', 'before:today'],
 
-            'education' => ['required', 'array', 'max: 4', 'min:1'],
-            'education.*' => ['required', 'array', 'size:4'],
-            'education.*.degree' => ['required', 'integer'],
-            'education.*.subject' => ['required', 'integer'],
-            'education.*.institute' => ['required', 'integer'],
-            'education.*.year' => ['required', 'string', 'size:4'],
-
-            'typedSubjects' => ['sometimes', 'required', 'array', 'max:4'],
-            'typedDegrees' => ['sometimes', 'required', 'array', 'max:4'],
-            'typedInstitutes' => ['sometimes', 'required', 'array', 'max:4'],
+            'education_details' => ['required', 'array', 'max: 4', 'min:1'],
+            'education_details.*' => ['required', 'array', 'size:4'],
+            'education_details.*.degree' => ['required', 'string', 'max:190'],
+            'education_details.*.subject' => ['required', 'string', 'max:190'],
+            'education_details.*.institute' => ['required', 'string', 'max:190'],
+            'education_details.*.year' => ['required', 'string'],
         ];
     }
 }

@@ -6,6 +6,6 @@ use Faker\Generator as Faker;
 
 $factory->define(ScholarEducationInstitute::class, function (Faker $faker) {
     return [
-        'name' => $faker->sentence(2),
+        'name' => $faker->unique()->sentence(2),
     ];
 });

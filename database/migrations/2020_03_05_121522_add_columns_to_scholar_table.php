@@ -26,7 +26,7 @@ class AddColumnsToScholarTable extends Migration
             $table->text('research_area', 501)->nullable();
             $table->date('enrollment_date')->nullable();
             $table->json('advisory_committee')->nullable();
-            $table->json('education')->nullable();
+            $table->json('education_details')->nullable();
             $table->json('old_cosupervisors')->nullable();
             $table->json('old_supervisors')->nullable();
             $table->json('old_advisory_committees')->nullable();

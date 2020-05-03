@@ -10,6 +10,7 @@ use App\Models\SupervisorProfile;
 use App\Models\User;
 use App\Types\AdmissionMode;
 use App\Types\AdvisoryCommitteeMember;
+use App\Types\EducationInfo;
 use App\Types\Gender;
 use App\Types\ReservationCategory;
 use App\Types\UserType;
@@ -47,22 +48,15 @@ $factory->define(Scholar::class, function (Faker $faker) {
                 ]),
             ];
         },
-        'education' => static function () use ($faker) {
-            $x = random_int(1, 4);
-            $data = [];
-            for ($i = 1; $i <= $x; $i++) {
-                $degree = factory(ScholarEducationDegree::class)->create();
-                $subject = factory(ScholarEducationSubject::class)->create();
-                $institute = factory(ScholarEducationInstitute::class)->create();
-
-                array_push($data, [
-                    'degree' => $degree->id,
-                    'subject' => $subject->id,
-                    'institute' => $institute->id,
+        'education_details' => static function () use ($faker) {
+            return array_map(function () use ($faker) {
+                return new EducationInfo([
+                    'degree' => factory(ScholarEducationDegree::class)->create()->name,
+                    'subject' => factory(ScholarEducationSubject::class)->create()->name,
+                    'institute' => factory(ScholarEducationInstitute::class)->create()->name,
                     'year' => $faker->date('Y', now()->subYear(1)),
                 ]);
-            }
-            return $data;
+            }, range(1, (random_int(1, 4))));
         },
         'cosupervisor_id' => function () {
             return factory(Cosupervisor::class)->create()->id;

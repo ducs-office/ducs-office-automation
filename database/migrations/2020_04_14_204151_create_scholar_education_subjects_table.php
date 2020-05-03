@@ -14,8 +14,7 @@ class CreateScholarEducationSubjectsTable extends Migration
     public function up()
     {
         Schema::create('scholar_education_subjects', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('name');
+            $table->string('name')->primary();
             $table->timestamps();
         });
     }
