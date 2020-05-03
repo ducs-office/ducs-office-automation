@@ -1,25 +1,53 @@
 
-<div class="flex space-x-6">
+<div class="flex items-start space-x-6">
     <div class="w-64 pr-4 relative z-10 -ml-8 my-2">
         <h3 class="relative z-20 pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
-            Journals
+            Journal Publications
         </h3>
         <svg class="absolute left-0 w-2 text-magenta-900" viewBox="0 0 10 10">
             <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
         </svg>
+        @if(auth()->guard('scholars')->check() && auth()->guard('scholars')->id() === $scholar->id)
+        <div class="mt-3 text-right">
+            <a href="{{ route('publications.journal.create') }}"
+                class="btn btn-magenta">
+                    New
+            </a>
+        </div>
+        @endif
     </div>
     <ul class="flex-1 border rounded-lg overflow-hidden mb-4">
         @forelse ($journals as $journal)
             <li class="border-b last:border-b-0 py-3">
-                <p class="ml-2 p-2">
-                    {{ implode(',', $journal->authors) }}.
-                    {{ $journal->date->format('F Y') }}.
-                    <span class="italic"> {{ $journal->paper_title }} </span>
-                    {{ $journal->name }},
-                    Volume {{ $journal->volume }},
-                    Number {{ $journal->number }},
-                    pp: {{ $journal->page_numbers[0] }}-{{ $journal->page_numbers[1] }}
-                </p>
+                <div class="flex">
+                    <p class="ml-2 p-2">
+                        {{ implode(',', $journal->authors) }}.
+                        {{ $journal->date->format('F Y') }}.
+                        <span class="italic"> {{ $journal->paper_title }} </span>
+                        {{ $journal->name }},
+                        Volume {{ $journal->volume }},
+                        Number {{ $journal->number }},
+                        pp: {{ $journal->page_numbers[0] }}-{{ $journal->page_numbers[1] }}
+                    </p>
+                    <div class="ml-auto p-2 flex">
+                        @can('update', $journal)
+                        <a href="{{ route('publications.journal.edit', $journal) }}"
+                            class="p-1 text-blue-600 hover:bg-gray-200 rounded mr-3" title="Edit">
+                            <feather-icon name="edit-3" stroke-width="2.5" class="h-current">Edit</feather-icon>
+                        </a>
+                        @endcan
+                        @can('delete', $journal)
+                        <form method="POST" action="{{ route('publications.journal.destroy', $journal->id) }}"
+                            onsubmit="return confirm('Do you really want to delete this journal?');">
+                            @csrf_token
+                            @method('DELETE')
+                            <button type="submit" class="p-1 hover:bg-gray-200 text-red-700 rounded">
+                                <feather-icon name="trash-2" stroke-width="2.5" class="h-current">Delete</feather-icon>
+                            </button>
+                        </form>
+                        @endcan
+                    </div>
+                </div>
                 <div class="w-full px-4">
                     <details class="ml-2 mt-4 bg-gray-100 border rounded-t cursor-pointer outline-none">
                         <summary class="underline p-2 bg-gray-200 outline-none">Expand</summary>

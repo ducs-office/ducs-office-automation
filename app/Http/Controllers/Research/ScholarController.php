@@ -39,8 +39,9 @@ class ScholarController extends Controller
 
     public function show(Scholar $scholar)
     {
-        $existingSupervisors = SupervisorProfile::all()->pluck('supervisor.name', 'id')
-                                ->forget($scholar->supervisor_profile_id);
+        $existingSupervisors = SupervisorProfile::all()
+            ->pluck('supervisor.name', 'id')
+            ->forget($scholar->supervisor_profile_id);
 
         return view('research.scholars.show', [
             'scholar' => $scholar->load(['courseworks', 'cosupervisor']),
