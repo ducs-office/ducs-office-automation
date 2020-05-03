@@ -10,19 +10,7 @@ class ScholarEducationSeeder extends Seeder
     public function run()
     {
         factory(ScholarEducationDegree::class)->create([
-            'name' => 'BSc(H)',
-        ]);
-
-        factory(ScholarEducationDegree::class)->create([
-            'name' => 'MSc',
-        ]);
-
-        factory(ScholarEducationDegree::class)->create([
             'name' => 'BSc Programme',
-        ]);
-
-        factory(ScholarEducationSubject::class)->create([
-            'name' => 'Computer Science',
         ]);
 
         factory(ScholarEducationSubject::class)->create([
@@ -31,14 +19,6 @@ class ScholarEducationSeeder extends Seeder
 
         factory(ScholarEducationSubject::class)->create([
             'name' => 'Mathematical Science',
-        ]);
-
-        factory(ScholarEducationInstitute::class)->create([
-            'name' => 'Shyama Prasad Mukherji College, DU',
-        ]);
-
-        factory(ScholarEducationInstitute::class)->create([
-            'name' => 'University of Delhi',
         ]);
 
         factory(ScholarEducationInstitute::class)->create([

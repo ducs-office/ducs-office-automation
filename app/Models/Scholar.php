@@ -61,8 +61,11 @@ class Scholar extends User
         static::creating(static function ($scholar) {
             $scholar->old_cosupervisors = [];
             $scholar->old_supervisors = [];
-            $scholar->education_details = [];
             $scholar->old_advisory_committees = [];
+
+            if ($scholar->education_details === null) {
+                $scholar->education_details = [];
+            }
         });
 
         static::created(static function ($scholar) {

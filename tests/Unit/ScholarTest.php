@@ -226,9 +226,9 @@ class ScholarTest extends TestCase
     }
 
     /** @test */
-    public function scholar_education_is_as_an_empty_array_onscholar_creation()
+    public function scholar_education_is_as_an_empty_array_if_education_details_are_null_on_scholar_creation()
     {
-        $this->signInScholar($scholar = create(Scholar::class));
+        $this->signInScholar($scholar = create(Scholar::class, 1, ['education_details' => null]));
 
         $this->assertEquals([], $scholar->education_details);
     }

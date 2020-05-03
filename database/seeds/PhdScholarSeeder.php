@@ -3,12 +3,15 @@
 use App\Models\Cosupervisor;
 use App\Models\PhdCourse;
 use App\Models\Scholar;
+use App\Models\ScholarEducationDegree;
+use App\Models\ScholarEducationInstitute;
 use App\Models\ScholarEducationSubject;
 use App\Models\Teacher;
 use App\Models\User;
 use App\Types\AdmissionMode;
 use App\Types\AdvisoryCommitteeMember;
 use App\Types\CitationIndex;
+use App\Types\EducationInfo;
 use App\Types\Gender;
 use App\Types\PresentationEventType;
 use App\Types\ReservationCategory;
@@ -58,19 +61,31 @@ class PhdScholarSeeder extends Seeder
                     'email' => 'naveengarg@iitd.ac.in',
                 ]),
             ],
-            'education' => [
-                [
-                    'degree' => 1,
-                    'subject' => 1,
-                    'institute' => 1,
+            'education_details' => [
+                new EducationInfo([
+                    'degree' => factory(ScholarEducationDegree::class)->create([
+                        'name' => 'BSc(H)',
+                    ])->name,
+                    'subject' => factory(ScholarEducationSubject::class)->create([
+                        'name' => 'Computer Science',
+                    ])->name,
+                    'institute' => factory(ScholarEducationInstitute::class)->create([
+                        'name' => 'Shyama Prasad Mukherji College, DU',
+                    ])->name,
                     'year' => '2017',
-                ],
-                [
-                    'degree' => 2,
-                    'subject' => 1,
-                    'institute' => 2,
+                ]),
+                new EducationInfo([
+                    'degree' => factory(ScholarEducationDegree::class)->create([
+                        'name' => 'MSc',
+                    ])->name,
+
+                    'subject' => 'Computer Science',
+
+                    'institute' => factory(ScholarEducationInstitute::class)->create([
+                        'name' => 'University of Delhi',
+                    ])->name,
                     'year' => '2019',
-                ],
+                ]),
             ],
         ]);
 

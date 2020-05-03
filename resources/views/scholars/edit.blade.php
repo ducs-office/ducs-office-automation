@@ -91,14 +91,12 @@
                 </div>
             </div>
 
-
-
-            <add-remove-elements :existing-elements="{{ collect($scholar->education)->map->toArray()->toJson() }}">
+            <add-remove-elements :existing-elements="{{ collect($scholar->education_details)->map->toArray()->toJson() }}">
                 <template v-slot="{ elements, addElement, removeElement}">
                     <div class="flex w-2/6 items-center">
                         <div class="w-64 pr-4 relative z-10 -ml-8 mb-4">
                             <h3 class="relative z-20 pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
-                                Education
+                                Education Details
                             </h3>
                             <svg class="absolute left-0 w-2 text-magenta-900" viewBox="0 0 10 10">
                                 <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
@@ -111,12 +109,12 @@
                         </button>
                     </div>
                     <h6 class="mb-6 text-gray-800 text-sm">You can add a maximum of 4 education records only. Minimum 1 is required. <span class="text-red-600">*</span></h6>
-                    <div class="flex items-baseline mb-4 space-x-2">
-                        <label for="education[][degree]" class="w-full flex-1 form-label">Degree</label>
-                        <label for="education[][subject]" class="w-full flex-1 form-label">Subject</label>
-                        <label for="education[][institute]" class="w-full flex-1 form-label">Institue</label>
-                        <label for="education[][year]" class="w-full flex-1 form-label">Year</label>
-                        <label for="" class="inlone-block w-10"></label>
+                    <div class="flex items-baseline mb-2 space-x-2">
+                        <label for="education_details[][degree]" class="w-full flex-1 form-label">Degree</label>
+                        <label for="education_details[][subject]" class="w-full flex-1 form-label">Subject</label>
+                        <label for="education_details[][institute]" class="w-full flex-1 form-label">Institue</label>
+                        <label for="education_details[][year]" class="w-24 form-label">Year</label>
+                        <label for="" class="inline-block w-8"></label>
                     </div>
                     <div class="space-y-2">
                         <div v-for="(element, index) in elements" :key="index" class="flex items-start space-x-2">
@@ -124,14 +122,14 @@
                                 class="w-full flex-1"
                                 select-class="w-full form-select"
                                 input-class="w-full form-input"
-                                :name="`education[${index}][degree]`"
-                                :other-name="`typedDegrees[${index}]`"
-                                :other-value="-1"
+                                :name="`education_details[${index}][degree]`"
+                                :other-name="`education_details[${index}][degree]`"
+                                other-value=""
                                 placeholder="Plase Specify...">
 
                                 <option value="">---- Choose option ----- </option>
                                 @foreach($degrees as $degree)
-                                <option value="{{ $degree->id }}" :selected="element.degree === '{{ $degree->name }}'">{{ $degree->name }}</option>
+                                <option value="{{ $degree }}" :selected="element.degree === '{{ $degree }}'">{{ $degree }}</option>
                                 @endforeach
 
                             </select-with-other>
@@ -139,14 +137,14 @@
                                 class="w-full flex-1"
                                 select-class="w-full form-select"
                                 input-class="w-full form-input"
-                                :name="`education[${index}][subject]`"
-                                :other-name="`typedSubjects[${index}]`"
+                                :name="`education_details[${index}][subject]`"
+                                :other-name="`education_details[${index}][subject]`"
                                 other-value="-1"
                                 placeholder="Plase Specify...">
 
                                 <option value="">---- Choose option ----- </option>
                                 @foreach($subjects as $subject)
-                                <option value="{{ $subject->id }}" :selected="element.subject === '{{ $subject->name }}' "> {{ $subject->name }} </option>
+                                <option value="{{ $subject }}" :selected="element.subject === '{{ $subject }}' "> {{ $subject }} </option>
                                 @endforeach
 
                             </select-with-other>
@@ -154,18 +152,18 @@
                                 class="w-full flex-1"
                                 select-class="w-full form-select"
                                 input-class="w-full form-input"
-                                :name="`education[${index}][institute]`"
-                                :other-name="`typedInstitutes[${index}]`"
-                                :other-value="-1"
+                                :name="`education_details[${index}][institute]`"
+                                :other-name="`education_details[${index}][institute]`"
+                                other-value=""
                                 placeholder="Plase Specify...">
 
                                 <option value="">---- Choose option ----- </option>
                                 @foreach($institutes as $institute)
-                                <option value="{{ $institute->id }}" :selected="element.institute === '{{ $institute->name }}' "> {{ $institute->name }} </option>
+                                <option value="{{ $institute }}" :selected="element.institute === '{{ $institute }}' "> {{ $institute }} </option>
                                 @endforeach
 
                             </select-with-other>
-                            <input type="text" :name="`education[${index}][year]`" v-model="element.year" class="w-full flex-1 form-input">
+                            <input type="text" :name="`education_details[${index}][year]`" v-model="element.year" class="w-24 form-input">
                             <button v-on:click.prevent="removeElement(index)" class="self-center btn is-sm text-red-600">x</button>
                         </div>
                     </div>

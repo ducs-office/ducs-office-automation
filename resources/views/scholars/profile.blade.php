@@ -71,7 +71,6 @@
                     </ul>
                 </div>
             </div>
-
             <div class="flex">
                 <div class="w-64 pr-4 relative z-10 -ml-8 my-6">
                     <h3 class="relative z-20 pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
@@ -88,12 +87,12 @@
                                 <div class="flex mb-1">
                                     <feather-icon name="book" class="h-current"></feather-icon>
                                     <div class="flex items-baseline">
-                                        <p class="ml-2 font-bold"> {{ $education['degree'] }} </p>
-                                        <p class="ml-1 font-normal"> ( {{ $education['subject'] }} ) </p>
+                                        <p class="ml-2 font-bold"> {{ $education->degree }} </p>
+                                        <p class="ml-1 font-normal"> ( {{ $education->subject }} ) </p>
                                     </div>
                                 </div>
-                                <p class="ml-6 text-gray-700 mb-1"> {{ $education['institute'] }} </p>
-                                <p class="ml-6 text-gray-700"> {{ $education['year'] }} </p>
+                                <p class="ml-6 text-gray-700 mb-1"> {{ $education->institute }} </p>
+                                <p class="ml-6 text-gray-700"> {{ $education->year }} </p>
                             </li>
                         @empty
                             <li class="px-4 py-2">
