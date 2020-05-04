@@ -84,7 +84,7 @@
                                     <p class="ml-2"> {{ $conference->date->format('F Y') }} </p>
                                 </div>
                                 <div class="flex m-2">
-                                    <h4 class="font-semibold"> Volume: </h4>
+                                    <h4 class="font-semibold">Edition: </h4>
                                     <p class="ml-2"> {{ $conference->volume }} </p>
                                 </div>
                                 <div class="flex m-2">

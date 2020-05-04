@@ -1,11 +1,11 @@
 @extends('layouts.research')
 @section('body')
     <div class="page-card p-6 overflow-visible space-y-6 m-4">
-        @include('research.scholars.publications.journals.index', [
+        @include('_partials.research.journal-publications', [
             'journals' => $supervisor->supervisorProfile->journals
         ])
 
-        @include('research.scholars.publications.conferences.index', [
+        @include('_partials.research.conference-publications', [
             'conferences' => $supervisor->supervisorProfile->conferences
         ])
     </div>

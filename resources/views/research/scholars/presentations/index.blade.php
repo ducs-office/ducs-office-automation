@@ -20,7 +20,7 @@
                     <div class="w-3/5">
                         <div class="flex m-2">
                             <h4 class="font-semibold"> Event Type: </h4>
-                            <p class="ml-2"> {{ $eventTypes[$presentation->event_type] }} </p>
+                            <p class="ml-2"> {{ $presentation->event_type }} </p>
                         </div>
                         <div class="flex m-2">
                             <h4 class="font-semibold"> Event Name: </h4>
