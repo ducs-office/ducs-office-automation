@@ -8,6 +8,7 @@ use App\Models\Publication;
 use App\Models\Scholar;
 use App\Models\SupervisorProfile;
 use App\Types\CitationIndex;
+use App\Types\PublicationType;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -85,5 +86,25 @@ class PublicationTest extends TestCase
 
         $this->assertInstanceOf(MorphTo::class, $publication->mainAuthor());
         $this->assertTrue($publication->mainAuthor->is($supervisorProfile));
+    }
+
+    /** @test */
+    public function publications_has_journal_scope_ordered_by_descending_date()
+    {
+        $journals = create(Publication::class, 3, ['type' => PublicationType::JOURNAL])
+                        ->sortByDesc('date');
+
+        $this->assertCount(3, Publication::journal()->get());
+        $this->assertEquals($journals->pluck('id'), Publication::journal()->get()->pluck('id'));
+    }
+
+    /** @test */
+    public function publications_has_conference_scope_ordered_by_descending_date()
+    {
+        $conferences = create(Publication::class, 3, ['type' => PublicationType::CONFERENCE])
+                        ->sortByDesc('date');
+
+        $this->assertCount(3, Publication::conference()->get());
+        $this->assertEquals($conferences->pluck('id'), Publication::conference()->get()->pluck('id'));
     }
 }

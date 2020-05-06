@@ -7,6 +7,7 @@ use App\Models\Scholar;
 use App\Models\SupervisorProfile;
 use App\Models\Teacher;
 use App\Types\CitationIndex;
+use App\Types\PublicationType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -41,7 +42,7 @@ class StorePublicationTest extends TestCase
         $this->signInScholar($scholar = create(Scholar::class));
 
         $journal = $this->fillPublication([
-            'type' => 'journal',
+            'type' => PublicationType::JOURNAL,
             'number' => 123,
             'publisher' => 'O Reilly',
         ]);
@@ -69,7 +70,7 @@ class StorePublicationTest extends TestCase
         $this->signInTeacher($supervisor);
 
         $journal = $this->fillPublication([
-            'type' => 'journal',
+            'type' => PublicationType::JOURNAL,
             'number' => 123,
             'publisher' => 'O Reilly',
         ]);
@@ -90,7 +91,7 @@ class StorePublicationTest extends TestCase
         $this->signInScholar($scholar = create(Scholar::class));
 
         $conference = $this->fillPublication([
-            'type' => 'conference',
+            'type' => PublicationType::CONFERENCE,
             'city' => 'Delhi',
             'country' => 'India',
         ]);
@@ -117,7 +118,7 @@ class StorePublicationTest extends TestCase
 
         $this->signInTeacher($supervisor);
         $conference = $this->fillPublication([
-            'type' => 'conference',
+            'type' => PublicationType::CONFERENCE,
             'city' => 'Delhi',
             'country' => 'India',
         ]);

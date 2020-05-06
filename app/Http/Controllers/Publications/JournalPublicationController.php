@@ -7,6 +7,7 @@ use App\Http\Requests\Publication\StoreJournalPublication;
 use App\Http\Requests\Publication\UpdateJournalPublication;
 use App\Models\Publication;
 use App\Types\CitationIndex;
+use App\Types\PublicationType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -36,7 +37,7 @@ class JournalPublicationController extends Controller
         $validData = $request->validated();
         $date = $validData['date']['month'] . ' ' . $validData['date']['year'];
 
-        $validData['type'] = 'journal';
+        $validData['type'] = PublicationType::JOURNAL;
         $validData['date'] = new Carbon($date);
 
         if (Auth::guard('scholars')->check()) {
@@ -47,7 +48,11 @@ class JournalPublicationController extends Controller
 
         flash('Journal Publication added successfully')->success();
 
-        return redirect(route('scholars.profile'));
+        if (Auth::guard('scholars')->check()) {
+            return redirect(route('scholars.profile'));
+        } else {
+            return redirect(route('research.publications.index'));
+        }
     }
 
     public function edit(Publication $journal)

@@ -7,6 +7,7 @@ use App\Models\Scholar;
 use App\Models\SupervisorProfile;
 use App\Models\Teacher;
 use App\Models\User;
+use App\Types\PublicationType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -21,7 +22,7 @@ class EditlPublicationTest extends TestCase
         $this->signInScholar($scholar = create(Scholar::class));
 
         $journal = create(Publication::class, 1, [
-            'type' => 'journal',
+            'type' => PublicationType::JOURNAL,
             'number' => 1234,
             'publisher' => 'O Rielly',
             'main_author_type' => Scholar::class,
@@ -48,7 +49,7 @@ class EditlPublicationTest extends TestCase
         $this->signIn($supervisor);
 
         $journal = create(Publication::class, 1, [
-            'type' => 'journal',
+            'type' => PublicationType::JOURNAL,
             'number' => 1234,
             'publisher' => 'O Rielly',
             'main_author_type' => SupervisorProfile::class,
@@ -68,7 +69,7 @@ class EditlPublicationTest extends TestCase
         $this->signInScholar($scholar = create(Scholar::class));
 
         $conference = create(Publication::class, 1, [
-            'type' => 'conference',
+            'type' => PublicationType::CONFERENCE,
             'city' => 'Delhi',
             'country' => 'India',
             'main_author_type' => Scholar::class,
@@ -95,7 +96,7 @@ class EditlPublicationTest extends TestCase
         $this->signInTeacher($supervisor);
 
         $conference = create(Publication::class, 1, [
-            'type' => 'conference',
+            'type' => PublicationType::CONFERENCE,
             'city' => 'Delhi',
             'country' => 'India',
             'main_author_type' => SupervisorProfile::class,

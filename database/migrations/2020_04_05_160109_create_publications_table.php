@@ -1,5 +1,6 @@
 <?php
 
+use App\Types\PublicationType;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,7 +16,7 @@ class CreatePublicationsTable extends Migration
     {
         Schema::create('publications', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->enum('type', ['journal', 'conference']);
+            $table->enum('type', PublicationType::values());
             $table->text('name');
             $table->text('paper_title');
             $table->string('authors');

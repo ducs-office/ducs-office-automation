@@ -5,6 +5,8 @@ namespace App\Models;
 use App\Casts\CustomTypeArray;
 use App\Models\Presentation;
 use App\Types\CitationIndex;
+use App\Types\PublicationType;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class Publication extends Model
@@ -18,6 +20,16 @@ class Publication extends Model
         'indexed_in' => CustomTypeArray::class . ':' . CitationIndex::class,
         'page_numbers' => 'array',
     ];
+
+    public function scopeJournal(Builder $builder)
+    {
+        return $builder->whereType(PublicationType::JOURNAL)->orderBy('date', 'DESC');
+    }
+
+    public function scopeConference(Builder $builder)
+    {
+        return $builder->whereType(PublicationType::CONFERENCE)->orderBy('date', 'DESC');
+    }
 
     public function setIndexedInAttribute($value)
     {

@@ -5,11 +5,12 @@ use App\Models\Publication;
 use App\Models\Scholar;
 use App\Models\SupervisorProfile;
 use App\Types\CitationIndex;
+use App\Types\PublicationType;
 use Faker\Generator as Faker;
 
 $factory->define(Publication::class, function (Faker $faker) {
     return [
-        'type' => $type = $faker->randomElement(['journal', 'conference']),
+        'type' => $type = $faker->randomElement([PublicationType::JOURNAL, PublicationType::CONFERENCE]),
         'authors' => static function () use ($faker) {
             $authors = array_fill(0, random_int(1, 10), 'NULL');
             return array_map(function () use ($faker) {

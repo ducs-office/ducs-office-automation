@@ -7,6 +7,7 @@ use App\Http\Requests\Publication\StoreConferencePublication;
 use App\Http\Requests\Publication\UpdateConferencePublication;
 use App\Models\Publication;
 use App\Types\CitationIndex;
+use App\Types\PublicationType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -36,7 +37,7 @@ class ConferencePublicationController extends Controller
         $validData = $request->validated();
         $date = $validData['date']['month'] . ' ' . $validData['date']['year'];
 
-        $validData['type'] = 'conference';
+        $validData['type'] = PublicationType::CONFERENCE;
         $validData['date'] = new Carbon($date);
 
         if (Auth::guard('scholars')->check()) {
