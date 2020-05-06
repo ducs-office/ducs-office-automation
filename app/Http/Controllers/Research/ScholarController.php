@@ -51,7 +51,7 @@ class ScholarController extends Controller
             'admissionModes' => AdmissionMode::values(),
             'genders' => Gender::values(),
             'eventTypes' => PresentationEventType::values(),
-            'existingCosupervisors' => Cosupervisor::select('name', 'id')->get(),
+            'existingCosupervisors' => Cosupervisor::all(),
             'existingSupervisors' => $existingSupervisors,
         ]);
     }

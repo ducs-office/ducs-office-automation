@@ -90,18 +90,23 @@ class EditScholarTest extends TestCase
     }
 
     /** @test */
-    public function cosupervisor_id_of_scholar_can_be_edited()
+    public function cosupervisor_of_scholar_can_be_edited()
     {
         $this->signIn();
 
         $cosupervisor = create(Cosupervisor::class);
-        $scholar = create(Scholar::class, 1, ['cosupervisor_id' => $cosupervisor->id]);
 
-        $this->assertEquals($scholar->cosupervisor_id, $cosupervisor->id);
+        $scholar = create(Scholar::class, 1, [
+            'cosupervisor_profile_type' => Cosupervisor::class,
+            'cosupervisor_profile_id' => $cosupervisor->id,
+        ]);
+
+        $this->assertEquals($scholar->cosupervisor_profile_id, $cosupervisor->id);
 
         $this->withoutExceptionHandling()
             ->patch(route('staff.scholars.update', $scholar), [
-                'cosupervisor_id' => $newCosupervisorId = create(Cosupervisor::class)->id,
+                'cosupervisor_profile_type' => Cosupervisor::class,
+                'cosupervisor_profile_id' => $newCosupervisorId = create(Cosupervisor::class)->id,
             ])
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'Scholar updated successfully');

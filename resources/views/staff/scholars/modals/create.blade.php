@@ -37,10 +37,20 @@
                     <label for="cosupervisor" class="w-full form-label">Co-Supervisor
                         <span class="h-current text-red-500 text-lg">*</span>
                     </label>
-                    <select class="form-input w-full block" name="cosupervisor_id" id="cosupervisor" required>
+                    <input type="hidden" name="cosupervisor_profile_type">
+                    <select class="form-input w-full block" name="cosupervisor_profile_id" id="cosupervisor" required
+                        onchange="cosupervisor_profile_type.value = this.options[this.selectedIndex].getAttribute('cosupervisor_profile_type')">
+
                         <option class="text-gray-600 selected" selected disabled value="">Select Co-Supervisor</option>
+                        @foreach ($supervisors as $name => $id)
+                            <option class="text-gray-600" value="{{ $id }}" cosupervisor_profile_type="App\Models\SupervisorProfile"> 
+                                {{ $name }} 
+                            </option>
+                        @endforeach
                         @foreach ($cosupervisors as $name => $id)
-                            <option class="text-gray-600" value="{{ $id }}"> {{ $name }} </option>
+                            <option class="text-gray-600" value="{{ $id }}" cosupervisor_profile_type="App\Models\Cosupervisor"> 
+                                {{ $name }} 
+                            </option>
                         @endforeach
                         <option class="text-gray-600" value=""> No cosupervisor assigned </option>
                     </select>

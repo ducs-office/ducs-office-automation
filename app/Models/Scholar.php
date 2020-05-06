@@ -6,6 +6,7 @@ use App\Casts\AdvisoryCommittee;
 use App\Casts\CustomType;
 use App\Casts\EducationDetails;
 use App\Casts\OldAdvisoryCommittee;
+use App\Concerns\HasPublications;
 use App\Models\AcademicDetail;
 use App\Models\Cosupervisor;
 use App\Models\Publication;
@@ -20,6 +21,8 @@ use Illuminate\Foundation\Auth\User;
 
 class Scholar extends User
 {
+    use HasPublications;
+
     protected $hidden = ['password'];
 
     protected $fillable = [
@@ -37,7 +40,8 @@ class Scholar extends User
         'enrollment_date',
         'advisory_committee',
         'education_details',
-        'cosupervisor_id',
+        'cosupervisor_profile_id',
+        'cosupervisor_profile_type',
         'old_cosupervisors',
         'old_supervisors',
         'old_advisory_committees',
@@ -99,24 +103,25 @@ class Scholar extends User
         return $this->belongsTo(SupervisorProfile::class);
     }
 
-    public function cosupervisor()
+    public function cosupervisorProfile()
     {
-        return $this->belongsTo(Cosupervisor::class);
+        return $this->morphTo('cosupervisor_profile');
     }
 
-    public function publications()
+    public function getCosupervisorAttribute()
     {
-        return $this->morphMany(Publication::class, 'main_author');
-    }
+        if ($this->cosupervisor_profile_type === SupervisorProfile::class) {
+            $cosupervisor = $this->cosupervisorProfile->supervisor;
 
-    public function journals()
-    {
-        return $this->publications()->where('type', 'journal')->orderBy('date', 'DESC');
-    }
+            return (object) [
+                'name' => $cosupervisor->name,
+                'email' => $cosupervisor->email,
+                'designation' => $cosupervisor->profile->designation ?? 'Professor',
+                'affiliation' => $cosupervisor->profile->college->name ?? 'Affiliation Not Set',
+            ];
+        }
 
-    public function conferences()
-    {
-        return $this->publications()->where('type', 'conference')->orderBy('date', 'DESC');
+        return $this->cosupervisorProfile;
     }
 
     public function presentations()

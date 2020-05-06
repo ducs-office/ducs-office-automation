@@ -17,7 +17,7 @@ class AddColumnsToScholarTable extends Migration
     public function up()
     {
         Schema::table('scholars', function (Blueprint $table) {
-            $table->unsignedBigInteger('cosupervisor_id')->nullable();
+            $table->nullableMorphs('cosupervisor_profile');
             $table->string('phone_no')->nullable();
             $table->text('address', 251)->nullable();
             $table->enum('gender', Gender::values())->nullable();
@@ -30,8 +30,6 @@ class AddColumnsToScholarTable extends Migration
             $table->json('old_cosupervisors')->nullable();
             $table->json('old_supervisors')->nullable();
             $table->json('old_advisory_committees')->nullable();
-
-            $table->foreign('cosupervisor_id')->references('id')->on('cosupervisors')->onDelete('set null');
         });
     }
 

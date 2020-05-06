@@ -44,21 +44,26 @@ class CreateNewScholarTest extends TestCase
             'first_name' => 'Pushkar',
             'last_name' => 'Sonkar',
             'email' => 'pushkar@cs.du.ac.in',
-            'cosupervisor_id' => $cosupervisor->id,
             'supervisor_profile_id' => $supervisorProfile->id,
+            'cosupervisor_profile_id' => $cosupervisor->id,
+            'cosupervisor_profile_type' => Cosupervisor::class,
         ];
 
-        $this->withoutExceptionHandling()
-            ->post(route('staff.scholars.store'), $scholar)
-            ->assertRedirect()
-            ->assertSessionHasFlash('success', 'New scholar added succesfully!');
+        try {
+            $this->withoutExceptionHandling()
+                ->post(route('staff.scholars.store'), $scholar)
+                ->assertRedirect()
+                ->assertSessionHasFlash('success', 'New scholar added succesfully!');
+        } catch (ValidationException $e) {
+            dd($e->errors());
+        }
 
         $this->assertEquals(1, Scholar::count());
 
         $this->assertEquals($scholar['first_name'], Scholar::first()->first_name);
         $this->assertEquals($scholar['last_name'], Scholar::first()->last_name);
         $this->assertEquals($scholar['email'], Scholar::first()->email);
-        $this->assertEquals($scholar['cosupervisor_id'], Scholar::first()->cosupervisor->id);
+        $this->assertEquals($cosupervisor->id, Scholar::first()->cosupervisor->id);
         $this->assertEquals($scholar['supervisor_profile_id'], Scholar::first()->supervisorProfile->id);
     }
 
@@ -201,6 +206,8 @@ class CreateNewScholarTest extends TestCase
                 'last_name' => 'Sonkar',
                 'email' => 'pushkar@cs.du.ac.in',
                 'supervisor_profile_id' => $supervisorProfile->id,
+                'cosupervisor_profile_id' => null,
+                'cosupervisor_profile_type' => null,
             ]);
 
         $this->assertNull(Scholar::first()->cosupervisor);

@@ -155,12 +155,56 @@ class ScholarTest extends TestCase
     }
 
     /** @test */
-    public function scholar_belongs_to_a_cosupervisor()
+    public function scholar_cosupervisor_profile_is_either_supervisor__profile_or_cosupervisor_via_morphs_to()
+    {
+        $scholar = create(Scholar::class);
+
+        $this->assertInstanceOf(MorphTo::class, $scholar->cosupervisorProfile());
+
+        $cosupervisor = create(Cosupervisor::class);
+        $scholar = create(Scholar::class, 1, [
+            'cosupervisor_profile_type' => Cosupervisor::class,
+            'cosupervisor_profile_id' => $cosupervisor->id,
+        ]);
+
+        $this->assertTrue($cosupervisor->is($scholar->cosupervisorProfile));
+
+        $supervisorProfile = create(SupervisorProfile::class);
+        $scholar = create(Scholar::class, 1, [
+            'cosupervisor_profile_type' => SupervisorProfile::class,
+            'cosupervisor_profile_id' => $supervisorProfile->id,
+        ]);
+
+        $this->assertTrue($supervisorProfile->is($scholar->cosupervisorProfile));
+    }
+
+    /** @test */
+    public function cosupervisor_return_supervisor_if_scholar_cosupervisor_profile_type_is_supervisor_profile()
+    {
+        $supervisorProfile = create(SupervisorProfile::class);
+
+        $scholar = create(Scholar::class, 1, [
+            'cosupervisor_profile_type' => SupervisorProfile::class,
+            'cosupervisor_profile_id' => $supervisorProfile->id,
+        ]);
+
+        $supervisor = $supervisorProfile->supervisor;
+
+        $this->assertEquals($supervisor->name, $scholar->cosupervisor->name);
+        $this->assertEquals($supervisor->email, $scholar->cosupervisor->email) ;
+        $this->assertEquals($supervisor->profile->designation ?? 'Professor', $scholar->cosupervisor->designation);
+        $this->assertEquals($supervisor->profile->college->name ?? 'Affiliation Not Set', $scholar->cosupervisor->affiliation);
+    }
+
+    /** @test */
+    public function cosupervisor_return_cosupervisor_if_scholar_cosupervisor_profile_type_is_cosupervisor_profile()
     {
         $cosupervisor = create(Cosupervisor::class);
-        $scholar = create(Scholar::class, 1, ['cosupervisor_id' => $cosupervisor->id]);
+        $scholar = create(Scholar::class, 1, [
+            'cosupervisor_profile_type' => Cosupervisor::class,
+            'cosupervisor_profile_id' => $cosupervisor->id,
+        ]);
 
-        $this->assertInstanceOf(BelongsTo::class, $scholar->cosupervisor());
         $this->assertTrue($cosupervisor->is($scholar->cosupervisor));
     }
 
@@ -218,7 +262,10 @@ class ScholarTest extends TestCase
     /** @test */
     public function scholar_advisory_committee_does_not_have_a_cosupervisor_field_if_the_scholar_does_mot_have_a_cosupervisor()
     {
-        $scholar = create(Scholar::class, 1, ['cosupervisor_id' => null]);
+        $scholar = create(Scholar::class, 1, [
+            'cosupervisor_profile_id' => null,
+            'cosupervisor_profile_type' => null,
+        ]);
 
         $advisoryCommittee = $scholar->advisory_committee;
 

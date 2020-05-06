@@ -49,12 +49,16 @@ class ScholarController extends Controller
 
     public function store(Request $request)
     {
+        // dd($request->all());
+        $validCosupervisorTypes = 'App\Models\Cosupervisor, App\Models\SupervisorProfile';
+
         $validData = $request->validate([
             'first_name' => 'required|string',
             'last_name' => 'required|string',
             'email' => 'required|unique:scholars',
-            'supervisor_profile_id' => 'required|exists:supervisor_profiles,id',
-            'cosupervisor_id' => 'nullable|exists:cosupervisors,id',
+            'supervisor_profile_id' => 'required| exists:supervisor_profiles,id',
+            'cosupervisor_profile_id' => 'nullable| integer',
+            'cosupervisor_profile_type' => 'nullable| in:' . $validCosupervisorTypes,
         ]);
 
         $plainPassword = Str::random(8);
@@ -70,12 +74,15 @@ class ScholarController extends Controller
 
     public function update(Request $request, Scholar $scholar)
     {
+        $validCosupervisorTypes = 'App\Models\Cosupervisor, App\Models\SupervisorProfile';
+
         $validData = $request->validate([
             'first_name' => 'sometimes|required|string',
             'last_name' => 'sometimes|required|string',
             'email' => 'sometimes|required|' . Rule::unique('scholars')->ignore($scholar),
             'supervisor_profile_id' => 'sometimes|required|exists:supervisor_profiles,id',
-            'cosupervisor_id' => 'nullable|exists:cosupervisors,id',
+            'cosupervisor_profile_id' => 'nullable| integer',
+            'cosupervisor_profile_type' => 'nullable| in:' . $validCosupervisorTypes,
         ]);
 
         $scholar->update($validData);
@@ -96,14 +103,23 @@ class ScholarController extends Controller
 
     public function replaceCosupervisor(Scholar $scholar, Request $request)
     {
-        $value = ($scholar->cosupervisor) ? $scholar->cosupervisor_id : null;
+        // dd($request->input('cosupervisor_profile_type'));
+        $cosupervisorProfileTypes = [
+            'App\Models\Cosupervisor' => 'cosupervisors',
+            'App\Models\SupervisorProfile' => 'supervisor_profiles',
+        ];
 
-        $validCosupervisorId = $request->validate([
-            'cosupervisor_id' => 'nullable|exists:cosupervisors,id|not In:' . $value . '|' .
-                                Rule::requiredIf(function () use ($scholar) {
-                                    return ! $scholar->cosupervisor;
-                                }),
+        // $value = ($scholar->cosupervisor) ? $scholar->cosupervisor_profile_id : null;
+
+        $validCosupervisor = $request->validate([
+            'cosupervisor_profile_type' => 'nullable|in:' . implode(',', array_keys($cosupervisorProfileTypes)),
+            'cosupervisor_profile_id' => 'nullable| integer',
+            //  |exists:'.$cosupervisorProfileTypes[$request->input('cosupervisor_profile_type')].',id'
         ]);
+        // not In:' . $value . '|' .
+        // Rule::requiredIf(function () use ($scholar) {
+        //     return ! $scholar->cosupervisor;
+        // })
 
         $oldCosupervisor = $scholar->cosupervisor;
 
@@ -119,7 +135,7 @@ class ScholarController extends Controller
 
         $this->rememberOldAdvisoryCommittee($scholar);
 
-        $scholar->update($validCosupervisorId + ['old_cosupervisors' => $oldCosupervisors]);
+        $scholar->update($validCosupervisor + ['old_cosupervisors' => $oldCosupervisors]);
 
         flash('Co-Supervisor replaced successfully!')->success();
 

@@ -34,8 +34,12 @@ class PhdScholarSeeder extends Seeder
         ])->supervisorProfile()->create();
 
         $cosupervisorNaveen = factory(Cosupervisor::class)->create([
-            'name' => 'Naveen Kumar',
-            'email' => 'naveen@cs.du.ac.in',
+            'professor_type' => User::class,
+            'professor_id' => factory(User::class)->create([
+                'name' => 'Naveen Kumar',
+                'email' => 'naveen@cs.du.ac.in',
+                'type' => UserType::FACULTY_TEACHER,
+            ])->id,
         ]);
 
         $scholarRajni = factory(Scholar::class)->create([
@@ -50,7 +54,8 @@ class PhdScholarSeeder extends Seeder
             'research_area' => 'Theoretical Computer Science',
             'enrollment_date' => '2019-11-11',
             'supervisor_profile_id' => $supervisorNeelima->id,
-            'cosupervisor_id' => null,
+            'cosupervisor_profile_type' => null,
+            'cosupervisor_profile_id' => null,
             'advisory_committee' => [
                 AdvisoryCommitteeMember::fromExistingCosupervisors($cosupervisorNaveen),
                 new AdvisoryCommitteeMember('external', [
@@ -101,8 +106,12 @@ class PhdScholarSeeder extends Seeder
         ])->supervisorProfile()->create();
 
         $cosupervisorPoonam = factory(Cosupervisor::class)->create([
-            'name' => 'Poonam Bedi',
-            'email' => 'pbedi@cs.du.ac.in',
+            'professor_type' => User::class,
+            'professor_id' => factory(User::class)->create([
+                'name' => 'Poonam Bedi',
+                'email' => 'pbedi@cs.du.ac.in',
+                'type' => UserType::FACULTY_TEACHER,
+            ])->id,
         ]);
 
         $scholarSudhir = factory(Scholar::class)->create([
@@ -117,7 +126,8 @@ class PhdScholarSeeder extends Seeder
             'research_area' => 'Mobile Specific Testing Strategies',
             'enrollment_date' => '2019-12-10',
             'supervisor_profile_id' => $supervisorSangeeta->id,
-            'cosupervisor_id' => null,
+            'cosupervisor_profile_type' => null,
+            'cosupervisor_profile_id' => null,
             'advisory_committee' => [
                 AdvisoryCommitteeMember::fromExistingCosupervisors($cosupervisorPoonam),
                 new AdvisoryCommitteeMember('external', [
@@ -171,7 +181,8 @@ class PhdScholarSeeder extends Seeder
             'research_area' => 'Approximation Algoriithms and their Analysis',
             'enrollment_date' => '2017-04-05',
             'supervisor_profile_id' => $supervisorNeelima->id,
-            'cosupervisor_id' => null,
+            'cosupervisor_profile_type' => null,
+            'cosupervisor_profile_id' => null,
             'advisory_committee' => [
                 AdvisoryCommitteeMember::fromExistingCosupervisors($cosupervisorNaveen),
                 new AdvisoryCommitteeMember('external', [
@@ -219,10 +230,11 @@ class PhdScholarSeeder extends Seeder
         ])->supervisorProfile()->create();
 
         $cosupervisorMuttoo = factory(Cosupervisor::class)->create([
-            'name' => 'S.K Muttoo',
-            'email' => 'drskmuttoo@gmail.com',
-            'affiliation' => 'Department of Computer Science, University of Delhi',
-            'designation' => 'Permanent',
+            'professor_type' => User::class,
+            'professor_id' => factory(User::class)->create([
+                'name' => 'S.K Muttoo',
+                'email' => 'drskmuttoo@gmail.com',
+            ])->id,
         ]);
 
         $scholarNisha = factory(Scholar::class)->create([
@@ -237,7 +249,8 @@ class PhdScholarSeeder extends Seeder
             'research_area' => 'Information Security',
             'enrollment_date' => '2018-11-26',
             'supervisor_profile_id' => $supervisorArchana->id,
-            'cosupervisor_id' => $cosupervisorMuttoo->id,
+            'cosupervisor_profile_id' => $cosupervisorMuttoo->id,
+            'cosupervisor_profile_type' => Cosupervisor::class,
             'advisory_committee' => [
                 AdvisoryCommitteeMember::fromExistingCosupervisors($cosupervisorPoonam),
                 new AdvisoryCommitteeMember('external', [
@@ -268,10 +281,12 @@ class PhdScholarSeeder extends Seeder
         ])->supervisorProfile()->create();
 
         $cosupervisorAnurag = factory(Cosupervisor::class)->create([
-            'name' => 'Anurag Mishra',
-            'email' => 'anurag_cse2003@yahoo.com',
-            'affiliation' => 'Deen Dayal Upadhyaya College, Delhi University',
-            'designation' => 'Permanent',
+            'professor_type' => Teacher::class,
+            'professor_id' => factory(Teacher::class)->create([
+                'first_name' => 'Anurag',
+                'last_name' => 'Mishra',
+                'email' => 'anurag_cse2003@yahoo.com',
+            ])->id,
         ]);
 
         $scholarMegha = factory(Scholar::class)->create([
@@ -286,7 +301,8 @@ class PhdScholarSeeder extends Seeder
             'research_area' => 'Information Security',
             'enrollment_date' => '2018-05-12',
             'supervisor_profile_id' => $supervisorArpita->id,
-            'cosupervisor_id' => $cosupervisorAnurag->id,
+            'cosupervisor_profile_id' => $cosupervisorAnurag->id,
+            'cosupervisor_profile_type' => Cosupervisor::class,
             'advisory_committee' => [
                 AdvisoryCommitteeMember::fromExistingCosupervisors($cosupervisorPoonam),
             ],

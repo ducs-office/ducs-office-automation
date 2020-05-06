@@ -34,11 +34,9 @@ $factory->define(Scholar::class, function (Faker $faker) {
         },
         'enrollment_date' => $faker->date($format = 'Y-m-d', $max = now()),
         'advisory_committee' => function () use ($faker) {
-            $faculty_teacher = factory(User::class)->create([
-                'type' => UserType::FACULTY_TEACHER,
-            ]);
+            $cosupervisor = factory(Cosupervisor::class)->create();
             return [
-                AdvisoryCommitteeMember::fromFacultyTeacher($faculty_teacher),
+                AdvisoryCommitteeMember::fromExistingCosupervisors($cosupervisor),
                 new AdvisoryCommitteeMember('external', [
                     'name' => $faker->name,
                     'designation' => $faker->jobTitle,
@@ -58,8 +56,9 @@ $factory->define(Scholar::class, function (Faker $faker) {
                 ]);
             }, range(1, (random_int(1, 4))));
         },
-        'cosupervisor_id' => function () {
-            return factory(Cosupervisor::class)->create()->id;
+        'cosupervisor_profile_type' => $cosupervisorProfileType = $faker->randomElement([SupervisorProfile::class, Cosupervisor::class]),
+        'cosupervisor_profile_id' => function () use ($cosupervisorProfileType) {
+            return factory($cosupervisorProfileType)->create()->id;
         },
     ];
 });
