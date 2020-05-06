@@ -34,12 +34,12 @@ list($permanentMembers, $addedMembers) = collect($scholar->advisory_committee)
                                 @endforeach
                             </select>
                         </template>
-                        <template v-slot:faculty="{ member }">
-                            <label :for="`faculty.${index}`" class="w-full form-label">Faculty</label>
-                            <select :id="`faculty.${index}`" :name="`committee[${index}][id]`" class="w-full form-select" v-model="member.id">
-                                <option :value="null" disabled>-- Select a Faculty Teacher --</option>
-                                @foreach($faculty as $teacher)
-                                    <option value="{{ $teacher->id }}">{{ $teacher->name }}</option>
+                        <template v-slot:existing_cosupervisor="{ member }">
+                            <label :for="`existing_cosupervisor.${index}`" class="w-full form-label">Co-Supervisor</label>
+                            <select :id="`existing_cosupervisor.${index}`" :name="`committee[${index}][id]`" class="w-full form-select" v-model="member.id">
+                                <option :value="null" disabled>-- Select an Existing Co-Supervisor --</option>
+                                @foreach($existingCosupervisors as $coSupervisor)
+                                    <option value="{{ $coSupervisor->id }}">{{ $coSupervisor->name }}</option>
                                 @endforeach
                             </select>
                         </template>

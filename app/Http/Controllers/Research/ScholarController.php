@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Research;
 
 use App\Http\Controllers\Controller;
+use App\Models\Cosupervisor;
 use App\Models\PhdCourse;
 use App\Models\Scholar;
 use App\Models\SupervisorProfile;
@@ -44,13 +45,13 @@ class ScholarController extends Controller
             ->forget($scholar->supervisor_profile_id);
 
         return view('research.scholars.show', [
-            'scholar' => $scholar->load(['courseworks', 'cosupervisor']),
+            'scholar' => $scholar->load(['courseworks']),
             'courses' => PhdCourse::whereNotIn('id', $scholar->courseworks()->allRelatedIds())->get(),
             'categories' => ReservationCategory::values(),
             'admissionModes' => AdmissionMode::values(),
             'genders' => Gender::values(),
             'eventTypes' => PresentationEventType::values(),
-            'faculty' => User::where('type', UserType::FACULTY_TEACHER)->get(),
+            'existingCosupervisors' => Cosupervisor::select('name', 'id')->get(),
             'existingSupervisors' => $existingSupervisors,
         ]);
     }
@@ -59,8 +60,8 @@ class ScholarController extends Controller
     {
         $validData = $request->validate([
             'committee' => ['required', 'array', 'max:5'],
-            'committee.*.type' => ['required', 'string', 'in:faculty_teacher,external,existing_supervisor'],
-            'committee.*.id' => ['required_if:commmitte.*.type,faculty_teacher, existing_supervisor', 'integer'],
+            'committee.*.type' => ['required', 'string', 'in:existing_supervisor,existing_cosupervisor,external'],
+            'committee.*.id' => ['required_if:commmitte.*.type,existing_supervisor, existing_cosupervisor', 'integer'],
             'committee.*.name' => ['required_if:commmitte.*.type,external', 'string'],
             'committee.*.designation' => ['required_if:commmitte.*.type,external', 'string'],
             'committee.*.affiliation' => ['required_if:commmitte.*.type,external', 'string'],
@@ -69,8 +70,8 @@ class ScholarController extends Controller
         ]);
 
         $committee = collect($validData['committee'])->map(function ($item) {
-            if ($item['type'] == 'faculty_teacher') {
-                return AdvisoryCommitteeMember::fromFacultyTeacher(User::find($item['id']));
+            if ($item['type'] == 'existing_cosupervisor') {
+                return AdvisoryCommitteeMember::fromExistingCosupervisors(Cosupervisor::find($item['id']));
             } elseif ($item['type'] == 'existing_supervisor') {
                 return AdvisoryCommitteeMember::fromExistingSupervisors(SupervisorProfile::find($item['id']));
             }
@@ -88,8 +89,8 @@ class ScholarController extends Controller
     {
         $validData = $request->validate([
             'committee' => ['required', 'array', 'max:5'],
-            'committee.*.type' => ['required', 'string', 'in:faculty_teacher,external,existing_supervisor'],
-            'committee.*.id' => ['required_if:commmitte.*.type,faculty_teacher, existing_supervisor', 'integer'],
+            'committee.*.type' => ['required', 'string', 'in:existing_cosupervisor,external,existing_supervisor'],
+            'committee.*.id' => ['required_if:commmitte.*.type,existing_cosupervisor, existing_supervisor', 'integer'],
             'committee.*.name' => ['required_if:commmitte.*.type,external', 'string'],
             'committee.*.designation' => ['required_if:commmitte.*.type,external', 'string'],
             'committee.*.affiliation' => ['required_if:commmitte.*.type,external', 'string'],
@@ -110,8 +111,8 @@ class ScholarController extends Controller
         array_unshift($oldAdvisoryCommittees, $currentAdvisoryCommittee);
 
         $newCommittee = collect($validData['committee'])->map(function ($item) {
-            if ($item['type'] == 'faculty_teacher') {
-                return AdvisoryCommitteeMember::fromFacultyTeacher(User::find($item['id']));
+            if ($item['type'] == 'existing_cosupervisor') {
+                return AdvisoryCommitteeMember::fromExistingCosupervisors(Cosupervisor::find($item['id']));
             } elseif ($item['type'] == 'existing_supervisor') {
                 return AdvisoryCommitteeMember::fromExistingSupervisors(SupervisorProfile::find($item['id']));
             }

@@ -13,8 +13,8 @@
         <div v-if="member.type=='existing_supervisor'">
             <slot name="existing_supervisor" :member="member"></slot>
         </div>
-        <div v-if="member.type=='faculty_teacher'">
-            <slot name="faculty" :member="member"></slot>
+        <div v-if="member.type=='existing_cosupervisor'">
+            <slot name="existing_cosupervisor" :member="member"></slot>
         </div>
         <div v-if="member.type=='external'">
             <slot name="external" :member="member"></slot>
@@ -23,7 +23,7 @@
 </template>
 <script>
 const defaultMember = {
-    type: 'faculty_teacher',
+    type: 'external',
     id: null,
     name: null,
     designation: null,
@@ -39,16 +39,16 @@ export default {
     data() {
         return {
             types: {
-                faculty_teacher: 'Faculty Teacher',
                 external: 'External',
                 existing_supervisor: 'Existing Supervisor',
+                existing_cosupervisor: 'Existing Co-Supervisor',
             },
             member: this.dataMember,
         };
     },
     created() {
         if (!Object.keys(this.types).includes(this.member.type)) {
-            this.member.type = 'faculty_teacher';
+            this.member.type = 'external';
             this.member.id = null;
         }
     }

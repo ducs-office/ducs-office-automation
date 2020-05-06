@@ -10,7 +10,7 @@
             @can('scholars.advisory_committee.manage', $scholar)
             @include('research.scholars.modals.edit_advisory_committee', [
                 'modalName' => 'edit-advisory-committee-modal',
-                'faculty' => $faculty,
+                'existingCosupervisors' => $existingCosupervisors,
                 'scholar' => $scholar
             ])
             <button class="btn btn-magenta is-sm shadow-inner ml-auto mr-2" @click.prevent="$modal.show('edit-advisory-committee-modal', {

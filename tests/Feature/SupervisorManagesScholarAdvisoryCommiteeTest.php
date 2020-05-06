@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Cosupervisor;
 use App\Models\Scholar;
 use App\Models\SupervisorProfile;
 use App\Models\User;
@@ -28,18 +29,17 @@ class SupervisorManagesScholarAdvisoryCommiteeTest extends TestCase
         $scholar = create(Scholar::class, 1, [
             'supervisor_profile_id' => $supervisor->id,
         ]);
-
-        $faculty_teacher = create(User::class, 1, ['type' => UserType::FACULTY_TEACHER]);
         $otherSupervisorProfile = create(SupervisorProfile::class);
+        $otherCosupervisor = create(Cosupervisor::class);
 
         $this->withoutExceptionHandling()
             ->patch(route('research.scholars.advisory_committee.update', [
                 'scholar' => $scholar,
             ]), [
                 'committee' => [
-                    [
-                        'type' => 'faculty_teacher',
-                        'id' => $faculty_teacher->id,
+                    $existingCosupervisor = [
+                        'type' => 'existing_cosupervisor',
+                        'id' => $otherCosupervisor->id,
                     ],
                     $external = [
                         'type' => 'external',
@@ -57,18 +57,18 @@ class SupervisorManagesScholarAdvisoryCommiteeTest extends TestCase
             ])->assertRedirect()
             ->assertSessionHasFlash('success', 'Advisory Committee Updated SuccessFully!');
 
-        $expectedAddedMembers = [
-            AdvisoryCommitteeMember::fromFacultyTeacher($faculty_teacher),
+        $expectedAddedMembers = collect([
+            AdvisoryCommitteeMember::fromExistingCosupervisors($otherCosupervisor),
             new AdvisoryCommitteeMember('external', $external),
             AdvisoryCommitteeMember::fromExistingSupervisors($otherSupervisorProfile),
-        ];
+        ])->sortBy('type');
 
         list($permanent, $added) = collect($scholar->fresh()->advisory_committee)
                 ->partition(function ($item) {
                     return in_array($item->type, ['supervisor', 'cosupervisor']);
-                })->map->values()->toArray();
+                })->map->values();
 
-        $this->assertEquals($expectedAddedMembers, $added);
+        $this->assertEquals($expectedAddedMembers, $added->sortBy('type'));
     }
 
     /** @test */
@@ -82,22 +82,21 @@ class SupervisorManagesScholarAdvisoryCommiteeTest extends TestCase
             'supervisor_profile_id' => $supervisor->id,
         ]);
 
-        $otherSupervisorProfile = create(SupervisorProfile::class);
-
         $beforeReplaceAdvisoryCommittee = $scholar->advisory_committee;
 
         $this->assertEquals(count($scholar->old_advisory_committees), 0);
 
-        $faculty_teacher = create(User::class, 1, ['type' => UserType::FACULTY_TEACHER]);
+        $otherSupervisorProfile = create(SupervisorProfile::class);
+        $otherCosupervisor = create(Cosupervisor::class);
 
         $this->withoutExceptionHandling()
             ->patch(route('research.scholars.advisory_committee.replace', [
                 'scholar' => $scholar,
             ]), [
                 'committee' => [
-                    [
-                        'type' => 'faculty_teacher',
-                        'id' => $faculty_teacher->id,
+                    $existingCosupervisor = [
+                        'type' => 'existing_cosupervisor',
+                        'id' => $otherCosupervisor->id,
                     ],
                     $external = [
                         'type' => 'external',
@@ -115,18 +114,18 @@ class SupervisorManagesScholarAdvisoryCommiteeTest extends TestCase
             ])->assertRedirect()
             ->assertSessionHasFlash('success', 'Advisory Committee Replaced SuccessFully!');
 
-        $expectedAddedMembers = [
-            AdvisoryCommitteeMember::fromFacultyTeacher($faculty_teacher),
+        $expectedAddedMembers = collect([
+            AdvisoryCommitteeMember::fromExistingCosupervisors($otherCosupervisor),
             new AdvisoryCommitteeMember('external', $external),
             AdvisoryCommitteeMember::fromExistingSupervisors($otherSupervisorProfile),
-        ];
+        ])->sortBy('type');
 
         list($permanent, $added) = collect($scholar->fresh()->advisory_committee)
             ->partition(function ($item) {
                 return in_array($item->type, ['supervisor', 'cosupervisor']);
-            })->map->values()->toArray();
+            })->map->values();
 
-        $this->assertEquals($expectedAddedMembers, $added);
+        $this->assertEquals($expectedAddedMembers, $added->sortBy('type'));
 
         $expectOldCommittee = [
             'committee' => $beforeReplaceAdvisoryCommittee,

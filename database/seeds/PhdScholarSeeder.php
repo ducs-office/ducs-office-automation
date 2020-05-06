@@ -33,10 +33,9 @@ class PhdScholarSeeder extends Seeder
             'type' => UserType::FACULTY_TEACHER,
         ])->supervisorProfile()->create();
 
-        $facultyNaveen = factory(User::class)->create([
+        $cosupervisorNaveen = factory(Cosupervisor::class)->create([
             'name' => 'Naveen Kumar',
             'email' => 'naveen@cs.du.ac.in',
-            'type' => UserType::FACULTY_TEACHER,
         ]);
 
         $scholarRajni = factory(Scholar::class)->create([
@@ -53,7 +52,7 @@ class PhdScholarSeeder extends Seeder
             'supervisor_profile_id' => $supervisorNeelima->id,
             'cosupervisor_id' => null,
             'advisory_committee' => [
-                AdvisoryCommitteeMember::fromFacultyTeacher($facultyNaveen),
+                AdvisoryCommitteeMember::fromExistingCosupervisors($cosupervisorNaveen),
                 new AdvisoryCommitteeMember('external', [
                     'name' => 'Naveen Garg',
                     'designation' => 'Professor',
@@ -101,10 +100,9 @@ class PhdScholarSeeder extends Seeder
             'email' => 'sangeeta.srivastava@cas.du.ac.in',
         ])->supervisorProfile()->create();
 
-        $facultyPoonam = factory(User::class)->create([
+        $cosupervisorPoonam = factory(Cosupervisor::class)->create([
             'name' => 'Poonam Bedi',
             'email' => 'pbedi@cs.du.ac.in',
-            'type' => UserType::FACULTY_TEACHER,
         ]);
 
         $scholarSudhir = factory(Scholar::class)->create([
@@ -121,7 +119,7 @@ class PhdScholarSeeder extends Seeder
             'supervisor_profile_id' => $supervisorSangeeta->id,
             'cosupervisor_id' => null,
             'advisory_committee' => [
-                AdvisoryCommitteeMember::fromFacultyTeacher($facultyPoonam),
+                AdvisoryCommitteeMember::fromExistingCosupervisors($cosupervisorPoonam),
                 new AdvisoryCommitteeMember('external', [
                     'name' => 'V.B. Singh',
                     'designation' => 'Dr.',
@@ -175,7 +173,7 @@ class PhdScholarSeeder extends Seeder
             'supervisor_profile_id' => $supervisorNeelima->id,
             'cosupervisor_id' => null,
             'advisory_committee' => [
-                AdvisoryCommitteeMember::fromFacultyTeacher($facultyNaveen),
+                AdvisoryCommitteeMember::fromExistingCosupervisors($cosupervisorNaveen),
                 new AdvisoryCommitteeMember('external', [
                     'name' => 'Naveen Garg',
                     'affiliation' => 'Department of Computer Science and Engineering IIT Delhi',
@@ -241,7 +239,7 @@ class PhdScholarSeeder extends Seeder
             'supervisor_profile_id' => $supervisorArchana->id,
             'cosupervisor_id' => $cosupervisorMuttoo->id,
             'advisory_committee' => [
-                AdvisoryCommitteeMember::fromFacultyTeacher($facultyPoonam),
+                AdvisoryCommitteeMember::fromExistingCosupervisors($cosupervisorPoonam),
                 new AdvisoryCommitteeMember('external', [
                     'name' => 'Archana Singhal',
                     'affiliation' => 'Ip college, University of Delhi',
@@ -288,10 +286,9 @@ class PhdScholarSeeder extends Seeder
             'research_area' => 'Information Security',
             'enrollment_date' => '2018-05-12',
             'supervisor_profile_id' => $supervisorArpita->id,
-            'cosupervisor_id' => null,
             'cosupervisor_id' => $cosupervisorAnurag->id,
             'advisory_committee' => [
-                AdvisoryCommitteeMember::fromFacultyTeacher($facultyPoonam),
+                AdvisoryCommitteeMember::fromExistingCosupervisors($cosupervisorPoonam),
             ],
         ]);
 
@@ -314,7 +311,7 @@ class PhdScholarSeeder extends Seeder
             'enrollment_date' => '2019-06-11',
             'supervisor_profile_id' => $supervisorSangeeta->id,
             'advisory_committee' => [
-                AdvisoryCommitteeMember::fromFacultyTeacher($facultyPoonam),
+                AdvisoryCommitteeMember::fromExistingCosupervisors($cosupervisorPoonam),
                 new AdvisoryCommitteeMember('external', [
                     'name' => 'V.B. Singh',
                     'designation' => 'Dr.',

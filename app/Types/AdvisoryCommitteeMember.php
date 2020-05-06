@@ -2,6 +2,7 @@
 
 namespace App\Types;
 
+use App\Models\Cosupervisor;
 use App\Models\SupervisorProfile;
 use App\Models\User;
 
@@ -27,23 +28,12 @@ class AdvisoryCommitteeMember
         $this->phone = $phone ?? null;
     }
 
-    public static function fromFacultyTeacher(User $facultyTeacher)
-    {
-        return new self('faculty_teacher', [
-            'id' => $facultyTeacher->id,
-            'name' => $facultyTeacher->name,
-            'designation' => 'Professor',
-            'affiliation' => 'Department of Computer Science',
-            'email' => $facultyTeacher->email,
-        ]);
-    }
-
     public static function fromExistingSupervisors(SupervisorProfile $supervisorProfile)
     {
         $affiliation = $supervisorProfile->supervisor instanceof User ?
-            'Department of Computer Science' :
-            $supervisorProfile->supervisor->profile->college->name ??
-            'Affiliation Not Set';
+        'Department of Computer Science' :
+        $supervisorProfile->supervisor->profile->college->name ??
+        'Affiliation Not Set';
 
         return new self('existing_supervisor', [
             'id' => $supervisorProfile->id,
@@ -51,6 +41,17 @@ class AdvisoryCommitteeMember
             'designation' => 'Professor',
             'affiliation' => $affiliation,
             'email' => $supervisorProfile->supervisor->email,
+        ]);
+    }
+
+    public static function fromExistingCosupervisors(Cosupervisor $cosupervisor)
+    {
+        return new self('existing_cosupervisor', [
+            'id' => $cosupervisor->id,
+            'name' => $cosupervisor->name,
+            'designation' => $cosupervisor->designation,
+            'affiliation' => $cosupervisor->affiliation,
+            'email' => $cosupervisor->email,
         ]);
     }
 
