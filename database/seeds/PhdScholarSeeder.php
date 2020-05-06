@@ -6,6 +6,7 @@ use App\Models\Scholar;
 use App\Models\ScholarEducationDegree;
 use App\Models\ScholarEducationInstitute;
 use App\Models\ScholarEducationSubject;
+use App\Models\SupervisorProfile;
 use App\Models\Teacher;
 use App\Models\User;
 use App\Types\AdmissionMode;
@@ -14,12 +15,20 @@ use App\Types\CitationIndex;
 use App\Types\EducationInfo;
 use App\Types\Gender;
 use App\Types\PresentationEventType;
+use App\Types\PublicationType;
 use App\Types\ReservationCategory;
 use App\Types\UserType;
 use Illuminate\Database\Seeder;
 
 class PhdScholarSeeder extends Seeder
 {
+    const ENC_PASSWORD = '$2y$10$bRgtu7JbF6VVbR9FG6E5oeTyP.Hi2w./HQ51t.WnP1cJFmjpMQ4y2';
+
+    protected $faculty;
+    protected $college_teachers;
+    protected $supervisors;
+    protected $cosupervisors;
+
     /**
      * Run the database seeds.
      *
@@ -27,25 +36,17 @@ class PhdScholarSeeder extends Seeder
      */
     public function run()
     {
-        $supervisorNeelima = factory(User::class)->create([
-            'name' => 'Neelima Gupta',
-            'email' => 'ngupta.cs.du@gmail.com',
-            'type' => UserType::FACULTY_TEACHER,
-        ])->supervisorProfile()->create();
+        $this->createFacultyTeachers();
+        $this->createCollegeTeachers();
+        $this->createSupervisors();
+        $this->createCosupervisors();
 
-        $cosupervisorNaveen = factory(Cosupervisor::class)->create([
-            'professor_type' => User::class,
-            'professor_id' => factory(User::class)->create([
-                'name' => 'Naveen Kumar',
-                'email' => 'naveen@cs.du.ac.in',
-                'type' => UserType::FACULTY_TEACHER,
-            ])->id,
-        ]);
-
-        $scholarRajni = factory(Scholar::class)->create([
+        // =========== Rajni Dabbas ============
+        $rajni = Scholar::create([
             'first_name' => 'Rajni',
-            'last_name' => '.',
+            'last_name' => 'Dabbas',
             'email' => 'rajni@cs.du.ac.in',
+            'password' => self::ENC_PASSWORD,
             'phone_no' => '9650361897',
             'gender' => Gender::FEMALE,
             'address' => 'HNo. 313, VPO Rani Khera, Delhi-110081',
@@ -53,71 +54,48 @@ class PhdScholarSeeder extends Seeder
             'admission_mode' => AdmissionMode::JRF,
             'research_area' => 'Theoretical Computer Science',
             'enrollment_date' => '2019-11-11',
-            'supervisor_profile_id' => $supervisorNeelima->id,
-            'cosupervisor_profile_type' => null,
-            'cosupervisor_profile_id' => null,
+            'supervisor_profile_id' => $this->supervisors->neelima_gupta->id,
             'advisory_committee' => [
-                AdvisoryCommitteeMember::fromExistingCosupervisors($cosupervisorNaveen),
-                new AdvisoryCommitteeMember('external', [
-                    'name' => 'Naveen Garg',
-                    'designation' => 'Professor',
-                    'affiliation' => 'Indian Institute of Technology Delhi',
-                    'email' => 'naveengarg@iitd.ac.in',
-                ]),
+                AdvisoryCommitteeMember::fromExistingSupervisors(
+                    $this->supervisors->naveen_kumar
+                ),
+                AdvisoryCommitteeMember::fromExistingCosupervisors(
+                    $this->cosupervisors->naveen_garg
+                ),
             ],
             'education_details' => [
                 new EducationInfo([
-                    'degree' => factory(ScholarEducationDegree::class)->create([
-                        'name' => 'BSc(H)',
+                    'degree' => ScholarEducationDegree::create([
+                        'name' => 'B.Sc (H)',
                     ])->name,
-                    'subject' => factory(ScholarEducationSubject::class)->create([
+                    'subject' => ScholarEducationSubject::create([
                         'name' => 'Computer Science',
                     ])->name,
-                    'institute' => factory(ScholarEducationInstitute::class)->create([
-                        'name' => 'Shyama Prasad Mukherji College, DU',
+                    'institute' => ScholarEducationInstitute::create([
+                        'name' => 'Shyama Prasad Mukherji College (University of Delhi)',
                     ])->name,
                     'year' => '2017',
                 ]),
                 new EducationInfo([
-                    'degree' => factory(ScholarEducationDegree::class)->create([
-                        'name' => 'MSc',
+                    'degree' => ScholarEducationDegree::create([
+                        'name' => 'M.Sc',
                     ])->name,
-
                     'subject' => 'Computer Science',
-
-                    'institute' => factory(ScholarEducationInstitute::class)->create([
-                        'name' => 'University of Delhi',
+                    'institute' => ScholarEducationInstitute::create([
+                        'name' => 'Department of Computer Science, University of Delhi',
                     ])->name,
                     'year' => '2019',
                 ]),
             ],
         ]);
+        $rajni->courseworks()->attach(PhdCourse::whereCode('RCS004')->first());
 
-        $scholarRajni->courseworks()->attach([
-            'phd_course_id' => 4,
-        ]);
-
-        // ====================================
-
-        $supervisorSangeeta = factory(Teacher::class)->create([
-            'first_name' => 'Sangeeta',
-            'last_name' => 'Srivastava',
-            'email' => 'sangeeta.srivastava@cas.du.ac.in',
-        ])->supervisorProfile()->create();
-
-        $cosupervisorPoonam = factory(Cosupervisor::class)->create([
-            'professor_type' => User::class,
-            'professor_id' => factory(User::class)->create([
-                'name' => 'Poonam Bedi',
-                'email' => 'pbedi@cs.du.ac.in',
-                'type' => UserType::FACULTY_TEACHER,
-            ])->id,
-        ]);
-
-        $scholarSudhir = factory(Scholar::class)->create([
-            'first_name' => 'Sudhir Kumar',
+        // ============ Sudhir Gupta =============
+        $sudhir = Scholar::create([
+            'first_name' => 'Sudhir',
             'last_name' => 'Gupta',
             'email' => 'cs.sudhirg@gmail.com',
+            'password' => self::ENC_PASSWORD,
             'phone_no' => '9891304971',
             'gender' => Gender::MALE,
             'address' => 'D8-24, POCKET-2, SECTOR-G2, NARELA, DELHI-110040',
@@ -125,54 +103,47 @@ class PhdScholarSeeder extends Seeder
             'admission_mode' => AdmissionMode::UGC_NET,
             'research_area' => 'Mobile Specific Testing Strategies',
             'enrollment_date' => '2019-12-10',
-            'supervisor_profile_id' => $supervisorSangeeta->id,
-            'cosupervisor_profile_type' => null,
-            'cosupervisor_profile_id' => null,
+            'supervisor_profile_id' => $this->supervisors->sangeeta_srivastava->id,
             'advisory_committee' => [
-                AdvisoryCommitteeMember::fromExistingCosupervisors($cosupervisorPoonam),
+                AdvisoryCommitteeMember::fromExistingSupervisors(
+                    $this->supervisors->poonam_bedi
+                ),
+                AdvisoryCommitteeMember::fromExistingCosupervisors(
+                    $this->cosupervisors->naveen_garg
+                ),
                 new AdvisoryCommitteeMember('external', [
                     'name' => 'V.B. Singh',
                     'designation' => 'Dr.',
                     'affiliation' => 'Delhi College of Arts & Commerce, University of Delhi',
                     'email' => 'vbsingh@gmail.com',
                 ]),
-                new AdvisoryCommitteeMember('external', [
-                    'name' => 'Naveen Garg',
-                    'designation' => 'Professor',
-                    'affiliation' => 'Indian Institute of Technology Delhi',
-                    'email' => 'naveen@.iitd.ac.in',
-                ]),
             ],
         ]);
-
-        $scholarSudhir->courseworks()->attach([
-            'phd_course_id' => 23,
-        ]);
-
-        $scholarSudhir->publications()->createMany([
-            [
-                'type' => 'journal',
-                'name' => 'International Journal of Recent Technology and Engineering',
-                'paper_title' => 'Big Data Analytics: An Indian Perspective',
-                'authors' => [
-                    'Ashish Kumar Jha', 'Sudhir Kumar Gupta',
-                    'Ajay Kumar', 'Mahesh Kumar Chaubey',
-                    'Jitendra Singh',
-                ],
-                'date' => '2019-09-30',
-                'volume' => 8,
-                'number' => 3,
-                'indexed_in' => CitationIndex::SCOPUS,
-                'page_numbers' => [29, 43],
+        $sudhir->courseworks()->attach(
+            PhdCourse::whereCode('RCS023')->first()
+        );
+        $sudhir->publications()->create([
+            'type' => PublicationType::JOURNAL,
+            'name' => 'International Journal of Recent Technology and Engineering',
+            'paper_title' => 'Big Data Analytics: An Indian Perspective',
+            'authors' => [
+                'Ashish Kumar Jha', 'Sudhir Kumar Gupta',
+                'Ajay Kumar', 'Mahesh Kumar Chaubey',
+                'Jitendra Singh',
             ],
+            'date' => '2019-09-30',
+            'volume' => 8,
+            'number' => 3,
+            'indexed_in' => CitationIndex::SCOPUS,
+            'page_numbers' => [29, 43],
         ]);
 
-        //=======================================
-
-        $scholarSapna = factory(Scholar::class)->create([
+        // ================== Sapna Grover =====================
+        $sapna = Scholar::create([
             'first_name' => 'Sapna',
             'last_name' => 'Grover',
             'email' => 'sapna.grover5@gmail.com',
+            'password' => self::ENC_PASSWORD,
             'phone_no' => '8447903161',
             'gender' => Gender::FEMALE,
             'address' => '8/22, Third Floor, Subhash Nagar, New Delhi-110027',
@@ -180,26 +151,21 @@ class PhdScholarSeeder extends Seeder
             'admission_mode' => AdmissionMode::DU_TEACHER,
             'research_area' => 'Approximation Algoriithms and their Analysis',
             'enrollment_date' => '2017-04-05',
-            'supervisor_profile_id' => $supervisorNeelima->id,
-            'cosupervisor_profile_type' => null,
-            'cosupervisor_profile_id' => null,
+            'supervisor_profile_id' => $this->supervisors->neelima_gupta->id,
             'advisory_committee' => [
-                AdvisoryCommitteeMember::fromExistingCosupervisors($cosupervisorNaveen),
-                new AdvisoryCommitteeMember('external', [
-                    'name' => 'Naveen Garg',
-                    'affiliation' => 'Department of Computer Science and Engineering IIT Delhi',
-                    'designation' => 'Prof.',
-                    'email' => 'naveengarg@iitd.ac.in',
-                ]),
+                AdvisoryCommitteeMember::fromExistingSupervisors(
+                    $this->supervisors->naveen_kumar
+                ),
+                AdvisoryCommitteeMember::fromExistingCoSupervisors(
+                    $this->cosupervisors->naveen_garg
+                ),
             ],
         ]);
-
-        $scholarSapna->courseworks()->attach([
-            'phd_course_id' => 3,
-        ]);
-
-        $scholarSapna->publications()->create([
-            'type' => 'conference',
+        $sapna->courseworks()->attach(
+            PhdCourse::whereCode('RCS003')->first()
+        );
+        $publication = $sapna->publications()->create([
+            'type' => PublicationType::CONFERENCE,
             'name' => 'Foundations of Software Technology and Theoretical Computer Science (FSTTCS) 2018',
             'paper_title' => 'Constant factor Approximation Algorithm for Uniform Hard Capacitated Knapsack Median Problem',
             'authors' => [
@@ -212,32 +178,19 @@ class PhdScholarSeeder extends Seeder
             'page_numbers' => [3, 37],
             'city' => 'Ahmedabad, Gujarat',
             'country' => 'India',
-        ])->presentations()->create([
-            'scholar_id' => $scholarSapna->id,
+        ]);
+        $sapna->presentations()->create([
+            'scholar_id' => $sapna->id,
+            'publication_id' => $publication->id,
             'city' => 'Ahmedabad, Gujarat',
             'country' => 'India',
             'date' => '2018-12-11',
             'event_type' => PresentationEventType::CONFERENCE,
-            'event_name' => 'Presentation',
+            'event_name' => 'ICSS',
         ]);
 
-        //======================================
-
-        $supervisorArchana = factory(Teacher::class)->create([
-            'first_name' => 'Archana',
-            'last_name' => 'Singhal',
-            'email' => 'archanasinghal1970@gmail.com',
-        ])->supervisorProfile()->create();
-
-        $cosupervisorMuttoo = factory(Cosupervisor::class)->create([
-            'professor_type' => User::class,
-            'professor_id' => factory(User::class)->create([
-                'name' => 'S.K Muttoo',
-                'email' => 'drskmuttoo@gmail.com',
-            ])->id,
-        ]);
-
-        $scholarNisha = factory(Scholar::class)->create([
+        //=================== Nisha ===================
+        $nisha = factory(Scholar::class)->create([
             'first_name' => 'Nisha',
             'last_name' => '.',
             'email' => 'nisha1988.d@gmail.com',
@@ -248,17 +201,12 @@ class PhdScholarSeeder extends Seeder
             'admission_mode' => AdmissionMode::UGC_NET,
             'research_area' => 'Information Security',
             'enrollment_date' => '2018-11-26',
-            'supervisor_profile_id' => $supervisorArchana->id,
-            'cosupervisor_profile_id' => $cosupervisorMuttoo->id,
-            'cosupervisor_profile_type' => Cosupervisor::class,
+            'supervisor_profile_id' => $this->supervisors->archana_singhal->id,
+            'cosupervisor_profile_id' => $this->supervisors->sk_mutto->id,
+            'cosupervisor_profile_type' => SupervisorProfile::class,
             'advisory_committee' => [
-                AdvisoryCommitteeMember::fromExistingCosupervisors($cosupervisorPoonam),
-                new AdvisoryCommitteeMember('external', [
-                    'name' => 'Archana Singhal',
-                    'affiliation' => 'Ip college, University of Delhi',
-                    'designation' => 'Dr.',
-                    'email' => 'archana@ip.du.ac.in',
-                ]),
+                AdvisoryCommitteeMember::fromExistingSupervisors($this->supervisors->archana_singhal),
+                AdvisoryCommitteeMember::fromExistingSupervisors($this->supervisors->poonam_bedi),
                 new AdvisoryCommitteeMember('external', [
                     'name' => 'Harmeet Kaur',
                     'designation' => 'Professor',
@@ -267,32 +215,16 @@ class PhdScholarSeeder extends Seeder
                 ]),
             ],
         ]);
+        $nisha->courseworks()->attach(
+            PhdCourse::whereCode('RCS008')->first()
+        );
 
-        $scholarNisha->courseworks()->attach([
-            'phd_course_id' => 8,
-        ]);
-
-        //======================================
-
-        $supervisorArpita = factory(Teacher::class)->create([
-            'first_name' => 'Arpita',
-            'last_name' => 'Sharma',
-            'email' => 'asharma@ddu.du.ac.in',
-        ])->supervisorProfile()->create();
-
-        $cosupervisorAnurag = factory(Cosupervisor::class)->create([
-            'professor_type' => Teacher::class,
-            'professor_id' => factory(Teacher::class)->create([
-                'first_name' => 'Anurag',
-                'last_name' => 'Mishra',
-                'email' => 'anurag_cse2003@yahoo.com',
-            ])->id,
-        ]);
-
-        $scholarMegha = factory(Scholar::class)->create([
+        //================== Megha Bansal ====================
+        $megha = Scholar::create([
             'first_name' => 'Megha',
             'last_name' => 'Bansal',
             'email' => 'megha.cs.du@gmail.com',
+            'password' => self::ENC_PASSWORD,
             'phone_no' => '9990278679',
             'gender' => Gender::FEMALE,
             'address' => 'G-73, Saket, New Delhi-17',
@@ -300,21 +232,21 @@ class PhdScholarSeeder extends Seeder
             'admission_mode' => AdmissionMode::UGC_NET,
             'research_area' => 'Information Security',
             'enrollment_date' => '2018-05-12',
-            'supervisor_profile_id' => $supervisorArpita->id,
-            'cosupervisor_profile_id' => $cosupervisorAnurag->id,
+            'supervisor_profile_id' => $this->supervisors->arpita_sharma->id,
+            'cosupervisor_profile_id' => $this->cosupervisors->anurag_mishra->id,
             'cosupervisor_profile_type' => Cosupervisor::class,
             'advisory_committee' => [
-                AdvisoryCommitteeMember::fromExistingCosupervisors($cosupervisorPoonam),
+                AdvisoryCommitteeMember::fromExistingSupervisors(
+                    $this->supervisors->poonam_bedi
+                ),
             ],
         ]);
+        $megha->courseworks()->attach(
+            PhdCourse::whereCode('RCS008')->first()
+        );
 
-        $scholarMegha->courseworks()->attach([
-            'phd_course_id' => 8,
-        ]);
-
-        //=======================================
-
-        $scholarKountay = factory(Scholar::class)->create([
+        //=================== Kountay Dwivedi ====================
+        $kountay = factory(Scholar::class)->create([
             'first_name' => 'Kountay',
             'last_name' => 'Dwivedi',
             'email' => 'kdwivedi@cs.du.ac.in',
@@ -325,9 +257,11 @@ class PhdScholarSeeder extends Seeder
             'admission_mode' => AdmissionMode::JRF,
             'research_area' => 'Machine Learning',
             'enrollment_date' => '2019-06-11',
-            'supervisor_profile_id' => $supervisorSangeeta->id,
+            'supervisor_profile_id' => $this->supervisors->sangeeta_srivastava->id,
             'advisory_committee' => [
-                AdvisoryCommitteeMember::fromExistingCosupervisors($cosupervisorPoonam),
+                AdvisoryCommitteeMember::fromExistingSupervisors(
+                    $this->supervisors->poonam_bedi
+                ),
                 new AdvisoryCommitteeMember('external', [
                     'name' => 'V.B. Singh',
                     'designation' => 'Dr.',
@@ -336,9 +270,105 @@ class PhdScholarSeeder extends Seeder
                 ]),
             ],
         ]);
+        $kountay->courseworks()->attach(
+            PhdCourse::whereCode('RCS023')->first()
+        );
+    }
 
-        $scholarKountay->courseworks()->attach([
-            'phd_course_id' => 23,
-        ]);
+    public function createFacultyTeachers()
+    {
+        $this->faculty = (object) [
+            'neelima_gupta' => User::create([
+                'name' => 'Neelima Gupta',
+                'email' => 'ngupta.cs.du@gmail.com',
+                'type' => UserType::FACULTY_TEACHER,
+                'password' => self::ENC_PASSWORD,
+            ]),
+
+            'naveen_kumar' => User::create([
+                'name' => 'Naveen Kumar',
+                'email' => 'naveen@cs.du.ac.in',
+                'type' => UserType::FACULTY_TEACHER,
+                'password' => self::ENC_PASSWORD,
+            ]),
+
+            'poonam_bedi' => User::create([
+                'name' => 'Poonam Bedi',
+                'email' => 'pbedi@cs.du.ac.in',
+                'type' => UserType::FACULTY_TEACHER,
+                'password' => self::ENC_PASSWORD,
+            ]),
+
+            'sk_mutto' => User::create([
+                'name' => 'S.K Muttoo',
+                'email' => 'drskmuttoo@gmail.com',
+                'type' => UserType::FACULTY_TEACHER,
+                'password' => self::ENC_PASSWORD,
+            ]),
+        ];
+    }
+
+    public function createCollegeTeachers()
+    {
+        $this->college_teachers = (object) [
+            'sangeeta_srivastava' => Teacher::create([
+                'first_name' => 'Sangeeta',
+                'last_name' => 'Srivastava',
+                'email' => 'sangeeta.srivastava@cas.du.ac.in',
+                'password' => self::ENC_PASSWORD,
+            ]),
+
+            'archana_singhal' => Teacher::create([
+                'first_name' => 'Archana',
+                'last_name' => 'Singhal',
+                'email' => 'archanasinghal1970@gmail.com',
+                'password' => self::ENC_PASSWORD,
+            ]),
+
+            'arpita_sharma' => Teacher::create([
+                'first_name' => 'Arpita',
+                'last_name' => 'Sharma',
+                'email' => 'asharma@ddu.du.ac.in',
+                'password' => self::ENC_PASSWORD,
+            ]),
+
+            'anurag_mishra' => Teacher::create([
+                'first_name' => 'Anurag',
+                'last_name' => 'Mishra',
+                'email' => 'anurag_cse2003@yahoo.com',
+                'password' => self::ENC_PASSWORD,
+            ]),
+        ];
+    }
+
+    public function createSupervisors()
+    {
+        $this->supervisors = (object) collect([
+            'neelima_gupta' => 'faculty',
+            'naveen_kumar' => 'faculty',
+            'poonam_bedi' => 'faculty',
+            'sk_mutto' => 'faculty',
+            'sangeeta_srivastava' => 'college_teachers',
+            'archana_singhal' => 'college_teachers',
+            'arpita_sharma' => 'college_teachers',
+        ])->map(function ($name, $type) {
+            return $this->{$name}->{$type}->supervisorProfile()->create();
+        })->all();
+    }
+
+    public function createCosupervisors()
+    {
+        $this->cosupervisors = (object) [
+            'anurag_mishra' => Cosupervisor::create([
+                'professor_type' => Teacher::class,
+                'professor_id' => $this->college_teachers->anurag_mishra->id,
+            ]),
+            'naveen_garg' => Cosupervisor::create([
+                'name' => 'Naveen Garg',
+                'email' => 'naveen@.iitd.ac.in',
+                'designation' => 'Professor',
+                'affiliation' => 'Indian Institute of Technology Delhi',
+            ]),
+        ];
     }
 }
