@@ -13,20 +13,31 @@ class CosupervisorController extends Controller
 {
     public function index()
     {
+        $teachers = Teacher::all()->filter(function ($teacher) {
+            return ! $teacher->isCosupervisor() && ! $teacher->isSupervisor();
+        });
+
+        $faculties = User::where('type', UserType::FACULTY_TEACHER)
+            ->get()->filter(function ($faculty) {
+                return ! $faculty->isCosupervisor() && ! $faculty->isSupervisor();
+            });
+
         return view('staff.cosupervisors.index', [
             'cosupervisors' => Cosupervisor::all(),
-            'teachers' => Teacher::all(),
-            'faculties' => User::where('type', UserType::FACULTY_TEACHER)->get(),
+            'teachers' => $teachers,
+            'faculties' => $faculties,
         ]);
     }
 
     public function storeTeacher(Teacher $teacher)
     {
+        if ($teacher->isSupervisor()) {
+            abort(403, 'A Supervisor can not be added as a Cosupervisor');
+        }
+
         Cosupervisor::create([
-            'name' => $teacher->name,
-            'email' => $teacher->email,
-            'designation' => $teacher->profile->designation,
-            'affiliation' => $teacher->profile->college->name,
+            'professor_type' => Teacher::class,
+            'professor_id' => $teacher->id,
         ]);
 
         flash('Co-supervisor added successfully')->success();
@@ -35,11 +46,13 @@ class CosupervisorController extends Controller
 
     public function storeFaculty(User $faculty)
     {
+        if ($faculty->isSupervisor() || ! $faculty->type->equals(UserType::FACULTY_TEACHER)) {
+            abort(403, 'Cosupervisor can not be added');
+        }
+
         Cosupervisor::create([
-            'name' => $faculty->name,
-            'email' => $faculty->email,
-            'designation' => 'Professor',
-            'affiliation' => 'DUCS',
+            'professor_type' => User::class,
+            'professor_id' => $faculty->id,
         ]);
 
         flash('Co-supervisor added successfully')->success();
@@ -54,6 +67,7 @@ class CosupervisorController extends Controller
             'designation' => 'required| string',
             'affiliation' => 'required| string',
         ]);
+
         Cosupervisor::create($validData);
 
         flash('Co-supervisor added successfully')->success();
@@ -62,6 +76,7 @@ class CosupervisorController extends Controller
 
     public function update(Request $request, Cosupervisor $cosupervisor)
     {
+        abort_if($cosupervisor->professor !== null, 403, 'Cosupervisor can not be updated');
         $validData = $request->validate([
             'name' => 'sometimes| required| string',
             'email' => 'sometimes| required| email',

@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Concerns\ExistsAsCosupervisor;
 use App\Concerns\SupervisesScholars;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Notifications\Notifiable;
 
 class Teacher extends User
 {
-    use Notifiable, SupervisesScholars;
+    use Notifiable, SupervisesScholars, ExistsAsCosupervisor;
 
     protected $guarded = [];
 

@@ -39,29 +39,31 @@
                     {{ ucwords($cosupervisor->name) }}
                 </h2>
                 <h4 class="text-sm font-semibold text-gray-600 mb-1">{{ $cosupervisor->email }}</h4>
-                <h4 class="text-sm font-semibold text-gray-600"> {{ $cosupervisor->designation }} Professor <strong>at</strong> {{ $cosupervisor->affiliation }} </h4>
+                <h4 class="text-sm font-semibold text-gray-600"> {{ $cosupervisor->designation }} <strong>at</strong> {{ $cosupervisor->affiliation }} </h4>
             </div>
-            <div class="flex ml-auto items-center">
-                <button type="submit" class="p-1 hover:text-blue-700 mr-2"
-                    @click="
-                        $modal.show('update-cosupervisor-modal', {
-                            cosupervisor: {
-                                id: {{ $cosupervisor->id }},
-                                name: {{ json_encode($cosupervisor->name) }},
-                                email: {{ json_encode($cosupervisor->email) }},
-                                designation: {{ json_encode($cosupervisor->designation) }},
-                                affiliation: {{ json_encode($cosupervisor->affiliation) }},
-                            },
-                        })">
-                    <feather-icon class="h-current" name="edit">Edit</feather-icon>
-                </button>
-                <form action="{{ route('staff.cosupervisors.destroy', $cosupervisor) }}" method="POST">
-                    @csrf_token @method('delete')
-                    <button type="submit" class="p-1 hover:text-red-700">
-                        <feather-icon class="h-current" name="trash-2">Trash</feather-icon>
+            @if($cosupervisor->professor === null)
+                <div class="flex ml-auto items-center">
+                    <button type="submit" class="p-1 hover:text-blue-700 mr-2"
+                        @click="
+                            $modal.show('update-cosupervisor-modal', {
+                                cosupervisor: {
+                                    id: {{ $cosupervisor->id }},
+                                    name: {{ json_encode($cosupervisor->name) }},
+                                    email: {{ json_encode($cosupervisor->email) }},
+                                    designation: {{ json_encode($cosupervisor->designation) }},
+                                    affiliation: {{ json_encode($cosupervisor->affiliation) }},
+                                },
+                            })">
+                        <feather-icon class="h-current" name="edit">Edit</feather-icon>
                     </button>
-                </form>
-            </div>
+                    <form action="{{ route('staff.cosupervisors.destroy', $cosupervisor) }}" method="POST">
+                        @csrf_token @method('delete')
+                        <button type="submit" class="p-1 hover:text-red-700">
+                            <feather-icon class="h-current" name="trash-2">Trash</feather-icon>
+                        </button>
+                    </form>
+                </div>
+            @endif
         </div>
     @endforeach
 </div>

@@ -15,10 +15,11 @@ class CreateCosupervisorsTable extends Migration
     {
         Schema::create('cosupervisors', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name');
-            $table->string('email');
+            $table->string('name')->nullable();
+            $table->string('email')->nullable();
             $table->string('designation')->nullable();
             $table->string('affiliation')->nullable();
+            $table->nullableMorphs('professor');
             $table->timestamps();
         });
     }

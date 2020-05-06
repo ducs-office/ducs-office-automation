@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Casts\CustomType;
+use App\Concerns\ExistsAsCosupervisor;
 use App\Concerns\SupervisesScholars;
 use App\Types\UserType;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -12,7 +13,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use Notifiable, HasRoles, SupervisesScholars;
+    use Notifiable, HasRoles, SupervisesScholars, ExistsAsCosupervisor;
 
     /**
      * The attributes that are mass assignable.
