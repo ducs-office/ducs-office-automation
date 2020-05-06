@@ -49,13 +49,6 @@ class UserController extends Controller
 
         if ($request->is_supervisor) {
             $user->supervisorProfile()->create();
-
-            Cosupervisor::create([
-                'name' => $user->name,
-                'email' => $user->email,
-                'designation' => 'Professor',
-                'affiliation' => 'DUCS, University of Delhi',
-            ]);
         }
 
         DB::commit();
@@ -79,13 +72,6 @@ class UserController extends Controller
 
         if ($request->is_supervisor && ! $user->isSupervisor()) {
             $user->supervisorProfile()->create();
-
-            Cosupervisor::create([
-                'name' => $user->name,
-                'email' => $user->email,
-                'designation' => 'Permanent',
-                'affiliation' => 'DUCS, University of Delhi',
-            ]);
         }
 
         DB::commit();

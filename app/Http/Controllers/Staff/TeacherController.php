@@ -82,15 +82,8 @@ class TeacherController extends Controller
 
         $teacher->update($validData);
 
-        if ($request->is_supervisor && $teacher->profile->college) {
+        if ($request->is_supervisor) {
             $teacher->supervisorProfile()->create();
-
-            Cosupervisor::create([
-                'name' => $teacher->name,
-                'email' => $teacher->email,
-                'designation' => 'Permanent',
-                'affiliation' => $teacher->profile->college->name,
-            ]);
         }
 
         flash('College teacher updated successfully')->success();
