@@ -90,7 +90,7 @@ module.exports = {
                 "56": "14rem",
                 "64": "16rem",
                 "screen-1/2": "50vh"
-            }
+            },
         }
     },
     variants: {

@@ -1,4 +1,6 @@
 require('./bootstrap');
+import 'alpinejs';
+import feather from 'feather-icons';
 import Vue from 'vue';
 import VueJsModal from 'vue-js-modal';
 
@@ -57,6 +59,35 @@ Vue.mixin({
 
 window.Events = new Vue();
 
-const app = new Vue({
-    el: '#app'
+if(document.getElementById('app')) {
+    const app = new Vue({
+        el: '#app'
+    });
+}
+
+window.modalsRoot = () => ({
+    $modal: {
+        current: null,
+        isOpen(name) { return this.current === name },
+        show(name) { this.current = name },
+        hide() { this.current = null },
+    }
 });
+
+window.tabbedPane = (initial = '') => ({
+    $tabs: {
+        current: initial,
+        isActive(name) {
+            return this.current === name;
+        },
+        switchTo(name) {
+            this.current = name;
+        }
+    }
+});
+
+window.featherIcon = function(name) {
+    return feather.icons.hasOwnProperty(name || "x")
+        ? feather.icons[name].contents
+        : feather.icons["x"].contents;
+}

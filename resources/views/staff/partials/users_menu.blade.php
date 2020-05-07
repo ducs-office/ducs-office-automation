@@ -8,7 +8,7 @@
         <ul v-if="userMenu.isVisible" v-click-outside="userMenu.hide"
             class="absolute mt-2 right-0 z-50 min-w-48 max-w-xs p-4 bg-white border rounded shadow-lg">
             <li class="mb-2">
-                <button class="w-full inline-flex items-center btn" @click="$modal.show('change_password_modal')">
+                <button class="w-full inline-flex items-center btn border-0 bg-transparent hover:bg-gray-200" @click="$modal.show('change_password_modal')">
                     <feather-icon name="key" class="h-current" stroke-width="3">Change Password Icon</feather-icon>
                     <span class="ml-2 whitespace-no-wrap">Change Password</span>
                 </button>
@@ -17,7 +17,7 @@
                 <button type="submit" form="logout-form"
                     formaction="{{ route('logout') }}"
                     formmethod="POST"
-                    class="w-full inline-flex items-center btn btn-red">
+                    class="w-full inline-flex items-center btn border-0 bg-transparent hover:bg-red-700 hover:text-white">
                     <feather-icon name="power" class="h-current" stroke-width="3">Logout Icon</feather-icon>
                     <span class="ml-2 whitespace-no-wrap">Logout</span>
                 </button>

@@ -1,5 +1,5 @@
 <div class="page-card p-6 flex overflow-visible space-x-6">
-    <div class="w-64 pr-4 relative z-10 -ml-8 my-2">
+    <div class="w-64 pr-4 relative -ml-8 my-2">
         <h3 class="relative pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
             Pre-PhD Coursework
         </h3>

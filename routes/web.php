@@ -141,7 +141,8 @@ Route::prefix('/scholars')
     ->namespace('Scholars')
     ->as('scholars.')
     ->group(static function () {
-        Route::get('/', 'ProfileController@index')->name('profile');
+        Route::get('/', 'DashboardController@index')->name('dashboard');
+        Route::get('/profile', 'ProfileController@index')->name('profile');
         Route::get('/profile/edit', 'ProfileController@edit')->name('profile.edit');
         Route::patch('/profile', 'ProfileController@update')->name('profile.update');
         Route::get('/profile/avatar', 'ProfileController@avatar')->name('profile.avatar');

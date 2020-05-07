@@ -67,7 +67,7 @@ class UpdateScholarProfileTest extends TestCase
         $this->assertEquals($updateDetails['address'], $freshScholar->address);
         $this->assertEquals($updateDetails['category'], $freshScholar->category);
         $this->assertEquals($updateDetails['admission_mode'], $freshScholar->admission_mode);
-        $this->assertEquals($updateDetails['enrollment_date'], $freshScholar->enrollment_date);
+        $this->assertEquals($updateDetails['enrollment_date'], $freshScholar->enrollment_date->format('Y-m-d'));
         $this->assertEquals($updateDetails['research_area'], $freshScholar->research_area);
         $this->assertEquals($updateDetails['education_details'][0]['year'], $freshScholar->education_details[0]->year);
         $this->assertEquals($degree->name, $freshScholar->education_details[0]->degree);

@@ -19,6 +19,7 @@ class CreateScholarsTable extends Migration
             $table->string('last_name');
             $table->string('email')->unique();
             $table->string('password', 60);
+            $table->rememberToken();
 
             $table->timestamps();
         });

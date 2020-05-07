@@ -48,6 +48,7 @@ class Scholar extends User
     ];
 
     protected $casts = [
+        'enrollment_date' => 'date',
         'advisory_committee' => AdvisoryCommittee::class,
         'old_advisory_committees' => OldAdvisoryCommittee::class,
         'category' => CustomType::class . ':' . ReservationCategory::class,
@@ -56,6 +57,14 @@ class Scholar extends User
         'education_details' => EducationDetails::class,
         'old_cosupervisors' => 'array',
         'old_supervisors' => 'array',
+    ];
+
+    protected $withCount = [
+        'courseworks', 'completedCourseworks',
+        'journals', 'conferences',
+        'presentations',
+        'advisoryMeetings',
+        'leaves', 'approvedLeaves',
     ];
 
     public static function boot()
@@ -137,6 +146,11 @@ class Scholar extends User
             ->using(ScholarCourseworkPivot::class);
     }
 
+    public function completedCourseworks()
+    {
+        return $this->courseworks()->wherePivot('completed_on', '<>', null);
+    }
+
     public function addCourse(PhdCourse $course, $attributes = [])
     {
         return $this->courseworks()->syncWithoutDetaching([$course->id => $attributes]);
@@ -147,6 +161,11 @@ class Scholar extends User
         return $this->hasMany(Leave::class)
             ->whereNull('extended_leave_id')
             ->orderBy('to', 'desc');
+    }
+
+    public function approvedLeaves()
+    {
+        return $this->leaves()->where('status', LeaveStatus::APPROVED);
     }
 
     public function advisoryMeetings()
