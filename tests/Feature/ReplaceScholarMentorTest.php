@@ -41,6 +41,20 @@ class ReplaceScholarMentorTest extends TestCase
         $this->assertEquals(now()->format('d F Y'), $scholar->fresh()->old_cosupervisors[0]['date']);
 
         $this->assertTrue($newCosupervisor->is($scholar->fresh()->cosupervisor));
+
+        $newCosupervisor = create(SupervisorProfile::class);
+
+        $this->withoutExceptionHandling()
+            ->patch(route('staff.scholars.replace_cosupervisor', $scholar), [
+                'cosupervisor_profile_type' => SupervisorProfile::class,
+                'cosupervisor_profile_id' => $newCosupervisor->id,
+            ])
+            ->assertSessionHasFlash('success', 'Co-Supervisor replaced successfully!');
+
+        $updatedScholar = $scholar->fresh();
+        $this->assertEquals(2, count($updatedScholar->old_cosupervisors));
+        $this->assertEquals($newCosupervisor->id, $updatedScholar->cosupervisor_profile_id);
+        $this->assertEquals('App\Models\SupervisorProfile', $updatedScholar->cosupervisor_profile_type);
     }
 
     /** @test */
@@ -96,42 +110,78 @@ class ReplaceScholarMentorTest extends TestCase
         $this->assertTrue($newCosupervisor->is($scholar->fresh()->cosupervisor));
     }
 
-    // /** @test */
-    // public function cosupervisor_of_scholar_can_not_be_replaced_if_cosupervisor_is_same_as_previous_cosupervisor()
-    // {
-    //     $this->signIn();
-    //     $scholar = create(Scholar::class);
+    /** @test */
+    public function cosupervisor_of_scholar_can_not_be_replaced_if_cosupervisor_is_same_as_previous_cosupervisor()
+    {
+        $this->signIn();
 
-    //     $this->assertEquals(0, count($scholar->fresh()->old_cosupervisors));
+        $SupervisorProfile = create(SupervisorProfile::class);
 
-    //     $oldCosupervisor = $scholar->cosupervisor;
+        $scholar = create(Scholar::class, 1, [
+            'cosupervisor_profile_type' => SupervisorProfile::class,
+            'cosupervisor_profile_id' => $SupervisorProfile->id,
+        ]);
 
-    //     try {
-    //         $this->withoutExceptionHandling()
-    //             ->patch(route('staff.scholars.replace_cosupervisor', $scholar), [
-    //                 'cosupervisor_id' => $oldCosupervisor->id,
-    //             ]);
-    //     } catch (ValidationException $e) {
-    //         $this->assertArrayHasKey('cosupervisor_id', $e->errors());
-    //     }
+        $this->assertEquals(0, count($scholar->fresh()->old_cosupervisors));
 
-    //     $this->assertEquals(0, count($scholar->fresh()->old_cosupervisors));
+        try {
+            $this->withoutExceptionHandling()
+                ->patch(route('staff.scholars.replace_cosupervisor', $scholar), [
+                    'cosupervisor_profile_type' => SupervisorProfile::class,
+                    'cosupervisor_profile_id' => $SupervisorProfile->id,
+                ]);
+        } catch (ValidationException $e) {
+            $this->assertArrayHasKey('cosupervisor_profile_id', $e->errors());
+        }
 
-    //     $scholar = create(Scholar::class, 1, ['cosupervisor_id' => '']);
+        $this->assertEquals(0, count($scholar->fresh()->old_cosupervisors));
 
-    //     $this->assertEquals(0, count($scholar->fresh()->old_cosupervisors));
+        $scholar = create(Scholar::class, 1, [
+            'cosupervisor_profile_type' => null,
+            'cosupervisor_profile_id' => null,
+        ]);
 
-    //     try {
-    //         $this->withoutExceptionHandling()
-    //             ->patch(route('staff.scholars.replace_cosupervisor', $scholar), [
-    //                 'cosupervisor_id' => '',
-    //             ]);
-    //     } catch (ValidationException $e) {
-    //         $this->assertArrayHasKey('cosupervisor_id', $e->errors());
-    //     }
+        $this->assertEquals(0, count($scholar->fresh()->old_cosupervisors));
 
-    //     $this->assertEquals(0, count($scholar->fresh()->old_cosupervisors));
-    // }
+        try {
+            $this->withoutExceptionHandling()
+                ->patch(route('staff.scholars.replace_cosupervisor', $scholar), [
+                    'cosupervisor_profile_type' => null,
+                    'cosupervisor_profile_id' => null,
+                ]);
+        } catch (ValidationException $e) {
+            $this->assertArrayHasKey('cosupervisor_profile_id', $e->errors());
+        }
+
+        $this->assertEquals(0, count($scholar->fresh()->old_cosupervisors));
+    }
+
+    /** @test */
+    public function cosupervisor_of_scholar_can_not_be_replaced_if_cosupervisor_is_same_as_supervisor()
+    {
+        $this->signIn();
+        $SupervisorProfile = create(SupervisorProfile::class);
+
+        $scholar = create(Scholar::class, 1, [
+            'supervisor_profile_id' => $SupervisorProfile->id,
+        ]);
+
+        $this->assertEquals(0, count($scholar->fresh()->old_cosupervisors));
+
+        $oldCosupervisor = $scholar->cosupervisor;
+
+        try {
+            $this->withoutExceptionHandling()
+                ->patch(route('staff.scholars.replace_cosupervisor', $scholar), [
+                    'cosupervisor_profile_type' => SupervisorProfile::class,
+                    'cosupervisor_profile_id' => $SupervisorProfile->id,
+                ]);
+        } catch (ValidationException $e) {
+            $this->assertArrayHasKey('cosupervisor_profile_id', $e->errors());
+        }
+
+        $this->assertEquals(0, count($scholar->fresh()->old_cosupervisors));
+    }
 
     /** @test */
     public function supervisor_of_scholar_can_not_be_replaced_if_supervisor_is_same_as_previous_supervisor()

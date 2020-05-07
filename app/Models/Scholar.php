@@ -117,7 +117,8 @@ class Scholar extends User
                 'name' => $cosupervisor->name,
                 'email' => $cosupervisor->email,
                 'designation' => $cosupervisor->profile->designation ?? 'Professor',
-                'affiliation' => $cosupervisor->profile->college->name ?? 'Affiliation Not Set',
+                'affiliation' => $cosupervisor->supervisor_type === User::class ? 'DUCS' :
+                                $cosupervisor->profile->college->name ?? 'Affiliation Not Set',
             ];
         }
 

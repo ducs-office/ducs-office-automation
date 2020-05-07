@@ -193,7 +193,11 @@ class ScholarTest extends TestCase
         $this->assertEquals($supervisor->name, $scholar->cosupervisor->name);
         $this->assertEquals($supervisor->email, $scholar->cosupervisor->email) ;
         $this->assertEquals($supervisor->profile->designation ?? 'Professor', $scholar->cosupervisor->designation);
-        $this->assertEquals($supervisor->profile->college->name ?? 'Affiliation Not Set', $scholar->cosupervisor->affiliation);
+        $this->assertEquals(
+            $supervisor->supervisor_type === User::class ? 'DUCS' :
+                $supervisor->profile->college->name ?? 'Affiliation Not Set',
+            $scholar->cosupervisor->affiliation
+        );
     }
 
     /** @test */
