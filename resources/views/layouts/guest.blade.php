@@ -9,7 +9,7 @@
     @routes
 </head>
 <body class="font-sans leading-tight bg-magenta-800">
-    <div id="app" class="min-h-screen px-4">
+    <div id="app" class="min-h-screen px-4 space-y-8">
         <header class="flex items-center max-w-lg mx-auto py-8 px-4">
             <img src="{{ asset('images/university-logo.png') }}" alt="University of Delhi - Logo" class="w-16 sm:w-20 flex-shrink-0 mr-3">
             <div class="flex-1 text-white leading-none">

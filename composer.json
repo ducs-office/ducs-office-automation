@@ -20,6 +20,7 @@
         "tightenco/ziggy": "^0.8.1"
     },
     "require-dev": {
+        "beyondcode/laravel-er-diagram-generator": "^1.4",
         "brainmaestro/composer-git-hooks": "^2.8",
         "filp/whoops": "^2.0",
         "friendsofphp/php-cs-fixer": "^2.16",

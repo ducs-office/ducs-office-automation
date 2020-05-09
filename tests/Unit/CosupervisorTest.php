@@ -7,7 +7,9 @@ use App\Models\Cosupervisor;
 use App\Models\Teacher;
 use App\Models\User;
 use App\Types\TeacherStatus;
+use App\Types\UserCategory;
 use App\Types\UserType;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -17,66 +19,41 @@ class CosupervisorTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function cosupervisor_is_either_a_college_teacher_or_faculty_via_morph_to()
+    public function cosupervisor_is_related_to_an_existing_user()
     {
-        $cosupervisor = create(Cosupervisor::class);
-
-        $this->assertInstanceOf(MorphTo::class, $cosupervisor->professor());
-
-        $teacher = create(Teacher::class);
-        $teacherCosupervisor = create(Cosupervisor::class, 1, [
-            'professor_type' => Teacher::class,
-            'professor_id' => $teacher->id,
-        ]);
-
-        $this->assertTrue($teacher->is($teacherCosupervisor->professor));
-
-        $faculty = create(User::class, 1, ['type' => UserType::FACULTY_TEACHER]);
-
-        $facultyCosupervisor = create(Cosupervisor::class, 1, [
+        $faculty = create(User::class, ['category' => UserCategory::FACULTY_TEACHER]);
+        $cosupervisor = create(Cosupervisor::class, 1, [
             'professor_type' => User::class,
             'professor_id' => $faculty->id,
         ]);
 
-        $this->assertTrue($faculty->is($facultyCosupervisor->professor));
+        $this->assertInstanceOf(BelongsTo::class, $cosupervisor->professor());
+        $this->assertTrue($faculty->is($cosupervisor->professor));
+
+        $teacher = create(User::class, 1, ['category' => UserCategory::COLLEGE_TEACHER]);
+
+        $teacherCosupervisor = create(Cosupervisor::class, 1, [
+            'professor_type' => User::class,
+            'professor_id' => $teacher->id,
+        ]);
+
+        $this->assertTrue($teacher->is($teacherCosupervisor->professor));
     }
 
     /** @test */
-    public function faculty_teacher_cosupervisor_details_can_be_accessed_as_direct_properties()
+    public function cosupervisor_details_for_existing_professor_can_be_accessed_as_direct_properties()
     {
-        $facultyTeacher = create(User::class);
+        $existingProfessor = create(User::class);
 
         $cosupervisor = create(Cosupervisor::class, 1, [
             'professor_type' => User::class,
-            'professor_id' => $facultyTeacher->id,
+            'professor_id' => $existingProfessor->id,
         ]);
 
-        $this->assertEquals($facultyTeacher->name, $cosupervisor->name);
-        $this->assertEquals($facultyTeacher->email, $cosupervisor->email);
-        $this->assertEquals('Professor', $cosupervisor->designation);
-        $this->assertEquals('DUCS', $cosupervisor->affiliation);
-    }
-
-    /** @test */
-    public function college_teacher_cosupervisor_details_can_be_accessed_as_direct_properties()
-    {
-        $collegeTeacher = create(Teacher::class);
-        $college = create(College::class);
-
-        $collegeTeacher->profile()->update([
-            'college_id' => $college->id,
-            'designation' => TeacherStatus::PERMANENT,
-        ]);
-
-        $cosupervisor = create(Cosupervisor::class, 1, [
-            'professor_type' => Teacher::class,
-            'professor_id' => $collegeTeacher->id,
-        ]);
-
-        $this->assertEquals($collegeTeacher->name, $cosupervisor->name);
-        $this->assertEquals($collegeTeacher->email, $cosupervisor->email);
-        $this->assertEquals('Professor', $cosupervisor->designation);
-        $this->assertEquals($collegeTeacher->profile->college->name, $cosupervisor->affiliation);
+        $this->assertEquals($existingProfessor->name, $cosupervisor->name);
+        $this->assertEquals($existingProfessor->email, $cosupervisor->email);
+        $this->assertEquals($existingProfessor->designation, $cosupervisor->designation);
+        $this->assertEquals($existingProfessor->college->name, $cosupervisor->affiliation);
     }
 
     /** @test */

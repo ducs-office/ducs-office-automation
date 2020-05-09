@@ -13,9 +13,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', 'Auth\LoginController@showLoginForm')->middleware(['guest', 'guest:teachers', 'guest:scholars'])->name('login_form');
-Route::post('/login', 'Auth\LoginController@login')->middleware(['guest', 'guest:teachers', 'guest:scholars'])->name('login');
-Route::post('/logout', 'Auth\LoginController@logout')->middleware('auth:web,teachers,scholars')->name('logout');
+Route::get('/', 'Auth\LoginController@showLoginForm')->middleware(['guest', 'guest:scholars'])->name('login_form');
+Route::post('/login', 'Auth\LoginController@login')->middleware(['guest', 'guest:scholars'])->name('login');
+Route::post('/logout', 'Auth\LoginController@logout')->middleware('auth:web,scholars')->name('logout');
 
 //============ scholar documents =====================
 Route::get(
@@ -88,7 +88,7 @@ Route::patch(
 )->name('scholars.title_approval.mark_complete')->middleware('auth:web,teachers');
 
 Route::prefix('/publications')
-->middleware(['auth:web,teachers,scholars'])
+->middleware(['auth:web,scholars'])
 ->namespace('Publications')
 ->as('publications.')
 ->group(static function () {
@@ -127,7 +127,7 @@ Route::delete(
 ->middleware('auth:web');
 
 Route::prefix('/research')
-    ->middleware(['auth:web,teachers'])
+    ->middleware(['auth:web'])
     ->namespace('Research')
     ->as('research.')
     ->group(static function () {
@@ -196,7 +196,7 @@ Route::prefix('/research')
     });
 
 Route::prefix('/teachers')
-    ->middleware('auth:teachers')
+    ->middleware('auth')
     ->namespace('Teachers')
     ->as('teachers.')
     ->group(static function () {

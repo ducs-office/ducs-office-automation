@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Types\UserType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
@@ -26,16 +27,15 @@ class Cosupervisor extends Model
 
     public function getDesignationAttribute($designation)
     {
-        return $this->professor ? 'Professor' : $designation;
+        return $this->professor ? $this->professor->designation : $designation;
     }
 
     public function getAffiliationAttribute($affiliation)
     {
-        if ($this->professor_type === Teacher::class) {
-            return optional($this->professor)->profile->college->name ??
-                    'Affiliation Not Set';
+        if (! $this->professor) {
+            return $affiliation;
         }
 
-        return $this->professor ? 'DUCS' : $affiliation;
+        return $this->professor->college->name;
     }
 }

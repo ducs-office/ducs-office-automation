@@ -2,16 +2,13 @@
 
 namespace App\Models;
 
-use App\Concerns\HasPublications;
 use Illuminate\Database\Eloquent\Model;
 
 class SupervisorProfile extends Model
 {
-    use HasPublications;
-
     public function supervisor()
     {
-        return $this->morphTo('supervisor');
+        return $this->belongsTo(User::class);
     }
 
     public function scholars()

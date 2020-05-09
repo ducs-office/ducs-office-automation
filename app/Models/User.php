@@ -3,17 +3,17 @@
 namespace App\Models;
 
 use App\Casts\CustomType;
-use App\Concerns\ExistsAsCosupervisor;
-use App\Concerns\SupervisesScholars;
-use App\Types\UserType;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Concerns\HasPublications;
+use App\Types\Designation;
+use App\Types\TeacherStatus;
+use App\Types\UserCategory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use Notifiable, HasRoles, SupervisesScholars, ExistsAsCosupervisor;
+    use Notifiable, HasRoles, HasPublications;
 
     /**
      * The attributes that are mass assignable.
@@ -21,7 +21,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'type',
+        'name', 'email', 'password', 'category',
     ];
 
     /**
@@ -40,7 +40,11 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'type' => CustomType::class . ':' . UserType::class,
+        'category' => CustomType::class . ':' . UserCategory::class,
+        'designation' => CustomType::class . ':' . Designation::class,
+        'status' => CustomType::class . ':' . TeacherStatus::class,
+        'is_admin' => 'boolean',
+        'is_supervisor' => 'boolean',
     ];
 
     protected static function boot()
@@ -51,6 +55,16 @@ class User extends Authenticatable
             $user->roles()->sync([]);
             $user->remarks()->update(['user_id' => null]);
         });
+    }
+
+    public function getNameAttribute()
+    {
+        return $this->first_name . ' ' . $this->last_name;
+    }
+
+    public function setNameAttribute($name)
+    {
+        list($this->first_name, $this->last_name) = explode(' ', $name, 2);
     }
 
     public function remarks()
@@ -76,5 +90,48 @@ class User extends Authenticatable
     public function createdIncomingLetters()
     {
         return $this->hasMany(IncomingLetter::class, 'creator_id');
+    }
+
+    public function canBecomeSupervisor()
+    {
+        return in_array($this->category, [
+            UserCategory::COLLEGE_TEACHER,
+            UserCategory::FACULTY_TEACHER,
+        ]);
+    }
+
+    public function supervisorProfile()
+    {
+        return $this->hasOne(SupervisorProfile::class, 'supervisor_id');
+    }
+
+    public function isSupervisor()
+    {
+        return $this->supervisorProfile !== null;
+    }
+
+    public function cosupervisorProfile()
+    {
+        return $this->hasOne(Cosupervisor::class);
+    }
+
+    public function isCosupervisor()
+    {
+        return $this->cosupervisorProfile !== null;
+    }
+
+    public function college()
+    {
+        return $this->belongsTo(College::class);
+    }
+
+    public function teachingDetails()
+    {
+        return $this->hasMany(TeachingDetail::class, 'teacher_id');
+    }
+
+    public function teachingRecords()
+    {
+        return $this->hasMany(TeachingRecord::class, 'teacher_id')->orderBy('valid_from', 'desc');
     }
 }

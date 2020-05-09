@@ -3,7 +3,7 @@
 namespace App\Http\Requests\Staff;
 
 use App\Models\User;
-use App\Types\UserType;
+use App\Types\UserCategory;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -31,7 +31,7 @@ class StoreUserRequest extends FormRequest
             'email' => ['required', 'string', 'min:3', 'max:190', 'email', 'unique:users'],
             'roles' => ['required', 'array', 'min:1'],
             'roles.*' => ['required', 'integer', 'exists:roles,id'],
-            'type' => ['required', Rule::in(UserType::values())],
+            'category' => ['required', Rule::in(UserCategory::values())],
         ];
     }
 }

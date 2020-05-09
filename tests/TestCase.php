@@ -33,17 +33,6 @@ abstract class TestCase extends BaseTestCase
         return $user;
     }
 
-    public function signInTeacher($teacher = null)
-    {
-        if (! $teacher) {
-            $teacher = create(Teacher::class);
-        }
-
-        $this->be($teacher, 'teachers');
-
-        return $this;
-    }
-
     public function signInScholar($scholar = null)
     {
         if (! $scholar) {

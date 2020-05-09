@@ -4,7 +4,7 @@ namespace Tests\Feature;
 
 use App\Mail\UserRegisteredMail;
 use App\Models\User;
-use App\Types\UserType;
+use App\Types\UserCategory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
@@ -29,7 +29,7 @@ class CreateNewUserTest extends TestCase
             ->post(route('staff.users.store'), [
                 'name' => $name = 'Naveen Kumar',
                 'email' => $email = 'naveen.k@uni.ac.in',
-                'type' => UserType::FACULTY_TEACHER,
+                'category' => UserCategory::FACULTY_TEACHER,
                 'roles' => [$teacherRole->id],
             ])->assertRedirect('/')
             ->assertSessionHasFlash('success', 'User created successfully!');
@@ -55,7 +55,7 @@ class CreateNewUserTest extends TestCase
             ->post(route('staff.users.store'), [
                 'name' => $name = 'PK Hazra',
                 'email' => $email = 'hazra.pk@uni.ac.in',
-                'type' => UserType::FACULTY_TEACHER,
+                'category' => UserCategory::FACULTY_TEACHER,
                 'roles' => [$teacherRole->id],
                 'is_supervisor' => true,
             ])->assertRedirect('/')
@@ -80,7 +80,7 @@ class CreateNewUserTest extends TestCase
             ->post(route('staff.users.store'), [
                 'name' => $name = 'Megha Khandelwal',
                 'email' => $email = 'megha@uni.ac.in',
-                'type' => UserType::FACULTY_TEACHER,
+                'category' => UserCategory::FACULTY_TEACHER,
                 'roles' => [$facultyRole->id, $hodRole->id],
             ])->assertRedirect('/')
             ->assertSessionHasFlash('success', 'User created successfully!');
@@ -104,16 +104,20 @@ class CreateNewUserTest extends TestCase
         $this->withoutExceptionHandling()
             ->post(route('staff.users.store'), [
                 'name' => 'Sapna Vaarshney',
-                'email' => 'sapnav@cs.du.ac.in',
-                'type' => UserType::FACULTY_TEACHER,
+                'email' => $email = 'sapnav@cs.du.ac.in',
+                'category' => UserCategory::FACULTY_TEACHER,
                 'roles' => [$facultyTeacherRole->id],
             ])->assertRedirect('/')
             ->assertSessionHasFlash('success', 'User created successfully!');
 
-        Mail::assertQueued(UserRegisteredMail::class, function ($mail) {
-            $this->assertArrayHasKey('user', $mail->build()->viewData);
-            $this->assertArrayHasKey('password', $mail->build()->viewData);
-            return true;
+        $user = User::whereEmail($email)->first();
+        $this->assertNotNull($user);
+
+        Mail::assertQueued(UserRegisteredMail::class, function ($mail) use ($user) {
+            $data = $mail->build()->viewData;
+            $this->assertArrayHasKey('user', $data);
+            $this->assertArrayHasKey('password', $data);
+            return (int) $data['user']->id === (int) $user->id;
         });
     }
 
@@ -129,7 +133,7 @@ class CreateNewUserTest extends TestCase
                 ->post(route('staff.users.store'), [
                     'name' => '',
                     'email' => 'hod@uni.ac.in',
-                    'type' => 'hod',
+                    'category' => UserCategory::FACULTY_TEACHER,
                     'roles' => [$teacherRole->id],
                 ]);
         } catch (ValidationException $e) {
@@ -150,7 +154,7 @@ class CreateNewUserTest extends TestCase
                 ->post(route('staff.users.store'), [
                     'name' => 'HOD Faculty',
                     'email' => '',
-                    'type' => 'hod',
+                    'category' => UserCategory::FACULTY_TEACHER,
                     'roles' => [$teacherRole->id],
                 ]);
         } catch (ValidationException $e) {
@@ -172,7 +176,7 @@ class CreateNewUserTest extends TestCase
                 ->post(route('staff.users.store'), [
                     'name' => 'HOD Faculty',
                     'email' => $user->email,
-                    'type' => 'hod',
+                    'category' => UserCategory::FACULTY_TEACHER,
                     'roles' => [$teacherRole->id],
                 ]);
         } catch (ValidationException $e) {
@@ -193,11 +197,11 @@ class CreateNewUserTest extends TestCase
                 ->post(route('staff.users.store'), [
                     'name' => 'HOD Faculty',
                     'email' => 'hod@uni.ac.in',
-                    'type' => '',
+                    'category' => '',
                     'roles' => [$teacherRole->id],
                 ]);
         } catch (ValidationException $e) {
-            $this->assertArrayHasKey('type', $e->errors());
+            $this->assertArrayHasKey('category', $e->errors());
         }
         $this->assertEquals(1, User::count());
     }
@@ -214,11 +218,11 @@ class CreateNewUserTest extends TestCase
                 ->post(route('staff.users.store'), [
                     'name' => 'HOD Faculty',
                     'email' => 'hod@uni.ac.in',
-                    'type' => 'InvalidCategory123',
+                    'category' => 'InvalidCategory123',
                     'roles' => [$teacherRole->id],
                 ]);
         } catch (ValidationException $e) {
-            $this->assertArrayHasKey('type', $e->errors());
+            $this->assertArrayHasKey('category', $e->errors());
         }
         $this->assertEquals(1, User::count());
     }
@@ -235,7 +239,7 @@ class CreateNewUserTest extends TestCase
                 ->post(route('staff.users.store'), [
                     'name' => 'Faculty Teacher',
                     'email' => 'teacher@uni.ac.in',
-                    'type' => UserType::FACULTY_TEACHER,
+                    'category' => UserCategory::FACULTY_TEACHER,
                     'roles' => '',
                 ]);
         } catch (ValidationException $e) {

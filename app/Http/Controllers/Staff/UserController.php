@@ -8,6 +8,7 @@ use App\Http\Requests\Staff\UpdateUserRequest;
 use App\Mail\UserRegisteredMail;
 use App\Models\Cosupervisor;
 use App\Models\User;
+use App\Types\UserCategory;
 use App\Types\UserType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -28,7 +29,7 @@ class UserController extends Controller
         return view('staff.users.index', [
             'users' => User::with('roles')->get(),
             'roles' => Role::all(),
-            'types' => UserType::values(),
+            'types' => UserCategory::values(),
         ]);
     }
 
@@ -41,7 +42,7 @@ class UserController extends Controller
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'type' => $request->type,
+            'category' => $request->category,
             'password' => bcrypt($plain_password),
         ]);
 

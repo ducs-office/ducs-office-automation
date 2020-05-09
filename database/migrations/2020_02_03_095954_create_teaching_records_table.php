@@ -17,14 +17,13 @@ class CreateTeachingRecordsTable extends Migration
         Schema::create('teaching_records', static function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->date('valid_from');
-            $table->unsignedBigInteger('teacher_id');
+            $table->foreignId('teacher_id')->constrained('users')->onDelete('cascade');
             $table->enum('designation', TeacherStatus::values());
-            $table->unsignedBigInteger('college_id');
-            $table->unsignedBigInteger('programme_revision_id');
-            $table->unsignedBigInteger('course_id');
+            $table->foreignId('college_id');
+            $table->foreignId('programme_revision_id');
+            $table->foreignId('course_id');
             $table->unsignedTinyInteger('semester');
 
-            $table->foreign('teacher_id')->references('id')->on('teachers')->onDelete('CASCADE');
             $table->timestamps();
         });
     }

@@ -15,7 +15,7 @@ class CreateSupervisorProfilesTable extends Migration
     {
         Schema::create('supervisor_profiles', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->morphs('supervisor');
+            $table->foreignId('supervisor_id')->constrained('users');
             $table->timestamps();
         });
     }

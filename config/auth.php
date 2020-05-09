@@ -41,12 +41,6 @@ return [
             'home' => '/staff',
         ],
 
-        'teachers' => [
-            'driver' => 'session',
-            'provider' => 'teachers',
-            'home' => '/teachers',
-        ],
-
         'scholars' => [
             'driver' => 'session',
             'provider' => 'scholars',
