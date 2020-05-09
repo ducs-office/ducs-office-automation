@@ -28,6 +28,7 @@
         "laracasts/generators": "^1.1",
         "mockery/mockery": "^1.0",
         "nunomaduro/collision": "^4.1",
+        "nunomaduro/laravel-mojito": "^0.2.4",
         "phpunit/phpunit": "^8.5"
     },
     "config": {

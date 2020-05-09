@@ -138,10 +138,37 @@ class EditUserTest extends TestCase
         $this->withoutExceptionHandling()
             ->patch(route('staff.users.update', $user), [
                 'is_supervisor' => true,
-            ])->assertRedirect()
-        ->assertSessionHasNoErrors()
-        ->assertSessionHasFlash('success', 'User updated successfully!');
+            ])
+            ->assertRedirect()
+            ->assertSessionHasFlash('success', 'User updated successfully!');
 
         $this->assertTrue($user->isSupervisor(), 'User was not made a supervisor.');
+    }
+
+    /** @test */
+    public function only_college_teacher_faculty_teacher_can_be_made_a_supervisor()
+    {
+        //TODO: Fill this test
+        $this->assertTrue(true);
+    }
+
+    /** @test */
+    public function user_of_type_teacher_can_be_made_a_supervisor_only_if_their_profile_has_a_college_set()
+    {
+        $this->signIn();
+
+        $teacher = create(User::class, 1, [
+            'category' => UserCategory::COLLEGE_TEACHER,
+            'college_id' => null,
+        ]);
+
+        $this->withoutExceptionHandling()
+            ->patch(route('staff.users.update', $teacher), [
+                'is_supervisor' => true,
+            ])
+            ->assertRedirect()
+            ->assertSessionHasFlash('success', 'User updated successfully');
+
+        $this->assertTrue($teacher->fresh()->isSupervisor(), 'teacher wasn\'t made a supervisor');
     }
 }

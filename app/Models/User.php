@@ -74,6 +74,16 @@ class User extends Authenticatable
         list($this->first_name, $this->last_name) = explode(' ', $name, 2);
     }
 
+    public function isCollegeTeacher()
+    {
+        return $this->category->equals(UserCategory::COLLEGE_TEACHER);
+    }
+
+    public function isFacultyTeacher()
+    {
+        return $this->category->equals(UserCategory::FACULTY_TEACHER);
+    }
+
     public function remarks()
     {
         return $this->hasMany(Remark::class, 'user_id');

@@ -166,6 +166,7 @@ return [
          * Package Service Providers...
          */
         Laracasts\Flash\FlashServiceProvider::class,
+        NunoMaduro\LaravelMojito\MojitoServiceProvider::class,
 
         /*
          * Application Service Providers...

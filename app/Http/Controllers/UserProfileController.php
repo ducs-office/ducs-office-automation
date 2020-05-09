@@ -16,18 +16,17 @@ use Illuminate\Support\Facades\Storage;
 
 class UserProfileController extends Controller
 {
-    public function index(Request $request)
+    public function show(Request $request, User $user)
     {
-        $teacher = $request->user()->load([
+        $user->load([
             'teachingRecords',
-            'profile.college',
-            'profile.profilePicture',
-            'profile.teachingDetails',
+            'college',
+            'teachingDetails',
         ]);
 
-        return view('teachers.profile', [
+        return view('users.profile', [
             'designations' => TeacherStatus::values(),
-            'teacher' => $teacher,
+            'user' => $user,
         ]);
     }
 

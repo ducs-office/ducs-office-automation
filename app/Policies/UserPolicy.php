@@ -58,6 +58,18 @@ class UserPolicy
     }
 
     /**
+     * Determine whether the user can update the model.
+     *
+     * @param  \App\Models\User  $user
+     *
+     * @return mixed
+     */
+    public function updateProfile(User $user, User $userModel)
+    {
+        return $user->can('users:edit') && $user->id === $userModel->id;
+    }
+
+    /**
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user

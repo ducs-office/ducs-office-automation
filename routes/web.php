@@ -87,6 +87,7 @@ Route::patch(
     'ScholarTitleApprovalController@markComplete'
 )->name('scholars.title_approval.mark_complete')->middleware('auth:web,teachers');
 
+Route::get('/users/@{user}', 'UserProfileController@show')->name('profiles.show');
 Route::patch('/users/@{user}', 'UserProfileController@update')->name('profiles.update');
 
 Route::prefix('/publications')
