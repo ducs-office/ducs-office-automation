@@ -21,9 +21,7 @@ $factory->define(ScholarDocument::class, function (Faker $faker) {
                     ->create('document.pdf', 100, 'application/pdf')
                     ->store('scholar_documents');
         },
-        'description' => ($type === ScholarDocumentType::PROGRESS_REPORT) ?
-                 $faker->randomElement(ProgressReportRecommendation::values()) :
-                 $faker->sentence,
+        'description' => $faker->sentence,
         'date' => $faker->date('Y-m-d'),
     ];
 });

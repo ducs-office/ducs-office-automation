@@ -299,34 +299,6 @@ class ScholarTest extends TestCase
     }
 
     /** @test */
-    public function progress_report_method_return_documents_of_type_progress_report()
-    {
-        $scholar = create(Scholar::class);
-
-        $this->assertCount(0, $scholar->progressReports());
-
-        $progressReports = create(ScholarDocument::class, 2, ['type' => ScholarDocumentType::PROGRESS_REPORT, 'scholar_id' => $scholar->id]);
-        $otherDocuments = create(ScholarDocument::class, 1, ['type' => ScholarDocumentType::OTHER_DOCUMENT, 'scholar_id' => $scholar->id]);
-
-        $this->assertCount(count($progressReports), $scholar->fresh()->progressReports());
-        $this->assertEquals($progressReports->sortByDesc('date')->pluck('id'), $scholar->fresh()->progressReports()->pluck('id'));
-    }
-
-    /** @test */
-    public function other_documents_method_return_documents_of_type_other_document()
-    {
-        $scholar = create(Scholar::class);
-
-        $this->assertCount(0, $scholar->otherDocuments());
-
-        $otherDocuments = create(ScholarDocument::class, 2, ['type' => ScholarDocumentType::OTHER_DOCUMENT, 'scholar_id' => $scholar->id]);
-        $progressReports = create(ScholarDocument::class, 1, ['type' => ScholarDocumentType::PROGRESS_REPORT, 'scholar_id' => $scholar->id]);
-
-        $this->assertCount(count($otherDocuments), $scholar->fresh()->otherDocuments());
-        $this->assertEquals($otherDocuments->sortByDesc('date')->pluck('id'), $scholar->fresh()->otherDocuments()->pluck('id'));
-    }
-
-    /** @test */
     public function addCourse_methods_assigns_pivot_attributes()
     {
         Storage::fake();

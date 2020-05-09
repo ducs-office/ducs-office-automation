@@ -1,0 +1,89 @@
+{{--Other Documents--}}
+<div class="page-card p-6 flex overflow-visible space-x-6">
+    <div class="w-64 pr-4 relative z-10 -ml-8 my-2">
+        <h3 class="relative pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
+            Documents
+        </h3>
+        <svg class="absolute left-0 w-2 text-magenta-900" viewBox="0 0 10 10">
+            <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
+        </svg>
+    </div>
+    <div class="flex-1">
+        <ul class="border rounded-lg overflow-hidden mb-4 divide-y">
+            @forelse ($scholar->documents as $document)
+                <li class="px-4 py-3">
+                    <div class="flex items-center">
+                        <div class="flex-1">
+                            <p class="font-bold mr-2">{{ $document->date->format('d F Y') }}</p>
+                            <p class="text-gray-700">{{ $document->description }}</p>
+                        </div>
+                        @can('view', $document)
+                        <a href="{{ route('scholars.documents.view', [$scholar, $document]) }}"
+                            class="inline-flex items-center underline px-3 py-1 bg-gray-100 text-gray-900 rounded font-bold">
+                        <feather-icon name="paperclip" class="h-4 mr-2"></feather-icon>
+                            {{ $document->type }}
+                        </a>
+                        @endcan
+                    </div>
+                </li>
+            @empty
+                <li class="px-4 py-3 text-center text-gray-700 font-bold">No Documents</li>
+            @endforelse
+        </ul>
+        @can('scholars.documents.store', $scholar)
+        <button class="mt-2 w-full btn btn-magenta rounded-lg py-3" @click="$modal.show('add-other-documents-modal')">
+            + Add Documents
+        </button>
+        <v-modal name="add-other-documents-modal" height="auto">
+            <div class="p-6">
+                <h3 class="text-lg font-bold mb-4">Add Documents</h3>
+                <form action="{{ route('research.scholars.documents.store', $scholar) }}" method="POST"
+                    class="px-6" enctype="multipart/form-data">
+                    @csrf_token
+                    <div class="mb-2 items-center">
+                        <div class="mb-2">
+                            <label for="date" class="mb-1 w-full form-label">Date
+                                <span class="text-red-600">*</span>
+                            </label>
+                            <input type="date" name="date" id="date" class="w-full form-input" required>
+                        </div>
+                        <div class="mb-2">
+                            <label for="document" class="mb-1 w-full form-label">Upload Document
+                                <span class="text-red-600">*</span>
+                            </label>
+                            <v-file-input id="document" name="document" accept="application/pdf" 
+                            class="form-input overflow-hidden" placeholder="Choose a Pdf ">
+                                <template v-slot="{ label }">
+                                    <div class="w-full inline-flex items-center">
+                                        <feather-icon name="upload" class="h-4 mr-2 text-gray-700 flex-shrink-0"></feather-icon>
+                                        <span v-text="label" class="truncate"></span>
+                                    </div>
+                                </template>
+                            </v-file-input>
+                        </div>
+                        <div class="mb-2">
+                            <label for="type" class="mb-1 form-label w-full">
+                                Type <span class="text-red-600">*</span>
+                            </label>
+                            <select name="type" id="type" class="form-select w-full">
+                                @foreach ($documentTypes as $documentType)
+                                    <option value="{{ $documentType }}">
+                                        {{$documentType}} </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="mb-2">
+                            <label for="description" class="mb-1 w-full form-label">Description
+                                <span class="text-red-600">*</span>
+                            </label>
+                            <textarea id="description" name="description" type="" class="w-full form-input" placeholder="Enter Description" required>
+                            </textarea>
+                        </div>
+                    </div>
+                    <button type="submit" class="px-5 btn btn-magenta text-sm rounded-l-none">Add</button>
+                </form>
+            </div>
+        </v-modal>
+        @endcan
+    </div>
+</div>

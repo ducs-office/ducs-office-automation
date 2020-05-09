@@ -47,8 +47,8 @@ class ScholarProfilePolicy
         return ($user instanceof User && $user->can('scholar progress reports:add'));
     }
 
-    public function addOtherDocuments($user, Scholar $scholar)
+    public function addDocuments($user, Scholar $scholar)
     {
-        return ($user instanceof User && $user->can('scholar other documents:add'));
+        return ($user instanceof User && $user->can('scholar documents:add'));
     }
 }

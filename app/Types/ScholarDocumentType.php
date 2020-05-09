@@ -2,27 +2,11 @@
 
 namespace App\Types;
 
-use Illuminate\Database\Eloquent\Model;
-
-class ScholarDocumentType extends Model
+class ScholarDocumentType extends BaseEnumType
 {
-    const PROGRESS_REPORT = 'progress report';
-    const OTHER_DOCUMENT = 'other document';
-
-    protected $value;
-
-    public function __construct($value)
-    {
-        $this->value = $value;
-    }
-
-    public function __toString()
-    {
-        return $this->value;
-    }
-
-    public static function values()
-    {
-        return [self::PROGRESS_REPORT, self::OTHER_DOCUMENT];
-    }
+    const JOINING_LETTER = 'Joining Letter';
+    const LETTER_OF_EXTENSION = 'Letter Of Extension';
+    const ACCEPTANCE_LETTER = 'Acceptance Letter';
+    const THESIS_TOC = 'Thesis - Table of Contents';
+    const PRE_PHD_SEMINAR_NOTICE = 'Pre-PhD Seminar Notice';
 }
