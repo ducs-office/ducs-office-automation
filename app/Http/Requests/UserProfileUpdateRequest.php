@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Http\Requests\Teacher;
+namespace App\Http\Requests;
 
 use App\Models\CourseProgrammeRevision;
 use App\Models\ProgrammeRevision;
+use App\Types\Designation;
 use App\Types\TeacherStatus;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class UpdateProfileRequest extends FormRequest
+class UserProfileUpdateRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -17,19 +18,24 @@ class UpdateProfileRequest extends FormRequest
      */
     public function rules()
     {
-        $profile = $this->user()->profile;
+        $user = $this->user();
 
         return [
-            'phone_no' => ['sometimes', Rule::requiredIf($profile->phone_no != null)],
-            'address' => ['sometimes', Rule::requiredIf($profile->address != null)],
+            'phone' => ['sometimes', Rule::requiredIf($user->phone != null)],
+            'address' => ['sometimes', Rule::requiredIf($user->address != null)],
+            'status' => [
+                'sometimes',
+                Rule::requiredIf($user->status != null),
+                Rule::in(TeacherStatus::values()),
+            ],
             'designation' => [
                 'sometimes',
-                Rule::requiredIf($profile->designation != null),
-                Rule::in(TeacherStatus::values()),
+                Rule::requiredIf($user->designation != null),
+                Rule::in(Designation::values()),
             ],
             'college_id' => [
                 'sometimes',
-                Rule::requiredIf($profile->college_id != null),
+                Rule::requiredIf($user->college_id != null),
                 'numeric', 'exists:colleges,id',
             ],
             'teaching_details' => ['nullable', 'array'],
@@ -46,7 +52,7 @@ class UpdateProfileRequest extends FormRequest
                     }
                 },
             ],
-            'profile_picture' => ['nullable', 'file', 'image'],
+            'avatar' => ['nullable', 'file', 'image'],
         ];
     }
 
@@ -66,11 +72,17 @@ class UpdateProfileRequest extends FormRequest
             })->toArray();
     }
 
-    public function getProfilePicture()
+    public function uploadAvatar()
     {
-        return [
-            'original_name' => $this->file('profile_picture')->getClientOriginalName(),
-            'path' => $this->file('profile_picture')->store('/teacher_attachments/profile_picture'),
-        ];
+        if (! $this->hasFile('avatar')) {
+            return null;
+        }
+
+        $avatarFile = $this->file('avatar');
+        $path = 'users/avatars';
+        $filename = md5(strtolower($this->route('user')->email))
+            . '.' . $avatarFile->getClientOriginalExtension();
+
+        return $avatarFile->storeAs($path, $filename);
     }
 }

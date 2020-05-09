@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 /*
-|---4-----------------------------------------------------------------------
+|---------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
 |
@@ -86,6 +86,8 @@ Route::patch(
     '/scholars/{scholar}/title-approval/{appeal}/mark-complete',
     'ScholarTitleApprovalController@markComplete'
 )->name('scholars.title_approval.mark_complete')->middleware('auth:web,teachers');
+
+Route::patch('/users/@{user}', 'UserProfileController@update')->name('profiles.update');
 
 Route::prefix('/publications')
 ->middleware(['auth:web,scholars'])

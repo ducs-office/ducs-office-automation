@@ -9,8 +9,8 @@ use App\Types\TeacherStatus;
 use App\Types\UserCategory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Support\Str;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
@@ -23,6 +23,8 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name', 'email', 'password', 'category',
+        'phone', 'address', 'college_id', 'designation',
+        'status', 'avatar_path',
     ];
 
     /**

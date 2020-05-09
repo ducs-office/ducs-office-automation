@@ -15,12 +15,12 @@ $factory->define(TeachingRecord::class, function (Faker $faker) {
     return [
         'designation' => $faker->randomElement(TeacherStatus::values()),
         'college_id' => factory(College::class),
-        'teacher_id' => function() use ($faker) {
+        'teacher_id' => function () use ($faker) {
             return factory(User::class)->create([
                 'category' => $faker->randomElement([
                     UserCategory::FACULTY_TEACHER,
                     UserCategory::COLLEGE_TEACHER,
-                ])
+                ]),
             ])->id;
         },
         'valid_from' => $faker->date('Y-m-d'),

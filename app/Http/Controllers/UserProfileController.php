@@ -1,19 +1,20 @@
 <?php
 
-namespace App\Http\Controllers\Teachers;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Teacher\UpdateProfileRequest;
+use App\Http\Requests\UserProfileUpdateRequest;
 use App\Models\College;
-use App\Models\Course;
 use App\Models\Programme;
 use App\Models\TeacherProfile;
+use App\Models\User;
 use App\Types\TeacherStatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 
-class ProfileController extends Controller
+class UserProfileController extends Controller
 {
     public function index(Request $request)
     {
@@ -48,29 +49,24 @@ class ProfileController extends Controller
         ]);
     }
 
-    public function update(UpdateProfileRequest $request)
+    public function update(UserProfileUpdateRequest $request, User $user)
     {
-        $validatedData = $request->validated();
-        $profile = $request->user()->profile->load('teachingDetails');
+        $user = $user->load('teachingDetails');
 
-        // dd($validatedData);
+        $user->update($request->validated() + [
+            'avatar_path' => $request->uploadAvatar() ?? $user->avatar_path,
+        ]);
 
-        $profile->update($validatedData);
-
-        $this->syncCreateTeachingDetails($profile, $request->getTeachingRecord());
-
-        if ($request->has('profile_picture')) {
-            $profile->profilePicture()->create($request->getProfilePicture());
-        }
+        $this->syncTeachingDetails($user, $request->getTeachingRecord());
 
         flash('Profile Updated Successfully!')->success();
 
         return redirect(route('teachers.profile'));
     }
 
-    protected function syncCreateTeachingDetails(TeacherProfile $profile, array $records)
+    protected function syncTeachingDetails(User $user, array $records)
     {
-        $currentDetails = $profile->teachingDetails->map->only([
+        $currentDetails = $user->teachingDetails->map->only([
             'programme_revision_id',
             'course_id',
             'semester',
@@ -85,8 +81,8 @@ class ProfileController extends Controller
         $toBeCreated = $newDetails->diffKeys($currentDetails)->toArray();
         $toBeDeleted = $currentDetails->diffKeys($newDetails);
 
-        $profile->teachingDetails()->createMany($toBeCreated);
-        $profile->teachingDetails()
+        $user->teachingDetails()->createMany($toBeCreated);
+        $user->teachingDetails()
             ->whereIn('programme_revision_id', $toBeDeleted->pluck('programme_revision_id')->toArray())
             ->whereIn('course_id', $toBeDeleted->pluck('course_id')->toArray())
             ->whereIn('semester', $toBeDeleted->pluck('semester')->toArray())
