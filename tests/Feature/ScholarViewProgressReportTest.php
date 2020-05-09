@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\ProgressReport;
 use App\Models\Scholar;
 use App\Models\ScholarDocument;
 use App\Types\ScholarDocumentType;
@@ -18,8 +19,7 @@ class ScholarViewProgressReportTest extends TestCase
     {
         $this->signInScholar($scholar = create(Scholar::class));
 
-        $progressReport = create(ScholarDocument::class, 1, [
-            'type' => ScholarDocumentType::PROGRESS_REPORT,
+        $progressReport = create(ProgressReport::class, 1, [
             'scholar_id' => $scholar->id,
         ]);
 
@@ -35,8 +35,7 @@ class ScholarViewProgressReportTest extends TestCase
 
         $scholar = create(Scholar::class);
 
-        $progressReport = create(ScholarDocument::class, 1, [
-            'type' => ScholarDocumentType::PROGRESS_REPORT,
+        $progressReport = create(ProgressReport::class, 1, [
             'scholar_id' => $scholar->id,
         ]);
 

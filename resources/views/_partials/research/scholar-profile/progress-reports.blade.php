@@ -1,9 +1,5 @@
 {{--Progress Reports--}}
-@php($recommendationColors = [
-    App\Types\ProgressReportRecommendation::CANCELLATION => 'bg-red-300 text-red-900',
-    App\Types\ProgressReportRecommendation::WARNING => 'bg-yellow-300 text-yellow-900',
-    App\Types\ProgressReportRecommendation::CONTINUE => 'bg-green-300 text-green-900',
-])
+
 <div class="page-card p-6 flex overflow-visible space-x-6">
     <div class="w-64 pr-4 relative -ml-8 my-2">
         <h3 class="relative pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
@@ -15,20 +11,21 @@
     </div>
     <div class="flex-1">
         <ul class="border rounded-lg overflow-hidden mb-4 divide-y">
-            @forelse ($scholar->progressReports() as $progressReport)
+            @forelse ($scholar->progressReports as $progressReport)
                 <li class="px-4 py-3">
                     <div class="flex items-center">
                         <div class="flex items-center space-x-4 mr-4">
                             <p class="font-bold w-32">{{ $progressReport->date->format('d F Y') }}</p>
-                            <a href="{{ route('research.scholars.progress_reports.attachment', [$scholar, $progressReport]) }}"
+                            <a  target="_blank" 
+                                href="{{ route('research.scholars.progress_reports.attachment', [$scholar, $progressReport]) }}"
                                 class="inline-flex items-center underline px-3 py-1 bg-gray-100 text-gray-900 rounded font-bold">
                                 <feather-icon name="paperclip" class="h-4 mr-2">Attachment</feather-icon>
                                 Attachment
                             </a>
                         </div>
                         <span class="px-3 py-1 text-sm font-bold rounded-full ml-auto flex-shrink-0
-                            {{ $recommendationColors[$progressReport->description] }}">
-                            {{ $progressReport->description }}
+                            {{ $progressReport->recommendation->getContextCSS() }}">
+                            {{ $progressReport->recommendation }}
                         </span>
                     </div>
                 </li>
@@ -54,10 +51,10 @@
                             <input type="date" name="date" id="date" class="w-full form-input" required>
                         </div>
                         <div class="w-1/2 ml-1">
-                            <label for="description" class="mb-1 w-full form-label">Recommendation
+                            <label for="recommendation" class="mb-1 w-full form-label">Recommendation
                                 <span class="text-red-600">*</span>
                             </label>
-                            <select class="w-full form-input block" name="description" required>
+                            <select class="w-full form-input block" name="recommendation" required>
                                 <option class="text-gray-600" selected disabled value="">Select Recommendation</option>
                                 @foreach (App\Types\ProgressReportRecommendation::values() as $recommendation)
                                     <option value="{{ $recommendation }}" class="text-gray-600"> {{ $recommendation }} </option>

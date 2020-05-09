@@ -180,7 +180,7 @@ class Scholar extends User
 
     public function progressReports()
     {
-        return $this->documents->where('type', ScholarDocumentType::PROGRESS_REPORT);
+        return $this->hasMany(ProgressReport::class)->orderBy('date', 'desc');
     }
 
     public function otherDocuments()

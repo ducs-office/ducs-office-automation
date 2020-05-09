@@ -109,7 +109,7 @@ Route::prefix('/research')
         )->name('scholars.progress_reports.store');
 
         Route::get(
-            'scholars/{scholar}/progress-report/{document}/attachment',
+            'scholars/{scholar}/progress-report/{report}/attachment',
             'ScholarProgressReportsController@viewAttachment'
         )->name('scholars.progress_reports.attachment');
 
@@ -176,7 +176,7 @@ Route::prefix('/scholars')
         )->name('advisory_meetings.minutes_of_meeting');
 
         Route::get(
-            '/progress-reports/{document}/attachment',
+            '/progress-reports/{report}/attachment',
             'ProgressReportsController'
         )->name('progress_reports.attachment');
 

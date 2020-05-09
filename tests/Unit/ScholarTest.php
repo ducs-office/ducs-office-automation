@@ -7,6 +7,7 @@ use App\Models\Cosupervisor;
 use App\Models\Leave;
 use App\Models\PhdCourse;
 use App\Models\Presentation;
+use App\Models\ProgressReport;
 use App\Models\Scholar;
 use App\Models\ScholarDocument;
 use App\Models\ScholarEducationDegree;
@@ -299,17 +300,18 @@ class ScholarTest extends TestCase
     }
 
     /** @test */
-    public function progress_report_method_return_documents_of_type_progress_report()
+    public function scholar_has_many_progress_reports()
     {
         $scholar = create(Scholar::class);
 
-        $this->assertCount(0, $scholar->progressReports());
+        $this->assertInstanceOf(HasMany::class, $scholar->progressReports());
+        $this->assertCount(0, $scholar->progressReports);
 
-        $progressReports = create(ScholarDocument::class, 2, ['type' => ScholarDocumentType::PROGRESS_REPORT, 'scholar_id' => $scholar->id]);
-        $otherDocuments = create(ScholarDocument::class, 1, ['type' => ScholarDocumentType::OTHER_DOCUMENT, 'scholar_id' => $scholar->id]);
+        $progressReports = create(ProgressReport::class, 2, ['scholar_id' => $scholar->id]);
 
-        $this->assertCount(count($progressReports), $scholar->fresh()->progressReports());
-        $this->assertEquals($progressReports->sortByDesc('date')->pluck('id'), $scholar->fresh()->progressReports()->pluck('id'));
+        $updatedScholar = $scholar->fresh();
+        $this->assertCount(count($progressReports), $updatedScholar->progressReports);
+        $this->assertEquals($progressReports->sortByDesc('date')->pluck('id'), $updatedScholar->progressReports->pluck('id'));
     }
 
     /** @test */

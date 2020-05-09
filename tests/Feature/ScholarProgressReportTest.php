@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\ProgressReport;
 use App\Models\Scholar;
 use App\Models\ScholarDocument;
 use App\Models\User;
@@ -31,26 +32,28 @@ class ScholarProgressReportTest extends TestCase
         $progressReport = UploadedFile::fake()->create('fake_progress_report.pdf', 50, 'application/pdf');
 
         $scholar = create(Scholar::class);
-        $this->assertCount(0, $scholar->progressReports());
+        $this->assertCount(0, $scholar->progressReports);
 
         $this->withoutExceptionHandling()
             ->post(route('research.scholars.progress_reports.store', $scholar), [
                 'progress_report' => $progressReport,
-                'description' => $description = Arr::random(array_values(ProgressReportRecommendation::values())),
+                'recommendation' => $recommendation = Arr::random(array_values(ProgressReportRecommendation::values())),
                 'date' => $date = '2019-09-12',
             ])
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'Progress Report added successfully!');
 
-        $this->assertCount(1, $scholar->fresh()->progressReports());
+        $updatedScholar = $scholar->fresh();
 
-        $expectedPath = 'scholar_documents/' . $progressReport->hashName();
+        $this->assertCount(1, $updatedScholar->progressReports);
 
-        $this->assertEquals($expectedPath, $scholar->fresh()->progressReports()->first()->path);
-        $this->assertEquals($description, $scholar->fresh()->progressReports()->first()->description);
-        $this->assertEquals($date, $scholar->fresh()->progressReports()->first()->date->format('Y-m-d'));
+        $expectedPath = 'progress_reports/' . $progressReport->hashName();
 
-        Storage::assertExists($scholar->fresh()->progressReports()->first()->path);
+        $this->assertEquals($expectedPath, $updatedScholar->progressReports->first()->path);
+        $this->assertEquals($recommendation, $updatedScholar->progressReports->first()->recommendation);
+        $this->assertEquals($date, $updatedScholar->progressReports->first()->date->format('Y-m-d'));
+
+        Storage::assertExists($updatedScholar->progressReports->first()->path);
     }
 
     /** @test */
@@ -65,17 +68,17 @@ class ScholarProgressReportTest extends TestCase
 
         $scholar = create(Scholar::class);
 
-        $this->assertCount(0, $scholar->progressReports());
+        $this->assertCount(0, $scholar->progressReports);
 
         $this->withExceptionHandling()
             ->post(route('research.scholars.progress_reports.store', $scholar), [
                 'progress_report' => $progressReport,
-                'description' => $description = Arr::random(array_values(ProgressReportRecommendation::values())),
+                'recommendation' => $recommendation = Arr::random(array_values(ProgressReportRecommendation::values())),
                 'date' => $date = '2019-09-12',
             ])
             ->assertForbidden();
 
-        $this->assertCount(0, $scholar->fresh()->progressReports());
+        $this->assertCount(0, $scholar->fresh()->progressReports);
     }
 
     /** @test */
@@ -90,38 +93,37 @@ class ScholarProgressReportTest extends TestCase
 
         $scholar = create(Scholar::class);
 
-        $this->assertCount(0, $scholar->progressReports());
+        $this->assertCount(0, $scholar->progressReports);
 
         try {
             $this->withoutExceptionHandling()
                 ->post(route('research.scholars.progress_reports.store', $scholar), [
                     'progress_report' => $progressReport,
-                    'description' => $description = 'Progress Report Description',
+                    'recommendation' => $recommendation = 'Progress Report Description',
                     'date' => $date = '2019-09-12',
                 ]);
         } catch (ValidationException $e) {
-            $this->assertArrayHasKey('description', $e->errors());
+            $this->assertArrayHasKey('recommendation', $e->errors());
         }
 
-        $this->assertCount(0, $scholar->fresh()->progressReports());
+        $this->assertCount(0, $scholar->fresh()->progressReports);
 
         $this->withoutExceptionHandling()
             ->post(route('research.scholars.progress_reports.store', $scholar), [
                 'progress_report' => $progressReport,
-                'description' => $description = ProgressReportRecommendation::CONTINUE,
+                'recommendation' => $recommendation = ProgressReportRecommendation::CONTINUE,
                 'date' => $date = '2019-09-12',
             ]);
 
-        $this->assertCount(1, $scholar->fresh()->progressReports());
+        $this->assertCount(1, $scholar->fresh()->progressReports);
     }
 
     /** @test */
     public function progess_report_can_be_viewed_if_they_are_authorized()
     {
         $scholar = create(Scholar::class);
-        $progressReport = create(ScholarDocument::class, 1, [
+        $progressReport = create(ProgressReport::class, 1, [
             'scholar_id' => $scholar->id,
-            'type' => ScholarDocumentType::PROGRESS_REPORT,
         ]);
         $role = Role::create(['name' => 'randomRole']);
 
@@ -132,7 +134,7 @@ class ScholarProgressReportTest extends TestCase
         $this->withoutExceptionHandling()
             ->get(route('research.scholars.progress_reports.attachment', [
                 'scholar' => $scholar,
-                'document' => $progressReport,
+                'report' => $progressReport,
             ]))
             ->assertSuccessful();
     }
@@ -148,15 +150,14 @@ class ScholarProgressReportTest extends TestCase
         $user->revokePermissionTo('scholars:view');
 
         $scholar = create(Scholar::class);
-        $progressReport = create(ScholarDocument::class, 1, [
+        $progressReport = create(ProgressReport::class, 1, [
             'scholar_id' => $scholar->id,
-            'type' => ScholarDocumentType::PROGRESS_REPORT,
         ]);
 
         $this->withExceptionHandling()
             ->get(route('research.scholars.progress_reports.attachment', [
                 'scholar' => $scholar,
-                'document' => $progressReport,
+                'report' => $progressReport,
             ]))
             ->assertForbidden();
     }

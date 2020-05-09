@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Research;
 
 use App\Http\Controllers\Controller;
+use App\Models\ProgressReport;
 use App\Models\Scholar;
 use App\Models\ScholarDocument;
 use App\Types\ProgressReportRecommendation;
@@ -22,14 +23,13 @@ class ScholarProgressReportsController extends Controller
 
         $request->validate([
             'progress_report' => ['required', 'file', 'mimetypes:application/pdf, image/*', 'max:200'],
-            'description' => ['required', 'in:' . $recommendations],
+            'recommendation' => ['required', 'in:' . $recommendations],
             'date' => ['required', 'date', 'before_or_equal:today'],
         ]);
 
-        $scholar->documents()->create([
-            'type' => ScholarDocumentType::PROGRESS_REPORT,
-            'path' => $request->file('progress_report')->store('scholar_documents'),
-            'description' => $request->input('description'),
+        $scholar->progressReports()->create([
+            'path' => $request->file('progress_report')->store('progress_reports'),
+            'recommendation' => $request->input('recommendation'),
             'date' => $request->input('date'),
         ]);
 
@@ -38,10 +38,10 @@ class ScholarProgressReportsController extends Controller
         return back();
     }
 
-    public function viewAttachment(Scholar $scholar, ScholarDocument $document)
+    public function viewAttachment(Scholar $scholar, ProgressReport $report)
     {
         $this->authorize('view', $scholar);
 
-        return Response::file(Storage::path($document->path));
+        return Response::file(Storage::path($report->path));
     }
 }

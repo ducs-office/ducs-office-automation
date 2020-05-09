@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Scholars;
 
 use App\Http\Controllers\Controller;
+use App\Models\ProgressReport;
 use App\Models\ScholarDocument;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
@@ -17,14 +18,14 @@ class ProgressReportsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function __invoke(ScholarDocument $document)
+    public function __invoke(ProgressReport $report)
     {
         abort_unless(
-            $document->scholar->id === auth()->id(),
+            $report->scholar->id === auth()->id(),
             '403',
             'You can not view this file'
         );
 
-        return Response::file(Storage::path($document->path));
+        return Response::file(Storage::path($report->path));
     }
 }

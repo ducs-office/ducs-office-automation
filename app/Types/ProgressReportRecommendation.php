@@ -11,9 +11,9 @@ class ProgressReportRecommendation extends BaseEnumType
     public function getContextCSS()
     {
         return [
-            self::CANCELLATION => 'bg-red-600',
-            self::WARNING => 'bg-yellow-400',
-            self::CONTINUE => 'bg-green-400',
+            self::CANCELLATION => 'bg-red-300 text-red-900',
+            self::WARNING => 'bg-yellow-300 text-yellow-900',
+            self::CONTINUE => 'bg-green-300 text-green-900',
         ][$this->value];
     }
 }
