@@ -36,6 +36,7 @@ class StoreScholarRequest extends FormRequest
             'first_name' => 'required|string',
             'last_name' => 'required|string',
             'email' => 'required|unique:scholars',
+            'term_duration' => 'required| integer| gt: 0',
             'supervisor_profile_id' => 'required| exists:supervisor_profiles,id',
             'cosupervisor_profile_type' => 'nullable| in:' . $validCosupervisorTypes,
         ] + $rules;

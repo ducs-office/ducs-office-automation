@@ -22,7 +22,7 @@ class UpdateProfileRequest extends FormRequest
             'admission_mode' => [Rule::requiredIf($scholar->admission_mode != null)],
             'profile_picture' => ['nullable', 'image'],
             'research_area' => [Rule::requiredIf($scholar->research_area != null)],
-            'enrollment_date' => ['nullable', 'date', 'before:today'],
+            'registration_date' => ['nullable', 'date', 'before:today'],
 
             'education_details' => ['required', 'array', 'max: 4', 'min:1'],
             'education_details.*' => ['required', 'array', 'size:4'],

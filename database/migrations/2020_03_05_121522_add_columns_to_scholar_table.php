@@ -17,14 +17,14 @@ class AddColumnsToScholarTable extends Migration
     public function up()
     {
         Schema::table('scholars', function (Blueprint $table) {
-            $table->nullableMorphs('cosupervisor_profile');
             $table->string('phone_no')->nullable();
             $table->text('address', 251)->nullable();
             $table->enum('gender', Gender::values())->nullable();
             $table->enum('category', ReservationCategory::values())->nullable();
             $table->enum('admission_mode', AdmissionMode::values())->nullable();
             $table->text('research_area', 501)->nullable();
-            $table->date('enrollment_date')->nullable();
+            $table->date('registration_date')->nullable();
+            $table->nullableMorphs('cosupervisor_profile');
             $table->json('advisory_committee')->nullable();
             $table->json('education_details')->nullable();
             $table->json('old_cosupervisors')->nullable();
