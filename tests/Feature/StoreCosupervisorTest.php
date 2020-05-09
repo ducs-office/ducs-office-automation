@@ -8,7 +8,7 @@ use App\Models\SupervisorProfile;
 use App\Models\Teacher;
 use App\Models\TeacherProfile;
 use App\Models\User;
-use App\Types\UserType;
+use App\Types\UserCategory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Validation\ValidationException;
@@ -72,7 +72,7 @@ class StoreCosupervisorTest extends TestCase
     {
         $this->signIn();
 
-        $faculty = create(User::class, 1, ['type' => UserType::FACULTY_TEACHER]);
+        $faculty = create(User::class, 1, ['category' => UserCategory::FACULTY_TEACHER]);
 
         $this->withoutExceptionHandling()
             ->post(route('staff.cosupervisors.faculties.store', $faculty))
@@ -89,7 +89,7 @@ class StoreCosupervisorTest extends TestCase
     {
         $this->signIn();
 
-        $faculty = create(User::class, 1, ['type' => UserType::FACULTY_TEACHER]);
+        $faculty = create(User::class, 1, ['category' => UserCategory::FACULTY_TEACHER]);
         create(SupervisorProfile::class, 1, [
             'supervisor_type' => User::class,
             'supervisor_id' => $faculty->id,
@@ -109,7 +109,7 @@ class StoreCosupervisorTest extends TestCase
     {
         $this->signIn();
 
-        $faculty = create(User::class, 1, ['type' => UserType::OFFICE_STAFF]);
+        $faculty = create(User::class, 1, ['category' => UserCategory::OFFICE_STAFF]);
 
         $this->assertEquals(0, Cosupervisor::count());
 
@@ -125,7 +125,7 @@ class StoreCosupervisorTest extends TestCase
     {
         $this->signIn();
 
-        $faculty = create(User::class, 1, ['type' => UserType::FACULTY_TEACHER]);
+        $faculty = create(User::class, 1, ['category' => UserCategory::FACULTY_TEACHER]);
 
         $this->assertEquals(0, Cosupervisor::count());
 

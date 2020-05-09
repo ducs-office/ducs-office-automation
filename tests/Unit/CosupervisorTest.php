@@ -8,7 +8,6 @@ use App\Models\Teacher;
 use App\Models\User;
 use App\Types\TeacherStatus;
 use App\Types\UserCategory;
-use App\Types\UserType;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Foundation\Testing\RefreshDatabase;

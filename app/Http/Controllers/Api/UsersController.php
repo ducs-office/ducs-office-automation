@@ -20,7 +20,8 @@ class UsersController extends Controller
             return $query->limit($request->limit)->get();
         }
 
-        return $query->orWhere('name', 'like', "%{$request->q}%")
+        return $query->orWhere('first_name', 'like', "{$request->q}%")
+            ->orWhere('last_name', 'like', "{$request->q}%")
             ->limit($request->limit)
             ->get();
     }

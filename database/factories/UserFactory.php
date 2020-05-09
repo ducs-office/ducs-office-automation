@@ -7,7 +7,6 @@ use App\Models\User;
 use App\Types\Designation;
 use App\Types\TeacherStatus;
 use App\Types\UserCategory;
-use App\Types\UserType;
 use Faker\Generator as Faker;
 use Illuminate\Support\Str;
 

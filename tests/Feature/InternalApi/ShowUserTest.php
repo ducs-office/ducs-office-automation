@@ -25,7 +25,8 @@ class ShowUserTest extends TestCase
             ->json();
 
         $this->assertArrayHasKey('id', $user);
-        $this->assertArrayHasKey('name', $user);
+        $this->assertArrayHasKey('first_name', $user);
+        $this->assertArrayHasKey('last_name', $user);
         $this->assertArrayHasKey('email', $user);
     }
 }

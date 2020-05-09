@@ -10,6 +10,7 @@ use App\Types\UserCategory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
@@ -64,6 +65,10 @@ class User extends Authenticatable
 
     public function setNameAttribute($name)
     {
+        if (! Str::contains($name, ' ')) {
+            $name .= ' .';
+        }
+
         list($this->first_name, $this->last_name) = explode(' ', $name, 2);
     }
 

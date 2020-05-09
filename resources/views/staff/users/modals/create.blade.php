@@ -30,7 +30,7 @@
                 <select name="category" id="category" class="w-full form-select" required>
                     <option value="" selected disabled>Select a Category:</option>
                     @foreach($categories as $category)
-                        <option value="{{ $category }}">{{ $category }} </option>
+                    <option value="{{ $category }}">{{ $category }} </option>
                     @endforeach
                 </select>
             </div>

@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Types\UserType;
+use App\Types\UserCategory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 

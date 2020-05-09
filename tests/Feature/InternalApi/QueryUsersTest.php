@@ -34,13 +34,13 @@ class QueryUsersTest extends TestCase
 
         $this->assertCount(2, $users);
 
-        $this->assertArrayHasKey('name', $users[0]);
-        $this->assertEquals($john->name, $users[0]['name']);
+        $this->assertArrayHasKey('first_name', $users[0]);
+        $this->assertEquals($john->first_name, $users[0]['first_name']);
         $this->assertArrayHasKey('email', $users[0]);
         $this->assertEquals($john->email, $users[0]['email']);
 
-        $this->assertArrayHasKey('name', $users[1]);
-        $this->assertEquals($mary->name, $users[1]['name']);
+        $this->assertArrayHasKey('last_name', $users[1]);
+        $this->assertEquals($mary->last_name, $users[1]['last_name']);
         $this->assertArrayHasKey('email', $users[1]);
         $this->assertEquals($mary->email, $users[1]['email']);
     }
@@ -49,7 +49,7 @@ class QueryUsersTest extends TestCase
     public function if_query_matches_exact_email_only_that_user_is_returned()
     {
         $maliciousUser = create(User::class, 1, ['name' => 'john@example.com']);
-        $john = create(User::class, 1, ['name' => 'John', 'email' => 'john@example.com']);
+        $john = create(User::class, 1, ['name' => 'John Doe', 'email' => 'john@example.com']);
         $jane = create(User::class, 1, ['name' => 'Jane Doe']);
 
         $this->withoutExceptionHandling()->signIn($jane);
@@ -60,8 +60,10 @@ class QueryUsersTest extends TestCase
 
         $this->assertCount(1, $users);
 
-        $this->assertArrayHasKey('name', $users[0]);
-        $this->assertEquals($john->name, $users[0]['name']);
+        $this->assertArrayHasKey('first_name', $users[0]);
+        $this->assertEquals($john->first_name, $users[0]['first_name']);
+        $this->assertArrayHasKey('last_name', $users[0]);
+        $this->assertEquals($john->last_name, $users[0]['last_name']);
         $this->assertArrayHasKey('email', $users[0]);
         $this->assertEquals($john->email, $users[0]['email']);
     }
@@ -95,6 +97,7 @@ class QueryUsersTest extends TestCase
         $users = $this->getJson('/api/users?q=Jo&limit=2')
             ->assertSuccessful()
             ->json();
+
         $this->assertCount(2, $users);
 
         $users = $this->getJson('/api/users?q=Jo')

@@ -13,7 +13,7 @@ use App\Types\AdvisoryCommitteeMember;
 use App\Types\EducationInfo;
 use App\Types\Gender;
 use App\Types\ReservationCategory;
-use App\Types\UserType;
+use App\Types\UserCategory;
 use Faker\Generator as Faker;
 use Faker\Provider\bg_BG\PhoneNumber;
 

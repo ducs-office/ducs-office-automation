@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\User;
-use App\Types\UserType;
+use App\Types\UserCategory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
@@ -30,7 +30,7 @@ class EditUserTest extends TestCase
         tap($john->fresh(), function ($updated) use ($john, $correctEmail) {
             $this->assertEquals($correctEmail, $updated->email);
             $this->assertEquals($john->name, $updated->name);
-            $this->assertEquals($john->type, $updated->type);
+            $this->assertEquals($john->category, $updated->category);
         });
 
         $this->assertEquals($facultyRole->name, $john->getRoleNames()->first());
@@ -54,7 +54,7 @@ class EditUserTest extends TestCase
         tap($john->fresh(), function ($updated) use ($john, $correctName) {
             $this->assertEquals($correctName, $updated->name);
             $this->assertEquals($john->email, $updated->email);
-            $this->assertEquals($john->type, $updated->type);
+            $this->assertEquals($john->category, $updated->category);
         });
 
         $this->assertEquals($facultyRole->name, $john->getRoleNames()->first());
@@ -82,24 +82,24 @@ class EditUserTest extends TestCase
     }
 
     /** @test */
-    public function admin_can_update_users_type()
+    public function admin_can_update_users_category()
     {
-        $allTypes = UserType::values();
+        $allTypes = UserCategory::values();
 
         $facultyRole = Role::firstOrCreate(['name' => 'faculty']);
-        $john = create(User::class, 1, ['type' => $allTypes[0]]);
+        $john = create(User::class, 1, ['category' => $allTypes[0]]);
         $john->assignRole($facultyRole);
 
         $this->signIn(create(User::class), 'admin');
 
         $this->withoutExceptionHandling()
             ->patch(route('staff.users.update', $john), [
-                'type' => $newCategory = $allTypes[1],
+                'category' => $newCategory = $allTypes[1],
             ])->assertRedirect()
             ->assertSessionHasFlash('success', 'User updated successfully!');
 
         tap($john->fresh(), function ($updated) use ($john, $newCategory) {
-            $this->assertEquals($newCategory, $updated->type);
+            $this->assertEquals($newCategory, (string) $updated->category);
             $this->assertEquals($john->email, $updated->email);
             $this->assertEquals($john->name, $updated->name);
         });
@@ -118,14 +118,14 @@ class EditUserTest extends TestCase
             ->patch(route('staff.users.update', $user), [
                 'email' => $user->email,
                 'name' => $newName = 'New name',
-                'type' => $newType = UserType::OFFICE_STAFF,
+                'category' => $newType = UserCategory::OFFICE_STAFF,
             ])->assertRedirect()
         ->assertSessionHasNoErrors()
         ->assertSessionHasFlash('success', 'User updated successfully!');
 
         $this->assertEquals(2, User::count());
         $this->assertEquals($newName, $user->fresh()->name);
-        $this->assertEquals($newType, $user->fresh()->type);
+        $this->assertEquals($newType, $user->fresh()->category);
     }
 
     /** @test */

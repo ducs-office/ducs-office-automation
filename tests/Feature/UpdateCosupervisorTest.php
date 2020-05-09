@@ -5,7 +5,7 @@ namespace Tests\Feature;
 use App\Models\Cosupervisor;
 use App\Models\Teacher;
 use App\Models\User;
-use App\Types\UserType;
+use App\Types\UserCategory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -41,7 +41,7 @@ class UpdateCosupervisorTest extends TestCase
     {
         $this->signIn();
 
-        $faculty = create(User::class, 1, ['name' => 'Sharanjeet Kaur', 'type' => UserType::FACULTY_TEACHER]);
+        $faculty = create(User::class, 1, ['name' => 'Sharanjeet Kaur', 'category' => UserCategory::FACULTY_TEACHER]);
         $coSupervisor = create(Cosupervisor::class, 1, [
             'professor_type' => User::class,
             'professor_id' => $faculty->id,

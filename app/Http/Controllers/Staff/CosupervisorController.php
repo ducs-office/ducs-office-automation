@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Cosupervisor;
 use App\Models\Teacher;
 use App\Models\User;
-use App\Types\UserType;
+use App\Types\UserCategory;
 use Illuminate\Http\Request;
 
 class CosupervisorController extends Controller
@@ -17,7 +17,7 @@ class CosupervisorController extends Controller
             return ! $teacher->isCosupervisor() && ! $teacher->isSupervisor();
         });
 
-        $faculties = User::where('type', UserType::FACULTY_TEACHER)
+        $faculties = User::where('category', UserCategory::FACULTY_TEACHER)
             ->get()->filter(function ($faculty) {
                 return ! $faculty->isCosupervisor() && ! $faculty->isSupervisor();
             });
@@ -46,7 +46,7 @@ class CosupervisorController extends Controller
 
     public function storeFaculty(User $faculty)
     {
-        if ($faculty->isSupervisor() || ! $faculty->type->equals(UserType::FACULTY_TEACHER)) {
+        if ($faculty->isSupervisor() || ! $faculty->category->equals(UserCategory::FACULTY_TEACHER)) {
             abort(403, 'Cosupervisor can not be added');
         }
 

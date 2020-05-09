@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Staff;
 
-use App\Types\UserType;
+use App\Types\UserCategory;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -33,7 +33,7 @@ class UpdateUserRequest extends FormRequest
             ],
             'roles' => ['sometimes', 'required', 'array', 'min:1'],
             'roles.*' => ['sometimes', 'required', 'integer', 'exists:roles,id'],
-            'type' => ['sometimes', Rule::in(UserType::values())],
+            'category' => ['sometimes', Rule::in(UserCategory::values())],
         ];
     }
 }

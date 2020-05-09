@@ -17,7 +17,7 @@ use App\Types\Gender;
 use App\Types\PresentationEventType;
 use App\Types\PublicationType;
 use App\Types\ReservationCategory;
-use App\Types\UserType;
+use App\Types\UserCategory;
 use Illuminate\Database\Seeder;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -315,28 +315,28 @@ class PhdScholarSeeder extends Seeder
             'neelima_gupta' => User::create([
                 'name' => 'Neelima Gupta',
                 'email' => 'ngupta.cs.du@gmail.com',
-                'type' => UserType::FACULTY_TEACHER,
+                'category' => UserCategory::FACULTY_TEACHER,
                 'password' => self::ENC_PASSWORD,
             ]),
 
             'naveen_kumar' => User::create([
                 'name' => 'Naveen Kumar',
                 'email' => 'naveen@cs.du.ac.in',
-                'type' => UserType::FACULTY_TEACHER,
+                'category' => UserCategory::FACULTY_TEACHER,
                 'password' => self::ENC_PASSWORD,
             ]),
 
             'poonam_bedi' => User::create([
                 'name' => 'Poonam Bedi',
                 'email' => 'pbedi@cs.du.ac.in',
-                'type' => UserType::FACULTY_TEACHER,
+                'category' => UserCategory::FACULTY_TEACHER,
                 'password' => self::ENC_PASSWORD,
             ]),
 
             'sk_mutto' => User::create([
                 'name' => 'S.K Muttoo',
                 'email' => 'drskmuttoo@gmail.com',
-                'type' => UserType::FACULTY_TEACHER,
+                'category' => UserCategory::FACULTY_TEACHER,
                 'password' => self::ENC_PASSWORD,
             ]),
         ];

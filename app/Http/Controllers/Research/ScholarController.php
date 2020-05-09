@@ -14,7 +14,6 @@ use App\Types\Gender;
 use App\Types\PresentationEventType;
 use App\Types\ReservationCategory;
 use App\Types\ScholarDocumentType;
-use App\Types\UserType;
 use Illuminate\Http\Request;
 
 class ScholarController extends Controller

@@ -21,7 +21,7 @@ use App\Models\TeacherProfile;
 use App\Models\User;
 use App\Types\CourseType;
 use App\Types\ProgrammeType;
-use App\Types\UserType;
+use App\Types\UserCategory;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role;
@@ -39,7 +39,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Administrator',
             'email' => 'admin@cs.du.ac.in',
             'password' => bcrypt('password'),
-            'type' => UserType::OFFICE_STAFF,
+            'category' => UserCategory::OFFICE_STAFF,
         ]);
 
         $admin->assignRole(Role::firstOrCreate(['name' => 'admin']));

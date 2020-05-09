@@ -34,10 +34,10 @@
                             class="h-current text-red-500 text-lg">*</span></label>
                     <select name="type" id="type" class="w-full form-select" required>
                         <option value="" selected disabled>Select a type for the user</option>
-                        @foreach ($types as $type)
-                        <option value="{{ $type }}"
-                            :selected="data('user.type') === '{{ $type }}'">
-                            {{ $type }}
+                        @foreach ($categories as $category)
+                        <option value="{{ $category }}"
+                            :selected="data('user.category') === '{{ $category }}'">
+                            {{ $category }}
                         </option>
                         @endforeach
                     </select>
