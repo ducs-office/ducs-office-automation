@@ -28,14 +28,11 @@ class IncomingLettersController extends Controller
                 ->orWhere('description', 'like', '%' . $request['search'] . '%');
         }
 
-        $recipients = User::select('id', 'name')->whereIn(
-            'id',
-            IncomingLetter::selectRaw('DISTINCT(recipient_id)')
-        )->get()->pluck('name', 'id');
-
         return view('staff.incoming_letters.index', [
             'incomingLetters' => $query->orderBy('date', 'DESC')->get(),
-            'recipients' => $recipients,
+            'recipients' => User::select(['id', 'first_name', 'last_name'])
+                    ->whereIn('id', IncomingLetter::selectRaw('DISTINCT(recipient_id)'))
+                    ->get()->pluck('name', 'id'),
             'senders' => IncomingLetter::selectRaw('DISTINCT(sender)')->get()->pluck('sender', 'sender'),
             'priorities' => Priority::values(),
         ]);

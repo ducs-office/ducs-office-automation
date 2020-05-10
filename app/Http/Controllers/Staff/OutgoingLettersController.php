@@ -34,8 +34,12 @@ class OutgoingLettersController extends Controller
             'letters' => $query->orderBy('date', 'DESC')->paginate(),
             'types' => collect(OutgoingLetterType::values())->combine(OutgoingLetterType::values()),
             'recipients' => OutgoingLetter::selectRaw('DISTINCT(recipient)')->get()->pluck('recipient', 'recipient'),
-            'creators' => User::select('id', 'name')->whereIn('id', OutgoingLetter::selectRaw('DISTINCT(creator_id)'))->get()->pluck('name', 'id'),
-            'senders' => User::select('id', 'name')->whereIn('id', OutgoingLetter::selectRaw('DISTINCT(sender_id)'))->get()->pluck('name', 'id'),
+            'creators' => User::select(['id', 'first_name', 'last_name'])
+                ->whereIn('id', OutgoingLetter::selectRaw('DISTINCT(creator_id)'))
+                ->get()->pluck('name', 'id'),
+            'senders' => User::select(['id', 'first_name', 'last_name'])
+                ->whereIn('id', OutgoingLetter::selectRaw('DISTINCT(sender_id)'))
+                ->get()->pluck('name', 'id'),
         ]);
     }
 
