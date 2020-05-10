@@ -2,9 +2,9 @@
 @section('body')
 <div class="page-card p-6 m-6">
     <h2 class="text-lg font-bold mb-2">Manage Record Submission</h1>
-    <form method="POST">
-        @csrf_token
-        @if(App\Models\TeachingRecord::isAccepting())
+        <form method="POST">
+            @csrf_token
+            @if(App\Models\TeachingRecord::isAccepting())
             @method('PATCH')
             <p class="mb-4">We've started accepting submissions, you can extend the deadline.</p>
             <div class="flex items-end">
@@ -15,50 +15,47 @@
                 </div>
                 <div class="flex-1 ml-2">
                     <label for="end_date" class="w-full form-label mb-1">Deadline</label>
-                    <input type="date" name="extend_to" id="end_date"
-                        class="w-full form-input"
+                    <input type="date" name="extend_to" id="end_date" class="w-full form-input"
                         value="{{ $endDate->format('Y-m-d') }}">
                 </div>
                 <div class="ml-1">
-                    <button class="btn btn-magenta"
-                        formaction="{{ route('staff.teaching_records.extend') }}">
+                    <button class="btn btn-magenta" formaction="{{ route('teaching-records.extend') }}">
                         Extend Submission Deadline
                     </button>
                 </div>
             </div>
-        @else
-            @if($startDate && $startDate < now())
-            <p class="mb-4">
+            @else
+            @if($startDate && $startDate < now()) <p class="mb-4">
                 We previously accepted submission from {{$startDate->format('d M, Y')}} to
                 {{$endDate->format('d M, Y')}}
-            </p>
-            @elseif($endDate && $endDate > now())
-            <p class="mb-4">
-                We will start accepting submission from {{$startDate->format('d M, Y')}} to
-                {{$endDate->format('d M, Y')}}
-            </p>
-            @else
-            <p class="mb-4">We never accepted details in the past.</p>
-            @endif
-            <div class="flex items-end">
-                <div class="flex-1">
-                    <label for="start_date" class="w-full form-label mb-1">Start From</label>
-                    <input type="date" name="start_date" id="start_date" class="w-full form-input"
-                        value="{{ old('start_date', $endDate ? $endDate->format('Y-m-d') : now()->format('Y-m-d')) }}">
+                </p>
+                @elseif($endDate && $endDate > now())
+                <p class="mb-4">
+                    We will start accepting submission from {{$startDate->format('d M, Y')}} to
+                    {{$endDate->format('d M, Y')}}
+                </p>
+                @else
+                <p class="mb-4">We never accepted details in the past.</p>
+                @endif
+                <div class="flex items-end">
+                    <div class="flex-1">
+                        <label for="start_date" class="w-full form-label mb-1">Start From</label>
+                        <input type="date" name="start_date" id="start_date" class="w-full form-input"
+                            value="{{ old('start_date', $endDate ? $endDate->format('Y-m-d') : now()->format('Y-m-d')) }}">
+                    </div>
+                    <div class="flex-1 ml-2">
+                        <label for="end_date" class="w-full form-label mb-1">Deadline</label>
+                        <input type="date" name="end_date" id="end_date" class="w-full form-input"
+                            value="{{ old('end_date', $endDate ? $endDate->format('Y-m-d') : now()->addMonth()->format('Y-m-d')) }}">
+                    </div>
+                    <div class="ml-1">
+                        <button class="btn btn-magenta" formaction="{{ route('teaching-records.start') }}">
+                            Update Submission Period
+                        </button>
+                    </div>
                 </div>
-                <div class="flex-1 ml-2">
-                    <label for="end_date" class="w-full form-label mb-1">Deadline</label>
-                    <input type="date" name="end_date" id="end_date" class="w-full form-input"
-                        value="{{ old('end_date', $endDate ? $endDate->format('Y-m-d') : now()->addMonth()->format('Y-m-d')) }}">
-                </div>
-                <div class="ml-1">
-                    <button class="btn btn-magenta" formaction="{{ route('staff.teaching_records.accept') }}">
-                        Update Submission Period
-                    </button>
-                </div>
-            </div>
-        @endif
-    </div>
+                @endif
+</div>
 </div>
 <div class="page-card m-6 pb-0">
     <div class="flex items-center px-6 pb-4 border-b">
@@ -76,26 +73,25 @@
             <select id="course_filters" name="filters[course_id]" type="text" class="w-full form-select">
                 <option value="" {{ isset($filters['course_id']) ? '' : 'selected' }}>All</option>
                 @foreach ($courses as $course)
-                <option value="{{ $course->id }}" {{ ($filters['course_id'] ?? null) == $course->id ? 'selected' : '' }}>
+                <option value="{{ $course->id }}"
+                    {{ ($filters['course_id'] ?? null) == $course->id ? 'selected' : '' }}>
                     {{ $course->name }} ({{ $course->code }})
                 </option>
                 @endforeach
             </select>
         </div>
         <div class="flex">
-            <button type="button"
-                class="inline-flex items-center btn hover:text-red-700 mr-2"
+            <button type="button" class="inline-flex items-center btn hover:text-red-700 mr-2"
                 onclick="window.location.replace(window.location.pathname)">
                 <feather-icon name="x-circle" stroke-width="2.5" class="h-5 mr-2">Clear</feather-icon>
                 Reset
             </button>
-            <button type="submit"
-                formaction="{{ route('staff.teaching_records.index') }}"
+            <button type="submit" formaction="{{ route('teaching-records.index') }}"
                 class="inline-flex items-center btn btn-magenta mr-2">
                 <feather-icon name="filter" stroke-width="2.5" class="h-5 mr-2">Filter</feather-icon>
                 Filter
             </button>
-            <button type="submit" formaction="{{ route('staff.teaching_records.export') }}"
+            <button type="submit" formaction="{{ route('teaching-records.export') }}"
                 class="inline-flex items-center btn btn-magenta mr-2">
                 <feather-icon name="download" stroke-width="2.5" class="h-5 mr-2">Export</feather-icon>
                 Export CSV
@@ -126,7 +122,8 @@
                     <span class="whitespace-no-wrap">(w.e.f {{ $record->programmeRevision->revised_at->year }})</span>
                 </td>
                 <td class="px-4 py-2 border-b" title="{{ $record->course->code }}">
-                    <span class="text-sm tracking-wide bg-gray-300 px-2 py-1 rounded font-mono">{{ $record->course->code }}</span>
+                    <span
+                        class="text-sm tracking-wide bg-gray-300 px-2 py-1 rounded font-mono">{{ $record->course->code }}</span>
                     <span class="leading-relaxed whitespace-no-wrap">{{ $record->course->name}}</span>
                 </td>
                 <td class="pr-6 pl-4 py-2 border-b table-fit">{{ $record->semester }}</td>
@@ -137,7 +134,8 @@
                     <div class="pt-6 pb-4 flex flex-col items-center justify-center text-gray-500">
                         <feather-icon name="frown" class="h-16"></feather-icon>
                         <p class="mt-4 mb-2  font-bold">
-                            Sorry! No Records {{ count(request()->filters ?? []) ? 'found for your query.' : 'added yet.' }}
+                            Sorry! No Records
+                            {{ count(request()->filters ?? []) ? 'found for your query.' : 'added yet.' }}
                         </p>
                     </div>
                 </td>

@@ -25,7 +25,7 @@ class TeachingRecord extends Model
             && Cache::put(static::$acceptRecordsKeyPrefix . 'end', $end);
     }
 
-    public static function canSubmit($teacher)
+    public static function canSubmit(User $teacher)
     {
         return static::isAccepting()
             && ! static::where('valid_from', static::getStartDate())

@@ -3,29 +3,40 @@
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 use App\Models\College;
 use App\Models\Course;
+use App\Models\CourseProgrammeRevision;
 use App\Models\ProgrammeRevision;
 use App\Models\Teacher;
 use App\Models\TeachingRecord;
 use App\Models\User;
+use App\Types\Designation;
 use App\Types\TeacherStatus;
 use App\Types\UserCategory;
 use Faker\Generator as Faker;
 
 $factory->define(TeachingRecord::class, function (Faker $faker) {
     return [
-        'designation' => $faker->randomElement(TeacherStatus::values()),
-        'college_id' => factory(College::class),
+        'valid_from' => $faker->date('Y-m-d'),
         'teacher_id' => function () use ($faker) {
             return factory(User::class)->create([
-                'category' => $faker->randomElement([
-                    UserCategory::FACULTY_TEACHER,
-                    UserCategory::COLLEGE_TEACHER,
-                ]),
+                'category' => UserCategory::COLLEGE_TEACHER,
             ])->id;
         },
-        'valid_from' => $faker->date('Y-m-d'),
+        'status' => function ($record) {
+            return User::find($record['teacher_id'])->status;
+        },
+        'designation' => function ($record) {
+            return User::find($record['teacher_id'])->designation;
+        },
+        'college_id' => function ($record) {
+            return User::find($record['teacher_id'])->college_id;
+        },
         'programme_revision_id' => factory(ProgrammeRevision::class),
         'course_id' => factory(Course::class),
-        'semester' => $faker->numberBetween(1, 6),
+        'semester' => function ($record) use ($faker) {
+            return CourseProgrammeRevision::firstOrCreate([
+                'course_id' => $record['course_id'],
+                'programme_revision_id' => $record['programme_revision_id'],
+            ], ['semester' => $faker->numberBetween(1, 6)])->semester;
+        },
     ];
 });

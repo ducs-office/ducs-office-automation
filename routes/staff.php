@@ -86,11 +86,6 @@ Route::get('/teachers/{teacher}', 'TeacherController@show')->name('teachers.show
 Route::patch('/teachers/{teacher}', 'TeacherController@update')->name('teachers.update');
 Route::delete('/teachers/{teacher}', 'TeacherController@destroy')->name('teachers.destroy');
 
-Route::get('/teaching-records', 'TeachingRecordsController@index')->name('teaching_records.index');
-Route::get('/teaching-records/export', 'TeachingRecordsController@index')->name('teaching_records.export');
-Route::post('/teaching-records/accept', 'AcceptTeachingRecordsController@start')->name('teaching_records.accept');
-Route::patch('/teaching-records/extend', 'AcceptTeachingRecordsController@extend')->name('teaching_records.extend');
-
 Route::get('/scholars', 'ScholarController@index')->name('scholars.index');
 Route::post('/scholars', 'ScholarController@store')->name('scholars.store');
 Route::get('/scholars/{scholar}/avatar', 'ScholarController@avatar')->name('scholars.avatar');

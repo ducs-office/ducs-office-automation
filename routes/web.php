@@ -90,6 +90,12 @@ Route::patch(
 Route::get('/users/@{user}', 'UserProfileController@show')->name('profiles.show');
 Route::patch('/users/@{user}', 'UserProfileController@update')->name('profiles.update');
 
+Route::get('/teaching-records', 'TeachingRecordsController@index')->name('teaching-records.index');
+Route::post('/teaching-details/send', 'TeachingRecordsController@store')->name('teaching-details.send');
+Route::get('/teaching-records/export', 'TeachingRecordsController@export')->name('teaching-records.export');
+Route::post('/teaching-records/start', 'TeachingRecordsController@start')->name('teaching-records.start');
+Route::patch('/teaching-records/extend', 'TeachingRecordsController@extend')->name('teaching-records.extend');
+
 Route::prefix('/publications')
 ->middleware(['auth:web,scholars'])
 ->namespace('Publications')
@@ -207,7 +213,6 @@ Route::prefix('/teachers')
         Route::get('/profile/edit', 'ProfileController@edit')->name('profile.edit');
         Route::patch('/profile', 'ProfileController@update')->name('profile.update');
         Route::get('/profile/avatar', 'ProfileController@avatar')->name('profile.avatar');
-        Route::post('/profile/submit', 'TeachingRecordsController@store')->name('profile.submit');
     });
 
 Route::prefix('/scholars')

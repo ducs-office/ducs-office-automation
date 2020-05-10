@@ -7,6 +7,7 @@ use App\Concerns\HasPublications;
 use App\Types\Designation;
 use App\Types\TeacherStatus;
 use App\Types\UserCategory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
@@ -82,6 +83,19 @@ class User extends Authenticatable
     public function isFacultyTeacher()
     {
         return $this->category->equals(UserCategory::FACULTY_TEACHER);
+    }
+
+    public function isProfileComplete()
+    {
+        return $this->college_id != null
+            && $this->designation != null
+            && $this->status != null
+            && $this->teachingDetails->count() > 0;
+    }
+
+    public function scopeCollegeTeachers(Builder $builder)
+    {
+        return $builder->where('category', UserCategory::COLLEGE_TEACHER);
     }
 
     public function remarks()

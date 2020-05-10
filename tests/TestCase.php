@@ -26,7 +26,9 @@ abstract class TestCase extends BaseTestCase
             $user = create(User::class);
         }
 
-        $user->assignRole(Role::firstOrCreate(['name' => $role]));
+        if ($role) {
+            $user->assignRole(Role::firstOrCreate(['name' => $role]));
+        }
 
         $this->be($user, $guard);
 

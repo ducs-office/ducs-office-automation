@@ -22,9 +22,9 @@ class ViewTeachingRecordsTest extends TestCase
         $records = create(TeachingRecord::class, 4);
 
         $viewRecords = $this->withoutExceptionHandling()
-            ->get(route('staff.teaching_records.index'))
+            ->get(route('teaching-records.index'))
             ->assertSuccessful()
-            ->assertViewIs('staff.teaching_records.index')
+            ->assertViewIs('teaching-records.index')
             ->assertViewHas(['records'])
             ->viewData('records');
 
@@ -41,9 +41,9 @@ class ViewTeachingRecordsTest extends TestCase
         $records = create(TeachingRecord::class, 4);
 
         $viewCourses = $this->withoutExceptionHandling()
-            ->get(route('staff.teaching_records.index'))
+            ->get(route('teaching-records.index'))
             ->assertSuccessful()
-            ->assertViewIs('staff.teaching_records.index')
+            ->assertViewIs('teaching-records.index')
             ->assertViewHas('courses')
             ->viewData('courses');
 
@@ -79,11 +79,11 @@ class ViewTeachingRecordsTest extends TestCase
         ]);
 
         $viewRecords = $this->withoutExceptionHandling()
-            ->get(route('staff.teaching_records.index', [
+            ->get(route('teaching-records.index', [
                 'filters' => ['course_id' => $algorithmCourse->id],
             ]))
             ->assertSuccessful()
-            ->assertViewIs('staff.teaching_records.index')
+            ->assertViewIs('teaching-records.index')
             ->assertViewHas('records')
             ->viewData('records');
 
@@ -99,13 +99,13 @@ class ViewTeachingRecordsTest extends TestCase
         $olderRecords = create(TeachingRecord::class, 2, ['valid_from' => now()->subYear(1)]);
 
         $viewRecords = $this->withoutExceptionHandling()
-            ->get(route('staff.teaching_records.index', [
+            ->get(route('teaching-records.index', [
                 'filters' => [
                     'valid_from' => now()->subMonths(6)->format('Y-m-d'),
                 ],
             ]))
             ->assertSuccessful()
-            ->assertViewIs('staff.teaching_records.index')
+            ->assertViewIs('teaching-records.index')
             ->assertViewHas('records')
             ->viewData('records');
 
@@ -124,9 +124,9 @@ class ViewTeachingRecordsTest extends TestCase
         $midRecord = create(TeachingRecord::class, 1, ['valid_from' => now()->subMonths(6)]);
 
         $viewRecords = $this->withoutExceptionHandling()
-            ->get(route('staff.teaching_records.index'))
+            ->get(route('teaching-records.index'))
             ->assertSuccessful()
-            ->assertViewIs('staff.teaching_records.index')
+            ->assertViewIs('teaching-records.index')
             ->assertViewHas('records')
             ->viewData('records');
 

@@ -13,7 +13,7 @@ class TeachingRecordsSaved extends Notification implements ShouldQueue
 
     public function via()
     {
-        return ['mail'];
+        return ['database', 'mail'];
     }
 
     public function toMail()
@@ -23,5 +23,12 @@ class TeachingRecordsSaved extends Notification implements ShouldQueue
             ->line('Your teaching details has been submitted.')
             ->action('View Teaching Details', url($url))
             ->line('Thank you!');
+    }
+
+    public function toDatabase()
+    {
+        return [
+            'message' => 'Your teaching details have been recorded. Thank you!',
+        ];
     }
 }

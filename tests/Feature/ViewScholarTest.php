@@ -6,6 +6,8 @@ use App\Models\Cosupervisor;
 use App\Models\Scholar;
 use App\Models\SupervisorProfile;
 use App\Models\Teacher;
+use App\Models\User;
+use App\Types\UserCategory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -30,15 +32,16 @@ class ViewScholarTest extends TestCase
     }
 
     /** @test */
-    public function a_supervisor_teacher_can_view_scholars_whom_they_supervise()
+    public function a_supervisor_can_view_only_scholars_whom_they_supervise_even_without_explicit_permission()
     {
-        $this->signInTeacher($teacher = create(Teacher::class));
+        $teacher = create(User::class);
+        $teacher->revokePermissionTo('scholars:view');
 
         $supervisorProfile = $teacher->supervisorProfile()->create();
-
         $theirScholars = create(Scholar::class, 3, ['supervisor_profile_id' => $supervisorProfile->id]);
         $otherScholars = create(Scholar::class, 5);
 
+        $this->signIn($teacher, null);
         $scholars = $this->withoutExceptionHandling()
             ->get(route('research.scholars.index'))
             ->assertViewHas('scholars')
@@ -49,11 +52,16 @@ class ViewScholarTest extends TestCase
     }
 
     /** @test */
-    public function a_non_supervisor_teacher_cannot_view_scholars()
+    public function a_user_cannot_view_scholars_without_permission()
     {
-        $this->signInTeacher($teacher = create(Teacher::class));
+        create(Scholar::class, 5);
 
-        $scholars = create(Scholar::class, 5);
+        $teacher = create(User::class, [
+            'category' => UserCategory::COLLEGE_TEACHER,
+        ]);
+        $teacher->revokePermissionTo('scholars:view');
+
+        $this->signIn($teacher, null);
 
         $this->withExceptionHandling()
             ->get(route('research.scholars.index'))

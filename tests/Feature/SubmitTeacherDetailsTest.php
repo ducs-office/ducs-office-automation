@@ -8,40 +8,22 @@ use App\Models\Course;
 use App\Models\CourseProgrammeRevision;
 use App\Models\Programme;
 use App\Models\Teacher;
+use App\Models\TeachingDetail;
 use App\Models\TeachingRecord;
+use App\Models\User;
 use App\Notifications\AcceptingTeachingRecordsStarted;
 use App\Notifications\TeachingRecordsSaved;
 use App\Types\TeacherStatus;
+use App\Types\UserCategory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Carbon as SupportCarbon;
 use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 
 class SubmitTeacherDetailsTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
-
-    protected function fillTeacherProfileFormFields($overrides = [])
-    {
-        return $this->mergeFormFields([
-            'phone_no' => $this->faker->phoneNumber,
-            'address' => $this->faker->address,
-            'designation' => $this->faker->randomElement(TeacherStatus::values()),
-            'college_id' => function () {
-                return factory(College::class)->create()->id;
-            },
-            'teacher_id' => function () {
-                return factory(Teacher::class)->create()->id;
-            },
-            'teaching_details' => function () {
-                return [
-                    create(CourseProgrammeRevision::class)->only([
-                        'programme_revision_id', 'course_id', 'semester',
-                    ]),
-                ];
-            },
-        ], $overrides);
-    }
 
     /**
      * A basic feature test example.
@@ -50,43 +32,51 @@ class SubmitTeacherDetailsTest extends TestCase
      */
 
     /** @test */
-    public function details_of_teacher_can_be_submitted()
+    public function teacher_sends_teaching_details_and_rececives_acknowledgement_notification_via_mail()
     {
-        $this->signInTeacher($teacher = create(Teacher::class));
-
-        $profile_form = $this->fillTeacherProfileFormFields(['teacher_id' => $teacher->id]);
-
-        $this->patch(route('teachers.profile.update'), $profile_form);
+        $teacher = create(User::class, 1, [
+            'category' => UserCategory::COLLEGE_TEACHER,
+        ]);
+        $teachingDetail = create(TeachingDetail::class, 1, ['teacher_id' => $teacher->id]);
 
         TeachingRecord::startAccepting(now(), now()->addMonths(6));
 
-        $this->withoutExceptionHandling()
-            ->post(route('teachers.profile.submit'))
-            ->assertSessionHasFlash('success', 'Details submitted successfully!');
+        $this->signIn($teacher, null);
 
-        $this->assertEquals(1, TeachingRecord::count());
-        $this->assertEqualsWithDelta(TeachingRecord::getStartDate(), TeachingRecord::first()->valid_from, 1);
-        $this->assertEquals($teacher->profile->fresh()->teacher_id, TeachingRecord::first()->teacher_id);
-        $this->assertEquals($teacher->profile->fresh()->college_id, TeachingRecord::first()->college_id);
-        $this->assertEquals($teacher->profile->fresh()->designation, TeachingRecord::first()->designation);
-        $this->assertEquals($teacher->profile->fresh()->teachingDetails->first()->programme_id, TeachingRecord::first()->programme_id);
-        $this->assertEquals($teacher->profile->fresh()->teachingDetails->first()->course_id, TeachingRecord::first()->course_id);
-        $this->assertEquals($teacher->profile->fresh()->teachingDetails->first()->semester, TeachingRecord::first()->semester);
+        $this->withoutExceptionHandling()
+            ->post(route('teaching-details.send'))
+            ->assertRedirect();
+
+        $this->assertCount(1, $records = TeachingRecord::all());
+        $submittedRecord = $records->first();
+
+        $teacher->refresh();
+
+        $this->assertEqualsWithDelta(TeachingRecord::getStartDate(), $submittedRecord->valid_from, 1);
+        $this->assertEquals($teacher->id, $submittedRecord->teacher_id);
+        $this->assertEquals($teacher->college_id, $submittedRecord->college_id);
+        $this->assertEquals($teacher->status, $submittedRecord->status);
+        $this->assertEquals($teacher->designation, $submittedRecord->designation);
+        $this->assertEquals($teachingDetail->programme_id, $submittedRecord->programme_id);
+        $this->assertEquals($teachingDetail->course_id, $submittedRecord->course_id);
+        $this->assertEquals($teachingDetail->semester, $submittedRecord->semester);
     }
 
     /** @test */
     public function details_of_teacher_cannot_be_submited_if_teacher_profile_college_id_is_null()
     {
-        $this->signInTeacher($teacher = create(Teacher::class));
-
-        $profile_form = $this->fillTeacherProfileFormFields(['teacher_id' => $teacher->id, 'college_id' => '']);
-
-        $this->patch(route('teachers.profile.update'), $profile_form);
+        $teacher = create(User::class, 1, [
+            'category' => UserCategory::COLLEGE_TEACHER,
+            'college_id' => null,
+        ]);
+        $teachingDetail = create(TeachingDetail::class, 1, ['teacher_id' => $teacher->id]);
 
         TeachingRecord::startAccepting(now(), now()->addMonths(6));
 
+        $this->signIn($teacher, null);
+
         $this->withExceptionHandling()
-            ->post(route('teachers.profile.submit'))
+            ->post(route('teaching-details.send'))
             ->assertRedirect()
             ->assertSessionHasFlash('danger', 'Your profile is not completed. You cannot perform this action.');
 
@@ -96,16 +86,41 @@ class SubmitTeacherDetailsTest extends TestCase
     /** @test */
     public function details_of_teacher_cannot_be_submited_if_teacher_profile_designation_is_null()
     {
-        $this->signInTeacher($teacher = create(Teacher::class));
+        $teacher = create(User::class, 1, [
+            'category' => UserCategory::COLLEGE_TEACHER,
+            'designation' => null,
+        ]);
 
-        $profile_form = $this->fillTeacherProfileFormFields(['teacher_id' => $teacher->id, 'designation' => '']);
-
-        $this->patch(route('teachers.profile.update'), $profile_form);
+        $teachingDetail = create(TeachingDetail::class, 1, ['teacher_id' => $teacher->id]);
 
         TeachingRecord::startAccepting(now(), now()->addMonths(6));
 
+        $this->signIn($teacher, null);
+
         $this->withExceptionHandling()
-            ->post(route('teachers.profile.submit'))
+            ->post(route('teaching-details.send'))
+            ->assertRedirect()
+            ->assertSessionHasFlash('danger', 'Your profile is not completed. You cannot perform this action.');
+
+        $this->assertEquals(0, TeachingRecord::count());
+    }
+
+    /** @test */
+    public function details_of_teacher_cannot_be_submited_if_teacher_status_is_null()
+    {
+        $teacher = create(User::class, 1, [
+            'category' => UserCategory::COLLEGE_TEACHER,
+            'status' => null,
+        ]);
+
+        $teachingDetail = create(TeachingDetail::class, 1, ['teacher_id' => $teacher->id]);
+
+        TeachingRecord::startAccepting(now(), now()->addMonths(6));
+
+        $this->signIn($teacher, null);
+
+        $this->withExceptionHandling()
+            ->post(route('teaching-details.send'))
             ->assertRedirect()
             ->assertSessionHasFlash('danger', 'Your profile is not completed. You cannot perform this action.');
 
@@ -115,109 +130,93 @@ class SubmitTeacherDetailsTest extends TestCase
     /** @test */
     public function details_of_teacher_cannot_be_submited_if_teacher_profile_teaching_details_are_empty()
     {
-        $this->signInTeacher($teacher = create(Teacher::class));
-
-        $profile_form = $this->fillTeacherProfileFormFields(['teacher_id' => $teacher->id, 'teaching_details' => '']);
-
-        $this->patch(route('teachers.profile.update'), $profile_form);
+        $teacher = create(User::class, 1, [
+            'category' => UserCategory::COLLEGE_TEACHER,
+        ]);
+        // NOT adding teaching Details
 
         TeachingRecord::startAccepting(now(), now()->addMonths(6));
 
-        try {
-            $this->withoutExceptionHandling()
-                ->from('/teachers')
-                ->post(route('teachers.profile.submit'))
-                ->assertRedirect('/teachers')
-                ->assertSessionHasFlash('danger', 'Your profile is not completed. You cannot perform this action.');
+        $this->signIn($teacher, null);
 
-            $this->fail('Profile Not Completed Exception was not thrown');
-        } catch (TeacherProfileNotCompleted $e) {
-            $this->assertEquals(0, TeachingRecord::count());
-        }
+        $this->withExceptionHandling()
+            ->post(route('teaching-details.send'))
+            ->assertRedirect()
+            ->assertSessionHasFlash('danger', 'Your profile is not completed. You cannot perform this action.');
+
+        $this->assertEquals(0, TeachingRecord::count());
     }
 
     /** @test */
-    public function teachers_cannot_submit_their_profile_if_accept_details_date_is_not_set_or_time_period_expired()
+    public function teachers_cannot_submit_their_profile_if_we_didnt_start_accepting_details()
     {
-        $this->signInTeacher($teacher = create(Teacher::class));
-
-        $profile_form = $this->fillTeacherProfileFormFields([
-            'teacher_id' => $teacher->id,
+        $teacher = create(User::class, 1, [
+            'category' => UserCategory::COLLEGE_TEACHER,
         ]);
-
-        $this->patch(route('teachers.profile.update'), $profile_form);
+        create(TeachingDetail::class, 1, ['teacher_id' => $teacher->id]);
 
         // TeachingRecord::startAccepting(now(), now()->addMonths(6));
-        // submit without any start_date
+        // Not accepting records as of now.
+
+        $this->signIn($teacher, null);
+
         $this->withExceptionHandling()
-            ->post(route('teachers.profile.submit'))
+            ->post(route('teaching-details.send'))
             ->assertForbidden();
 
         $this->assertEquals(0, TeachingRecord::count());
+    }
+
+    /** @test */
+    public function teachers_cannot_submit_their_profile_if_deadline_has_expired()
+    {
+        $teacher = create(User::class, 1, [
+            'category' => UserCategory::COLLEGE_TEACHER,
+        ]);
+        create(TeachingDetail::class, 1, ['teacher_id' => $teacher->id]);
 
         TeachingRecord::startAccepting(now(), now()->addMonths(6));
 
-        \Carbon\Carbon::setTestNow(now()->addMonths(1));
+        // Time expired. Fast-forward to future (one day after deadline).
+        SupportCarbon::setTestNow(now()->addMonths(6)->addDay());
 
-        // submit after start_date is set
-        $this->withoutExceptionHandling()
-            ->from('/teachers')
-            ->post(route('teachers.profile.submit'))
-            ->assertRedirect('/teachers')
-            ->assertSessionHasNoErrors();
+        $this->signIn($teacher, null);
 
-        $this->assertEquals(1, TeachingRecord::count());
-
-        // submitting again
         $this->withExceptionHandling()
-            ->post(route('teachers.profile.submit'))
+            ->post(route('teaching-details.send'))
             ->assertForbidden();
 
-        $this->assertEquals(1, TeachingRecord::count());
+        $this->assertEquals(0, TeachingRecord::count());
     }
 
     /** @test */
-    public function notification_is_sent_to_all_teachers_when_accepting_details_has_started()
-    {
-        $this->signIn();
-
-        Notification::fake();
-
-        $teachers = create(Teacher::class, 5);
-
-        $this->withExceptionHandling()
-            ->post(route('staff.teaching_records.accept'), [
-                'start_date' => $start_date = now(),
-                'end_date' => $end_date = now()->addMonths(6),
-            ]);
-
-        Notification::assertSentTo(
-            $teachers,
-            AcceptingTeachingRecordsStarted::class,
-            function ($notification) use ($start_date, $end_date) {
-                return $notification->start_date == $start_date
-                        && $notification->end_date == $end_date;
-            }
-        );
-    }
-
-    /** @test */
-    public function acknowledgement_is_sent_via_mail_when_teacher_submitted_their_profile()
+    public function teacher_rececives_acknowledgement_notification_only_if_they_choose_to()
     {
         Notification::fake();
 
-        $this->signInTeacher($teacher = create(Teacher::class));
-
-        $profile_form = $this->fillTeacherProfileFormFields(['teacher_id' => $teacher->id]);
-
-        $this->patch(route('teachers.profile.update'), $profile_form);
+        $teacherPrefersAck = create(User::class, 1, [
+            'category' => UserCategory::COLLEGE_TEACHER,
+        ]);
+        $teacherDoesntPreferAck = create(User::class, 1, [
+            'category' => UserCategory::COLLEGE_TEACHER,
+        ]);
+        create(TeachingDetail::class, 1, ['teacher_id' => $teacherPrefersAck->id]);
+        create(TeachingDetail::class, 1, ['teacher_id' => $teacherDoesntPreferAck->id]);
 
         TeachingRecord::startAccepting(now(), now()->addMonths(6));
 
-        $this->withoutExceptionHandling()
-            ->post(route('teachers.profile.submit'))
-            ->assertSessionHasFlash('success', 'Details submitted successfully!');
+        $this->signIn($teacherPrefersAck, null);
+        $this->withExceptionHandling()
+            ->post(route('teaching-details.send'), ['notify' => true])
+            ->assertRedirect();
+        $this->assertEquals(1, TeachingRecord::count());
+        Notification::assertSentTo($teacherPrefersAck, TeachingRecordsSaved::class);
 
-        Notification::assertSentTo($teacher, TeachingRecordsSaved::class);
+        $this->signIn($teacherDoesntPreferAck, null);
+        $this->withExceptionHandling()
+            ->post(route('teaching-details.send'))
+            ->assertRedirect();
+        $this->assertEquals(2, TeachingRecord::count());
+        Notification::assertNotSentTo($teacherDoesntPreferAck, TeachingRecordsSaved::class);
     }
 }
