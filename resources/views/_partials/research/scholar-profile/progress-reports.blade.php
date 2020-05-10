@@ -14,7 +14,7 @@
             @forelse ($scholar->progressReports as $progressReport)
                 @can('view', $progressReport)
                 <li class="px-4 py-3">
-                    <div class="flex items-center">
+                    <div class="flex items-center justify-between">
                         <div class="flex items-center space-x-4 mr-4">
                             <p class="font-bold w-32">{{ $progressReport->date->format('d F Y') }}</p>
                             <a  target="_blank" 
@@ -24,10 +24,22 @@
                                 Attachment
                             </a>
                         </div>
-                        <span class="px-3 py-1 text-sm font-bold rounded-full ml-auto flex-shrink-0
-                            {{ $progressReport->recommendation->getContextCSS() }}">
-                            {{ $progressReport->recommendation }}
-                        </span>
+                        <div class="flex items-center space-x-4 mr-4">
+                            <span class="px-3 py-1 text-sm font-bold rounded-full ml-auto flex-shrink-0
+                                {{ $progressReport->recommendation->getContextCSS() }}">
+                                {{ $progressReport->recommendation }}
+                            </span>
+                            @can('delete', $progressReport)
+                            <form method="POST" action="{{ route('scholars.progress_reports.destroy', [$scholar, $progressReport]) }}"
+                                onsubmit="return confirm('Do you really want to delete this conference?');">
+                                @csrf_token
+                                @method('DELETE')
+                                <button type="submit" class="p-1 hover:bg-gray-200 text-red-700 rounded">
+                                    <feather-icon name="trash-2" stroke-width="2.5" class="h-current">Delete</feather-icon>
+                                </button>
+                            </form>
+                            @endcan
+                        </div>
                     </div>
                 </li>
                 @endcan

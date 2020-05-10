@@ -47,6 +47,12 @@ Route::get(
 )->name('scholars.progress_reports.show')
 ->middleware(['auth:web,teachers,scholars']);
 
+Route::delete(
+    'scholars/@{scholar}/progress-report/{report}',
+    'ScholarProgressReportController@destroy'
+)->name('scholars.progress_reports.destroy')
+->middleware('auth:web');
+
 Route::prefix('/research')
     ->middleware(['auth:web,teachers'])
     ->namespace('Research')

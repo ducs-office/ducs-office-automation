@@ -43,6 +43,19 @@ class ScholarProgressReportController extends Controller
 
     public function show(Scholar $scholar, ProgressReport $report)
     {
+        abort_if($scholar->id !== $report->scholar->id, 404);
+
         return Response::file(Storage::path($report->path));
+    }
+
+    public function destroy(Scholar $scholar, ProgressReport $report)
+    {
+        abort_if($scholar->id !== $report->scholar->id, 404);
+
+        $report->delete();
+
+        flash('Progress Report deleted successfully!')->success();
+
+        return back();
     }
 }
