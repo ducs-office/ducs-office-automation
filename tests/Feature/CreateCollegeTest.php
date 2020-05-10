@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\College;
 use App\Models\Programme;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 use Tests\TestCase;
@@ -39,7 +40,7 @@ class CreateCollegeTest extends TestCase
     /** @test */
     public function admin_can_create_new_college()
     {
-        $this->signIn();
+        $this->signIn(create(User::class, 1, ['college_id' => null]));
 
         $params = $this->fillCollegeFormFields();
 
@@ -63,7 +64,7 @@ class CreateCollegeTest extends TestCase
     /** @test */
     public function request_validates_code_field_is_not_null()
     {
-        $this->signIn();
+        $this->signIn(create(User::class, 1, ['college_id' => null]));
 
         $params = $this->fillCollegeFormFields(['code' => '']);
 
@@ -77,7 +78,7 @@ class CreateCollegeTest extends TestCase
     /** @test */
     public function request_validates_code_field_is_unique_value()
     {
-        $this->signIn();
+        $this->signIn(create(User::class, 1, ['college_id' => null]));
 
         $existing_college_code = create(College::class)->code;
         $params = $this->fillCollegeFormFields(['code' => $existing_college_code]);
@@ -92,7 +93,7 @@ class CreateCollegeTest extends TestCase
     /** @test */
     public function request_validates_name_field_is_not_null()
     {
-        $this->signIn();
+        $this->signIn(create(User::class, 1, ['college_id' => null]));
 
         $params = $this->fillCollegeFormFields(['name' => '']);
 
@@ -106,7 +107,7 @@ class CreateCollegeTest extends TestCase
     /** @test */
     public function request_validates_name_field_is_unique_value()
     {
-        $this->signIn();
+        $this->signIn(create(User::class, 1, ['college_id' => null]));
 
         $existing_college_name = create(College::class)->name;
         $params = $this->fillCollegeFormFields(['name' => $existing_college_name]);
@@ -121,7 +122,7 @@ class CreateCollegeTest extends TestCase
     /** @test */
     public function request_validates_programmes_field_is_not_null()
     {
-        $this->signIn();
+        $this->signIn(create(User::class, 1, ['college_id' => null]));
 
         $params = $this->fillCollegeFormFields([
             'programmes' => [],
@@ -137,7 +138,7 @@ class CreateCollegeTest extends TestCase
     /** @test */
     public function request_validates_programmes_field_is_existing_programme()
     {
-        $this->signIn();
+        $this->signIn(create(User::class, 1, ['college_id' => null]));
 
         $params = $this->fillCollegeFormFields([
             'programmes' => [123432, 321323],
@@ -153,7 +154,7 @@ class CreateCollegeTest extends TestCase
     /** @test */
     public function request_validates_principal_name_field_is_required()
     {
-        $this->signIn();
+        $this->signIn(create(User::class, 1, ['college_id' => null]));
 
         $params = $this->fillCollegeFormFields([
             'principal_name' => '',
@@ -169,7 +170,7 @@ class CreateCollegeTest extends TestCase
     /** @test */
     public function request_validates_principal_phones_field_is_required()
     {
-        $this->signIn();
+        $this->signIn(create(User::class, 1, ['college_id' => null]));
 
         $params = $this->fillCollegeFormFields([
             'principal_phones' => '',
@@ -185,7 +186,7 @@ class CreateCollegeTest extends TestCase
     /** @test */
     public function request_validates_principal_phones_field_should_not_be_empty_array()
     {
-        $this->signIn();
+        $this->signIn(create(User::class, 1, ['college_id' => null]));
 
         $params = $this->fillCollegeFormFields([
             'principal_phones' => [],
@@ -201,7 +202,7 @@ class CreateCollegeTest extends TestCase
     /** @test */
     public function request_validates_principal_phones_every_item_is_10_digit_number()
     {
-        $this->signIn();
+        $this->signIn(create(User::class, 1, ['college_id' => null]));
 
         $params = $this->fillCollegeFormFields([
             'principal_phones' => ['9876'],
@@ -217,7 +218,7 @@ class CreateCollegeTest extends TestCase
     /** @test */
     public function request_validates_principal_emails_field_is_required()
     {
-        $this->signIn();
+        $this->signIn(create(User::class, 1, ['college_id' => null]));
 
         $params = $this->fillCollegeFormFields([
             'principal_emails' => '',
@@ -233,7 +234,7 @@ class CreateCollegeTest extends TestCase
     /** @test */
     public function request_validates_principal_emails_field_should_not_be_empty_array()
     {
-        $this->signIn();
+        $this->signIn(create(User::class, 1, ['college_id' => null]));
 
         $params = $this->fillCollegeFormFields([
             'principal_emails' => [],
@@ -249,7 +250,7 @@ class CreateCollegeTest extends TestCase
     /** @test */
     public function request_validates_principal_emails_every_item_is_10_digit_number()
     {
-        $this->signIn();
+        $this->signIn(create(User::class, 1, ['college_id' => null]));
 
         $params = $this->fillCollegeFormFields([
             'principal_emails' => ['9876'],
@@ -265,7 +266,7 @@ class CreateCollegeTest extends TestCase
     /** @test */
     public function request_validates_address_field_is_required()
     {
-        $this->signIn();
+        $this->signIn(create(User::class, 1, ['college_id' => null]));
 
         $params = $this->fillCollegeFormFields([
             'address' => '',
@@ -281,7 +282,7 @@ class CreateCollegeTest extends TestCase
     /** @test */
     public function request_validates_address_is_minmum_10_characters()
     {
-        $this->signIn();
+        $this->signIn(create(User::class, 1, ['college_id' => null]));
 
         $params = $this->fillCollegeFormFields([
             'address' => Str::random(9),
@@ -297,7 +298,7 @@ class CreateCollegeTest extends TestCase
     /** @test */
     public function request_validates_website_field_is_required()
     {
-        $this->signIn();
+        $this->signIn(create(User::class, 1, ['college_id' => null]));
 
         $params = $this->fillCollegeFormFields([
             'website' => '',
@@ -313,7 +314,7 @@ class CreateCollegeTest extends TestCase
     /** @test */
     public function request_validates_website_field_is_well_formed_url()
     {
-        $this->signIn();
+        $this->signIn(create(User::class, 1, ['college_id' => null]));
 
         $params = $this->fillCollegeFormFields([
             'website' => 'without-protocol.com',
