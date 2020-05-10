@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\College;
 use App\Models\Programme;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -26,7 +27,7 @@ class UpdateCollegeTest extends TestCase
     /** @test */
     public function admin_can_update_a_college_code()
     {
-        $this->signIn();
+        $this->signIn(create(User::class, 1, ['college_id' => null]));
 
         $college = create(College::class);
 
@@ -42,7 +43,7 @@ class UpdateCollegeTest extends TestCase
     /** @test */
     public function admin_can_update_a_college_name()
     {
-        $this->signIn();
+        $this->signIn(create(User::class, 1, ['college_id' => null]));
 
         $college = create(College::class);
 
@@ -59,7 +60,7 @@ class UpdateCollegeTest extends TestCase
     /** @test */
     public function colleges_principal_name_can_be_updated()
     {
-        $this->signIn();
+        $this->signIn(create(User::class, 1, ['college_id' => null]));
 
         $college = create(College::class);
 
@@ -77,7 +78,7 @@ class UpdateCollegeTest extends TestCase
     /** @test */
     public function colleges_principal_phones_can_be_updated()
     {
-        $this->signIn();
+        $this->signIn(create(User::class, 1, ['college_id' => null]));
 
         $college = create(College::class);
 
@@ -95,7 +96,7 @@ class UpdateCollegeTest extends TestCase
     /** @test */
     public function colleges_principal_emails_can_be_updated()
     {
-        $this->signIn();
+        $this->signIn(create(User::class, 1, ['college_id' => null]));
 
         $college = create(College::class);
 
@@ -113,7 +114,7 @@ class UpdateCollegeTest extends TestCase
     /** @test */
     public function colleges_address_can_be_updated()
     {
-        $this->signIn();
+        $this->signIn(create(User::class, 1, ['college_id' => null]));
 
         $college = create(College::class);
 
@@ -131,7 +132,7 @@ class UpdateCollegeTest extends TestCase
     /** @test */
     public function colleges_website_can_be_updated()
     {
-        $this->signIn();
+        $this->signIn(create(User::class, 1, ['college_id' => null]));
 
         $college = create(College::class);
 
@@ -149,7 +150,7 @@ class UpdateCollegeTest extends TestCase
     /** @test */
     public function admin_can_update_a_college_programmes()
     {
-        $this->signIn();
+        $this->signIn(create(User::class, 1, ['college_id' => null]));
 
         $college = create(College::class);
         $related_programmes = create(Programme::class, 3);
@@ -185,7 +186,7 @@ class UpdateCollegeTest extends TestCase
     public function college_is_not_validated_for_uniqueness_if_code_is_not_changed()
     {
         $this->withoutExceptionHandling()
-            ->signIn();
+            ->signIn(create(User::class, 1, ['college_id' => null]));
 
         $college = create(College::class);
 
@@ -204,7 +205,7 @@ class UpdateCollegeTest extends TestCase
     public function college_is_not_validated_for_uniqueness_if_name_is_not_changed()
     {
         $this->withoutExceptionHandling()
-            ->signIn();
+            ->signIn(create(User::class, 1, ['college_id' => null]));
 
         $college = create(College::class);
 
@@ -222,7 +223,7 @@ class UpdateCollegeTest extends TestCase
     /** @test */
     public function colleges_principal_name_cannot_be_updated_to_null()
     {
-        $this->signIn();
+        $this->signIn(create(User::class, 1, ['college_id' => null]));
 
         $college = create(College::class);
 

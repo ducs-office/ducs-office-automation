@@ -30,7 +30,7 @@ class ViewCollegesTest extends TestCase
     /** @test */
     public function admin_can_view_colleges()
     {
-        $this->signIn();
+        $this->signIn(create(User::class, 1, ['college_id' => null]));
 
         create(College::class, 3);
 
