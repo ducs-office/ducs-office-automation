@@ -9,7 +9,9 @@ use App\Models\PastTeachersProfile;
 use App\Models\Programme;
 use App\Models\Teacher;
 use App\Models\TeachingRecord;
+use App\Models\User;
 use App\Types\CourseType;
+use App\Types\UserCategory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -31,22 +33,28 @@ class CollectionToCSVMacroTest extends TestCase
             $javaCourse->id => ['semester' => 1],
             $phpCourse->id => ['semester' => 3],
         ]);
-        $ankit = create(Teacher::class, 1, ['first_name' => 'Ankit', 'last_name' => 'Rajpal']);
+        $ankit = create(User::class, 1, [
+            'first_name' => 'Ankit', 'last_name' => 'Rajpal',
+            'category' => UserCategory::COLLEGE_TEACHER,
+            'college_id' => $deenDayalCollege->id,
+        ]);
         $ankitRecord = create(TeachingRecord::class, 1, [
             'teacher_id' => $ankit->id,
             'course_id' => $phpCourse->id,
             'programme_revision_id' => $bscHonoursLatestRev->id,
             'semester' => 3,
-            'college_id' => $deenDayalCollege->id,
         ]);
 
-        $rajan = create(Teacher::class, 1, ['first_name' => 'Rajan', 'last_name' => 'Gupta']);
+        $rajan = create(User::class, 1, [
+            'first_name' => 'Rajan', 'last_name' => 'Gupta',
+            'category' => UserCategory::COLLEGE_TEACHER,
+            'college_id' => $deenDayalCollege->id,
+        ]);
         $rajanRecord = create(TeachingRecord::class, 1, [
             'teacher_id' => $rajan->id,
             'course_id' => $javaCourse->id,
             'programme_revision_id' => $bscHonoursLatestRev->id,
             'semester' => 1,
-            'college_id' => $deenDayalCollege->id,
         ]);
 
         $csv = TeachingRecord::with([
