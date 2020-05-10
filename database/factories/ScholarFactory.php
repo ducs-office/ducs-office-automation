@@ -23,6 +23,7 @@ $factory->define(Scholar::class, function (Faker $faker) {
         'last_name' => $faker->lastName(),
         'email' => $faker->email(),
         'password' => '$2y$10$BrUcxS6jKnitbT4tRCog2eR00DCkJT.VXOhxRAv2Xxoq.77ow2fV2', // password
+        'term_duration' => $faker->numberBetween(4, 6),
         'phone_no' => $faker->phoneNumber(),
         'address' => $faker->address(),
         'gender' => $faker->randomElement(Gender::values()),
@@ -32,7 +33,7 @@ $factory->define(Scholar::class, function (Faker $faker) {
         'supervisor_profile_id' => static function () {
             return factory(SupervisorProfile::class)->create()->id;
         },
-        'enrollment_date' => $faker->date($format = 'Y-m-d', $max = now()),
+        'registration_date' => $faker->date($format = 'Y-m-d', $max = now()),
         'advisory_committee' => function () use ($faker) {
             $cosupervisor = factory(Cosupervisor::class)->create();
             return [

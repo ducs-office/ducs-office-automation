@@ -14,6 +14,7 @@ use App\Types\EducationInfo;
 use App\Types\Gender;
 use App\Types\PresentationEventType;
 use App\Types\ReservationCategory;
+use App\Types\ScholarDocumentType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -35,6 +36,7 @@ class ProfileController extends Controller
             'genders' => Gender::values(),
             'categories' => ReservationCategory::values(),
             'eventTypes' => PresentationEventType::values(),
+            'documentTypes' => ScholarDocumentType::values(),
         ]);
     }
 

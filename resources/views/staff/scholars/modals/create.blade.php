@@ -21,6 +21,12 @@
                 <input id="email" type="email" name="email" class="w-full form-input"
                     placholder="Enter scholar's email here..." required>
             </div>
+            <div class="mb-2">
+                <label for="term_duration" class="w-full form-label">Term Duration<span
+                        class="h-current text-red-500 text-lg">*</span></label>
+                <input id="term_duration" type="number" name="term_duration" min="1" class="w-full form-input"
+                    placholder="Enter scholar's term duration here..." required>
+            </div>
             <div class="flex mb-2 w-full">
                 <div class="w-1/2 mr-2">
                     <label for="supervisor" class="w-full form-label">Supervisor

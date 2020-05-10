@@ -75,7 +75,15 @@
                     </li>
                     <li class="px-4 py-3 flex space-x-4">
                         <h4 class="whitespace-no-wrap font-bold w-48"> Date of Registration </h4>
-                        <p class="flex-1 text-gray-800"> {{ $scholar->enrollment_date->format('d F, Y') }}</p>
+                        <p class="flex-1 text-gray-800"> {{ optional($scholar->registration_date)->format('d F, Y') }}</p>
+                    </li>
+                    <li class="px-4 py-3 flex space-x-4">
+                        <h4 class="whitespace-no-wrap font-bold w-48"> Term Duration </h4>
+                        <p class="flex-1 text-gray-800"> {{ $scholar->term_duration }} years </p>
+                    </li>
+                    <li class="px-4 py-3 flex space-x-4">
+                        <h4 class="whitespace-no-wrap font-bold w-48"> Registration Valid Upto </h4>
+                        <p class="flex-1 text-gray-800"> {{ optional($scholar->registration_valid_upto)->format('d F, Y') }} </p>
                     </li>
                     <li class="px-4 py-3 flex space-x-4">
                         <p class="whitespace-no-wrap font-bold w-48"> Admission Mode</p>

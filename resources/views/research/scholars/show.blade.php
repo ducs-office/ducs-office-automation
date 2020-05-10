@@ -11,6 +11,6 @@
         @include('_partials.research.scholar-profile.leaves')
         @include('_partials.research.scholar-profile.advisory-meetings')
         @include('_partials.research.scholar-profile.progress-reports')
-        @include('_partials.research.scholar-profile.other-documents')
+        @include('_partials.research.scholar-profile.documents')
     </div>
 @endsection

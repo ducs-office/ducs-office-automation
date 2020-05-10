@@ -17,6 +17,11 @@ Route::get('/', 'Auth\LoginController@showLoginForm')->middleware(['guest', 'gue
 Route::post('/login', 'Auth\LoginController@login')->middleware(['guest', 'guest:teachers', 'guest:scholars'])->name('login');
 Route::post('/logout', 'Auth\LoginController@logout')->middleware('auth:web,teachers,scholars')->name('logout');
 
+Route::get(
+    'scholars/{scholar}/document/{document}/view',
+    'ScholarDocumentsController@view'
+)->name('scholars.documents.view')->middleware('auth:web,teachers,scholars');
+
 Route::prefix('/publications')
 ->middleware(['auth:web,teachers,scholars'])
 ->namespace('Publications')
@@ -123,13 +128,8 @@ Route::prefix('/research')
 
         Route::post(
             '/scholars/{scholar}/document',
-            'ScholarOtherDocumentsController@store'
+            'ScholarDocumentsController@store'
         )->name('scholars.documents.store');
-
-        Route::get(
-            'scholars/{scholar}/document/{document}/attachment',
-            'ScholarOtherDocumentsController@viewAttachment'
-        )->name('scholars.documents.attachment');
     });
 
 Route::prefix('/teachers')
@@ -182,9 +182,4 @@ Route::prefix('/scholars')
             '/advisory-meetings/{meeting}/minutes-of-meeting',
             'AdvisoryMeetingsController@minutesOfMeeting'
         )->name('advisory_meetings.minutes_of_meeting');
-
-        Route::get(
-            '/document/{document}/attachment',
-            'OtherDocumentsController'
-        )->name('documents.attachment');
     });

@@ -14,6 +14,7 @@ use App\Models\ScholarProfile;
 use App\Models\SupervisorProfile;
 use App\Types\AdmissionMode;
 use App\Types\Gender;
+use App\Types\LeaveStatus;
 use App\Types\ReservationCategory;
 use App\Types\ScholarDocumentType;
 use Illuminate\Database\Eloquent\Model;
@@ -30,6 +31,7 @@ class Scholar extends User
         'last_name',
         'email',
         'password',
+        'term_duration',
         'phone_no',
         'address',
         'category',
@@ -37,7 +39,7 @@ class Scholar extends User
         'supervisor_profile_id',
         'gender',
         'research_area',
-        'enrollment_date',
+        'registration_date',
         'advisory_committee',
         'education_details',
         'cosupervisor_profile_id',
@@ -48,7 +50,7 @@ class Scholar extends User
     ];
 
     protected $casts = [
-        'enrollment_date' => 'date',
+        'registration_date' => 'date',
         'advisory_committee' => AdvisoryCommittee::class,
         'old_advisory_committees' => OldAdvisoryCommittee::class,
         'category' => CustomType::class . ':' . ReservationCategory::class,
@@ -94,6 +96,11 @@ class Scholar extends User
     public function getNameAttribute()
     {
         return $this->first_name . ' ' . $this->last_name;
+    }
+
+    public function getRegistrationValidUptoAttribute()
+    {
+        return optional($this->registration_date)->addYears($this->term_duration);
     }
 
     public function profilePicture()
@@ -181,10 +188,5 @@ class Scholar extends User
     public function progressReports()
     {
         return $this->hasMany(ProgressReport::class)->orderBy('date', 'desc');
-    }
-
-    public function otherDocuments()
-    {
-        return $this->documents->where('type', ScholarDocumentType::OTHER_DOCUMENT);
     }
 }

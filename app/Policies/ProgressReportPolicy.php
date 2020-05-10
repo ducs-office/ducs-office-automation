@@ -69,7 +69,7 @@ class ProgressReportPolicy
      *
      * @return mixed
      */
-    public function delete(User $user, ProgressReport $progressReport)
+    public function delete($user, ProgressReport $progressReport)
     {
         return $user instanceof User &&
                $user->can('scholar progress reports:delete');
