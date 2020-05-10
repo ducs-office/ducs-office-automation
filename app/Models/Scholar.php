@@ -14,6 +14,7 @@ use App\Models\ScholarProfile;
 use App\Models\SupervisorProfile;
 use App\Types\AdmissionMode;
 use App\Types\Gender;
+use App\Types\LeaveStatus;
 use App\Types\ReservationCategory;
 use App\Types\ScholarDocumentType;
 use Illuminate\Database\Eloquent\Model;

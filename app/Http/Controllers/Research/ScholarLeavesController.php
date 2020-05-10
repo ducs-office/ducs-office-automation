@@ -31,10 +31,8 @@ class ScholarLeavesController extends Controller
     {
         $this->authorize('respond', $leave);
 
-        $validResponseTypes = LeaveStatus::APPROVED . ',' . LeaveStatus::REJECTED;
-
         $request->validate([
-            'response' => ['required', 'in:' . $validResponseTypes],
+            'response' => ['required', Rule::in(LeaveStatus::values())],
             'response_letter' => ['required', 'file', 'mimetypes:application/pdf,image/*', 'max:200'],
         ]);
 
