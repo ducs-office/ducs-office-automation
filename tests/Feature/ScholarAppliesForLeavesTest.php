@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Leave;
 use App\Models\Scholar;
 use App\Models\Teacher;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
@@ -21,7 +22,7 @@ class ScholarAppliesForLeavesTest extends TestCase
         Storage::fake();
         $fakeFile = UploadedFile::fake()->create('fakefile.pdf', 20, 'application/pdf');
 
-        $teacher = create(Teacher::class);
+        $teacher = create(User::class);
         $supervisorProfile = $teacher->supervisorProfile()->create();
 
         $scholar = create(Scholar::class, 1, ['supervisor_profile_id' => $supervisorProfile->id]);

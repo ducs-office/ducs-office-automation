@@ -40,14 +40,10 @@ class DeletePublicationTest extends TestCase
     /** @test */
     public function journal_publication_of_supervisor_can_be_deleted()
     {
-        $supervisorProfile = create(SupervisorProfile::class, 1, [
-            'supervisor_type' => Teacher::class,
-            'supervisor_id' => create(Teacher::class)->id,
-        ]);
-
+        $supervisorProfile = create(SupervisorProfile::class);
         $supervisor = $supervisorProfile->supervisor;
 
-        $this->signInTeacher($supervisor);
+        $this->signIn($supervisor);
 
         $journal = create(Publication::class, 1, [
             'type' => 'journal',
@@ -91,11 +87,7 @@ class DeletePublicationTest extends TestCase
     /** @test */
     public function conference_publication_of_supervisor_can_be_deleted()
     {
-        $supervisorProfile = create(SupervisorProfile::class, 1, [
-            'supervisor_type' => User::class,
-            'supervisor_id' => create(User::class)->id,
-        ]);
-
+        $supervisorProfile = create(SupervisorProfile::class);
         $supervisor = $supervisorProfile->supervisor;
 
         $this->signIn($supervisor);

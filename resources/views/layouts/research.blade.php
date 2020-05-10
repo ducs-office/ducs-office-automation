@@ -21,11 +21,12 @@
         </div>
         @endauth
         <main class="flex-1 overflow-x-hidden overflow-y-auto">
-            @if(auth()->guard('web')->check())
-            @include('staff.partials.header')
-            @elseif(auth()->guard('teachers')->check())
+            @auth('web')
             @include('teachers.partials.header')
-            @endif
+            @elseauth('scholars')
+            @include('scholars.partials.header')
+            @endauth
+
             @yield('body')
         </main>
         @include('flash::message')

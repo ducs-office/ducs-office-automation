@@ -5,6 +5,7 @@ namespace Tests\Unit;
 use App\Models\Publication;
 use App\Models\SupervisorProfile;
 use App\Models\Teacher;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -18,10 +19,9 @@ class SupervisorProfileTest extends TestCase
     /** @test */
     public function supervisor_profile_belongs_to_a_supervisor()
     {
-        $teacher = create(Teacher::class);
+        $teacher = create(User::class);
 
         $supervisorProfile = create(SupervisorProfile::class, 1, [
-            'supervisor_type' => Teacher::class,
             'supervisor_id' => $teacher->id,
         ]);
 

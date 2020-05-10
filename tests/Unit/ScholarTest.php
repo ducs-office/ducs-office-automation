@@ -100,7 +100,7 @@ class ScholarTest extends TestCase
             'supervisor_profile_id' => $supervisorProfile->id,
         ]);
 
-        $this->assertInstanceOf(MorphTo::class, $scholar->supervisor());
+        $this->assertInstanceOf(BelongsTo::class, $scholar->supervisor());
         $this->assertTrue($supervisorProfile->supervisor->is($scholar->supervisor));
     }
 

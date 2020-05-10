@@ -27,20 +27,16 @@ class CreatePublicationTest extends TestCase
     /** @test */
     public function journal_publication_of_supervisor_can_be_created()
     {
-        $supervisorProfile = create(SupervisorProfile::class, 1, [
-            'supervisor_type' => User::class,
-            'supervisor_id' => create(User::class)->id,
-        ]);
-
+        $supervisorProfile = create(SupervisorProfile::class);
         $supervisor = $supervisorProfile->supervisor;
 
         $this->signIn($supervisor);
 
         $this->withoutExceptionHandling()
-        ->get(route('publications.journal.create'))
-        ->assertSuccessful()
-        ->assertViewIs('publications.journals.create')
-        ->assertViewHas('citationIndexes');
+            ->get(route('publications.journal.create'))
+            ->assertSuccessful()
+            ->assertViewIs('publications.journals.create')
+            ->assertViewHas('citationIndexes');
     }
 
     /** @test */
@@ -58,11 +54,7 @@ class CreatePublicationTest extends TestCase
     /** @test */
     public function conference_publication_of_supervisor_can_be_created()
     {
-        $supervisorProfile = create(SupervisorProfile::class, 1, [
-            'supervisor_type' => User::class,
-            'supervisor_id' => create(User::class)->id,
-        ]);
-
+        $supervisorProfile = create(SupervisorProfile::class);
         $supervisor = $supervisorProfile->supervisor;
 
         $this->signIn($supervisor);
