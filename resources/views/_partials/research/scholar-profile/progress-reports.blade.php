@@ -12,12 +12,13 @@
     <div class="flex-1">
         <ul class="border rounded-lg overflow-hidden mb-4 divide-y">
             @forelse ($scholar->progressReports as $progressReport)
+                @can('view', $progressReport)
                 <li class="px-4 py-3">
                     <div class="flex items-center">
                         <div class="flex items-center space-x-4 mr-4">
                             <p class="font-bold w-32">{{ $progressReport->date->format('d F Y') }}</p>
                             <a  target="_blank" 
-                                href="{{ route('research.scholars.progress_reports.attachment', [$scholar, $progressReport]) }}"
+                                href="{{ route('scholars.progress_reports.show', [$scholar, $progressReport]) }}"
                                 class="inline-flex items-center underline px-3 py-1 bg-gray-100 text-gray-900 rounded font-bold">
                                 <feather-icon name="paperclip" class="h-4 mr-2">Attachment</feather-icon>
                                 Attachment
@@ -29,18 +30,19 @@
                         </span>
                     </div>
                 </li>
+                @endcan
             @empty
                 <li class="px-4 py-3 text-center text-gray-700 font-bold">No Progress Reports yet.</li>
             @endforelse
         </ul>
-        @can('scholars.progress_reports.store', $scholar)
+        @can('create', \App\Models\ProgressReport::class)
         <button class="mt-2 w-full btn btn-magenta rounded-lg py-3" @click="$modal.show('add-progress-reports-modal')">
             + Add Progress Reports
         </button>
         <v-modal name="add-progress-reports-modal" height="auto">
             <div class="p-6">
                 <h3 class="text-lg font-bold mb-4">Add Progress Report</h3>
-                <form action="{{ route('research.scholars.progress_reports.store', $scholar) }}" method="POST"
+                <form action="{{ route('scholars.progress_reports.store', $scholar) }}" method="POST"
                     class="px-6" enctype="multipart/form-data">
                     @csrf_token
                     <div class="mb-2 flex items-center">

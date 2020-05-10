@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Research;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\ProgressReport;
@@ -13,12 +13,15 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response as Response;
 use Illuminate\Support\Facades\Storage;
 
-class ScholarProgressReportsController extends Controller
+class ScholarProgressReportController extends Controller
 {
+    public function __construct()
+    {
+        return $this->authorizeResource(ProgressReport::class, 'report');
+    }
+
     public function store(Request $request, Scholar $scholar)
     {
-        $this->authorize('scholars.progress_reports.store', $scholar);
-
         $recommendations = implode(',', ProgressReportRecommendation::values());
 
         $request->validate([
@@ -38,10 +41,8 @@ class ScholarProgressReportsController extends Controller
         return back();
     }
 
-    public function viewAttachment(Scholar $scholar, ProgressReport $report)
+    public function show(Scholar $scholar, ProgressReport $report)
     {
-        $this->authorize('view', $scholar);
-
         return Response::file(Storage::path($report->path));
     }
 }

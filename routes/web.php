@@ -35,6 +35,18 @@ Route::prefix('/publications')
     Route::delete('/conference/{conference}', 'ConferencePublicationController@destroy')->name('conference.destroy');
 });
 
+Route::post(
+    '/scholars/@{scholar}/progress-report',
+    'ScholarProgressReportController@store'
+)->name('scholars.progress_reports.store')
+->middleware('auth:web');
+
+Route::get(
+    'scholars/@{scholar}/progress-report/{report}',
+    'ScholarProgressReportController@show'
+)->name('scholars.progress_reports.show')
+->middleware(['auth:web,teachers,scholars']);
+
 Route::prefix('/research')
     ->middleware(['auth:web,teachers'])
     ->namespace('Research')
@@ -104,16 +116,6 @@ Route::prefix('/research')
         )->name('scholars.advisory_committee.replace');
 
         Route::post(
-            '/scholars/{scholar}/progress-report',
-            'ScholarProgressReportsController@store'
-        )->name('scholars.progress_reports.store');
-
-        Route::get(
-            'scholars/{scholar}/progress-report/{report}/attachment',
-            'ScholarProgressReportsController@viewAttachment'
-        )->name('scholars.progress_reports.attachment');
-
-        Route::post(
             '/scholars/{scholar}/document',
             'ScholarOtherDocumentsController@store'
         )->name('scholars.documents.store');
@@ -174,11 +176,6 @@ Route::prefix('/scholars')
             '/advisory-meetings/{meeting}/minutes-of-meeting',
             'AdvisoryMeetingsController@minutesOfMeeting'
         )->name('advisory_meetings.minutes_of_meeting');
-
-        Route::get(
-            '/progress-reports/{report}/attachment',
-            'ProgressReportsController'
-        )->name('progress_reports.attachment');
 
         Route::get(
             '/document/{document}/attachment',

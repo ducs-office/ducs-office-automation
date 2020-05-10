@@ -14,10 +14,9 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
-use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
-class ScholarProgressReportTest extends TestCase
+class StoreScholarProgressReportTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -35,7 +34,7 @@ class ScholarProgressReportTest extends TestCase
         $this->assertCount(0, $scholar->progressReports);
 
         $this->withoutExceptionHandling()
-            ->post(route('research.scholars.progress_reports.store', $scholar), [
+            ->post(route('scholars.progress_reports.store', $scholar), [
                 'progress_report' => $progressReport,
                 'recommendation' => $recommendation = Arr::random(array_values(ProgressReportRecommendation::values())),
                 'date' => $date = '2019-09-12',
@@ -71,7 +70,7 @@ class ScholarProgressReportTest extends TestCase
         $this->assertCount(0, $scholar->progressReports);
 
         $this->withExceptionHandling()
-            ->post(route('research.scholars.progress_reports.store', $scholar), [
+            ->post(route('scholars.progress_reports.store', $scholar), [
                 'progress_report' => $progressReport,
                 'recommendation' => $recommendation = Arr::random(array_values(ProgressReportRecommendation::values())),
                 'date' => $date = '2019-09-12',
@@ -97,7 +96,7 @@ class ScholarProgressReportTest extends TestCase
 
         try {
             $this->withoutExceptionHandling()
-                ->post(route('research.scholars.progress_reports.store', $scholar), [
+                ->post(route('scholars.progress_reports.store', $scholar), [
                     'progress_report' => $progressReport,
                     'recommendation' => $recommendation = 'Progress Report Description',
                     'date' => $date = '2019-09-12',
@@ -109,56 +108,12 @@ class ScholarProgressReportTest extends TestCase
         $this->assertCount(0, $scholar->fresh()->progressReports);
 
         $this->withoutExceptionHandling()
-            ->post(route('research.scholars.progress_reports.store', $scholar), [
+            ->post(route('scholars.progress_reports.store', $scholar), [
                 'progress_report' => $progressReport,
                 'recommendation' => $recommendation = ProgressReportRecommendation::CONTINUE,
                 'date' => $date = '2019-09-12',
             ]);
 
         $this->assertCount(1, $scholar->fresh()->progressReports);
-    }
-
-    /** @test */
-    public function progess_report_can_be_viewed_if_they_are_authorized()
-    {
-        $scholar = create(Scholar::class);
-        $progressReport = create(ProgressReport::class, 1, [
-            'scholar_id' => $scholar->id,
-        ]);
-        $role = Role::create(['name' => 'randomRole']);
-
-        $role->givePermissionTo('scholars:view');
-
-        $this->signIn($user = create(User::class), $role->name);
-
-        $this->withoutExceptionHandling()
-            ->get(route('research.scholars.progress_reports.attachment', [
-                'scholar' => $scholar,
-                'report' => $progressReport,
-            ]))
-            ->assertSuccessful();
-    }
-
-    /** @test */
-    public function progess_report_can_not_be_viewed_if_they_are_not_authorized()
-    {
-        $role = Role::create(['name' => 'randomRole']);
-        $role->revokePermissionTo('scholars:view');
-
-        $this->signIn($user = create(User::class), $role->name);
-
-        $user->revokePermissionTo('scholars:view');
-
-        $scholar = create(Scholar::class);
-        $progressReport = create(ProgressReport::class, 1, [
-            'scholar_id' => $scholar->id,
-        ]);
-
-        $this->withExceptionHandling()
-            ->get(route('research.scholars.progress_reports.attachment', [
-                'scholar' => $scholar,
-                'report' => $progressReport,
-            ]))
-            ->assertForbidden();
     }
 }
