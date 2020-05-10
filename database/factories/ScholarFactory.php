@@ -35,10 +35,15 @@ $factory->define(Scholar::class, function (Faker $faker) {
         },
         'registration_date' => $faker->date($format = 'Y-m-d', $max = now()),
         'enrolment_id' => $faker->regexify('[A-Za-z0-9]{30}'),
-        'advisory_committee' => function () use ($faker) {
-            $cosupervisor = factory(Cosupervisor::class)->create();
+        'advisory_committee' => function ($scholar) use ($faker) {
             return [
-                AdvisoryCommitteeMember::fromExistingCosupervisors($cosupervisor),
+                new AdvisoryCommitteeMember('external', [
+                    'name' => $faker->name,
+                    'designation' => $faker->jobTitle,
+                    'affiliation' => $faker->company,
+                    'email' => $faker->email,
+                    'phone' => $faker->PhoneNumber,
+                ]),
                 new AdvisoryCommitteeMember('external', [
                     'name' => $faker->name,
                     'designation' => $faker->jobTitle,

@@ -15,14 +15,10 @@ class ViewSupervisorPublicationsTest extends TestCase
     /** @test */
     public function supervisor_can_view_publications()
     {
-        $supervisorProfile = create(SupervisorProfile::class, 1, [
-            'supervisor_type' => Teacher::class,
-            'supervisor_id' => create(Teacher::class)->id,
-        ]);
-
+        $supervisorProfile = create(SupervisorProfile::class);
         $supervisor = $supervisorProfile->supervisor;
 
-        $this->signInTeacher($supervisor);
+        $this->signIn($supervisor);
 
         $response = $this->withoutExceptionHandling()
                 ->get(route('research.publications.index'))

@@ -20,14 +20,9 @@ class SupervisorManagesAdvisoryMeetingsTest extends TestCase
     {
         Storage::fake();
 
-        $teacher = create(Teacher::class);
-        $supervisorProfile = $teacher->supervisorProfile()->create();
+        $scholar = create(Scholar::class);
 
-        $scholar = create(Scholar::class, 1, [
-            'supervisor_profile_id' => $supervisorProfile->id,
-        ]);
-
-        $this->signInTeacher($teacher);
+        $this->signIn($scholar->supervisor);
 
         try {
             $this->withoutExceptionHandling()
@@ -50,19 +45,14 @@ class SupervisorManagesAdvisoryMeetingsTest extends TestCase
         Storage::fake();
         $file = UploadedFile::fake()->create('minutes_of_meeting.pdf', 15, 'document/*');
 
-        $teacher = create(Teacher::class);
-        $supervisorProfile = $teacher->supervisorProfile()->create();
-
-        $scholar = create(Scholar::class, 1, [
-            'supervisor_profile_id' => $supervisorProfile->id,
-        ]);
+        $scholar = create(Scholar::class);
 
         $meeting = $scholar->advisoryMeetings()->create([
             'date' => now()->subDays(2),
             'minutes_of_meeting_path' => $file->store('advisory_meetings'),
         ]);
 
-        $this->signInTeacher($teacher);
+        $this->signIn($scholar->supervisor);
 
         $this->withoutExceptionHandling()
             ->get(route('research.scholars.advisory_meetings.minutes_of_meeting', [$meeting]))

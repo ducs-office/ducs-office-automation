@@ -8,6 +8,7 @@ use App\Models\SupervisorProfile;
 use App\Models\Teacher;
 use App\Models\User;
 use App\Types\PrePhdCourseType;
+use App\Types\UserCategory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
@@ -22,12 +23,12 @@ class SupervisorManagesScholarCourseworkTest extends TestCase
     /** @test */
     public function teacher_supervisors_can_add_elective_courses_to_scholars_courseworks()
     {
-        $teacher = create(Teacher::class);
+        $teacher = create(User::class, 1, ['category' => UserCategory::COLLEGE_TEACHER]);
         $supervisorProfile = $teacher->supervisorProfile()->create();
 
         $scholar = create(Scholar::class, 1, ['supervisor_profile_id' => $supervisorProfile->id]);
 
-        $this->signInTeacher($teacher);
+        $this->signIn($teacher);
 
         $courses = create(PhdCourse::class, 2, ['type' => PrePhdCourseType::ELECTIVE]);
 

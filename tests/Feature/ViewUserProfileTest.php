@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\TeachingDetail;
 use App\Models\TeachingRecord;
 use App\Models\User;
+use App\Types\TeacherStatus;
 use App\Types\UserCategory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -70,7 +71,7 @@ class ViewUserProfileTest extends TestCase
     /** @test */
     public function teaching_records_of_a_teacher_are_passed_in_reverse_chronological_order()
     {
-        $this->signIn($teacher = create(User::class, [
+        $this->signIn($teacher = create(User::class, 1, [
             'category' => UserCategory::COLLEGE_TEACHER,
         ]));
 
