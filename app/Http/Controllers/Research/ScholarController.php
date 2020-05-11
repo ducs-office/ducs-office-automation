@@ -62,7 +62,7 @@ class ScholarController extends Controller
         $validData = $request->validate([
             'committee' => ['required', 'array', 'max:5'],
             'committee.*.type' => ['required', 'string', 'in:existing_supervisor,existing_cosupervisor,external'],
-            'committee.*.id' => ['required_if:commmitte.*.type,existing_supervisor, existing_cosupervisor', 'integer'],
+            'committee.*.id' => ['required_if:commmitte.*.type,existing_supervisor,existing_cosupervisor', 'integer'],
             'committee.*.name' => ['required_if:commmitte.*.type,external', 'string'],
             'committee.*.designation' => ['required_if:commmitte.*.type,external', 'string'],
             'committee.*.affiliation' => ['required_if:commmitte.*.type,external', 'string'],

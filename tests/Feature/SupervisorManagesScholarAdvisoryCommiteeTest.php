@@ -7,6 +7,7 @@ use App\Models\Scholar;
 use App\Models\SupervisorProfile;
 use App\Models\User;
 use App\Types\AdvisoryCommitteeMember;
+use App\Types\Designation;
 use App\Types\UserCategory;
 use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -74,7 +75,10 @@ class SupervisorManagesScholarAdvisoryCommiteeTest extends TestCase
     /** @test */
     public function scholar_advisory_committee_can_be_replaced_by_their_supervisor()
     {
-        $this->signIn($faculty = create(User::class, 1, ['category' => UserCategory::FACULTY_TEACHER]));
+        $this->signIn($faculty = create(User::class, 1, [
+            'category' => UserCategory::FACULTY_TEACHER,
+            'designation' => Designation::PROFESSOR,
+        ]));
 
         $supervisor = $faculty->supervisorProfile()->create();
 

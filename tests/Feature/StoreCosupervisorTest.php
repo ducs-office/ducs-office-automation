@@ -23,16 +23,15 @@ class StoreCosupervisorTest extends TestCase
     {
         $this->signIn();
 
-        $teacher = create(Teacher::class);
-
-        $college = create(College::class);
-
-        $teacher->profile()->update([
-            'college_id' => $college->id,
+        $teacher = create(User::class, 1, [
+            'category' => UserCategory::COLLEGE_TEACHER,
+            'college_id' => create(College::class)->id,
         ]);
 
         $this->withoutExceptionHandling()
-            ->post(route('staff.cosupervisors.teachers.store', $teacher))
+            ->post(route('staff.cosupervisors.store'), [
+                'user_id' => $teacher->id,
+            ])
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'Co-supervisor added successfully');
 
@@ -46,22 +45,16 @@ class StoreCosupervisorTest extends TestCase
     {
         $this->signIn();
 
-        $teacher = create(Teacher::class);
-        $college = create(College::class);
-
-        $teacher->profile()->update([
-            'college_id' => $college->id,
+        $teacher = create(User::class, 1, [
+            'category' => UserCategory::COLLEGE_TEACHER,
+            'college_id' => create(College::class)->id,
         ]);
-
-        create(SupervisorProfile::class, 1, [
-            'supervisor_type' => Teacher::class,
-            'supervisor_id' => $teacher->id,
-        ]);
-
-        $this->assertEquals(0, Cosupervisor::count());
+        $teacher->supervisorProfile()->create();
 
         $this->withExceptionHandling()
-            ->post(route('staff.cosupervisors.teachers.store', $teacher))
+            ->post(route('staff.cosupervisors.store'), [
+                'user_id' => $teacher->id,
+            ])
             ->assertForbidden();
 
         $this->assertEquals(0, Cosupervisor::count());
@@ -75,7 +68,9 @@ class StoreCosupervisorTest extends TestCase
         $faculty = create(User::class, 1, ['category' => UserCategory::FACULTY_TEACHER]);
 
         $this->withoutExceptionHandling()
-            ->post(route('staff.cosupervisors.faculties.store', $faculty))
+            ->post(route('staff.cosupervisors.store'), [
+                'user_id' => $faculty->id,
+            ])
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'Co-supervisor added successfully');
 
@@ -90,15 +85,14 @@ class StoreCosupervisorTest extends TestCase
         $this->signIn();
 
         $faculty = create(User::class, 1, ['category' => UserCategory::FACULTY_TEACHER]);
-        create(SupervisorProfile::class, 1, [
-            'supervisor_type' => User::class,
-            'supervisor_id' => $faculty->id,
-        ]);
+        $faculty->supervisorProfile()->create();
 
         $this->assertEquals(0, Cosupervisor::count());
 
         $this->withExceptionHandling()
-            ->post(route('staff.cosupervisors.faculties.store', $faculty))
+            ->post(route('staff.cosupervisors.store'), [
+                'user_id' => $faculty->id,
+            ])
             ->assertForbidden();
 
         $this->assertEquals(0, Cosupervisor::count());
@@ -114,7 +108,9 @@ class StoreCosupervisorTest extends TestCase
         $this->assertEquals(0, Cosupervisor::count());
 
         $this->withExceptionHandling()
-            ->post(route('staff.cosupervisors.faculties.store', $faculty))
+            ->post(route('staff.cosupervisors.store'), [
+                'user_id' => $faculty->id,
+            ])
             ->assertForbidden();
 
         $this->assertEquals(0, Cosupervisor::count());
@@ -130,7 +126,9 @@ class StoreCosupervisorTest extends TestCase
         $this->assertEquals(0, Cosupervisor::count());
 
         $this->withoutExceptionHandling()
-            ->post(route('staff.cosupervisors.faculties.store', $faculty))
+            ->post(route('staff.cosupervisors.store'), [
+                'user_id' => $faculty->id,
+            ])
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'Co-supervisor added successfully');
 

@@ -22,8 +22,7 @@ class CosupervisorTest extends TestCase
     {
         $faculty = create(User::class, ['category' => UserCategory::FACULTY_TEACHER]);
         $cosupervisor = create(Cosupervisor::class, 1, [
-            'professor_type' => User::class,
-            'professor_id' => $faculty->id,
+            'user_id' => $faculty->id,
         ]);
 
         $this->assertInstanceOf(BelongsTo::class, $cosupervisor->professor());
@@ -32,8 +31,7 @@ class CosupervisorTest extends TestCase
         $teacher = create(User::class, 1, ['category' => UserCategory::COLLEGE_TEACHER]);
 
         $teacherCosupervisor = create(Cosupervisor::class, 1, [
-            'professor_type' => User::class,
-            'professor_id' => $teacher->id,
+            'user_id' => $teacher->id,
         ]);
 
         $this->assertTrue($teacher->is($teacherCosupervisor->professor));
@@ -45,8 +43,7 @@ class CosupervisorTest extends TestCase
         $existingProfessor = create(User::class);
 
         $cosupervisor = create(Cosupervisor::class, 1, [
-            'professor_type' => User::class,
-            'professor_id' => $existingProfessor->id,
+            'user_id' => $existingProfessor->id,
         ]);
 
         $this->assertEquals($existingProfessor->name, $cosupervisor->name);
@@ -59,8 +56,7 @@ class CosupervisorTest extends TestCase
     public function external_cosupervisor_details_can_be_accessed_as_direct_properties()
     {
         $external = create(Cosupervisor::class, 1, [
-            'professor_type' => null,
-            'professor_id' => null,
+            'user_id' => null,
             'name' => $name = 'Cosupervisor Name',
             'email' => $email = 'cosup@gmail.com',
             'designation' => $designation = 'Head of Department',

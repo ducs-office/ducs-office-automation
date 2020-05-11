@@ -3,29 +3,21 @@
 <div class="page-card m-6">
     <div class="flex items-baseline px-6 pb-4 border-b justify-between">
         <h1 class="page-header mb-0 px-0 mr-4">Co-supervisors</h1>
-            <button class="btn btn-magenta is-sm shadow-inner"
-                @click.prevent="$modal.show('create-cosupervisor-modal')">
-                Create New Co-supervisor
-            </button>
-            @include('staff.cosupervisors.modals.create', [
-                'modalName' => 'create-cosupervisor-modal',
-            ])
-            <button class="btn btn-magenta is-sm shadow-inner"
-                @click.prevent="$modal.show('add-college-teacher-modal')">
-                Add From College Teachers
-            </button>
-            @include('staff.cosupervisors.modals.add_college_teacher', [
-                'modalName' => 'add-college-teacher-modal',
-                'teachers' => $teachers,
-            ])
-            <button class="btn btn-magenta is-sm shadow-inner"
-             @click.prevent="$modal.show('add-faculty-modal')">
-             Add From Faculty
-         </button>
-         @include('staff.cosupervisors.modals.add_faculty', [
-                'modalName' => 'add-faculty-modal',
-                'faculties' => $faculties,
-            ])
+        <button class="btn btn-magenta is-sm shadow-inner"
+            @click.prevent="$modal.show('create-cosupervisor-modal')">
+            Create New Co-supervisor
+        </button>
+        @include('staff.cosupervisors.modals.create', [
+            'modalName' => 'create-cosupervisor-modal',
+        ])
+        <button class="btn btn-magenta is-sm shadow-inner"
+            @click.prevent="$modal.show('add-college-teacher-modal')">
+            Add From Existing Teachers
+        </button>
+        @include('staff.cosupervisors.modals.add-existing-teacher', [
+            'modalName' => 'add-existing-teacher-modal',
+            'teachers' => $users,
+        ])
     </div>
 
     @include('staff.cosupervisors.modals.edit', [

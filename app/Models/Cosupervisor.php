@@ -12,7 +12,7 @@ class Cosupervisor extends Model
 
     public function professor()
     {
-        return $this->morphTo('professor');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function getNameAttribute($name)

@@ -18,6 +18,6 @@ class ViewCosupervisorsTest extends TestCase
         $this->withoutExceptionHandling()
             ->get(route('staff.cosupervisors.index'))
             ->assertViewIs('staff.cosupervisors.index')
-            ->assertViewHasAll(['cosupervisors', 'teachers', 'faculties']);
+            ->assertViewHasAll(['cosupervisors', 'users']);
     }
 }

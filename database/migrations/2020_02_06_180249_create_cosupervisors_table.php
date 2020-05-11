@@ -19,7 +19,7 @@ class CreateCosupervisorsTable extends Migration
             $table->string('email')->nullable();
             $table->string('designation')->nullable();
             $table->string('affiliation')->nullable();
-            $table->nullableMorphs('professor');
+            $table->foreignId('user_id')->nullable()->constrained();
             $table->timestamps();
         });
     }
