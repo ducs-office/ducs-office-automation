@@ -18,9 +18,19 @@ Route::post('/login', 'Auth\LoginController@login')->middleware(['guest', 'guest
 Route::post('/logout', 'Auth\LoginController@logout')->middleware('auth:web,teachers,scholars')->name('logout');
 
 Route::get(
-    'scholars/{scholar}/document/{document}/view',
-    'ScholarDocumentsController@view'
-)->name('scholars.documents.view')->middleware('auth:web,teachers,scholars');
+    'scholars/{scholar}/document/{document}',
+    'ScholarDocumentsController@show'
+)->name('scholars.documents.show')->middleware('auth:web,teachers,scholars');
+
+Route::post(
+    '/scholars/{scholar}/document',
+    'ScholarDocumentsController@store'
+)->name('scholars.documents.store')->middleware('auth:web,teachers,scholars');
+
+Route::delete(
+    '/scholars/{scholar}/document/{document}',
+    'ScholarDocumentsController@destroy'
+)->name('scholars.documents.destroy')->middleware('auth:web,teachers,scholars');
 
 Route::prefix('/publications')
 ->middleware(['auth:web,teachers,scholars'])
@@ -125,11 +135,6 @@ Route::prefix('/research')
             '/scholars/{scholar}/replace-advisory-committee',
             'ScholarController@replaceAdvisoryCommittee'
         )->name('scholars.advisory_committee.replace');
-
-        Route::post(
-            '/scholars/{scholar}/document',
-            'ScholarDocumentsController@store'
-        )->name('scholars.documents.store');
     });
 
 Route::prefix('/teachers')

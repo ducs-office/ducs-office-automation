@@ -16,23 +16,20 @@ class ViewScholarDocumentsTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function user_can_view_documents_if_they_have_permission_to_view_scholar()
+    public function user_can_view_documents_if_they_have_permission_to_view()
     {
+        $this->signIn($user = create(User::class), 'randomRole');
+
+        $user->roles->first()->givePermissionTo('scholar documents:view');
+
         $scholar = create(Scholar::class);
 
         $document = create(ScholarDocument::class, 1, [
             'scholar_id' => $scholar->id,
-            'type' => ScholarDocumentType::JOINING_LETTER,
         ]);
 
-        $role = Role::create(['name' => 'randomRole']);
-
-        $role->givePermissionTo('scholars:view');
-
-        $this->signIn($user = create(User::class), $role->name);
-
         $this->withoutExceptionHandling()
-             ->get(route('scholars.documents.view', [
+             ->get(route('scholars.documents.show', [
                  'scholar' => $scholar,
                  'document' => $document,
              ]))
@@ -40,28 +37,22 @@ class ViewScholarDocumentsTest extends TestCase
     }
 
     /** @test */
-    public function user_can_not_view_documents_if_do_not_have_permission_to_view_scholar()
+    public function user_can_not_view_documents_if_they_do_not_have_permission_to_view()
     {
-        $role = Role::create(['name' => 'randomRole']);
+        $this->signIn($user = create(User::class), 'randomRole');
 
-        $role->givePermissionTo('scholars:view');
-
-        $this->signIn($user = create(User::class), $role->name);
-
-        $user->roles->every->revokePermissionTo('scholars:view');
+        $user->roles->first()->givePermissionTo('scholar documents:view');
 
         $scholar = create(Scholar::class);
 
-        $otherDocument = create(ScholarDocument::class, 1, [
+        $document = create(ScholarDocument::class, 1, [
             'scholar_id' => $scholar->id,
-            'type' => ScholarDocumentType::JOINING_LETTER,
         ]);
 
+        $user->roles->first()->revokePermissionTo('scholar documents:view');
+
         $this->withExceptionHandling()
-             ->get(route('scholars.documents.view', [
-                 'scholar' => $scholar,
-                 'document' => $otherDocument,
-             ]))
+             ->get(route('scholars.documents.show', [$scholar, $document]))
              ->assertForbidden();
     }
 
@@ -76,7 +67,7 @@ class ViewScholarDocumentsTest extends TestCase
         ]);
 
         $this->withoutExceptionHandling()
-            ->get(route('scholars.documents.view', [$scholar, $document]))
+            ->get(route('scholars.documents.show', [$scholar, $document]))
             ->assertSuccessful();
     }
 
@@ -93,7 +84,7 @@ class ViewScholarDocumentsTest extends TestCase
         ]);
 
         $this->withExceptionHandling()
-            ->get(route('scholars.documents.view', [$scholar, $document]))
+            ->get(route('scholars.documents.show', [$scholar, $document]))
             ->assertForbidden();
     }
 }

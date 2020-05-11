@@ -40,6 +40,5 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('scholars.coursework.complete', ScholarProfilePolicy::class . '@markCourseworkCompleted');
         Gate::define('scholars.advisory_meetings.store', ScholarProfilePolicy::class . '@addAdvisoryMeeting');
         Gate::define('scholars.advisory_committee.manage', ScholarProfilePolicy::class . '@manageAdvisoryCommittee');
-        Gate::define('scholars.documents.store', ScholarProfilePolicy::class . '@addDocuments');
     }
 }

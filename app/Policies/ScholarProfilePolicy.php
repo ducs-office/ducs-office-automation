@@ -41,9 +41,4 @@ class ScholarProfilePolicy
             $user->isSupervisor() &&
             $user->supervisorProfile->scholars->contains($scholar);
     }
-
-    public function addDocuments($user, Scholar $scholar)
-    {
-        return ($user instanceof User && $user->can('scholar documents:add'));
-    }
 }

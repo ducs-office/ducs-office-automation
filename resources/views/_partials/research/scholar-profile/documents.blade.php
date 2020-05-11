@@ -11,33 +11,44 @@
     <div class="flex-1">
         <ul class="border rounded-lg overflow-hidden mb-4 divide-y">
             @forelse ($scholar->documents as $document)
-                <li class="px-4 py-3">
+                @can('view', $document)
+                <li class="px-4 py-3">   
                     <div class="flex items-center">
                         <div class="flex-1">
                             <p class="font-bold mr-2">{{ $document->date->format('d F Y') }}</p>
                             <p class="text-gray-700">{{ $document->description }}</p>
                         </div>
-                        @can('view', $document)
-                        <a href="{{ route('scholars.documents.view', [$scholar, $document]) }}"
+                        <a href="{{ route('scholars.documents.show', [$scholar, $document]) }}"
                             class="inline-flex items-center underline px-3 py-1 bg-gray-100 text-gray-900 rounded font-bold">
                         <feather-icon name="paperclip" class="h-4 mr-2"></feather-icon>
                             {{ $document->type }}
                         </a>
+                        @can('delete', $document)
+                        <form method="POST" action="{{ route('scholars.documents.destroy', [$scholar, $document]) }}"
+                                onsubmit="return confirm('Do you really want to delete this document?');">
+                                @csrf_token
+                                @method('DELETE')
+                                <button type="submit" class="p-1 hover:bg-gray-200 text-red-700 rounded">
+                                    <feather-icon name="trash-2" stroke-width="2.5" class="h-current">Delete</feather-icon>
+                                </button>
+                            </form>
                         @endcan
                     </div>
                 </li>
+                @endcan
             @empty
                 <li class="px-4 py-3 text-center text-gray-700 font-bold">No Documents</li>
             @endforelse
         </ul>
-        @can('scholars.documents.store', $scholar)
-        <button class="mt-2 w-full btn btn-magenta rounded-lg py-3" @click="$modal.show('add-other-documents-modal')">
+        @can('create', App\Models\ScholarDocument::class)
+        <button class="mt-2 w-full btn btn-magenta rounded-lg py-3" @click="$modal.show('add-documents-modal')">
             + Add Documents
         </button>
-        <v-modal name="add-other-documents-modal" height="auto">
+        @endcan
+        <v-modal name="add-documents-modal" height="auto">
             <div class="p-6">
                 <h3 class="text-lg font-bold mb-4">Add Documents</h3>
-                <form action="{{ route('research.scholars.documents.store', $scholar) }}" method="POST"
+                <form action="{{ route('scholars.documents.store', $scholar) }}" method="POST"
                     class="px-6" enctype="multipart/form-data">
                     @csrf_token
                     <div class="mb-2 items-center">
@@ -84,6 +95,5 @@
                 </form>
             </div>
         </v-modal>
-        @endcan
     </div>
 </div>
