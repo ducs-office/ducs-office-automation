@@ -10,13 +10,7 @@ use Faker\Generator as Faker;
 
 $factory->define(Publication::class, function (Faker $faker) {
     return [
-        'type' => $type = $faker->randomElement([PublicationType::JOURNAL, PublicationType::CONFERENCE]),
-        'authors' => static function () use ($faker) {
-            $authors = array_fill(0, random_int(1, 10), 'NULL');
-            return array_map(function () use ($faker) {
-                return $faker->name;
-            }, $authors);
-        },
+        'type' => $type = $faker->randomElement(PublicationType::values()),
         'paper_title' => $faker->sentence,
         'name' => $faker->sentence,
         'volume' => $faker->numberBetween(1, 20),
@@ -35,9 +29,21 @@ $factory->define(Publication::class, function (Faker $faker) {
         },
         'main_author_type' => $type = $faker->randomElement([Scholar::class, SupervisorProfile::class]),
         'main_author_id' => factory($type)->create()->id,
-        'number' => null,
-        'publisher' => null,
-        'city' => null,
-        'country' => null,
+        'number' => function ($publication) use ($faker) {
+            return $publication['type'] === PublicationType::JOURNAL
+                ? $faker->randomNumber(2) : null;
+        },
+        'publisher' => function ($publication) use ($faker) {
+            return $publication['type'] === PublicationType::JOURNAL
+                ? $faker->name : null;
+        },
+        'city' => function ($publication) use ($faker) {
+            return $publication['type'] === PublicationType::CONFERENCE
+                ? $faker->city : null;
+        },
+        'country' => function ($publication) use ($faker) {
+            return $publication['type'] === PublicationType::CONFERENCE
+                ? $faker->country : null;
+        },
     ];
 });

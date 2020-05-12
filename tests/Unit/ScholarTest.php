@@ -17,6 +17,7 @@ use App\Models\SupervisorProfile;
 use App\Models\User;
 use App\Types\EducationInfo;
 use App\Types\PrePhdCourseType;
+use App\Types\PublicationType;
 use App\Types\ScholarDocumentType;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -37,7 +38,6 @@ class ScholarTest extends TestCase
         return $this->mergeFormFields([
             'type' => null,
             'name' => 'India CS Journal',
-            'authors' => ['JOhn Doe', 'Sally Brooke'],
             'paper_title' => 'Lorem ipsum dolor sit amet consectetur adipisicing',
             'date' => '2020-02-09',
             'volume' => '1',
@@ -59,12 +59,12 @@ class ScholarTest extends TestCase
 
         $scholar->publications()->createMany([
             $this->fillPublication([
-                'type' => 'journal',
+                'type' => PublicationType::JOURNAL,
                 'number' => 123,
                 'publisher' => 'O Reilly',
             ]),
             $this->fillPublication([
-                'type' => 'conference',
+                'type' => PublicationType::CONFERENCE,
                 'city' => 'Delhi',
                 'country' => 'India',
             ]),

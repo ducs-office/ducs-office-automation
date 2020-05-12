@@ -19,6 +19,8 @@ use App\Types\PublicationType;
 use App\Types\ReservationCategory;
 use App\Types\UserType;
 use Illuminate\Database\Seeder;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 class PhdScholarSeeder extends Seeder
 {
@@ -28,6 +30,7 @@ class PhdScholarSeeder extends Seeder
     protected $college_teachers;
     protected $supervisors;
     protected $cosupervisors;
+    protected $nocPath;
 
     /**
      * Run the database seeds.
@@ -40,6 +43,7 @@ class PhdScholarSeeder extends Seeder
         $this->createCollegeTeachers();
         $this->createSupervisors();
         $this->createCosupervisors();
+        $this->createNocDocument();
 
         // =========== Rajni Dabbas ============
         $rajni = Scholar::create([
@@ -124,20 +128,34 @@ class PhdScholarSeeder extends Seeder
         $sudhir->courseworks()->attach(
             PhdCourse::whereCode('RCS023')->first()
         );
-        $sudhir->publications()->create([
+        $sudhirPublication = $sudhir->publications()->create([
             'type' => PublicationType::JOURNAL,
             'name' => 'International Journal of Recent Technology and Engineering',
             'paper_title' => 'Big Data Analytics: An Indian Perspective',
-            'authors' => [
-                'Ashish Kumar Jha', 'Sudhir Kumar Gupta',
-                'Ajay Kumar', 'Mahesh Kumar Chaubey',
-                'Jitendra Singh',
-            ],
             'date' => '2019-09-30',
             'volume' => 8,
             'number' => 3,
             'indexed_in' => CitationIndex::SCOPUS,
             'page_numbers' => [29, 43],
+        ]);
+
+        $sudhirPublication->coAuthors()->createMany([
+            [
+                'name' => 'Ashish Kumar Jha',
+                'noc_path' => $this->nocPath,
+            ],
+            [
+                'name' => 'Ajay Kumar',
+                'noc_path' => $this->nocPath,
+            ],
+            [
+                'name' => 'Mahesh Kumar Chaubey',
+                'noc_path' => $this->nocPath,
+            ],
+            [
+                'name' => 'Jitendra Singh',
+                'noc_path' => $this->nocPath,
+            ],
         ]);
 
         // ================== Sapna Grover =====================
@@ -167,14 +185,10 @@ class PhdScholarSeeder extends Seeder
         $sapna->courseworks()->attach(
             PhdCourse::whereCode('RCS003')->first()
         );
-        $publication = $sapna->publications()->create([
+        $sapnaPublication = $sapna->publications()->create([
             'type' => PublicationType::CONFERENCE,
             'name' => 'Foundations of Software Technology and Theoretical Computer Science (FSTTCS) 2018',
             'paper_title' => 'Constant factor Approximation Algorithm for Uniform Hard Capacitated Knapsack Median Problem',
-            'authors' => [
-                'Sapna Grover', 'Neelima Gupta',
-                'Samir Khuller', 'Aditya Pancholi',
-            ],
             'date' => '2018-12-11',
             'volume' => 122,
             'indexed_in' => CitationIndex::SCOPUS,
@@ -182,9 +196,23 @@ class PhdScholarSeeder extends Seeder
             'city' => 'Ahmedabad, Gujarat',
             'country' => 'India',
         ]);
+        $sapnaPublication->coAuthors()->createMany([
+            [
+                'name' => 'Neelima Gupta',
+                'noc_path' => $this->nocPath,
+            ],
+            [
+                'name' => 'Aditya Pancholi',
+                'noc_path' => $this->nocPath,
+            ],
+            [
+                'name' => 'Samir Khuller',
+                'noc_path' => $this->nocPath,
+            ],
+        ]);
         $sapna->presentations()->create([
             'scholar_id' => $sapna->id,
-            'publication_id' => $publication->id,
+            'publication_id' => $sapnaPublication->id,
             'city' => 'Ahmedabad, Gujarat',
             'country' => 'India',
             'date' => '2018-12-11',
@@ -376,5 +404,14 @@ class PhdScholarSeeder extends Seeder
                 'affiliation' => 'Indian Institute of Technology Delhi',
             ]),
         ];
+    }
+
+    public function createNocDocument()
+    {
+        Storage::fake();
+
+        $this->nocPath = UploadedFile::fake()
+            ->create('noc.pdf', '10', 'application/pdf')
+            ->store('publications/co_authors_noc');
     }
 }

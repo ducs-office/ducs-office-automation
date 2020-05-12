@@ -46,7 +46,7 @@ class ScholarController extends Controller
             ->forget($scholar->supervisor_profile_id);
 
         return view('research.scholars.show', [
-            'scholar' => $scholar->load(['courseworks', 'progressReports', 'documents']),
+            'scholar' => $scholar->load(['courseworks', 'progressReports', 'documents', 'publications']),
             'courses' => PhdCourse::whereNotIn('id', $scholar->courseworks()->allRelatedIds())->get(),
             'categories' => ReservationCategory::values(),
             'admissionModes' => AdmissionMode::values(),

@@ -41,9 +41,20 @@ class ConferencePublicationController extends Controller
         $validData['date'] = new Carbon($date);
 
         if (Auth::guard('scholars')->check()) {
-            $user->publications()->create($validData);
+            $publication = $user->publications()->create($validData);
         } else {
-            $user->supervisorProfile->publications()->create($validData);
+            $publication = $user->supervisorProfile->publications()->create($validData);
+        }
+
+        if ($request->has('co_authors')) {
+            $publication->coAuthors()->createMany(
+                array_map(static function ($coAuthor) {
+                    return [
+                        'name' => $coAuthor['name'],
+                        'noc_path' => $coAuthor['noc']->store('/publications/co_authors_noc'),
+                    ];
+                }, $validData['co_authors'])
+            );
         }
 
         flash('Conference Publication added successfully')->success();
@@ -76,6 +87,17 @@ class ConferencePublicationController extends Controller
         $validData['date'] = new Carbon($date);
 
         $conference->update($validData);
+
+        if ($request->has('co_authors')) {
+            $conference->coAuthors()->createMany(
+                array_map(static function ($coAuthor) {
+                    return [
+                        'name' => $coAuthor['name'],
+                        'noc_path' => $coAuthor['noc']->store('/publications/co_authors_noc'),
+                    ];
+                }, $validData['co_authors'])
+            );
+        }
 
         flash('Conference Publication updated successfully!')->success();
 

@@ -4,22 +4,50 @@
         <div class="page-header flex items-baseline">
             <h2 class="mr-6">Update Journal</h2>
         </div>
-        <form action="{{ route('publications.journal.update' , $journal )}}" method="post" class="px-6">
+        <form id="remove-noc" method="POST" onsubmit="return confirm('Do you really want to delete co-author?');">
+            @csrf_token @method('DELETE')
+        </form>
+        <form action="{{ route('publications.journal.update' , $journal )}}" method="post" 
+            class="px-6" enctype="multipart/form-data">
             @csrf_token
             @method('PATCH')
             <div class="mb-4">
-                <add-remove-elements :existing-elements ="{{ is_array(old('authors')) ? json_encode(old('authors')) : json_encode($journal->authors)}}">
+                <label for="co_authors[]" class="form-label block mb-1">
+                    Co-Authors 
+                </label> 
+                @foreach($journal->coAuthors as $coAuthor)
+                <div class="flex items-start mb-2">
+                    <input type="text" value="{{$coAuthor->name}}" disabled class="form-input mr-2 text-gray-500 bg-transparent">
+                    @can('view', $coAuthor)
+                    <a href="{{ route('publications.co_authors.show', $coAuthor) }}" target="__blank" 
+                    class="form-input overflow-hidden flex flex-1 text-gray-500 items-baseline">
+                        <feather-icon name="paperclip" class="h-4 mr-2" stroke-width="2">NOC</feather-icon>
+                        <span>NOC</span>
+                    </a>
+                    @endcan
+                    @can('delete', $coAuthor)
+                    <button type="submit" form="remove-noc" formaction="{{ route('publications.co_authors.destroy', $coAuthor) }}"
+                    class="btn is-md ml-2 text-red-600">x</button>
+                    @endcan
+                </div>
+                @endforeach
+                <add-remove-elements>
                     <template v-slot="{ elements, addElement, removeElement }">
-                        <div class="flex items-baseline mb-2">
-                            <label for="authors[]" class="form-label block mb-1">
-                                Authors <span class="text-red-600">*</span>
-                            </label>
-                            <button v-on:click.prevent="addElement" class="ml-auto btn is-sm text-blue-700 bg-gray-300">+</button>
+                        <div v-for="(element, index) in elements" :key="index" class="flex items-start mb-2">
+                            <input type="text" 
+                                :name="`co_authors[${index}][name]`" class="form-input mr-2" placeholder="Co-Author's name">
+                                <v-file-input :id="`co_authors[${index}][noc]`" :name="`co_authors[${index}][noc]`" accept="application/pdf" 
+                                class="form-input overflow-hidden text-gray-500 flex-1" placeholder="Upload Co-Author's NOC ">
+                                <template v-slot="{ label }">
+                                    <div class="flex-1 inline-flex items-center">
+                                        <feather-icon name="upload" class="h-4 mr-2 text-gray-700 flex-shrink-0"></feather-icon>
+                                        <span v-text="label" class="truncate"></span>
+                                    </div>
+                                </template>
+                            </v-file-input>
+                            <button v-on:click.prevent="removeElement(index)" class="btn is-md ml-2 text-red-600">x</button>
                         </div>
-                        <div v-for="(element, index) in elements" :key="index" class="flex items-baseline">
-                            <input type="text" v-model= "element" name="authors[]" class="form-input block mb-2 w-full">
-                            <button v-on:click.prevent="removeElement(index)" class="btn is-sm ml-2 text-red-600">x</button>
-                        </div>
+                        <button class="link" @click.prevent="addElement">Add more...</button>
                     </template>
                 </add-remove-elements>
             </div>
@@ -27,8 +55,9 @@
                 <label for="paper_title" class="form-label block mb-1">
                     Paper Title <span class="text-red-600">*</span>
                 </label>
-                <input type="text" value="{{ old('paper_title', $journal->paper_title) }}" name="paper_title"
-                    class="form-input w-full {{ $errors->has('paper_title') ? ' border-red-600' : ''}}">
+                <input type="text" value="{{ old('paper_title') }}" name="paper_title"
+                    class="form-input w-full {{ $errors->has('paper_title') ? ' border-red-600' : ''}}"
+                    placeholder="Title of the publication">
             </div>
             <div class="mb-4">
                 <label for="name" class="form-label block mb-1">

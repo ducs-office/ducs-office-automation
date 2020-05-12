@@ -13,15 +13,51 @@
                 class="btn btn-magenta">
                     New
             </a>
-        </div>
+        </div>u
         @endif
     </div>
     <ul class="flex-1 border rounded-lg overflow-hidden mb-4">
         @forelse ($journals as $journal)
+            <div class="flex mt-2">
+                <ul class="flex">
+                    @forelse($journal->coAuthors as $coAuthor)
+                    <li class="flex items-baseline">
+                        <div class="inline-flex items-center p-2 rounded border hover:bg-gray-300 mx-2">
+                            @can('view', $coAuthor)
+                            <a href="{{ route('publications.co_authors.show', $coAuthor) }}" target="__blank" class="inline-flex items-center mr-1">
+                                <feather-icon name="paperclip" class="h-4 mr-2" stroke-width="2">NOC</feather-icon>
+                                <span>{{ $coAuthor->name }}</span>
+                            </a>
+                            @endcan
+                        </div>
+                    </li>
+                    @empty
+                        <p class="ml-2 p-2">No Co-authors associated with this publication.</p>
+                    @endforelse
+                </ul>
+                <div class="ml-auto p-2 flex">
+                    @can('update', $journal)
+                    <a href="{{ route('publications.journal.edit', $journal) }}"
+                        class="p-1 text-blue-600 hover:bg-gray-200 rounded mr-3" title="Edit">
+                        <feather-icon name="edit-3" stroke-width="2.5" class="h-current">Edit</feather-icon>
+                    </a>
+                    @endcan
+                    @can('delete', $journal)
+                    <form method="POST" action="{{ route('publications.journal.destroy', $journal->id) }}"
+                        onsubmit="return confirm('Do you really want to delete this journal?');">
+                        @csrf_token
+                        @method('DELETE')
+                        <button type="submit" class="p-1 hover:bg-gray-200 text-red-700 rounded">
+                            <feather-icon name="trash-2" stroke-width="2.5" class="h-current">Delete</feather-icon>
+                        </button>
+                    </form>
+                    @endcan
+                </div>
+            </div>
             <li class="border-b last:border-b-0 py-3">
                 <div class="flex">
                     <p class="ml-2 p-2">
-                        {{ implode(',', $journal->authors) }}.
+                        {{auth()->user()->name . ',' . implode(',', $journal->coAuthors->map->name->toArray())}}
                         {{ $journal->date->format('F Y') }}.
                         <span class="italic"> {{ $journal->paper_title }} </span>
                         {{ $journal->name }},
@@ -29,24 +65,6 @@
                         Number {{ $journal->number }},
                         pp: {{ $journal->page_numbers[0] }}-{{ $journal->page_numbers[1] }}
                     </p>
-                    <div class="ml-auto p-2 flex">
-                        @can('update', $journal)
-                        <a href="{{ route('publications.journal.edit', $journal) }}"
-                            class="p-1 text-blue-600 hover:bg-gray-200 rounded mr-3" title="Edit">
-                            <feather-icon name="edit-3" stroke-width="2.5" class="h-current">Edit</feather-icon>
-                        </a>
-                        @endcan
-                        @can('delete', $journal)
-                        <form method="POST" action="{{ route('publications.journal.destroy', $journal->id) }}"
-                            onsubmit="return confirm('Do you really want to delete this journal?');">
-                            @csrf_token
-                            @method('DELETE')
-                            <button type="submit" class="p-1 hover:bg-gray-200 text-red-700 rounded">
-                                <feather-icon name="trash-2" stroke-width="2.5" class="h-current">Delete</feather-icon>
-                            </button>
-                        </form>
-                        @endcan
-                    </div>
                 </div>
                 <div class="w-full px-4">
                     <details class="ml-2 mt-4 bg-gray-100 border rounded-t cursor-pointer outline-none">
@@ -56,7 +74,14 @@
                                 <feather-icon name="users" class="h-current text-blue-600"></feather-icon>
                                 <h4 class="ml-1 font-semibold"> Author: </h4>
                             </div>
-                            <p class="ml-2"> {{ implode(', ', $journal->authors) }} </p>
+                            <p class="ml-2"> {{ auth()->user()->name }} </p>
+                        </div>
+                        <div class="flex m-2">
+                            <div class="w-30 flex">
+                                <feather-icon name="users" class="h-current text-blue-600"></feather-icon>
+                                <h4 class="ml-1 font-semibold"> Co-Authors: </h4>
+                            </div>
+                            <p class="ml-2"> {{implode(',', $journal->coAuthors->map->name->toArray())}} </p>
                         </div>
                         <div class="m-2 flex">
                             <div class="w-30 flex">

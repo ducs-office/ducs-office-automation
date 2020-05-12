@@ -4,22 +4,32 @@
         <div class="page-header flex items-baseline">
             <h2 class="mr-6">Create Conference</h2>
         </div>
-        <form action="{{ route('publications.conference.store')}}" method="post" class="px-6">
+        <form action="{{ route('publications.conference.store')}}" method="post" 
+            class="px-6" enctype="multipart/form-data">
             @csrf_token
             <div class="mb-4">
-                <add-remove-elements :existing-elements ="{{ empty(old('authors')) ? json_encode([auth()->user()->name]) : json_encode(old('authors')) }}">
+                <add-remove-elements>
                     <template v-slot="{ elements, addElement, removeElement }">
                         <div class="flex items-baseline mb-2">
-                            <label for="authors[]" class="form-label block mb-1">
-                                Author(s) <span class="text-red-600">*</span>
+                            <label foAr="co_authors[]" class="form-label block mb-1">
+                                Co-Author(s)
                             </label>
-                            <button v-on:click.prevent="addElement" class="ml-auto btn is-sm text-blue-700 bg-gray-300">+</button>
                         </div>
-                        <div v-for="(element, index) in elements" :key="index" class="flex items-baseline">
-                            <input type="text" v-model= "element"
-                                name="authors[]" class="form-input block mb-2 w-full" placeholder="Author's name">
-                            <button v-on:click.prevent="removeElement(index)"class="btn is-sm ml-2 text-red-600">x</button>
+                        <div v-for="(element, index) in elements" :key="index" class="flex items-start mb-2">
+                            <input type="text" 
+                                :name="`co_authors[${index}][name]`" class="form-input mr-2" placeholder="Co-Author's name">
+                            <v-file-input :id="`co_authors[${index}][noc]`" :name="`co_authors[${index}][noc]`" accept="application/pdf" 
+                                class="form-input overflow-hidden text-gray-500 flex-1" placeholder="Upload Co-Author's NOC ">
+                                <template v-slot="{ label }">
+                                    <div class="flex-1 inline-flex items-center">
+                                        <feather-icon name="upload" class="h-4 mr-2 text-gray-700 flex-shrink-0"></feather-icon>
+                                        <span v-text="label" class="truncate"></span>
+                                    </div>
+                                </template>
+                            </v-file-input>
+                            <button v-on:click.prevent="removeElement(index)" class="btn is-md ml-2 text-red-600">x</button>
                         </div>
+                        <button class="link" @click.prevent="addElement">Add more...</button>
                     </template>
                 </add-remove-elements>
             </div>

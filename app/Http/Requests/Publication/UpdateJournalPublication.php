@@ -16,8 +16,9 @@ class UpdateJournalPublication extends FormRequest
         }, range(1, 12));
 
         return [
-            'authors' => ['sometimes', 'required', 'array', 'max:10', 'min:1'],
-            'authors.0' => ['sometimes', 'required', 'string'],
+            'co_authors' => ['nullable', 'array', 'max:10', 'min:1'],
+            'co_authors.*.name' => ['required', 'string'],
+            'co_authors.*.noc' => ['required', 'file', 'max:200', 'mimeTypes:application/pdf, image/*'],
             'paper_title' => ['sometimes', 'required', 'string', 'max:400'],
             'name' => ['sometimes', 'required', 'string', 'max:100'],
             'volume' => ['nullable', 'integer'],

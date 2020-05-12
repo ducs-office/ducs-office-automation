@@ -10,11 +10,30 @@ use App\Models\User;
 use App\Types\PublicationType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
 
 class UpdatePublicationTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
+
+    protected $noc1;
+    protected $noc2;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        Storage::fake();
+
+        $this->noc1 = UploadedFile::fake()
+                        ->create('noc1.pdf', 20, 'application/pdf');
+
+        $this->noc2 = UploadedFile::fake()
+                        ->create('noc2.pdf', 20, 'application/pdf');
+    }
 
     /** @test */
     public function journal_publication_of_scholar_can_be_updated()
@@ -23,8 +42,6 @@ class UpdatePublicationTest extends TestCase
 
         $journal = create(Publication::class, 1, [
             'type' => PublicationType::JOURNAL,
-            'number' => 123,
-            'publisher' => 'O Reilly',
             'main_author_type' => Scholar::class,
             'main_author_id' => $scholar->id,
         ]);
@@ -36,11 +53,29 @@ class UpdatePublicationTest extends TestCase
                     'month' => 'January',
                     'year' => 2020,
                 ],
+                'co_authors' => $coAuthors = [
+                    ['name' => 'John Doe', 'noc' => $this->noc1],
+                    ['name' => 'Sally Burgman', 'noc' => $this->noc2],
+                ],
             ])
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'Journal Publication updated successfully!');
 
-        $this->assertEquals($number, $scholar->fresh()->journals->first()->number);
+        $freshJournal = $scholar->journals->first()->fresh();
+
+        $this->assertEquals($number, $freshJournal->number);
+
+        $this->assertCount(2, $freshJournal->coAuthors);
+
+        $this->assertEquals(
+            $coAuthors[0]['name'],
+            $freshJournal->coAuthors->first()->name
+        );
+
+        $this->assertEquals(
+            $coAuthors[0]['noc']->hashName('publications/co_authors_noc'),
+            $freshJournal->coAuthors->first()->noc_path
+        );
     }
 
     /** @test */
@@ -57,8 +92,6 @@ class UpdatePublicationTest extends TestCase
 
         $journal = create(Publication::class, 1, [
             'type' => PublicationType::JOURNAL,
-            'number' => 123,
-            'publisher' => 'O Reilly',
             'main_author_type' => SupervisorProfile::class,
             'main_author_id' => $supervisorProfile->id,
         ]);
@@ -70,11 +103,29 @@ class UpdatePublicationTest extends TestCase
                     'month' => 'January',
                     'year' => 2020,
                 ],
+                'co_authors' => $coAuthors = [
+                    ['name' => 'John Doe', 'noc' => $this->noc1],
+                    ['name' => 'Sally Burgman', 'noc' => $this->noc2],
+                ],
             ])
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'Journal Publication updated successfully!');
 
-        $this->assertEquals($number, $supervisorProfile->fresh()->journals->first()->number);
+        $freshJournal = $supervisorProfile->journals->first()->fresh();
+
+        $this->assertEquals($number, $freshJournal->number);
+
+        $this->assertCount(2, $freshJournal->coAuthors);
+
+        $this->assertEquals(
+            $coAuthors[0]['name'],
+            $freshJournal->coAuthors->first()->name
+        );
+
+        $this->assertEquals(
+            $coAuthors[0]['noc']->hashName('publications/co_authors_noc'),
+            $freshJournal->coAuthors->first()->noc_path
+        );
     }
 
     /** @test */
@@ -84,8 +135,6 @@ class UpdatePublicationTest extends TestCase
 
         $conference = create(Publication::class, 1, [
             'type' => PublicationType::CONFERENCE,
-            'city' => 'Delhi',
-            'country' => 'India',
             'main_author_type' => Scholar::class,
             'main_author_id' => $scholar->id,
         ]);
@@ -97,11 +146,29 @@ class UpdatePublicationTest extends TestCase
                     'month' => 'January',
                     'year' => 2020,
                 ],
+                'co_authors' => $coAuthors = [
+                    ['name' => 'John Doe', 'noc' => $this->noc1],
+                    ['name' => 'Sally Burgman', 'noc' => $this->noc2],
+                ],
             ])
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'Conference Publication updated successfully!');
 
-        $this->assertEquals($city, $scholar->fresh()->conferences->first()->city);
+        $freshConference = $scholar->conferences->first()->fresh();
+
+        $this->assertEquals($city, $freshConference->city);
+
+        $this->assertCount(2, $freshConference->coAuthors);
+
+        $this->assertEquals(
+            $coAuthors[0]['name'],
+            $freshConference->coAuthors->first()->name
+        );
+
+        $this->assertEquals(
+            $coAuthors[0]['noc']->hashName('publications/co_authors_noc'),
+            $freshConference->coAuthors->first()->noc_path
+        );
     }
 
     /** @test */
@@ -118,8 +185,6 @@ class UpdatePublicationTest extends TestCase
 
         $conference = create(Publication::class, 1, [
             'type' => PublicationType::CONFERENCE,
-            'city' => 'Delhi',
-            'country' => 'India',
             'main_author_type' => SupervisorProfile::class,
             'main_author_id' => $supervisorProfile->id,
         ]);
@@ -131,10 +196,28 @@ class UpdatePublicationTest extends TestCase
                     'month' => 'January',
                     'year' => 2020,
                 ],
+                'co_authors' => $coAuthors = [
+                    ['name' => 'John Doe', 'noc' => $this->noc1],
+                    ['name' => 'Sally Burgman', 'noc' => $this->noc2],
+                ],
             ])
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'Conference Publication updated successfully!');
 
-        $this->assertEquals($city, $supervisorProfile->fresh()->conferences->first()->city);
+        $freshConference = $supervisorProfile->conferences->first()->fresh();
+
+        $this->assertEquals($city, $freshConference->city);
+
+        $this->assertCount(2, $freshConference->coAuthors);
+
+        $this->assertEquals(
+            $coAuthors[0]['name'],
+            $freshConference->coAuthors->first()->name
+        );
+
+        $this->assertEquals(
+            $coAuthors[0]['noc']->hashName('publications/co_authors_noc'),
+            $freshConference->coAuthors->first()->noc_path
+        );
     }
 }

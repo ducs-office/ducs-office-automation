@@ -7,7 +7,7 @@
                         <feather-icon name="users" class="h-current text-blue-600"></feather-icon>
                         <h4 class="ml-1 font-semibold"> Author: </h4>
                     </div>
-                    <p class="ml-2"> {{ implode(', ', $presentation->publication->authors) }} </p>
+                    <p class="ml-2"> {{ auth()->user()->name . ',' . implode(',', $presentation->publication->coAuthors->map->name->toArray()) }} </p>
                 </div>
                 <div class="m-2 flex">
                     <div class="w-30 flex">

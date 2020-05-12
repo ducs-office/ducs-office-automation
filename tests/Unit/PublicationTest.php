@@ -3,12 +3,14 @@
 namespace Tests\Unit;
 
 use App\Casts\CustomTypeArray;
+use App\Models\CoAuthor;
 use App\Models\Presentation;
 use App\Models\Publication;
 use App\Models\Scholar;
 use App\Models\SupervisorProfile;
 use App\Types\CitationIndex;
 use App\Types\PublicationType;
+use CreateCoauthorsTable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -18,15 +20,6 @@ use Tests\TestCase;
 class PublicationTest extends TestCase
 {
     use RefreshDatabase;
-
-    /** @test */
-    public function authors_attribute_is_casted_to_array()
-    {
-        $publication = new Publication();
-
-        $this->assertArrayHasKey('authors', $publication->getCasts());
-        $this->assertEquals('array', $publication->getCasts()['authors']);
-    }
 
     /** @test */
     public function indexed_in_attributes_uses_CustomTypeArray_caster_class()
@@ -106,5 +99,21 @@ class PublicationTest extends TestCase
 
         $this->assertCount(3, Publication::conference()->get());
         $this->assertEquals($conferences->pluck('id'), Publication::conference()->get()->pluck('id'));
+    }
+
+    /** @test */
+    public function publications_has_many_co_authors()
+    {
+        $publication = create(Publication::class);
+
+        $this->assertInstanceOf(HasMany::class, $publication->coAuthors());
+        $this->assertCount(0, $publication->coAuthors);
+
+        $coAuthors = create(CoAuthor::class, 3, ['publication_id' => $publication->id]);
+
+        $freshPublication = $publication->fresh();
+
+        $this->assertCount(3, $freshPublication->coAuthors);
+        $this->assertEquals($coAuthors->pluck('id'), $freshPublication->coAuthors->pluck('id'));
     }
 }

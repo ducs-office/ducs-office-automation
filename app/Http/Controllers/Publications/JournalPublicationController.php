@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Publication\StoreJournalPublication;
 use App\Http\Requests\Publication\UpdateJournalPublication;
 use App\Models\Publication;
+use App\Models\Scholar;
+use App\Models\SupervisorProfile;
 use App\Types\CitationIndex;
 use App\Types\PublicationType;
 use Illuminate\Http\Request;
@@ -41,9 +43,20 @@ class JournalPublicationController extends Controller
         $validData['date'] = new Carbon($date);
 
         if (Auth::guard('scholars')->check()) {
-            $user->publications()->create($validData);
+            $publication = $user->publications()->create($validData);
         } else {
-            $user->supervisorProfile->publications()->create($validData);
+            $publication = $user->supervisorProfile->publications()->create($validData);
+        }
+
+        if ($request->has('co_authors')) {
+            $publication->coAuthors()->createMany(
+                array_map(static function ($coAuthor) {
+                    return [
+                        'name' => $coAuthor['name'],
+                        'noc_path' => $coAuthor['noc']->store('/publications/co_authors_noc'),
+                    ];
+                }, $validData['co_authors'])
+            );
         }
 
         flash('Journal Publication added successfully')->success();
@@ -75,6 +88,17 @@ class JournalPublicationController extends Controller
         $validData['date'] = new Carbon($date);
 
         $journal->update($validData);
+
+        if ($request->has('co_authors')) {
+            $journal->coAuthors()->createMany(
+                array_map(static function ($coAuthor) {
+                    return [
+                        'name' => $coAuthor['name'],
+                        'noc_path' => $coAuthor['noc']->store('/publications/co_authors_noc'),
+                    ];
+                }, $validData['co_authors'])
+            );
+        }
 
         flash('Journal Publication updated successfully!')->success();
 

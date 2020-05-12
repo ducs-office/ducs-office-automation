@@ -44,10 +44,13 @@ Route::prefix('/publications')
     Route::delete('/journal/{journal}', 'JournalPublicationController@destroy')->name('journal.destroy');
 
     Route::get('/conference', 'ConferencePublicationController@create')->name('conference.create');
-    Route::post('publications/conference', 'ConferencePublicationController@store')->name('conference.store');
+    Route::post('/conference', 'ConferencePublicationController@store')->name('conference.store');
     Route::get('/conference/{conference}/edit', 'ConferencePublicationController@edit')->name('conference.edit');
     Route::patch('/conference/{conference}', 'ConferencePublicationController@update')->name('conference.update');
     Route::delete('/conference/{conference}', 'ConferencePublicationController@destroy')->name('conference.destroy');
+
+    Route::get('/co-authors/{coAuthor}', 'CoAuthorController@show')->name('co_authors.show');
+    Route::delete('/co-authors/{coAuthor}', 'CoAuthorController@destroy')->name('co_authors.destroy');
 });
 
 Route::post(

@@ -10,6 +10,8 @@ use App\Types\CitationIndex;
 use App\Types\PublicationType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class StorePublicationTest extends TestCase
@@ -18,8 +20,14 @@ class StorePublicationTest extends TestCase
 
     protected function fillPublication($overrides = [])
     {
+        Storage::fake();
+        $noc1 = UploadedFile::fake()
+            ->create('noc1.pdf', 100, 'application/pdf');
+
+        $noc2 = UploadedFile::fake()
+        ->create('noc2.pdf', 100, 'application/pdf');
+
         return $this->mergeFormFields([
-            'authors' => [$this->faker->name, $this->faker->name],
             'paper_title' => $this->faker->sentence,
             'name' => $this->faker->sentence,
             'volume' => $this->faker->numberBetween(1, 20),
@@ -33,6 +41,10 @@ class StorePublicationTest extends TestCase
             'publisher' => null,
             'city' => null,
             'country' => null,
+            'co_authors' => [
+                ['name' => 'John Doe', 'noc' => $noc1],
+                ['name' => 'Sally Burgman', 'noc' => $noc2],
+            ],
         ], $overrides);
     }
 
@@ -53,8 +65,20 @@ class StorePublicationTest extends TestCase
             ->assertSessionHasFlash('success', 'Journal Publication added successfully');
 
         $this->assertCount(1, Publication::all());
-        $this->assertCount(1, $scholar->fresh()->journals);
+        $this->assertCount(1, $scholar->journals);
         $this->assertEquals($journal['paper_title'], $scholar->journals->first()->paper_title);
+
+        $storedJournal = $scholar->journals->first();
+
+        $this->assertCount(2, $storedJournal->coAuthors);
+        $this->assertEquals(
+            $journal['co_authors'][0]['name'],
+            $storedJournal->coAuthors->first()->name
+        );
+        $this->assertEquals(
+            $journal['co_authors'][0]['noc']->hashName('publications/co_authors_noc'),
+            $storedJournal->coAuthors->first()->noc_path
+        );
     }
 
     /** @test */
@@ -83,6 +107,18 @@ class StorePublicationTest extends TestCase
         $this->assertCount(1, Publication::all());
         $this->assertCount(1, $supervisor->fresh()->supervisorProfile->journals);
         $this->assertEquals($journal['paper_title'], $supervisor->supervisorProfile->journals->first()->paper_title);
+
+        $storedJournal = $supervisor->supervisorProfile->journals->first();
+
+        $this->assertCount(2, $storedJournal->coAuthors);
+        $this->assertEquals(
+            $journal['co_authors'][0]['name'],
+            $storedJournal->coAuthors->first()->name
+        );
+        $this->assertEquals(
+            $journal['co_authors'][0]['noc']->hashName('publications/co_authors_noc'),
+            $storedJournal->coAuthors->first()->noc_path
+        );
     }
 
     /** @test */
@@ -104,6 +140,18 @@ class StorePublicationTest extends TestCase
         $this->assertCount(1, Publication::all());
         $this->assertCount(1, $scholar->fresh()->conferences);
         $this->assertEquals($conference['paper_title'], $scholar->conferences->first()->paper_title);
+
+        $storedConference = $scholar->conferences->first();
+
+        $this->assertCount(2, $storedConference->coAuthors);
+        $this->assertEquals(
+            $conference['co_authors'][0]['name'],
+            $storedConference->coAuthors->first()->name
+        );
+        $this->assertEquals(
+            $conference['co_authors'][0]['noc']->hashName('publications/co_authors_noc'),
+            $storedConference->coAuthors->first()->noc_path
+        );
     }
 
     /** @test */
@@ -131,5 +179,17 @@ class StorePublicationTest extends TestCase
         $this->assertCount(1, Publication::all());
         $this->assertCount(1, $supervisor->fresh()->supervisorProfile->conferences);
         $this->assertEquals($conference['paper_title'], $supervisor->supervisorProfile->conferences->first()->paper_title);
+
+        $storedConference = $supervisor->supervisorProfile->conferences->first();
+
+        $this->assertCount(2, $storedConference->coAuthors);
+        $this->assertEquals(
+            $conference['co_authors'][0]['name'],
+            $storedConference->coAuthors->first()->name
+        );
+        $this->assertEquals(
+            $conference['co_authors'][0]['noc']->hashName('publications/co_authors_noc'),
+            $storedConference->coAuthors->first()->noc_path
+        );
     }
 }

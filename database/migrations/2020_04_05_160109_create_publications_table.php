@@ -19,7 +19,6 @@ class CreatePublicationsTable extends Migration
             $table->enum('type', PublicationType::values());
             $table->text('name');
             $table->text('paper_title');
-            $table->string('authors');
             $table->date('date');
             $table->smallInteger('volume')->nullable();
             $table->string('publisher')->nullable();

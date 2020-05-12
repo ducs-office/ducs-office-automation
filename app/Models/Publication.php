@@ -11,12 +11,25 @@ use Illuminate\Database\Eloquent\Model;
 
 class Publication extends Model
 {
-    protected $guarded = [];
+    protected $fillable = [
+        'type',
+        'name',
+        'paper_title',
+        'date',
+        'volume',
+        'publisher',
+        'number',
+        'indexed_in',
+        'page_numbers',
+        'city',
+        'country',
+        'main_author_type',
+        'main_author_id',
+    ];
 
     protected $dates = ['date'];
 
     protected $casts = [
-        'authors' => 'array',
         'indexed_in' => CustomTypeArray::class . ':' . CitationIndex::class,
         'page_numbers' => 'array',
     ];
@@ -63,5 +76,10 @@ class Publication extends Model
     public function presentations()
     {
         return $this->hasMany(Presentation::class)->orderBy('date', 'desc');
+    }
+
+    public function coAuthors()
+    {
+        return $this->hasMany(CoAuthor::class, 'publication_id');
     }
 }

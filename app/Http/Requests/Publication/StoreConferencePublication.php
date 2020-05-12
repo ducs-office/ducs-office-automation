@@ -22,8 +22,9 @@ class StoreConferencePublication extends FormRequest
 
         return [
             'name' => ['required', 'string', 'max:400'],
-            'authors' => ['required', 'array', 'max:10', 'min:1'],
-            'authors.0' => ['required', 'string'],
+            'co_authors' => ['nullable', 'array', 'max:10', 'min:1'],
+            'co_authors.*.name' => ['required', 'string'],
+            'co_authors.*.noc' => ['required', 'file', 'max:200', 'mimeTypes:application/pdf, image/*'],
             'paper_title' => ['required', 'string', 'max:400'],
             'date' => ['required', 'array', 'size:2'],
             'date.month' => ['required', Rule::in($months)],

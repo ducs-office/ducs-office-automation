@@ -1,7 +1,7 @@
 export default {
     props: {
         tag: {default: 'div'},
-        existingElements: {default: null, type: Array},
+        existingElements: {default: () => new Array(), type: Array},
     },
     render(h) {
         return h(
