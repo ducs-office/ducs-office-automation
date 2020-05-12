@@ -28,7 +28,7 @@ class SendFillAdvisoryCommitteeEmail
      */
     public function handle(ScholarCreated $event)
     {
-        Mail::to($event->scholar->supervisor)
+        Mail::to($event->scholar->currentSupervisor->email)
             ->send(new FillAdvisoryCommitteeMail($event->scholar));
     }
 }

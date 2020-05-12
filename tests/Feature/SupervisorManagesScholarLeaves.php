@@ -5,8 +5,8 @@ namespace Tests\Feature;
 use App\Models\Leave;
 use App\Models\LeaveStatus;
 use App\Models\Scholar;
-use App\Models\SupervisorProfile;
 use App\Models\Teacher;
+use App\Models\User;
 use App\Types\LeaveStatus;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -19,13 +19,13 @@ class SupervisorManagesScholarLeaves extends TestCase
     /** @test */
     public function supervisor_recommends_leave_for_scholar()
     {
-        $teacher = create(Teacher::class);
-        $supervisorProfile = $teacher->supervisorProfile()->create();
+        $supervisor = factory(User::class)->states('supervisor')->create();
+        $scholar = create(Scholar::class);
+        $scholar->supervisors()->attach($supervisor);
 
-        $scholar = create(Scholar::class, 1, ['supervisor_profile_id' => $supervisorProfile->id]);
         $leave = create(Leave::class, 1, ['scholar_id' => $scholar->id]);
 
-        $this->signInTeacher($teacher);
+        $this->signIn($supervisor);
 
         $this->withoutExceptionHandling()
             ->patch(route('research.scholars.leaves.recommend', [$scholar, $leave]))
@@ -38,14 +38,15 @@ class SupervisorManagesScholarLeaves extends TestCase
     /** @test */
     public function superviser_cannot_recommend_leave_for_scholar_whom_they_donot_supervise()
     {
-        $anotherSupervisor = create(Teacher::class);
-        $anotherSupervisorProfile = $anotherSupervisor->supervisorProfile()->create();
-        $actualSupervisorProfile = create(SupervisorProfile::class);
+        $anotherSupervisor = factory(User::class)->states('supervisor')->create();
+        $actualSupervisor = factory(User::class)->states('supervisor')->create();
 
-        $scholar = create(Scholar::class, 1, ['supervisor_profile_id' => $anotherSupervisorProfile->id]);
+        $scholar = create(Scholar::class);
+        $scholar->supervisors()->attach($actualSupervisor);
+
         $leave = create(Leave::class, 1, ['scholar_id' => $scholar->id]);
 
-        $this->signInTeacher($anotherSupervisor);
+        $this->signIn($anotherSupervisor);
 
         $this->withExceptionHandling()
             ->patch(route('research.scholars.leaves.recommend', [$scholar, $leave]))

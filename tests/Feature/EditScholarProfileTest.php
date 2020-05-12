@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\Models\Cosupervisor;
 use App\Models\Scholar;
-use App\Models\SupervisorProfile;
 use App\Models\Teacher;
 use App\Types\AdmissionMode;
 use Illuminate\Foundation\Testing\RefreshDatabase;

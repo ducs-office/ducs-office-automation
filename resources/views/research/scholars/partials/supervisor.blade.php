@@ -6,5 +6,5 @@
             <p class="ml-1 italic">{{ $supervisor->email }}</p>
         </div>
     </div>
-    <p class="w-1/2 mr-4 font-bold"> {{ $sinceDate }} - {{ $supervisor->date ?? 'Present' }}</p>
+    <p class="w-1/2 mr-4 font-bold"> {{ $supervisor->pivot->started_on->format('d F Y') }} - {{ optional($supervisor->pivot->ended_on)->format('d F Y') ?? 'Present' }}</p>
 </div>

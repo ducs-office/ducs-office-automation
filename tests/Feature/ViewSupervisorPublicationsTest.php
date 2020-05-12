@@ -2,8 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Models\SupervisorProfile;
-use App\Models\Teacher;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -15,8 +14,7 @@ class ViewSupervisorPublicationsTest extends TestCase
     /** @test */
     public function supervisor_can_view_publications()
     {
-        $supervisorProfile = create(SupervisorProfile::class);
-        $supervisor = $supervisorProfile->supervisor;
+        $supervisor = factory(User::class)->states('supervisor')->create();
 
         $this->signIn($supervisor);
 

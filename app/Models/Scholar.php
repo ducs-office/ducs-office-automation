@@ -7,20 +7,19 @@ use App\Casts\CustomType;
 use App\Casts\EducationDetails;
 use App\Casts\OldAdvisoryCommittee;
 use App\Concerns\HasPublications;
-use App\Models\AcademicDetail;
+use App\ExternalAuthority;
 use App\Models\Cosupervisor;
 use App\Models\Publication;
 use App\Models\ScholarAppeal;
-use App\Models\ScholarProfile;
-use App\Models\SupervisorProfile;
+use App\Models\User;
+use App\ScholarAdvisor;
+use App\ScholarSupervisor;
 use App\Types\AdmissionMode;
 use App\Types\Gender;
 use App\Types\LeaveStatus;
 use App\Types\ReservationCategory;
 use App\Types\ScholarAppealTypes;
 use App\Types\ScholarDocumentType;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Foundation\Auth\User;
 
 class Scholar extends User
 {
@@ -38,17 +37,12 @@ class Scholar extends User
         'address',
         'category',
         'admission_mode',
-        'supervisor_profile_id',
         'gender',
         'research_area',
         'registration_date',
         'enrolment_id',
         'advisory_committee',
         'education_details',
-        'cosupervisor_profile_id',
-        'cosupervisor_profile_type',
-        'old_cosupervisors',
-        'old_supervisors',
         'old_advisory_committees',
         'finalized_title',
         'recommended_title',
@@ -64,14 +58,10 @@ class Scholar extends User
     ];
 
     protected $casts = [
-        'advisory_committee' => AdvisoryCommittee::class,
-        'old_advisory_committees' => OldAdvisoryCommittee::class,
         'category' => CustomType::class . ':' . ReservationCategory::class,
         'admission_mode' => CustomType::class . ':' . AdmissionMode::class,
         'gender' => CustomType::class . ':' . Gender::class,
         'education_details' => EducationDetails::class,
-        'old_cosupervisors' => 'array',
-        'old_supervisors' => 'array',
     ];
 
     protected $withCount = [
@@ -88,10 +78,6 @@ class Scholar extends User
         parent::boot();
 
         static::creating(static function ($scholar) {
-            $scholar->old_cosupervisors = [];
-            $scholar->old_supervisors = [];
-            $scholar->old_advisory_committees = [];
-
             if ($scholar->education_details === null) {
                 $scholar->education_details = [];
             }
@@ -120,39 +106,75 @@ class Scholar extends User
     public function profilePicture()
     {
         return $this->morphOne(Attachment::class, 'attachable');
-        return $this->belongsTo(SupervisorProfile::class);
     }
 
-    public function supervisor()
+    public function supervisors()
     {
-        return $this->supervisorProfile->supervisor();
+        return $this->belongsToMany(
+            User::class,
+            'scholar_supervisor',
+            'scholar_id',
+            'supervisor_id'
+        )
+            ->withPivot(['started_on', 'ended_on'])
+            ->using(ScholarSupervisor::class);
     }
 
-    public function supervisorProfile()
+    public function getCurrentSupervisorAttribute()
     {
-        return $this->belongsTo(SupervisorProfile::class);
+        return $this->supervisors
+            ->firstWhere('pivot.ended_on', null);
     }
 
-    public function cosupervisorProfile()
+    public function cosupervisors()
     {
-        return $this->morphTo('cosupervisor_profile');
+        return $this->belongsToMany(Cosupervisor::class)
+            ->withPivot(['started_on', 'ended_on'])
+            ->using(ScholarCosupervisor::class);
     }
 
-    public function getCosupervisorAttribute()
+    public function getCurrentCosupervisorAttribute()
     {
-        if ($this->cosupervisor_profile_type === SupervisorProfile::class) {
-            $cosupervisor = $this->cosupervisorProfile->supervisor;
+        return $this->cosupervisors
+            ->firstWhere('pivot.ended_on', null);
+    }
 
-            return (object) [
-                'name' => $cosupervisor->name,
-                'email' => $cosupervisor->email,
-                'designation' => $cosupervisor->profile->designation ?? 'Professor',
-                'affiliation' => $cosupervisor->supervisor_type === User::class ? 'DUCS' :
-                                $cosupervisor->profile->college->name ?? 'Affiliation Not Set',
-            ];
-        }
+    public function userAdvisors()
+    {
+        return $this->morphedByMany(User::class, 'advisor', 'scholar_advisor')
+            ->withPivot(['started_on', 'ended_on'])
+            ->orderBy('started_on', 'desc');
+    }
 
-        return $this->cosupervisorProfile;
+    public function externalAdvisors()
+    {
+        return $this->morphedByMany(ExternalAuthority::class, 'advisor', 'scholar_advisor')
+            ->withPivot(['started_on', 'ended_on'])
+            ->orderBy('started_on', 'desc');
+    }
+
+    public function getAdvisorsAttribute()
+    {
+        return collect([$this->userAdvisors, $this->externalAdvisors])
+            ->flatten()
+            ->sortByDesc('pivot.started_on')
+            ->values();
+    }
+
+    public function getCurrentAdvisorsAttribute()
+    {
+        return $this->advisors->filter(function ($model) {
+            return $model->pivot->ended_on === null;
+        })->values();
+    }
+
+    public function getCommitteeAttribute()
+    {
+        return (object) [
+            'supervisor' => $this->currentSupervisor,
+            'cosupervisor' => $this->currentCosupervisor,
+            'advisors' => $this->currentAdvisors,
+        ];
     }
 
     public function presentations()

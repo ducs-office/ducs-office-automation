@@ -9,19 +9,12 @@
         </svg>
     </div>
     <ul class="self-start flex flex-col-reverse mt-4 flex-1 border rounded-lg overflow-hidden divide-y divide-y-reverse">
-        @php($sinceDate = $scholar->registerOn)
-        @foreach ($scholar->old_cosupervisors as $old_cosupervisor)
+        @foreach ($scholar->cosupervisors as $cosupervisor)
         <li class="px-5 p-2">
             @include('research.scholars.partials.cosupervisor', [
-                'cosupervisor' => (object)$old_cosupervisor
+                'cosupervisor' => $cosupervisor
             ])
-            @php($sinceDate = $old_cosupervisor['date'])
         </li>
         @endforeach
-        <li class="px-5 p-2">
-            @include('research.scholars.partials.cosupervisor', [
-                'cosupervisor' => $scholar->cosupervisor
-            ])
-        </li>
     </ul>
 </div>

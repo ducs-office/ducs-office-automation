@@ -142,7 +142,7 @@ class EditUserTest extends TestCase
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'User updated successfully!');
 
-        $this->assertTrue($user->isSupervisor(), 'User was not made a supervisor.');
+        $this->assertTrue($user->fresh()->isSupervisor(), 'User was not made a supervisor.');
     }
 
     /** @test */

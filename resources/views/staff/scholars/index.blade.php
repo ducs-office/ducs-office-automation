@@ -80,7 +80,7 @@
                             <feather-icon class="h-current" name="refresh-cw">Replace Supervisor</feather-icon>
                         </button>
                     </div>
-                    <p class="pt-1">{{ $scholar->supervisor->name }}</p>
+                    <p class="pt-1">{{ $scholar->currentSupervisor->name }}</p>
                 </div>
                 <div class="px-4 mx-4 w-1/2">
                     <div class="flex">

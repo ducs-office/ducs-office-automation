@@ -6,7 +6,6 @@ use App\Models\Scholar;
 use App\Models\ScholarEducationDegree;
 use App\Models\ScholarEducationInstitute;
 use App\Models\ScholarEducationSubject;
-use App\Models\SupervisorProfile;
 use App\Models\User;
 use App\Types\AdmissionMode;
 use App\Types\AdvisoryCommitteeMember;
@@ -30,29 +29,8 @@ $factory->define(Scholar::class, function (Faker $faker) {
         'category' => $faker->randomElement(ReservationCategory::values()),
         'admission_mode' => $faker->randomElement(AdmissionMode::values()),
         'research_area' => $faker->sentence(),
-        'supervisor_profile_id' => static function () {
-            return factory(SupervisorProfile::class)->create()->id;
-        },
         'registration_date' => $faker->date($format = 'Y-m-d', $max = now()),
         'enrolment_id' => $faker->regexify('[A-Za-z0-9]{30}'),
-        'advisory_committee' => function ($scholar) use ($faker) {
-            return [
-                new AdvisoryCommitteeMember('external', [
-                    'name' => $faker->name,
-                    'designation' => $faker->jobTitle,
-                    'affiliation' => $faker->company,
-                    'email' => $faker->email,
-                    'phone' => $faker->PhoneNumber,
-                ]),
-                new AdvisoryCommitteeMember('external', [
-                    'name' => $faker->name,
-                    'designation' => $faker->jobTitle,
-                    'affiliation' => $faker->company,
-                    'email' => $faker->email,
-                    'phone' => $faker->PhoneNumber,
-                ]),
-            ];
-        },
         'education_details' => static function () use ($faker) {
             return array_map(function () use ($faker) {
                 return new EducationInfo([
@@ -62,10 +40,6 @@ $factory->define(Scholar::class, function (Faker $faker) {
                     'year' => $faker->date('Y', now()->subYear(1)),
                 ]);
             }, range(1, (random_int(1, 4))));
-        },
-        'cosupervisor_profile_type' => $cosupervisorProfileType = $faker->randomElement([SupervisorProfile::class, Cosupervisor::class]),
-        'cosupervisor_profile_id' => function () use ($cosupervisorProfileType) {
-            return factory($cosupervisorProfileType)->create()->id;
         },
         'finalized_title' => $faker->word,
         'title_finalized_on' => $faker->date(),

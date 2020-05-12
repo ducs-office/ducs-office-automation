@@ -2,6 +2,8 @@
 
 namespace Tests\Unit;
 
+use App\ExternalAuthority;
+use App\Http\Requests\ExternalAuthorityUpdateRequest;
 use App\Models\AdvisoryMeeting;
 use App\Models\Cosupervisor;
 use App\Models\Leave;
@@ -15,7 +17,6 @@ use App\Models\ScholarDocument;
 use App\Models\ScholarEducationDegree;
 use App\Models\ScholarEducationInstitute;
 use App\Models\ScholarEducationSubject;
-use App\Models\SupervisorProfile;
 use App\Models\User;
 use App\Types\CitationIndex;
 use App\Types\EducationInfo;
@@ -28,9 +29,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
@@ -79,29 +82,150 @@ class ScholarTest extends TestCase
     }
 
     /** @test */
-    public function scholar_belongs_to_a_supervisor_profile()
+    public function scholar_has_many_supervisors()
     {
-        $supervisorProfile = create(SupervisorProfile::class);
+        $scholar = create(Scholar::class);
+        $this->assertInstanceOf(BelongsToMany::class, $scholar->supervisors());
 
-        $scholar = create(Scholar::class, 1, [
-            'supervisor_profile_id' => $supervisorProfile->id,
-        ]);
+        $supervisor = factory(User::class)->states('supervisor')->create();
+        $scholar->supervisors()->attach($supervisor);
 
-        $this->assertInstanceOf(BelongsTo::class, $scholar->supervisorProfile());
-        $this->assertTrue($supervisorProfile->is($scholar->supervisorProfile));
+        $supervisors = $scholar->supervisors()
+            ->wherePivot('supervisor_id', $supervisor->id)
+            ->get();
+
+        $this->assertCount(1, $supervisors);
     }
 
     /** @test */
-    public function scholar_morphs_to_a_supervisor_indirectly_through_supervisor_profile()
+    public function scholar_has_one_currentSupervisor()
     {
-        $supervisorProfile = create(SupervisorProfile::class);
+        $scholar = create(Scholar::class);
 
-        $scholar = create(Scholar::class, 1, [
-            'supervisor_profile_id' => $supervisorProfile->id,
+        $supervisors = factory(User::class, 2)->states('supervisor')->create();
+        $scholar->supervisors()->attach([
+            $supervisors[0]->id => ['started_on' => today()->subMonths(8), 'ended_on' => today()->subMonths(3)],
+            $supervisors[1]->id => ['started_on' => today()->subMonths(3), 'ended_on' => null],
         ]);
 
-        $this->assertInstanceOf(BelongsTo::class, $scholar->supervisor());
-        $this->assertTrue($supervisorProfile->supervisor->is($scholar->supervisor));
+        $scholar->refresh();
+
+        $this->assertCount(2, $scholar->supervisors);
+
+        $this->assertNotNull($scholar->currentSupervisor, 'current supervisor should not be null');
+        $this->assertEquals($supervisors[1]->id, $scholar->currentSupervisor->id);
+    }
+
+    /** @test */
+    public function scholar_has_many_cosupervisors()
+    {
+        $scholar = create(Scholar::class);
+
+        $this->assertInstanceOf(BelongsToMany::class, $scholar->cosupervisors());
+
+        $anotherSupervisor = factory(User::class)->states('supervisor')->create();
+        $cosupervisor = create(Cosupervisor::class, 1, [
+            'person_type' => User::class,
+            'person_id' => $anotherSupervisor->id,
+        ]);
+
+        $scholar->cosupervisors()->attach($cosupervisor);
+
+        $cosupervisors = $scholar->cosupervisors()->get();
+        $this->assertCount(1, $cosupervisors);
+        $this->assertEquals(User::class, $cosupervisors->first()->person_type);
+        $this->assertEquals($anotherSupervisor->id, $cosupervisors->first()->person_id);
+    }
+
+    /** @test */
+    public function scholar_has_one_currentCosupervisor()
+    {
+        $scholar = create(Scholar::class);
+
+        $cosupervisors = create(Cosupervisor::class, 2);
+        $scholar->cosupervisors()->attach([
+            $cosupervisors[0]->id => ['started_on' => today()->subMonths(8), 'ended_on' => today()->subMonths(3)],
+            $cosupervisors[1]->id => ['started_on' => today()->subMonths(3), 'ended_on' => null],
+        ]);
+
+        $scholar->refresh();
+
+        $this->assertCount(2, $scholar->cosupervisors);
+
+        $this->assertNotNull($scholar->currentCosupervisor, 'current cosupervisor should not be null');
+        $this->assertEquals($cosupervisors[1]->id, $scholar->currentCosupervisor->id);
+    }
+
+    /** @test */
+    public function scholar_has_many_external_advisors()
+    {
+        $scholar = create(Scholar::class);
+
+        $this->assertInstanceOf(MorphToMany::class, $scholar->externalAdvisors());
+
+        $externalAuthority = create(ExternalAuthority::class, 2);
+
+        $scholar->externalAdvisors()->attach($externalAuthority);
+        $scholar->refresh();
+
+        $this->assertCount(2, $scholar->externalAdvisors);
+    }
+
+    /** @test */
+    public function scholar_has_many_user_advisors()
+    {
+        $scholar = create(Scholar::class);
+
+        $this->assertInstanceOf(MorphToMany::class, $scholar->userAdvisors());
+
+        $facultyTeachers = factory(User::class, 2)->states('faculty')->create();
+
+        $scholar->userAdvisors()->attach($facultyTeachers);
+        $scholar->refresh();
+
+        $this->assertCount(2, $scholar->userAdvisors);
+    }
+
+    /** @test */
+    public function scholar_has_many_advisors_external_user_merged()
+    {
+        $scholar = create(Scholar::class);
+
+        $this->assertInstanceOf(MorphToMany::class, $scholar->userAdvisors());
+
+        $facultyTeachers = factory(User::class, 2)->states('faculty')->create();
+        $externalAuthorities = create(ExternalAuthority::class, 2);
+        $scholar->userAdvisors()->attach($facultyTeachers);
+        $scholar->externalAdvisors()->attach($externalAuthorities);
+
+        $scholar->refresh();
+
+        $this->assertCount(4, $scholar->advisors);
+    }
+
+    /** @test */
+    public function scholar_has_many_current_advisors_external_user_merged()
+    {
+        $scholar = create(Scholar::class);
+
+        $this->assertInstanceOf(MorphToMany::class, $scholar->userAdvisors());
+
+        $facultyTeachers = factory(User::class, 2)->states('faculty')->create();
+        $externalAuthorities = create(ExternalAuthority::class, 2);
+        $scholar->userAdvisors()->attach([
+            $facultyTeachers[0]->id => ['started_on' => today()->subMonths(8), 'ended_on' => today()->subMonths(3)],
+            $facultyTeachers[1]->id => ['started_on' => today()->subMonths(3), 'ended_on' => null],
+        ]);
+        $scholar->externalAdvisors()->attach([
+            $externalAuthorities[0]->id => ['started_on' => today()->subMonths(8), 'ended_on' => today()->subMonths(4)],
+            $externalAuthorities[1]->id => ['started_on' => today()->subMonths(4), 'ended_on' => null],
+        ]);
+
+        $scholar->refresh();
+
+        $this->assertCount(2, $scholar->currentAdvisors);
+        $this->assertEquals($facultyTeachers[1]->id, $scholar->currentAdvisors[0]->id);
+        $this->assertEquals($externalAuthorities[1]->id, $scholar->currentAdvisors[1]->id);
     }
 
     /** @test */
@@ -161,64 +285,6 @@ class ScholarTest extends TestCase
     }
 
     /** @test */
-    public function scholar_cosupervisor_profile_is_either_supervisor__profile_or_cosupervisor_via_morphs_to()
-    {
-        $scholar = create(Scholar::class);
-
-        $this->assertInstanceOf(MorphTo::class, $scholar->cosupervisorProfile());
-
-        $cosupervisor = create(Cosupervisor::class);
-        $scholar = create(Scholar::class, 1, [
-            'cosupervisor_profile_type' => Cosupervisor::class,
-            'cosupervisor_profile_id' => $cosupervisor->id,
-        ]);
-
-        $this->assertTrue($cosupervisor->is($scholar->cosupervisorProfile));
-
-        $supervisorProfile = create(SupervisorProfile::class);
-        $scholar = create(Scholar::class, 1, [
-            'cosupervisor_profile_type' => SupervisorProfile::class,
-            'cosupervisor_profile_id' => $supervisorProfile->id,
-        ]);
-
-        $this->assertTrue($supervisorProfile->is($scholar->cosupervisorProfile));
-    }
-
-    /** @test */
-    public function cosupervisor_return_supervisor_if_scholar_cosupervisor_profile_type_is_supervisor_profile()
-    {
-        $supervisorProfile = create(SupervisorProfile::class);
-
-        $scholar = create(Scholar::class, 1, [
-            'cosupervisor_profile_type' => SupervisorProfile::class,
-            'cosupervisor_profile_id' => $supervisorProfile->id,
-        ]);
-
-        $supervisor = $supervisorProfile->supervisor;
-
-        $this->assertEquals($supervisor->name, $scholar->cosupervisor->name);
-        $this->assertEquals($supervisor->email, $scholar->cosupervisor->email) ;
-        $this->assertEquals($supervisor->profile->designation ?? 'Professor', $scholar->cosupervisor->designation);
-        $this->assertEquals(
-            $supervisor->supervisor_type === User::class ? 'DUCS' :
-                $supervisor->profile->college->name ?? 'Affiliation Not Set',
-            $scholar->cosupervisor->affiliation
-        );
-    }
-
-    /** @test */
-    public function cosupervisor_return_cosupervisor_if_scholar_cosupervisor_profile_type_is_cosupervisor_profile()
-    {
-        $cosupervisor = create(Cosupervisor::class);
-        $scholar = create(Scholar::class, 1, [
-            'cosupervisor_profile_type' => Cosupervisor::class,
-            'cosupervisor_profile_id' => $cosupervisor->id,
-        ]);
-
-        $this->assertTrue($cosupervisor->is($scholar->cosupervisor));
-    }
-
-    /** @test */
     public function scholar_has_many_presentations()
     {
         $scholar = create(Scholar::class);
@@ -227,8 +293,14 @@ class ScholarTest extends TestCase
 
         $this->assertCount(0, $scholar->presentations);
 
+        $publication = create(Publication::class, 1, [
+            'main_author_type' => Scholar::class,
+            'main_author_id' => $scholar->id,
+        ]);
+
         $presentation = create(Presentation::class, 1, [
             'scholar_id' => $scholar->id,
+            'publication_id' => $publication->id,
         ]);
 
         $this->assertCount(1, $scholar->fresh()->presentations);
@@ -243,43 +315,6 @@ class ScholarTest extends TestCase
         $registerOn = $createdAt->format('d F Y');
 
         $this->assertEquals($registerOn, $scholar->register_on);
-    }
-
-    public function scholar_advisory_committee_is_returned_as_an_array_containing_supervisor_and_cosupervisor()
-    {
-        $faculty = create(User::class, 1, ['category' => 'faculty_teacher']);
-        $supervisor = $faculty->supervisorProfile()->create();
-
-        $scholar = create(Scholar::class, 1, [
-            'supervisor_profile_id' => $supervisor->id,
-        ]);
-
-        $cosupervisor = create(Cosupervisor::class);
-
-        $scholar->cosupervisors()->attach([
-            'cosupervisor_id' => $cosupervisor->id,
-        ]);
-
-        $advisoryCommittee = $scholar->advisory_committee;
-
-        $this->assertArrayHasKey('supervisor', $advisoryCommittee);
-        $this->assertEquals($faculty->name, $advisoryCommittee['supervisor']);
-
-        $this->assertArrayHasKey('cosupervisor', $advisoryCommittee);
-        $this->assertEquals($cosupervisor->name, $advisoryCommittee['cosupervisor']);
-    }
-
-    /** @test */
-    public function scholar_advisory_committee_does_not_have_a_cosupervisor_field_if_the_scholar_does_mot_have_a_cosupervisor()
-    {
-        $scholar = create(Scholar::class, 1, [
-            'cosupervisor_profile_id' => null,
-            'cosupervisor_profile_type' => null,
-        ]);
-
-        $advisoryCommittee = $scholar->advisory_committee;
-
-        $this->assertArrayNotHasKey('cosupervisor', $advisoryCommittee);
     }
 
     /** @test */

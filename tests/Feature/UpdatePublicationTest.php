@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\Models\Publication;
 use App\Models\Scholar;
-use App\Models\SupervisorProfile;
 use App\Models\Teacher;
 use App\Models\User;
 use App\Types\PublicationType;
@@ -81,15 +80,14 @@ class UpdatePublicationTest extends TestCase
     /** @test */
     public function journal_publication_of_supervisor_can_be_updated()
     {
-        $supervisorProfile = create(SupervisorProfile::class);
-        $supervisor = $supervisorProfile->supervisor;
+        $supervisor = factory(User::class)->states('supervisor')->create();
 
         $this->signIn($supervisor);
 
         $journal = create(Publication::class, 1, [
             'type' => PublicationType::JOURNAL,
-            'main_author_type' => SupervisorProfile::class,
-            'main_author_id' => $supervisorProfile->id,
+            'main_author_type' => User::class,
+            'main_author_id' => $supervisor->id,
         ]);
 
         $this->withoutExceptionHandling()
@@ -107,7 +105,7 @@ class UpdatePublicationTest extends TestCase
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'Journal Publication updated successfully!');
 
-        $freshJournal = $supervisorProfile->journals->first()->fresh();
+        $freshJournal = $supervisor->journals->first()->fresh();
 
         $this->assertEquals($number, $freshJournal->number);
 
@@ -170,15 +168,14 @@ class UpdatePublicationTest extends TestCase
     /** @test */
     public function conference_publication_of_supervisor_can_be_updated()
     {
-        $supervisorProfile = create(SupervisorProfile::class);
-        $supervisor = $supervisorProfile->supervisor;
+        $supervisor = factory(User::class)->states('supervisor')->create();
 
         $this->signIn($supervisor);
 
         $conference = create(Publication::class, 1, [
             'type' => PublicationType::CONFERENCE,
-            'main_author_type' => SupervisorProfile::class,
-            'main_author_id' => $supervisorProfile->id,
+            'main_author_type' => User::class,
+            'main_author_id' => $supervisor->id,
         ]);
 
         $this->withoutExceptionHandling()
@@ -196,7 +193,7 @@ class UpdatePublicationTest extends TestCase
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'Conference Publication updated successfully!');
 
-        $freshConference = $supervisorProfile->conferences->first()->fresh();
+        $freshConference = $supervisor->conferences()->first();
 
         $this->assertEquals($city, $freshConference->city);
 

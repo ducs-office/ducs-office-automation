@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\Models\Cosupervisor;
 use App\Models\Scholar;
-use App\Models\SupervisorProfile;
 use App\Models\User;
 use App\Types\AdvisoryCommitteeMember;
 use App\Types\Designation;
@@ -30,7 +29,7 @@ class SupervisorManagesScholarAdvisoryCommiteeTest extends TestCase
         $scholar = create(Scholar::class, 1, [
             'supervisor_profile_id' => $supervisor->id,
         ]);
-        $otherSupervisorProfile = create(SupervisorProfile::class);
+        $otherSupervisorProfile = factory(User::class)->states('supervisor')->create();
         $otherCosupervisor = create(Cosupervisor::class);
 
         $this->withoutExceptionHandling()
@@ -90,7 +89,7 @@ class SupervisorManagesScholarAdvisoryCommiteeTest extends TestCase
 
         $this->assertEquals(count($scholar->old_advisory_committees), 0);
 
-        $otherSupervisorProfile = create(SupervisorProfile::class);
+        $otherSupervisorProfile = factory(User::class)->states('supervisor')->create();
         $otherCosupervisor = create(Cosupervisor::class);
 
         $this->withoutExceptionHandling()

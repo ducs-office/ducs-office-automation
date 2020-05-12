@@ -12,5 +12,5 @@
         <p class="font-bold"> Cosupervisor Not Assigned </p>
         @endif
     </div>
-    <p class="w-1/2 mr-4 font-bold"> {{ $sinceDate }} - {{ $cosupervisor->date ?? 'Present' }}</p>
+    <p class="w-1/2 mr-4 font-bold"> {{ $cosupervisor->pivot->started_on->format('d F Y') }} - {{ optional($cosupervisor->pivot->ended_on)->format('d F Y') ?? 'Present' }}</p>
 <div>

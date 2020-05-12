@@ -3,7 +3,7 @@
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 use App\Models\Publication;
 use App\Models\Scholar;
-use App\Models\SupervisorProfile;
+use App\Models\User;
 use App\Types\CitationIndex;
 use App\Types\PublicationType;
 use Faker\Generator as Faker;
@@ -27,8 +27,10 @@ $factory->define(Publication::class, function (Faker $faker) {
                 return $faker->randomElement(CitationIndex::values());
             }, $indexed_in);
         },
-        'main_author_type' => $type = $faker->randomElement([Scholar::class, SupervisorProfile::class]),
-        'main_author_id' => factory($type)->create()->id,
+        'main_author_type' => $type = $faker->randomElement([Scholar::class, User::class]),
+        'main_author_id' => function ($publication) {
+            return factory($publication['main_author_type'])->create()->id;
+        },
         'number' => function ($publication) use ($faker) {
             return $publication['type'] === PublicationType::JOURNAL
                 ? $faker->randomNumber(2) : null;

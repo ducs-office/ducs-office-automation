@@ -5,10 +5,7 @@ namespace App\Http\Controllers\Scholars;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Scholar\StorePresentation;
 use App\Http\Requests\Scholar\UpdatePresentation;
-use App\Models\AcademicDetail;
 use App\Models\Presentation;
-use App\Models\Scholar;
-use App\Models\SupervisorProfile;
 use App\Types\PresentationEventType;
 use Illuminate\Http\Request;
 

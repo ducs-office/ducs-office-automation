@@ -2,40 +2,39 @@
 
 namespace App\Models;
 
-use App\Types\UserCategory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
 
 class Cosupervisor extends Model
 {
     protected $guarded = [];
+    protected $with = ['person'];
 
-    public function professor()
+    public function person()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->morphTo();
     }
 
-    public function getNameAttribute($name)
+    public function getNameAttribute()
     {
-        return optional($this->professor)->name ?? $name;
+        return $this->person->name;
     }
 
-    public function getEmailAttribute($email)
+    public function getEmailAttribute()
     {
-        return optional($this->professor)->email ?? $email;
+        return $this->person->email;
     }
 
-    public function getDesignationAttribute($designation)
+    public function getDesignationAttribute()
     {
-        return $this->professor ? $this->professor->designation : $designation;
+        return $this->person->designation;
     }
 
-    public function getAffiliationAttribute($affiliation)
+    public function getAffiliationAttribute()
     {
-        if (! $this->professor) {
-            return $affiliation;
+        if ($this->person_type === User::class) {
+            return optional($this->person->college)->name ?? 'Unknown';
         }
 
-        return $this->professor->college->name;
+        return $this->person->affiliation;
     }
 }

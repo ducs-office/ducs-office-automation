@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\Models\PhdCourse;
 use App\Models\Scholar;
-use App\Models\SupervisorProfile;
 use App\Models\Teacher;
 use App\Models\User;
 use App\Types\PrePhdCourseType;
@@ -23,12 +22,11 @@ class SupervisorManagesScholarCourseworkTest extends TestCase
     /** @test */
     public function teacher_supervisors_can_add_elective_courses_to_scholars_courseworks()
     {
-        $teacher = create(User::class, 1, ['category' => UserCategory::COLLEGE_TEACHER]);
-        $supervisorProfile = $teacher->supervisorProfile()->create();
+        $supervisor = factory(User::class)->states('supervisor')->create();
+        $scholar = create(Scholar::class);
+        $scholar->supervisors()->attach($supervisor);
 
-        $scholar = create(Scholar::class, 1, ['supervisor_profile_id' => $supervisorProfile->id]);
-
-        $this->signIn($teacher);
+        $this->signIn($supervisor);
 
         $courses = create(PhdCourse::class, 2, ['type' => PrePhdCourseType::ELECTIVE]);
 
@@ -44,12 +42,11 @@ class SupervisorManagesScholarCourseworkTest extends TestCase
     /** @test */
     public function faculty_supervisors_can_add_elective_courses_to_scholars_courseworks()
     {
-        $user = create(User::class);
-        $supervisorProfile = $user->supervisorProfile()->create();
+        $supervisor = factory(User::class)->states('supervisor')->create();
+        $scholar = create(Scholar::class);
+        $scholar->supervisors()->attach($supervisor);
 
-        $scholar = create(Scholar::class, 1, ['supervisor_profile_id' => $supervisorProfile->id]);
-
-        $this->signIn($user);
+        $this->signIn($supervisor);
 
         $courses = create(PhdCourse::class, 2, ['type' => PrePhdCourseType::ELECTIVE]);
 
@@ -65,18 +62,14 @@ class SupervisorManagesScholarCourseworkTest extends TestCase
     /** @test */
     public function supervisors_can_add_elective_courses_to_only_the_scholars_whom_they_supervise()
     {
-        $profNeelima = create(User::class, 1, ['name' => 'Prof. Neelima Gupta']);
-        $profPoonam = create(User::class, 1, ['name' => 'Prof. Poonam Bedi']);
+        $profNeelima = factory(User::class)->states('supervisor')->create(['name' => 'Prof. Neelima Gupta']);
+        $profPoonam = factory(User::class)->states('supervisor')->create(['name' => 'Prof. Poonam Bedi']);
 
-        $profNeelimaProfile = $profNeelima->supervisorProfile()->create();
-        $profPoonamProfile = $profPoonam->supervisorProfile()->create();
+        $rajni = create(Scholar::class);
+        $rajni->supervisors()->attach($profNeelima);
 
-        $rajni = create(Scholar::class, 1, [
-            'supervisor_profile_id' => $profNeelimaProfile->id,
-        ]);
-        $pushkar = create(Scholar::class, 1, [
-            'supervisor_profile_id' => $profPoonamProfile->id,
-        ]);
+        $pushkar = create(Scholar::class);
+        $pushkar->supervisors()->attach($profPoonam);
 
         $electiveCourses = create(PhdCourse::class, 2, ['type' => PrePhdCourseType::ELECTIVE]);
 

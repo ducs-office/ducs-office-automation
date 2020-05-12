@@ -2,15 +2,16 @@
 
 namespace Tests\Feature;
 
+use App\ExternalAuthority;
 use App\Models\College;
 use App\Models\Cosupervisor;
-use App\Models\SupervisorProfile;
 use App\Models\Teacher;
 use App\Models\TeacherProfile;
 use App\Models\User;
 use App\Types\UserCategory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
 
@@ -41,26 +42,6 @@ class StoreCosupervisorTest extends TestCase
     }
 
     /** @test */
-    public function college_teacher_who_is_supervisor_can_not_be_stored_as_cosupervisor()
-    {
-        $this->signIn();
-
-        $teacher = create(User::class, 1, [
-            'category' => UserCategory::COLLEGE_TEACHER,
-            'college_id' => create(College::class)->id,
-        ]);
-        $teacher->supervisorProfile()->create();
-
-        $this->withExceptionHandling()
-            ->post(route('staff.cosupervisors.store'), [
-                'user_id' => $teacher->id,
-            ])
-            ->assertForbidden();
-
-        $this->assertEquals(0, Cosupervisor::count());
-    }
-
-    /** @test */
     public function faculty_who_is_not_supervisor_can_be_stored_as_co_supervisor()
     {
         $this->signIn();
@@ -84,14 +65,17 @@ class StoreCosupervisorTest extends TestCase
     {
         $this->signIn();
 
-        $faculty = create(User::class, 1, ['category' => UserCategory::FACULTY_TEACHER]);
-        $faculty->supervisorProfile()->create();
+        // Faking Model events, so that cosupervisor is not created.
+        // @see /app/Models/User.php
+        Event::fake();
+
+        $facultySupervisor = factory(User::class)->states('supervisor')->create();
 
         $this->assertEquals(0, Cosupervisor::count());
 
         $this->withExceptionHandling()
             ->post(route('staff.cosupervisors.store'), [
-                'user_id' => $faculty->id,
+                'user_id' => $facultySupervisor->id,
             ])
             ->assertForbidden();
 
@@ -117,7 +101,7 @@ class StoreCosupervisorTest extends TestCase
     }
 
     /** @test */
-    public function user_who_is_a_faculty_teacher_not_be_stored_as_cosupervisor()
+    public function user_who_is_a_faculty_teacher_can_be_stored_as_cosupervisor()
     {
         $this->signIn();
 
@@ -136,11 +120,11 @@ class StoreCosupervisorTest extends TestCase
     }
 
     /** @test */
-    public function new_cosupervisor_can_be_stored()
+    public function new__external_cosupervisor_can_be_stored()
     {
         $this->signIn();
 
-        $coSupervisor = [
+        $newExternal = [
             'name' => 'Abhijeet',
             'email' => 'abhijeet@du.com',
             'designation' => 'teacher',
@@ -148,12 +132,33 @@ class StoreCosupervisorTest extends TestCase
         ];
 
         $this->withoutExceptionHandling()
-             ->post(route('staff.cosupervisors.store', $coSupervisor))
+             ->post(route('staff.cosupervisors.store', $newExternal))
              ->assertRedirect()
              ->assertSessionHasFlash('success', 'Co-supervisor added successfully');
 
-        $this->assertEquals(1, Cosupervisor::count());
-        $this->assertEquals($coSupervisor['name'], Cosupervisor::first()->name);
-        $this->assertEquals($coSupervisor['email'], Cosupervisor::first()->email);
+        $this->assertCount(1, $extrnals = ExternalAuthority::all());
+        $this->assertEquals($newExternal['name'], $extrnals->first()->name);
+        $this->assertEquals($newExternal['email'], $extrnals->first()->email);
+
+        $this->assertCount(1, $cosupervisors = Cosupervisor::all());
+        $this->assertEquals(ExternalAuthority::class, $cosupervisors->first()->person_type);
+        $this->assertEquals($extrnals->first()->id, $cosupervisors->first()->person_id);
+    }
+
+    /** @test */
+    public function existing_external_can_be_made_cosupervisor()
+    {
+        $this->signIn();
+
+        $external = create(ExternalAuthority::class);
+
+        $this->withoutExceptionHandling()
+             ->post(route('staff.cosupervisors.store', ['external_id' => $external->id]))
+             ->assertRedirect()
+             ->assertSessionHasFlash('success', 'Co-supervisor added successfully');
+
+        $this->assertCount(1, $cosupervisors = Cosupervisor::all());
+        $this->assertEquals(ExternalAuthority::class, $cosupervisors->first()->person_type);
+        $this->assertEquals($external->first()->id, $cosupervisors->first()->person_id);
     }
 }

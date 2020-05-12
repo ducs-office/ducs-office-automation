@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Staff;
 
+use App\ExternalAuthority;
 use App\Http\Controllers\Controller;
 use App\Models\Cosupervisor;
 use App\Models\Teacher;
@@ -13,53 +14,51 @@ class CosupervisorController extends Controller
 {
     public function index()
     {
-        $users = User::collegeTeachers()
-            ->orWhere('category', UserCategory::FACULTY_TEACHER)
-            ->whereDoesntHave('supervisorProfile')
-            ->whereDoesntHave('cosupervisorProfile');
+        $users = User::allTeachers()
+            ->where('is_supervisor', false)
+            ->whereNotIn('users.id', Cosupervisor::select('person_id')->where('is_supervisor', true));
+
+        $externals = ExternalAuthority::query()
+            ->whereNotIn(
+                'external_authorities',
+                Cosupervisor::select('person_id')->where('person_type', ExternalAuthority::class)
+            );
 
         return view('staff.cosupervisors.index', [
             'cosupervisors' => Cosupervisor::all(),
             'users' => $users,
+            'externals' => $externals,
         ]);
     }
 
     public function store(Request $request)
     {
         $validData = $request->validate([
-            'user_id' => 'sometimes|bail|nullable|integer|exists:users,id',
-            'name' => 'required_without:user_id|string',
-            'email' => 'required_without:user_id|email',
-            'designation' => 'required_without:user_id|string',
-            'affiliation' => 'required_without:user_id|string',
+            'user_id' => 'sometimes|bail|nullable|integer',
+            'external_id' => 'sometimes|bail|nullable|integer',
+            'name' => 'required_without_all:user_id,external_id|string',
+            'email' => 'required_without_all:user_id,external_id|email|unique:external_authorities',
+            'designation' => 'required_without_all:user_id,external_id|string',
+            'affiliation' => 'required_without_all:user_id,external_id|string',
         ]);
 
         if ($request->has('user_id')) {
             $user = User::find($request->user_id);
             $allowedCategories = [UserCategory::COLLEGE_TEACHER, UserCategory::FACULTY_TEACHER];
-            abort_unless(in_array($user->category, $allowedCategories), 403, 'only teachers can become cosupervisor');
+            abort_unless($user && in_array($user->category, $allowedCategories), 403, 'only teachers can become cosupervisor');
             abort_if($user->isSupervisor(), 403, 'supervisor cannot become cosupervisor');
+            Cosupervisor::create([
+                'person_type' => User::class,
+                'person_id' => $request->user_id,
+            ]);
+        } else {
+            Cosupervisor::create([
+                'person_type' => ExternalAuthority::class,
+                'person_id' => $request->external_id ?? ExternalAuthority::create($validData)->id,
+            ]);
         }
 
-        Cosupervisor::create($validData);
-
         flash('Co-supervisor added successfully')->success();
-        return back();
-    }
-
-    public function update(Request $request, Cosupervisor $cosupervisor)
-    {
-        abort_if($cosupervisor->professor !== null, 403, 'Cosupervisor can not be updated');
-        $validData = $request->validate([
-            'name' => 'sometimes| required| string',
-            'email' => 'sometimes| required| email',
-            'designation' => 'sometimes| required| string',
-            'affiliation' => 'sometimes| required| string',
-        ]);
-
-        $cosupervisor->update($validData);
-
-        flash('Co-supervisor updated successfully!')->success();
         return back();
     }
 

@@ -32,19 +32,21 @@ $factory->define(User::class, static function (Faker $faker) {
         'college_id' => factory(College::class),
         'status' => function ($user) use ($faker) {
             return in_array($user['category'], [
-                UserCategory::FACULTY_TEACHER,
                 UserCategory::COLLEGE_TEACHER,
             ]) ? $faker->randomElement(TeacherStatus::values())
                 : null;
         },
-        'designation' => function ($user) use ($faker) {
-            return in_array($user['category'], [
-                UserCategory::FACULTY_TEACHER,
-                UserCategory::COLLEGE_TEACHER,
-            ]) ? $faker->randomElement(Designation::values())
-                : null;
-        },
+        'designation' => $faker->randomElement(Designation::values()),
         'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
         'remember_token' => Str::random(10),
     ];
 });
+
+$factory->state(User::class, 'supervisor', [
+    'category' => UserCategory::FACULTY_TEACHER,
+    'is_supervisor' => true,
+]);
+
+$factory->state(User::class, 'faculty', [
+    'category' => UserCategory::FACULTY_TEACHER,
+]);

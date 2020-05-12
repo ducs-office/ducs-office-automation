@@ -4,7 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Cosupervisor;
 use App\Models\Scholar;
-use App\Models\SupervisorProfile;
+use App\Models\User;
 use Dotenv\Regex\Success;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -91,63 +91,57 @@ class EditScholarTest extends TestCase
     }
 
     /** @test */
-    public function cosupervisor_of_scholar_can_be_edited()
+    public function cosupervisor_of_scholar_can_be_edited_without_tracking()
     {
         $this->signIn();
 
-        $cosupervisor = create(Cosupervisor::class);
+        $scholar = create(Scholar::class);
+        $scholar->supervisors()->attach(
+            factory(User::class)->states('supervisor')->create()
+        );
+        $oldCosupervisors = create(Cosupervisor::class, 2);
 
-        $scholar = create(Scholar::class, 1, [
-            'cosupervisor_profile_type' => Cosupervisor::class,
-            'cosupervisor_profile_id' => $cosupervisor->id,
+        $scholar->cosupervisors()->attach([
+            $oldCosupervisors[0]->id => ['started_on' => today()->subMonths(10), 'ended_on' => today()->subMonths(2)],
+            $oldCosupervisors[1]->id => ['started_on' => today()->subMonths(2), 'ended_on' => null],
         ]);
 
-        $this->assertEquals($scholar->cosupervisor_profile_id, $cosupervisor->id);
-
         $this->withoutExceptionHandling()
             ->patch(route('staff.scholars.update', $scholar), [
-                'cosupervisor_profile_type' => Cosupervisor::class,
-                'cosupervisor_profile_id' => $newCosupervisorId = create(Cosupervisor::class)->id,
+                'cosupervisor_id' => $newCosupervisorId = create(Cosupervisor::class)->id,
             ])
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'Scholar updated successfully');
 
-        $this->assertEquals(1, Scholar::count());
-        $this->assertEquals($newCosupervisorId, $scholar->fresh()->cosupervisor_profile_id);
-        $this->assertEquals('App\Models\Cosupervisor', $scholar->fresh()->cosupervisor_profile_type);
-
-        $this->withoutExceptionHandling()
-            ->patch(route('staff.scholars.update', $scholar), [
-                'cosupervisor_profile_type' => SupervisorProfile::class,
-                'cosupervisor_profile_id' => $newCosupervisorId = create(SupervisorProfile::class)->id,
-            ])
-            ->assertRedirect()
-            ->assertSessionHasFlash('success', 'Scholar updated successfully');
-
-        $this->assertEquals(1, Scholar::count());
-        $this->assertEquals($newCosupervisorId, $scholar->fresh()->cosupervisor_profile_id);
-        $this->assertEquals('App\Models\SupervisorProfile', $scholar->fresh()->cosupervisor_profile_type);
+        $this->assertCount(2, $scholar->refresh()->cosupervisors);
+        $this->assertEquals($newCosupervisorId, $scholar->currentCosupervisor->id);
+        $this->assertEquals(today()->subMonths(2), $scholar->currentCosupervisor->pivot->started_on);
     }
 
     /** @test */
-    public function supervisor_profile_id_of_scholar_can_be_edited()
+    public function supervisor_of_scholar_can_be_updated_without_tracking()
     {
         $this->signIn();
 
-        $supervisorProfile = create(SupervisorProfile::class);
-        $scholar = create(Scholar::class, 1, ['supervisor_profile_id' => $supervisorProfile->id]);
+        $oldSupervisors = factory(User::class, 2)->states('supervisor')->create();
+        $scholar = create(Scholar::class);
+        $scholar->supervisors()->attach([
+            $oldSupervisors[0]->id => ['started_on' => today()->subMonths(10), 'ended_on' => today()->subMonths(2)],
+            $oldSupervisors[1]->id => ['started_on' => today()->subMonths(2), 'ended_on' => null],
+        ]);
 
-        $this->assertEquals($scholar->supervisor_profile_id, $supervisorProfile->id);
-
+        $newSupervisor = factory(User::class)->states('supervisor')->create();
         $this->withoutExceptionHandling()
-             ->patch(route('staff.scholars.update', $scholar), [
-                 'supervisor_profile_id' => $newSupervisorProfileId = create(SupervisorProfile::class)->id,
-             ])
-             ->assertRedirect()
-             ->assertSessionHasFlash('success', 'Scholar updated successfully');
+            ->patch(route('staff.scholars.update', $scholar), [
+                'supervisor_id' => $newSupervisor->id,
+            ])
+            ->assertRedirect()
+            ->assertSessionHasFlash('success', 'Scholar updated successfully');
 
         $this->assertEquals(1, Scholar::count());
-        $this->assertEquals($newSupervisorProfileId, $scholar->fresh()->supervisor_profile_id);
+        $this->assertCount(2, $scholar->refresh()->supervisors);
+        $this->assertEquals($newSupervisor->id, $scholar->currentSupervisor->id);
+        $this->assertEquals(today()->subMonths(2), $scholar->currentSupervisor->pivot->started_on);
     }
 
     /** @test */
@@ -155,28 +149,24 @@ class EditScholarTest extends TestCase
     {
         $this->signIn();
 
+        $scholar = create(Scholar::class);
         $cosupervisor = create(Cosupervisor::class);
-        $supervisorProfile = create(SupervisorProfile::class);
+        $supervisor = factory(User::class)->states('supervisor')->create();
+        $scholar->supervisors()->attach($supervisor);
+        $scholar->cosupervisors()->attach($cosupervisor);
 
-        $scholar = create(Scholar::class, 1, [
-            'supervisor_profile_id' => $supervisorProfile->id,
-            'cosupervisor_profile_type' => Cosupervisor::class,
-            'cosupervisor_profile_id' => $cosupervisor->id,
+        $cosupervisorWhoIsSupervisor = create(Cosupervisor::class, 1, [
+            'person_type' => User::class,
+            'person_id' => $supervisor->id,
         ]);
 
-        try {
-            $this->withoutExceptionHandling()
-                ->patch(route('staff.scholars.update', $scholar), [
-                    'supervisor_profile_id' => $supervisorProfile->id,
-                    'cosupervisor_profile_type' => SupervisorProfile::class,
-                    'cosupervisor_profile_id' => $supervisorProfile->id,
-                ]);
-        } catch (ValidationException $e) {
-            $this->assertArrayHasKey('cosupervisor_profile_id', $e->errors());
-        }
+        $this->withExceptionHandling()
+            ->patch(route('staff.scholars.update', $scholar), [
+                'cosupervisor_id' => $cosupervisorWhoIsSupervisor->id,
+            ])
+            ->assertSessionHasErrors('cosupervisor_id');
 
         $updatedScholar = $scholar->fresh();
-        $this->assertEquals($cosupervisor->id, $updatedScholar->cosupervisor_profile_id);
-        $this->assertEquals('App\Models\Cosupervisor', $updatedScholar->cosupervisor_profile_type);
+        $this->assertEquals($cosupervisor->id, $updatedScholar->currentCosupervisor->id);
     }
 }

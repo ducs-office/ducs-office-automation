@@ -7,7 +7,7 @@ use App\Models\Scholar;
 use App\Models\ScholarEducationDegree;
 use App\Models\ScholarEducationInstitute;
 use App\Models\ScholarEducationSubject;
-use App\Models\SupervisorProfile;
+use App\Models\User;
 use App\Types\AdmissionMode;
 use App\Types\EducationInfo;
 use App\Types\ReservationCategory;
@@ -21,8 +21,7 @@ use Tests\TestCase;
 
 class UpdateScholarProfileTest extends TestCase
 {
-    use RefreshDatabase;
-    use WithFaker;
+    use RefreshDatabase, WithFaker;
 
     /** @test */
     public function scholar_can_update_their_profile()

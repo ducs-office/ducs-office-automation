@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\Models\Cosupervisor;
 use App\Models\Scholar;
-use App\Models\SupervisorProfile;
 use App\Models\Teacher;
 use App\Models\User;
 use App\Types\UserCategory;
@@ -21,7 +20,10 @@ class ViewScholarTest extends TestCase
     {
         $this->signIn();
 
-        create(Scholar::class, 3);
+        create(Scholar::class, 3)->each(function ($scholar) {
+            $scholar->supervisors()->attach(factory(User::class)->states('supervisor')->create());
+            $scholar->cosupervisors()->attach(create(Cosupervisor::class));
+        });
 
         $scholars = $this->withoutExceptionHandling()
             ->get(route('staff.scholars.index'))
@@ -34,21 +36,22 @@ class ViewScholarTest extends TestCase
     /** @test */
     public function a_supervisor_can_view_only_scholars_whom_they_supervise_even_without_explicit_permission()
     {
-        $teacher = create(User::class);
-        $teacher->revokePermissionTo('scholars:view');
+        $supervisor = factory(User::class)->states('supervisor')->create();
+        $supervisor->revokePermissionTo('scholars:view');
 
-        $supervisorProfile = $teacher->supervisorProfile()->create();
-        $theirScholars = create(Scholar::class, 3, ['supervisor_profile_id' => $supervisorProfile->id]);
+        $theirScholars = $supervisor->scholars()->createMany(
+            make(Scholar::class, 3)->makeVisible('password')->toArray()
+        );
         $otherScholars = create(Scholar::class, 5);
 
-        $this->signIn($teacher, null);
+        $this->signIn($supervisor, null);
         $scholars = $this->withoutExceptionHandling()
             ->get(route('research.scholars.index'))
             ->assertViewHas('scholars')
             ->viewData('scholars');
 
         $this->assertCount(3, $scholars);
-        $this->assertEquals($theirScholars->pluck('id'), $scholars->pluck('id'));
+        $this->assertEquals(collect($theirScholars)->pluck('id'), $scholars->pluck('id'));
     }
 
     /** @test */
@@ -71,7 +74,8 @@ class ViewScholarTest extends TestCase
     /** @test */
     public function view_has_a_unique_list_of_supervisors()
     {
-        $supervisorProfiles = create(SupervisorProfile::class, 3);
+        create(User::class, 3);
+        $supervisors = factory(User::class, 3)->states('supervisor')->create();
 
         $this->signIn();
 
@@ -83,7 +87,7 @@ class ViewScholarTest extends TestCase
             ->viewData('supervisors');
 
         $this->assertCount(3, $viewData);
-        $this->assertSame($supervisorProfiles->pluck('id', 'supervisor.name')->toArray(), $viewData->toArray());
+        $this->assertSame($supervisors->pluck('id', 'name')->toArray(), $viewData->toArray());
     }
 
     /** @test */

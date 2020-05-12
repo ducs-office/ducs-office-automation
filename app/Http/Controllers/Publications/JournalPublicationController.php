@@ -7,7 +7,7 @@ use App\Http\Requests\Publication\StoreJournalPublication;
 use App\Http\Requests\Publication\UpdateJournalPublication;
 use App\Models\Publication;
 use App\Models\Scholar;
-use App\Models\SupervisorProfile;
+use App\Models\User;
 use App\Types\CitationIndex;
 use App\Types\PublicationType;
 use Illuminate\Http\Request;
@@ -42,11 +42,7 @@ class JournalPublicationController extends Controller
         $validData['type'] = PublicationType::JOURNAL;
         $validData['date'] = new Carbon($date);
 
-        if (Auth::guard('scholars')->check()) {
-            $publication = $user->publications()->create($validData);
-        } else {
-            $publication = $user->supervisorProfile->publications()->create($validData);
-        }
+        $publication = $user->publications()->create($validData);
 
         if ($request->has('co_authors')) {
             $publication->coAuthors()->createMany(

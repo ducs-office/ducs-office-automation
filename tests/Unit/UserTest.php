@@ -2,9 +2,12 @@
 
 namespace Tests\Unit;
 
+use App\Models\Cosupervisor;
+use App\Models\Publication;
 use App\Models\User;
 use App\Types\UserCategory;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -34,27 +37,13 @@ class UserTest extends TestCase
     }
 
     /** @test */
-    public function it_may_have_a_supervisor_profile()
-    {
-        $user = create(User::class);
-
-        $this->assertInstanceOf(HasOne::class, $user->supervisorProfile());
-
-        $this->assertNull($user->supervisorProfile);
-
-        $profile = $user->supervisorProfile()->create();
-
-        $this->assertTrue($profile->is($user->fresh()->supervisorProfile));
-    }
-
-    /** @test */
     public function isSupervisor_method_gives_boolean_indicating_whether_or_not_user_is_a_supervisor()
     {
         $user = create(User::class);
 
         $this->assertFalse($user->isSupervisor());
 
-        $profile = $user->supervisorProfile()->create();
+        $user->update(['is_supervisor' => true]);
 
         $this->assertTrue($user->fresh()->isSupervisor());
     }
@@ -73,5 +62,41 @@ class UserTest extends TestCase
 
         $collegeTeacher = create(User::class, 1, ['category' => UserCategory::COLLEGE_TEACHER]);
         $this->assertTrue($collegeTeacher->canBecomeSupervisor());
+    }
+
+    /** @test */
+    public function when_a_user_is_made_supervisor_cosupervisor_is_also_created()
+    {
+        $supervisor = create(User::class);
+
+        $supervisor->update(['is_supervisor' => true]);
+
+        $cosupervisors = Cosupervisor::query()
+            ->wherePersonType(User::class)
+            ->wherePersonId($supervisor->id)
+            ->whereIsSupervisor(true)
+            ->get();
+
+        $this->assertCount(1, $cosupervisors);
+    }
+
+    /** @test */
+    public function a_superviosr_has_many_publications()
+    {
+        $supervisor = create(User::class, [
+            'category' => UserCategory::FACULTY_TEACHER,
+            'is_supervisor' => true,
+        ]);
+
+        $this->assertInstanceOf(MorphMany::class, $supervisor->publications());
+
+        $this->assertCount(0, $supervisor->publications);
+
+        $publication = create(Publication::class, 1, [
+            'main_author_type' => User::class,
+            'main_author_id' => $supervisor->id,
+        ]);
+
+        $this->assertCount(1, $supervisor->fresh()->publications);
     }
 }

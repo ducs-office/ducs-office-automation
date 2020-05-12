@@ -7,7 +7,7 @@ use App\Models\CoAuthor;
 use App\Models\Presentation;
 use App\Models\Publication;
 use App\Models\Scholar;
-use App\Models\SupervisorProfile;
+use App\Models\User;
 use App\Types\CitationIndex;
 use App\Types\PublicationType;
 use CreateCoauthorsTable;
@@ -70,15 +70,15 @@ class PublicationTest extends TestCase
         $this->assertInstanceOf(MorphTo::class, $publication->mainAuthor());
         $this->assertTrue($publication->mainAuthor->is($scholar));
 
-        $supervisorProfile = create(SupervisorProfile::class);
+        $supervisor = factory(User::class)->states('supervisor')->create();
 
         $publication = create(Publication::class, 1, [
-            'main_author_type' => SupervisorProfile::class,
-            'main_author_id' => $supervisorProfile->id,
+            'main_author_type' => User::class,
+            'main_author_id' => $supervisor->id,
         ]);
 
         $this->assertInstanceOf(MorphTo::class, $publication->mainAuthor());
-        $this->assertTrue($publication->mainAuthor->is($supervisorProfile));
+        $this->assertTrue($publication->mainAuthor->is($supervisor));
     }
 
     /** @test */

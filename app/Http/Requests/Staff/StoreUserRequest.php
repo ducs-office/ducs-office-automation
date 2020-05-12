@@ -32,6 +32,7 @@ class StoreUserRequest extends FormRequest
             'roles' => ['required', 'array', 'min:1'],
             'roles.*' => ['required', 'integer', 'exists:roles,id'],
             'category' => ['required', Rule::in(UserCategory::values())],
+            'is_supervior' => ['sometimes'],
         ];
     }
 }

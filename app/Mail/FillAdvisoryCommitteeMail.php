@@ -23,7 +23,7 @@ class FillAdvisoryCommitteeMail extends Mailable implements ShouldQueue
      */
     public function __construct(Scholar $scholar)
     {
-        $this->supervisor = $scholar->supervisor;
+        $this->supervisor = $scholar->currentSupervisor;
         $this->scholarName = $scholar->name;
         $this->deadline = $scholar->created_at->addDays(15)->format('d F Y');
     }

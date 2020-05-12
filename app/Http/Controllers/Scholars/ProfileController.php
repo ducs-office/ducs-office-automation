@@ -8,7 +8,7 @@ use App\Models\Cosupervisor;
 use App\Models\ScholarEducationDegree;
 use App\Models\ScholarEducationInstitute;
 use App\Models\ScholarEducationSubject;
-use App\Models\SupervisorProfile;
+use App\Models\User;
 use App\Types\AdmissionMode;
 use App\Types\EducationInfo;
 use App\Types\Gender;
@@ -49,8 +49,6 @@ class ProfileController extends Controller
             'categories' => ReservationCategory::values(),
             'admissionModes' => AdmissionMode::values(),
             'genders' => Gender::values(),
-            'supervisorProfiles' => SupervisorProfile::all()->pluck('id', 'supervisor.name'),
-            'cosupervisors' => Cosupervisor::all()->pluck('id', 'name', 'email'),
             'subjects' => ScholarEducationSubject::all()->pluck('name')->toArray(),
             'degrees' => ScholarEducationDegree::all()->pluck('name')->toArray(),
             'institutes' => ScholarEducationInstitute::all()->pluck('name')->toArray(),

@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\Models\Cosupervisor;
 use App\Models\Scholar;
-use App\Models\SupervisorProfile;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -42,11 +41,10 @@ class ReplaceScholarMentorTest extends TestCase
 
         $this->assertTrue($newCosupervisor->is($scholar->fresh()->cosupervisor));
 
-        $newCosupervisor = create(SupervisorProfile::class);
+        $newCosupervisor = factory(User::class)->states('supervisor')->create();
 
         $this->withoutExceptionHandling()
             ->patch(route('staff.scholars.replace_cosupervisor', $scholar), [
-                'cosupervisor_profile_type' => SupervisorProfile::class,
                 'cosupervisor_profile_id' => $newCosupervisor->id,
             ])
             ->assertSessionHasFlash('success', 'Co-Supervisor replaced successfully!');
@@ -63,7 +61,7 @@ class ReplaceScholarMentorTest extends TestCase
         $this->signIn();
         $scholar = create(Scholar::class);
         $oldSupervisor = $scholar->supervisor;
-        $newSupervisorProfile = create(SupervisorProfile::class);
+        $newSupervisorProfile = factory(User::class)->states('supervisor')->create();
 
         $this->withoutExceptionHandling()
             ->patch(route('staff.scholars.replace_supervisor', $scholar), [
@@ -115,10 +113,9 @@ class ReplaceScholarMentorTest extends TestCase
     {
         $this->signIn();
 
-        $SupervisorProfile = create(SupervisorProfile::class);
+        $SupervisorProfile = factory(User::class)->states('supervisor')->create();
 
         $scholar = create(Scholar::class, 1, [
-            'cosupervisor_profile_type' => SupervisorProfile::class,
             'cosupervisor_profile_id' => $SupervisorProfile->id,
         ]);
 
@@ -127,7 +124,6 @@ class ReplaceScholarMentorTest extends TestCase
         try {
             $this->withoutExceptionHandling()
                 ->patch(route('staff.scholars.replace_cosupervisor', $scholar), [
-                    'cosupervisor_profile_type' => SupervisorProfile::class,
                     'cosupervisor_profile_id' => $SupervisorProfile->id,
                 ]);
         } catch (ValidationException $e) {
@@ -160,7 +156,7 @@ class ReplaceScholarMentorTest extends TestCase
     public function cosupervisor_of_scholar_can_not_be_replaced_if_cosupervisor_is_same_as_supervisor()
     {
         $this->signIn();
-        $SupervisorProfile = create(SupervisorProfile::class);
+        $SupervisorProfile = factory(User::class)->states('supervisor')->create();
 
         $scholar = create(Scholar::class, 1, [
             'supervisor_profile_id' => $SupervisorProfile->id,
@@ -173,7 +169,6 @@ class ReplaceScholarMentorTest extends TestCase
         try {
             $this->withoutExceptionHandling()
                 ->patch(route('staff.scholars.replace_cosupervisor', $scholar), [
-                    'cosupervisor_profile_type' => SupervisorProfile::class,
                     'cosupervisor_profile_id' => $SupervisorProfile->id,
                 ]);
         } catch (ValidationException $e) {
@@ -213,7 +208,7 @@ class ReplaceScholarMentorTest extends TestCase
         $scholar = create(Scholar::class, 1, [
             'created_at' => now()->subMonths(3),
         ]);
-        $newSupervisorProfile = create(SupervisorProfile::class);
+        $newSupervisorProfile = factory(User::class)->states('supervisor')->create();
 
         $beforeSupervisorReplaceAdvisoryCommittee = $scholar->advisory_committee;
 

@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\Staff;
 
+use App\Models\Cosupervisor;
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -24,22 +26,28 @@ class UpdateScholarRequest extends FormRequest
      */
     public function rules()
     {
-        $rules = [];
-
-        $validCosupervisorTypes = 'App\Models\Cosupervisor,App\Models\SupervisorProfile';
-
-        if ($this->input('cosupervisor_profile_type') === 'App\Models\SupervisorProfile') {
-            $rules['cosupervisor_profile_id'] = 'sometimes|integer|exists:supervisor_profiles,id|Not in:' . $this->input('supervisor_profile_id');
-        } else {
-            $rules['cosupervisor_profile_id'] = 'sometimes|nullable|integer|exists:cosupervisors,id';
-        }
-
         return [
             'first_name' => 'sometimes|required|string',
             'last_name' => 'sometimes|required|string',
             'email' => 'sometimes|required|' . Rule::unique('scholars')->ignore($this->route('scholar')),
-            'supervisor_profile_id' => 'sometimes|required|exists:supervisor_profiles,id',
-            'cosupervisor_profile_type' => 'nullable| in:' . $validCosupervisorTypes,
-        ] + $rules;
+            'supervisor_id' => ['sometimes', 'required', Rule::exists('users', 'id')->where('is_supervisor', true)],
+            'cosupervisor_id' => [
+                'sometimes', 'nullable', 'integer',
+                function ($attribute, $value, $fail) {
+                    $supervisor = $this->route('scholar')->currentSupervisor;
+                    $cosup = Cosupervisor::find($value);
+                    if (! $cosup) {
+                        $fail('Invalid Cosupervior!');
+                    }
+
+                    if (
+                        $cosup->person_type === User::class
+                        && in_array($cosup->person_id, [$this->supervisor_id, $supervisor->id])
+                    ) {
+                        $fail('cosupervisor cannot be same as supervisor');
+                    }
+                },
+            ],
+        ];
     }
 }

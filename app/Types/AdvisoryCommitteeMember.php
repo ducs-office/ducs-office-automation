@@ -3,7 +3,6 @@
 namespace App\Types;
 
 use App\Models\Cosupervisor;
-use App\Models\SupervisorProfile;
 use App\Models\User;
 
 class AdvisoryCommitteeMember

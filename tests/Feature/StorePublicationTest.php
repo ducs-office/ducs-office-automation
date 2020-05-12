@@ -4,8 +4,8 @@ namespace Tests\Feature;
 
 use App\Models\Publication;
 use App\Models\Scholar;
-use App\Models\SupervisorProfile;
 use App\Models\Teacher;
+use App\Models\User;
 use App\Types\CitationIndex;
 use App\Types\PublicationType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -84,8 +84,7 @@ class StorePublicationTest extends TestCase
     /** @test */
     public function journal_publication_of_supervisor_can_be_stored()
     {
-        $supervisorProfile = create(SupervisorProfile::class);
-        $supervisor = $supervisorProfile->supervisor;
+        $supervisor = factory(User::class)->states('supervisor')->create();
 
         $this->signIn($supervisor);
 
@@ -100,12 +99,10 @@ class StorePublicationTest extends TestCase
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'Journal Publication added successfully');
 
-        $this->assertCount(1, Publication::all());
-        $this->assertCount(1, $supervisor->fresh()->supervisorProfile->journals);
-        $this->assertEquals($journal['paper_title'], $supervisor->supervisorProfile->journals->first()->paper_title);
+        $this->assertCount(1, $supervisor->refresh()->journals);
+        $storedJournal = $supervisor->journals->first();
 
-        $storedJournal = $supervisor->supervisorProfile->journals->first();
-
+        $this->assertEquals($journal['paper_title'], $storedJournal->paper_title);
         $this->assertCount(2, $storedJournal->coAuthors);
         $this->assertEquals(
             $journal['co_authors'][0]['name'],
@@ -153,8 +150,7 @@ class StorePublicationTest extends TestCase
     /** @test */
     public function conference_publication_of_supervisor_can_be_stored()
     {
-        $supervisorProfile = create(SupervisorProfile::class);
-        $supervisor = $supervisorProfile->supervisor;
+        $supervisor = factory(User::class)->states('supervisor')->create();
 
         $this->signIn($supervisor);
         $conference = $this->fillPublication([
@@ -168,12 +164,10 @@ class StorePublicationTest extends TestCase
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'Conference Publication added successfully');
 
-        $this->assertCount(1, Publication::all());
-        $this->assertCount(1, $supervisor->fresh()->supervisorProfile->conferences);
-        $this->assertEquals($conference['paper_title'], $supervisor->supervisorProfile->conferences->first()->paper_title);
+        $this->assertCount(1, $supervisor->fresh()->conferences);
+        $storedConference = $supervisor->conferences->first();
 
-        $storedConference = $supervisor->supervisorProfile->conferences->first();
-
+        $this->assertEquals($conference['paper_title'], $storedConference->paper_title);
         $this->assertCount(2, $storedConference->coAuthors);
         $this->assertEquals(
             $conference['co_authors'][0]['name'],

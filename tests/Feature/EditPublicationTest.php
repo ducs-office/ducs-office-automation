@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\Models\Publication;
 use App\Models\Scholar;
-use App\Models\SupervisorProfile;
 use App\Models\Teacher;
 use App\Models\User;
 use App\Types\PublicationType;
@@ -39,8 +38,7 @@ class EditlPublicationTest extends TestCase
     /** @test */
     public function journal_publication_of_supervisor_can_be_edited()
     {
-        $supervisorProfile = create(SupervisorProfile::class);
-        $supervisor = $supervisorProfile->supervisor;
+        $supervisor = factory(User::class)->states('supervisor')->create();
 
         $this->signIn($supervisor);
 
@@ -48,8 +46,8 @@ class EditlPublicationTest extends TestCase
             'type' => PublicationType::JOURNAL,
             'number' => 1234,
             'publisher' => 'O Rielly',
-            'main_author_type' => SupervisorProfile::class,
-            'main_author_id' => $supervisorProfile->id,
+            'main_author_type' => User::class,
+            'main_author_id' => $supervisor->id,
         ]);
 
         $this->withoutExceptionHandling()
@@ -82,8 +80,7 @@ class EditlPublicationTest extends TestCase
     /** @test */
     public function conference_publication_of_supervisor_can_be_edited()
     {
-        $supervisorProfile = create(SupervisorProfile::class);
-        $supervisor = $supervisorProfile->supervisor;
+        $supervisor = factory(User::class)->states('supervisor')->create();
 
         $this->signIn($supervisor);
 
@@ -91,8 +88,8 @@ class EditlPublicationTest extends TestCase
             'type' => PublicationType::CONFERENCE,
             'city' => 'Delhi',
             'country' => 'India',
-            'main_author_type' => SupervisorProfile::class,
-            'main_author_id' => $supervisorProfile->id,
+            'main_author_type' => User::class,
+            'main_author_id' => $supervisor->id,
         ]);
 
         $this->withoutExceptionHandling()

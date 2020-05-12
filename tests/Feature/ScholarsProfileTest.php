@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\Models\Scholar;
 use App\Models\ScholarProfile;
-use App\Models\SupervisorProfile;
 use App\Models\Teacher;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;

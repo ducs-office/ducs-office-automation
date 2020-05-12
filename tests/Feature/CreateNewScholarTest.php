@@ -6,9 +6,10 @@ use App\Mail\FillAdvisoryCommitteeMail;
 use App\Mail\UserRegisteredMail;
 use App\Models\Cosupervisor;
 use App\Models\Scholar;
-use App\Models\SupervisorProfile;
 use App\Models\Teacher;
 use App\Models\User;
+use App\Types\UserCategory;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Mail;
@@ -21,164 +22,111 @@ class CreateNewScholarTest extends TestCase
 
     protected function getScholarFormDetails($overrides = [])
     {
-        $supervisorProfile = create(SupervisorProfile::class);
-        $cosupervisor = create(Cosupervisor::class);
-
         return $this->mergeFormFields([
             'first_name' => 'Pushkar',
             'last_name' => 'Sonkar',
             'email' => 'pushkar@cs.du.ac.in',
             'term_duration' => 5,
-            'supervisor_profile_id' => $supervisorProfile->id,
-            'cosupervisor_profile_id' => $cosupervisor->id,
-            'cosupervisor_profile_type' => Cosupervisor::class,
+            'supervisor_id' => function () {
+                return factory(User::class)->states('supervisor')->create()->id;
+            },
+            'cosupervisor_id' => function () {
+                return create(Cosupervisor::class)->id;
+            },
         ], $overrides);
     }
 
     /** @test */
     public function scholars_can_not_be_created_by_a_guest()
     {
-        $scholar = $this->getScholarFormDetails();
+        $this->expectException(AuthenticationException::class);
 
-        $this->withExceptionHandling()
-            ->post(route('staff.scholars.store'), $scholar)->assertRedirect();
+        $this->withoutExceptionHandling()
+            ->post(route('staff.scholars.store'));
 
         $this->assertEquals(0, Scholar::count());
     }
 
     /** @test */
-    public function scholar_with_cosupervisor_profile_of_cosupervisor_type_can_be_created()
+    public function scholar_created_with_supervisor_and_cosupervisor_and_mail_is_sent_to_scholar_and_supervisor()
     {
         $this->signIn();
 
-        $cosupervisor = create(Cosupervisor::class);
+        $supervisor = factory(User::class)->states('supervisor')->create();
+        $cosupervisor = factory(Cosupervisor::class)->create();
 
-        $scholar = $this->getScholarFormDetails([
-            'cosupervisor_profile_id' => $cosupervisor->id,
-            'cosupervisor_profile_type' => Cosupervisor::class,
+        $scholarParam = $this->getScholarFormDetails([
+            'cosupervisor_id' => $cosupervisor->id,
+            'supervisor_id' => $supervisor->id,
         ]);
 
-        $this->withoutExceptionHandling()
-            ->post(route('staff.scholars.store'), $scholar)
-            ->assertRedirect()
-            ->assertSessionHasFlash('success', 'New scholar added succesfully!');
-
-        $this->assertEquals(1, Scholar::count());
-
-        $this->assertEquals($scholar['first_name'], Scholar::first()->first_name);
-        $this->assertEquals($scholar['last_name'], Scholar::first()->last_name);
-        $this->assertEquals($scholar['email'], Scholar::first()->email);
-        $this->assertEquals($scholar['term_duration'], Scholar::first()->term_duration);
-        $this->assertEquals($cosupervisor->id, Scholar::first()->cosupervisor->id);
-        $this->assertEquals($scholar['supervisor_profile_id'], Scholar::first()->supervisorProfile->id);
-        $this->assertEquals($scholar['cosupervisor_profile_id'], Scholar::first()->cosupervisor_profile_id);
-        $this->assertEquals($scholar['cosupervisor_profile_type'], Scholar::first()->cosupervisor_profile_type);
-    }
-
-    /** @test */
-    public function scholar_with_cosupervisor_profile_of_supervisor_profile_type_can_be_created()
-    {
-        $this->signIn();
-
-        $supervisorProfile = create(SupervisorProfile::class);
-
-        $scholar = $this->getScholarFormDetails([
-            'cosupervisor_profile_id' => $supervisorProfile->id,
-            'cosupervisor_profile_type' => SupervisorProfile::class,
-        ]);
-
-        $this->withoutExceptionHandling()
-            ->post(route('staff.scholars.store'), $scholar)
-            ->assertRedirect()
-            ->assertSessionHasFlash('success', 'New scholar added succesfully!');
-
-        $this->assertEquals(1, Scholar::count());
-
-        $this->assertEquals($scholar['cosupervisor_profile_id'], Scholar::first()->cosupervisor_profile_id);
-        $this->assertEquals($scholar['cosupervisor_profile_type'], Scholar::first()->cosupervisor_profile_type);
-    }
-
-    /** @test */
-    public function credentials_are_sent_via_mail_to_a_registered_scholar()
-    {
         Mail::fake();
 
-        $this->signIn();
-
-        $scholar = $this->getScholarFormDetails();
-
-        $this->withoutExceptionHandling()
-            ->post(route('staff.scholars.store'), $scholar)
+        $this->withExceptionHandling()
+            ->post(route('staff.scholars.store'), $scholarParam)
             ->assertRedirect()
+            ->assertSessionHasNoErrors()
             ->assertSessionHasFlash('success', 'New scholar added succesfully!');
 
-        $scholar = Scholar::first();
+        $scholars = Scholar::query()
+            ->where('first_name', $scholarParam['first_name'])
+            ->where('last_name', $scholarParam['last_name'])
+            ->where('email', $scholarParam['email'])
+            ->where('term_duration', $scholarParam['term_duration'])
+            ->get();
 
-        Mail::assertQueued(UserRegisteredMail::class, function ($mail) use ($scholar) {
+        $this->assertCount(1, $scholars);
+
+        $newSupervisors = $scholars->first()
+            ->supervisors()
+            ->wherePivot('supervisor_id', $supervisor->id)
+            ->wherePivot('started_on', today())
+            ->wherePivot('ended_on', null)
+            ->get();
+
+        $this->assertCount(1, $newSupervisors);
+
+        $cosupervisors = $scholars->first()
+            ->cosupervisors()
+            ->wherePivot('cosupervisor_id', $cosupervisor->id)
+            ->wherePivot('started_on', today())
+            ->whereNull('ended_on')
+            ->get();
+
+        $this->assertCount(1, $cosupervisors);
+
+        Mail::assertQueued(UserRegisteredMail::class, function ($mail) use ($scholars) {
             $data = $mail->build()->viewData;
             $this->assertArrayHasKey('user', $data);
             $this->assertArrayHasKey('password', $data);
-            return (int) $data['user']->id === (int) $scholar->id;
+            return (int) $data['user']->id === (int) $scholars->first()->id;
         });
-    }
 
-    /** @test */
-    public function mail_is_sent_to_supervisor_of_scholar_to_fill_advisory_committee()
-    {
-        Mail::fake();
-
-        $this->signIn();
-
-        $scholar = $this->getScholarFormDetails();
-
-        $this->withoutExceptionHandling()
-            ->post(route('staff.scholars.store'), $scholar)
-            ->assertRedirect()
-            ->assertSessionHasFlash('success', 'New scholar added succesfully!');
-
-        $scholar = Scholar::first();
-
-        Mail::assertQueued(FillAdvisoryCommitteeMail::class, function ($mail) use ($scholar) {
+        Mail::assertQueued(FillAdvisoryCommitteeMail::class, function ($mail) use ($supervisor) {
             $data = $mail->build()->viewData;
             $this->assertArrayHasKey('supervisor', $data);
             $this->assertArrayHasKey('scholarName', $data);
             $this->assertArrayHasKey('deadline', $data);
-            return (int) $data['supervisor']->id === (int) $scholar->supervisor->id;
+            return (int) $data['supervisor']->id === (int) $supervisor->id;
         });
     }
 
     /** @test */
-    public function request_validates_first_name_can_not_be_null()
+    public function request_validates_first_name_and_last_name_are_required()
     {
         $this->signIn();
 
         $scholar = $this->getScholarFormDetails([
             'first_name' => '',
-        ]);
-
-        try {
-            $this->withoutExceptionHandling()
-                ->post(route('staff.scholars.store'), $scholar);
-        } catch (ValidationException $e) {
-            $this->assertArrayHasKey('first_name', $e->errors());
-        }
-
-        $this->assertEquals(0, Scholar::count());
-    }
-
-    /** @test */
-    public function request_validates_last_name_can_not_be_null()
-    {
-        $this->signIn();
-
-        $scholar = $this->getScholarFormDetails([
             'last_name' => '',
         ]);
 
         try {
             $this->withoutExceptionHandling()
                 ->post(route('staff.scholars.store'), $scholar);
+            $this->fail('Validation exception was expected');
         } catch (ValidationException $e) {
+            $this->assertArrayHasKey('first_name', $e->errors());
             $this->assertArrayHasKey('last_name', $e->errors());
         }
 
@@ -199,6 +147,7 @@ class CreateNewScholarTest extends TestCase
         try {
             $this->withoutExceptionHandling()
                 ->post(route('staff.scholars.store'), $scholar);
+            $this->fail('Validation exception was expected');
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('email', $e->errors());
         }
@@ -207,17 +156,17 @@ class CreateNewScholarTest extends TestCase
     }
 
     /** @test */
-    public function request_validates_cosupervisor_profile_id_can_be_null()
+    public function request_validates_cosupervisor_id_is_optional()
     {
         $this->signIn();
 
         $scholar = $this->getScholarFormDetails([
-            'cosupervisor_profile_id' => null,
-            'cosupervisor_profile_type' => null,
+            'cosupervisor_id' => null,
         ]);
 
         $this->withoutExceptionHandling()
-            ->post(route('staff.scholars.store'), $scholar);
+            ->post(route('staff.scholars.store'), $scholar)
+            ->assertSessionHasNoErrors();
 
         $this->assertNull(Scholar::first()->cosupervisor);
     }
@@ -227,43 +176,43 @@ class CreateNewScholarTest extends TestCase
     {
         $this->signIn();
 
-        $supervisorProfile = create(SupervisorProfile::class);
+        $supervisor = factory(User::class)->states('supervisor')->create();
+        $cosupervisorWhoIsSupervisor = create(Cosupervisor::class, 1, [
+            'person_type' => User::class,
+            'person_id' => $supervisor->id,
+        ]);
 
         $scholar = $this->getScholarFormDetails([
-            'supervisor_profile_id' => $supervisorProfile->id,
-            'cosupervisor_profile_type' => SupervisorProfile::class,
-            'cosupervisor_profile_id' => $supervisorProfile->id,
+            'supervisor_id' => $supervisor->id,
+            'cosupervisor_id' => $cosupervisorWhoIsSupervisor->id,
         ]);
 
         try {
             $this->withoutExceptionHandling()
                 ->post(route('staff.scholars.store'), $scholar);
+            $this->fail('Validation exception was expected.');
         } catch (ValidationException $e) {
-            $this->assertArrayHasKey('cosupervisor_profile_id', $e->errors());
+            $this->assertArrayHasKey('cosupervisor_id', $e->errors());
         }
 
         $this->assertEquals(0, Scholar::count());
     }
 
     /** @test */
-    public function request_validates_supervisor_profile_id_is_required()
+    public function request_validates_supervisor_id_is_required()
     {
         $this->signIn();
 
         $cosupervisor = create(Cosupervisor::class);
 
-        try {
-            $this->withoutExceptionHandling()
-                ->post(route('staff.scholars.store'), [
-                    'first_name' => 'Pushkar',
-                    'last_name' => 'Sonkar',
-                    'email' => 'pushkar@cs.du.ac.in',
-                    'cosupervisor_profile_id' => $cosupervisor->id,
-                    'cosupervisor_profile_type' => Cosupervisor::class,
-                ]);
-        } catch (ValidationException $e) {
-            $this->assertArrayHasKey('supervisor_profile_id', $e->errors());
-        }
+        $this->withExceptionHandling()
+            ->post(route('staff.scholars.store'), [
+                'first_name' => 'Pushkar',
+                'last_name' => 'Sonkar',
+                'email' => 'pushkar@cs.du.ac.in',
+                'cosupervisor_id' => $cosupervisor->id,
+            ])
+            ->assertSessionHasErrors('supervisor_id');
 
         $this->assertEquals(0, Scholar::count());
     }

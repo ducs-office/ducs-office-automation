@@ -17,9 +17,8 @@ class ShowPublications extends Controller
     public function __invoke(Request $request)
     {
         $supervisor = $request->user()->load([
-            'supervisorProfile',
-            'supervisorProfile.journals',
-            'supervisorProfile.conferences',
+            'journals',
+            'conferences',
         ]);
 
         return view('research.publications.index', [

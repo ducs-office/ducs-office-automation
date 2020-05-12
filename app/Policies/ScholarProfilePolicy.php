@@ -12,9 +12,9 @@ class ScholarProfilePolicy
 
     public function addCoursework($user, Scholar $scholar)
     {
-        return method_exists($user, 'isSupervisor') &&
+        return get_class($user) === User::class &&
             $user->isSupervisor() &&
-            $user->supervisorProfile->scholars->contains($scholar);
+            (int) $user->id === (int) $scholar->currentSupervisor->id;
     }
 
     public function applyLeaves($user, Scholar $scholar)
@@ -30,15 +30,15 @@ class ScholarProfilePolicy
 
     public function addAdvisoryMeeting($user, Scholar $scholar)
     {
-        return method_exists($user, 'isSupervisor') &&
+        return get_class($user) === User::class &&
             $user->isSupervisor() &&
-            $user->supervisorProfile->scholars->contains($scholar);
+            (int) $user->id === (int) $scholar->currentSupervisor->id;
     }
 
     public function manageAdvisoryCommittee($user, Scholar $scholar)
     {
-        return method_exists($user, 'isSupervisor') &&
+        return get_class($user) === User::class &&
             $user->isSupervisor() &&
-            $user->supervisorProfile->scholars->contains($scholar);
+            (int) $user->id === (int) $scholar->currentSupervisor->id;
     }
 }

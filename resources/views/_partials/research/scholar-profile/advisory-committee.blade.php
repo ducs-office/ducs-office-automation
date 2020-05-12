@@ -32,7 +32,8 @@
         @include('research.scholars.partials.advisory_committee',[
             'advisoryCommittee' => $scholar->advisory_committee
         ])
-        @foreach ($scholar->old_advisory_committees as $oldCommittee)
+        {{-- TODO: Show History here --}}
+        {{-- @foreach ($scholar->old_advisory_committees as $oldCommittee)
         <details class="mt-1">
             <summary class="p-2 bg-gray-200 rounded">
                 {{ $oldCommittee['from_date']->format('d F Y') }} - {{ $oldCommittee['to_date']->format('d F Y') }}
@@ -43,6 +44,6 @@
                 ])
             </div>
         </details>
-        @endforeach
+        @endforeach --}}
     </div>
 </div>

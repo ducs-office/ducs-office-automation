@@ -43,13 +43,10 @@ class UserController extends Controller
             'email' => $request->email,
             'category' => $request->category,
             'password' => bcrypt($plain_password),
+            'is_supervisor' => $request->is_supervisor ?? false,
         ]);
 
         $user->syncRoles($request->roles);
-
-        if ($request->is_supervisor) {
-            $user->supervisorProfile()->create();
-        }
 
         DB::commit();
 
@@ -64,14 +61,12 @@ class UserController extends Controller
     {
         DB::beginTransaction();
 
+        $data = $request->validated();
+
         $user->update($request->validated());
 
         if ($request->has('roles')) {
             $user->syncRoles($request->roles);
-        }
-
-        if ($request->is_supervisor && ! $user->isSupervisor()) {
-            $user->supervisorProfile()->create();
         }
 
         DB::commit();

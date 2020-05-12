@@ -2,8 +2,6 @@
 
 namespace App\Concerns;
 
-use App\Models\SupervisorProfile;
-
 trait SupervisesScholars
 {
     public function supervisorProfile()

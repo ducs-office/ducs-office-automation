@@ -14,6 +14,7 @@ use App\Models\Cosupervisor;
 use App\Models\PhdCourse;
 use App\Models\Scholar;
 use App\Models\SupervisorProfile;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -29,8 +30,8 @@ class ScholarController extends Controller
     {
         return view('staff.scholars.index', [
             'scholars' => Scholar::all(),
-            'supervisors' => SupervisorProfile::all()->pluck('id', 'supervisor.name'),
-            'cosupervisors' => Cosupervisor::all()->pluck('id', 'name', 'email'),
+            'supervisors' => User::where('is_supervisor', true)->get()->pluck('id', 'name'),
+            'cosupervisors' => Cosupervisor::all()->pluck('id', 'person.name'),
         ]);
     }
 
@@ -57,6 +58,8 @@ class ScholarController extends Controller
         $plainPassword = Str::random(8);
 
         $scholar = Scholar::create($validData + ['password' => bcrypt($plainPassword)]);
+        $scholar->supervisors()->attach($request->supervisor_id);
+        $scholar->cosupervisors()->attach($request->cosupervisor_id);
 
         event(new ScholarCreated($scholar, $plainPassword));
 
@@ -70,6 +73,24 @@ class ScholarController extends Controller
         $validData = $request->validated();
 
         $scholar->update($validData);
+
+        if (
+            $request->supervisor_id !== null &&
+            (int) $request->supervisor_id !== (int) $scholar->currentSupervisor->id
+        ) {
+            $scholar->supervisors()->wherePivot('ended_on', null)->sync([
+                $request->supervisor_id => ['started_on' => $scholar->currentSupervisor->pivot->started_on],
+            ]);
+        }
+
+        if (
+            $request->cosupervisor_id !== null &&
+            (int) $request->cosupervisor_id !== (int) $scholar->currentCosupervisor->id
+        ) {
+            $scholar->cosupervisors()->wherePivot('ended_on', null)->sync([
+                $request->cosupervisor_id => ['started_on' => $scholar->currentCosupervisor->pivot->started_on],
+            ]);
+        }
 
         flash('Scholar updated successfully!')->success();
 

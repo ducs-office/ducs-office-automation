@@ -4,7 +4,6 @@ namespace App\Policies;
 
 use App\Models\Publication;
 use App\Models\Scholar;
-use App\Models\SupervisorProfile;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Support\Facades\Auth;
@@ -22,10 +21,8 @@ class PublicationPolicy
      */
     public function viewAny($user)
     {
-        return (Auth::guard('scholars')->check() || (
-            method_exists($user, 'isSupervisor') &&
-            $user->isSupervisor()
-        ));
+        return get_class($user) === Scholar::class ||
+            (get_class($user) === User::class && $user->isSupervisor());
     }
 
     /**
@@ -37,10 +34,8 @@ class PublicationPolicy
      */
     public function create($user)
     {
-        return (Auth::guard('scholars')->check() || (
-            method_exists($user, 'isSupervisor') &&
-            $user->isSupervisor()
-        ));
+        return get_class($user) === Scholar::class ||
+            (get_class($user) === User::class && $user->isSupervisor());
     }
 
     /**
@@ -53,12 +48,8 @@ class PublicationPolicy
      */
     public function update($user, Publication $publication)
     {
-        if ($publication->main_author_type === SupervisorProfile::class) {
-            return (int) $publication->main_author_id === (int) optional($user->supervisorProfile)->id;
-        }
-
         return  $publication->main_author_type === get_class($user)
-                && (int) $publication->main_author_id === (int) $user->id;
+            && (int) $publication->main_author_id === (int) $user->id;
     }
 
     /**
@@ -71,11 +62,7 @@ class PublicationPolicy
      */
     public function delete($user, Publication $publication)
     {
-        if ($publication->main_author_type === SupervisorProfile::class) {
-            return (int) $publication->main_author_id === (int) optional($user->supervisorProfile)->id;
-        }
-
         return  $publication->main_author_type === get_class($user)
-                && (int) $publication->main_author_id === (int) $user->id;
+            && (int) $publication->main_author_id === (int) $user->id;
     }
 }

@@ -259,3 +259,7 @@ Route::prefix('/scholars')
             'ProposedTitleController@update',
         )->name('proposed_title.update');
     });
+
+Route::get('/external-authorities', 'ExternalAuthorityController@index')->name('external-authority.index');
+Route::post('/external-authorities', 'ExternalAuthorityController@store')->name('external-authority.store');
+Route::patch('/external-authorities/{externalAuthority}', 'ExternalAuthorityController@update')->name('external-authority.update');

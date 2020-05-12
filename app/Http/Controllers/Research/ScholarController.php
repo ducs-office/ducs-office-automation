@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Cosupervisor;
 use App\Models\PhdCourse;
 use App\Models\Scholar;
-use App\Models\SupervisorProfile;
 use App\Models\User;
 use App\Types\AdmissionMode;
 use App\Types\AdvisoryCommitteeMember;
@@ -25,12 +24,12 @@ class ScholarController extends Controller
 
     public function index(Request $request)
     {
-        $profile = $request->user()->supervisorProfile;
+        $user = $request->user();
 
-        if (! $profile) {
+        if (! $user->isSupervisor()) {
             $scholars = Scholar::all();
         } else {
-            $scholars = $profile->scholars;
+            $scholars = $user->scholars;
         }
 
         return view('research.scholars.index', [

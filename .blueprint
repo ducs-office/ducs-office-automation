@@ -1,0 +1,12 @@
+created:
+    - database/migrations/2020_05_11_172600_create_external_authorities_table.php
+    - app/ExternalAuthority.php
+    - database/factories/ExternalAuthorityFactory.php
+    - app/Http/Controllers/ExternalAuthorityController.php
+    - app/Http/Requests/ExternalAuthorityStoreRequest.php
+    - resources/views/external-authority/index.blade.php
+    - tests/Feature/Http/Controllers/ExternalAuthorityControllerTest.php
+updated:
+    - routes/web.php
+models:
+    ExternalAuthority: { name: 'string:191', email: 'string:191', designation: 'string:191', affiliation: 'string:191', phone: 'nullable string:10' }

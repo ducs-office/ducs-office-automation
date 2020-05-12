@@ -25,7 +25,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name', 'email', 'password', 'category',
         'phone', 'address', 'college_id', 'designation',
-        'status', 'avatar_path',
+        'status', 'avatar_path', 'is_supervisor',
     ];
 
     /**
@@ -47,8 +47,8 @@ class User extends Authenticatable
         'category' => CustomType::class . ':' . UserCategory::class,
         'designation' => CustomType::class . ':' . Designation::class,
         'status' => CustomType::class . ':' . TeacherStatus::class,
-        'is_admin' => 'boolean',
         'is_supervisor' => 'boolean',
+        'is_admin' => 'boolean',
     ];
 
     protected static function boot()
@@ -58,6 +58,16 @@ class User extends Authenticatable
         static::deleting(static function ($user) {
             $user->roles()->sync([]);
             $user->remarks()->update(['user_id' => null]);
+        });
+
+        static::saved(function ($user) {
+            if ($user->isSupervisor()) {
+                Cosupervisor::create([
+                    'is_supervisor' => true,
+                    'person_type' => User::class,
+                    'person_id' => $user->id,
+                ]);
+            }
         });
     }
 
@@ -93,9 +103,19 @@ class User extends Authenticatable
             && $this->teachingDetails->count() > 0;
     }
 
+    public function scopeFacultyTeachers(Builder $builder)
+    {
+        return $builder->where('category', UserCategory::FACULTY_TEACHER);
+    }
+
     public function scopeCollegeTeachers(Builder $builder)
     {
         return $builder->where('category', UserCategory::COLLEGE_TEACHER);
+    }
+
+    public function scopeAllTeachers(Builder $builder)
+    {
+        return $builder->whereIn('category', [UserCategory::FACULTY_TEACHER, UserCategory::COLLEGE_TEACHER]);
     }
 
     public function remarks()
@@ -131,24 +151,9 @@ class User extends Authenticatable
         ]);
     }
 
-    public function supervisorProfile()
-    {
-        return $this->hasOne(SupervisorProfile::class, 'supervisor_id');
-    }
-
     public function isSupervisor()
     {
-        return $this->supervisorProfile !== null;
-    }
-
-    public function cosupervisorProfile()
-    {
-        return $this->hasOne(Cosupervisor::class);
-    }
-
-    public function isCosupervisor()
-    {
-        return $this->cosupervisorProfile !== null;
+        return $this->is_supervisor === true;
     }
 
     public function college()
@@ -164,5 +169,15 @@ class User extends Authenticatable
     public function teachingRecords()
     {
         return $this->hasMany(TeachingRecord::class, 'teacher_id')->orderBy('valid_from', 'desc');
+    }
+
+    public function scholars()
+    {
+        return $this->belongsToMany(Scholar::class, 'scholar_supervisor', 'supervisor_id');
+    }
+
+    public function getAffiliationAttribute()
+    {
+        return optional($this->college)->name ?? 'Unknown';
     }
 }

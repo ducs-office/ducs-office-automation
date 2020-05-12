@@ -8,22 +8,13 @@
             <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
         </svg>
     </div>
-    <ul class="flex flex-col-reverse mt-4 flex-1 border rounded-lg overflow-hidden divide-y divide-y-reverse">
-        @php($sinceDate = $scholar->registerOn)
-        @foreach ($scholar->old_supervisors as $old_supervisor)
+    <ul class="flex flex-col mt-4 flex-1 border rounded-lg overflow-hidden divide-y divide-y-reverse">
+        @foreach ($scholar->supervisors as $supervisor)
             <li class="px-5 p-2">
                 @include('research.scholars.partials.supervisor', [
-                    'supervisor' => (object)$old_supervisor,
-                    'sinceDate' => $sinceDate
+                    'supervisor' => $supervisor
                 ])
             </li>
-            @php($sinceDate = $old_supervisor['date'])
         @endforeach
-        <li class="px-5 p-2">
-            @include('research.scholars.partials.supervisor', [
-                'supervisor' => $scholar->supervisor,
-                'sinceDate' => $sinceDate
-            ])
-        </li>
     </ul>
 </div>

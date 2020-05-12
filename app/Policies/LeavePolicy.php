@@ -49,7 +49,7 @@ class LeavePolicy
         return $leave->status === LeaveStatus::APPLIED
             && method_exists($user, 'isSupervisor')
             && $user->isSupervisor()
-            && $user->supervisorProfile->scholars->contains($leave->scholar_id);
+            && $supervisor->scholars->contains($leave->scholar_id);
     }
 
     /**

@@ -40,11 +40,7 @@ class ConferencePublicationController extends Controller
         $validData['type'] = PublicationType::CONFERENCE;
         $validData['date'] = new Carbon($date);
 
-        if (Auth::guard('scholars')->check()) {
-            $publication = $user->publications()->create($validData);
-        } else {
-            $publication = $user->supervisorProfile->publications()->create($validData);
-        }
+        $publication = $user->publications()->create($validData);
 
         if ($request->has('co_authors')) {
             $publication->coAuthors()->createMany(

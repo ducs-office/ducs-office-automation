@@ -34,6 +34,7 @@ class UpdateUserRequest extends FormRequest
             'roles' => ['sometimes', 'required', 'array', 'min:1'],
             'roles.*' => ['sometimes', 'required', 'integer', 'exists:roles,id'],
             'category' => ['sometimes', Rule::in(UserCategory::values())],
+            'is_supervisor' => ['sometimes'],
         ];
     }
 }

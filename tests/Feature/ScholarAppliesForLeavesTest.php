@@ -17,15 +17,14 @@ class ScholarAppliesForLeavesTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function supervisor_adds_applied_leave_for_scholar()
+    public function scholar_applies_for_leaves()
     {
         Storage::fake();
         $fakeFile = UploadedFile::fake()->create('fakefile.pdf', 20, 'application/pdf');
 
-        $teacher = create(User::class);
-        $supervisorProfile = $teacher->supervisorProfile()->create();
-
-        $scholar = create(Scholar::class, 1, ['supervisor_profile_id' => $supervisorProfile->id]);
+        $supervisor = factory(User::class)->states('supervisor')->create();
+        $scholar = create(Scholar::class);
+        $scholar->supervisors()->attach($supervisor);
 
         $this->signInScholar($scholar);
 

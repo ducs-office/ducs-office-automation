@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Models\SupervisorProfile;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -27,8 +26,7 @@ class CreatePublicationTest extends TestCase
     /** @test */
     public function journal_publication_of_supervisor_can_be_created()
     {
-        $supervisorProfile = create(SupervisorProfile::class);
-        $supervisor = $supervisorProfile->supervisor;
+        $supervisor = factory(User::class)->states('supervisor')->create();
 
         $this->signIn($supervisor);
 
@@ -54,8 +52,7 @@ class CreatePublicationTest extends TestCase
     /** @test */
     public function conference_publication_of_supervisor_can_be_created()
     {
-        $supervisorProfile = create(SupervisorProfile::class);
-        $supervisor = $supervisorProfile->supervisor;
+        $supervisor = factory(User::class)->states('supervisor')->create();
 
         $this->signIn($supervisor);
 
