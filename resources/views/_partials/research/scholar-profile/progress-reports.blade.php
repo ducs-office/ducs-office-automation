@@ -31,7 +31,7 @@
                             </span>
                             @can('delete', $progressReport)
                             <form method="POST" action="{{ route('scholars.progress_reports.destroy', [$scholar, $progressReport]) }}"
-                                onsubmit="return confirm('Do you really want to delete this conference?');">
+                                onsubmit="return confirm('Do you really want to delete this preogress report?');">
                                 @csrf_token
                                 @method('DELETE')
                                 <button type="submit" class="p-1 hover:bg-gray-200 text-red-700 rounded">

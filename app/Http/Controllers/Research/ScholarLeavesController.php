@@ -32,7 +32,7 @@ class ScholarLeavesController extends Controller
         $this->authorize('respond', $leave);
 
         $request->validate([
-            'response' => ['required', Rule::in(LeaveStatus::values())],
+            'response' => ['required', Rule::in([LeaveStatus::APPROVED, LeaveStatus::REJECTED])],
             'response_letter' => ['required', 'file', 'mimetypes:application/pdf,image/*', 'max:200'],
         ]);
 
