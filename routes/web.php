@@ -194,14 +194,18 @@ Route::prefix('/research')
         )->name('publications.index');
 
         Route::patch(
-            '/scholars/{scholar}/advisory-committee',
-            'ScholarController@updateAdvisoryCommittee'
-        )->name('scholars.advisory_committee.update');
+            '/scholars/{scholar}/advisors',
+            'ScholarController@updateAdvisors'
+        )->name('scholars.advisors.update');
+        Route::patch(
+            '/scholars/{scholar}/advisors',
+            'ScholarController@updateAdvisors'
+        )->name('scholars.advisors.update');
 
         Route::patch(
-            '/scholars/{scholar}/replace-advisory-committee',
+            '/scholars/{scholar}/advisors/replace',
             'ScholarController@replaceAdvisoryCommittee'
-        )->name('scholars.advisory_committee.replace');
+        )->name('scholars.advisors.replace');
     });
 
 Route::prefix('/teachers')

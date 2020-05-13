@@ -106,25 +106,29 @@ class ScholarController extends Controller
         return redirect(route('staff.scholars.index'));
     }
 
-    public function replaceCosupervisor(Scholar $scholar, ReplaceScholarCosupervisorRequest $request)
+    public function replaceCosupervisor(Request $request, Scholar $scholar)
     {
-        $validCosupervisor = $request->validated();
+        $supervisorsCosupervisorProfile = Cosupervisor::query()
+            ->where('person_type', User::class)
+            ->where('person_id', $scholar->currentSupervisor->id)
+            ->first();
 
-        $oldCosupervisor = $scholar->cosupervisor;
+        $scholarCosupervisor = optional($scholar->currentCosupervisor);
+        $conflicts = [
+            $supervisorsCosupervisorProfile->id,
+            $scholarCosupervisor->id,
+        ];
 
-        $oldCosupervisors = $scholar->old_cosupervisors;
-
-        array_push($oldCosupervisors, [
-            'name' => ($oldCosupervisor) ? $oldCosupervisor->name : null,
-            'email' => ($oldCosupervisor) ? $oldCosupervisor->email : null,
-            'designation' => ($oldCosupervisor) ? $oldCosupervisor->designation : null,
-            'affiliation' => ($oldCosupervisor) ? $oldCosupervisor->affiliation : null,
-            'date' => now()->format('d F Y'),
+        $request->validate([
+            'cosupervisor_id' => ['required', 'integer', Rule::notIn($conflicts), 'exists:cosupervisors,id'],
         ]);
 
-        $this->rememberOldAdvisoryCommittee($scholar);
+        if ($scholar->currentCosupervisor) {
+            $scholar->currentCosupervisor->pivot
+                ->update(['ended_on' => today()]);
+        }
 
-        $scholar->update($validCosupervisor + ['old_cosupervisors' => $oldCosupervisors]);
+        $scholar->cosupervisors()->attach($request->cosupervisor_id);
 
         flash('Co-Supervisor replaced successfully!')->success();
 
@@ -133,22 +137,18 @@ class ScholarController extends Controller
 
     public function replaceSupervisor(Scholar $scholar, Request $request)
     {
-        $validSupervisorProfileId = $request->validate([
-            'supervisor_profile_id' => 'required|exists:supervisor_profiles,id|not In:' . $scholar->supervisor_profile_id,
+        $request->validate([
+            'supervisor_id' => [
+                'required', Rule::exists('users', 'id')
+                    ->whereNot('id', $scholar->currentSupervisor->id)
+                    ->where('is_supervisor', true),
+            ],
         ]);
 
-        $oldSupervisor = $scholar->supervisor;
-        $oldSupervisors = $scholar->old_supervisors;
+        $scholar->currentSupervisor->pivot
+            ->update(['ended_on' => today()]);
 
-        array_push($oldSupervisors, [
-            'name' => $oldSupervisor->name,
-            'email' => $oldSupervisor->email,
-            'date' => now()->format('d F Y'),
-        ]);
-
-        $this->rememberOldAdvisoryCommittee($scholar);
-
-        $scholar->update($validSupervisorProfileId + ['old_supervisors' => $oldSupervisors]);
+        $scholar->supervisors()->attach($request->supervisor_id);
 
         flash('Supervisor replaced successfully!')->success();
 

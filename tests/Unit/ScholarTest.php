@@ -12,6 +12,7 @@ use App\Models\Presentation;
 use App\Models\ProgressReport;
 use App\Models\Publication;
 use App\Models\Scholar;
+use App\Models\ScholarAdvisor;
 use App\Models\ScholarAppeal;
 use App\Models\ScholarDocument;
 use App\Models\ScholarEducationDegree;
@@ -157,75 +158,63 @@ class ScholarTest extends TestCase
     }
 
     /** @test */
-    public function scholar_has_many_external_advisors()
+    public function scholar_has_many_scholar_advisors()
     {
         $scholar = create(Scholar::class);
 
-        $this->assertInstanceOf(MorphToMany::class, $scholar->externalAdvisors());
+        $this->assertInstanceOf(HasMany::class, $scholar->advisors());
 
-        $externalAuthority = create(ExternalAuthority::class, 2);
+        $cosupervisor = create(Cosupervisor::class, ['person_type' => User::class]);
+        $external = create(ExternalAuthority::class);
 
-        $scholar->externalAdvisors()->attach($externalAuthority);
-        $scholar->refresh();
-
-        $this->assertCount(2, $scholar->externalAdvisors);
-    }
-
-    /** @test */
-    public function scholar_has_many_user_advisors()
-    {
-        $scholar = create(Scholar::class);
-
-        $this->assertInstanceOf(MorphToMany::class, $scholar->userAdvisors());
-
-        $facultyTeachers = factory(User::class, 2)->states('faculty')->create();
-
-        $scholar->userAdvisors()->attach($facultyTeachers);
-        $scholar->refresh();
-
-        $this->assertCount(2, $scholar->userAdvisors);
-    }
-
-    /** @test */
-    public function scholar_has_many_advisors_external_user_merged()
-    {
-        $scholar = create(Scholar::class);
-
-        $this->assertInstanceOf(MorphToMany::class, $scholar->userAdvisors());
-
-        $facultyTeachers = factory(User::class, 2)->states('faculty')->create();
-        $externalAuthorities = create(ExternalAuthority::class, 2);
-        $scholar->userAdvisors()->attach($facultyTeachers);
-        $scholar->externalAdvisors()->attach($externalAuthorities);
-
-        $scholar->refresh();
-
-        $this->assertCount(4, $scholar->advisors);
-    }
-
-    /** @test */
-    public function scholar_has_many_current_advisors_external_user_merged()
-    {
-        $scholar = create(Scholar::class);
-
-        $this->assertInstanceOf(MorphToMany::class, $scholar->userAdvisors());
-
-        $facultyTeachers = factory(User::class, 2)->states('faculty')->create();
-        $externalAuthorities = create(ExternalAuthority::class, 2);
-        $scholar->userAdvisors()->attach([
-            $facultyTeachers[0]->id => ['started_on' => today()->subMonths(8), 'ended_on' => today()->subMonths(3)],
-            $facultyTeachers[1]->id => ['started_on' => today()->subMonths(3), 'ended_on' => null],
+        $scholar->advisors()->createMany([
+            [
+                'advisor_type' => $cosupervisor->person_type,
+                'advisor_id' => $cosupervisor->person_id,
+            ],
+            [
+                'advisor_type' => ExternalAuthority::class,
+                'advisor_id' => $external->id,
+            ],
         ]);
-        $scholar->externalAdvisors()->attach([
-            $externalAuthorities[0]->id => ['started_on' => today()->subMonths(8), 'ended_on' => today()->subMonths(4)],
-            $externalAuthorities[1]->id => ['started_on' => today()->subMonths(4), 'ended_on' => null],
-        ]);
+
+        $scholar->refresh();
+        $this->assertCount(2, $scholar->advisors);
+        $this->assertInstanceOf(ScholarAdvisor::class, $scholar->advisors->first());
+    }
+
+    /** @test */
+    public function scholar_has_many_current_scholar_advisors()
+    {
+        $scholar = create(Scholar::class);
+
+        $this->assertInstanceOf(HasMany::class, $scholar->currentAdvisors());
+
+        $oldAdvisors = create(Cosupervisor::class, 2)
+            ->map(function ($cosup) {
+                return [
+                    'advisor_type' => $cosup->person_type,
+                    'advisor_id' => $cosup->person_id,
+                    'started_on' => today()->subMonths(10),
+                    'ended_on' => today()->subMonths(5),
+                ];
+            })->toArray();
+        $oldAdvisors = $scholar->advisors()->createMany($oldAdvisors);
+
+        $currentAdvisors = create(Cosupervisor::class, 2)
+            ->map(function ($cosup) {
+                return [
+                    'advisor_type' => $cosup->person_type,
+                    'advisor_id' => $cosup->person_id,
+                    'started_on' => today()->subMonths(5),
+                ];
+            })->toArray();
+        $currentAdvisors = $scholar->advisors()->createMany($currentAdvisors);
 
         $scholar->refresh();
 
         $this->assertCount(2, $scholar->currentAdvisors);
-        $this->assertEquals($facultyTeachers[1]->id, $scholar->currentAdvisors[0]->id);
-        $this->assertEquals($externalAuthorities[1]->id, $scholar->currentAdvisors[1]->id);
+        $this->assertEquals($currentAdvisors->pluck('id')->toArray(), $scholar->currentAdvisors->pluck('id')->toArray());
     }
 
     /** @test */

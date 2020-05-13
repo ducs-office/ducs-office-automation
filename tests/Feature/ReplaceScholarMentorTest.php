@@ -4,7 +4,9 @@ namespace Tests\Feature;
 
 use App\Models\Cosupervisor;
 use App\Models\Scholar;
+use App\Models\User;
 use Carbon\Carbon;
+use CreateCosupervisorsTable;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Carbon as SupportCarbon;
@@ -16,255 +18,163 @@ class ReplaceScholarMentorTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function co_supervisor_of_scholar_can_be_replaced()
+    public function scholars_co_supervisor_is_replaced_while_keeping_the_history()
+    {
+        $scholar = create(Scholar::class);
+        $scholar->supervisors()->attach(
+            factory(User::class)->states('supervisor')->create()
+        );
+        $scholar->cosupervisors()->attach(
+            create(Cosupervisor::class)
+        );
+        $exisitngCosupervisor = create(Cosupervisor::class);
+
+        $this->signIn();
+
+        $this->withoutExceptionHandling()
+            ->patch(route('staff.scholars.cosupervisor.replace', $scholar), [
+                'cosupervisor_id' => $exisitngCosupervisor->id,
+            ])
+            ->assertSessionHasFlash('success', 'Co-Supervisor replaced successfully!');
+
+        $oldCosupervisors = $scholar->cosupervisors()
+            ->wherePivot('ended_on', today())
+            ->get();
+
+        $newCosupervisors = $scholar->cosupervisors()
+            ->wherePivot('ended_on', null)
+            ->wherePivot('started_on', today())
+            ->where('cosupervisor_id', $exisitngCosupervisor->id)
+            ->get();
+
+        $this->assertCount(1, $oldCosupervisors);
+        $this->assertCount(1, $newCosupervisors);
+    }
+
+    /** @test */
+    public function scholars_cosupervisor_can_be_replaced_even_when_there_is_no_cosupervisor_assigned()
+    {
+        $scholar = create(Scholar::class);
+        $scholar->supervisors()->attach(
+            factory(User::class)->states('supervisor')->create()
+        );
+        $exisitngCosupervisor = create(Cosupervisor::class);
+        // No cosupervisor assigned already
+        // $scholar->cosupervisors()->attach(
+        //     create(Cosupervisor::class)
+        // );
+
+        $this->signIn();
+
+        $this->withoutExceptionHandling()
+            ->patch(route('staff.scholars.cosupervisor.replace', $scholar), [
+                'cosupervisor_id' => $exisitngCosupervisor->id,
+            ])
+            ->assertSessionHasFlash('success', 'Co-Supervisor replaced successfully!');
+
+        $this->assertCount(1, $scholar->fresh()->cosupervisors); // Only one new Cosupervisor
+
+        $newCosupervisors = $scholar->cosupervisors()
+            ->wherePivot('ended_on', null)
+            // start date is recorded from today so that we know a term when there was no cosupervisor assigned.
+            ->wherePivot('started_on', today())
+            ->where('cosupervisor_id', $exisitngCosupervisor->id)
+            ->get();
+
+        $this->assertCount(1, $newCosupervisors);
+    }
+
+    /** @test */
+    public function cosupervisor_of_scholar_cannot_be_replaced_if_cosupervisor_is_same_as_previous_cosupervisor_or_current_supervisor()
     {
         $this->signIn();
+        $supervisor = factory(User::class)->states('supervisor')->create();
+        $cosupervisor = create(Cosupervisor::class);
         $scholar = create(Scholar::class);
+        $scholar->supervisors()->attach($supervisor);
+        $scholar->cosupervisors()->attach($cosupervisor);
 
-        $oldCosupervisor = $scholar->cosupervisor;
-        $newCosupervisor = create(Cosupervisor::class);
+        try {
+            $this->withoutExceptionHandling()
+                ->patch(route('staff.scholars.cosupervisor.replace', $scholar), [
+                    'cosupervisor_id' => $cosupervisor->id,
+                ]);
+            $this->fail('Cosupervisor was allowed to replace with the same current cosupervisor. Validation Error was expected.');
+        } catch (ValidationException $e) {
+            $this->assertArrayHasKey('cosupervisor_id', $e->errors());
+        }
+        $this->assertCount(1, $scholar->fresh()->cosupervisors);
 
-        $this->withoutExceptionHandling()
-            ->patch(route('staff.scholars.replace_cosupervisor', $scholar), [
-                'cosupervisor_profile_type' => Cosupervisor::class,
-                'cosupervisor_profile_id' => $newCosupervisor->id,
-            ])
-            ->assertSessionHasFlash('success', 'Co-Supervisor replaced successfully!');
+        // Now try replacing with current supervisor's cosupervisor id.
+        $cosupervisorForCurrentSupervisor = Cosupervisor::query()
+            ->where('person_type', User::class)
+            ->where('person_id', $supervisor->id)
+            ->firstOrFail();
 
-        $this->assertEquals(1, count($scholar->fresh()->old_cosupervisors));
+        try {
+            $this->withoutExceptionHandling()
+                ->patch(route('staff.scholars.cosupervisor.replace', $scholar), [
+                    'cosupervisor_id' => $cosupervisorForCurrentSupervisor->id,
+                ]);
+            $this->fail('cosupervisor was allowed to replace with the current supervisor. Validation Errror was expected');
+        } catch (ValidationException $e) {
+            $this->assertArrayHasKey('cosupervisor_id', $e->errors());
+        }
 
-        $this->assertEquals($oldCosupervisor->name, $scholar->fresh()->old_cosupervisors[0]['name']);
-        $this->assertEquals($oldCosupervisor->email, $scholar->fresh()->old_cosupervisors[0]['email']);
-        $this->assertEquals($oldCosupervisor->designation, $scholar->fresh()->old_cosupervisors[0]['designation']);
-        $this->assertEquals($oldCosupervisor->affiliation, $scholar->fresh()->old_cosupervisors[0]['affiliation']);
-        $this->assertEquals(now()->format('d F Y'), $scholar->fresh()->old_cosupervisors[0]['date']);
-
-        $this->assertTrue($newCosupervisor->is($scholar->fresh()->cosupervisor));
-
-        $newCosupervisor = factory(User::class)->states('supervisor')->create();
-
-        $this->withoutExceptionHandling()
-            ->patch(route('staff.scholars.replace_cosupervisor', $scholar), [
-                'cosupervisor_profile_id' => $newCosupervisor->id,
-            ])
-            ->assertSessionHasFlash('success', 'Co-Supervisor replaced successfully!');
-
-        $updatedScholar = $scholar->fresh();
-        $this->assertEquals(2, count($updatedScholar->old_cosupervisors));
-        $this->assertEquals($newCosupervisor->id, $updatedScholar->cosupervisor_profile_id);
-        $this->assertEquals('App\Models\SupervisorProfile', $updatedScholar->cosupervisor_profile_type);
+        $this->assertCount(1, $scholar->fresh()->cosupervisors);
     }
 
     /** @test */
     public function supervisor_of_scholar_can_be_replaced()
     {
+        ($scholar = create(Scholar::class))->supervisors()->attach(
+            $supervisor = factory(User::class)->states('supervisor')->create()
+        );
+        $exisitngSupervisor = factory(User::class)->states('supervisor')->create();
+
         $this->signIn();
-        $scholar = create(Scholar::class);
-        $oldSupervisor = $scholar->supervisor;
-        $newSupervisorProfile = factory(User::class)->states('supervisor')->create();
 
         $this->withoutExceptionHandling()
-            ->patch(route('staff.scholars.replace_supervisor', $scholar), [
-                'supervisor_profile_id' => $newSupervisorProfile->id,
+            ->patch(route('staff.scholars.supervisor.replace', $scholar), [
+                'supervisor_id' => $exisitngSupervisor->id,
             ])
             ->assertSessionHasFlash('success', 'Supervisor replaced successfully!');
 
-        $this->assertEquals(1, count($scholar->fresh()->old_supervisors));
+        $oldSupervisors = $scholar->supervisors()
+            ->wherePivot('ended_on', today())
+            ->where('supervisor_id', $supervisor->id)
+            ->get();
 
-        $this->assertEquals($oldSupervisor->name, $scholar->fresh()->old_supervisors[0]['name']);
-        $this->assertEquals($oldSupervisor->email, $scholar->fresh()->old_supervisors[0]['email']);
-        $this->assertEquals(now()->format('d F Y'), $scholar->fresh()->old_supervisors[0]['date']);
+        $newSupervisors = $scholar->supervisors()
+            ->wherePivot('ended_on', null)
+            ->wherePivot('started_on', today())
+            ->where('supervisor_id', $exisitngSupervisor->id)
+            ->get();
 
-        $this->assertTrue($newSupervisorProfile->supervisor->is($scholar->fresh()->supervisor));
-    }
-
-    /** @test */
-    public function co_supervisor_of_scholar_can_be_replaced_even_if_current_cosupervisor_is_null()
-    {
-        $this->signIn();
-
-        $scholar = create(Scholar::class, 1, [
-            'cosupervisor_profile_type' => null,
-            'cosupervisor_profile_id' => null,
-        ]);
-
-        $newCosupervisor = create(Cosupervisor::class);
-
-        $this->withoutExceptionHandling()
-            ->patch(route('staff.scholars.replace_cosupervisor', $scholar), [
-                'cosupervisor_profile_type' => Cosupervisor::class,
-                'cosupervisor_profile_id' => $newCosupervisor->id,
-            ])
-            ->assertSessionHasFlash('success', 'Co-Supervisor replaced successfully!');
-
-        $this->assertEquals(1, count($scholar->fresh()->old_cosupervisors));
-
-        $this->assertNull($scholar->fresh()->old_cosupervisors[0]['name']);
-        $this->assertNull($scholar->fresh()->old_cosupervisors[0]['email']);
-        $this->assertNull($scholar->fresh()->old_cosupervisors[0]['designation']);
-        $this->assertNull($scholar->fresh()->old_cosupervisors[0]['affiliation']);
-        $this->assertEquals(now()->format('d F Y'), $scholar->fresh()->old_cosupervisors[0]['date']);
-
-        $this->assertTrue($newCosupervisor->is($scholar->fresh()->cosupervisor));
-    }
-
-    /** @test */
-    public function cosupervisor_of_scholar_can_not_be_replaced_if_cosupervisor_is_same_as_previous_cosupervisor()
-    {
-        $this->signIn();
-
-        $SupervisorProfile = factory(User::class)->states('supervisor')->create();
-
-        $scholar = create(Scholar::class, 1, [
-            'cosupervisor_profile_id' => $SupervisorProfile->id,
-        ]);
-
-        $this->assertEquals(0, count($scholar->fresh()->old_cosupervisors));
-
-        try {
-            $this->withoutExceptionHandling()
-                ->patch(route('staff.scholars.replace_cosupervisor', $scholar), [
-                    'cosupervisor_profile_id' => $SupervisorProfile->id,
-                ]);
-        } catch (ValidationException $e) {
-            $this->assertArrayHasKey('cosupervisor_profile_id', $e->errors());
-        }
-
-        $this->assertEquals(0, count($scholar->fresh()->old_cosupervisors));
-
-        $scholar = create(Scholar::class, 1, [
-            'cosupervisor_profile_type' => null,
-            'cosupervisor_profile_id' => null,
-        ]);
-
-        $this->assertEquals(0, count($scholar->fresh()->old_cosupervisors));
-
-        try {
-            $this->withoutExceptionHandling()
-                ->patch(route('staff.scholars.replace_cosupervisor', $scholar), [
-                    'cosupervisor_profile_type' => null,
-                    'cosupervisor_profile_id' => null,
-                ]);
-        } catch (ValidationException $e) {
-            $this->assertArrayHasKey('cosupervisor_profile_id', $e->errors());
-        }
-
-        $this->assertEquals(0, count($scholar->fresh()->old_cosupervisors));
-    }
-
-    /** @test */
-    public function cosupervisor_of_scholar_can_not_be_replaced_if_cosupervisor_is_same_as_supervisor()
-    {
-        $this->signIn();
-        $SupervisorProfile = factory(User::class)->states('supervisor')->create();
-
-        $scholar = create(Scholar::class, 1, [
-            'supervisor_profile_id' => $SupervisorProfile->id,
-        ]);
-
-        $this->assertEquals(0, count($scholar->fresh()->old_cosupervisors));
-
-        $oldCosupervisor = $scholar->cosupervisor;
-
-        try {
-            $this->withoutExceptionHandling()
-                ->patch(route('staff.scholars.replace_cosupervisor', $scholar), [
-                    'cosupervisor_profile_id' => $SupervisorProfile->id,
-                ]);
-        } catch (ValidationException $e) {
-            $this->assertArrayHasKey('cosupervisor_profile_id', $e->errors());
-        }
-
-        $this->assertEquals(0, count($scholar->fresh()->old_cosupervisors));
+        $this->assertCount(1, $oldSupervisors);
+        $this->assertCount(1, $newSupervisors);
     }
 
     /** @test */
     public function supervisor_of_scholar_can_not_be_replaced_if_supervisor_is_same_as_previous_supervisor()
     {
+        ($scholar = create(Scholar::class))->supervisors()->attach(
+            $supervisor = factory(User::class)->states('supervisor')->create()
+        );
+
         $this->signIn();
-        $scholar = create(Scholar::class);
-
-        $this->assertEquals(0, count($scholar->fresh()->old_supervisors));
-
-        $oldSupervisorProfileId = $scholar->supervisor_profile_id;
 
         try {
             $this->withoutExceptionHandling()
-                ->patch(route('staff.scholars.replace_supervisor', $scholar), [
-                    'cosupervisor_id' => $oldSupervisorProfileId,
+                ->patch(route('staff.scholars.supervisor.replace', $scholar), [
+                    'supervisor_id' => $supervisor->id,
                 ]);
+            $this->fail('Supervisor was allowed to replace by the same supervisor. Validation Error was expected.');
         } catch (ValidationException $e) {
-            $this->assertArrayHasKey('supervisor_profile_id', $e->errors());
+            $this->assertArrayHasKey('supervisor_id', $e->errors());
         }
 
-        $this->assertEquals(0, count($scholar->fresh()->old_supervisors));
-    }
-
-    /** @test */
-    public function current_advisory_committee_is_replaced_if_the_scholar_supervisor_is_replaced()
-    {
-        $this->signIn();
-
-        $scholar = create(Scholar::class, 1, [
-            'created_at' => now()->subMonths(3),
-        ]);
-        $newSupervisorProfile = factory(User::class)->states('supervisor')->create();
-
-        $beforeSupervisorReplaceAdvisoryCommittee = $scholar->advisory_committee;
-
-        $this->assertEquals([], $scholar->old_advisory_committees);
-
-        $this->withoutExceptionHandling()
-            ->patch(route('staff.scholars.replace_supervisor', $scholar), [
-                'supervisor_profile_id' => $newSupervisorProfile->id,
-            ])
-            ->assertSessionHasFlash('success', 'Supervisor replaced successfully!');
-
-        $this->assertEquals(1, count($scholar->fresh()->old_supervisors));
-
-        $this->assertEquals(count($scholar->fresh()->old_advisory_committees), 1);
-
-        $expectedOldCommittee = [
-            'committee' => $beforeSupervisorReplaceAdvisoryCommittee,
-            'to_date' => today(),
-            'from_date' => Carbon::parse($scholar->created_at->format('d F Y')),
-        ];
-
-        $this->assertEquals(
-            $expectedOldCommittee,
-            $scholar->fresh()->old_advisory_committees[0]
-        );
-    }
-
-    /** @test */
-    public function current_advisory_committee_is_replaced_if_the_scholar_cosupervisor_is_replaced()
-    {
-        $this->signIn();
-        $scholar = create(Scholar::class);
-        $newCosupervisor = create(Cosupervisor::class);
-
-        $beforeCosupervisorReplaceAdvisoryCommittee = $scholar->advisory_committee;
-
-        $this->withoutExceptionHandling()
-            ->patch(route('staff.scholars.replace_cosupervisor', $scholar), [
-                'cosupervisor_profile_type' => Cosupervisor::class,
-                'cosupervisor_profile_id' => $newCosupervisor->id,
-            ])
-            ->assertSessionHasFlash('success', 'Co-Supervisor replaced successfully!');
-
-        $this->assertEquals(1, count($scholar->fresh()->old_cosupervisors));
-
-        $this->assertEquals(count($scholar->fresh()->old_advisory_committees), 1);
-
-        $expectedOldCommittee = [
-            'committee' => $beforeCosupervisorReplaceAdvisoryCommittee,
-            'to_date' => today(),
-            'from_date' => Carbon::parse($scholar->created_at->format('d F Y')),
-        ];
-
-        $this->assertEquals(
-            $expectedOldCommittee,
-            $scholar->fresh()->old_advisory_committees[0]
-        );
+        $this->assertCount(1, $scholar->refresh()->supervisors);
+        $this->assertEquals($supervisor->id, $scholar->supervisors->first()->id);
     }
 }

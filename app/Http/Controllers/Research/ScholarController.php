@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Research;
 
+use App\ExternalAuthority;
 use App\Http\Controllers\Controller;
 use App\Models\Cosupervisor;
 use App\Models\PhdCourse;
@@ -56,75 +57,84 @@ class ScholarController extends Controller
         ]);
     }
 
-    public function updateAdvisoryCommittee(Request $request, Scholar $scholar)
+    public function updateAdvisors(Request $request, Scholar $scholar)
     {
         $validData = $request->validate([
-            'committee' => ['required', 'array', 'max:5'],
-            'committee.*.type' => ['required', 'string', 'in:existing_supervisor,existing_cosupervisor,external'],
-            'committee.*.id' => ['required_if:commmitte.*.type,existing_supervisor,existing_cosupervisor', 'integer'],
-            'committee.*.name' => ['required_if:commmitte.*.type,external', 'string'],
-            'committee.*.designation' => ['required_if:commmitte.*.type,external', 'string'],
-            'committee.*.affiliation' => ['required_if:commmitte.*.type,external', 'string'],
-            'committee.*.email' => ['required_if:commmitte.*.type,external', 'email'],
-            'committee.*.phone' => ['nullable', 'string'],
+            'advisors' => ['required', 'array', 'max:2'],
+            'advisors.*.user_id' => ['sometimes', 'required', 'integer'],
+            'advisors.*.external_id' => ['sometimes', 'required', 'integer'],
+            'advisors.*.name' => [
+                'required_without_all:advisors.*.user_id,advisors.*.external_id',
+            ],
+            'advisors.*.designation' => [
+                'required_without_all:advisors.*.user_id,advisors.*.external_id',
+            ],
+            'advisors.*.affiliation' => [
+                'required_without_all:advisors.*.user_id,advisors.*.external_id',
+            ],
+            'advisors.*.email' => [
+                'required_without_all:advisors.*.user_id,advisors.*.external_id',
+                'email', 'unique:external_authorities,email',
+            ],
+            'advisors.*.phone' => ['nullable', 'string'],
         ]);
 
-        $committee = collect($validData['committee'])->map(function ($item) {
-            if ($item['type'] == 'existing_cosupervisor') {
-                return AdvisoryCommitteeMember::fromExistingCosupervisors(Cosupervisor::find($item['id']));
-            } elseif ($item['type'] == 'existing_supervisor') {
-                return AdvisoryCommitteeMember::fromExistingSupervisors(SupervisorProfile::find($item['id']));
-            }
-            return new AdvisoryCommitteeMember($item['type'], $item);
-        })->toArray();
+        $updatedAdvisors = collect($validData['advisors'])->map(function ($item) use ($scholar) {
+            return [
+                'advisor_type' => isset($item['user_id']) ? User::class : ExternalAuthority::class,
+                'advisor_id' => $item['user_id'] ?? $item['external_id'] ?? ExternalAuthority::create($item)->id,
+                'started_on' => $scholar->currentAdvisors->min('started_on') ?? $scholar->created_at,
+            ];
+        });
 
-        $scholar->update(['advisory_committee' => $committee]);
+        $scholar->currentAdvisors()->delete();
+        $scholar->currentAdvisors()->createMany($updatedAdvisors->toArray());
 
-        flash("Scholar's Advisory Committee Updated SuccessFully!")->success();
+        flash('Advisors Updated SuccessFully!')->success();
 
         return back();
     }
 
-    public function replaceAdvisoryCommittee(Request $request, Scholar $scholar)
+    public function replaceAdvisors(Request $request, Scholar $scholar)
     {
+        abort_if(
+            $scholar->currentAdvisors->count() == 0,
+            403,
+            'You cant replace advisors, no advisors assigned. Use edit feature instead'
+        );
+
         $validData = $request->validate([
-            'committee' => ['required', 'array', 'max:5'],
-            'committee.*.type' => ['required', 'string', 'in:existing_cosupervisor,external,existing_supervisor'],
-            'committee.*.id' => ['required_if:commmitte.*.type,existing_cosupervisor, existing_supervisor', 'integer'],
-            'committee.*.name' => ['required_if:commmitte.*.type,external', 'string'],
-            'committee.*.designation' => ['required_if:commmitte.*.type,external', 'string'],
-            'committee.*.affiliation' => ['required_if:commmitte.*.type,external', 'string'],
-            'committee.*.email' => ['required_if:commmitte.*.type,external', 'email'],
-            'committee.*.phone' => ['nullable', 'string'],
+            'advisors' => ['required', 'array', 'max:2'],
+            'advisors.*.user_id' => ['sometimes', 'required', 'integer'],
+            'advisors.*.external_id' => ['sometimes', 'required', 'integer'],
+            'advisors.*.name' => [
+                'required_without_all:advisors.*.user_id,advisors.*.external_id',
+            ],
+            'advisors.*.designation' => [
+                'required_without_all:advisors.*.user_id,advisors.*.external_id',
+            ],
+            'advisors.*.affiliation' => [
+                'required_without_all:advisors.*.user_id,advisors.*.external_id',
+            ],
+            'advisors.*.email' => [
+                'required_without_all:advisors.*.user_id,advisors.*.external_id',
+                'email', 'unique:external_authorities,email',
+            ],
+            'advisors.*.phone' => ['nullable', 'string'],
         ]);
 
-        $oldAdvisoryCommittees = $scholar->old_advisory_committees;
+        $updatedAdvisors = collect($validData['advisors'])->map(function ($item) use ($scholar) {
+            return [
+                'advisor_type' => isset($item['user_id']) ? User::class : ExternalAuthority::class,
+                'advisor_id' => $item['user_id'] ?? $item['external_id'] ?? ExternalAuthority::create($item)->id,
+                'started_on' => today(),
+            ];
+        });
 
-        $currentAdvisoryCommittee = [
-            'committee' => $scholar->advisory_committee,
-            'to_date' => today(),
-            'from_date' => count($oldAdvisoryCommittees) > 0 ?
-                $oldAdvisoryCommittees[count($oldAdvisoryCommittees) - 1]['to_date'] :
-                $scholar->created_at,
-        ];
+        $scholar->currentAdvisors()->update(['ended_on' => today()]);
+        $scholar->currentAdvisors()->createMany($updatedAdvisors->toArray());
 
-        array_unshift($oldAdvisoryCommittees, $currentAdvisoryCommittee);
-
-        $newCommittee = collect($validData['committee'])->map(function ($item) {
-            if ($item['type'] == 'existing_cosupervisor') {
-                return AdvisoryCommitteeMember::fromExistingCosupervisors(Cosupervisor::find($item['id']));
-            } elseif ($item['type'] == 'existing_supervisor') {
-                return AdvisoryCommitteeMember::fromExistingSupervisors(SupervisorProfile::find($item['id']));
-            }
-            return new AdvisoryCommitteeMember($item['type'], $item);
-        })->toArray();
-
-        $scholar->update([
-            'advisory_committee' => $newCommittee,
-            'old_advisory_committees' => $oldAdvisoryCommittees,
-        ]);
-
-        flash("Scholar's Advisory Committee Replaced SuccessFully!")->success();
+        flash('Advisors Updated SuccessFully!')->success();
 
         return back();
     }

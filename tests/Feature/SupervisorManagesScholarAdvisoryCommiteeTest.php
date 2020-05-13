@@ -2,8 +2,10 @@
 
 namespace Tests\Feature;
 
+use App\ExternalAuthority;
 use App\Models\Cosupervisor;
 use App\Models\Scholar;
+use App\Models\ScholarAdvisor;
 use App\Models\User;
 use App\Types\AdvisoryCommitteeMember;
 use App\Types\Designation;
@@ -20,127 +22,300 @@ class SupervisorManagesScholarAdvisoryCommiteeTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function scholar_advisory_committee_can_be_edited_by_their_supervisor()
+    public function scholars_current_advisors_are_updated_without_tracking_history()
     {
-        $this->signIn($faculty = create(User::class, 1, ['category' => UserCategory::FACULTY_TEACHER]));
+        $scholar = create(Scholar::class);
 
-        $supervisor = $faculty->supervisorProfile()->create();
+        $supervisor = factory(User::class)->states('supervisor')->create();
+        $scholar->supervisors()->attach($supervisor);
 
-        $scholar = create(Scholar::class, 1, [
-            'supervisor_profile_id' => $supervisor->id,
-        ]);
-        $otherSupervisorProfile = factory(User::class)->states('supervisor')->create();
-        $otherCosupervisor = create(Cosupervisor::class);
+        $cosupervisor = create(Cosupervisor::class, 1, ['person_type' => User::class]);
+        $scholar->cosupervisors()->attach($cosupervisor);
+
+        $externalAdvisors = make(ScholarAdvisor::class, 2, ['advisor_type' => ExternalAuthority::class]);
+        $scholar->advisors()->saveMany($externalAdvisors);
+
+        $facultyCosupervisor = create(Cosupervisor::class, 1, ['person_type' => User::class]);
+
+        // 10 Days later...
+        Carbon::setTestNow(today()->addDays(10));
+
+        $this->signIn($supervisor);
 
         $this->withoutExceptionHandling()
-            ->patch(route('research.scholars.advisory_committee.update', [
-                'scholar' => $scholar,
-            ]), [
-                'committee' => [
-                    $existingCosupervisor = [
-                        'type' => 'existing_cosupervisor',
-                        'id' => $otherCosupervisor->id,
-                    ],
-                    $external = [
-                        'type' => 'external',
-                        'name' => 'Rakesh Sharma',
-                        'designation' => 'astronaut',
-                        'affiliation' => 'IAF',
-                        'email' => 'rakesh@gmail.com',
-                        'phone' => '9469297632',
-                    ],
-                    $existingSupervisor = [
-                        'type' => 'existing_supervisor',
-                        'id' => $otherSupervisorProfile->id,
-                    ],
+            ->patch(route('research.scholars.advisors.update', $scholar), [
+                'advisors' => [
+                    ['user_id' => $facultyCosupervisor->person_id],
                 ],
             ])->assertRedirect()
-            ->assertSessionHasFlash('success', 'Advisory Committee Updated SuccessFully!');
+            ->assertSessionHasFlash('success', 'Advisors Updated SuccessFully!');
 
-        $expectedAddedMembers = collect([
-            AdvisoryCommitteeMember::fromExistingCosupervisors($otherCosupervisor),
-            new AdvisoryCommitteeMember('external', $external),
-            AdvisoryCommitteeMember::fromExistingSupervisors($otherSupervisorProfile),
-        ])->sortBy('type');
+        $this->assertDeleted($externalAdvisors[0]);
+        $this->assertDeleted($externalAdvisors[1]);
 
-        list($permanent, $added) = collect($scholar->fresh()->advisory_committee)
-                ->partition(function ($item) {
-                    return in_array($item->type, ['supervisor', 'cosupervisor']);
-                })->map->values();
+        $this->assertCount(1, $advisors = $scholar->refresh()->currentAdvisors);
 
-        $this->assertEquals($expectedAddedMembers, $added->sortBy('type'));
+        $this->assertEquals($facultyCosupervisor->person_type, $advisors->first()->advisor_type);
+        $this->assertEquals($facultyCosupervisor->person_id, $advisors->first()->advisor_id);
+
+        // Created with same term as pervious even when changed after 10 days.
+        $this->assertEquals(today()->subDays(10), $advisors->first()->started_on);
     }
 
     /** @test */
-    public function scholar_advisory_committee_can_be_replaced_by_their_supervisor()
+    public function scholars_new_current_advisors_are_added_without_tracking_history()
     {
-        $this->signIn($faculty = create(User::class, 1, [
-            'category' => UserCategory::FACULTY_TEACHER,
-            'designation' => Designation::PROFESSOR,
-        ]));
+        $scholar = create(Scholar::class);
 
-        $supervisor = $faculty->supervisorProfile()->create();
+        $supervisor = factory(User::class)->states('supervisor')->create();
+        $scholar->supervisors()->attach($supervisor);
 
-        $scholar = create(Scholar::class, 1, [
-            'supervisor_profile_id' => $supervisor->id,
-        ]);
+        $cosupervisor = create(Cosupervisor::class, 1, ['person_type' => User::class]);
+        $scholar->cosupervisors()->attach($cosupervisor);
 
-        $beforeReplaceAdvisoryCommittee = $scholar->advisory_committee;
+        $facultyCosupervisor = create(Cosupervisor::class, 1, ['person_type' => User::class]);
 
-        $this->assertEquals(count($scholar->old_advisory_committees), 0);
+        // 10 Days later...
+        Carbon::setTestNow(today()->addDays(10));
 
-        $otherSupervisorProfile = factory(User::class)->states('supervisor')->create();
-        $otherCosupervisor = create(Cosupervisor::class);
+        $this->signIn($supervisor);
 
         $this->withoutExceptionHandling()
-            ->patch(route('research.scholars.advisory_committee.replace', [
-                'scholar' => $scholar,
-            ]), [
-                'committee' => [
-                    $existingCosupervisor = [
-                        'type' => 'existing_cosupervisor',
-                        'id' => $otherCosupervisor->id,
-                    ],
-                    $external = [
-                        'type' => 'external',
-                        'name' => 'Rakesh Sharma',
-                        'designation' => 'astronaut',
-                        'affiliation' => 'IAF',
-                        'email' => 'rakesh@gmail.com',
-                        'phone' => '9469297632',
-                    ],
-                    $existingSupervisor = [
-                        'type' => 'existing_supervisor',
-                        'id' => $otherSupervisorProfile->id,
-                    ],
+            ->patch(route('research.scholars.advisors.update', $scholar), [
+                'advisors' => [
+                    ['user_id' => $facultyCosupervisor->person_id],
                 ],
             ])->assertRedirect()
-            ->assertSessionHasFlash('success', 'Advisory Committee Replaced SuccessFully!');
+            ->assertSessionHasFlash('success', 'Advisors Updated SuccessFully!');
 
-        $expectedAddedMembers = collect([
-            AdvisoryCommitteeMember::fromExistingCosupervisors($otherCosupervisor),
-            new AdvisoryCommitteeMember('external', $external),
-            AdvisoryCommitteeMember::fromExistingSupervisors($otherSupervisorProfile),
-        ])->sortBy('type');
+        $this->assertCount(1, $advisors = $scholar->refresh()->currentAdvisors);
+        $this->assertEquals($facultyCosupervisor->person_type, $advisors->first()->advisor_type);
+        $this->assertEquals($facultyCosupervisor->person_id, $advisors->first()->advisor_id);
 
-        list($permanent, $added) = collect($scholar->fresh()->advisory_committee)
-            ->partition(function ($item) {
-                return in_array($item->type, ['supervisor', 'cosupervisor']);
-            })->map->values();
+        // Created with same term as pervious even when changed after 10 days.
+        $this->assertEquals($scholar->created_at, $advisors->first()->started_on);
+    }
 
-        $this->assertEquals($expectedAddedMembers, $added->sortBy('type'));
+    /** @test */
+    public function scholars_current_advisors_are_updated_without_tracking_history_with_existing_externals()
+    {
+        $scholar = create(Scholar::class);
 
-        $expectOldCommittee = [
-            'committee' => $beforeReplaceAdvisoryCommittee,
-            'from_date' => today(),
-            'to_date' => Carbon::parse($scholar->created_at->format('d F Y')),
-        ];
+        $supervisor = factory(User::class)->states('supervisor')->create();
+        $scholar->supervisors()->attach($supervisor);
 
-        $this->assertCount(1, $scholar->fresh()->old_advisory_committees);
+        $cosupervisor = create(Cosupervisor::class, 1, ['person_type' => User::class]);
+        $scholar->cosupervisors()->attach($cosupervisor);
 
-        $this->assertEquals(
-            $expectOldCommittee,
-            $scholar->fresh()->old_advisory_committees[0]
-        );
+        $externalAdvisors = make(ScholarAdvisor::class, 2, ['advisor_type' => ExternalAuthority::class]);
+        $scholar->advisors()->saveMany($externalAdvisors);
+
+        $existingExternal = create(ExternalAuthority::class);
+
+        // 10 Days later...
+        Carbon::setTestNow(today()->addDays(10));
+
+        $this->signIn($supervisor);
+
+        $this->withoutExceptionHandling()
+            ->patch(route('research.scholars.advisors.update', $scholar), [
+                'advisors' => [
+                    ['external_id' => $existingExternal->id],
+                ],
+            ])->assertRedirect()
+            ->assertSessionHasFlash('success', 'Advisors Updated SuccessFully!');
+
+        $this->assertDeleted($externalAdvisors[0]);
+        $this->assertDeleted($externalAdvisors[1]);
+
+        $this->assertCount(1, $advisors = $scholar->refresh()->currentAdvisors);
+
+        $this->assertEquals(ExternalAuthority::class, $advisors->first()->advisor_type);
+        $this->assertEquals($existingExternal->id, $advisors->first()->advisor_id);
+
+        // Created with same term as pervious even when changed after 10 days.
+        $this->assertEquals(today()->subDays(10), $advisors->first()->started_on);
+    }
+
+    /** @test */
+    public function scholars_current_advisors_are_updated_without_tracking_history_with_new_externals_created_on_fly()
+    {
+        $scholar = create(Scholar::class);
+
+        $supervisor = factory(User::class)->states('supervisor')->create();
+        $scholar->supervisors()->attach($supervisor);
+
+        $cosupervisor = create(Cosupervisor::class, 1, ['person_type' => User::class]);
+        $scholar->cosupervisors()->attach($cosupervisor);
+
+        $externalAdvisors = make(ScholarAdvisor::class, 2, ['advisor_type' => ExternalAuthority::class]);
+        $scholar->advisors()->saveMany($externalAdvisors);
+
+        // 10 Days later...
+        Carbon::setTestNow(today()->addDays(10));
+
+        $this->signIn($supervisor);
+
+        $this->withoutExceptionHandling()
+            ->patch(route('research.scholars.advisors.update', $scholar), [
+                'advisors' => [
+                    $external = make(ExternalAuthority::class)->attributesToArray(),
+                ],
+            ])->assertRedirect()
+            ->assertSessionHasFlash('success', 'Advisors Updated SuccessFully!');
+
+        $externalAuthorities = ExternalAuthority::query()
+            ->where($external)
+            ->get();
+        $this->assertCount(1, $externalAuthorities);
+
+        $this->assertCount(1, $advisors = $scholar->refresh()->currentAdvisors);
+
+        $this->assertEquals(ExternalAuthority::class, $advisors->first()->advisor_type);
+        $this->assertEquals($externalAuthorities->first()->id, $advisors->first()->advisor_id);
+
+        // Created with same term as pervious even when changed after 10 days.
+        $this->assertEquals(today()->subDays(10), $advisors->first()->started_on);
+    }
+
+    /** @test */
+    public function scholar_current_advisors_can_be_replaced_by_new_advisors_while_still_keeping_track_of_history()
+    {
+        $scholar = create(Scholar::class);
+
+        $supervisor = factory(User::class)->states('supervisor')->create();
+        $scholar->supervisors()->attach($supervisor);
+
+        $cosupervisor = create(Cosupervisor::class, 1, ['person_type' => User::class]);
+        $scholar->cosupervisors()->attach($cosupervisor);
+
+        $currentExternalAdvisors = make(ScholarAdvisor::class, 2, ['advisor_type' => ExternalAuthority::class]);
+        $scholar->advisors()->saveMany($currentExternalAdvisors);
+
+        $facultyCosupervisor = create(Cosupervisor::class, 1, ['person_type' => User::class]);
+
+        // 10 Days later...
+        Carbon::setTestNow(today()->addDays(10));
+
+        $this->signIn($supervisor);
+
+        $this->withoutExceptionHandling()
+            ->patch(route('research.scholars.advisors.replace', $scholar), [
+                'advisors' => [
+                    ['user_id' => $facultyCosupervisor->person_id],
+                ],
+            ])->assertRedirect()
+            ->assertSessionHasFlash('success', 'Advisors Updated SuccessFully!');
+
+        $freshOldAdvisors = $currentExternalAdvisors->map->fresh();
+        $this->assertNotNull($freshOldAdvisors[0], 'first old advisor was removed');
+        // modified with term, ending from today, i.e. after 10 days.
+        $this->assertEquals(today(), $freshOldAdvisors[0]->ended_on);
+
+        $this->assertNotNull($freshOldAdvisors[1], 'second old advisor was removed');
+        $this->assertEquals(today(), $freshOldAdvisors[1]->ended_on);
+
+        $this->assertCount(1, $advisors = $scholar->refresh()->currentAdvisors);
+        $this->assertEquals($facultyCosupervisor->person_type, $advisors->first()->advisor_type);
+        $this->assertEquals($facultyCosupervisor->person_id, $advisors->first()->advisor_id);
+
+        // Created with new term, starting from today, i.e. after 10 days.
+        $this->assertEquals(today(), $advisors->first()->started_on);
+    }
+
+    /** @test */
+    public function scholar_current_advisors_can_be_replaced_by_existing_externals_as_new_current_advisors()
+    {
+        $scholar = create(Scholar::class);
+
+        $supervisor = factory(User::class)->states('supervisor')->create();
+        $scholar->supervisors()->attach($supervisor);
+
+        $cosupervisor = create(Cosupervisor::class, 1, ['person_type' => User::class]);
+        $scholar->cosupervisors()->attach($cosupervisor);
+
+        $currentExternalAdvisors = make(ScholarAdvisor::class, 2, ['advisor_type' => ExternalAuthority::class]);
+        $scholar->advisors()->saveMany($currentExternalAdvisors);
+
+        $existingExternal = create(ExternalAuthority::class);
+
+        // 10 Days later...
+        Carbon::setTestNow(today()->addDays(10));
+
+        $this->signIn($supervisor);
+
+        $this->withoutExceptionHandling()
+            ->patch(route('research.scholars.advisors.replace', $scholar), [
+                'advisors' => [
+                    ['external_id' => $existingExternal->id],
+                ],
+            ])->assertRedirect()
+            ->assertSessionHasFlash('success', 'Advisors Updated SuccessFully!');
+
+        $freshOldAdvisors = $currentExternalAdvisors->map->fresh();
+
+        $this->assertCount(1, $advisors = $scholar->refresh()->currentAdvisors);
+        $this->assertEquals(ExternalAuthority::class, $advisors->first()->advisor_type);
+        $this->assertEquals($existingExternal->id, $advisors->first()->advisor_id);
+
+        // Created with new term, starting from today, i.e. after 10 days.
+        $this->assertEquals(today(), $advisors->first()->started_on);
+    }
+
+    /** @test */
+    public function scholar_current_advisors_can_be_replaced_by_new_externals_craeted_on_the_fly_and_made_current_advisors()
+    {
+        $scholar = create(Scholar::class);
+
+        $supervisor = factory(User::class)->states('supervisor')->create();
+        $scholar->supervisors()->attach($supervisor);
+
+        $cosupervisor = create(Cosupervisor::class, 1, ['person_type' => User::class]);
+        $scholar->cosupervisors()->attach($cosupervisor);
+
+        $currentExternalAdvisors = make(ScholarAdvisor::class, 2, ['advisor_type' => ExternalAuthority::class]);
+        $scholar->advisors()->saveMany($currentExternalAdvisors);
+
+        // 10 Days later...
+        Carbon::setTestNow(today()->addDays(10));
+
+        $this->signIn($supervisor);
+
+        $this->withoutExceptionHandling()
+            ->patch(route('research.scholars.advisors.replace', $scholar), [
+                'advisors' => [
+                    $external = make(ExternalAuthority::class)->attributesToArray(),
+                ],
+            ])->assertRedirect()
+            ->assertSessionHasFlash('success', 'Advisors Updated SuccessFully!');
+
+        $externalAuthorities = ExternalAuthority::where($external)->get();
+        $this->assertCount(1, $externalAuthorities);
+        $this->assertCount(1, $advisors = $scholar->refresh()->currentAdvisors);
+        $this->assertEquals(ExternalAuthority::class, $advisors->first()->advisor_type);
+        $this->assertEquals($externalAuthorities->first()->id, $advisors->first()->advisor_id);
+
+        // Created with new term, starting from today, i.e. after 10 days.
+        $this->assertEquals(today(), $advisors->first()->started_on);
+    }
+
+    /** @test */
+    public function scholar_advisors_cannot_be_replaced_if_no_current_advisors_assigned()
+    {
+        $scholar = create(Scholar::class);
+
+        $supervisor = factory(User::class)->states('supervisor')->create();
+        $scholar->supervisors()->attach($supervisor);
+
+        $cosupervisor = create(Cosupervisor::class, 1, ['person_type' => User::class]);
+        $scholar->cosupervisors()->attach($cosupervisor);
+
+        $this->signIn($supervisor);
+
+        $this->withExceptionHandling()
+            ->patch(route('research.scholars.advisors.replace', $scholar))
+            ->assertForbidden();
+
+        $this->assertCount(0, $advisors = $scholar->refresh()->currentAdvisors);
     }
 }

@@ -10,9 +10,9 @@ use App\Concerns\HasPublications;
 use App\ExternalAuthority;
 use App\Models\Cosupervisor;
 use App\Models\Publication;
+use App\Models\ScholarAdvisor;
 use App\Models\ScholarAppeal;
 use App\Models\User;
-use App\ScholarAdvisor;
 use App\ScholarSupervisor;
 use App\Types\AdmissionMode;
 use App\Types\Gender;
@@ -139,33 +139,16 @@ class Scholar extends User
             ->firstWhere('pivot.ended_on', null);
     }
 
-    public function userAdvisors()
+    public function advisors()
     {
-        return $this->morphedByMany(User::class, 'advisor', 'scholar_advisor')
-            ->withPivot(['started_on', 'ended_on'])
+        return $this->hasMany(ScholarAdvisor::class)->orderBy('started_on', 'desc');
+    }
+
+    public function currentAdvisors()
+    {
+        return $this->hasMany(ScholarAdvisor::class)
+            ->whereNull('ended_on')
             ->orderBy('started_on', 'desc');
-    }
-
-    public function externalAdvisors()
-    {
-        return $this->morphedByMany(ExternalAuthority::class, 'advisor', 'scholar_advisor')
-            ->withPivot(['started_on', 'ended_on'])
-            ->orderBy('started_on', 'desc');
-    }
-
-    public function getAdvisorsAttribute()
-    {
-        return collect([$this->userAdvisors, $this->externalAdvisors])
-            ->flatten()
-            ->sortByDesc('pivot.started_on')
-            ->values();
-    }
-
-    public function getCurrentAdvisorsAttribute()
-    {
-        return $this->advisors->filter(function ($model) {
-            return $model->pivot->ended_on === null;
-        })->values();
     }
 
     public function getCommitteeAttribute()
