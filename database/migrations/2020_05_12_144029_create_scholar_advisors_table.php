@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateScholarAdvisorTable extends Migration
+class CreateScholarAdvisorsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateScholarAdvisorTable extends Migration
      */
     public function up()
     {
-        Schema::create('scholar_advisor', function (Blueprint $table) {
+        Schema::create('scholar_advisors', function (Blueprint $table) {
             $table->id();
             $table->foreignId('scholar_id')->constrained();
             $table->morphs('advisor');

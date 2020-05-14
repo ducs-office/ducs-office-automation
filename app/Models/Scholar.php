@@ -128,15 +128,12 @@ class Scholar extends User
 
     public function cosupervisors()
     {
-        return $this->belongsToMany(Cosupervisor::class)
-            ->withPivot(['started_on', 'ended_on'])
-            ->using(ScholarCosupervisor::class);
+        return $this->hasMany(ScholarCosupervisor::class);
     }
 
-    public function getCurrentCosupervisorAttribute()
+    public function currentCosupervisor()
     {
-        return $this->cosupervisors
-            ->firstWhere('pivot.ended_on', null);
+        return $this->hasOne(ScholarCosupervisor::class)->whereNull('ended_on');
     }
 
     public function advisors()

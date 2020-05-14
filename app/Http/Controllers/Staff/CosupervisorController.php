@@ -9,23 +9,18 @@ use App\Models\Teacher;
 use App\Models\User;
 use App\Types\UserCategory;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class CosupervisorController extends Controller
 {
     public function index()
     {
-        $users = User::allTeachers()
-            ->where('is_supervisor', false)
-            ->whereNotIn('users.id', Cosupervisor::select('person_id')->where('is_supervisor', true));
-
-        $externals = ExternalAuthority::query()
-            ->whereNotIn(
-                'external_authorities',
-                Cosupervisor::select('person_id')->where('person_type', ExternalAuthority::class)
-            );
+        $users = User::select(['id', 'first_name', 'last_name'])->nonCosupervisors()->get();
+        $externals = ExternalAuthority::select(['id', 'name'])->nonCosupervisors()->get();
 
         return view('staff.cosupervisors.index', [
-            'cosupervisors' => Cosupervisor::all(),
+            'cosupervisors' => User::cosupervisors()->get(),
+            'externalCosupervisors' => ExternalAuthority::nonCosupervisors()->get(),
             'users' => $users,
             'externals' => $externals,
         ]);
@@ -33,38 +28,41 @@ class CosupervisorController extends Controller
 
     public function store(Request $request)
     {
+        $allowedCategories = [UserCategory::COLLEGE_TEACHER, UserCategory::FACULTY_TEACHER];
+
         $validData = $request->validate([
-            'user_id' => 'sometimes|bail|nullable|integer',
-            'external_id' => 'sometimes|bail|nullable|integer',
-            'name' => 'required_without_all:user_id,external_id|string',
-            'email' => 'required_without_all:user_id,external_id|email|unique:external_authorities',
-            'designation' => 'required_without_all:user_id,external_id|string',
-            'affiliation' => 'required_without_all:user_id,external_id|string',
+            'user_id' => [
+                'required', 'integer',
+                Rule::exists(User::class, 'id')
+                    ->whereIn('category', $allowedCategories)
+                    ->where('is_supervisor', 0),
+            ],
+            // 'external_id' => 'sometimes|bail|nullable|integer',
+            // 'name' => 'required_without_all:user_id,external_id|string',
+            // 'email' => 'required_without_all:user_id,external_id|email|unique:external_authorities',
+            // 'designation' => 'required_without_all:user_id,external_id|string',
+            // 'affiliation' => 'required_without_all:user_id,external_id|string',
         ]);
 
-        if ($request->has('user_id')) {
-            $user = User::find($request->user_id);
-            $allowedCategories = [UserCategory::COLLEGE_TEACHER, UserCategory::FACULTY_TEACHER];
-            abort_unless($user && in_array($user->category, $allowedCategories), 403, 'only teachers can become cosupervisor');
-            abort_if($user->isSupervisor(), 403, 'supervisor cannot become cosupervisor');
-            Cosupervisor::create([
-                'person_type' => User::class,
-                'person_id' => $request->user_id,
-            ]);
-        } else {
-            Cosupervisor::create([
-                'person_type' => ExternalAuthority::class,
-                'person_id' => $request->external_id ?? ExternalAuthority::create($validData)->id,
-            ]);
-        }
+        // if ($request->has('user_id')) {
+        User::whereId($request->user_id)
+            ->update(['is_cosupervisor' => true]);
+        // } elseif ($request->has('external_id')) {
+        //     ExternalAuthority::whereId($request->external_id)->update(['is_cosupervisor' => true]);
+        // } else {
+        //     ExternalAuthority::updateOrCreate(
+        //         $validData,
+        //         ['is_cosupervisor' => true]
+        //     );
+        // }
 
         flash('Co-supervisor added successfully')->success();
         return back();
     }
 
-    public function destroy(Cosupervisor $cosupervisor)
+    public function destroy(User $cosupervisor)
     {
-        $cosupervisor->delete();
+        $cosupervisor->update(['is_cosupervisor' => false]);
 
         flash('Co-supervisor deleted successfully!')->success();
 

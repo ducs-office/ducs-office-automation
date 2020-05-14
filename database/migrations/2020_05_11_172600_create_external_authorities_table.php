@@ -20,6 +20,7 @@ class CreateExternalAuthoritiesTable extends Migration
             $table->string('designation', 191);
             $table->string('affiliation', 191);
             $table->string('phone', 15)->nullable();
+            $table->boolean('is_cosupervisor')->default(false);
             $table->timestamps();
         });
     }

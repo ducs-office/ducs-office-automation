@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Cosupervisor;
 use App\Models\Scholar;
+use App\Models\ScholarCosupervisor;
 use App\Models\User;
 use Dotenv\Regex\Success;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -22,6 +23,9 @@ class EditScholarTest extends TestCase
 
         $email = 'scholar@gmail.com';
         $scholar = create(Scholar::class, 1, ['email' => $email]);
+        $scholar->supervisors()->attach(
+            factory(User::class)->states('supervisor')->create()
+        );
 
         $this->withoutExceptionHandling()
            ->patch(route('staff.scholars.update', $scholar), [
@@ -40,6 +44,9 @@ class EditScholarTest extends TestCase
 
         $firstName = 'Pushcar';
         $scholar = create(Scholar::class, 1, ['first_name' => $firstName]);
+        $scholar->supervisors()->attach(
+            factory(User::class)->states('supervisor')->create()
+        );
 
         $this->withoutExceptionHandling()
            ->patch(route('staff.scholars.update', $scholar), [
@@ -58,6 +65,9 @@ class EditScholarTest extends TestCase
 
         $lastName = 'Solanki';
         $scholar = create(Scholar::class, 1, ['last_name' => $lastName]);
+        $scholar->supervisors()->attach(
+            factory(User::class)->states('supervisor')->create()
+        );
 
         $this->withoutExceptionHandling()
            ->patch(route('staff.scholars.update', $scholar), [
@@ -76,6 +86,9 @@ class EditScholarTest extends TestCase
 
         $lastName = 'Solanki';
         $scholar = create(Scholar::class, 1, ['last_name' => $lastName]);
+        $scholar->supervisors()->attach(
+            factory(User::class)->states('supervisor')->create()
+        );
 
         $this->withoutExceptionHandling()
             ->patch(route('staff.scholars.update', $scholar), [
@@ -99,23 +112,35 @@ class EditScholarTest extends TestCase
         $scholar->supervisors()->attach(
             factory(User::class)->states('supervisor')->create()
         );
-        $oldCosupervisors = create(Cosupervisor::class, 2);
-
-        $scholar->cosupervisors()->attach([
-            $oldCosupervisors[0]->id => ['started_on' => today()->subMonths(10), 'ended_on' => today()->subMonths(2)],
-            $oldCosupervisors[1]->id => ['started_on' => today()->subMonths(2), 'ended_on' => null],
+        $oldCosupervisorPrevious = factory(User::class)->states('cosupervisor')->create();
+        $oldCosupervisorCurrent = factory(User::class)->states('cosupervisor')->create();
+        $newCosupervisor = factory(User::class)->states('cosupervisor')->create();
+        $scholar->cosupervisors()->createMany([
+            [
+                'person_type' => User::class,
+                'person_id' => $oldCosupervisorPrevious->id,
+                'started_on' => today()->subMonths(10),
+                'ended_on' => today()->subMonths(2),
+            ],
+            [
+                'person_type' => User::class,
+                'person_id' => $oldCosupervisorCurrent->id,
+                'started_on' => today()->subMonths(2),
+                'ended_on' => null,
+            ],
         ]);
 
         $this->withoutExceptionHandling()
             ->patch(route('staff.scholars.update', $scholar), [
-                'cosupervisor_id' => $newCosupervisorId = create(Cosupervisor::class)->id,
+                'cosupervisor_user_id' => $newCosupervisor->id,
             ])
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'Scholar updated successfully');
 
         $this->assertCount(2, $scholar->refresh()->cosupervisors);
-        $this->assertEquals($newCosupervisorId, $scholar->currentCosupervisor->id);
-        $this->assertEquals(today()->subMonths(2), $scholar->currentCosupervisor->pivot->started_on);
+        $this->assertEquals($newCosupervisor->id, $scholar->currentCosupervisor->person_id);
+        $this->assertEquals(today()->subMonths(2), $scholar->currentCosupervisor->started_on);
+        $this->assertTrue($oldCosupervisorPrevious->exists());
     }
 
     /** @test */
@@ -150,23 +175,21 @@ class EditScholarTest extends TestCase
         $this->signIn();
 
         $scholar = create(Scholar::class);
-        $cosupervisor = create(Cosupervisor::class);
         $supervisor = factory(User::class)->states('supervisor')->create();
         $scholar->supervisors()->attach($supervisor);
-        $scholar->cosupervisors()->attach($cosupervisor);
-
-        $cosupervisorWhoIsSupervisor = create(Cosupervisor::class, 1, [
+        $cosupervisor = factory(User::class)->states('cosupervisor')->create();
+        $scholar->cosupervisors()->create([
             'person_type' => User::class,
-            'person_id' => $supervisor->id,
+            'person_id' => $cosupervisor->id,
         ]);
 
         $this->withExceptionHandling()
             ->patch(route('staff.scholars.update', $scholar), [
-                'cosupervisor_id' => $cosupervisorWhoIsSupervisor->id,
+                'cosupervisor_user_id' => $supervisor->id,
             ])
-            ->assertSessionHasErrors('cosupervisor_id');
+            ->assertSessionHasErrors('cosupervisor_user_id');
 
         $updatedScholar = $scholar->fresh();
-        $this->assertEquals($cosupervisor->id, $updatedScholar->currentCosupervisor->id);
+        $this->assertEquals($cosupervisor->id, $updatedScholar->currentCosupervisor->person_id);
     }
 }

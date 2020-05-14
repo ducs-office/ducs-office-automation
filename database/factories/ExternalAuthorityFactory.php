@@ -14,3 +14,7 @@ $factory->define(ExternalAuthority::class, function (Faker $faker) {
         'phone' => $faker->phoneNumber,
     ];
 });
+
+$factory->state(ExternalAuthority::class, 'cosupervisor', [
+    'is_cosupervisor' => true,
+]);

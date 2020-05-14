@@ -14,6 +14,7 @@ use App\Models\Publication;
 use App\Models\Scholar;
 use App\Models\ScholarAdvisor;
 use App\Models\ScholarAppeal;
+use App\Models\ScholarCosupervisor;
 use App\Models\ScholarDocument;
 use App\Models\ScholarEducationDegree;
 use App\Models\ScholarEducationInstitute;
@@ -24,13 +25,9 @@ use App\Types\EducationInfo;
 use App\Types\PrePhdCourseType;
 use App\Types\PublicationType;
 use App\Types\ScholarAppealTypes;
-use App\Types\ScholarDocumentType;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Illuminate\Database\Eloquent\Relations\MorphTo;
-use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Carbon;
@@ -122,15 +119,14 @@ class ScholarTest extends TestCase
     {
         $scholar = create(Scholar::class);
 
-        $this->assertInstanceOf(BelongsToMany::class, $scholar->cosupervisors());
+        $this->assertInstanceOf(HasMany::class, $scholar->cosupervisors());
 
         $anotherSupervisor = factory(User::class)->states('supervisor')->create();
-        $cosupervisor = create(Cosupervisor::class, 1, [
-            'person_type' => User::class,
+        $cosupervisor = factory(ScholarCosupervisor::class)->states('user')->make([
             'person_id' => $anotherSupervisor->id,
         ]);
 
-        $scholar->cosupervisors()->attach($cosupervisor);
+        $scholar->cosupervisors()->save($cosupervisor);
 
         $cosupervisors = $scholar->cosupervisors()->get();
         $this->assertCount(1, $cosupervisors);
@@ -143,18 +139,24 @@ class ScholarTest extends TestCase
     {
         $scholar = create(Scholar::class);
 
-        $cosupervisors = create(Cosupervisor::class, 2);
-        $scholar->cosupervisors()->attach([
-            $cosupervisors[0]->id => ['started_on' => today()->subMonths(8), 'ended_on' => today()->subMonths(3)],
-            $cosupervisors[1]->id => ['started_on' => today()->subMonths(3), 'ended_on' => null],
+        $oldCosupervisor = factory(ScholarCosupervisor::class)->make([
+            'started_on' => today()->subMonths(8),
+            'ended_on' => today()->subMonths(3),
+        ]);
+        $currentCosupervisor = factory(ScholarCosupervisor::class)->make([
+            'started_on' => today()->subMonths(3),
+        ]);
+        $scholar->cosupervisors()->createMany([
+            $oldCosupervisor->attributesToArray(),
+            $currentCosupervisor->attributesToArray(),
         ]);
 
         $scholar->refresh();
 
         $this->assertCount(2, $scholar->cosupervisors);
 
-        $this->assertNotNull($scholar->currentCosupervisor, 'current cosupervisor should not be null');
-        $this->assertEquals($cosupervisors[1]->id, $scholar->currentCosupervisor->id);
+        $scholarsCurrentCosupervisor = $scholar->currentCosupervisor()->where($currentCosupervisor->toArray());
+        $this->assertNotNull($scholarsCurrentCosupervisor, 'current cosupervisor wasnt returned');
     }
 
     /** @test */
@@ -164,7 +166,7 @@ class ScholarTest extends TestCase
 
         $this->assertInstanceOf(HasMany::class, $scholar->advisors());
 
-        $cosupervisor = create(Cosupervisor::class, ['person_type' => User::class]);
+        $cosupervisor = factory(ScholarCosupervisor::class)->states('user')->create();
         $external = create(ExternalAuthority::class);
 
         $scholar->advisors()->createMany([
@@ -190,7 +192,7 @@ class ScholarTest extends TestCase
 
         $this->assertInstanceOf(HasMany::class, $scholar->currentAdvisors());
 
-        $oldAdvisors = create(Cosupervisor::class, 2)
+        $oldAdvisors = create(ScholarCosupervisor::class, 2)
             ->map(function ($cosup) {
                 return [
                     'advisor_type' => $cosup->person_type,
@@ -201,7 +203,7 @@ class ScholarTest extends TestCase
             })->toArray();
         $oldAdvisors = $scholar->advisors()->createMany($oldAdvisors);
 
-        $currentAdvisors = create(Cosupervisor::class, 2)
+        $currentAdvisors = create(ScholarCosupervisor::class, 2)
             ->map(function ($cosup) {
                 return [
                     'advisor_type' => $cosup->person_type,

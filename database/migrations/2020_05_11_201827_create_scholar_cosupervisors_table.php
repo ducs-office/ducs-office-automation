@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCosupervisorScholarTable extends Migration
+class CreateScholarCosupervisorsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreateCosupervisorScholarTable extends Migration
      */
     public function up()
     {
-        Schema::create('cosupervisor_scholar', function (Blueprint $table) {
+        Schema::create('scholar_cosupervisors', function (Blueprint $table) {
             $table->id();
             $table->foreignId('scholar_id')->contrained();
-            $table->foreignId('cosupervisor_id')->constrained();
+            $table->morphs('person');
             $table->date('started_on')->default(today());
             $table->date('ended_on')->nullable();
         });

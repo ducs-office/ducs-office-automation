@@ -65,22 +65,6 @@ class UserTest extends TestCase
     }
 
     /** @test */
-    public function when_a_user_is_made_supervisor_cosupervisor_is_also_created()
-    {
-        $supervisor = create(User::class);
-
-        $supervisor->update(['is_supervisor' => true]);
-
-        $cosupervisors = Cosupervisor::query()
-            ->wherePersonType(User::class)
-            ->wherePersonId($supervisor->id)
-            ->whereIsSupervisor(true)
-            ->get();
-
-        $this->assertCount(1, $cosupervisors);
-    }
-
-    /** @test */
     public function a_superviosr_has_many_publications()
     {
         $supervisor = create(User::class, [

@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Cosupervisor;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -16,15 +17,13 @@ class DeleteCosupervisorTest extends TestCase
     {
         $this->signIn();
 
-        $coSupervisor = create(Cosupervisor::class);
-
-        $this->assertEquals(1, Cosupervisor::count());
+        $cosupervisor = factory(User::class)->states('cosupervisor')->create();
 
         $this->withoutExceptionHandling()
-        ->delete(route('staff.cosupervisors.destroy', $coSupervisor))
+        ->delete(route('staff.cosupervisors.destroy', $cosupervisor))
         ->assertRedirect()
         ->assertSessionHasFlash('success', 'Co-supervisor deleted successfully!');
 
-        $this->assertEquals(0, Cosupervisor::count());
+        $this->assertFalse($cosupervisor->fresh()->isCosupervisor());
     }
 }

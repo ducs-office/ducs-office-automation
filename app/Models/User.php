@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Casts\CustomType;
+use App\Concerns\ActsAsCosupervisor;
 use App\Concerns\HasPublications;
 use App\Types\Designation;
 use App\Types\TeacherStatus;
@@ -15,7 +16,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use Notifiable, HasRoles, HasPublications;
+    use Notifiable, HasRoles, HasPublications, ActsAsCosupervisor;
 
     /**
      * The attributes that are mass assignable.
@@ -25,7 +26,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name', 'email', 'password', 'category',
         'phone', 'address', 'college_id', 'designation',
-        'status', 'avatar_path', 'is_supervisor',
+        'status', 'avatar_path', 'is_supervisor', 'is_cosupervisor',
     ];
 
     /**
@@ -48,6 +49,7 @@ class User extends Authenticatable
         'designation' => CustomType::class . ':' . Designation::class,
         'status' => CustomType::class . ':' . TeacherStatus::class,
         'is_supervisor' => 'boolean',
+        'is_cosupervisor' => 'boolean',
         'is_admin' => 'boolean',
     ];
 
@@ -58,16 +60,6 @@ class User extends Authenticatable
         static::deleting(static function ($user) {
             $user->roles()->sync([]);
             $user->remarks()->update(['user_id' => null]);
-        });
-
-        static::saved(function ($user) {
-            if ($user->isSupervisor()) {
-                Cosupervisor::create([
-                    'is_supervisor' => true,
-                    'person_type' => User::class,
-                    'person_id' => $user->id,
-                ]);
-            }
         });
     }
 
@@ -101,6 +93,16 @@ class User extends Authenticatable
             && $this->designation != null
             && $this->status != null
             && $this->teachingDetails->count() > 0;
+    }
+
+    public function scopeSupervisors(Builder $builder)
+    {
+        return $builder->where('is_supervisor', true);
+    }
+
+    public function scopeNonSupervisors(Builder $builder)
+    {
+        return $builder->where('is_supervisor', true);
     }
 
     public function scopeFacultyTeachers(Builder $builder)

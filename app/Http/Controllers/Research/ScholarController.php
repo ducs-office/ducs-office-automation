@@ -40,9 +40,11 @@ class ScholarController extends Controller
 
     public function show(Scholar $scholar)
     {
-        $existingSupervisors = SupervisorProfile::all()
-            ->pluck('supervisor.name', 'id')
-            ->forget($scholar->supervisor_profile_id);
+        $existingSupervisors = User::query()
+            ->select('id', 'first_name', 'last_name')
+            ->supervisors()->get()
+            ->pluck('name', 'id')
+            ->forget($scholar->currentSupervisor->id);
 
         return view('research.scholars.show', [
             'scholar' => $scholar->load(['courseworks', 'progressReports', 'documents', 'publications']),
@@ -51,9 +53,6 @@ class ScholarController extends Controller
             'admissionModes' => AdmissionMode::values(),
             'genders' => Gender::values(),
             'eventTypes' => PresentationEventType::values(),
-            'existingCosupervisors' => Cosupervisor::all(),
-            'existingSupervisors' => $existingSupervisors,
-            'documentTypes' => ScholarDocumentType::values(),
         ]);
     }
 

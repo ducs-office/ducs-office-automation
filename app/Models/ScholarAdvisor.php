@@ -7,11 +7,10 @@ use App\Models\User;
 
 class ScholarAdvisor extends Model
 {
-    protected $table = 'scholar_advisor';
     protected $fillable = [
+        'scholar_id',
         'advisor_type', 'advisor_id',
         'started_on', 'ended_on',
-        'scholar_id',
     ];
 
     protected $with = ['advisor'];

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Staff;
 
+use App\ExternalAuthority;
 use App\Models\Cosupervisor;
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
@@ -27,26 +28,21 @@ class UpdateScholarRequest extends FormRequest
     public function rules()
     {
         return [
-            'first_name' => 'sometimes|required|string',
-            'last_name' => 'sometimes|required|string',
-            'email' => 'sometimes|required|' . Rule::unique('scholars')->ignore($this->route('scholar')),
-            'supervisor_id' => ['sometimes', 'required', Rule::exists('users', 'id')->where('is_supervisor', true)],
-            'cosupervisor_id' => [
-                'sometimes', 'nullable', 'integer',
-                function ($attribute, $value, $fail) {
-                    $supervisor = $this->route('scholar')->currentSupervisor;
-                    $cosup = Cosupervisor::find($value);
-                    if (! $cosup) {
-                        $fail('Invalid Cosupervior!');
-                    }
-
-                    if (
-                        $cosup->person_type === User::class
-                        && in_array($cosup->person_id, [$this->supervisor_id, $supervisor->id])
-                    ) {
-                        $fail('cosupervisor cannot be same as supervisor');
-                    }
-                },
+            'first_name' => ['sometimes', 'required', 'string', 'max:190'],
+            'last_name' => ['sometimes', 'required', 'string', 'max:190'],
+            'email' => ['sometimes', 'required', Rule::unique('scholars')->ignore($this->route('scholar'))],
+            'supervisor_id' => [
+                'sometimes', 'required',
+                Rule::notIn([optional($this->route('scholar')->currentSupervisor)->id]),
+                Rule::exists('users', 'id')->where('is_supervisor', true),
+            ],
+            'cosupervisor_user_id' => [
+                'nullable', 'different:supervisor_id',
+                Rule::exists(User::class, 'id')
+                    ->where('is_cosupervisor', true),
+            ],
+            'cosupervisor_external_id' => [
+                'nullable', Rule::exists(ExternalAuthority::class, 'id')->where('is_cosupervisor', true),
             ],
         ];
     }

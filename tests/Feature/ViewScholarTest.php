@@ -2,8 +2,10 @@
 
 namespace Tests\Feature;
 
+use App\ExternalAuthority;
 use App\Models\Cosupervisor;
 use App\Models\Scholar;
+use App\Models\ScholarCosupervisor;
 use App\Models\Teacher;
 use App\Models\User;
 use App\Types\UserCategory;
@@ -20,9 +22,9 @@ class ViewScholarTest extends TestCase
     {
         $this->signIn();
 
-        create(Scholar::class, 3)->each(function ($scholar) {
+        $scholars = create(Scholar::class, 3)->each(function ($scholar) {
             $scholar->supervisors()->attach(factory(User::class)->states('supervisor')->create());
-            $scholar->cosupervisors()->attach(create(Cosupervisor::class));
+            create(ScholarCosupervisor::class, 1, ['scholar_id' => $scholar->id]);
         });
 
         $scholars = $this->withoutExceptionHandling()
@@ -93,7 +95,9 @@ class ViewScholarTest extends TestCase
     /** @test */
     public function view_has_a_unique_list_of_cosupervisors()
     {
-        $cosupervisors = create(Cosupervisor::class, 3);
+        $userCosupervisors = factory(User::class)->states('cosupervisor')->create();
+        $externalCosupervisors = factory(ExternalAuthority::class)->states('cosupervisor')->create();
+
         $this->signIn();
 
         $viewData = $this->withoutExceptionHandling()
@@ -103,6 +107,6 @@ class ViewScholarTest extends TestCase
              ->assertViewHas('cosupervisors')
              ->viewData('cosupervisors');
 
-        $this->assertCount(Cosupervisor::count(), $viewData);
+        $this->assertCount(2, $viewData);
     }
 }

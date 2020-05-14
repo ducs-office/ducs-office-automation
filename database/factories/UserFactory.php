@@ -47,6 +47,16 @@ $factory->state(User::class, 'supervisor', [
     'is_supervisor' => true,
 ]);
 
+$factory->state(User::class, 'cosupervisor', [
+    'category' => UserCategory::FACULTY_TEACHER,
+    'is_supervisor' => false,
+    'is_cosupervisor' => true,
+]);
+
 $factory->state(User::class, 'faculty', [
     'category' => UserCategory::FACULTY_TEACHER,
+]);
+
+$factory->state(User::class, 'college', [
+    'category' => UserCategory::COLLEGE_TEACHER,
 ]);
