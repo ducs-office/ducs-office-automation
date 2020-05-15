@@ -5,7 +5,7 @@ namespace Tests\Feature;
 use App\Exceptions\TeacherProfileNotCompleted;
 use App\Models\College;
 use App\Models\Course;
-use App\Models\CourseProgrammeRevision;
+use App\Models\Pivot\CourseProgrammeRevision;
 use App\Models\Programme;
 use App\Models\Teacher;
 use App\Models\TeachingDetail;

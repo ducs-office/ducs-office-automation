@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Research;
 
 use App\Http\Controllers\Controller;
 use App\Models\PhdCourse;
+use App\Models\Pivot\ScholarCoursework;
 use App\Models\Scholar;
-use App\Models\ScholarCourseworkPivot;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
@@ -49,7 +49,7 @@ class ScholarCourseworkController extends Controller
         return redirect()->back();
     }
 
-    public function viewMarksheet(Scholar $scholar, ScholarCourseworkPivot $course)
+    public function viewMarksheet(Scholar $scholar, ScholarCoursework $course)
     {
         $this->authorize('view', $scholar);
 

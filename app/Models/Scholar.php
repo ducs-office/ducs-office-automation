@@ -9,11 +9,12 @@ use App\Casts\OldAdvisoryCommittee;
 use App\Concerns\HasPublications;
 use App\Models\Cosupervisor;
 use App\Models\ExternalAuthority;
+use App\Models\Pivot\ScholarCoursework;
+use App\Models\Pivot\ScholarSupervisor;
 use App\Models\Publication;
 use App\Models\ScholarAdvisor;
 use App\Models\ScholarAppeal;
 use App\Models\User;
-use App\ScholarSupervisor;
 use App\Types\AdmissionMode;
 use App\Types\Gender;
 use App\Types\LeaveStatus;
@@ -166,7 +167,7 @@ class Scholar extends User
     {
         return $this->belongsToMany(PhdCourse::class)
             ->withPivot(['completed_on', 'marksheet_path', 'id'])
-            ->using(ScholarCourseworkPivot::class);
+            ->using(ScholarCoursework::class);
     }
 
     public function completedCourseworks()

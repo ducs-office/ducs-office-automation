@@ -3,7 +3,7 @@
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 use App\Models\College;
 use App\Models\Course;
-use App\Models\CourseProgrammeRevision;
+use App\Models\Pivot\CourseProgrammeRevision;
 use App\Models\ProgrammeRevision;
 use App\Models\Teacher;
 use App\Models\TeachingRecord;

@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Staff;
 
-use App\Models\CourseProgrammeRevision;
+use App\Models\Pivot\CourseProgrammeRevision;
 use App\Models\Programme;
 use App\Types\ProgrammeType;
 use Illuminate\Foundation\Http\FormRequest;

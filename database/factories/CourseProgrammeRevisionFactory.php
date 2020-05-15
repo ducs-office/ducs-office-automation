@@ -2,7 +2,7 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 use App\Models\Course;
-use App\Models\CourseProgrammeRevision;
+use App\Models\Pivot\CourseProgrammeRevision;
 use App\Models\ProgrammeRevision;
 use Faker\Generator as Faker;
 

@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Models\CourseProgrammeRevision;
+use App\Models\Pivot\CourseProgrammeRevision;
 use App\Models\ProgrammeRevision;
 use App\Types\Designation;
 use App\Types\TeacherStatus;

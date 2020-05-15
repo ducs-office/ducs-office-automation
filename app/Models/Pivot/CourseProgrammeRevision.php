@@ -1,7 +1,9 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Pivot;
 
+use App\Models\Course;
+use App\Models\ProgrammeRevision;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class CourseProgrammeRevision extends Pivot

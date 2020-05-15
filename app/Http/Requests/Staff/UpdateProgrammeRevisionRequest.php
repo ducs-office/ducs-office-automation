@@ -3,7 +3,7 @@
 namespace App\Http\Requests\Staff;
 
 use App\Models\Course;
-use App\Models\CourseProgrammeRevision;
+use App\Models\Pivot\CourseProgrammeRevision;
 use App\Models\ProgrammeRevision;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;

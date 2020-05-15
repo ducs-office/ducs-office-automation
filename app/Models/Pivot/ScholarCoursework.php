@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Pivot;
 
 use Illuminate\Database\Eloquent\Relations\Pivot as Pivot;
 
-class ScholarCourseworkPivot extends Pivot
+class ScholarCoursework extends Pivot
 {
     protected $table = 'phd_course_scholar';
 
