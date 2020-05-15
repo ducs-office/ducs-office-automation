@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Research;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ChangeScholarAdvisorsRequest;
 use App\Models\Cosupervisor;
 use App\Models\ExternalAuthority;
 use App\Models\PhdCourse;
@@ -57,27 +58,9 @@ class ScholarController extends Controller
         ]);
     }
 
-    public function updateAdvisors(Request $request, Scholar $scholar)
+    public function updateAdvisors(ChangeScholarAdvisorsRequest $request, Scholar $scholar)
     {
-        $validData = $request->validate([
-            'advisors' => ['required', 'array', 'max:2'],
-            'advisors.*.user_id' => ['sometimes', 'required', 'integer'],
-            'advisors.*.external_id' => ['sometimes', 'required', 'integer'],
-            'advisors.*.name' => [
-                'required_without_all:advisors.*.user_id,advisors.*.external_id',
-            ],
-            'advisors.*.designation' => [
-                'required_without_all:advisors.*.user_id,advisors.*.external_id',
-            ],
-            'advisors.*.affiliation' => [
-                'required_without_all:advisors.*.user_id,advisors.*.external_id',
-            ],
-            'advisors.*.email' => [
-                'required_without_all:advisors.*.user_id,advisors.*.external_id',
-                'email', 'unique:external_authorities,email',
-            ],
-            'advisors.*.phone' => ['nullable', 'string'],
-        ]);
+        $validData = $request->validated();
 
         $updatedAdvisors = collect($validData['advisors'])->map(function ($item) use ($scholar) {
             return [
@@ -95,33 +78,9 @@ class ScholarController extends Controller
         return back();
     }
 
-    public function replaceAdvisors(Request $request, Scholar $scholar)
+    public function replaceAdvisors(ChangeScholarAdvisorsRequest $request, Scholar $scholar)
     {
-        abort_if(
-            $scholar->currentAdvisors->count() == 0,
-            403,
-            'You cant replace advisors, no advisors assigned. Use edit feature instead'
-        );
-
-        $validData = $request->validate([
-            'advisors' => ['required', 'array', 'max:2'],
-            'advisors.*.user_id' => ['sometimes', 'required', 'integer'],
-            'advisors.*.external_id' => ['sometimes', 'required', 'integer'],
-            'advisors.*.name' => [
-                'required_without_all:advisors.*.user_id,advisors.*.external_id',
-            ],
-            'advisors.*.designation' => [
-                'required_without_all:advisors.*.user_id,advisors.*.external_id',
-            ],
-            'advisors.*.affiliation' => [
-                'required_without_all:advisors.*.user_id,advisors.*.external_id',
-            ],
-            'advisors.*.email' => [
-                'required_without_all:advisors.*.user_id,advisors.*.external_id',
-                'email', 'unique:external_authorities,email',
-            ],
-            'advisors.*.phone' => ['nullable', 'string'],
-        ]);
+        $validData = $request->validated();
 
         $updatedAdvisors = collect($validData['advisors'])->map(function ($item) use ($scholar) {
             return [

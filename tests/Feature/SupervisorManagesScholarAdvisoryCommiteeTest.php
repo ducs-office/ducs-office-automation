@@ -2,18 +2,13 @@
 
 namespace Tests\Feature;
 
-use App\ExternalAuthority;
-use App\Models\Cosupervisor;
+use App\Models\ExternalAuthority;
 use App\Models\Scholar;
 use App\Models\ScholarAdvisor;
 use App\Models\ScholarCosupervisor;
 use App\Models\User;
-use App\Types\AdvisoryCommitteeMember;
-use App\Types\Designation;
-use App\Types\UserCategory;
-use Exception;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Carbon;
 use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
@@ -136,6 +131,66 @@ class SupervisorManagesScholarAdvisoryCommiteeTest extends TestCase
 
         // Created with same term as pervious even when changed after 10 days.
         $this->assertEquals(today()->subDays(10), $advisors->first()->started_on);
+    }
+
+    /** @test */
+    public function scholars_current_advisors_cannot_be_added_with_current_supervisor_cosupervisor_or_same_advisors()
+    {
+        $scholar = create(Scholar::class);
+
+        $supervisor = factory(User::class)->states('supervisor')->create();
+        $scholar->supervisors()->attach($supervisor);
+
+        $cosupervisor = factory(User::class)->states('cosupervisor')->create();
+        $scholar->cosupervisors()->create([
+            'person_type' => User::class,
+            'person_id' => $cosupervisor->id,
+        ]);
+
+        $existingExternals = create(ExternalAuthority::class, 2);
+
+        // 10 Days later...
+        Carbon::setTestNow(today()->addDays(10));
+
+        $this->signIn($supervisor);
+
+        // Try adding current Supervisor and cosupervisor as advisors.
+        try {
+            $this->withoutExceptionHandling()
+                ->patch(route('research.scholars.advisors.update', $scholar), [
+                    'advisors' => [
+                        ['user_id' => $supervisor->id],
+                        ['user_id' => $cosupervisor->id],
+                    ],
+                ])->assertRedirect()
+                ->assertSessionHasFlash('success', 'Advisors Updated SuccessFully!');
+
+            $this->fail('Advisors were allowed to same as supervisor or cosupervisor. Valdiation Error was Expected.');
+        } catch (ValidationException $e) {
+            $this->assertArrayHasKey('advisors.0.user_id', $e->errors(), 'Supervisor was allowed');
+            $this->assertArrayHasKey('advisors.1.user_id', $e->errors(), 'Cosupervisor was allowed');
+        }
+
+        $this->assertCount(0, $advisors = $scholar->refresh()->currentAdvisors);
+
+        // Try adding current same person as two different advisors.
+        try {
+            $this->withoutExceptionHandling()
+                ->patch(route('research.scholars.advisors.update', $scholar), [
+                    'advisors' => [
+                        ['external_id' => $existingExternals[0]->id],
+                        ['external_id' => $existingExternals[0]->id],
+                    ],
+                ])->assertRedirect()
+                ->assertSessionHasFlash('success', 'Advisors Updated SuccessFully!');
+
+            $this->fail('Advisors were allowed to same as supervisor or cosupervisor. Valdiation Error was Expected.');
+        } catch (ValidationException $e) {
+            $this->assertArrayHasKey('advisors.0.external_id', $e->errors(), 'Duplicates were allowed');
+            $this->assertArrayHasKey('advisors.1.external_id', $e->errors(), 'Duplicates were allowed');
+        }
+
+        $this->assertCount(0, $advisors = $scholar->refresh()->currentAdvisors);
     }
 
     /** @test */
@@ -301,6 +356,69 @@ class SupervisorManagesScholarAdvisoryCommiteeTest extends TestCase
     }
 
     /** @test */
+    public function scholars_current_advisors_cannot_be_replaced_with_current_supervisor_cosupervisor_or_same_advisors()
+    {
+        $scholar = create(Scholar::class);
+
+        $supervisor = factory(User::class)->states('supervisor')->create();
+        $scholar->supervisors()->attach($supervisor);
+
+        $cosupervisor = factory(User::class)->states('cosupervisor')->create();
+        $scholar->cosupervisors()->create([
+            'person_type' => User::class,
+            'person_id' => $cosupervisor->id,
+        ]);
+
+        $externalAdvisors = make(ScholarAdvisor::class, 2, ['advisor_type' => ExternalAuthority::class]);
+        $scholar->advisors()->saveMany($externalAdvisors);
+
+        $existingExternals = create(ExternalAuthority::class, 2);
+
+        // 10 Days later...
+        Carbon::setTestNow(today()->addDays(10));
+
+        $this->signIn($supervisor);
+
+        // Try adding current Supervisor and cosupervisor as advisors.
+        try {
+            $this->withoutExceptionHandling()
+                ->patch(route('research.scholars.advisors.replace', $scholar), [
+                    'advisors' => [
+                        ['user_id' => $supervisor->id],
+                        ['user_id' => $cosupervisor->id],
+                    ],
+                ])->assertRedirect()
+                ->assertSessionHasFlash('success', 'Advisors Updated SuccessFully!');
+
+            $this->fail('Advisors were allowed to same as supervisor or cosupervisor. Valdiation Error was Expected.');
+        } catch (ValidationException $e) {
+            $this->assertArrayHasKey('advisors.0.user_id', $e->errors(), 'Supervisor was allowed');
+            $this->assertArrayHasKey('advisors.1.user_id', $e->errors(), 'Cosupervisor was allowed');
+        }
+
+        $this->assertCount(2, $advisors = $scholar->refresh()->advisors);
+
+        // Try adding current same person as two different advisors.
+        try {
+            $this->withoutExceptionHandling()
+                ->patch(route('research.scholars.advisors.replace', $scholar), [
+                    'advisors' => [
+                        ['external_id' => $existingExternals[0]->id],
+                        ['external_id' => $existingExternals[0]->id],
+                    ],
+                ])->assertRedirect()
+                ->assertSessionHasFlash('success', 'Advisors Updated SuccessFully!');
+
+            $this->fail('Advisors were allowed to same as supervisor or cosupervisor. Valdiation Error was Expected.');
+        } catch (ValidationException $e) {
+            $this->assertArrayHasKey('advisors.0.external_id', $e->errors(), 'Duplicates were allowed');
+            $this->assertArrayHasKey('advisors.1.external_id', $e->errors(), 'Duplicates were allowed');
+        }
+
+        $this->assertCount(2, $advisors = $scholar->refresh()->advisors);
+    }
+
+    /** @test */
     public function scholar_advisors_cannot_be_replaced_if_no_current_advisors_assigned()
     {
         $scholar = create(Scholar::class);
@@ -313,7 +431,9 @@ class SupervisorManagesScholarAdvisoryCommiteeTest extends TestCase
 
         $this->signIn($supervisor);
 
-        $this->withExceptionHandling()
+        $this->expectException(AuthorizationException::class, 'advisors were allowed to replace, even when there were no advisors before. Action was not Authorized.');
+
+        $this->withoutExceptionHandling()
             ->patch(route('research.scholars.advisors.replace', $scholar))
             ->assertForbidden();
 
