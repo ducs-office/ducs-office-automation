@@ -3,11 +3,24 @@
 namespace App\Models;
 
 use App\Casts\CustomType;
+use App\Concerns\Filterable;
+use App\Filters\LetterFilters\AfterDate;
+use App\Filters\LetterFilters\BeforeDate;
+use App\Filters\LetterFilters\ByCreatorId;
+use App\Filters\LetterFilters\ByRecipientString;
+use App\Filters\LetterFilters\BySenderId;
+use App\Filters\LetterFilters\ByType;
+use App\Filters\LetterFilters\SearchLike;
 use App\Types\OutgoingLetterType;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Facades\Cache;
 
 class OutgoingLetter extends Model
 {
+    use Filterable;
+
     protected $perPage = 20;
 
     protected $fillable = [
@@ -15,17 +28,19 @@ class OutgoingLetter extends Model
         'sender_id', 'creator_id',
     ];
 
+    protected $filters = [
+        BeforeDate::class,
+        AfterDate::class,
+        ByType::class,
+        ByRecipientString::class,
+        BySenderId::class,
+        ByCreatorId::class,
+        SearchLike::class,
+    ];
+
     protected $casts = [
         'date' => 'datetime',
         'type' => CustomType::class . ':' . OutgoingLetterType::class,
-    ];
-
-    protected $allowedFilters = [
-        'date' => 'less_than',
-        'type' => 'equals',
-        'recipient' => 'equals',
-        'creator_id' => 'equals',
-        'sender_id' => 'equals',
     ];
 
     protected static function boot()

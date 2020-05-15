@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Staff;
 
+use App\Filters\LetterFilters\AfterDate;
+use App\Filters\LetterFilters\BeforeDate;
+use App\Filters\LetterFilters\SearchLike;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Staff\StoreOutgoingLetterRequest;
 use App\Http\Requests\Staff\UpdateOutgoingLetterRequest;
@@ -10,6 +13,7 @@ use App\Models\Remark;
 use App\Models\User;
 use App\Types\OutgoingLetterType;
 use Illuminate\Http\Request;
+use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Facades\Auth;
 
 class OutgoingLettersController extends Controller
@@ -23,15 +27,14 @@ class OutgoingLettersController extends Controller
     {
         $filters = $request->query('filters');
 
-        $query = OutgoingLetter::applyFilter($filters)->with(['remarks.user', 'reminders']);
-
-        if ($request->has('search') && request('search') !== '') {
-            $query->where('subject', 'like', '%' . request('search') . '%')
-                ->orWhere('description', 'like', '%' . request('search') . '%');
-        }
+        $letters = OutgoingLetter::query()
+            ->filter()
+            ->with(['remarks.user', 'reminders'])
+            ->orderBy('date', 'DESC')
+            ->paginate();
 
         return view('staff.outgoing_letters.index', [
-            'letters' => $query->orderBy('date', 'DESC')->paginate(),
+            'letters' => $letters,
             'types' => collect(OutgoingLetterType::values())->combine(OutgoingLetterType::values()),
             'recipients' => OutgoingLetter::selectRaw('DISTINCT(recipient)')->get()->pluck('recipient', 'recipient'),
             'creators' => User::select(['id', 'first_name', 'last_name'])

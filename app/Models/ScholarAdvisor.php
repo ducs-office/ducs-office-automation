@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use App\Models\Model;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Model;
 
 class ScholarAdvisor extends Model
 {

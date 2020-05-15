@@ -17,19 +17,16 @@ class IncomingLettersController extends Controller
         $this->authorizeResource(IncomingLetter::class, 'letter');
     }
 
-    public function index(Request $request)
+    public function index()
     {
-        $filters = $request->query('filters');
-
-        $query = IncomingLetter::applyFilter($filters)->with(['remarks.user', 'handovers']);
-
-        if ($request->has('search') && $request['search'] !== '') {
-            $query->where('subject', 'like', '%' . $request['search'] . '%')
-                ->orWhere('description', 'like', '%' . $request['search'] . '%');
-        }
+        $letters = IncomingLetter::query()
+            ->filter()
+            ->with(['remarks.user', 'handovers'])
+            ->orderBy('date', 'DESC')
+            ->get();
 
         return view('staff.incoming_letters.index', [
-            'incomingLetters' => $query->orderBy('date', 'DESC')->get(),
+            'incomingLetters' => $letters,
             'recipients' => User::select(['id', 'first_name', 'last_name'])
                     ->whereIn('id', IncomingLetter::selectRaw('DISTINCT(recipient_id)'))
                     ->get()->pluck('name', 'id'),

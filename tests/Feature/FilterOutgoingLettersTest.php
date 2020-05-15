@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\OutgoingLetter;
 use App\Models\User;
+use App\Types\OutgoingLetterType;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -28,7 +29,7 @@ class FilterOutgoingLettersTest extends TestCase
 
         $viewOutgoingLetters = $this->withoutExceptionHandling()
             ->get(route('staff.outgoing_letters.index', [
-                'filters' => ['date' => ['less_than' => $beforeFilter]],
+                'filters' => ['before_date' => $beforeFilter],
             ]))
             ->assertSuccessful()
             ->assertViewIs('staff.outgoing_letters.index')
@@ -36,7 +37,7 @@ class FilterOutgoingLettersTest extends TestCase
             ->viewData('letters');
 
         $this->assertInstanceOf(LengthAwarePaginator::class, $viewOutgoingLetters);
-        $this->assertEquals(2, $viewOutgoingLetters->total(), 'Only 2 letters were expected but :actual letters were returned');
+        $this->assertEquals(2, $viewOutgoingLetters->total());
 
         $lettersAfterBeforeFilter = $viewOutgoingLetters->filter(function ($letter) use ($beforeFilter) {
             return Carbon::parse($beforeFilter)->lessThan($letter->date);
@@ -58,7 +59,7 @@ class FilterOutgoingLettersTest extends TestCase
 
         $viewOutgoingLetters = $this->withoutExceptionHandling()
             ->get(route('staff.outgoing_letters.index', [
-                'filters' => ['date' => ['greater_than' => $afterFilter]],
+                'filters' => ['after_date' => $afterFilter],
             ]))
             ->assertSuccessful()
             ->assertViewIs('staff.outgoing_letters.index')
@@ -66,7 +67,7 @@ class FilterOutgoingLettersTest extends TestCase
             ->viewData('letters');
 
         $this->assertInstanceOf(LengthAwarePaginator::class, $viewOutgoingLetters);
-        $this->assertEquals(1, $viewOutgoingLetters->total(), 'Only 1 letter was expected but :actual letters were returned');
+        $this->assertEquals(1, $viewOutgoingLetters->total());
 
         $lettersBeforeAfterFilter = $viewOutgoingLetters->filter(function ($letter) use ($afterFilter) {
             return Carbon::parse($afterFilter)->greaterThan($letter->date);
@@ -91,10 +92,8 @@ class FilterOutgoingLettersTest extends TestCase
         $viewOutgoingLetters = $this->withoutExceptionHandling()
             ->get(route('staff.outgoing_letters.index', [
                 'filters' => [
-                    'date' => [
-                        'greater_than' => $afterFilter,
-                        'less_than' => $beforeFilter,
-                    ],
+                    'after_date' => $afterFilter,
+                    'before_date' => $beforeFilter,
                 ],
             ]))
             ->assertSuccessful()
@@ -123,7 +122,7 @@ class FilterOutgoingLettersTest extends TestCase
 
         $viewLetters = $this->withoutExceptionHandling()
             ->get(route('staff.outgoing_letters.index', [
-                'filters' => ['date' => ['greater_than' => $after_date]],
+                'filters' => ['after_date' => $after_date],
             ]))
             ->assertSuccessful()
             ->assertViewIs('staff.outgoing_letters.index')
@@ -143,9 +142,7 @@ class FilterOutgoingLettersTest extends TestCase
 
         $viewLetters = $this->withoutExceptionHandling()
             ->get(route('staff.outgoing_letters.index', [
-                'filters' => [
-                    'date' => ['less_than' => $before_date],
-                ],
+                'filters' => ['before_date' => $before_date],
             ]))
             ->assertSuccessful()
             ->assertViewIs('staff.outgoing_letters.index')
@@ -167,10 +164,8 @@ class FilterOutgoingLettersTest extends TestCase
         $viewLetters = $this->withoutExceptionHandling()
             ->get(route('staff.outgoing_letters.index', [
                 'filters' => [
-                    'date' => [
-                        'greater_than' => $after_date,
-                        'less_than' => $before_date,
-                    ],
+                    'after_date' => $after_date,
+                    'before_date' => $before_date,
                 ],
             ]))
             ->assertSuccessful()
@@ -192,7 +187,7 @@ class FilterOutgoingLettersTest extends TestCase
 
         $viewLetters = $this->withoutExceptionHandling()
             ->get(route('staff.outgoing_letters.index', [
-                'filters' => ['type' => ['equals' => 'Bill']],
+                'filters' => ['type' => OutgoingLetterType::BILL],
             ]))
             ->assertSuccessful()
             ->assertViewIs('staff.outgoing_letters.index')
@@ -215,7 +210,7 @@ class FilterOutgoingLettersTest extends TestCase
 
         $viewLetters = $this->withoutExceptionHandling()
             ->get(route('staff.outgoing_letters.index', [
-                'filters' => ['recipient' => ['equals' => 'DUCC']],
+                'filters' => ['recipient' => 'DUCC'],
             ]))
             ->assertSuccessful()
             ->assertViewIs('staff.outgoing_letters.index')
@@ -238,7 +233,7 @@ class FilterOutgoingLettersTest extends TestCase
 
         $viewLetters = $this->withoutExceptionHandling()
             ->get(route('staff.outgoing_letters.index', [
-                'filters' => ['creator_id' => ['equals' => 1]],
+                'filters' => ['creator_id' => '1'],
             ]))
             ->assertSuccessful()
             ->assertViewIs('staff.outgoing_letters.index')
@@ -261,7 +256,7 @@ class FilterOutgoingLettersTest extends TestCase
 
         $viewLetters = $this->withoutExceptionHandling()
             ->get(route('staff.outgoing_letters.index', [
-                'filters' => ['sender_id' => ['equals' => 1]],
+                'filters' => ['sender_id' => 1],
             ]))
             ->assertSuccessful()
             ->assertViewIs('staff.outgoing_letters.index')

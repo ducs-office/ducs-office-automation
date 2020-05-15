@@ -3,12 +3,22 @@
 namespace App\Models;
 
 use App\Casts\CustomType;
+use App\Concerns\Filterable;
+use App\Filters\LetterFilters\AfterDate;
+use App\Filters\LetterFilters\BeforeDate;
+use App\Filters\LetterFilters\ByPriority;
+use App\Filters\LetterFilters\ByRecipientId;
+use App\Filters\LetterFilters\BySenderString;
+use App\Filters\LetterFilters\SearchLike;
 use App\Types\Priority;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 
 class IncomingLetter extends Model
 {
+    use Filterable;
+
     protected $fillable = [
         'date', 'received_id', 'sender', 'description', 'subject', 'priority',
         'recipient_id', 'creator_id',
@@ -19,11 +29,13 @@ class IncomingLetter extends Model
         'priority' => CustomType::class . ':' . Priority::class,
     ];
 
-    protected $allowedFilters = [
-        'date' => 'less_than',
-        'priority' => 'equals',
-        'recipient_id' => 'equals',
-        'sender' => 'equals',
+    protected $filters = [
+        BeforeDate::class,
+        AfterDate::class,
+        BySenderString::class,
+        ByRecipientId::class,
+        ByPriority::class,
+        SearchLike::class,
     ];
 
     protected static function boot()

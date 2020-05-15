@@ -28,7 +28,7 @@ class FilterAndSearchIncomingLettersTest extends TestCase
 
         $viewIncomingLetters = $this->withoutExceptionHandling()
             ->get(route('staff.incoming_letters.index', [
-                'filters' => ['date' => ['less_than' => $beforeFilter]],
+                'filters' => ['before_date' => $beforeFilter],
             ]))
             ->assertSuccessful()
             ->assertViewIs('staff.incoming_letters.index')
@@ -58,7 +58,7 @@ class FilterAndSearchIncomingLettersTest extends TestCase
 
         $viewIncomingLetters = $this->withoutExceptionHandling()
             ->get(route('staff.incoming_letters.index', [
-                'filters' => ['date' => ['greater_than' => $afterFilter]],
+                'filters' => ['after_date' => $afterFilter],
             ]))
             ->assertSuccessful()
             ->assertViewIs('staff.incoming_letters.index')
@@ -91,10 +91,8 @@ class FilterAndSearchIncomingLettersTest extends TestCase
         $viewIncomingLetters = $this->withoutExceptionHandling()
             ->get(route('staff.incoming_letters.index', [
                 'filters' => [
-                    'date' => [
-                        'greater_than' => $afterFilter,
-                        'less_than' => $beforeFilter,
-                    ],
+                    'after_date' => $afterFilter,
+                    'before_date' => $beforeFilter,
                 ],
             ]))
             ->assertSuccessful()
@@ -122,7 +120,7 @@ class FilterAndSearchIncomingLettersTest extends TestCase
 
         $viewIncomingLetters = $this->withoutExceptionHandling()
             ->get(route('staff.incoming_letters.index', [
-                'filters' => ['date' => ['greater_than' => $after_date]],
+                'filters' => ['after_date' => $after_date],
             ]))
             ->assertSuccessful()
             ->assertViewIs('staff.incoming_letters.index')
@@ -141,7 +139,7 @@ class FilterAndSearchIncomingLettersTest extends TestCase
 
         $viewIncomingLetters = $this->withoutExceptionHandling()
             ->get(route('staff.incoming_letters.index', [
-                'filters' => ['date' => ['less_than' => $before_date]],
+                'filters' => ['before_date' => $before_date],
             ]))
             ->assertSuccessful()
             ->assertViewIs('staff.incoming_letters.index')
@@ -162,10 +160,8 @@ class FilterAndSearchIncomingLettersTest extends TestCase
         $viewIncomingLetters = $this->withoutExceptionHandling()
             ->get(route('staff.incoming_letters.index', [
                 'filters' => [
-                    'date' => [
-                        'greater_than' => $after_date,
-                        'less_than' => $before_date,
-                    ],
+                    'after_date' => $after_date,
+                    'before_date' => $before_date,
                 ],
             ]))
             ->assertSuccessful()
@@ -186,13 +182,13 @@ class FilterAndSearchIncomingLettersTest extends TestCase
         $this->signIn();
 
         $viewIncomingLetters = $this->withoutExceptionHandling()
-                                ->get(route('staff.incoming_letters.index', [
-                                    'filters' => ['priority' => ['equals' => Priority::HIGH]],
-                                ]))
-                                ->assertSuccessful()
-                                ->assertViewIs('staff.incoming_letters.index')
-                                ->AssertViewHas('incomingLetters')
-                                ->viewData('incomingLetters');
+            ->get(route('staff.incoming_letters.index', [
+                'filters' => ['priority' => Priority::HIGH],
+            ]))
+            ->assertSuccessful()
+            ->assertViewIs('staff.incoming_letters.index')
+            ->AssertViewHas('incomingLetters')
+            ->viewData('incomingLetters');
 
         $this->assertCount(2, $viewIncomingLetters);
         $this->assertTrue($viewIncomingLetters->pluck('id')->contains($prioritisedLetters[0]->id));
@@ -210,13 +206,13 @@ class FilterAndSearchIncomingLettersTest extends TestCase
         $this->signIn();
 
         $viewIncomingLetters = $this->withoutExceptionHandling()
-                                ->get(route('staff.incoming_letters.index', [
-                                    'filters' => ['recipient_id' => ['equals' => 1]],
-                                ]))
-                                ->assertSuccessful()
-                                ->assertViewIs('staff.incoming_letters.index')
-                                ->assertViewHas('incomingLetters')
-                                ->viewData('incomingLetters');
+            ->get(route('staff.incoming_letters.index', [
+                'filters' => ['recipient_id' => 1],
+            ]))
+            ->assertSuccessful()
+            ->assertViewIs('staff.incoming_letters.index')
+            ->assertViewHas('incomingLetters')
+            ->viewData('incomingLetters');
 
         $this->assertCount(2, $viewIncomingLetters);
         $this->assertTrue($viewIncomingLetters->pluck('id')->contains($recipientIs1[0]->id));
@@ -234,7 +230,7 @@ class FilterAndSearchIncomingLettersTest extends TestCase
 
         $viewIncomingLetters = $this->withoutExceptionHandling()
             ->get(route('staff.incoming_letters.index', [
-                'filters' => ['sender' => ['equals' => 'University Office']],
+                'filters' => ['sender' => 'University Office'],
             ]))
             ->assertSuccessful()
             ->assertViewIs('staff.incoming_letters.index')

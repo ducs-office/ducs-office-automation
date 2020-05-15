@@ -2,6 +2,9 @@
 
 namespace App\Concerns;
 
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Pipeline\Pipeline;
+
 trait Filterable
 {
     /**
@@ -9,20 +12,13 @@ trait Filterable
      *
      * @var array
      */
-    protected $allowedFilters = [];
-
-    public function scopeApplyFilter($query, $filters)
+    public function scopeFilter(Builder $query)
     {
-        $operators = config('database.operators');
-
-        $filters = array_intersect_key($filters ?? [], $this->allowedFilters);
-
-        foreach ($filters as $field => $comparators) {
-            foreach ($comparators as $operator => $value) {
-                if (trim($value) !== '') {
-                    $query->where($field, $operators[$operator], $value);
-                }
-            }
-        }
+        return app(Pipeline::class)
+            ->send($query)
+            ->through($this->filters)
+            ->then(function ($query) {
+                return $query;
+            });
     }
 }
