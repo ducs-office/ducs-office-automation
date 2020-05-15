@@ -2,10 +2,10 @@
 
 namespace Tests\Feature;
 
-use App\ExternalAuthority;
 use App\Mail\FillAdvisoryCommitteeMail;
 use App\Mail\UserRegisteredMail;
 use App\Models\Cosupervisor;
+use App\Models\ExternalAuthority;
 use App\Models\Scholar;
 use App\Models\Teacher;
 use App\Models\User;

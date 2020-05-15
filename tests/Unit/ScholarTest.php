@@ -2,10 +2,10 @@
 
 namespace Tests\Unit;
 
-use App\ExternalAuthority;
 use App\Http\Requests\ExternalAuthorityUpdateRequest;
 use App\Models\AdvisoryMeeting;
 use App\Models\Cosupervisor;
+use App\Models\ExternalAuthority;
 use App\Models\Leave;
 use App\Models\PhdCourse;
 use App\Models\Presentation;

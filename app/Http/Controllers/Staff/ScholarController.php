@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Staff;
 
 use App\Events\ScholarCreated;
-use App\ExternalAuthority;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Scholar\StoreJournalPublication;
 use App\Http\Requests\Staff\ReplaceScholarCosupervisorRequest;
@@ -12,6 +11,7 @@ use App\Http\Requests\Staff\UpdateScholarRequest;
 use App\Mail\FillAdvisoryCommitteeMail;
 use App\Mail\UserRegisteredMail;
 use App\Models\Cosupervisor;
+use App\Models\ExternalAuthority;
 use App\Models\PhdCourse;
 use App\Models\Scholar;
 use App\Models\SupervisorProfile;

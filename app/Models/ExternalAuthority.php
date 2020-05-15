@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use App\Concerns\ActsAsCosupervisor;
 use Illuminate\Database\Eloquent\Model;

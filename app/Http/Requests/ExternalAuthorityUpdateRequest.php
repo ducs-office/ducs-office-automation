@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\ExternalAuthority;
+use App\Models\ExternalAuthority;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 

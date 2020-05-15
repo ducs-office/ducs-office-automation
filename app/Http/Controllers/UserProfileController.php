@@ -60,7 +60,7 @@ class UserProfileController extends Controller
 
         flash('Profile Updated Successfully!')->success();
 
-        return redirect(route('teachers.profile'));
+        return redirect(route('profiles.show', $user));
     }
 
     protected function syncTeachingDetails(User $user, array $records)

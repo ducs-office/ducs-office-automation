@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Staff;
 
-use App\ExternalAuthority;
 use App\Http\Controllers\Controller;
 use App\Models\Cosupervisor;
+use App\Models\ExternalAuthority;
 use App\Models\Teacher;
 use App\Models\User;
 use App\Types\UserCategory;

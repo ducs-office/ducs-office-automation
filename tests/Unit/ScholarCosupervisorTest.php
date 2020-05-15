@@ -2,9 +2,9 @@
 
 namespace Tests\Unit;
 
-use App\ExternalAuthority;
 use App\Models\College;
 use App\Models\Cosupervisor;
+use App\Models\ExternalAuthority;
 use App\Models\ScholarCosupervisor;
 use App\Models\Teacher;
 use App\Models\User;

@@ -2,7 +2,7 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\ExternalAuthority;
+use App\Models\ExternalAuthority;
 use Faker\Generator as Faker;
 
 $factory->define(ExternalAuthority::class, function (Faker $faker) {

@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Research;
 
-use App\ExternalAuthority;
 use App\Http\Controllers\Controller;
 use App\Models\Cosupervisor;
+use App\Models\ExternalAuthority;
 use App\Models\PhdCourse;
 use App\Models\Scholar;
 use App\Models\User;
@@ -15,6 +15,7 @@ use App\Types\PresentationEventType;
 use App\Types\ReservationCategory;
 use App\Types\ScholarDocumentType;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class ScholarController extends Controller
 {

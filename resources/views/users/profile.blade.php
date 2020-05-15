@@ -4,7 +4,7 @@
     <div class="col-span-2 page-card p-6 overflow-visible">
         <div class="-mt-6 -mx-6 bg-magenta-800 h-48 rounded-t-md flex justify-end items-end p-4">
             @can('updateProfile', $user)
-            <a href="{{ route('teachers.profile.edit', $user) }}" class="btn inline-flex">
+            <a href="#" class="btn inline-flex">
                 <x-feather-icon name="edit" class="h-current mr-2"></x-feather-icon>
                 Edit
             </a>

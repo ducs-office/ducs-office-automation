@@ -36,7 +36,7 @@ class AcceptingTeachingRecordsStarted extends Notification
      *
      * @return \Illuminate\Notifications\Messages\MailMessage
      */
-    public function toMail()
+    public function toMail($notifiable)
     {
         return (new MailMessage())
             ->line(
@@ -45,7 +45,7 @@ class AcceptingTeachingRecordsStarted extends Notification
                 . '. Please visit your profile.'
             )
             ->line('The deadline to make submissions is ' . $this->end_date->format('Y-m-d'))
-            ->action('Profile', url(route('teachers.profile')))
+            ->action('Profile', url(route('profiles.show', $notifiable)))
             ->line('Thank you!');
     }
 

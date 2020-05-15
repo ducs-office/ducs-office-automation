@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests\Staff;
 
-use App\ExternalAuthority;
 use App\Models\Cosupervisor;
+use App\Models\ExternalAuthority;
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;

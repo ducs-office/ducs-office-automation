@@ -2,7 +2,7 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\ExternalAuthority;
+use App\Models\ExternalAuthority;
 use App\Models\Scholar;
 use App\Models\ScholarCosupervisor;
 use App\Models\User;

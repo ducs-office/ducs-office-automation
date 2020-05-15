@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\ExternalAuthority;
 use App\Http\Requests\ExternalAuthorityStoreRequest;
 use App\Http\Requests\ExternalAuthorityUpdateRequest;
+use App\Models\ExternalAuthority;
 use Illuminate\Http\Request;
 
 class ExternalAuthorityController extends Controller
