@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Casts\CustomType;
 use App\Concerns\ActsAsCosupervisor;
+use App\Concerns\ActsAsSupervisor;
 use App\Concerns\HasPublications;
 use App\Types\Designation;
 use App\Types\TeacherStatus;
@@ -16,7 +17,11 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use Notifiable, HasRoles, HasPublications, ActsAsCosupervisor;
+    use Notifiable,
+        HasRoles,
+        HasPublications,
+        ActsAsSupervisor,
+        ActsAsCosupervisor;
 
     /**
      * The attributes that are mass assignable.
@@ -44,7 +49,6 @@ class User extends Authenticatable
      * @var array
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
         'category' => CustomType::class . ':' . UserCategory::class,
         'designation' => CustomType::class . ':' . Designation::class,
         'status' => CustomType::class . ':' . TeacherStatus::class,
@@ -63,48 +67,7 @@ class User extends Authenticatable
         });
     }
 
-    public function getNameAttribute()
-    {
-        return $this->first_name . ' ' . $this->last_name;
-    }
-
-    public function setNameAttribute($name)
-    {
-        if (! Str::contains($name, ' ')) {
-            $name .= ' .';
-        }
-
-        list($this->first_name, $this->last_name) = explode(' ', $name, 2);
-    }
-
-    public function isCollegeTeacher()
-    {
-        return $this->category->equals(UserCategory::COLLEGE_TEACHER);
-    }
-
-    public function isFacultyTeacher()
-    {
-        return $this->category->equals(UserCategory::FACULTY_TEACHER);
-    }
-
-    public function isProfileComplete()
-    {
-        return $this->college_id != null
-            && $this->designation != null
-            && $this->status != null
-            && $this->teachingDetails->count() > 0;
-    }
-
-    public function scopeSupervisors(Builder $builder)
-    {
-        return $builder->where('is_supervisor', true);
-    }
-
-    public function scopeNonSupervisors(Builder $builder)
-    {
-        return $builder->where('is_supervisor', true);
-    }
-
+    // Query Scopes
     public function scopeFacultyTeachers(Builder $builder)
     {
         return $builder->where('category', UserCategory::FACULTY_TEACHER);
@@ -120,6 +83,7 @@ class User extends Authenticatable
         return $builder->whereIn('category', [UserCategory::FACULTY_TEACHER, UserCategory::COLLEGE_TEACHER]);
     }
 
+    // Eloquent Relations
     public function remarks()
     {
         return $this->hasMany(Remark::class, 'user_id');
@@ -145,19 +109,6 @@ class User extends Authenticatable
         return $this->hasMany(IncomingLetter::class, 'creator_id');
     }
 
-    public function canBecomeSupervisor()
-    {
-        return in_array($this->category, [
-            UserCategory::COLLEGE_TEACHER,
-            UserCategory::FACULTY_TEACHER,
-        ]);
-    }
-
-    public function isSupervisor()
-    {
-        return $this->is_supervisor === true;
-    }
-
     public function college()
     {
         return $this->belongsTo(College::class);
@@ -178,8 +129,42 @@ class User extends Authenticatable
         return $this->belongsToMany(Scholar::class, 'scholar_supervisor', 'supervisor_id');
     }
 
+    // Accessors & Mutators
+    public function getNameAttribute()
+    {
+        return $this->first_name . ' ' . $this->last_name;
+    }
+
+    public function setNameAttribute($name)
+    {
+        if (! Str::contains($name, ' ')) {
+            $name .= ' .';
+        }
+
+        list($this->first_name, $this->last_name) = explode(' ', $name, 2);
+    }
+
     public function getAffiliationAttribute()
     {
         return optional($this->college)->name ?? 'Unknown';
+    }
+
+    // Helpers
+    public function isCollegeTeacher()
+    {
+        return $this->category->equals(UserCategory::COLLEGE_TEACHER);
+    }
+
+    public function isFacultyTeacher()
+    {
+        return $this->category->equals(UserCategory::FACULTY_TEACHER);
+    }
+
+    public function isProfileComplete()
+    {
+        return $this->college_id != null
+            && $this->designation != null
+            && $this->status != null
+            && $this->teachingDetails->count() > 0;
     }
 }
