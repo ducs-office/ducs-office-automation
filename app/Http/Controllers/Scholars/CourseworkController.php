@@ -3,10 +3,7 @@
 namespace App\Http\Controllers\Scholars;
 
 use App\Http\Controllers\Controller;
-use App\Models\PhdCourse;
 use App\Models\Pivot\ScholarCoursework;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
