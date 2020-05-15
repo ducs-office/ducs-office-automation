@@ -419,23 +419,25 @@ class SupervisorManagesScholarAdvisoryCommiteeTest extends TestCase
     }
 
     /** @test */
-    public function scholar_advisors_cannot_be_replaced_if_no_current_advisors_assigned()
+    public function scholar_advisors_are_replaced_if_no_current_advisors_assigned_does_nothing_and_redirects_with_message()
     {
         $scholar = create(Scholar::class);
 
         $supervisor = factory(User::class)->states('supervisor')->create();
         $scholar->supervisors()->attach($supervisor);
 
-        $cosupervisor = factory(ScholarCosupervisor::class)->states('user')->make();
-        $scholar->cosupervisors()->create($cosupervisor->attributesToArray());
+        $facultyCosupervisor = factory(User::class)->states('cosupervisor')->create();
 
         $this->signIn($supervisor);
 
-        $this->expectException(AuthorizationException::class, 'advisors were allowed to replace, even when there were no advisors before. Action was not Authorized.');
-
         $this->withoutExceptionHandling()
-            ->patch(route('research.scholars.advisors.replace', $scholar))
-            ->assertForbidden();
+            ->patch(route('research.scholars.advisors.replace', $scholar), [
+                'advisors' => [
+                    ['user_id' => $facultyCosupervisor->id],
+                ],
+            ])
+            ->assertRedirect()
+            ->assertSessionHasFlash('warning', 'There must be advisors already assigned to be replaced.');
 
         $this->assertCount(0, $advisors = $scholar->refresh()->currentAdvisors);
     }

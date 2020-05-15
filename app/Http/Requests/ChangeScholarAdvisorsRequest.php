@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Models\ExternalAuthority;
 use App\Models\User;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -16,11 +17,7 @@ class ChangeScholarAdvisorsRequest extends FormRequest
      */
     public function authorize()
     {
-        if ($this->routeIs('research.scholars.advisors.update')) {
-            return true;
-        }
-
-        return $this->route('scholar')->currentAdvisors->count() > 0;
+        return true;
     }
 
     /**

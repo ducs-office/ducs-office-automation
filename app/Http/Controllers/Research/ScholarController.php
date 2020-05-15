@@ -80,6 +80,11 @@ class ScholarController extends Controller
 
     public function replaceAdvisors(ChangeScholarAdvisorsRequest $request, Scholar $scholar)
     {
+        if ($scholar->currentAdvisors->count() == 0) {
+            flash('There must be advisors already assigned to be replaced.')->warning();
+            return redirect()->back();
+        }
+
         $validData = $request->validated();
 
         $updatedAdvisors = collect($validData['advisors'])->map(function ($item) use ($scholar) {
