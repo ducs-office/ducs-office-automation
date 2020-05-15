@@ -7,6 +7,7 @@ use App\Casts\CustomType;
 use App\Casts\EducationDetails;
 use App\Casts\OldAdvisoryCommittee;
 use App\Concerns\HasPublications;
+use App\Concerns\HasResearchCommittee;
 use App\Models\Cosupervisor;
 use App\Models\ExternalAuthority;
 use App\Models\Pivot\ScholarCoursework;
@@ -24,7 +25,7 @@ use App\Types\ScholarDocumentType;
 
 class Scholar extends User
 {
-    use HasPublications;
+    use HasPublications, HasResearchCommittee;
 
     protected $hidden = ['password'];
 
@@ -89,16 +90,6 @@ class Scholar extends User
         });
     }
 
-    public function getRegisterOnAttribute()
-    {
-        return $this->created_at->format('d F Y');
-    }
-
-    public function getNameAttribute()
-    {
-        return $this->first_name . ' ' . $this->last_name;
-    }
-
     public function getRegistrationValidUptoAttribute()
     {
         return optional($this->registration_date)->addYears($this->term_duration);
@@ -107,55 +98,6 @@ class Scholar extends User
     public function profilePicture()
     {
         return $this->morphOne(Attachment::class, 'attachable');
-    }
-
-    public function supervisors()
-    {
-        return $this->belongsToMany(
-            User::class,
-            'scholar_supervisor',
-            'scholar_id',
-            'supervisor_id'
-        )
-            ->withPivot(['started_on', 'ended_on'])
-            ->using(ScholarSupervisor::class);
-    }
-
-    public function getCurrentSupervisorAttribute()
-    {
-        return $this->supervisors
-            ->firstWhere('pivot.ended_on', null);
-    }
-
-    public function cosupervisors()
-    {
-        return $this->hasMany(ScholarCosupervisor::class);
-    }
-
-    public function currentCosupervisor()
-    {
-        return $this->hasOne(ScholarCosupervisor::class)->whereNull('ended_on');
-    }
-
-    public function advisors()
-    {
-        return $this->hasMany(ScholarAdvisor::class)->orderBy('started_on', 'desc');
-    }
-
-    public function currentAdvisors()
-    {
-        return $this->hasMany(ScholarAdvisor::class)
-            ->whereNull('ended_on')
-            ->orderBy('started_on', 'desc');
-    }
-
-    public function getCommitteeAttribute()
-    {
-        return (object) [
-            'supervisor' => $this->currentSupervisor,
-            'cosupervisor' => $this->currentCosupervisor,
-            'advisors' => $this->currentAdvisors,
-        ];
     }
 
     public function presentations()
@@ -173,11 +115,6 @@ class Scholar extends User
     public function completedCourseworks()
     {
         return $this->courseworks()->wherePivot('completed_on', '<>', null);
-    }
-
-    public function addCourse(PhdCourse $course, $attributes = [])
-    {
-        return $this->courseworks()->syncWithoutDetaching([$course->id => $attributes]);
     }
 
     public function leaves()
@@ -258,5 +195,17 @@ class Scholar extends User
         return $this->isJoiningLetterUploaded()
             && $this->isTableOfContentsOfThesisUploaded()
             && $this->isPrePhdSeminarNoticeUploaded();
+    }
+
+    // Helpers
+    public function addCourse(PhdCourse $course, $attributes = [])
+    {
+        return $this->courseworks()->syncWithoutDetaching([$course->id => $attributes]);
+    }
+
+    // Accessors
+    public function getNameAttribute()
+    {
+        return $this->first_name . ' ' . $this->last_name;
     }
 }

@@ -298,17 +298,6 @@ class ScholarTest extends TestCase
     }
 
     /** @test */
-    public function register_on_attribute_return_date_when_scholar_is_created()
-    {
-        $scholar = new Scholar();
-
-        $scholar->created_at = $createdAt = now();
-        $registerOn = $createdAt->format('d F Y');
-
-        $this->assertEquals($registerOn, $scholar->register_on);
-    }
-
-    /** @test */
     public function scholar_education_is_as_an_empty_array_if_education_details_are_null_on_scholar_creation()
     {
         $this->signInScholar($scholar = create(Scholar::class, 1, ['education_details' => null]));
