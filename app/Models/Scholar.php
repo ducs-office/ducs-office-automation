@@ -10,12 +10,14 @@ use App\Concerns\HasPublications;
 use App\Models\AcademicDetail;
 use App\Models\Cosupervisor;
 use App\Models\Publication;
+use App\Models\ScholarAppeal;
 use App\Models\ScholarProfile;
 use App\Models\SupervisorProfile;
 use App\Types\AdmissionMode;
 use App\Types\Gender;
 use App\Types\LeaveStatus;
 use App\Types\ReservationCategory;
+use App\Types\ScholarAppealTypes;
 use App\Types\ScholarDocumentType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User;
@@ -188,5 +190,21 @@ class Scholar extends User
     public function progressReports()
     {
         return $this->hasMany(ProgressReport::class)->orderBy('date', 'desc');
+    }
+
+    public function appeals()
+    {
+        return $this->hasMany(ScholarAppeal::class, 'scholar_id');
+    }
+
+    public function phdSeminarAppeal()
+    {
+        return $this->appeals()->where('type', ScholarAppealTypes::PRE_PHD_SEMINAR)->get();
+    }
+
+    public function isDocumentListComplete()
+    {
+        return $this->documents()->where('type', ScholarDocumentType::JOINING_LETTER)->exists()
+            && $this->documents()->where('type', ScholarDocumentType::ACCEPTANCE_LETTER)->exists();
     }
 }

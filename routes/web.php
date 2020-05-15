@@ -17,6 +17,7 @@ Route::get('/', 'Auth\LoginController@showLoginForm')->middleware(['guest', 'gue
 Route::post('/login', 'Auth\LoginController@login')->middleware(['guest', 'guest:teachers', 'guest:scholars'])->name('login');
 Route::post('/logout', 'Auth\LoginController@logout')->middleware('auth:web,teachers,scholars')->name('logout');
 
+//============ scholar documents =====================
 Route::get(
     'scholars/{scholar}/document/{document}',
     'ScholarDocumentsController@show'
@@ -31,6 +32,28 @@ Route::delete(
     '/scholars/{scholar}/document/{document}',
     'ScholarDocumentsController@destroy'
 )->name('scholars.documents.destroy')->middleware('auth:web,teachers,scholars');
+
+//=========== scholar pre-phd seminar =============
+
+Route::get(
+    '/scholars/{scholar}/pre-phd-seminar/',
+    'ScholarAppealController@showPhdSeminarForm'
+)->name('scholars.pre_phd_seminar.show')->middleware('auth:web,teachers,scholars');
+
+Route::post(
+    '/scholars/{scholar}/pre-phd-seminar/apply/',
+    'ScholarAppealController@storePhdSeminar'
+)->name('scholars.pre_phd_seminar.apply')->middleware('auth:scholars');
+
+Route::patch(
+    '/scholars/{scholar}/appeals/{appeal}/recommend',
+    'ScholarAppealController@recommend'
+)->name('scholars.appeals.recommend')->middleware('auth:web,teachers');
+
+Route::patch(
+    '/scholars/{scholar}/appeals/{appeal}/respond',
+    'ScholarAppealController@respond'
+)->name('scholars.appeals.respond')->middleware('auth:web');
 
 Route::prefix('/publications')
 ->middleware(['auth:web,teachers,scholars'])

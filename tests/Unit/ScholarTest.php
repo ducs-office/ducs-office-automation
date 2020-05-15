@@ -9,6 +9,7 @@ use App\Models\PhdCourse;
 use App\Models\Presentation;
 use App\Models\ProgressReport;
 use App\Models\Scholar;
+use App\Models\ScholarAppeal;
 use App\Models\ScholarDocument;
 use App\Models\ScholarEducationDegree;
 use App\Models\ScholarEducationInstitute;
@@ -350,5 +351,21 @@ class ScholarTest extends TestCase
         $this->assertEquals($course->id, $scholar->courseworks->first()->pivot->phd_course_id);
         $this->assertNull($scholar->courseworks->first()->pivot->marksheet_path);
         $this->assertNull($scholar->courseworks->first()->pivot->completed_on);
+    }
+
+    /** @test */
+    public function scholar_has_many_appeals()
+    {
+        $scholar = create(Scholar::class);
+
+        $this->assertInstanceOf(HasMany::class, $scholar->appeals());
+        $this->assertCount(0, $scholar->appeals);
+
+        $scholarAppeals = create(ScholarAppeal::class, 2, ['scholar_id' => $scholar->id]);
+
+        $freshScholar = $scholar->fresh();
+
+        $this->assertCount(2, $freshScholar->appeals);
+        $this->assertEquals($scholarAppeals->pluck('id'), $freshScholar->appeals->pluck('id'));
     }
 }
