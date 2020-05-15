@@ -27,7 +27,11 @@ class ScholarDocumentsController extends Controller
 
     public function store(Request $request, Scholar $scholar)
     {
-        abort_if((int) auth()->id() !== $scholar->id, 403);
+        abort_if(
+            auth()->user() instanceof Scholar
+            && (int) auth()->id() !== $scholar->id,
+            403
+        );
 
         $request->validate([
             'document' => ['required', 'file', 'mimetypes:application/pdf, image/*', 'max:200'],
