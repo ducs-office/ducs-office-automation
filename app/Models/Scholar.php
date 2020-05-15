@@ -69,6 +69,7 @@ class Scholar extends User
         'presentations',
         'advisoryMeetings',
         'leaves', 'approvedLeaves',
+        'appeals',
     ];
 
     public static function boot()
@@ -202,9 +203,19 @@ class Scholar extends User
         return $this->appeals()->where('type', ScholarAppealTypes::PRE_PHD_SEMINAR)->get();
     }
 
+    public function isJoiningLetterUploaded()
+    {
+        return $this->documents()->where('type', ScholarDocumentType::JOINING_LETTER)->exists();
+    }
+
+    public function isAcceptanceLetterUploaded()
+    {
+        return $this->documents()->where('type', ScholarDocumentType::ACCEPTANCE_LETTER)->exists();
+    }
+
     public function isDocumentListComplete()
     {
-        return $this->documents()->where('type', ScholarDocumentType::JOINING_LETTER)->exists()
-            && $this->documents()->where('type', ScholarDocumentType::ACCEPTANCE_LETTER)->exists();
+        return $this->isAcceptanceLetterUploaded()
+            && $this->isJoiningLetterUploaded();
     }
 }

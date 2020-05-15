@@ -12,4 +12,5 @@
         @include('_partials.research.scholar-profile.advisory-meetings')
         @include('_partials.research.scholar-profile.progress-reports')
         @include('_partials.research.scholar-profile.documents')
+        @include('_partials.research.scholar-profile.pre-phd-seminar')
 @endsection

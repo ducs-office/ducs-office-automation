@@ -81,8 +81,8 @@ class ScholarAppealPolicy
         return get_class($user) === User::class
             && method_exists($user, 'isSupervisor')
             && $user->isSupervisor()
-            && $user->supervisorProfile->scholars->contains($appeal->scholar->id)
-            && $appeal->status === ScholarAppealStatus::APPLIED;
+            && $user->supervisorProfile->scholars->contains($appeal->scholar_id)
+            && $appeal->status == ScholarAppealStatus::APPLIED;
     }
 
     /**

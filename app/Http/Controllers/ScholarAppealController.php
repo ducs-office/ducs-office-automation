@@ -30,7 +30,7 @@ class ScholarAppealController extends Controller
             'type' => ScholarAppealTypes::PRE_PHD_SEMINAR,
         ]);
 
-        return redirect()->back();
+        return redirect(route('scholars.profile'));
     }
 
     public function recommend(Request $request, Scholar $scholar, ScholarAppeal $appeal)
@@ -59,6 +59,34 @@ class ScholarAppealController extends Controller
         ]);
 
         flash("Scholar's appeal {$request->response} successfully!")->success();
+
+        return redirect()->back();
+    }
+
+    public function reject(Request $request, Scholar $scholar, ScholarAppeal $appeal)
+    {
+        $this->authorize('respond', $appeal);
+
+        $appeal->update([
+            'status' => ScholarAppealStatus::REJECTED,
+            'response_date' => now()->format('Y-m-d'),
+        ]);
+
+        flash("Scholar's appeal {ScholarAppealStatus::REJECTED} successfully!")->success();
+
+        return redirect()->back();
+    }
+
+    public function approve(Request $request, Scholar $scholar, ScholarAppeal $appeal)
+    {
+        $this->authorize('respond', $appeal);
+
+        $appeal->update([
+            'status' => ScholarAppealStatus::APPROVED,
+            'response_date' => now()->format('Y-m-d'),
+        ]);
+
+        flash("Scholar's appeal {ScholarAppealStatus::APPROVED} successfully!")->success();
 
         return redirect()->back();
     }

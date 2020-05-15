@@ -55,6 +55,16 @@ Route::patch(
     'ScholarAppealController@respond'
 )->name('scholars.appeals.respond')->middleware('auth:web');
 
+Route::patch(
+    '/scholars/{scholar}/appeals/{appeal}/approve',
+    'ScholarAppealController@approve'
+)->name('scholars.appeals.approve')->middleware('auth:web');
+
+Route::patch(
+    '/scholars/{scholar}/appeals/{appeal}/reject',
+    'ScholarAppealController@reject'
+)->name('scholars.appeals.reject')->middleware('auth:web');
+
 Route::prefix('/publications')
 ->middleware(['auth:web,teachers,scholars'])
 ->namespace('Publications')
