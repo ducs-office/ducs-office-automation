@@ -22,7 +22,7 @@
         @endauth
         <main class="flex-1 overflow-x-hidden overflow-y-auto">
             @auth('web')
-            @include('teachers.partials.header')
+            @include('staff.partials.header')
             @elseauth('scholars')
             @include('scholars.partials.header')
             @endauth

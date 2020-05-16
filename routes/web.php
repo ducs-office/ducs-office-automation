@@ -89,6 +89,7 @@ Route::patch(
 
 Route::get('/users/@{user}', 'UserProfileController@show')->name('profiles.show');
 Route::patch('/users/@{user}', 'UserProfileController@update')->name('profiles.update');
+Route::get('/users/@{user}/avatar', 'UserProfileController@avatar')->name('profiles.avatar');
 
 Route::get('/teaching-records', 'TeachingRecordsController@index')->name('teaching-records.index');
 Route::post('/teaching-details/send', 'TeachingRecordsController@store')->name('teaching-details.send');

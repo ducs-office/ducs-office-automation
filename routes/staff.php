@@ -81,7 +81,6 @@ Route::delete('/attachments/{attachment}', 'AttachmentController@destroy')->name
 
 Route::get('/teachers', 'TeacherController@index')->name('teachers.index');
 Route::post('/teachers', 'TeacherController@store')->name('teachers.store');
-Route::get('/teachers/{teacher}/avatar', 'TeacherController@avatar')->name('teachers.avatar');
 Route::get('/teachers/{teacher}', 'TeacherController@show')->name('teachers.show');
 Route::patch('/teachers/{teacher}', 'TeacherController@update')->name('teachers.update');
 Route::delete('/teachers/{teacher}', 'TeacherController@destroy')->name('teachers.destroy');

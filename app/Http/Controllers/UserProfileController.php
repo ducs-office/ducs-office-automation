@@ -3,11 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Teacher\UpdateProfileRequest;
 use App\Http\Requests\UserProfileUpdateRequest;
-use App\Models\College;
-use App\Models\Programme;
-use App\Models\TeacherProfile;
 use App\Models\User;
 use App\Types\TeacherStatus;
 use Illuminate\Http\Request;
@@ -27,24 +23,6 @@ class UserProfileController extends Controller
         return view('users.profile', [
             'designations' => TeacherStatus::values(),
             'user' => $user,
-        ]);
-    }
-
-    public function edit(Request $request)
-    {
-        $teacher = $request->user()->load([
-            'profile.college',
-            'profile.profilePicture',
-            'profile.teachingDetails',
-        ]);
-
-        $programmes = Programme::withLatestRevision()->get();
-
-        return view('teachers.edit', [
-            'colleges' => College::all()->pluck('name', 'id'),
-            'designations' => TeacherStatus::values(),
-            'programmes' => $programmes,
-            'teacher' => $teacher,
         ]);
     }
 
@@ -88,18 +66,16 @@ class UserProfileController extends Controller
             ->delete();
     }
 
-    public function avatar()
+    public function avatar(User $user)
     {
-        $attachmentPicture = auth()->user()->profile->profilePicture;
-
-        if ($attachmentPicture && Storage::exists($attachmentPicture->path)) {
-            return Response::file(Storage::path($attachmentPicture->path));
+        if (Storage::exists($user->avatar_path)) {
+            return Response::file(Storage::path($user->avatar_path));
         }
 
-        $gravatarHash = md5(strtolower(trim(auth()->user()->email)));
+        $gravatarHash = md5(strtolower(trim($user->email)));
         $avatar = file_get_contents('https://gravatar.com/avatar/' . $gravatarHash . '?s=200&d=identicon');
 
-        return Response::make($avatar, 200, [
+        return Response::make($avatar, 2000, [
             'Content-Type' => 'image/jpg',
         ]);
     }
