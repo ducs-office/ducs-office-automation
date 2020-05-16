@@ -8,6 +8,7 @@ use App\Models\Leave;
 use App\Models\PhdCourse;
 use App\Models\Presentation;
 use App\Models\ProgressReport;
+use App\Models\Publication;
 use App\Models\Scholar;
 use App\Models\ScholarAppeal;
 use App\Models\ScholarDocument;
@@ -16,6 +17,7 @@ use App\Models\ScholarEducationInstitute;
 use App\Models\ScholarEducationSubject;
 use App\Models\SupervisorProfile;
 use App\Models\User;
+use App\Types\CitationIndex;
 use App\Types\EducationInfo;
 use App\Types\PrePhdCourseType;
 use App\Types\PublicationType;
@@ -367,5 +369,122 @@ class ScholarTest extends TestCase
 
         $this->assertCount(2, $freshScholar->appeals);
         $this->assertEquals($scholarAppeals->pluck('id'), $freshScholar->appeals->pluck('id'));
+    }
+
+    /** @test */
+    public function countSCIOrSCIEJournals_returns_number_of_SCI_and_SCIE_journal_publications()
+    {
+        $scholar = Create(Scholar::class);
+
+        $publicationsSCIAndSCIE = create(Publication::class, 2, [
+            'type' => PublicationType::JOURNAL,
+            'indexed_in' => [CitationIndex::SCI, CitationIndex::SCIE],
+            'main_author_type' => Scholar::class,
+            'main_author_id' => $scholar->id,
+        ]);
+
+        $publicationSCIAndMR = create(publication::class, 2, [
+            'type' => PublicationType::JOURNAL,
+            'indexed_in' => [CitationIndex::SCI, CitationIndex::MR],
+            'main_author_type' => Scholar::class,
+            'main_author_id' => $scholar->id,
+        ]);
+
+        $publciationSCIEAndSCOPUS = create(publication::class, 2, [
+            'type' => PublicationType::JOURNAL,
+            'indexed_in' => [CitationIndex::SCIE, CitationIndex::SCOPUS],
+            'main_author_type' => Scholar::class,
+            'main_author_id' => $scholar->id,
+        ]);
+
+        $publicationSCOPUSAndMR = create(Publication::class, 1, [
+            'type' => PublicationType::JOURNAL,
+            'indexed_in' => [CitationIndex::SCOPUS, CitationIndex::MR],
+            'main_author_type' => Scholar::class,
+            'main_author_id' => $scholar->id,
+        ]);
+
+        $ConferencePublicationSCIAndSCIE = create(Publication::class, 3, [
+            'type' => PublicationType::CONFERENCE,
+            'indexed_in' => [CitationIndex::SCI, CitationIndex::SCIE],
+            'main_author_type' => Scholar::class,
+            'main_author_id' => $scholar->id,
+        ]);
+
+        $this->assertCount(10, $scholar->publications);
+        $this->assertCount(7, $scholar->journals);
+        $this->assertEquals(6, $scholar->CountSCIOrSCIEJournals());
+    }
+
+    /** @test */
+    public function countMRPublications_return_number_of_indexed_in_MR_publications()
+    {
+        $scholar = Create(Scholar::class);
+
+        $publicationsSCIAndSCIE = create(Publication::class, 2, [
+            'indexed_in' => [CitationIndex::SCI, CitationIndex::SCIE],
+            'main_author_type' => Scholar::class,
+            'main_author_id' => $scholar->id,
+        ]);
+
+        $publicationSCIAndMR = create(publication::class, 2, [
+            'indexed_in' => [CitationIndex::SCI, CitationIndex::MR],
+            'main_author_type' => Scholar::class,
+            'main_author_id' => $scholar->id,
+        ]);
+
+        $publciationMR = create(publication::class, 2, [
+            'indexed_in' => [CitationIndex::MR],
+            'main_author_type' => Scholar::class,
+            'main_author_id' => $scholar->id,
+        ]);
+
+        $this->assertCount(6, $scholar->publications);
+        $this->assertEquals(4, $scholar->CountMRPublications());
+    }
+
+    /** @test */
+    public function countScopusNotSCIOrSCIE_return_number_of_publications_which_are_scopus_indexed_but_not_SCI_or_SCIE_indexed()
+    {
+        $scholar = Create(Scholar::class);
+
+        $publicationsSCISCIEAndSCOPUS = create(Publication::class, 2, [
+            'indexed_in' => [CitationIndex::SCI, CitationIndex::SCIE, CitationIndex::MR],
+            'main_author_type' => Scholar::class,
+            'main_author_id' => $scholar->id,
+        ]);
+
+        $publicationSCIAndSCOPUS = create(publication::class, 2, [
+            'indexed_in' => [CitationIndex::SCI, CitationIndex::SCOPUS],
+            'main_author_type' => Scholar::class,
+            'main_author_id' => $scholar->id,
+        ]);
+
+        $publciationSCOPUS = create(publication::class, 2, [
+            'indexed_in' => [CitationIndex::SCOPUS],
+            'main_author_type' => Scholar::class,
+            'main_author_id' => $scholar->id,
+        ]);
+
+        $publicationSCOPUSAndMR = create(publication::class, 2, [
+            'indexed_in' => [CitationIndex::SCOPUS, CitationIndex::MR],
+            'main_author_type' => Scholar::class,
+            'main_author_id' => $scholar->id,
+        ]);
+
+        $publicationMR = create(publication::class, 2, [
+            'indexed_in' => [CitationIndex::MR],
+            'main_author_type' => Scholar::class,
+            'main_author_id' => $scholar->id,
+        ]);
+
+        $publicationSCOPUSAndSCIE = create(publication::class, 2, [
+            'indexed_in' => [CitationIndex::SCOPUS, CitationIndex::SCIE],
+            'main_author_type' => Scholar::class,
+            'main_author_id' => $scholar->id,
+        ]);
+
+        $this->assertCount(12, $scholar->publications);
+        $this->assertEquals(4, $scholar->CountScopusNotSCIOrSCIEPublications());
     }
 }
