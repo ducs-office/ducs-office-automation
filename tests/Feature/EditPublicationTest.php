@@ -11,7 +11,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class EditlPublicationTest extends TestCase
+class EditPublicationTest extends TestCase
 {
     use RefreshDatabase;
 

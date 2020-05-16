@@ -79,12 +79,6 @@ Route::delete('/roles/{role}', 'RoleController@destroy')->name('roles.destroy');
 Route::get('/attachments/{attachment}', 'AttachmentController@show')->name('attachments.show');
 Route::delete('/attachments/{attachment}', 'AttachmentController@destroy')->name('attachments.destroy');
 
-Route::get('/teachers', 'TeacherController@index')->name('teachers.index');
-Route::post('/teachers', 'TeacherController@store')->name('teachers.store');
-Route::get('/teachers/{teacher}', 'TeacherController@show')->name('teachers.show');
-Route::patch('/teachers/{teacher}', 'TeacherController@update')->name('teachers.update');
-Route::delete('/teachers/{teacher}', 'TeacherController@destroy')->name('teachers.destroy');
-
 Route::get('/scholars', 'ScholarController@index')->name('scholars.index');
 Route::post('/scholars', 'ScholarController@store')->name('scholars.store');
 Route::get('/scholars/{scholar}/avatar', 'ScholarController@avatar')->name('scholars.avatar');

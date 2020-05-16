@@ -16,7 +16,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
-class EditTeacherProfileTest extends TestCase
+class EditUserProfileTest extends TestCase
 {
     use RefreshDatabase;
 
