@@ -77,6 +77,10 @@
                         <input id="enrollment_date" type="date" name="enrollment_date" class="w-full form-input flex-1" value="{{ old('date', $scholar->enrollment_date) }}">
                     </div>
                     <div class="flex items-baseline">
+                        <label for="enrolment_id" class="w-48 form-label">Enrollment Number:</label>
+                        <input id="enrolment_id" type="text" name="enrolment_id" class="w-full form-input flex-1" value="{{ old('date', $scholar->enrolment_id) }}">
+                    </div>
+                    <div class="flex items-baseline">
                         <label for="admission_mode" class="w-48 form-label">Admission Mode:</label>
                         <select id="admission_mode" name="admission_mode" class="w-full form-select flex-1">
                             <option value="" selected> Choose the mode of admission </option>

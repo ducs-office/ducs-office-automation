@@ -78,6 +78,10 @@
                         <p class="flex-1 text-gray-800"> {{ optional($scholar->registration_date)->format('d F, Y') }}</p>
                     </li>
                     <li class="px-4 py-3 flex space-x-4">
+                        <h4 class="whitespace-no-wrap font-bold w-48"> Enrolment Number </h4>
+                        <p class="flex-1 text-gray-800"> {{ $scholar->enrolment_id ?? 'not set' }}</p>
+                    </li>
+                    <li class="px-4 py-3 flex space-x-4">
                         <h4 class="whitespace-no-wrap font-bold w-48"> Term Duration </h4>
                         <p class="flex-1 text-gray-800"> {{ $scholar->term_duration }} years </p>
                     </li>

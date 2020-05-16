@@ -42,6 +42,7 @@ class Scholar extends User
         'gender',
         'research_area',
         'registration_date',
+        'enrolment_id',
         'advisory_committee',
         'education_details',
         'cosupervisor_profile_id',

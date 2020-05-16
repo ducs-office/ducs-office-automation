@@ -15,6 +15,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
 
@@ -28,8 +29,6 @@ class UpdateScholarProfileTest extends TestCase
     {
         $this->signInScholar($scholar = create(Scholar::class));
 
-        $cosupervisor = create(Cosupervisor::class);
-        $supervisorProfile = create(SupervisorProfile::class);
         $subject = create(ScholarEducationSubject::class);
         $degree = create(ScholarEducationDegree::class);
         $institute = create(ScholarEducationInstitute::class);
@@ -50,6 +49,7 @@ class UpdateScholarProfileTest extends TestCase
                     'year' => '2016',
                 ],
             ],
+            'enrolment_id' => Str::random(20),
         ];
         try {
             $this->withoutExceptionHandling()
@@ -69,6 +69,7 @@ class UpdateScholarProfileTest extends TestCase
         $this->assertEquals($updateDetails['admission_mode'], $freshScholar->admission_mode);
         $this->assertEquals($updateDetails['registration_date'], $freshScholar->registration_date->format('Y-m-d'));
         $this->assertEquals($updateDetails['research_area'], $freshScholar->research_area);
+        $this->assertEquals($updateDetails['enrolment_id'], $freshScholar->enrolment_id);
         $this->assertEquals($updateDetails['education_details'][0]['year'], $freshScholar->education_details[0]->year);
         $this->assertEquals($degree->name, $freshScholar->education_details[0]->degree);
 
@@ -94,6 +95,7 @@ class UpdateScholarProfileTest extends TestCase
                 'category' => null,
                 'admission_mode' => null,
                 'research_area' => null,
+                'enrolment_id' => null,
             ])
         );
 
@@ -161,6 +163,7 @@ class UpdateScholarProfileTest extends TestCase
                 'category' => null,
                 'admission_mode' => null,
                 'research_area' => null,
+                'enrolment_id' => null,
             ])
         );
 

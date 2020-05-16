@@ -34,6 +34,7 @@ $factory->define(Scholar::class, function (Faker $faker) {
             return factory(SupervisorProfile::class)->create()->id;
         },
         'registration_date' => $faker->date($format = 'Y-m-d', $max = now()),
+        'enrolment_id' => $faker->regexify('[A-Za-z0-9]{30}'),
         'advisory_committee' => function () use ($faker) {
             $cosupervisor = factory(Cosupervisor::class)->create();
             return [
