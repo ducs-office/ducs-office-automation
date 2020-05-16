@@ -16,11 +16,15 @@ class ScholarAppeal extends Model
 
     protected $dates = [
         'applied_on',
-        'response_date',
     ];
 
     public function scholar()
     {
         return $this->belongsTo(Scholar::class);
+    }
+
+    public function isRejected()
+    {
+        return $this->status->equals(ScholarAppealStatus::REJECTED);
     }
 }

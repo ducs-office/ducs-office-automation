@@ -19,8 +19,8 @@ class CreateScholarAppealsTable extends Migration
         Schema::create('scholar_appeals', function (Blueprint $table) {
             $table->id();
             $table->foreignId('scholar_id')->constrained('scholars')->onDelete('cascade');
-            $table->date('applied_on');
-            $table->date('response_date')->nullable();
+            $table->date('applied_on')->default(now());
+            $table->string('proposed_title')->nullable();
             $table->enum('status', ScholarAppealStatus::values())->default(ScholarAppealStatus::APPLIED);
             $table->enum('type', ScholarAppealTypes::values());
             $table->timestamps();

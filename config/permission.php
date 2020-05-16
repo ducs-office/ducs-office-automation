@@ -96,7 +96,7 @@ return [
             'phd course work' => ['mark completed'],
             'scholar progress reports' => ['add', 'view', 'delete'],
             'scholar documents' => ['add', 'view', 'delete'],
-            'scholar appeals' => ['respond'],
+            'scholar appeals' => ['mark complete'],
         ],
 
         'roles' => [
@@ -119,7 +119,7 @@ return [
                 'phd course work' => ['mark completed'],
                 'scholar progress reports' => ['add', 'view'],
                 'scholar documents' => ['add', 'view', 'delete'],
-                'scholar appeals' => ['respond'],
+                'scholar appeals' => ['mark complete'],
             ],
         ],
     ],

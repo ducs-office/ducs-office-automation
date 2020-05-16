@@ -62,5 +62,8 @@ $factory->define(Scholar::class, function (Faker $faker) {
         'cosupervisor_profile_id' => function () use ($cosupervisorProfileType) {
             return factory($cosupervisorProfileType)->create()->id;
         },
+        'finalized_title' => $faker->word,
+        'title_finalized_on' => $faker->date(),
+        'proposed_title' => $faker->word,
     ];
 });

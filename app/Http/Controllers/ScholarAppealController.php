@@ -25,42 +25,12 @@ class ScholarAppealController extends Controller
         $this->authorize('createPhDSeminar', ScholarAppeal::class);
 
         $scholar->appeals()->create([
-            'applied_on' => now()->format('Y-m-d'),
-            'status' => ScholarAppealStatus::APPLIED,
             'type' => ScholarAppealTypes::PRE_PHD_SEMINAR,
         ]);
 
+        flash('Request for Pre-PhD Seminar applied successfully!')->success();
+
         return redirect(route('scholars.profile'));
-    }
-
-    public function recommend(Request $request, Scholar $scholar, ScholarAppeal $appeal)
-    {
-        $this->authorize('recommend', $appeal);
-
-        $appeal->update([
-            'status' => ScholarAppealStatus::RECOMMENDED,
-        ]);
-
-        flash("Scholar's appeal recommended successfully!")->success();
-
-        return redirect()->back();
-    }
-
-    public function respond(Request $request, Scholar $scholar, ScholarAppeal $appeal)
-    {
-        $this->authorize('respond', $appeal);
-
-        $request->validate([
-            'response' => ['required', Rule::in([ScholarAppealStatus::APPROVED, ScholarAppealStatus::REJECTED])],
-        ]);
-
-        $appeal->update([
-            'status' => $request->response,
-        ]);
-
-        flash("Scholar's appeal {$request->response} successfully!")->success();
-
-        return redirect()->back();
     }
 
     public function reject(Request $request, Scholar $scholar, ScholarAppeal $appeal)
@@ -69,10 +39,10 @@ class ScholarAppealController extends Controller
 
         $appeal->update([
             'status' => ScholarAppealStatus::REJECTED,
-            'response_date' => now()->format('Y-m-d'),
+            'proposed_title' => $scholar->proposed_title,
         ]);
 
-        flash("Scholar's appeal {ScholarAppealStatus::REJECTED} successfully!")->success();
+        flash("Scholar's appeal rejected successfully!")->success();
 
         return redirect()->back();
     }
@@ -83,10 +53,32 @@ class ScholarAppealController extends Controller
 
         $appeal->update([
             'status' => ScholarAppealStatus::APPROVED,
-            'response_date' => now()->format('Y-m-d'),
+            'proposed_title' => $scholar->proposed_title,
         ]);
 
-        flash("Scholar's appeal {ScholarAppealStatus::APPROVED} successfully!")->success();
+        flash("Scholar's appeal approved successfully!")->success();
+
+        return redirect()->back();
+    }
+
+    public function markComplete(Request $request, Scholar $scholar, ScholarAppeal $appeal)
+    {
+        $this->authorize('markComplete', $appeal);
+
+        $appeal->update([
+            'status' => ScholarAppealStatus::COMPLETED,
+        ]);
+
+        $request->validate([
+            'finalized_title' => ['required', 'string'],
+        ]);
+
+        $scholar->update([
+            'finalized_title' => $request->finalized_title,
+            'title_finalized_on' => now(),
+        ]);
+
+        flash("Scholar's appeal marked completed successfully!")->success();
 
         return redirect()->back();
     }

@@ -50,10 +50,17 @@ class Scholar extends User
         'old_cosupervisors',
         'old_supervisors',
         'old_advisory_committees',
+        'finalized_title',
+        'title_finalized_on',
+        'proposed_title',
+    ];
+
+    protected $dates = [
+        'registration_date',
+        'title_finalized_on',
     ];
 
     protected $casts = [
-        'registration_date' => 'date',
         'advisory_committee' => AdvisoryCommittee::class,
         'old_advisory_committees' => OldAdvisoryCommittee::class,
         'category' => CustomType::class . ':' . ReservationCategory::class,
@@ -201,7 +208,7 @@ class Scholar extends User
 
     public function phdSeminarAppeal()
     {
-        return $this->appeals()->where('type', ScholarAppealTypes::PRE_PHD_SEMINAR)->get();
+        return $this->appeals()->where('type', ScholarAppealTypes::PRE_PHD_SEMINAR)->orderBY('applied_on', 'DESC')->first();
     }
 
     public function isJoiningLetterUploaded()

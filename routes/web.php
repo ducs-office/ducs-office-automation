@@ -46,16 +46,6 @@ Route::post(
 )->name('scholars.pre_phd_seminar.apply')->middleware('auth:scholars');
 
 Route::patch(
-    '/scholars/{scholar}/appeals/{appeal}/recommend',
-    'ScholarAppealController@recommend'
-)->name('scholars.appeals.recommend')->middleware('auth:web,teachers');
-
-Route::patch(
-    '/scholars/{scholar}/appeals/{appeal}/respond',
-    'ScholarAppealController@respond'
-)->name('scholars.appeals.respond')->middleware('auth:web');
-
-Route::patch(
     '/scholars/{scholar}/appeals/{appeal}/approve',
     'ScholarAppealController@approve'
 )->name('scholars.appeals.approve')->middleware('auth:web');
@@ -64,6 +54,11 @@ Route::patch(
     '/scholars/{scholar}/appeals/{appeal}/reject',
     'ScholarAppealController@reject'
 )->name('scholars.appeals.reject')->middleware('auth:web');
+
+Route::patch(
+    '/scholars/{scholar}/appeals/{appeal}/mark-complete',
+    'ScholarAppealController@markComplete'
+)->name('scholars.appeals.mark_complete')->middleware('auth:web,teachers');
 
 Route::prefix('/publications')
 ->middleware(['auth:web,teachers,scholars'])
@@ -223,4 +218,9 @@ Route::prefix('/scholars')
             '/advisory-meetings/{meeting}/minutes-of-meeting',
             'AdvisoryMeetingsController@minutesOfMeeting'
         )->name('advisory_meetings.minutes_of_meeting');
+
+        Route::patch(
+            'scholars/{scholar}/propposed-title/update',
+            'ProposedTitleController@update',
+        )->name('proposed_title.update');
     });

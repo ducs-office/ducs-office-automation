@@ -22,21 +22,18 @@ class ScholarAppealPolicy
      */
     public function viewPhdSeminarForm($user, Scholar $scholar)
     {
-        return ((
-            get_class($user) === Scholar::class
-                && ($user->isDocumentListComplete() || $user->phdSeminarAppeal()->first())
-        )
-            || (
+        return (
+                (
+                    get_class($user) === Scholar::class
+                && $user->id === $scholar->id
+                ) || (
                 get_class($user) === User::class
                 && method_exists($user, 'isSupervisor')
                 && $user->isSupervisor()
                 && $user->supervisorProfile->scholars->contains($scholar->id)
-                && $scholar->phdSeminarAppeal()->first()
-            )
-            || (
+            ) || (
                 get_class($user) === User::class
-                && $user->can('scholar appeals:respond')
-                && $scholar->phdSeminarAppeal()->first()
+                && $user->can('scholar appeals:mark complete')
             )
         );
     }
@@ -51,7 +48,10 @@ class ScholarAppealPolicy
     public function requestPhDSeminar($user)
     {
         return get_class($user) === Scholar::class
-            && $user->phdSeminarAppeal()->isEmpty();
+            && (
+                $user->phdSeminarAppeal() === null
+                    || $user->phdSeminarAppeal()->isRejected()
+            );
     }
 
     /**
@@ -65,24 +65,11 @@ class ScholarAppealPolicy
     {
         return get_class($user) === Scholar::class
             && $user->isDocumentListComplete()
-            && $user->phdSeminarAppeal()->isEmpty();
-    }
-
-    /**
-     * Determine whether the user can recomend an appeal
-     *
-     * @param  $user
-     * @param ScholarAppeal $appeal
-     *
-     * @return mixed
-     */
-    public function recommend($user, ScholarAppeal $appeal)
-    {
-        return get_class($user) === User::class
-            && method_exists($user, 'isSupervisor')
-            && $user->isSupervisor()
-            && $user->supervisorProfile->scholars->contains($appeal->scholar_id)
-            && $appeal->status == ScholarAppealStatus::APPLIED;
+            && $user->publications->count()
+            && (
+                $user->phdSeminarAppeal() === null
+                || $user->phdSeminarAppeal()->isRejected()
+            );
     }
 
     /**
@@ -96,7 +83,24 @@ class ScholarAppealPolicy
     public function respond($user, ScholarAppeal $appeal)
     {
         return get_class($user) === User::class
-            && $user->can('scholar appeals:respond')
-            && in_array($appeal->status, [ScholarAppealStatus::APPLIED, ScholarAppealStatus::RECOMMENDED]);
+            && method_exists($user, 'isSupervisor')
+            && $user->isSupervisor()
+            && $user->supervisorProfile->scholars->contains($appeal->scholar_id)
+            && $appeal->status == ScholarAppealStatus::APPLIED;
+    }
+
+    /**
+     * Determine whether the user can mark complate an appeal
+     *
+     * @param  $user
+     * @param ScholarAppeal $appeal
+     *
+     * @return mixed
+     */
+    public function markComplete($user, ScholarAppeal $appeal)
+    {
+        return get_class($user) === User::class
+            && $user->can('scholar appeals:mark complete')
+            && $appeal->status == ScholarAppealStatus::APPROVED;
     }
 }

@@ -21,6 +21,7 @@ use App\Types\CitationIndex;
 use App\Types\EducationInfo;
 use App\Types\PrePhdCourseType;
 use App\Types\PublicationType;
+use App\Types\ScholarAppealTypes;
 use App\Types\ScholarDocumentType;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -486,5 +487,27 @@ class ScholarTest extends TestCase
 
         $this->assertCount(12, $scholar->publications);
         $this->assertEquals(4, $scholar->CountScopusNotSCIOrSCIEPublications());
+    }
+
+    /** @test */
+    public function phdSeminarAppeals_method_returns_the_latest_applied_phd_seminar_appeal()
+    {
+        $scholar = create(Scholar::class);
+
+        $scholarAppealOld = create(ScholarAppeal::class, 1, [
+            'scholar_id' => $scholar->id,
+            'applied_on' => '2011-10-10',
+            'type' => ScholarAppealTypes::PRE_PHD_SEMINAR,
+        ]);
+
+        $scholarAppealNew = create(ScholarAppeal::class, 1, [
+            'scholar_id' => $scholar->id,
+            'applied_on' => '2020-10-10',
+            'type' => ScholarAppealTypes::PRE_PHD_SEMINAR,
+        ]);
+
+        $freshScholar = $scholar->fresh();
+
+        $this->assertEquals($scholarAppealNew->id, $freshScholar->phdSeminarAppeal()->id);
     }
 }

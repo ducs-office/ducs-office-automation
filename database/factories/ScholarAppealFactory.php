@@ -12,7 +12,7 @@ $factory->define(ScholarAppeal::class, function (Faker $faker) {
     return [
         'scholar_id' => factory(Scholar::class)->create()->id,
         'applied_on' => $faker->date('Y-m-d'),
-        'response_date' => $faker->date('Y-m-d'),
+        'proposed_title' => $faker->word,
         'status' => $faker->randomElement(ScholarAppealStatus::values()),
         'type' => $faker->randomElement(ScholarAppealTypes::values()),
     ];

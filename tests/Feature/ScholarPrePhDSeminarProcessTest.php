@@ -2,15 +2,18 @@
 
 namespace Tests\Feature;
 
+use App\Models\Publication;
 use App\Models\Scholar;
 use App\Models\ScholarAppeal;
 use App\Models\ScholarDocument;
+use App\Models\SupervisorProfile;
 use App\Models\User;
 use App\Types\ScholarAppealStatus;
 use App\Types\ScholarAppealTypes;
 use App\Types\ScholarDocumentType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
 class ScholarPrePhDSeminarProcessTest extends TestCase
@@ -18,19 +21,9 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function scholar_can_view_pre_phd_seminar_application_if_all_required_documents_have_been_uploaded()
+    public function scholar_can_view_their_pre_phd_seminar_application()
     {
         $this->signInScholar($scholar = create(Scholar::class));
-
-        create(ScholarDocument::class, 1, [
-            'type' => ScholarDocumentType::JOINING_LETTER,
-            'scholar_id' => $scholar->id,
-        ]);
-
-        create(ScholarDocument::class, 1, [
-            'type' => ScholarDocumentType::ACCEPTANCE_LETTER,
-            'scholar_id' => $scholar->id,
-        ]);
 
         $this->withoutExceptionHandling()
             ->get(route('scholars.pre_phd_seminar.show', $scholar))
@@ -38,33 +31,13 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
     }
 
     /** @test */
-    public function scholar_can_view_pre_phd_seminar_application_if_the_scholars_phd_seminar_appeal_exists()
-    {
-        $this->signInScholar($scholar = create(Scholar::class));
-
-        create(ScholarAppeal::class, 1, [
-            'type' => ScholarAppealTypes::PRE_PHD_SEMINAR,
-            'scholar_id' => $scholar->id,
-        ]);
-
-        $this->withoutExceptionHandling()
-            ->get(route('scholars.pre_phd_seminar.show', $scholar))
-            ->assertViewIs('research.scholars.pre_phd_form');
-    }
-
-    /** @test */
-    public function user_can_view_scholar_pre_phd_form_seminar_application_if_scholar_phd_seminar_appeal_exists_and_user_has_permission_to_respond_to_appeals()
+    public function user_can_view_scholar_pre_phd_form_seminar_application_of_scholars_if_they_have_permission_to_mark_complete_appeals()
     {
         $this->signIn($user = create(User::class), 'randomRole');
 
-        $user->roles->first()->givePermissionTo('scholar appeals:respond');
+        $user->roles->first()->givePermissionTo('scholar appeals:mark complete');
 
         $scholar = create(Scholar::class);
-
-        create(ScholarAppeal::class, 1, [
-            'type' => ScholarAppealTypes::PRE_PHD_SEMINAR,
-            'scholar_id' => $scholar->id,
-        ]);
 
         $this->withoutExceptionHandling()
             ->get(route('scholars.pre_phd_seminar.show', $scholar))
@@ -72,7 +45,7 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
     }
 
     /** @test */
-    public function scholar_supervisor_can_view_scholars_phd_seminar_application_if_scholars_phd_seminar_appeal_exists()
+    public function supervisor_can_view_their_scholars_phd_seminar_application()
     {
         $this->signIn($user = create(User::class));
 
@@ -93,7 +66,26 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
     }
 
     /** @test */
-    public function scholar_can_apply_for_a_pre_phd_seminar()
+    public function supervisor_can_not_view_their_scholars_phd_seminar_application()
+    {
+        $this->signIn($user = create(User::class));
+
+        $supervisorProfile = $user->supervisorProfile()->create();
+
+        $scholar = create(Scholar::class);
+
+        create(ScholarAppeal::class, 1, [
+            'type' => ScholarAppealTypes::PRE_PHD_SEMINAR,
+            'scholar_id' => $scholar->id,
+        ]);
+
+        $this->withExceptionHandling()
+            ->get(route('scholars.pre_phd_seminar.show', $scholar))
+            ->assertForbidden();
+    }
+
+    /** @test */
+    public function scholar_can_apply_for_a_pre_phd_seminar_if_no_appeal_for_a_phd_seminar_exists()
     {
         $this->signInScholar($scholar = create(Scholar::class));
 
@@ -107,30 +99,61 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
             'scholar_id' => $scholar->id,
         ]);
 
+        create(Publication::class, 1, [
+            'main_author_type' => Scholar::class,
+            'main_author_id' => $scholar->id,
+        ]);
+
         $this->withoutExceptionHandling()
             ->post(route('scholars.pre_phd_seminar.apply', $scholar))
-            ->assertRedirect();
+            ->assertRedirect()
+            ->assertSessionHasFlash('success', 'Request for Pre-PhD Seminar applied successfully!');
 
         $freshScholar = $scholar->fresh();
 
-        $this->assertCount(1, $freshScholar->phdSeminarAppeal());
-        $this->assertEquals(now()->format('Y-m-d'), $freshScholar->phdSeminarAppeal()->first()->applied_on->format('Y-m-d'));
-        $this->assertEquals(ScholarAppealStatus::APPLIED, $freshScholar->phdSeminarAppeal()->first()->status);
+        $this->assertCount(1, $freshScholar->appeals);
+        $this->assertEquals(now()->format('Y-m-d'), $freshScholar->appeals->first()->applied_on->format('Y-m-d'));
+        $this->assertEquals(ScholarAppealStatus::APPLIED, $freshScholar->appeals->first()->status);
+        $this->assertEquals(ScholarAppealTypes::PRE_PHD_SEMINAR, $freshScholar->appeals->first()->type);
     }
 
     /** @test */
-    public function scholar_can_apply_for_a_single_pre_phd_seminar_only()
+    public function scholar_can_apply_for_a_pre_phd_seminar_if_their_latest_appeal_has_been_rejected()
     {
         $this->signInScholar($scholar = create(Scholar::class));
 
         create(ScholarAppeal::class, 1, [
             'scholar_id' => $scholar->id,
             'type' => ScholarAppealTypes::PRE_PHD_SEMINAR,
+            'status' => ScholarAppealStatus::REJECTED,
         ]);
 
-        $this->withExceptionHandling()
+        create(ScholarDocument::class, 1, [
+            'type' => ScholarDocumentType::JOINING_LETTER,
+            'scholar_id' => $scholar->id,
+        ]);
+
+        create(ScholarDocument::class, 1, [
+            'type' => ScholarDocumentType::ACCEPTANCE_LETTER,
+            'scholar_id' => $scholar->id,
+        ]);
+
+        create(Publication::class, 1, [
+            'main_author_type' => Scholar::class,
+            'main_author_id' => $scholar->id,
+        ]);
+
+        $this->withoutExceptionHandling()
             ->post(route('scholars.pre_phd_seminar.apply', $scholar))
-            ->assertForbidden();
+            ->assertRedirect()
+            ->assertSessionHasFlash('success', 'Request for Pre-PhD Seminar applied successfully!');
+
+        $freshScholar = $scholar->fresh();
+
+        $this->assertCount(2, $freshScholar->appeals);
+        $this->assertEquals(now()->format('Y-m-d'), $freshScholar->appeals[1]->applied_on->format('Y-m-d'));
+        $this->assertEquals(ScholarAppealStatus::APPLIED, $freshScholar->appeals[1]->status);
+        $this->assertEquals(ScholarAppealTypes::PRE_PHD_SEMINAR, $freshScholar->appeals[1]->type);
     }
 
     /** @test */
@@ -138,13 +161,38 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
     {
         $this->signInScholar($scholar = create(Scholar::class));
 
+        create(Publication::class, 1, [
+            'main_author_type' => Scholar::class,
+            'main_author_id' => $scholar->id,
+        ]);
+
         $this->withExceptionHandling()
             ->post(route('scholars.pre_phd_seminar.apply', $scholar))
             ->assertForbidden();
     }
 
     /** @test */
-    public function scholars_supervisor_can_recommend_their_scholars_appeals()
+    public function scholar_can_not_apply_for_a_pre_phd_seminar_if_no_publications_exist()
+    {
+        $this->signInScholar($scholar = create(Scholar::class));
+
+        create(ScholarDocument::class, 1, [
+            'type' => ScholarDocumentType::JOINING_LETTER,
+            'scholar_id' => $scholar->id,
+        ]);
+
+        create(ScholarDocument::class, 1, [
+            'type' => ScholarDocumentType::ACCEPTANCE_LETTER,
+            'scholar_id' => $scholar->id,
+        ]);
+
+        $this->withExceptionHandling()
+            ->post(route('scholars.pre_phd_seminar.apply', $scholar))
+            ->assertForbidden();
+    }
+
+    /** @test */
+    public function scholars_supervisor_can_reject_phd_seminar_appeal()
     {
         $this->signIn($user = create(User::class));
 
@@ -160,45 +208,26 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
         ]);
 
         $this->withoutExceptionHandling()
-            ->patch(route('scholars.appeals.recommend', [$scholar, $appeal]))
-            ->assertRedirect()
-            ->assertSessionHasFlash('success', "Scholar's appeal recommended successfully!");
-
-        $this->assertEquals(ScholarAppealStatus::RECOMMENDED, $appeal->fresh()->status);
-    }
-
-    /** @test */
-    public function user_can_reject_phd_seminar_appeal_if_they_have_the_permission_to_respond_to_scholar_appeals()
-    {
-        $this->signIn($user = create(User::class), 'randomRole');
-
-        $user->roles->first()->givePermissionTo('scholar appeals:respond');
-
-        $scholar = create(Scholar::class);
-
-        $appeal = create(ScholarAppeal::class, 1, [
-            'scholar_id' => $scholar->id,
-            'status' => ScholarAppealStatus::APPLIED,
-        ]);
-
-        $this->withoutExceptionHandling()
-            ->patch(route('scholars.appeals.respond', [$scholar, $appeal]), [
+            ->patch(route('scholars.appeals.reject', [$scholar, $appeal]), [
                 'response' => ScholarAppealStatus::REJECTED,
             ])
             ->assertRedirect()
             ->assertSessionHasFlash('success', "Scholar's appeal rejected successfully!");
 
         $this->assertEquals(ScholarAppealStatus::REJECTED, $appeal->fresh()->status);
+        $this->assertEquals($scholar->proposed_title, $appeal->fresh()->proposed_title);
     }
 
     /** @test */
-    public function user_can_approve_phd_seminar_appeal_if_they_have_the_permission_to_respond_to_scholar_appeals()
+    public function scholars_supervisor_can_approve_phd_seminar_appeal()
     {
-        $this->signIn($user = create(User::class), 'randomRole');
+        $this->signIn($user = create(User::class));
 
-        $user->roles->first()->givePermissionTo('scholar appeals:respond');
+        $supervisorProfile = $user->supervisorProfile()->create();
 
-        $scholar = create(Scholar::class);
+        $scholar = create(Scholar::class, 1, [
+            'supervisor_profile_id' => $supervisorProfile->id,
+        ]);
 
         $appeal = create(ScholarAppeal::class, 1, [
             'scholar_id' => $scholar->id,
@@ -206,12 +235,39 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
         ]);
 
         $this->withoutExceptionHandling()
-            ->patch(route('scholars.appeals.respond', [$scholar, $appeal]), [
+            ->patch(route('scholars.appeals.approve', [$scholar, $appeal]), [
                 'response' => ScholarAppealStatus::APPROVED,
             ])
             ->assertRedirect()
             ->assertSessionHasFlash('success', "Scholar's appeal approved successfully!");
 
         $this->assertEquals(ScholarAppealStatus::APPROVED, $appeal->fresh()->status);
+        $this->assertEquals($scholar->proposed_title, $appeal->fresh()->proposed_title);
+    }
+
+    /** @test */
+    public function user_can_mark_phd_seminar_appeal_complete_if_they_have_permission_to_mark_complete()
+    {
+        $this->signIn($user = create(User::class), 'randomRole');
+
+        $user->roles->first()->givePermissionTo('scholar appeals:mark complete');
+
+        $scholar = create(Scholar::class);
+
+        $appeal = create(ScholarAppeal::class, 1, [
+            'scholar_id' => $scholar->id,
+            'status' => ScholarAppealStatus::APPROVED,
+        ]);
+
+        $this->withoutExceptionHandling()
+            ->patch(route('scholars.appeals.mark_complete', [$scholar, $appeal]), [
+                'finalized_title' => $title = Str::random('30'),
+            ]);
+
+        $this->assertEquals(ScholarAppealStatus::COMPLETED, $appeal->fresh()->status);
+
+        $freshScholar = $scholar->fresh();
+        $this->assertEquals($title, $freshScholar->finalized_title);
+        $this->assertEquals(now()->format('Y-m-d'), $freshScholar->title_finalized_on->format('Y-m-d'));
     }
 }
