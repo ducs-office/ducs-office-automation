@@ -75,7 +75,7 @@ Route::post(
 Route::get(
     '/scholars/{scholar}/title-approval/show',
     'ScholarTitleApprovalController@show'
-)->name('scholars.title_approval.show')->middleware('auth:we,teachers,scholars');
+)->name('scholars.title_approval.show')->middleware('auth:web,teachers,scholars');
 
 Route::patch(
     '/scholars/{scholar}/title-approval/{appeal}/approve',

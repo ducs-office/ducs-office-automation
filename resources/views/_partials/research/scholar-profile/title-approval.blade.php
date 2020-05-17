@@ -8,10 +8,39 @@
                 <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
             </svg>
         </div> 
-        @can('requestTitleApproval', \App\Models\ScholarAppeal::class)      
+        @can('applyTitleApproval', \App\Models\ScholarAppeal::class) 
         <a href="{{ route('scholars.title_approval.request', $scholar) }}" class="btn btn-magenta is-sm -ml-4 my-2">
            Request For Title Appoval
         </a>
+        @elsecan('requestTitleApproval', \App\Models\ScholarAppeal::class)
+        <button class="btn btn-magenta is-sm -ml-4 my-2" x-on:click="$modal.show('title-approval-requirements-modal')">
+            Request For Title Approval
+        </button>
+        <x-modal name="title-approval-requirements-modal" class="p-6">
+            <div> 
+                <p class="text-lg mb-3 font-bold">Your profile needs to have the following before applying for Title Approval</p>
+                <ul class="list-disc px-6">
+                    <li class="font-bold m-2 
+                        {{$scholar->isJoiningLetterUploaded() ? 'text-green-700' : 'text-gray-700 '}}"> 
+                        Joining Letter 
+                    </li>
+                    <li class="font-bold m-2 text-gray-700"> 
+                        Letter of extension from BRS (if any)
+                    </li>
+                    <li class="font-bold m-2 text-gray-700"> 
+                        Attach first pages of reprints/preprints
+                    </li>
+                    <li class="font-bold m-2
+                        {{$scholar->isPrePhdSeminarNoticeUploaded() ? 'text-green-700': 'text-gray-700'}}">
+                        Copy of the Pre-PhD Seminar notice
+                    </li>
+                    <li class="font-bold m-2
+                        {{$scholar->isTableOfContentsOfThesisUploaded() ? 'text-green-700': 'text-gray-700'}}"> 
+                        (Proposed)Table of Contents of the Thesis
+                    </li>
+                </ul>
+            </div>
+        </x-modal>
         @endcan
     </div>
     @if($scholar->titleApprovalAppeal())

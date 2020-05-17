@@ -17,6 +17,7 @@ class ScholarAppealStatus extends BaseEnumType
             self::APPROVED => 'check-circle',
             self::REJECTED => 'x-circle',
             self::APPLIED => 'alert-circle',
+            self::COMPLETED => 'check-circle',
         ][$this->value];
     }
 
