@@ -70,7 +70,7 @@ class ScholarTitleApprovalController extends Controller
             'recommended_title' => $request->recommended_title,
             'title_recommended_on' => now(),
         ]);
-        dd($appeal->status);
+
         flash("Scholar's appeal marked completed successfully!")->success();
 
         return redirect()->back();

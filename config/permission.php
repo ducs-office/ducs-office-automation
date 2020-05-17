@@ -112,6 +112,7 @@ return [
                 'users' => ['view', 'create', 'edit', 'delete'],
                 'teachers' => ['view', 'create', 'edit', 'delete'],
                 'scholars' => ['view', 'create', 'edit', 'delete'],
+                'scholar appeals' => ['mark complete'],
             ],
             'DRC Member' => [
                 'scholars' => ['view', 'create', 'edit', 'delete'],

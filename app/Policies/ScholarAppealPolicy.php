@@ -124,9 +124,9 @@ class ScholarAppealPolicy
         return
             $scholar->titleApprovalAppeal() != null && (
                 (
-                $user instanceof Scholar
+                    $user instanceof Scholar
                 && $user->id === $scholar->id
-            ) || (
+                ) || (
                 $user instanceof User
                 && method_exists($user, 'isSupervisor')
                 && $user->isSupervisor()

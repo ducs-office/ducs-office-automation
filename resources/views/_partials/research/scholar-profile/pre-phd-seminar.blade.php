@@ -68,28 +68,7 @@
         </form>
     </x-modal>
     
-    <x-modal name="mark-seminar-appeal-complete-modal" class="p-6">
-        <h2 class="text-lg font-bold mb-6">Conclude Seminar Appeal</h2>
-        <form action="{{ route('scholars.appeals.mark_complete',[ $scholar, $scholar->currentPhDSeminarAppeal()])}}" method="post">
-            @csrf_token
-            @method("PATCH")
-            <div class="flex items-center mb-2">
-                <label for="finalized_title" class="form-label">
-                    Finalized Title
-                    <span class="text-red-600">*</span>
-                </label>
-                <input type="text" name="finalized_title" class="form-input ml-2">
-            </div>
-            <div class="flex items-center mb-2">
-                <label for="title_finalized_on" class="form-label">
-                    Date of Seminar Meeting
-                    <span class="text-red-600">*</span>
-                </label>
-                <input type="date" name="title_finalized_on" class="form-input ml-2">
-            </div>
-            <button type="submit" class="btn btn-magenta ml-2">Conclude</button>
-        </form>
-    </x-modal>
+
     
     <form id="patch-form" method="POST" class="w-0">
         @csrf_token @method("PATCH")
@@ -136,13 +115,10 @@
                     </div>
                     <div class="flex ml-auto items-baseline">
                         <div class="flex">
-                            <x-feather-icon name="{{ $phdSeminarAppeal->status->getContextIcon() }}"
-                                class="h-current {{ $phdSeminarAppeal->status->getContextCSS() }} mr-2" 
-                                stroke-width="2.5">
-                            </x-feather-icon>
-                            <div class="capitalize mr-2">
+                            <p class="px-3 py-1 text-center flex items-center font-lg font-bold border border-4 border-solid rounded-full
+                                {{ $phdSeminarAppeal->status->getContextCSS() }}">
                                 {{ $phdSeminarAppeal->status }}
-                            </div>
+                            </p>
                         </div>
                         <div class="ml-2">
                             @can('respond', $phdSeminarAppeal)
@@ -161,6 +137,28 @@
                         <div class="ml-2">
                             @can('markComplete', $phdSeminarAppeal)
                                 <button class="btn  btn-magenta ml-4" x-on:click="$modal.show('mark-seminar-appeal-complete-modal')"> Conclude </button>
+                                <x-modal name="mark-seminar-appeal-complete-modal" class="p-6">
+                                    <h2 class="text-lg font-bold mb-6">Conclude Seminar Appeal</h2>
+                                    <form action="{{ route('scholars.appeals.mark_complete',[ $scholar, $phdSeminarAppeal])}}" method="post">
+                                        @csrf_token
+                                        @method("PATCH")
+                                        <div class="flex items-center mb-2">
+                                            <label for="finalized_title" class="form-label">
+                                                Finalized Title
+                                                <span class="text-red-600">*</span>
+                                            </label>
+                                            <input type="text" name="finalized_title" class="form-input ml-2">
+                                        </div>
+                                        <div class="flex items-center mb-2">
+                                            <label for="title_finalized_on" class="form-label">
+                                                Date of Seminar Meeting
+                                                <span class="text-red-600">*</span>
+                                            </label>
+                                            <input type="date" name="title_finalized_on" class="form-input ml-2">
+                                        </div>
+                                        <button type="submit" class="btn btn-magenta ml-2">Conclude</button>
+                                    </form>
+                                </x-modal>
                             @endcan
                         </div>
                     </div>
