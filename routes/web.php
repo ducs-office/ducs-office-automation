@@ -83,7 +83,7 @@ Route::patch(
 )->name('scholars.title_approval.approve')->middleware('auth:web,scholars');
 
 Route::patch(
-    '/scholars/{scholar}/appeals/{appeal}/mark-complete',
+    '/scholars/{scholar}/title-approval/{appeal}/mark-complete',
     'ScholarTitleApprovalController@markComplete'
 )->name('scholars.title_approval.mark_complete')->middleware('auth:web,teachers');
 
