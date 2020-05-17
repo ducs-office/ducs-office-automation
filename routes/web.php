@@ -29,24 +29,24 @@ Route::post('/password/reset', 'Auth\ResetPasswordController@reset')->middleware
 Route::get(
     'scholars/{scholar}/document/{document}',
     'ScholarDocumentsController@show'
-)->name('scholars.documents.show')->middleware('auth:web,teachers,scholars');
+)->name('scholars.documents.show')->middleware('auth:web,scholars');
 
 Route::post(
     '/scholars/{scholar}/document',
     'ScholarDocumentsController@store'
-)->name('scholars.documents.store')->middleware('auth:web,teachers,scholars');
+)->name('scholars.documents.store')->middleware('auth:web,scholars');
 
 Route::delete(
     '/scholars/{scholar}/document/{document}',
     'ScholarDocumentsController@destroy'
-)->name('scholars.documents.destroy')->middleware('auth:web,teachers,scholars');
+)->name('scholars.documents.destroy')->middleware('auth:web,scholars');
 
 //=========== scholar pre-phd seminar =============
 
 Route::get(
     '/scholars/{scholar}/pre-phd-seminar/',
     'ScholarAppealController@showPhdSeminarForm'
-)->name('scholars.pre_phd_seminar.show')->middleware('auth:web,teachers,scholars');
+)->name('scholars.pre_phd_seminar.show')->middleware('auth:web,scholars');
 
 Route::post(
     '/scholars/{scholar}/pre-phd-seminar/apply/',
@@ -83,7 +83,7 @@ Route::post(
 Route::get(
     '/scholars/{scholar}/title-approval/show',
     'ScholarTitleApprovalController@show'
-)->name('scholars.title_approval.show')->middleware('auth:web,teachers,scholars');
+)->name('scholars.title_approval.show')->middleware('auth:web,scholars');
 
 Route::patch(
     '/scholars/{scholar}/title-approval/{appeal}/approve',
@@ -136,7 +136,7 @@ Route::get(
     'scholars/@{scholar}/progress-report/{report}',
     'ScholarProgressReportController@show'
 )->name('scholars.progress_reports.show')
-->middleware(['auth:web,teachers,scholars']);
+->middleware(['auth:web,scholars']);
 
 Route::delete(
     'scholars/@{scholar}/progress-report/{report}',
@@ -213,7 +213,7 @@ Route::prefix('/research')
 
         Route::patch(
             '/scholars/{scholar}/advisors/replace',
-            'ScholarController@replaceAdvisoryCommittee'
+            'ScholarController@replaceAdvisors'
         )->name('scholars.advisors.replace');
     });
 

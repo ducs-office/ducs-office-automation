@@ -46,6 +46,9 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
     public function scholar_can_view_their_pre_phd_seminar_application()
     {
         $this->signInScholar($scholar = create(Scholar::class));
+        $scholar->supervisors()->attach(
+            factory(User::class)->states('supervisor')->create()
+        );
 
         $this->withoutExceptionHandling()
             ->get(route('scholars.pre_phd_seminar.show', $scholar))
@@ -60,6 +63,9 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
         $user->roles->first()->givePermissionTo('scholar appeals:mark complete');
 
         $scholar = create(Scholar::class);
+        $scholar->supervisors()->attach(
+            factory(User::class)->states('supervisor')->create()
+        );
 
         $this->withoutExceptionHandling()
             ->get(route('scholars.pre_phd_seminar.show', $scholar))
@@ -69,13 +75,11 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
     /** @test */
     public function supervisor_can_view_their_scholars_phd_seminar_application()
     {
-        $this->signIn($user = create(User::class));
+        $user = factory(User::class)->states('supervisor')->create();
+        $this->signIn($user);
 
-        $supervisorProfile = $user->supervisorProfile()->create();
-
-        $scholar = create(Scholar::class, 1, [
-            'supervisor_profile_id' => $supervisorProfile->id,
-        ]);
+        $scholar = create(Scholar::class);
+        $scholar->supervisors()->attach($user);
 
         create(ScholarAppeal::class, 1, [
             'type' => ScholarAppealTypes::PRE_PHD_SEMINAR,
@@ -90,9 +94,8 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
     /** @test */
     public function supervisor_can_not_view_their_scholars_phd_seminar_application()
     {
-        $this->signIn($user = create(User::class));
-
-        $supervisorProfile = $user->supervisorProfile()->create();
+        $user = factory(User::class)->states('supervisor')->create();
+        $this->signIn($user);
 
         $scholar = create(Scholar::class);
 
@@ -188,13 +191,11 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
     /** @test */
     public function scholars_supervisor_can_reject_phd_seminar_appeal()
     {
-        $this->signIn($user = create(User::class));
+        $user = factory(User::class)->states('supervisor')->create();
+        $this->signIn($user);
 
-        $supervisorProfile = $user->supervisorProfile()->create();
-
-        $scholar = create(Scholar::class, 1, [
-            'supervisor_profile_id' => $supervisorProfile->id,
-        ]);
+        $scholar = create(Scholar::class);
+        $scholar->supervisors()->attach($user);
 
         $appeal = create(ScholarAppeal::class, 1, [
             'scholar_id' => $scholar->id,
@@ -215,13 +216,11 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
     /** @test */
     public function scholars_supervisor_can_approve_phd_seminar_appeal()
     {
-        $this->signIn($user = create(User::class));
+        $user = factory(User::class)->states('supervisor')->create();
+        $this->signIn($user);
 
-        $supervisorProfile = $user->supervisorProfile()->create();
-
-        $scholar = create(Scholar::class, 1, [
-            'supervisor_profile_id' => $supervisorProfile->id,
-        ]);
+        $scholar = create(Scholar::class);
+        $scholar->supervisors()->attach($user);
 
         $appeal = create(ScholarAppeal::class, 1, [
             'scholar_id' => $scholar->id,

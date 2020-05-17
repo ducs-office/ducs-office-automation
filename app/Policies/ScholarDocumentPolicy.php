@@ -32,7 +32,7 @@ class ScholarDocumentPolicy
             || (
                 method_exists($user, 'isSupervisor')
                 && $user->isSupervisor()
-                && $user->supervisorProfile->scholars->contains((int) $document->scholar_id)
+                && $user->scholars->contains((int) $document->scholar_id)
             )
         );
     }

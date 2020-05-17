@@ -22,20 +22,15 @@ class ScholarAppealPolicy
      */
     public function viewPhdSeminarForm($user, Scholar $scholar)
     {
-        return (
-                (
-                    get_class($user) === Scholar::class
-                && $user->id === $scholar->id
-                ) || (
-                    get_class($user) === User::class
-                && method_exists($user, 'isSupervisor')
-                && $user->isSupervisor()
-                && $user->supervisorProfile->scholars->contains($scholar->id)
-                ) || (
-                    get_class($user) === User::class
-                && $user->can('scholar appeals:mark complete')
-                )
-        );
+        if (get_class($user) === Scholar::class) {
+            return (int) $user->id === (int) $scholar->id;
+        }
+
+        if ($user->isSupervisor()) {
+            return $user->scholars->contains($scholar);
+        }
+
+        return $user->can('scholar appeals:mark complete');
     }
 
     /**
@@ -50,7 +45,7 @@ class ScholarAppealPolicy
         return get_class($user) === Scholar::class
             && (
                 $user->currentPhdSeminarAppeal() === null
-                    || $user->currentPhdSeminarAppeal()->isRejected()
+                || $user->currentPhdSeminarAppeal()->isRejected()
             );
     }
 
@@ -85,7 +80,7 @@ class ScholarAppealPolicy
         return get_class($user) === User::class
             && method_exists($user, 'isSupervisor')
             && $user->isSupervisor()
-            && $user->supervisorProfile->scholars->contains($appeal->scholar_id)
+            && $user->scholars->contains($appeal->scholar_id)
             && $appeal->status == ScholarAppealStatus::APPLIED;
     }
 
@@ -127,14 +122,14 @@ class ScholarAppealPolicy
                     $user instanceof Scholar
                 && $user->id === $scholar->id
                 ) || (
-                $user instanceof User
+                    $user instanceof User
                 && method_exists($user, 'isSupervisor')
                 && $user->isSupervisor()
-                && $user->supervisorProfile->scholars->contains($scholar->id)
-            ) || (
-                $user instanceof User
+                && $user->scholars->contains($scholar->id)
+                ) || (
+                    $user instanceof User
                 && $user->can('scholar appeals:mark complete')
-            )
+                )
             );
     }
 }

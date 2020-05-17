@@ -41,7 +41,7 @@ class ProgressReportPolicy
                 ) || (
                     method_exists($user, 'isSupervisor') &&
                     $user->isSupervisor() &&
-                    $user->supervisorProfile->scholars->contains($progressReport->scholar->id)
+                    $user->scholars->contains($progressReport->scholar->id)
                 ) || (
                     $user instanceof User &&
                     $user->can('scholar progress reports:view')

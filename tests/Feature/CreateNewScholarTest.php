@@ -205,6 +205,8 @@ class CreateNewScholarTest extends TestCase
     {
         $this->signIn();
 
+        Mail::fake();
+
         $scholar = $this->getScholarFormDetails([
             'cosupervisor_id' => null,
         ]);
