@@ -27,11 +27,11 @@ class ScholarAppealPolicy
                     get_class($user) === Scholar::class
                 && $user->id === $scholar->id
                 ) || (
-                get_class($user) === User::class
+                    get_class($user) === User::class
                 && method_exists($user, 'isSupervisor')
                 && $user->isSupervisor()
                 && $user->supervisorProfile->scholars->contains($scholar->id)
-            ) || (
+                ) || (
                 get_class($user) === User::class
                 && $user->can('scholar appeals:mark complete')
             )
@@ -49,8 +49,8 @@ class ScholarAppealPolicy
     {
         return get_class($user) === Scholar::class
             && (
-                $user->phdSeminarAppeal() === null
-                    || $user->phdSeminarAppeal()->isRejected()
+                $user->currentPhdSeminarAppeal() === null
+                    || $user->currentPhdSeminarAppeal()->isRejected()
             );
     }
 
@@ -67,8 +67,8 @@ class ScholarAppealPolicy
             && $user->isDocumentListComplete()
             && $user->publications->count()
             && (
-                $user->phdSeminarAppeal() === null
-                || $user->phdSeminarAppeal()->isRejected()
+                $user->currentPhdSeminarAppeal() === null
+                || $user->currentPhdSeminarAppeal()->isRejected()
             );
     }
 

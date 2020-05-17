@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Scholar;
 use App\Models\ScholarAppeal;
 use App\Types\ScholarAppealStatus;
+use App\Types\ScholarAppealTypes;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Str;
@@ -38,6 +39,7 @@ class ScholarProposedTitleTest extends TestCase
 
         create(ScholarAppeal::class, 1, [
             'scholar_id' => $scholar->id,
+            'type' => ScholarAppealTypes::PRE_PHD_SEMINAR,
             'status' => ScholarAppealStatus::APPLIED,
         ]);
 

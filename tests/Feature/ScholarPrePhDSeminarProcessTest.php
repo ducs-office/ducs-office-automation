@@ -13,12 +13,34 @@ use App\Types\ScholarAppealTypes;
 use App\Types\ScholarDocumentType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
 class ScholarPrePhDSeminarProcessTest extends TestCase
 {
     use RefreshDatabase;
+
+    protected function addScholarDocuments($scholar)
+    {
+        create(ScholarDocument::class, 1, [
+            'type' => ScholarDocumentType::JOINING_LETTER,
+            'scholar_id' => $scholar->id,
+        ]);
+
+        create(ScholarDocument::class, 1, [
+            'type' => ScholarDocumentType::ACCEPTANCE_LETTER,
+            'scholar_id' => $scholar->id,
+        ]);
+    }
+
+    protected function addScholarPublications($scholar)
+    {
+        create(Publication::class, 1, [
+            'main_author_type' => Scholar::class,
+            'main_author_id' => $scholar->id,
+        ]);
+    }
 
     /** @test */
     public function scholar_can_view_their_pre_phd_seminar_application()
@@ -94,15 +116,8 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
             'scholar_id' => $scholar->id,
         ]);
 
-        create(ScholarDocument::class, 1, [
-            'type' => ScholarDocumentType::ACCEPTANCE_LETTER,
-            'scholar_id' => $scholar->id,
-        ]);
-
-        create(Publication::class, 1, [
-            'main_author_type' => Scholar::class,
-            'main_author_id' => $scholar->id,
-        ]);
+        $this->addScholarDocuments($scholar);
+        $this->addScholarPublications($scholar);
 
         $this->withoutExceptionHandling()
             ->post(route('scholars.pre_phd_seminar.apply', $scholar))
@@ -111,10 +126,10 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
 
         $freshScholar = $scholar->fresh();
 
-        $this->assertCount(1, $freshScholar->appeals);
-        $this->assertEquals(now()->format('Y-m-d'), $freshScholar->appeals->first()->applied_on->format('Y-m-d'));
-        $this->assertEquals(ScholarAppealStatus::APPLIED, $freshScholar->appeals->first()->status);
-        $this->assertEquals(ScholarAppealTypes::PRE_PHD_SEMINAR, $freshScholar->appeals->first()->type);
+        $this->assertNotNull($freshScholar->currentPhdSeminarAppeal());
+        $this->assertEquals(now()->format('d F Y'), $freshScholar->currentPhdSeminarAppeal()->applied_on);
+        $this->assertEquals(ScholarAppealStatus::APPLIED, $freshScholar->currentPhdSeminarAppeal()->status);
+        $this->assertEquals(ScholarAppealTypes::PRE_PHD_SEMINAR, $freshScholar->currentPhdSeminarAppeal()->type);
     }
 
     /** @test */
@@ -128,20 +143,10 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
             'status' => ScholarAppealStatus::REJECTED,
         ]);
 
-        create(ScholarDocument::class, 1, [
-            'type' => ScholarDocumentType::JOINING_LETTER,
-            'scholar_id' => $scholar->id,
-        ]);
+        $this->addScholarDocuments($scholar);
+        $this->addScholarPublications($scholar);
 
-        create(ScholarDocument::class, 1, [
-            'type' => ScholarDocumentType::ACCEPTANCE_LETTER,
-            'scholar_id' => $scholar->id,
-        ]);
-
-        create(Publication::class, 1, [
-            'main_author_type' => Scholar::class,
-            'main_author_id' => $scholar->id,
-        ]);
+        Carbon::setTestNow($appealTime = now()->addDay());
 
         $this->withoutExceptionHandling()
             ->post(route('scholars.pre_phd_seminar.apply', $scholar))
@@ -150,10 +155,10 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
 
         $freshScholar = $scholar->fresh();
 
-        $this->assertCount(2, $freshScholar->appeals);
-        $this->assertEquals(now()->format('Y-m-d'), $freshScholar->appeals[1]->applied_on->format('Y-m-d'));
-        $this->assertEquals(ScholarAppealStatus::APPLIED, $freshScholar->appeals[1]->status);
-        $this->assertEquals(ScholarAppealTypes::PRE_PHD_SEMINAR, $freshScholar->appeals[1]->type);
+        $this->assertNotNull($freshScholar->currentPhdSeminarAppeal());
+        $this->assertEquals($appealTime->format('d F Y'), $freshScholar->currentPhdSeminarAppeal()->applied_on);
+        $this->assertEquals(ScholarAppealStatus::APPLIED, $freshScholar->currentPhdSeminarAppeal()->status);
+        $this->assertEquals(ScholarAppealTypes::PRE_PHD_SEMINAR, $freshScholar->currentPhdSeminarAppeal()->type);
     }
 
     /** @test */
@@ -161,10 +166,7 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
     {
         $this->signInScholar($scholar = create(Scholar::class));
 
-        create(Publication::class, 1, [
-            'main_author_type' => Scholar::class,
-            'main_author_id' => $scholar->id,
-        ]);
+        $this->addScholarPublications($scholar);
 
         $this->withExceptionHandling()
             ->post(route('scholars.pre_phd_seminar.apply', $scholar))
@@ -176,15 +178,7 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
     {
         $this->signInScholar($scholar = create(Scholar::class));
 
-        create(ScholarDocument::class, 1, [
-            'type' => ScholarDocumentType::JOINING_LETTER,
-            'scholar_id' => $scholar->id,
-        ]);
-
-        create(ScholarDocument::class, 1, [
-            'type' => ScholarDocumentType::ACCEPTANCE_LETTER,
-            'scholar_id' => $scholar->id,
-        ]);
+        $this->addScholarDocuments($scholar);
 
         $this->withExceptionHandling()
             ->post(route('scholars.pre_phd_seminar.apply', $scholar))
@@ -262,12 +256,13 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
         $this->withoutExceptionHandling()
             ->patch(route('scholars.appeals.mark_complete', [$scholar, $appeal]), [
                 'finalized_title' => $title = Str::random('30'),
+                'title_finalized_on' => $finalizedOn = '2020-01-01',
             ]);
 
         $this->assertEquals(ScholarAppealStatus::COMPLETED, $appeal->fresh()->status);
 
         $freshScholar = $scholar->fresh();
         $this->assertEquals($title, $freshScholar->finalized_title);
-        $this->assertEquals(now()->format('Y-m-d'), $freshScholar->title_finalized_on->format('Y-m-d'));
+        $this->assertEquals($finalizedOn, $freshScholar->title_finalized_on->format('Y-m-d'));
     }
 }

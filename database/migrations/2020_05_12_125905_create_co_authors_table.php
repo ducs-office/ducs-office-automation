@@ -15,7 +15,7 @@ class CreateCoAuthorsTable extends Migration
     {
         Schema::create('co_authors', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('publication_id')->constrained('publications');
+            $table->foreignId('publication_id')->constrained('publications')->onDelete('cascade');
             $table->string('name');
             $table->string('noc_path');
             $table->timestamps();

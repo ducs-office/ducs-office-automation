@@ -206,9 +206,14 @@ class Scholar extends User
         return $this->hasMany(ScholarAppeal::class, 'scholar_id');
     }
 
-    public function phdSeminarAppeal()
+    public function currentPhdSeminarAppeal()
     {
-        return $this->appeals()->where('type', ScholarAppealTypes::PRE_PHD_SEMINAR)->orderBY('applied_on', 'DESC')->first();
+        return optional($this->phdSeminarAppeals())->first();
+    }
+
+    public function phdSeminarAppeals()
+    {
+        return $this->appeals()->phdSeminarAppeals();
     }
 
     public function isJoiningLetterUploaded()

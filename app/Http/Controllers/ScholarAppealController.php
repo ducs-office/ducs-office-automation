@@ -42,6 +42,10 @@ class ScholarAppealController extends Controller
             'proposed_title' => $scholar->proposed_title,
         ]);
 
+        $scholar->update([
+            'proposed_title' => null,
+        ]);
+
         flash("Scholar's appeal rejected successfully!")->success();
 
         return redirect()->back();
@@ -69,14 +73,12 @@ class ScholarAppealController extends Controller
             'status' => ScholarAppealStatus::COMPLETED,
         ]);
 
-        $request->validate([
+        $validData = $request->validate([
             'finalized_title' => ['required', 'string'],
+            'title_finalized_on' => ['required', 'date', 'before_or_equal:today'],
         ]);
 
-        $scholar->update([
-            'finalized_title' => $request->finalized_title,
-            'title_finalized_on' => now(),
-        ]);
+        $scholar->update($validData);
 
         flash("Scholar's appeal marked completed successfully!")->success();
 

@@ -127,8 +127,9 @@
                         <span class="inline font-semibold ml-1 p-1"> {{ $scholar->publications()->count() }} </span>
                     </p>
                 </div>
-                <div class="flex divide-x divide-black h-20">
+                <div class="divide-x  h-20">
                     <p class="ml-1 p-1"> Proposed Title of the Thesis: </p>
+                    <p class="ml-4 p-1 font-semibold"> {{ $scholar->proposed_title}} </p>
                 </div>
                 <div class="flex divide-x divide-black h-24">
                     <div class="w-1/2 flex items-end"> 
@@ -157,15 +158,15 @@
             <div>
                 <p class="font-bold text-lg"> Are you sure you want to apply for Pre-Phd Seminar ? </p>
                 <div class="flex justify-center"> 
-                    <a href="{{ route('scholars.profile') }}" class="btn btn-magenta is-sm m-2">
-                        Cancel  
-                    </a>
                     <form action="{{ route('scholars.pre_phd_seminar.apply', $scholar) }}" method="POST">
                         @csrf_token
                         <button class="btn btn-magenta is-sm m-2" > 
                             Apply
                         </button>
                     </form>
+                    <a href="{{ route('scholars.profile') }}" class="btn btn-magenta is-sm m-2">
+                        Cancel  
+                    </a>
                 </div>
             </div>
         </div>

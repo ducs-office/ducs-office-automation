@@ -10,8 +10,7 @@ use Faker\Generator as Faker;
 
 $factory->define(ScholarAppeal::class, function (Faker $faker) {
     return [
-        'scholar_id' => factory(Scholar::class)->create()->id,
-        'applied_on' => $faker->date('Y-m-d'),
+        'scholar_id' => (factory(Scholar::class)->create()->id),
         'proposed_title' => $faker->word,
         'status' => $faker->randomElement(ScholarAppealStatus::values()),
         'type' => $faker->randomElement(ScholarAppealTypes::values()),

@@ -45,7 +45,7 @@
             + Add Documents
         </button>
         @endcan
-        <v-modal name="add-documents-modal" height="auto">
+        <x-modal name="add-documents-modal" height="auto">
             <div class="p-6">
                 <h3 class="text-lg font-bold mb-4">Add Documents</h3>
                 <form action="{{ route('scholars.documents.store', $scholar) }}" method="POST"
@@ -62,15 +62,7 @@
                             <label for="document" class="mb-1 w-full form-label">Upload Document
                                 <span class="text-red-600">*</span>
                             </label>
-                            <v-file-input id="document" name="document" accept="application/pdf" 
-                            class="form-input overflow-hidden" placeholder="Choose a Pdf ">
-                                <template v-slot="{ label }">
-                                    <div class="w-full inline-flex items-center">
-                                        <feather-icon name="upload" class="h-4 mr-2 text-gray-700 flex-shrink-0"></feather-icon>
-                                        <span v-text="label" class="truncate"></span>
-                                    </div>
-                                </template>
-                            </v-file-input>
+                            <input type="file" name="document" id="">
                         </div>
                         <div class="mb-2">
                             <label for="type" class="mb-1 form-label w-full">
@@ -94,6 +86,6 @@
                     <button type="submit" class="px-5 btn btn-magenta text-sm rounded-l-none">Add</button>
                 </form>
             </div>
-        </v-modal>
+        </x-modal>
     </div>
 </div>

@@ -30,6 +30,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
@@ -490,24 +491,39 @@ class ScholarTest extends TestCase
     }
 
     /** @test */
-    public function phdSeminarAppeals_method_returns_the_latest_applied_phd_seminar_appeal()
+    public function phdSeminarAppeals_method_returns_all_phd_seminar_appeals_of_the_scholar()
     {
         $scholar = create(Scholar::class);
 
-        $scholarAppealOld = create(ScholarAppeal::class, 1, [
+        $phdSeminarAppeals = create(ScholarAppeal::class, 3, [
             'scholar_id' => $scholar->id,
-            'applied_on' => '2011-10-10',
-            'type' => ScholarAppealTypes::PRE_PHD_SEMINAR,
-        ]);
-
-        $scholarAppealNew = create(ScholarAppeal::class, 1, [
-            'scholar_id' => $scholar->id,
-            'applied_on' => '2020-10-10',
             'type' => ScholarAppealTypes::PRE_PHD_SEMINAR,
         ]);
 
         $freshScholar = $scholar->fresh();
 
-        $this->assertEquals($scholarAppealNew->id, $freshScholar->phdSeminarAppeal()->id);
+        $this->assertEquals($phdSeminarAppeals->pluck('id'), $freshScholar->phdSeminarAppeals()->pluck('id'));
+    }
+
+    /** @test */
+    public function currentPhdSeminarAppeal_method_returns_the_latest_phd_seminar_appeal_of_the_scholar()
+    {
+        $scholar = create(Scholar::class);
+
+        $phdSeminarAppealOld = create(ScholarAppeal::class, 1, [
+            'scholar_id' => $scholar->id,
+            'type' => ScholarAppealTypes::PRE_PHD_SEMINAR,
+        ]);
+
+        Carbon::setTestNow($appealTime = now()->addDay());
+
+        $phdSeminarAppealNew = create(ScholarAppeal::class, 1, [
+            'scholar_id' => $scholar->id,
+            'type' => ScholarAppealTypes::PRE_PHD_SEMINAR,
+        ]);
+
+        $freshScholar = $scholar->fresh();
+
+        $this->assertEquals($phdSeminarAppealNew->id, $freshScholar->currentPhDSeminarAppeal()->id);
     }
 }
