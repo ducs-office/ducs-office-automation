@@ -77,7 +77,6 @@
                         </div>
                         <div class="mb-2">
                             <label for="description" class="mb-1 w-full form-label">Description
-                                <span class="text-red-600">*</span>
                             </label>
                             <textarea id="description" name="description" type="" class="w-full form-input" placeholder="Enter Description" required>
                             </textarea>

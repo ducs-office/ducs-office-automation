@@ -20,7 +20,7 @@ class CreateScholarDocumentsTable extends Migration
             $table->unsignedBigInteger('scholar_id');
             $table->enum('type', ScholarDocumentType::values());
             $table->string('path');
-            $table->string('description');
+            $table->string('description')->nullable();
             $table->date('date');
             $table->timestamps();
         });
