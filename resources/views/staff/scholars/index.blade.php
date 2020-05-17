@@ -19,7 +19,6 @@
         'modalName' => 'edit-scholar-modal',
     ])
     @endcan
-
     @include('staff.scholars.modals.replace_supervisor', [
         'modalName' => 'replace-scholar-supervisor-modal',
     ])
@@ -40,17 +39,7 @@
                 <div class="ml-auto px-2 flex items-center">
                     @can('update', App\Scholar::class)
                     <button type="submit" class="p-1 hover:text-red-700 mr-2"
-                        @click="
-                            $modal.show('edit-scholar-modal', {
-                                Scholar: {
-                                    id: {{ $scholar->id }},
-                                    first_name: {{ json_encode($scholar->first_name) }},
-                                    last_name: {{ json_encode($scholar->last_name) }},
-                                    email: {{ json_encode($scholar->email) }},
-                                    supervisor_profile_id: {{ json_encode($scholar->supervisor_profile_id) }},
-                                    cosupervisor_id: {{ json_encode($scholar->cosupervisor_id) }},
-                                }
-                            })">
+                        @click="$modal.show('edit-scholar-modal')">
                         <feather-icon class="h-current" name="edit">Edit</feather-icon>
                     </button>
                     @endcan
@@ -70,13 +59,7 @@
                     <div class="flex">
                         <h2 class="font-bold underline"> Supervisor </h2>
                         <button type="submit" class="ml-2 text-blue-500"
-                            @click ="
-                            $modal.show('replace-scholar-supervisor-modal', {
-                                scholar: {
-                                    id: {{ $scholar->id }},
-                                    supervisor_profile_id: {{ json_encode($scholar->supervisor_profile_id) }}
-                                }
-                            })">
+                            @click="$modal.show('replace-scholar-supervisor-modal')">
                             <feather-icon class="h-current" name="refresh-cw">Replace Supervisor</feather-icon>
                         </button>
                     </div>
@@ -86,13 +69,7 @@
                     <div class="flex">
                         <h2 class="font-bold underline"> Co-Supervisor </h2>
                         <button type="submit" class="ml-2 text-blue-500"
-                            @click ="
-                            $modal.show('replace-scholar-cosupervisor-modal', {
-                                scholar: {
-                                    id: {{ $scholar->id }},
-                                    cosupervisor_id: {{ json_encode($scholar->cosupervisor_id) }}
-                                }
-                            })">
+                            @click="$modal.show('replace-scholar-cosupervisor-modal')">
                             <feather-icon class="h-current" name="refresh-cw">Replace Co-Supervisor</feather-icon>
                         </button>
                     </div>

@@ -1,6 +1,10 @@
 <?php
 
+use App\Mail\UserRegisteredMail;
+use App\Models\User;
+use App\Notifications\WelcomeNotification;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
 
 /*
 |---------------------------------------------------------------------------

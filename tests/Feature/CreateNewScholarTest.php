@@ -9,11 +9,13 @@ use App\Models\ExternalAuthority;
 use App\Models\Scholar;
 use App\Models\Teacher;
 use App\Models\User;
+use App\Notifications\UserRegisteredNotification;
 use App\Types\UserCategory;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
 
@@ -67,6 +69,7 @@ class CreateNewScholarTest extends TestCase
             'supervisor_id' => $supervisor->id,
         ]);
 
+        Notification::fake();
         Mail::fake();
 
         $this->withExceptionHandling()
@@ -103,12 +106,7 @@ class CreateNewScholarTest extends TestCase
 
         $this->assertCount(1, $cosupervisors);
 
-        Mail::assertQueued(UserRegisteredMail::class, function ($mail) use ($scholars) {
-            $data = $mail->build()->viewData;
-            $this->assertArrayHasKey('user', $data);
-            $this->assertArrayHasKey('password', $data);
-            return (int) $data['user']->id === (int) $scholars->first()->id;
-        });
+        Notification::assertSentTo($scholars->first(), UserRegisteredNotification::class);
 
         Mail::assertQueued(FillAdvisoryCommitteeMail::class, function ($mail) use ($supervisor) {
             $data = $mail->build()->viewData;

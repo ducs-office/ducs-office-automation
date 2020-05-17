@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\Scholar;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -12,17 +13,17 @@ class UserRegisteredMail extends Mailable implements ShouldQueue
     use Queueable, SerializesModels;
 
     protected $user;
-    protected $password;
+    protected $token;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($user, $password)
+    public function __construct($user, $token)
     {
         $this->user = $user;
-        $this->password = $password;
+        $this->token = $token;
     }
 
     /**
@@ -32,9 +33,23 @@ class UserRegisteredMail extends Mailable implements ShouldQueue
      */
     public function build()
     {
-        return $this->view('mail.users.registered', [
+        if ($this->user instanceof Scholar) {
+            return $this->buildScholarMail();
+        }
+
+        return $this->markdown('mail.users.registered', [
             'user' => $this->user,
-            'password' => $this->password,
+            'token' => $this->token,
+        ]);
+    }
+
+    private function buildScholarMail()
+    {
+        return $this->markdown('mail.scholars.registered', [
+            'scholar' => $this->user,
+            'supervisor' => $this->user->currentSupervisor,
+            'cosupervisor' => $this->user->currentCosupervisor,
+            'token' => $this->token,
         ]);
     }
 }

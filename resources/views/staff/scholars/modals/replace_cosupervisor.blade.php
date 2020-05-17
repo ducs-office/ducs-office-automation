@@ -2,7 +2,7 @@
     <template v-slot="{ data }">
         <div class="p-6">
             <h2 class="text-lg font-bold mb-8">Replace Co-Supervisor</h2>
-            <form :action="route('staff.scholars.replace_cosupervisor', data('scholar', ''))" method="POST" class="px-6">
+            <form :action="route('staff.scholars.cosupervisor.replace', data('scholar', ''))" method="POST" class="px-6">
                 @csrf_token @method('PATCH')
                 <div class="mb-2">
                     <input type="hidden" name="cosupervisor_profile_type">
@@ -11,13 +11,13 @@
 
                         <option class="text-gray-600 selected" selected disabled value="">Select Co-Supervisor</option>
                         @foreach ($supervisors as $name => $id)
-                            <option class="text-gray-600" value="{{ $id }}" cosupervisor_profile_type="App\Models\SupervisorProfile"> 
-                                {{ $name }} 
+                            <option class="text-gray-600" value="{{ $id }}" cosupervisor_profile_type="App\Models\SupervisorProfile">
+                                {{ $name }}
                             </option>
                         @endforeach
                         @foreach ($cosupervisors as $name => $id)
-                            <option class="text-gray-600" value="{{ $id }}" cosupervisor_profile_type="App\Models\Cosupervisor"> 
-                                {{ $name }} 
+                            <option class="text-gray-600" value="{{ $id }}" cosupervisor_profile_type="App\Models\Cosupervisor">
+                                {{ $name }}
                             </option>
                         @endforeach
                         <option class="text-gray-600" value=""> No cosupervisor assigned </option>

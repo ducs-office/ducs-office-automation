@@ -4,9 +4,11 @@ namespace Tests\Feature;
 
 use App\Mail\UserRegisteredMail;
 use App\Models\User;
+use App\Notifications\UserRegisteredNotification;
 use App\Types\UserCategory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\ValidationException;
 use Spatie\Permission\Models\Role;
@@ -95,7 +97,7 @@ class CreateNewUserTest extends TestCase
     /** @test */
     public function credentials_are_sent_via_email_when_new_user_is_created()
     {
-        Mail::fake();
+        Notification::fake();
 
         $this->signIn(create(User::class), 'admin');
 
@@ -113,12 +115,7 @@ class CreateNewUserTest extends TestCase
         $user = User::whereEmail($email)->first();
         $this->assertNotNull($user);
 
-        Mail::assertQueued(UserRegisteredMail::class, function ($mail) use ($user) {
-            $data = $mail->build()->viewData;
-            $this->assertArrayHasKey('user', $data);
-            $this->assertArrayHasKey('password', $data);
-            return (int) $data['user']->id === (int) $user->id;
-        });
+        Notification::assertSentTo($user, UserRegisteredNotification::class);
     }
 
     /** @test */

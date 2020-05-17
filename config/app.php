@@ -13,6 +13,8 @@ return [
     */
 
     'name' => env('APP_NAME', 'Laravel'),
+    'organisation' => 'Department of Computer Science',
+    'affiliation' => 'University of Delhi',
 
     /*
     |--------------------------------------------------------------------------

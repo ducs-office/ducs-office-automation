@@ -89,7 +89,7 @@ class ViewScholarTest extends TestCase
             ->viewData('supervisors');
 
         $this->assertCount(3, $viewData);
-        $this->assertSame($supervisors->pluck('id', 'name')->toArray(), $viewData->toArray());
+        $this->assertSame($supervisors->pluck('name', 'id')->toArray(), $viewData->toArray());
     }
 
     /** @test */

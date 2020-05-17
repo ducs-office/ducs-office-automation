@@ -4,22 +4,12 @@ namespace App\Http\Controllers\Staff;
 
 use App\Events\ScholarCreated;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Scholar\StoreJournalPublication;
-use App\Http\Requests\Staff\ReplaceScholarCosupervisorRequest;
 use App\Http\Requests\Staff\StoreScholarRequest;
 use App\Http\Requests\Staff\UpdateScholarRequest;
-use App\Mail\FillAdvisoryCommitteeMail;
-use App\Mail\UserRegisteredMail;
-use App\Models\Cosupervisor;
 use App\Models\ExternalAuthority;
-use App\Models\PhdCourse;
 use App\Models\Scholar;
-use App\Models\SupervisorProfile;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Response as Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -31,9 +21,9 @@ class ScholarController extends Controller
     {
         return view('staff.scholars.index', [
             'scholars' => Scholar::all(),
-            'supervisors' => User::supervisors()->get()->pluck('id', 'name'),
-            'cosupervisors' => User::cosupervisors()->get()->pluck('id', 'name')->merge(
-                ExternalAuthority::cosupervisors()->get()->pluck('id', 'name')
+            'supervisors' => User::supervisors()->get()->pluck('name', 'id'),
+            'cosupervisors' => User::cosupervisors()->get()->pluck('name', 'id')->merge(
+                ExternalAuthority::cosupervisors()->get()->pluck('name', 'id')
             ),
         ]);
     }

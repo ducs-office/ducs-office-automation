@@ -15,24 +15,15 @@ class ScholarCreated
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+    public $scholar;
+
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(Scholar $scholar, $plainPassword)
+    public function __construct(Scholar $scholar)
     {
         $this->scholar = $scholar;
-        $this->plainPassword = $plainPassword;
-    }
-
-    /**
-     * Get the channels the event should broadcast on.
-     *
-     * @return \Illuminate\Broadcasting\Channel|array
-     */
-    public function broadcastOn()
-    {
-        return new PrivateChannel('channel-name');
     }
 }

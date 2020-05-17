@@ -2,18 +2,14 @@
 
 namespace App\Http\Controllers\Staff;
 
+use App\Events\UserCreated;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Staff\StoreUserRequest;
 use App\Http\Requests\Staff\UpdateUserRequest;
-use App\Mail\UserRegisteredMail;
-use App\Models\Cosupervisor;
 use App\Models\User;
 use App\Types\UserCategory;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
-use Illuminate\Validation\Rule;
 use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
@@ -34,15 +30,13 @@ class UserController extends Controller
 
     public function store(StoreUserRequest $request)
     {
-        $plain_password = strtoupper(Str::random(8));
-
         DB::beginTransaction();
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'category' => $request->category,
-            'password' => bcrypt($plain_password),
+            'password' => bcrypt(Str::random(16)), // Random password
             'is_supervisor' => $request->is_supervisor ?? false,
         ]);
 
@@ -50,9 +44,9 @@ class UserController extends Controller
 
         DB::commit();
 
-        Mail::to($user)->send(new UserRegisteredMail($user, $plain_password));
-
         flash('User created successfully!')->success();
+
+        event(new UserCreated($user));
 
         return redirect()->back();
     }
@@ -60,8 +54,6 @@ class UserController extends Controller
     public function update(UpdateUserRequest $request, User $user)
     {
         DB::beginTransaction();
-
-        $data = $request->validated();
 
         $user->update($request->validated());
 
