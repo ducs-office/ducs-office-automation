@@ -28,7 +28,7 @@ class StoreRemarkTest extends TestCase
 
         $this->withExceptionHandling()
             ->post(route('staff.outgoing_letters.remarks.store', $letter))
-            ->assertRedirect(route('login_form'));
+            ->assertRedirect(route('login-form'));
 
         $this->assertEquals(0, Remark::count());
     }

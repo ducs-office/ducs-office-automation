@@ -28,7 +28,7 @@ class StoreOutgoingLettersTest extends TestCase
     {
         $this->withExceptionHandling()
             ->post(route('staff.outgoing_letters.store'))
-            ->assertRedirect(route('login_form'));
+            ->assertRedirect(route('login-form'));
 
         $this->assertEquals(0, OutgoingLetter::count());
     }

@@ -20,7 +20,7 @@ class DeleteOutgoingLettersTest extends TestCase
         $letter = create(OutgoingLetter::class);
 
         $this->delete(route('staff.outgoing_letters.destroy', $letter))
-            ->assertRedirect(route('login_form'));
+            ->assertRedirect(route('login-form'));
 
         $this->assertEquals(1, OutgoingLetter::count());
     }

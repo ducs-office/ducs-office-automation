@@ -23,7 +23,7 @@
                 </li>
                 <li>
                     <button type="submit" form="logout-form"
-                        formaction="{{ route('logout') }}"
+                        formaction="{{ route('logout', ['scholar']) }}"
                         formmethod="POST"
                         class="w-full inline-flex items-center btn border-0 bg-transparent hover:bg-red-700 hover:text-white">
                         <x-feather-icon name="power" class="h-current" stroke-width="2">Logout Icon</x-feather-icon>
@@ -58,5 +58,4 @@
 </div>
 <form id="logout-form" class="h-0 w-0 pointer-events-none">
     @csrf_token
-    <input type="hidden" name="type" value="scholars">
 </form>

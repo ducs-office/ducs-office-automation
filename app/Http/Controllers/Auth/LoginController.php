@@ -16,12 +16,12 @@ class LoginController extends Controller
     protected function redirectTo()
     {
         $guards = config('auth.guards');
-        return $guards[Request::get('type', 'web')]['home'];
+        return $guards[request()->has('scholar') ? 'scholars' : 'web']['home'];
     }
 
     public function guard()
     {
-        return Auth::guard(Request::get('type', 'web'));
+        return Auth::guard(request()->has('scholar') ? 'scholars' : 'web');
     }
 
     protected function validateLogin(HttpRequest $request)
@@ -31,12 +31,11 @@ class LoginController extends Controller
         $request->validate([
             $this->username() => 'required|string',
             'password' => 'required|string',
-            'type' => 'required|in:' . $guards,
         ]);
     }
 
     protected function loggedOut()
     {
-        return redirect(route('login_form'));
+        return redirect(route('login-form'));
     }
 }

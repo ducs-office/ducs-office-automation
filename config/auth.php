@@ -77,19 +77,10 @@ return [
             'model' => App\Models\User::class,
         ],
 
-        'teachers' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\Teacher::class,
-        ],
-
         'scholars' => [
             'driver' => 'eloquent',
             'model' => App\Models\Scholar::class,
         ],
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
     ],
 
     /*
@@ -110,6 +101,11 @@ return [
     'passwords' => [
         'users' => [
             'provider' => 'users',
+            'table' => 'password_resets',
+            'expire' => 60,
+        ],
+        'scholars' => [
+            'provider' => 'scholars',
             'table' => 'password_resets',
             'expire' => 60,
         ],

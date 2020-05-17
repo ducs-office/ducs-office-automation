@@ -28,7 +28,7 @@ class DeleteLetterRemindersTest extends TestCase
 
         $this->withExceptionHandling()
             ->delete(route('staff.reminders.destroy', $reminder))
-            ->assertRedirect(route('login_form'));
+            ->assertRedirect(route('login-form'));
 
         $this->assertEquals(1, LetterReminder::count());
     }

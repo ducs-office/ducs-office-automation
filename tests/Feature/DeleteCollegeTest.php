@@ -18,7 +18,7 @@ class DeleteCollegeTest extends TestCase
         $college = create(College::class);
 
         $this->delete(route('staff.colleges.destroy', $college))
-            ->assertRedirect(route('login_form'));
+            ->assertRedirect(route('login-form'));
 
         $this->assertEquals($college->code, $college->fresh()->code);
     }

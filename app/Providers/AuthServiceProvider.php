@@ -5,6 +5,8 @@ namespace App\Providers;
 use App\Models\Scholar;
 use App\Policies\RolePolicy;
 use App\Policies\ScholarProfilePolicy;
+use Illuminate\Auth\Notifications\ResetPassword;
+use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 use Spatie\Permission\Models\Role;
@@ -31,6 +33,19 @@ class AuthServiceProvider extends ServiceProvider
     {
         Gate::guessPolicyNamesUsing(function ($class) {
             return $this->policiesNamespace . '\\' . class_basename($class) . 'Policy';
+        });
+
+        ResetPassword::createUrlUsing(function ($notifiable, $token) {
+            $params = [
+                'token' => $token,
+                'email' => $notifiable->email,
+            ];
+
+            if ($notifiable instanceof Scholar) {
+                $params[] = 'scholar';
+            }
+
+            return route('password.reset', $params);
         });
 
         $this->registerPolicies();

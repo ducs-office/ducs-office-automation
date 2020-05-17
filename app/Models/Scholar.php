@@ -15,17 +15,18 @@ use App\Models\Pivot\ScholarSupervisor;
 use App\Models\Publication;
 use App\Models\ScholarAdvisor;
 use App\Models\ScholarAppeal;
-use App\Models\User;
 use App\Types\AdmissionMode;
 use App\Types\Gender;
 use App\Types\LeaveStatus;
 use App\Types\ReservationCategory;
 use App\Types\ScholarAppealTypes;
 use App\Types\ScholarDocumentType;
+use Illuminate\Foundation\Auth\User;
+use Illuminate\Notifications\Notifiable;
 
 class Scholar extends User
 {
-    use HasPublications, HasResearchCommittee;
+    use Notifiable, HasPublications, HasResearchCommittee;
 
     protected $hidden = ['password'];
 
