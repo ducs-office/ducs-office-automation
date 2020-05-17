@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use App\Models\Scholar;
-use App\Models\Teacher;
 use App\Models\User;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -36,7 +35,6 @@ class LoginTest extends TestCase
         $this->post(route('login'), [
             'email' => $adminStaff->email,
             'password' => $password,
-            'type' => 'web',
         ])->assertRedirect();
 
         $this->assertTrue(Auth::guard('web')->check(), 'User was expected to login but was not.');
@@ -72,10 +70,9 @@ class LoginTest extends TestCase
         ]);
 
         $this->withoutExceptionHandling()
-            ->post(route('login'), [
+            ->post(route('login', ['scholar']), [
                 'email' => $email,
                 'password' => $plainPassword,
-                'type' => 'scholars',
             ])->assertRedirect();
 
         $this->assertTrue(Auth::guard('scholars')->check());
@@ -87,14 +84,14 @@ class LoginTest extends TestCase
         $this->signInScholar();
 
         $this->withoutExceptionHandling()
-            ->post(route('logout'), ['type' => 'scholars'])
+            ->post(route('logout', ['scholar']))
             ->assertRedirect();
 
         $this->assertFalse(Auth::guard('scholars')->check(), 'Scholar was expected to logout, but was not logged out!');
     }
 
     /** @test */
-    public function scholars_cannot_login_on_invalid_guard()
+    public function scholars_cannot_login_from_regular_login()
     {
         $scholar = create(Scholar::class, 1, [
             'password' => bcrypt($plainPassword = 'secret'),
@@ -104,9 +101,25 @@ class LoginTest extends TestCase
             ->post(route('login'), [
                 'email' => $scholar->email,
                 'password' => $plainPassword,
-                'type' => 'tyuhgyt',
             ])->assertRedirect()
-            ->assertSessionHasErrors('type');
+            ->assertSessionHasErrors('email');
+
+        $this->assertFalse(Auth::guard('scholars')->check());
+    }
+
+    /** @test */
+    public function users_cannot_login_from_scholar_login()
+    {
+        $user = create(User::class, 1, [
+            'password' => bcrypt($plainPassword = 'secret'),
+        ]);
+
+        $this->withExceptionHandling()
+            ->post(route('login', ['scholar']), [
+                'email' => $user->email,
+                'password' => $plainPassword,
+            ])->assertRedirect()
+            ->assertSessionHasErrors('email');
 
         $this->assertFalse(Auth::guard('scholars')->check());
     }
