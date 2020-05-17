@@ -51,13 +51,16 @@ class Scholar extends User
         'old_supervisors',
         'old_advisory_committees',
         'finalized_title',
+        'recommended_title',
         'title_finalized_on',
+        'title_recommended_on',
         'proposed_title',
     ];
 
     protected $dates = [
         'registration_date',
         'title_finalized_on',
+        'title_recommended_on',
     ];
 
     protected $casts = [
@@ -226,9 +229,31 @@ class Scholar extends User
         return $this->documents()->where('type', ScholarDocumentType::ACCEPTANCE_LETTER)->exists();
     }
 
+    public function isTableOfContentsOfThesisUploaded()
+    {
+        return $this->documents()->where('type', ScholarDocumentType::THESIS_TOC)->exists();
+    }
+
+    public function isPrePhdSeminarNoticeUploaded()
+    {
+        return $this->documents()->where('type', ScholarDocumentType::PRE_PHD_SEMINAR_NOTICE)->exists();
+    }
+
     public function isDocumentListComplete()
     {
         return $this->isAcceptanceLetterUploaded()
             && $this->isJoiningLetterUploaded();
+    }
+
+    public function titleApprovalAppeal()
+    {
+        return $this->appeals()->where('type', ScholarAppealTypes::TITLE_APPROVAL)->orderBY('created_at', 'DESC')->first();
+    }
+
+    public function isTitleApprovalDocumentListCompleted()
+    {
+        return $this->isJoiningLetterUploaded()
+            && $this->isTableOfContentsOfThesisUploaded()
+            && $this->isPrePhdSeminarNoticeUploaded();
     }
 }

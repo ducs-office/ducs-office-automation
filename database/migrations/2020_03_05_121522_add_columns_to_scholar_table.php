@@ -33,6 +33,8 @@ class AddColumnsToScholarTable extends Migration
             $table->json('old_advisory_committees')->nullable();
             $table->string('finalized_title')->nullable();
             $table->date('title_finalized_on')->nullable();
+            $table->string('recommended_title')->nullable();
+            $table->date('title_recommended_on')->nullable();
             $table->string('proposed_title')->nullable();
         });
     }

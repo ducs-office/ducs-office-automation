@@ -64,6 +64,8 @@ $factory->define(Scholar::class, function (Faker $faker) {
         },
         'finalized_title' => $faker->word,
         'title_finalized_on' => $faker->date(),
+        'recommended_title' => $faker->word,
+        'title_recommended_on' => $faker->date(),
         'proposed_title' => $faker->word,
     ];
 });

@@ -60,6 +60,33 @@ Route::patch(
     'ScholarAppealController@markComplete'
 )->name('scholars.appeals.mark_complete')->middleware('auth:web,teachers');
 
+//================Scholar Title Approval =======================
+
+Route::get(
+    '/scholars/{scholar}/title-approval/request',
+    'ScholarTitleApprovalController@request'
+)->name('scholars.title_approval.request')->middleware('auth:scholars');
+
+Route::post(
+    '/scholars/{scholar}/title-approval/apply',
+    'ScholarTitleApprovalController@apply'
+)->name('scholars.title_approval.apply')->middleware('auth:scholars');
+
+Route::get(
+    '/scholars/{scholar}/title-approval/show',
+    'ScholarTitleApprovalController@show'
+)->name('scholars.title_approval.show')->middleware('auth:we,teachers,scholars');
+
+Route::patch(
+    '/scholars/{scholar}/title-approval/{appeal}/approve',
+    'ScholarTitleApprovalController@approve'
+)->name('scholars.title_approval.approve')->middleware('auth:web,scholars');
+
+Route::patch(
+    '/scholars/{scholar}/appeals/{appeal}/mark-complete',
+    'ScholarTitleApprovalController@markComplete'
+)->name('scholars.title_approval.mark_complete')->middleware('auth:web,teachers');
+
 Route::prefix('/publications')
 ->middleware(['auth:web,teachers,scholars'])
 ->namespace('Publications')

@@ -23,9 +23,10 @@ class ScholarAppealStatus extends BaseEnumType
     public function getContextCSS()
     {
         return [
-            self::APPROVED => 'text-green-500',
+            self::APPROVED => 'text-green-500 bg-green-300 border-green-500',
             self::REJECTED => 'text-red-600',
-            self::APPLIED => 'text-gray-700',
+            self::APPLIED => 'text-gray-600 bg-gray-200',
+            self::COMPLETED => 'text-magenta-800 bg-magenta-200 border-magenta-800',
         ][$this->value];
     }
 }

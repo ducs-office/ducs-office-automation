@@ -32,9 +32,9 @@ class ScholarAppealPolicy
                 && $user->isSupervisor()
                 && $user->supervisorProfile->scholars->contains($scholar->id)
                 ) || (
-                get_class($user) === User::class
+                    get_class($user) === User::class
                 && $user->can('scholar appeals:mark complete')
-            )
+                )
         );
     }
 
@@ -102,5 +102,39 @@ class ScholarAppealPolicy
         return get_class($user) === User::class
             && $user->can('scholar appeals:mark complete')
             && $appeal->status == ScholarAppealStatus::APPROVED;
+    }
+
+    public function requestTitleApproval($user)
+    {
+        return $user instanceof Scholar
+            && optional($user->currentPhdSeminarAppeal())->status == ScholarAppealStatus::COMPLETED
+            && $user->titleApprovalAppeal() == null;
+    }
+
+    public function applyTitleApproval($user)
+    {
+        return $user instanceof Scholar
+            && $user->isTitleApprovalDocumentListCompleted()
+            && optional($user->currentPhdSeminarAppeal())->status == ScholarAppealStatus::COMPLETED
+            && $user->titleApprovalAppeal() == null;
+    }
+
+    public function viewTitleApprovalForm($user, Scholar $scholar)
+    {
+        return
+            $scholar->titleApprovalAppeal() != null && (
+                (
+                $user instanceof Scholar
+                && $user->id === $scholar->id
+            ) || (
+                $user instanceof User
+                && method_exists($user, 'isSupervisor')
+                && $user->isSupervisor()
+                && $user->supervisorProfile->scholars->contains($scholar->id)
+            ) || (
+                $user instanceof User
+                && $user->can('scholar appeals:mark complete')
+            )
+            );
     }
 }
