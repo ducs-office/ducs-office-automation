@@ -12,28 +12,20 @@
             font-size: 14px;
         }
     </style>
+    <script src="{{ asset('js/app.js') }}" defer></script>
 </head>
 <body class="font-sans leading-tight bg-gray-200 overflow-y-hidden">
-    <div id="app">
-        <toggle-visibility :shown="$window.innerWidth > 800" class="flex h-screen">
-            <template v-slot="sidebar">
-                    <transition enter-class="transform -translate-x-full"
-                        leave-to-class="transform -translate-x-full"
-                        enter-active-class="transition-transform duration-300"
-                        leave-active-class="transition-transform duration-300">
-                        <div v-show="sidebar.isVisible"
-                            class="bg-magenta-800 text-white w-80 flex flex-col flex-shrink-0">
-                            @auth @include('staff.partials.sidebar') @endauth
-                        </div>
-                    </transition>
-                    <main class="flex-1 overflow-x-hidden overflow-y-auto">
-                        @include('staff.partials.header')
-                        @yield('body')
-                    </main>
-                    @include('flash::message')
-            </template>
-        </toggle-visibility>
-    </div>
-    <script src="{{ asset('js/app.js') }}"></script>
+    <div x-data="{ ...modalsRoot() }" class="h-screen flex">
+            <div class="bg-magenta-800 text-white w-80 flex flex-col flex-shrink-0">
+                @include('staff.partials.sidebar')
+            </div>
+            <div class="flex-1 flex flex-col h-full overflow-y-auto">
+                @include('staff.partials.header')
+                <main class="flex-1 h-full p-4 space-y-4">
+                    @yield('body')
+                </main>
+            </div>
+        </div>
+        @include('flash::message')
 </body>
 </html>

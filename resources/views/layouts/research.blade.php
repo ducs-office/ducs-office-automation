@@ -14,32 +14,23 @@
     </style>
 </head>
 <body class="font-sans leading-tight bg-gray-200 overflow-y-hidden">
-    <div id="app">
-        <toggle-visibility :shown="$window.innerWidth > 800" class="flex h-screen">
-            <template v-slot="sidebar">
-                    @auth('web')
-                    <transition enter-class="translate-x-back-100"
-                        leave-to-class="translate-x-back-100"
-                        enter-active-class="transition-transform"
-                        leave-active-class="transition-transform">
-                        <div v-show="sidebar.isVisible"
-                            class="bg-magenta-800 text-white w-80 flex flex-col flex-shrink-0">
-                            @auth @include('staff.partials.sidebar') @endauth
-                        </div>
-                    </transition>
-                    @endauth
-                    <main class="flex-1 overflow-x-hidden overflow-y-auto">
-                        @if(auth()->guard('web')->check())
-                        @include('staff.partials.header')
-                        @elseif(auth()->guard('teachers')->check())
-                        @include('teachers.partials.header')
-                        @endif
-                        @yield('body')
-                    </main>
-                    @include('flash::message')
-            </template>
-        </toggle-visibility>
+    <div x-data="{ ...modalsRoot() }" class="h-screen flex">
+        @auth('web')
+        <div class="bg-magenta-800 text-white w-80 flex flex-col flex-shrink-0">
+            @auth @include('staff.partials.sidebar') @endauth
+        </div>
+        @endauth
+        <main class="flex-1 overflow-x-hidden overflow-y-auto">
+            @if(auth()->guard('web')->check())
+            @include('staff.partials.header')
+            @elseif(auth()->guard('teachers')->check())
+            @include('teachers.partials.header')
+            @endif
+            @yield('body')
+        </main>
+        @include('flash::message')
     </div>
+    @include('flash::message')
     <script src="{{ asset('js/app.js') }}"></script>
 </body>
 </html>
