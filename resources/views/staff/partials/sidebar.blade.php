@@ -74,13 +74,7 @@
             </a>
         </li>
         @endcan
-        @can('viewAny', App\Models\Teacher::class)
-        <li class="mb-1 last:mb-0">
-            <a href="{{ route('staff.teachers.index') }}" class="flex items-center py-2 px-4 hover:bg-magenta-700 hover:text-white rounded">
-                <x-feather-icon name="users" class="h-4 mr-2">College Teacher</x-feather-icon>
-                College Teachers
-            </a>
-        </li>
+        @can('viewAny', App\Models\TeachingRecord::class)
         <li class="mb-1 last:mb-0">
             <a href="{{ route('teaching_records.index') }}" class="flex items-center py-2 px-4 hover:bg-magenta-700 hover:text-white rounded">
                 <x-feather-icon name="database" class="h-4 mr-2">UG Teaching Records</x-feather-icon>
