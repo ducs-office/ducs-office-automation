@@ -16,8 +16,6 @@ use App\Models\ScholarEducationDegree;
 use App\Models\ScholarEducationInstitute;
 use App\Models\ScholarEducationSubject;
 use App\Models\ScholarProfile;
-use App\Models\Teacher;
-use App\Models\TeacherProfile;
 use App\Models\User;
 use App\Types\CourseType;
 use App\Types\ProgrammeType;
@@ -119,10 +117,11 @@ class DatabaseSeeder extends Seeder
             'name' => 'Hansraj College',
         ])->programmes()->sync($programmes->pluck('id')->toArray());
 
-        $teacher = factory(Teacher::class)->create([
+        $teacher = factory(User::class)->create([
             'first_name' => 'Sharanjit',
             'last_name' => 'Kaur',
             'email' => 'kaur.sharanjit@andc.du.ac.in',
+            'category' => UserCategory::COLLEGE_TEACHER,
         ]);
 
         $this->call(PhdCourseSeeder::class);

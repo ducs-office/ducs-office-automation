@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Cosupervisor;
+use App\Models\ExternalAuthority;
 use App\Models\PhdCourse;
 use App\Models\Scholar;
 use App\Models\ScholarEducationDegree;
@@ -27,8 +28,7 @@ class PhdScholarSeeder extends Seeder
 
     protected $faculty;
     protected $college_teachers;
-    protected $supervisors;
-    protected $cosupervisors;
+    protected $externals;
     protected $nocPath;
 
     /**
@@ -40,8 +40,7 @@ class PhdScholarSeeder extends Seeder
     {
         $this->createFacultyTeachers();
         $this->createCollegeTeachers();
-        $this->createSupervisors();
-        $this->createCosupervisors();
+        $this->createExternals();
         $this->createNocDocument();
 
         // =========== Rajni Dabbas ============
@@ -58,15 +57,6 @@ class PhdScholarSeeder extends Seeder
             'admission_mode' => AdmissionMode::JRF,
             'research_area' => 'Theoretical Computer Science',
             'registration_date' => '2019-11-11',
-            'supervisor_profile_id' => $this->supervisors->neelima_gupta->id,
-            'advisory_committee' => [
-                AdvisoryCommitteeMember::fromExistingSupervisors(
-                    $this->supervisors->naveen_kumar
-                ),
-                AdvisoryCommitteeMember::fromExistingCosupervisors(
-                    $this->cosupervisors->naveen_garg
-                ),
-            ],
             'education_details' => [
                 new EducationInfo([
                     'degree' => ScholarEducationDegree::create([
@@ -92,6 +82,17 @@ class PhdScholarSeeder extends Seeder
                 ]),
             ],
         ]);
+        $rajni->supervisors()->attach($this->faculty->neelima_gupta);
+        $rajni->currentAdvisors()->createMany([
+            [
+                'advisor_type' => ExternalAuthority::class,
+                'advisor_id' => $this->externals->naveen_garg->id,
+            ],
+            [
+                'advisor_type' => User::class,
+                'advisor_id' => $this->faculty->naveen_kumar->id,
+            ],
+        ]);
         $rajni->courseworks()->attach(PhdCourse::whereCode('RCS004')->first());
 
         // ============ Sudhir Gupta =============
@@ -108,20 +109,16 @@ class PhdScholarSeeder extends Seeder
             'admission_mode' => AdmissionMode::UGC_NET,
             'research_area' => 'Mobile Specific Testing Strategies',
             'registration_date' => '2019-12-10',
-            'supervisor_profile_id' => $this->supervisors->sangeeta_srivastava->id,
-            'advisory_committee' => [
-                AdvisoryCommitteeMember::fromExistingSupervisors(
-                    $this->supervisors->poonam_bedi
-                ),
-                AdvisoryCommitteeMember::fromExistingCosupervisors(
-                    $this->cosupervisors->naveen_garg
-                ),
-                new AdvisoryCommitteeMember('external', [
-                    'name' => 'V.B. Singh',
-                    'designation' => 'Dr.',
-                    'affiliation' => 'Delhi College of Arts & Commerce, University of Delhi',
-                    'email' => 'vbsingh@gmail.com',
-                ]),
+        ]);
+        $sudhir->supervisors()->attach($this->college_teachers->sangeeta_srivastava);
+        $sudhir->currentAdvisors()->createMany([
+            [
+                'advisor_type' => User::class,
+                'advisor_id' => $this->faculty->poonam_bedi->id,
+            ],
+            [
+                'advisor_type' => ExternalAuthority::class,
+                'advisor_id' => $this->externals->vb_singh->id,
             ],
         ]);
         $sudhir->courseworks()->attach(
@@ -137,7 +134,6 @@ class PhdScholarSeeder extends Seeder
             'indexed_in' => CitationIndex::SCOPUS,
             'page_numbers' => [29, 43],
         ]);
-
         $sudhirPublication->coAuthors()->createMany([
             [
                 'name' => 'Ashish Kumar Jha',
@@ -171,14 +167,16 @@ class PhdScholarSeeder extends Seeder
             'admission_mode' => AdmissionMode::DU_TEACHER,
             'research_area' => 'Approximation Algoriithms and their Analysis',
             'registration_date' => '2017-04-05',
-            'supervisor_profile_id' => $this->supervisors->neelima_gupta->id,
-            'advisory_committee' => [
-                AdvisoryCommitteeMember::fromExistingSupervisors(
-                    $this->supervisors->naveen_kumar
-                ),
-                AdvisoryCommitteeMember::fromExistingCoSupervisors(
-                    $this->cosupervisors->naveen_garg
-                ),
+        ]);
+        $sapna->supervisors()->attach($this->faculty->neelima_gupta);
+        $sapna->currentAdvisors()->createMany([
+            [
+                'advisor_type' => User::class,
+                'advisor_id' => $this->faculty->naveen_kumar->id,
+            ],
+            [
+                'advisor_type' => ExternalAuthority::class,
+                'advisor_id' => $this->externals->naveen_garg->id,
             ],
         ]);
         $sapna->courseworks()->attach(
@@ -232,18 +230,20 @@ class PhdScholarSeeder extends Seeder
             'admission_mode' => AdmissionMode::UGC_NET,
             'research_area' => 'Information Security',
             'registration_date' => '2018-11-26',
-            'supervisor_profile_id' => $this->supervisors->archana_singhal->id,
-            'cosupervisor_profile_id' => $this->supervisors->sk_mutto->id,
-            'cosupervisor_profile_type' => SupervisorProfile::class,
-            'advisory_committee' => [
-                AdvisoryCommitteeMember::fromExistingSupervisors($this->supervisors->archana_singhal),
-                AdvisoryCommitteeMember::fromExistingSupervisors($this->supervisors->poonam_bedi),
-                new AdvisoryCommitteeMember('external', [
-                    'name' => 'Harmeet Kaur',
-                    'designation' => 'Professor',
-                    'affiliation' => 'Hansraj college, University of Delhi',
-                    'email' => 'harmeet@hc.du.ac.in',
-                ]),
+        ]);
+        $nisha->supervisors()->attach($this->college_teachers->archana_singhal);
+        $nisha->cosupervisors()->create([
+            'person_type' => User::class,
+            'person_id' => $this->faculty->sk_mutto->id,
+        ]);
+        $nisha->currentAdvisors()->createMany([
+            [
+                'advisor_type' => User::class,
+                'advisor_id' => $this->faculty->poonam_bedi->id,
+            ],
+            [
+                'advisor_type' => ExternalAuthority::class,
+                'advisor_id' => $this->externals->harmeet_kaur->id,
             ],
         ]);
         $nisha->courseworks()->attach(
@@ -264,14 +264,15 @@ class PhdScholarSeeder extends Seeder
             'admission_mode' => AdmissionMode::UGC_NET,
             'research_area' => 'Information Security',
             'registration_date' => '2018-05-12',
-            'supervisor_profile_id' => $this->supervisors->arpita_sharma->id,
-            'cosupervisor_profile_id' => $this->cosupervisors->anurag_mishra->id,
-            'cosupervisor_profile_type' => Cosupervisor::class,
-            'advisory_committee' => [
-                AdvisoryCommitteeMember::fromExistingSupervisors(
-                    $this->supervisors->poonam_bedi
-                ),
-            ],
+        ]);
+        $megha->supervisors()->attach($this->college_teachers->arpita_sharma);
+        $megha->cosupervisors()->create([
+            'person_type' => User::class,
+            'person_id' => $this->college_teachers->anurag_mishra->id,
+        ]);
+        $megha->currentAdvisors()->create([
+            'advisor_type' => User::class,
+            'advisor_id' => $this->faculty->poonam_bedi->id,
         ]);
         $megha->courseworks()->attach(
             PhdCourse::whereCode('RCS008')->first()
@@ -290,17 +291,16 @@ class PhdScholarSeeder extends Seeder
             'admission_mode' => AdmissionMode::JRF,
             'research_area' => 'Machine Learning',
             'registration_date' => '2019-06-11',
-            'supervisor_profile_id' => $this->supervisors->sangeeta_srivastava->id,
-            'advisory_committee' => [
-                AdvisoryCommitteeMember::fromExistingSupervisors(
-                    $this->supervisors->poonam_bedi
-                ),
-                new AdvisoryCommitteeMember('external', [
-                    'name' => 'V.B. Singh',
-                    'designation' => 'Dr.',
-                    'affiliation' => 'Delhi College of Arts & Commerce, University of Delhi',
-                    'email' => 'vbsingh@gmail.com',
-                ]),
+        ]);
+        $kountay->supervisors()->attach($this->college_teachers->sangeeta_srivastava);
+        $kountay->currentAdvisors()->createMany([
+            [
+                'advisor_type' => User::class,
+                'advisor_id' => $this->faculty->poonam_bedi->id,
+            ],
+            [
+                'advisor_type' => ExternalAuthority::class,
+                'advisor_id' => $this->externals->vb_singh->id,
             ],
         ]);
         $kountay->courseworks()->attach(
@@ -316,6 +316,7 @@ class PhdScholarSeeder extends Seeder
                 'email' => 'ngupta.cs.du@gmail.com',
                 'category' => UserCategory::FACULTY_TEACHER,
                 'password' => self::ENC_PASSWORD,
+                'is_supervisor' => true,
             ]),
 
             'naveen_kumar' => User::create([
@@ -323,6 +324,7 @@ class PhdScholarSeeder extends Seeder
                 'email' => 'naveen@cs.du.ac.in',
                 'category' => UserCategory::FACULTY_TEACHER,
                 'password' => self::ENC_PASSWORD,
+                'is_supervisor' => true,
             ]),
 
             'poonam_bedi' => User::create([
@@ -330,6 +332,7 @@ class PhdScholarSeeder extends Seeder
                 'email' => 'pbedi@cs.du.ac.in',
                 'category' => UserCategory::FACULTY_TEACHER,
                 'password' => self::ENC_PASSWORD,
+                'is_supervisor' => true,
             ]),
 
             'sk_mutto' => User::create([
@@ -337,6 +340,8 @@ class PhdScholarSeeder extends Seeder
                 'email' => 'drskmuttoo@gmail.com',
                 'category' => UserCategory::FACULTY_TEACHER,
                 'password' => self::ENC_PASSWORD,
+                'is_supervisor' => true,
+                'is_cosupervisor' => true,
             ]),
         ];
     }
@@ -344,63 +349,67 @@ class PhdScholarSeeder extends Seeder
     public function createCollegeTeachers()
     {
         $this->college_teachers = (object) [
-            'sangeeta_srivastava' => Teacher::create([
+            'sangeeta_srivastava' => User::create([
                 'first_name' => 'Sangeeta',
                 'last_name' => 'Srivastava',
                 'email' => 'sangeeta.srivastava@cas.du.ac.in',
                 'password' => self::ENC_PASSWORD,
+                'category' => UserCategory::COLLEGE_TEACHER,
+                'is_supervisor' => true,
             ]),
 
-            'archana_singhal' => Teacher::create([
+            'archana_singhal' => User::create([
                 'first_name' => 'Archana',
                 'last_name' => 'Singhal',
                 'email' => 'archanasinghal1970@gmail.com',
                 'password' => self::ENC_PASSWORD,
+                'category' => UserCategory::COLLEGE_TEACHER,
+                'is_supervisor' => true,
             ]),
 
-            'arpita_sharma' => Teacher::create([
+            'arpita_sharma' => User::create([
                 'first_name' => 'Arpita',
                 'last_name' => 'Sharma',
                 'email' => 'asharma@ddu.du.ac.in',
                 'password' => self::ENC_PASSWORD,
+                'category' => UserCategory::COLLEGE_TEACHER,
+                'is_supervisor' => true,
             ]),
 
-            'anurag_mishra' => Teacher::create([
+            'anurag_mishra' => User::create([
                 'first_name' => 'Anurag',
                 'last_name' => 'Mishra',
                 'email' => 'anurag_cse2003@yahoo.com',
                 'password' => self::ENC_PASSWORD,
+                'category' => UserCategory::COLLEGE_TEACHER,
+                'is_cosupervisor' => true,
             ]),
         ];
     }
 
-    public function createSupervisors()
+    public function createExternals()
     {
-        $this->supervisors = (object) collect([
-            'neelima_gupta' => 'faculty',
-            'naveen_kumar' => 'faculty',
-            'poonam_bedi' => 'faculty',
-            'sk_mutto' => 'faculty',
-            'sangeeta_srivastava' => 'college_teachers',
-            'archana_singhal' => 'college_teachers',
-            'arpita_sharma' => 'college_teachers',
-        ])->map(function ($name, $type) {
-            return $this->{$name}->{$type}->supervisorProfile()->create();
-        })->all();
-    }
-
-    public function createCosupervisors()
-    {
-        $this->cosupervisors = (object) [
-            'anurag_mishra' => Cosupervisor::create([
-                'professor_type' => Teacher::class,
-                'professor_id' => $this->college_teachers->anurag_mishra->id,
-            ]),
-            'naveen_garg' => Cosupervisor::create([
+        $this->externals = (object) [
+            'naveen_garg' => ExternalAuthority::create([
                 'name' => 'Naveen Garg',
                 'email' => 'naveen@.iitd.ac.in',
                 'designation' => 'Professor',
                 'affiliation' => 'Indian Institute of Technology Delhi',
+                'is_cosupervisor' => true,
+            ]),
+
+            'vb_singh' => ExternalAuthority::create([
+                'name' => 'V.B. Singh',
+                'email' => 'vbsingh@gmail.com',
+                'designation' => 'Dr.',
+                'affiliation' => 'Delhi College of Arts & Commerce, University of Delhi',
+            ]),
+
+            'harmeet_kaur' => ExternalAuthority::create([
+                'name' => 'Harmeet Kaur',
+                'email' => 'harmeet@hc.du.ac.in',
+                'designation' => 'Professor',
+                'affiliation' => 'Hansraj college, University of Delhi',
             ]),
         ];
     }
