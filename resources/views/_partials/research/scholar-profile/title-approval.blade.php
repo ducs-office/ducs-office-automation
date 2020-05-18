@@ -14,7 +14,7 @@
         </a>
         @elsecan('requestTitleApproval', \App\Models\ScholarAppeal::class)
         <button class="btn btn-magenta is-sm -ml-4 my-2" x-on:click="$modal.show('title-approval-requirements-modal')">
-            Request For Title Approval
+            Request
         </button>
         <x-modal name="title-approval-requirements-modal" class="p-6">
             <div> 

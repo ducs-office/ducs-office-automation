@@ -18,6 +18,7 @@ use App\Models\ScholarAppeal;
 use App\Types\AdmissionMode;
 use App\Types\Gender;
 use App\Types\LeaveStatus;
+use App\Types\RequestStatus;
 use App\Types\ReservationCategory;
 use App\Types\ScholarAppealTypes;
 use App\Types\ScholarDocumentType;
@@ -52,12 +53,19 @@ class Scholar extends User
         'title_finalized_on',
         'title_recommended_on',
         'proposed_title',
+        'examiner_status',
+        'examiner_applied_on',
+        'examiner_recommended_on',
+        'examiner_approved_on',
     ];
 
     protected $dates = [
         'registration_date',
         'title_finalized_on',
         'title_recommended_on',
+        'examiner_applied_on',
+        'examiner_recommended_on',
+        'examiner_approved_on',
     ];
 
     protected $casts = [
@@ -65,6 +73,7 @@ class Scholar extends User
         'admission_mode' => CustomType::class . ':' . AdmissionMode::class,
         'gender' => CustomType::class . ':' . Gender::class,
         'education_details' => EducationDetails::class,
+        'examiner_status' => CustomType::class . ':' . RequestStatus::class,
     ];
 
     protected $withCount = [

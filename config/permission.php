@@ -97,6 +97,7 @@ return [
             'scholar progress reports' => ['add', 'view', 'delete'],
             'scholar documents' => ['add', 'view', 'delete'],
             'scholar appeals' => ['mark complete'],
+            'scholar examiner' => ['recommend', 'approve'],
         ],
 
         'roles' => [
@@ -114,6 +115,7 @@ return [
                 'scholars' => ['view', 'create', 'edit', 'delete'],
                 'scholar documents' => ['add', 'view', 'delete'],
                 'scholar appeals' => ['mark complete'],
+                'scholar examiner' => ['recommend', 'approve'],
             ],
             'DRC Member' => [
                 'scholars' => ['view', 'create', 'edit', 'delete'],

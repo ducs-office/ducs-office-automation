@@ -2,6 +2,7 @@
 
 use App\Types\AdmissionMode;
 use App\Types\Gender;
+use App\Types\RequestStatus;
 use App\Types\ReservationCategory;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -31,6 +32,10 @@ class AddColumnsToScholarTable extends Migration
             $table->string('recommended_title')->nullable();
             $table->date('title_recommended_on')->nullable();
             $table->string('proposed_title')->nullable();
+            $table->enum('examiner_status', RequestStatus::values())->nullable();
+            $table->date('examiner_applied_on')->nullable();
+            $table->date('examiner_recommended_on')->nullable();
+            $table->date('examiner_approved_on')->nullable();
         });
     }
 

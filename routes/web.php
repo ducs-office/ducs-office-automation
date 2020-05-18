@@ -105,8 +105,20 @@ Route::get('/teaching-records/export', 'TeachingRecordsController@export')->name
 Route::post('/teaching-records/start', 'TeachingRecordsController@start')->name('teaching-records.start');
 Route::patch('/teaching-records/extend', 'TeachingRecordsController@extend')->name('teaching-records.extend');
 
+//===================Scholar Examiner==============
+Route::patch('scholars/{scholar}/examiner/apply', 'ScholarExaminerController@apply')
+    ->middleware('auth:web')
+    ->name('scholars.examiner.apply');
+
+Route::patch('scholar/{scholar}/examiner/recommend', 'ScholarExaminerController@recommend')
+    ->middleware('auth:web')
+    ->name('scholars.examiner.recommend');
+
+Route::patch('scholar/{scholar}/examiner/approve', 'ScholarExaminerController@approve')
+    ->middleware('auth:web')
+    ->name('scholars.examiner.approve');
+
 Route::prefix('/publications')
-->middleware(['auth:web,scholars'])
 ->namespace('Publications')
 ->as('publications.')
 ->group(static function () {

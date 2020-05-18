@@ -68,21 +68,15 @@
         </form>
     </x-modal>
     
-
-    
-    <form id="patch-form" method="POST" class="w-0">
-        @csrf_token @method("PATCH")
-    </form>
-    
     <div class="flex-1">
-        <div class="ml-auto flex mb-4 px-4">
+        <div class="ml-auto flex mb-4">
             @if (optional($scholar->currentPhdSeminarAppeal())->isCompleted())
                 <h3 class="font-bold">Finalized Title: </h3>
                 <h3 class="text-gray-800 ml-2"> {{$scholar->finalized_title}}</h3>
             @else
-                <div class="flex items-baseline">
+                <div class="flex items-baseline justify-end w-full">
                     <h3 class="font-bold">Proposed Title: </h3>
-                    <h3 class="text-gray-800 ml-2"> {{$scholar->proposed_title ?? 'not set'}}</h3>
+                    <h3 class="text-gray-800 mx-2"> {{$scholar->proposed_title ?? 'not set'}}</h3>
                     @can('requestPhDSeminar', \App\Models\ScholarAppeal::class)
                     <button class="btn btn-magenta ml-4 py-1 px-2 rounded-sm text-sm" x-on:click="$modal.show('update-proposed-title-modal')">
                         Edit
@@ -170,3 +164,6 @@
         </ul>
     </div>
 </div>
+<form id="patch-form" method="POST" class="w-0">
+    @csrf_token @method("PATCH")
+</form>

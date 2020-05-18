@@ -92,7 +92,7 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
     }
 
     /** @test */
-    public function supervisor_can_not_view_their_scholars_phd_seminar_application()
+    public function supervisor_can_not_view_other_scholars_phd_seminar_application()
     {
         $user = factory(User::class)->states('supervisor')->create();
         $this->signIn($user);

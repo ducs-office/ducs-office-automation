@@ -11,6 +11,7 @@ use App\Types\AdmissionMode;
 use App\Types\AdvisoryCommitteeMember;
 use App\Types\EducationInfo;
 use App\Types\Gender;
+use App\Types\RequestStatus;
 use App\Types\ReservationCategory;
 use App\Types\UserCategory;
 use Faker\Generator as Faker;
@@ -46,5 +47,9 @@ $factory->define(Scholar::class, function (Faker $faker) {
         'recommended_title' => $faker->word,
         'title_recommended_on' => $faker->date(),
         'proposed_title' => $faker->word,
+        'examiner_status' => null,
+        'examiner_applied_on' => null,
+        'examiner_recommended_on' => null,
+        'examiner_approved_on' => null,
     ];
 });
