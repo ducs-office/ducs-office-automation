@@ -19,12 +19,13 @@ class ScholarController extends Controller
 {
     public function index()
     {
+        $cosupervisors = User::select(['id', 'first_name', 'last_name', 'is_supervisor', 'is_cosupervisor'])
+            ->allCosupervisors()->get();
+
         return view('staff.scholars.index', [
             'scholars' => Scholar::all(),
-            'supervisors' => User::supervisors()->get()->pluck('name', 'id'),
-            'cosupervisors' => User::cosupervisors()->get()->pluck('name', 'id')->merge(
-                ExternalAuthority::cosupervisors()->get()->pluck('name', 'id')
-            ),
+            'supervisors' => $cosupervisors->where('is_supervisor', true)->pluck('name', 'id'),
+            'cosupervisors' => $cosupervisors->pluck('name', 'id'),
         ]);
     }
 
@@ -53,11 +54,8 @@ class ScholarController extends Controller
         $scholar = Scholar::create($validData + ['password' => bcrypt($plainPassword)]);
         $scholar->supervisors()->attach($request->supervisor_id);
 
-        if ($request->hasAny(['cosupervisor_user_id', 'cosupervisor_external_id'])) {
-            $scholar->cosupervisors()->create([
-                'person_type' => $request->has('cosupervisor_user_id') ? User::class : ExternalAuthority::class,
-                'person_id' => $request->cosupervisor_user_id ?? $request->cosupervisor_external_id,
-            ]);
+        if ($request->has('cosupervisor_id')) {
+            $scholar->cosupervisors()->attach($request->cosupervisor_id);
         }
 
         event(new ScholarCreated($scholar, $plainPassword));
@@ -79,15 +77,14 @@ class ScholarController extends Controller
             ]);
         }
 
-        if ($request->hasAny(['cosupervisor_user_id', 'cosupervisor_external_id'])) {
-            if (! $request->cosupervisor_user_id && ! $request->cosupervisor_external_id) {
-                $scholar->currentCosupervisor()->delete();
-            } else {
-                $scholar->cosupervisors()->updateOrCreate(['ended_on' => null], [
-                    'person_type' => $request->has('cosupervisor_user_id') ? User::class : ExternalAuthority::class,
-                    'person_id' => $request->cosupervisor_user_id ?? $request->cosupervisor_external_id,
-                ]);
-            }
+        if ($request->has('cosupervisor_id')) {
+            $scholar->cosupervisors()->wherePivot('ended_on', null)->sync([
+                $request->cosupervisor_id => [
+                    'started_on' => $scholar->currentCosupervisor
+                        ? $scholar->currentCosupervisor->pivot->started_on
+                        : today(),
+                ],
+            ]);
         }
 
         flash('Scholar updated successfully!')->success();
@@ -106,41 +103,28 @@ class ScholarController extends Controller
 
     public function replaceCosupervisor(Request $request, Scholar $scholar)
     {
-        $userConflicts = [$scholar->currentSupervisor->id];
-        $externalConflicts = [];
-
-        if ($cosupervisor = $scholar->currentCosupervisor) {
-            if ($cosupervisor->person_type === User::class) {
-                $userConflicts[] = $scholar->currentCosupervisor->person_id;
-            } else {
-                $externalConflicts[] = $scholar->currentCosupervisor->person_id;
-            }
-        }
+        $conflicts = [
+            $scholar->currentSupervisor->id,
+            optional($scholar->currentCosupervisor)->id,
+        ];
 
         $request->validate([
             'user_id' => [
-                'nullable', 'integer',
-                Rule::notIn($userConflicts),
+                'nullable', 'integer', Rule::notIn($conflicts),
                 Rule::exists(User::class, 'id')
                     ->where(function ($q) {
                         return $q->where('is_supervisor', true)
                             ->orWhere('is_cosupervisor', true);
                     }),
             ],
-            'external_id' => [
-                'nullable', 'integer', Rule::notIn($externalConflicts), 'exists:external_authorities,id',
-            ],
         ]);
 
         if ($scholar->currentCosupervisor) {
-            $scholar->currentCosupervisor->update(['ended_on' => today()]);
+            $scholar->currentCosupervisor->pivot->update(['ended_on' => today()]);
         }
 
-        if ($request->user_id || $request->external_id) {
-            $scholar->cosupervisors()->create([
-                'person_type' => $request->has('user_id') ? User::class : ExternalAuthority::class,
-                'person_id' => $request->user_id ?? $request->external_id,
-            ]);
+        if ($request->user_id) {
+            $scholar->cosupervisors()->attach($request->user_id);
         }
 
         flash('Co-Supervisor replaced successfully!')->success();

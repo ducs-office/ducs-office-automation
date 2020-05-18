@@ -4,8 +4,8 @@ namespace Tests\Feature;
 
 use App\Models\Cosupervisor;
 use App\Models\ExternalAuthority;
+use App\Models\Pivot\ScholarCosupervisor;
 use App\Models\Scholar;
-use App\Models\ScholarCosupervisor;
 use App\Models\Teacher;
 use App\Models\User;
 use App\Types\UserCategory;
@@ -95,18 +95,23 @@ class ViewScholarTest extends TestCase
     /** @test */
     public function view_has_a_unique_list_of_cosupervisors()
     {
+        factory(User::class, 2)->create([
+            'is_supervisor' => false,
+            'is_cosupervisor' => false,
+        ]);
+        $supervisors = factory(User::class, 2)->states('supervisor')->create();
         $userCosupervisors = factory(User::class)->states('cosupervisor')->create();
-        $externalCosupervisors = factory(ExternalAuthority::class)->states('cosupervisor')->create();
+        $externalCosupervisors = factory(User::class)->states(['cosupervisor', 'external'])->create();
 
         $this->signIn();
 
-        $viewData = $this->withoutExceptionHandling()
+        $viewCosupervisors = $this->withoutExceptionHandling()
              ->get(route('staff.scholars.index'))
              ->assertSuccessful()
              ->assertViewIs('staff.scholars.index')
              ->assertViewHas('cosupervisors')
              ->viewData('cosupervisors');
 
-        $this->assertCount(2, $viewData);
+        $this->assertCount(4, $viewCosupervisors);
     }
 }

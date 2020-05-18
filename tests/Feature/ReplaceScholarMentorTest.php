@@ -153,11 +153,10 @@ class ReplaceScholarMentorTest extends TestCase
         $this->assertCount(1, $scholar->fresh()->cosupervisors); // Only one new Cosupervisor
 
         $newCosupervisors = $scholar->cosupervisors()
-            ->where('ended_on', null)
+            ->wherePivot('ended_on', null)
             // start date is recorded from today so that we know a term when there was no cosupervisor assigned.
-            ->where('started_on', today())
-            ->where('person_type', User::class)
-            ->where('person_id', $exisitngCosupervisor->id)
+            ->wherePivot('started_on', today())
+            ->wherePivot('user_id', $exisitngCosupervisor->id)
             ->get();
 
         $this->assertCount(1, $newCosupervisors);
@@ -171,10 +170,7 @@ class ReplaceScholarMentorTest extends TestCase
         $cosupervisor = factory(User::class)->states('cosupervisor')->create();
         $scholar = create(Scholar::class);
         $scholar->supervisors()->attach($supervisor);
-        $scholar->cosupervisors()->create([
-            'person_type' => User::class,
-            'person_id' => $cosupervisor->id,
-        ]);
+        $scholar->cosupervisors()->attach($cosupervisor);
 
         try {
             $this->withoutExceptionHandling()

@@ -45,12 +45,17 @@ $factory->define(User::class, static function (Faker $faker) {
 $factory->state(User::class, 'supervisor', [
     'category' => UserCategory::FACULTY_TEACHER,
     'is_supervisor' => true,
+    'is_cosupervisor' => false,
 ]);
 
 $factory->state(User::class, 'cosupervisor', [
     'category' => UserCategory::FACULTY_TEACHER,
     'is_supervisor' => false,
     'is_cosupervisor' => true,
+]);
+
+$factory->state(User::class, 'external', [
+    'category' => UserCategory::EXTERNAL,
 ]);
 
 $factory->state(User::class, 'faculty', [

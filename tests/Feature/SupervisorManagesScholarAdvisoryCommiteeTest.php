@@ -3,9 +3,9 @@
 namespace Tests\Feature;
 
 use App\Models\ExternalAuthority;
+use App\Models\Pivot\ScholarCosupervisor;
 use App\Models\Scholar;
 use App\Models\ScholarAdvisor;
-use App\Models\ScholarCosupervisor;
 use App\Models\User;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Testing\RefreshDatabase;

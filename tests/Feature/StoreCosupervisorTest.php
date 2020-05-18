@@ -65,10 +65,6 @@ class StoreCosupervisorTest extends TestCase
     {
         $this->signIn();
 
-        // Faking Model events, so that cosupervisor is not created.
-        // @see /app/Models/User.php
-        Event::fake();
-
         $facultySupervisor = factory(User::class)->states('supervisor')->create();
 
         $this->assertEquals(0, User::cosupervisors()->count());
