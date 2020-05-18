@@ -151,21 +151,4 @@ class ScholarController extends Controller
 
         return back();
     }
-
-    public function rememberOldAdvisoryCommittee(Scholar $scholar)
-    {
-        $oldAdvisoryCommittees = $scholar->old_advisory_committees;
-
-        $currentAdvisoryCommittee = [
-            'committee' => $scholar->advisory_committee,
-            'to_date' => today(),
-            'from_date' => count($oldAdvisoryCommittees) > 0 ?
-                $oldAdvisoryCommittees[count($oldAdvisoryCommittees) - 1]['to_date'] :
-                $scholar->created_at,
-        ];
-
-        array_unshift($oldAdvisoryCommittees, $currentAdvisoryCommittee);
-
-        $scholar->update(['old_advisory_committees' => $oldAdvisoryCommittees]);
-    }
 }

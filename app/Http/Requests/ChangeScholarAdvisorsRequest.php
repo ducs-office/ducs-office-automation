@@ -2,9 +2,8 @@
 
 namespace App\Http\Requests;
 
-use App\Models\ExternalAuthority;
 use App\Models\User;
-use Illuminate\Contracts\Validation\Validator;
+use App\Types\UserCategory;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -27,48 +26,44 @@ class ChangeScholarAdvisorsRequest extends FormRequest
      */
     public function rules()
     {
-        $userConflicts = [$this->route('scholar')->currentSupervisor->id];
-        $externalConflicts = [];
+        $allowedCategories = [
+            UserCategory::FACULTY_TEACHER,
+            UserCategory::COLLEGE_TEACHER,
+            UserCategory::EXTERNAL,
+        ];
 
-        if ($cosupervisor = $this->route('scholar')->currentCosupervisor) {
-            if ($cosupervisor->person_type === User::class) {
-                $userConflicts[] = $this->route('scholar')->currentCosupervisor->person_id;
-            } else {
-                $externalConflicts[] = $this->route('scholar')->currentCosupervisor->person_id;
-            }
-        }
+        $conflicts = [
+            $this->route('scholar')->currentSupervisor->id,
+            optional($this->route('scholar')->currentCosupervisor)->id,
+        ];
 
         return [
             'advisors' => ['required', 'array', 'max:2'],
-            'advisors.*.user_id' => [
-                'sometimes', 'required', 'integer', 'distinct',
-                Rule::notIn($userConflicts),
+            'advisors.*' => [
+                'required', 'integer', 'distinct',
+                Rule::notIn($conflicts),
                 Rule::exists(User::class, 'id')
-                    ->where(function ($query) {
-                        $query->where('is_cosupervisor', 1)
-                            ->orWhere('is_supervisor', 1);
+                    ->where(function ($query) use ($allowedCategories) {
+                        $query->where('is_supervisor', 1)
+                            ->orWhere('is_cosupervisor', 1)
+                            ->orWhereIn('category', $allowedCategories);
                     }),
             ],
-            'advisors.*.external_id' => [
-                'sometimes', 'required', 'integer', 'distinct',
-                Rule::notIn($externalConflicts),
-                Rule::exists(ExternalAuthority::class, 'id'),
-            ],
-            'advisors.*.name' => [
-                'required_without_all:advisors.*.user_id,advisors.*.external_id',
-            ],
-            'advisors.*.designation' => [
-                'required_without_all:advisors.*.user_id,advisors.*.external_id',
-            ],
-            'advisors.*.affiliation' => [
-                'required_without_all:advisors.*.user_id,advisors.*.external_id',
-            ],
-            'advisors.*.email' => [
-                'required_without_all:advisors.*.user_id,advisors.*.external_id',
-                'distinct',
-                'email', 'unique:external_authorities,email',
-            ],
-            'advisors.*.phone' => ['nullable', 'string'],
+            // 'advisors.*.name' => [
+            //     'required_without_all:advisors.*.user_id,advisors.*.external_id',
+            // ],
+            // 'advisors.*.designation' => [
+            //     'required_without_all:advisors.*.user_id,advisors.*.external_id',
+            // ],
+            // 'advisors.*.affiliation' => [
+            //     'required_without_all:advisors.*.user_id,advisors.*.external_id',
+            // ],
+            // 'advisors.*.email' => [
+            //     'required_without_all:advisors.*.user_id,advisors.*.external_id',
+            //     'distinct', 'email', 'unique:users,email',
+            // ],
+            // 'advisors.*.phone' => ['nullable', 'string'],
+            // 'advisors.*.address' => ['nullable', 'string'],
         ];
     }
 }

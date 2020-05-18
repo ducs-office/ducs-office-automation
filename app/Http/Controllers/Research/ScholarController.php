@@ -16,6 +16,7 @@ use App\Types\PresentationEventType;
 use App\Types\ReservationCategory;
 use App\Types\ScholarDocumentType;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
 class ScholarController extends Controller
@@ -60,18 +61,12 @@ class ScholarController extends Controller
 
     public function updateAdvisors(ChangeScholarAdvisorsRequest $request, Scholar $scholar)
     {
-        $validData = $request->validated();
+        $startedDate = $scholar->currentAdvisors->min('pivot.started_on') ?? $scholar->created_at;
 
-        $updatedAdvisors = collect($validData['advisors'])->map(function ($item) use ($scholar) {
-            return [
-                'advisor_type' => isset($item['user_id']) ? User::class : ExternalAuthority::class,
-                'advisor_id' => $item['user_id'] ?? $item['external_id'] ?? ExternalAuthority::create($item)->id,
-                'started_on' => $scholar->currentAdvisors->min('started_on') ?? $scholar->created_at,
-            ];
-        });
-
-        $scholar->currentAdvisors()->delete();
-        $scholar->currentAdvisors()->createMany($updatedAdvisors->toArray());
+        $scholar->advisors()->detach($scholar->currentAdvisors);
+        $scholar->advisors()->attach($request->advisors, [
+            'started_on' => $startedDate,
+        ]);
 
         flash('Advisors Updated SuccessFully!')->success();
 
@@ -85,18 +80,18 @@ class ScholarController extends Controller
             return redirect()->back();
         }
 
-        $validData = $request->validated();
+        $newAdvisors = collect($request->advisors)
+                ->mapWithKeys(function ($advisor) {
+                    return [$advisor => ['started_on' => today()]];
+                });
 
-        $updatedAdvisors = collect($validData['advisors'])->map(function ($item) use ($scholar) {
-            return [
-                'advisor_type' => isset($item['user_id']) ? User::class : ExternalAuthority::class,
-                'advisor_id' => $item['user_id'] ?? $item['external_id'] ?? ExternalAuthority::create($item)->id,
-                'started_on' => today(),
-            ];
-        });
+        $updatedAdvisors = $scholar->currentAdvisors
+            ->mapWithKeys(function ($advisor) {
+                return [$advisor->id => ['ended_on' => today()]];
+            })
+            ->concat($newAdvisors)->toArray();
 
-        $scholar->currentAdvisors()->update(['ended_on' => today()]);
-        $scholar->currentAdvisors()->createMany($updatedAdvisors->toArray());
+        $scholar->advisors()->syncWithoutDetaching($updatedAdvisors);
 
         flash('Advisors Updated SuccessFully!')->success();
 

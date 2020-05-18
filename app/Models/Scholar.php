@@ -13,7 +13,7 @@ use App\Models\ExternalAuthority;
 use App\Models\Pivot\ScholarCoursework;
 use App\Models\Pivot\ScholarSupervisor;
 use App\Models\Publication;
-use App\Models\ScholarAdvisor;
+use App\Models\Pivot\ScholarAdvisor;
 use App\Models\ScholarAppeal;
 use App\Types\AdmissionMode;
 use App\Types\Gender;

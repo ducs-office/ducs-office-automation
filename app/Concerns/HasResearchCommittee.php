@@ -2,9 +2,9 @@
 
 namespace App\Concerns;
 
+use App\Models\Pivot\ScholarAdvisor;
 use App\Models\Pivot\ScholarCosupervisor;
 use App\Models\Pivot\ScholarSupervisor;
-use App\Models\ScholarAdvisor;
 use App\Models\User;
 
 trait HasResearchCommittee
@@ -40,14 +40,15 @@ trait HasResearchCommittee
 
     public function advisors()
     {
-        return $this->hasMany(ScholarAdvisor::class)->orderBy('started_on', 'desc');
+        return $this->belongsToMany(User::class, 'advisor_scholar')
+            ->withPivot(['started_on', 'ended_on'])
+            ->using(ScholarAdvisor::class)
+            ->orderBy('started_on', 'desc');
     }
 
     public function currentAdvisors()
     {
-        return $this->hasMany(ScholarAdvisor::class)
-            ->whereNull('ended_on')
-            ->orderBy('started_on', 'desc');
+        return $this->advisors()->wherePivot('ended_on', null);
     }
 
     public function getCommitteeAttribute()
