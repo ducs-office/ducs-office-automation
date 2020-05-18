@@ -6,7 +6,6 @@ use App\Events\ScholarCreated;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Staff\StoreScholarRequest;
 use App\Http\Requests\Staff\UpdateScholarRequest;
-use App\Models\ExternalAuthority;
 use App\Models\Scholar;
 use App\Models\User;
 use Illuminate\Http\Request;

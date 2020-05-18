@@ -4,20 +4,14 @@ namespace App\Http\Controllers\Research;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ChangeScholarAdvisorsRequest;
-use App\Models\Cosupervisor;
-use App\Models\ExternalAuthority;
 use App\Models\PhdCourse;
 use App\Models\Scholar;
 use App\Models\User;
 use App\Types\AdmissionMode;
-use App\Types\AdvisoryCommitteeMember;
 use App\Types\Gender;
 use App\Types\PresentationEventType;
 use App\Types\ReservationCategory;
-use App\Types\ScholarDocumentType;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\Rule;
 
 class ScholarController extends Controller
 {

@@ -30,7 +30,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name', 'email', 'password', 'category',
-        'phone', 'address', 'college_id', 'designation',
+        'phone', 'address', 'college_id', 'designation', 'affiliation',
         'status', 'avatar_path', 'is_supervisor', 'is_cosupervisor',
     ];
 
@@ -146,7 +146,7 @@ class User extends Authenticatable
 
     public function getAffiliationAttribute()
     {
-        return optional($this->college)->name ?? 'Unknown';
+        return $this->affiliation ?? optional($this->college)->name ?? 'Unknown';
     }
 
     // Helpers
