@@ -127,9 +127,9 @@
                         <span class="inline font-semibold ml-1 p-1"> {{ $scholar->publications()->count() }} </span>
                     </p>
                 </div>
-                <div class="divide-x  h-20">
+                <div class="flex flex-wrap h-20">
                     <p class="ml-1 p-1"> Proposed Title of the Thesis: </p>
-                    <p class="ml-4 p-1 font-semibold"> {{ $scholar->proposed_title}} </p>
+                    <p class="ml-1 p-1 font-semibold"> {{ $scholar->proposed_title}} </p>
                 </div>
                 <div class="flex divide-x divide-black h-24">
                     <div class="w-1/2 flex items-end">

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Pre-PhD-Seminar</title>
+    <title>Title Approval</title>
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     @routes
     <style>
@@ -87,41 +87,41 @@
                 <div class="flex divide-x divide-black">
                     <div class="w-1/2 flex flex-wrap"> 
                         <p class="ml-1 p-1"> Name: </p>
-                        <p class="ml-1 p-1 font-semibold"> {{ $scholar->supervisor->name }} </p>
+                        <p class="ml-1 p-1 font-semibold"> {{ $scholar->currentSupervisor->name }} </p>
                     </div>    
                     <div class="flex flex-wrap">
                         <p class="ml-1 p-1"> Name: </p>
-                        <p class="ml-1 p-1 font-semibold"> {{ optional($scholar->cosupervisor)->name }} </p>
+                        <p class="ml-1 p-1 font-semibold"> {{ optional($scholar->currentCosupervisor)->name }} </p>
                     </div>    
                 </div>
                 <div class="flex divide-x divide-black">
                     <div class="w-1/2 flex flex-wrap"> 
                         <p class="ml-1 p-1"> Email: </p>
-                        <p class="ml-1 p-1 font-semibold"> {{ $scholar->supervisor->email}} </p>
+                        <p class="ml-1 p-1 font-semibold"> {{ $scholar->currentSupervisor->email}} </p>
                     </div>    
                     <div class="flex flex-wrap">
                         <p class="ml-1 p-1"> Email: </p>
-                        <p class="ml-1 p-1 font-semibold"> {{ optional($scholar->cosupervisor)->email }} </p>
+                        <p class="ml-1 p-1 font-semibold"> {{ optional($scholar->currentCosupervisor)->email }} </p>
                     </div>    
                 </div>
                 <div class="flex divide-x divide-black">
                     <div class="w-1/2 flex flex-wrap"> 
                         <p class="ml-1 p-1"> Mobile: </p>
-                        <p class="ml-1 p-1 font-semibold"> {{ $scholar->supervisor->phone_no }} </p>
+                        <p class="ml-1 p-1 font-semibold"> {{ $scholar->currentSupervisor->phone_no }} </p>
                     </div>    
                     <div class="flex flex-wrap">
                         <p class="ml-1 p-1"> Mobile: </p>
-                        <p class="ml-1 p-1 font-semibold"> {{ optional($scholar->cosupervisor)->phone_no }} </p>
+                        <p class="ml-1 p-1 font-semibold"> {{ optional($scholar->currentCosupervisor)->phone_no }} </p>
                     </div>    
                 </div>
                 <div class="flex divide-x divide-black h-24">
                     <div class="w-1/2 flex flex-wrap"> 
                         <p class="ml-1 p-1"> Address: </p>
-                        <p class="ml-1 p-1 font-semibold"> {{ $scholar->supervisor->address }} </p>
+                        <p class="ml-1 p-1 font-semibold"> {{ $scholar->currentSupervisor->address }} </p>
                     </div>    
                     <div class="flex flex-wrap">
                         <p class="ml-1 p-1"> Address: </p>
-                        <p class="ml-1 p-1 font-semibold"> {{ optional($scholar->cosupervisor)->address }} </p>
+                        <p class="ml-1 p-1 font-semibold"> {{ optional($scholar->currentCosupervisor)->address }} </p>
                     </div>    
                 </div>
                 <div class="flex divide-x divide-black h-20">
@@ -144,23 +144,23 @@
             </div>
         </div>
     </div>
+    @can('applyTitleApproval', \App\Models\ScholarAppeal::class)
     <div class="flex items-end justify-center"> 
         <div>
             <p class="font-bold text-lg"> Are you sure you want to apply for Title Approval ? </p>
             <div class="flex justify-center"> 
-                <a href="{{ route('scholars.profile') }}" class="btn btn-magenta is-sm m-2">
-                    Cancel  
-                </a>
-                @can('applyTitleApproval', \App\Models\ScholarAppeal::class)
                 <form action="{{ route('scholars.title_approval.apply', $scholar) }}" method="POST">
                     @csrf_token
                     <button class="btn btn-magenta is-sm m-2" > 
                         Apply
                     </button>
                 </form>
-                @endcan
+                <a href="{{ route('scholars.profile') }}" class="btn btn-magenta is-sm m-2">
+                    Cancel  
+                </a>
             </div>
         </div>
     </div>
+    @endcan
 </body>
 </html>

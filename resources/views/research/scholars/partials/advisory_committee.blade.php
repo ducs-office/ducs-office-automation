@@ -3,11 +3,11 @@
     <ul class="border rounded-lg overflow-hidden mb-4">
         @foreach ($scholar->advisors as $advisor)
         <li class="px-4 py-3 border-b last:border-b-0">
-            <h3 class="font-bold">{{ $member->name }}</h3>
-            <div class="italic">{{ $member->designation }}, {{ $member->affiliation }}</div>
+            <h3 class="font-bold">{{ $advisor->name }}</h3>
+            <div class="italic">{{ $advisor->designation }}, {{ $advisor->affiliation }}</div>
             <div>
-                <a class="link" href="mailto:{{ $member->email }}">{{ $member->email }}</a>
-                @isset($member->phone)<a class="link ml-2" href="tel:{{ $member->phone }}">{{ $member->phone }}</a>@endisset
+                <a class="link" href="mailto:{{ $advisor->email }}">{{ $advisor->email }}</a>
+                @isset($advisor->phone)<a class="link ml-2" href="tel:{{ $advisor->phone }}">{{ $advisor->phone }}</a>@endisset
             </div>
         </li>
         @endforeach

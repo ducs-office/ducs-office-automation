@@ -55,6 +55,7 @@ class ScholarController extends Controller
             'admissionModes' => AdmissionMode::values(),
             'genders' => Gender::values(),
             'eventTypes' => PresentationEventType::values(),
+            'documentTypes' => ScholarDocumentType::values(),
         ]);
     }
 
