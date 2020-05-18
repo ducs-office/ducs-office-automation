@@ -8,5 +8,5 @@ class UserCategory extends BaseEnumType
     const LAB_STAFF = 'Lab Staff';
     const FACULTY_TEACHER = 'Faculty Teacher';
     const COLLEGE_TEACHER = 'College Teacher';
-    const EXTERNALS = 'External';
+    const EXTERNAL = 'External';
 }

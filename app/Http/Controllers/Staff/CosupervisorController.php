@@ -13,14 +13,18 @@ class CosupervisorController extends Controller
 {
     public function index()
     {
-        $users = User::select(['id', 'first_name', 'last_name'])->nonCosupervisors()->get();
-        $externals = ExternalAuthority::select(['id', 'name'])->nonCosupervisors()->get();
+        $nonCosupervisors = User::select(['id', 'first_name', 'last_name'])
+            ->nonCosupervisors()
+            ->nonSupervisors()
+            ->get();
+        $currentCosupervisors = User::select(['id', 'first_name', 'last_name'])
+            ->cosupervisors()
+            ->nonSupervisors()
+            ->get();
 
         return view('staff.cosupervisors.index', [
-            'cosupervisors' => User::cosupervisors()->get(),
-            'externalCosupervisors' => ExternalAuthority::nonCosupervisors()->get(),
-            'users' => $users,
-            'externals' => $externals,
+            'cosupervisors' => $currentCosupervisors,
+            'users' => $nonCosupervisors,
         ]);
     }
 

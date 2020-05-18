@@ -11,6 +11,12 @@ trait ActsAsCosupervisor
         return $this->is_cosupervisor === true;
     }
 
+    public function scopeAllCosupervisors(Builder $builder)
+    {
+        return $builder->where('is_cosupervisor', true)
+            ->orWhere('is_supervisor', true);
+    }
+
     public function scopeCosupervisors(Builder $builder)
     {
         return $builder->where('is_cosupervisor', true);

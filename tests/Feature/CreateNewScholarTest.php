@@ -33,14 +33,10 @@ class CreateNewScholarTest extends TestCase
             'supervisor_id' => function () {
                 return factory(User::class)->states('supervisor')->create()->id;
             },
-            'cosupervisor_user_id' => function () {
+            'cosupervisor_id' => function () {
                 return factory(User::class)->states('cosupervisor')->create()->id;
             },
         ];
-
-        if (isset($overrides['cosupervisor_external_id'])) {
-            unset($form['cosupervisor_user_id']);
-        }
 
         return $this->mergeFormFields($form, $overrides);
     }
@@ -65,7 +61,7 @@ class CreateNewScholarTest extends TestCase
         $cosupervisor = factory(User::class)->states('cosupervisor')->create();
 
         $scholarParam = $this->getScholarFormDetails([
-            'cosupervisor_user_id' => $cosupervisor->id,
+            'cosupervisor_id' => $cosupervisor->id,
             'supervisor_id' => $supervisor->id,
         ]);
 
@@ -98,9 +94,8 @@ class CreateNewScholarTest extends TestCase
 
         $cosupervisors = $scholars->first()
             ->cosupervisors()
-            ->where('person_type', User::class)
-            ->where('person_id', $cosupervisor->id)
-            ->where('started_on', today())
+            ->wherePivot('user_id', $cosupervisor->id)
+            ->wherePivot('started_on', today())
             ->whereNull('ended_on')
             ->get();
 
@@ -123,11 +118,11 @@ class CreateNewScholarTest extends TestCase
         $this->signIn();
 
         $supervisor = factory(User::class)->states('supervisor')->create();
-        $externalCosupervisor = factory(ExternalAuthority::class)->states('cosupervisor')->create();
+        $external = factory(User::class)->states(['cosupervisor', 'external'])->create();
 
         $newsScholarPrams = $this->getScholarFormDetails([
             'supervisor_id' => $supervisor->id,
-            'cosupervisor_external_id' => $externalCosupervisor->id,
+            'cosupervisor_id' => $external->id,
         ]);
 
         Mail::fake();
@@ -147,10 +142,9 @@ class CreateNewScholarTest extends TestCase
 
         $cosupervisors = $scholars->first()
             ->cosupervisors()
-            ->where('person_type', get_class($externalCosupervisor))
-            ->where('person_id', $externalCosupervisor->id)
-            ->where('started_on', today())
-            ->whereNull('ended_on')
+            ->wherePivot('user_id', $external->id)
+            ->wherePivot('started_on', today())
+            ->wherePivot('ended_on', null)
             ->get();
 
         $this->assertCount(1, $cosupervisors);
@@ -224,11 +218,10 @@ class CreateNewScholarTest extends TestCase
         $this->signIn();
 
         $supervisor = factory(User::class)->states('supervisor')->create();
-        $anotherSupervisor = factory(User::class)->states('supervisor')->create();
 
         $scholar = $this->getScholarFormDetails([
             'supervisor_id' => $supervisor->id,
-            'cosupervisor_user_id' => $anotherSupervisor->id,
+            'cosupervisor_id' => $supervisor->id,
         ]);
 
         try {
@@ -236,7 +229,7 @@ class CreateNewScholarTest extends TestCase
                 ->post(route('staff.scholars.store'), $scholar);
             $this->fail('Validation exception was expected.');
         } catch (ValidationException $e) {
-            $this->assertArrayHasKey('cosupervisor_user_id', $e->errors());
+            $this->assertArrayHasKey('cosupervisor_id', $e->errors());
         }
 
         $this->assertEquals(0, Scholar::count());

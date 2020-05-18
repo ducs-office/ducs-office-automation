@@ -3,8 +3,8 @@
 namespace Tests\Feature;
 
 use App\Models\Cosupervisor;
+use App\Models\Pivot\ScholarCosupervisor;
 use App\Models\Scholar;
-use App\Models\ScholarCosupervisor;
 use App\Models\User;
 use Dotenv\Regex\Success;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -115,16 +115,12 @@ class EditScholarTest extends TestCase
         $oldCosupervisorPrevious = factory(User::class)->states('cosupervisor')->create();
         $oldCosupervisorCurrent = factory(User::class)->states('cosupervisor')->create();
         $newCosupervisor = factory(User::class)->states('cosupervisor')->create();
-        $scholar->cosupervisors()->createMany([
-            [
-                'person_type' => User::class,
-                'person_id' => $oldCosupervisorPrevious->id,
+        $scholar->cosupervisors()->attach([
+            $oldCosupervisorPrevious->id => [
                 'started_on' => today()->subMonths(10),
                 'ended_on' => today()->subMonths(2),
             ],
-            [
-                'person_type' => User::class,
-                'person_id' => $oldCosupervisorCurrent->id,
+            $oldCosupervisorCurrent->id => [
                 'started_on' => today()->subMonths(2),
                 'ended_on' => null,
             ],
@@ -132,14 +128,14 @@ class EditScholarTest extends TestCase
 
         $this->withoutExceptionHandling()
             ->patch(route('staff.scholars.update', $scholar), [
-                'cosupervisor_user_id' => $newCosupervisor->id,
+                'cosupervisor_id' => $newCosupervisor->id,
             ])
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'Scholar updated successfully');
 
-        $this->assertCount(2, $scholar->refresh()->cosupervisors);
-        $this->assertEquals($newCosupervisor->id, $scholar->currentCosupervisor->person_id);
-        $this->assertEquals(today()->subMonths(2), $scholar->currentCosupervisor->started_on);
+        $this->assertCount(2, $scholar->fresh()->cosupervisors);
+        $this->assertEquals($newCosupervisor->id, $scholar->currentCosupervisor->id);
+        $this->assertEquals(today()->subMonths(2), $scholar->currentCosupervisor->pivot->started_on);
         $this->assertTrue($oldCosupervisorPrevious->exists());
     }
 
@@ -178,18 +174,15 @@ class EditScholarTest extends TestCase
         $supervisor = factory(User::class)->states('supervisor')->create();
         $scholar->supervisors()->attach($supervisor);
         $cosupervisor = factory(User::class)->states('cosupervisor')->create();
-        $scholar->cosupervisors()->create([
-            'person_type' => User::class,
-            'person_id' => $cosupervisor->id,
-        ]);
+        $scholar->cosupervisors()->attach($cosupervisor);
 
         $this->withExceptionHandling()
             ->patch(route('staff.scholars.update', $scholar), [
-                'cosupervisor_user_id' => $supervisor->id,
+                'cosupervisor_id' => $supervisor->id,
             ])
-            ->assertSessionHasErrors('cosupervisor_user_id');
+            ->assertSessionHasErrors('cosupervisor_id');
 
         $updatedScholar = $scholar->fresh();
-        $this->assertEquals($cosupervisor->id, $updatedScholar->currentCosupervisor->person_id);
+        $this->assertEquals($cosupervisor->id, $updatedScholar->currentCosupervisor->id);
     }
 }
