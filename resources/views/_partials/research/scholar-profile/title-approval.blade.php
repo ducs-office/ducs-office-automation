@@ -10,7 +10,7 @@
         </div> 
         @can('applyTitleApproval', \App\Models\ScholarAppeal::class) 
         <a href="{{ route('scholars.title_approval.request', $scholar) }}" class="btn btn-magenta is-sm -ml-4 my-2">
-           Request For Title Appoval
+           Request
         </a>
         @elsecan('requestTitleApproval', \App\Models\ScholarAppeal::class)
         <button class="btn btn-magenta is-sm -ml-4 my-2" x-on:click="$modal.show('title-approval-requirements-modal')">

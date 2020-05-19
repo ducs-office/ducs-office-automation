@@ -66,7 +66,7 @@ Route::patch(
 Route::patch(
     '/scholars/{scholar}/appeals/{appeal}/mark-complete',
     'ScholarAppealController@markComplete'
-)->name('scholars.appeals.mark_complete')->middleware('auth:web,teachers');
+)->name('scholars.appeals.mark_complete')->middleware('auth:web');
 
 //================Scholar Title Approval =======================
 
@@ -93,7 +93,7 @@ Route::patch(
 Route::patch(
     '/scholars/{scholar}/title-approval/{appeal}/mark-complete',
     'ScholarTitleApprovalController@markComplete'
-)->name('scholars.title_approval.mark_complete')->middleware('auth:web,teachers');
+)->name('scholars.title_approval.mark_complete')->middleware('auth:web');
 
 Route::get('/users/@{user}', 'UserProfileController@show')->name('profiles.show');
 Route::patch('/users/@{user}', 'UserProfileController@update')->name('profiles.update');
@@ -119,6 +119,7 @@ Route::patch('scholar/{scholar}/examiner/approve', 'ScholarExaminerController@ap
     ->name('scholars.examiner.approve');
 
 Route::prefix('/publications')
+->middleware('auth:web,scholars')
 ->namespace('Publications')
 ->as('publications.')
 ->group(static function () {
