@@ -30,7 +30,8 @@
                 @yield('body')
             </main>
         </div>
+        @stack('modals')
+        @include('flash::message')
     </div>
-    @include('flash::message')
 </body>
 </html>

@@ -1,19 +1,21 @@
 @extends('layouts.master')
+@push('modals')
+    <x-modal name="create-user-modal" class="p-6 min-w-1/2">
+        <h2 class="text-lg font-bold mb-8">Create Users</h2>
+        @include('_partials.forms.create-user')
+    </x-modal>
+    <livewire:edit-user-modal :roles="$roles" />
+@endpush
 @section('body')
-<div class="page-card m-2" x-data="modalsRoot()">
+<div class="page-card m-2">
     <div class="flex items-baseline px-6 pb-4 border-b">
         <h1 class="page-header mb-0 px-0 mr-4">Users</h1>
         @can('create', App\Models\User::class)
-        <button class="btn btn-magenta is-sm shadow-inner"
-            x-on:click.prevent="$modal.show('create-user-modal')">
+        <x-modal.trigger modal="create-user-modal"
+            class="btn btn-magenta is-sm shadow-inner">
             New
-        </button>
-        <x-modal name="create-user-modal" class="p-6 min-w-1/2">
-            <h2 class="text-lg font-bold mb-8">Create Users</h2>
-            @include('_partials.forms.create-user')
-        </x-modal>
+        </x-modal.trigger>
         @endcan
-        <livewire:edit-user-modal :roles="$roles"/>
     </div>
     <table class="min-w-full">
         <thead>
