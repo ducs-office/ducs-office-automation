@@ -7,8 +7,8 @@
     <livewire:edit-user-modal :roles="$roles" />
 @endpush
 @section('body')
-<div class="page-card m-2">
-    <div class="flex items-baseline px-6 pb-4 border-b">
+<div class="page-card p-0 m-2">
+    <div class="flex items-center px-6 py-2 border-b">
         <h1 class="page-header mb-0 px-0 mr-4">Users</h1>
         @can('create', App\Models\User::class)
         <x-modal.trigger modal="create-user-modal"
@@ -16,6 +16,20 @@
             New
         </x-modal.trigger>
         @endcan
+        <form class="ml-auto px-6" x-data>
+            <label for="category-filter" class="w-full form-label mb-1">Filter By Category</label>
+            <select id="category-filter" name="filters[category]" x-on:input="
+                        if ($event.target.value === 'all') {
+                            return window.location.replace(window.location.pathname);
+                        }
+                        return $el.submit();" class="w-full form-select">
+                <option @if(request('filters.category', 'all' )=='all' ) selected @endif value="all">All</option>
+                @foreach($categories as $category)
+                <option @if(request('filters.category', 'all' )==$category) selected @endif value="{{ $category }}">
+                    {{ $category }}</option>
+                @endforeach
+            </select>
+        </form>
     </div>
     <table class="min-w-full">
         <thead>

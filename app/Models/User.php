@@ -5,7 +5,9 @@ namespace App\Models;
 use App\Casts\CustomType;
 use App\Concerns\ActsAsCosupervisor;
 use App\Concerns\ActsAsSupervisor;
+use App\Concerns\Filterable;
 use App\Concerns\HasPublications;
+use App\Filters\User\ByCategory;
 use App\Types\Designation;
 use App\Types\TeacherStatus;
 use App\Types\UserCategory;
@@ -19,6 +21,7 @@ class User extends Authenticatable
 {
     use Notifiable,
         HasRoles,
+        Filterable,
         HasPublications,
         ActsAsSupervisor,
         ActsAsCosupervisor;
@@ -55,6 +58,10 @@ class User extends Authenticatable
         'is_supervisor' => 'boolean',
         'is_cosupervisor' => 'boolean',
         'is_admin' => 'boolean',
+    ];
+
+    protected $filters = [
+        ByCategory::class,
     ];
 
     protected static function boot()

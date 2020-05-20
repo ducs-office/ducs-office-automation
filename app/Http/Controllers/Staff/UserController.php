@@ -22,7 +22,7 @@ class UserController extends Controller
     public function index()
     {
         return view('staff.users.index', [
-            'users' => User::with('roles')->get(),
+            'users' => User::with('roles')->filter()->get(),
             'roles' => Role::all(),
             'categories' => UserCategory::values(),
         ]);
