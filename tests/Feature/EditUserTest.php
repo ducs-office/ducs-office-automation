@@ -164,7 +164,7 @@ class EditUserTest extends TestCase
 
         $this->withoutExceptionHandling()
             ->patch(route('staff.users.update', $teacher), [
-                'is_supervisor' => true,
+                'is_supervisor' => '1',
             ])
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'User updated successfully');

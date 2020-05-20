@@ -29,7 +29,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'category',
+        'name', 'first_name', 'last_name', 'email', 'password', 'category',
         'phone', 'address', 'college_id', 'designation', 'affiliation',
         'status', 'avatar_path', 'is_supervisor', 'is_cosupervisor',
     ];
@@ -147,6 +147,17 @@ class User extends Authenticatable
     public function getAffiliationAttribute()
     {
         return $this->affiliation ?? optional($this->college)->name ?? 'Unknown';
+    }
+
+    public function getAvatarUrl()
+    {
+        if ($this->avatar_path != null) {
+            return route('profiles.avatar', $this);
+        }
+
+        return 'https://gravatar.com/avatar/'
+            . md5(strtolower(trim($this->email)))
+            . '?s=200&d=identicon';
     }
 
     // Helpers

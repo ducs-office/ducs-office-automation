@@ -72,10 +72,9 @@ class UserProfileController extends Controller
             return Response::file(Storage::path($user->avatar_path));
         }
 
-        $gravatarHash = md5(strtolower(trim($user->email)));
-        $avatar = file_get_contents('https://gravatar.com/avatar/' . $gravatarHash . '?s=200&d=identicon');
+        $avatar = file_get_contents($user->getGravatarUrl());
 
-        return Response::make($avatar, 2000, [
+        return Response::make($avatar, 200, [
             'Content-Type' => 'image/jpg',
         ]);
     }

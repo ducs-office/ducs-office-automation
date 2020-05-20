@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Livewire\Livewire;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
@@ -17,7 +18,7 @@ class ViewRolesTest extends TestCase
     {
         $this->signIn();
 
-        $response = $this->get(route('staff.roles.index'))
+        $response = $this->withoutExceptionHandling()->get(route('staff.roles.index'))
             ->assertSuccessful()
             ->assertViewIs('staff.roles.index')
             ->assertViewHasAll(['roles', 'permissions']);

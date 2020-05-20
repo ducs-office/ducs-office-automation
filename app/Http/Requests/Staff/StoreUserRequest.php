@@ -27,12 +27,14 @@ class StoreUserRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['required', 'string', 'min:3', 'max:190'],
+            'name' => ['sometimes', 'required', 'string', 'min:3', 'max:255'],
+            'first_name' => ['required_without:name', 'string', 'min:3', 'max:190'],
+            'last_name' => ['required_without:name', 'string', 'max:190'],
             'email' => ['required', 'string', 'min:3', 'max:190', 'email', 'unique:users'],
             'roles' => ['required', 'array', 'min:1'],
             'roles.*' => ['required', 'integer', 'exists:roles,id'],
             'category' => ['required', Rule::in(UserCategory::values())],
-            'is_supervior' => ['sometimes'],
+            'is_supervisor' => ['sometimes', 'boolean'],
         ];
     }
 }

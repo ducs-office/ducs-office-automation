@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Mail\UserRegisteredMail;
 use App\Models\User;
 use App\Notifications\UserRegisteredNotification;
 use App\Types\UserCategory;
@@ -59,7 +58,7 @@ class CreateNewUserTest extends TestCase
                 'email' => $email = 'hazra.pk@uni.ac.in',
                 'category' => UserCategory::FACULTY_TEACHER,
                 'roles' => [$teacherRole->id],
-                'is_supervisor' => true,
+                'is_supervisor' => '1',
             ])->assertRedirect('/')
             ->assertSessionHasFlash('success', 'User created successfully!');
 

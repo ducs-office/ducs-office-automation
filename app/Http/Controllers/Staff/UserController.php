@@ -32,12 +32,8 @@ class UserController extends Controller
     {
         DB::beginTransaction();
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'category' => $request->category,
+        $user = User::create($request->validated() + [
             'password' => bcrypt(Str::random(16)), // Random password
-            'is_supervisor' => $request->is_supervisor ?? false,
         ]);
 
         $user->syncRoles($request->roles);

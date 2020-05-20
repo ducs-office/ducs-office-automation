@@ -69,8 +69,23 @@ window.modalsRoot = () => ({
     $modal: {
         current: null,
         isOpen(name) { return this.current === name },
-        show(name) { this.current = name },
+        show(name) {
+            this.current = name;
+        },
+        showLivewire(component, event, data = null) {
+            this.show(component);
+            window.livewire.emitTo(component, event, data);
+        },
         hide() { this.current = null },
+    }
+});
+
+window.dropdown = (dropdownName = '$dropdown') => ({
+    [dropdownName]: {
+        isOpen: false,
+        open() { this.isOpen = true },
+        close() { this.isOpen = false },
+        toggle() { this.isOpen = ! this.isOpen }
     }
 });
 
