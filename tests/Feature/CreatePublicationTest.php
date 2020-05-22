@@ -17,9 +17,9 @@ class CreatePublicationTest extends TestCase
         $this->signInScholar();
 
         $this->withoutExceptionHandling()
-        ->get(route('publications.journal.create'))
+        ->get(route('publications.create'))
         ->assertSuccessful()
-        ->assertViewIs('publications.journals.create')
+        ->assertViewIs('publications.create')
         ->assertViewHas('citationIndexes');
     }
 
@@ -31,9 +31,9 @@ class CreatePublicationTest extends TestCase
         $this->signIn($supervisor);
 
         $this->withoutExceptionHandling()
-            ->get(route('publications.journal.create'))
+            ->get(route('publications.create'))
             ->assertSuccessful()
-            ->assertViewIs('publications.journals.create')
+            ->assertViewIs('publications.create')
             ->assertViewHas('citationIndexes');
     }
 
@@ -43,9 +43,9 @@ class CreatePublicationTest extends TestCase
         $this->signInScholar();
 
         $this->withoutExceptionHandling()
-        ->get(route('publications.conference.create'))
+        ->get(route('publications.create'))
         ->assertSuccessful()
-        ->assertViewIs('publications.conferences.create')
+        ->assertViewIs('publications.create')
         ->assertViewHas('citationIndexes');
     }
 
@@ -57,9 +57,9 @@ class CreatePublicationTest extends TestCase
         $this->signIn($supervisor);
 
         $this->withoutExceptionHandling()
-        ->get(route('publications.conference.create'))
+        ->get(route('publications.create'))
         ->assertSuccessful()
-        ->assertViewIs('publications.conferences.create')
+        ->assertViewIs('publications.create')
         ->assertViewHas('citationIndexes');
     }
 }

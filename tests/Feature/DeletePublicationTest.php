@@ -6,8 +6,10 @@ use App\Models\Publication;
 use App\Models\Scholar;
 use App\Models\Teacher;
 use App\Models\User;
+use App\Types\PublicationType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class DeletePublicationTest extends TestCase
@@ -20,18 +22,19 @@ class DeletePublicationTest extends TestCase
         $this->signInScholar($scholar = create(Scholar::class));
 
         $journal = create(Publication::class, 1, [
-            'type' => 'journal',
-            'main_author_type' => Scholar::class,
-            'main_author_id' => $scholar->id,
+            'type' => PublicationType::JOURNAL,
+            'author_type' => Scholar::class,
+            'author_id' => $scholar->id,
         ]);
 
         $this->assertCount(1, $scholar->fresh()->journals);
 
         $this->withoutExceptionHandling()
-            ->delete(route('publications.journal.destroy', $journal))
+            ->delete(route('publications.destroy', $journal))
             ->assertRedirect()
-            ->assertSessionHasFlash('success', 'Journal Publication deleted successfully!');
+            ->assertSessionHasFlash('success', 'Publication deleted successfully!');
 
+        Storage::assertMissing($journal->document_path);
         $this->assertCount(0, $scholar->fresh()->journals);
         $this->assertNull($journal->fresh());
     }
@@ -44,18 +47,19 @@ class DeletePublicationTest extends TestCase
         $this->signIn($supervisor);
 
         $journal = create(Publication::class, 1, [
-            'type' => 'journal',
-            'main_author_type' => User::class,
-            'main_author_id' => $supervisor->id,
+            'type' => PublicationType::JOURNAL,
+            'author_type' => User::class,
+            'author_id' => $supervisor->id,
         ]);
 
         $this->assertCount(1, $supervisor->fresh()->journals);
 
         $this->withoutExceptionHandling()
-            ->delete(route('publications.journal.destroy', $journal))
+            ->delete(route('publications.destroy', $journal))
             ->assertRedirect()
-            ->assertSessionHasFlash('success', 'Journal Publication deleted successfully!');
+            ->assertSessionHasFlash('success', 'Publication deleted successfully!');
 
+        Storage::assertMissing($journal->document_path);
         $this->assertCount(0, $supervisor->fresh()->journals);
         $this->assertNull($journal->fresh());
     }
@@ -66,18 +70,19 @@ class DeletePublicationTest extends TestCase
         $this->signInScholar($scholar = create(Scholar::class));
 
         $conference = create(Publication::class, 1, [
-            'type' => 'conference',
-            'main_author_type' => Scholar::class,
-            'main_author_id' => $scholar->id,
+            'type' => PublicationType::CONFERENCE,
+            'author_type' => Scholar::class,
+            'author_id' => $scholar->id,
         ]);
 
         $this->assertCount(1, $scholar->fresh()->conferences);
 
         $this->withoutExceptionHandling()
-            ->delete(route('publications.conference.destroy', $conference))
+            ->delete(route('publications.destroy', $conference))
             ->assertRedirect()
-            ->assertSessionHasFlash('success', 'Conference Publication deleted successfully!');
+            ->assertSessionHasFlash('success', 'Publication deleted successfully!');
 
+        Storage::assertMissing($conference->document_path);
         $this->assertCount(0, $scholar->fresh()->conferences);
         $this->assertNull($conference->fresh());
     }
@@ -89,18 +94,19 @@ class DeletePublicationTest extends TestCase
 
         $this->signIn($supervisor);
         $conference = create(Publication::class, 1, [
-            'type' => 'conference',
-            'main_author_type' => User::class,
-            'main_author_id' => $supervisor->id,
+            'type' => PublicationType::CONFERENCE,
+            'author_type' => User::class,
+            'author_id' => $supervisor->id,
         ]);
 
         $this->assertCount(1, $supervisor->fresh()->conferences);
 
         $this->withoutExceptionHandling()
-            ->delete(route('publications.conference.destroy', $conference))
+            ->delete(route('publications.destroy', $conference))
             ->assertRedirect()
-            ->assertSessionHasFlash('success', 'Conference Publication deleted successfully!');
+            ->assertSessionHasFlash('success', 'Publication deleted successfully!');
 
+        Storage::assertMissing($conference->document_path);
         $this->assertCount(0, $supervisor->fresh()->conferences);
         $this->assertNull($conference->fresh());
     }

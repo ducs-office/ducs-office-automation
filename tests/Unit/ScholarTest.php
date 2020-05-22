@@ -47,6 +47,8 @@ class ScholarTest extends TestCase
 
     protected function fillPublication($overrides = [])
     {
+        Storage::fake();
+
         return $this->mergeFormFields([
             'type' => null,
             'name' => 'India CS Journal',
@@ -59,6 +61,8 @@ class ScholarTest extends TestCase
             'publisher' => null,
             'city' => null,
             'country' => null,
+            'is_published' => true,
+            'document_path' => UploadedFile::fake()->create('file.pdf', 10, 'application/pdf')->store('/publications'),
         ], $overrides);
     }
 
@@ -291,8 +295,8 @@ class ScholarTest extends TestCase
         $this->assertCount(0, $scholar->presentations);
 
         $publication = create(Publication::class, 1, [
-            'main_author_type' => Scholar::class,
-            'main_author_id' => $scholar->id,
+            'author_type' => Scholar::class,
+            'author_id' => $scholar->id,
         ]);
 
         $presentation = create(Presentation::class, 1, [
@@ -386,36 +390,36 @@ class ScholarTest extends TestCase
         $publicationsSCIAndSCIE = create(Publication::class, 2, [
             'type' => PublicationType::JOURNAL,
             'indexed_in' => [CitationIndex::SCI, CitationIndex::SCIE],
-            'main_author_type' => Scholar::class,
-            'main_author_id' => $scholar->id,
+            'author_type' => Scholar::class,
+            'author_id' => $scholar->id,
         ]);
 
         $publicationSCIAndMR = create(publication::class, 2, [
             'type' => PublicationType::JOURNAL,
             'indexed_in' => [CitationIndex::SCI, CitationIndex::MR],
-            'main_author_type' => Scholar::class,
-            'main_author_id' => $scholar->id,
+            'author_type' => Scholar::class,
+            'author_id' => $scholar->id,
         ]);
 
         $publciationSCIEAndSCOPUS = create(publication::class, 2, [
             'type' => PublicationType::JOURNAL,
             'indexed_in' => [CitationIndex::SCIE, CitationIndex::SCOPUS],
-            'main_author_type' => Scholar::class,
-            'main_author_id' => $scholar->id,
+            'author_type' => Scholar::class,
+            'author_id' => $scholar->id,
         ]);
 
         $publicationSCOPUSAndMR = create(Publication::class, 1, [
             'type' => PublicationType::JOURNAL,
             'indexed_in' => [CitationIndex::SCOPUS, CitationIndex::MR],
-            'main_author_type' => Scholar::class,
-            'main_author_id' => $scholar->id,
+            'author_type' => Scholar::class,
+            'author_id' => $scholar->id,
         ]);
 
         $ConferencePublicationSCIAndSCIE = create(Publication::class, 3, [
             'type' => PublicationType::CONFERENCE,
             'indexed_in' => [CitationIndex::SCI, CitationIndex::SCIE],
-            'main_author_type' => Scholar::class,
-            'main_author_id' => $scholar->id,
+            'author_type' => Scholar::class,
+            'author_id' => $scholar->id,
         ]);
 
         $this->assertCount(10, $scholar->publications);
@@ -430,20 +434,20 @@ class ScholarTest extends TestCase
 
         $publicationsSCIAndSCIE = create(Publication::class, 2, [
             'indexed_in' => [CitationIndex::SCI, CitationIndex::SCIE],
-            'main_author_type' => Scholar::class,
-            'main_author_id' => $scholar->id,
+            'author_type' => Scholar::class,
+            'author_id' => $scholar->id,
         ]);
 
         $publicationSCIAndMR = create(publication::class, 2, [
             'indexed_in' => [CitationIndex::SCI, CitationIndex::MR],
-            'main_author_type' => Scholar::class,
-            'main_author_id' => $scholar->id,
+            'author_type' => Scholar::class,
+            'author_id' => $scholar->id,
         ]);
 
         $publciationMR = create(publication::class, 2, [
             'indexed_in' => [CitationIndex::MR],
-            'main_author_type' => Scholar::class,
-            'main_author_id' => $scholar->id,
+            'author_type' => Scholar::class,
+            'author_id' => $scholar->id,
         ]);
 
         $this->assertCount(6, $scholar->publications);
@@ -457,38 +461,38 @@ class ScholarTest extends TestCase
 
         $publicationsSCISCIEAndSCOPUS = create(Publication::class, 2, [
             'indexed_in' => [CitationIndex::SCI, CitationIndex::SCIE, CitationIndex::MR],
-            'main_author_type' => Scholar::class,
-            'main_author_id' => $scholar->id,
+            'author_type' => Scholar::class,
+            'author_id' => $scholar->id,
         ]);
 
         $publicationSCIAndSCOPUS = create(publication::class, 2, [
             'indexed_in' => [CitationIndex::SCI, CitationIndex::SCOPUS],
-            'main_author_type' => Scholar::class,
-            'main_author_id' => $scholar->id,
+            'author_type' => Scholar::class,
+            'author_id' => $scholar->id,
         ]);
 
         $publciationSCOPUS = create(publication::class, 2, [
             'indexed_in' => [CitationIndex::SCOPUS],
-            'main_author_type' => Scholar::class,
-            'main_author_id' => $scholar->id,
+            'author_type' => Scholar::class,
+            'author_id' => $scholar->id,
         ]);
 
         $publicationSCOPUSAndMR = create(publication::class, 2, [
             'indexed_in' => [CitationIndex::SCOPUS, CitationIndex::MR],
-            'main_author_type' => Scholar::class,
-            'main_author_id' => $scholar->id,
+            'author_type' => Scholar::class,
+            'author_id' => $scholar->id,
         ]);
 
         $publicationMR = create(publication::class, 2, [
             'indexed_in' => [CitationIndex::MR],
-            'main_author_type' => Scholar::class,
-            'main_author_id' => $scholar->id,
+            'author_type' => Scholar::class,
+            'author_id' => $scholar->id,
         ]);
 
         $publicationSCOPUSAndSCIE = create(publication::class, 2, [
             'indexed_in' => [CitationIndex::SCOPUS, CitationIndex::SCIE],
-            'main_author_type' => Scholar::class,
-            'main_author_id' => $scholar->id,
+            'author_type' => Scholar::class,
+            'author_id' => $scholar->id,
         ]);
 
         $this->assertCount(12, $scholar->publications);

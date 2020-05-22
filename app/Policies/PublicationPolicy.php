@@ -26,6 +26,33 @@ class PublicationPolicy
     }
 
     /**
+     * Determine whether the user can view a publications.
+     *
+     * @param  \App\User  $user
+     *
+     * @return mixed
+     */
+    public function view($user, Publication $publication)
+    {
+        return ((
+            get_class($user) === Scholar::class
+                && $user->id === (int) $publication->author_id
+        ) || (
+                get_class($user) === User::class && $user->isSupervisor()
+                && (
+                    (
+                    $user->id === (int) $publication->author_id
+                        && $publication->author_type === User::class
+                ) || (
+                        $user->scholars->contains($publication->author_id)
+                        && $publication->author_type === Scholar::class
+                    )
+                )
+            )
+        );
+    }
+
+    /**
      * Determine whether the user can create publications.
      *
      * @param  \App\User  $user
@@ -48,8 +75,8 @@ class PublicationPolicy
      */
     public function update($user, Publication $publication)
     {
-        return  $publication->main_author_type === get_class($user)
-            && (int) $publication->main_author_id === (int) $user->id;
+        return  $publication->author_type === get_class($user)
+            && (int) $publication->author_id === (int) $user->id;
     }
 
     /**
@@ -62,7 +89,7 @@ class PublicationPolicy
      */
     public function delete($user, Publication $publication)
     {
-        return  $publication->main_author_type === get_class($user)
-            && (int) $publication->main_author_id === (int) $user->id;
+        return  $publication->author_type === get_class($user)
+            && (int) $publication->author_id === (int) $user->id;
     }
 }

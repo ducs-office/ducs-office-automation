@@ -13,15 +13,15 @@ class CoAuthorPolicy
 
     public function view($user, CoAuthor $coAuthor)
     {
-        if ($coAuthor->publication->main_author_type === 'App\Models\Scholar') {
-            return $user instanceof Scholar && $user->id === (int) $coAuthor->publication->main_author_id;
+        if ($coAuthor->publication->author_type === 'App\Models\Scholar') {
+            return $user instanceof Scholar && $user->id === (int) $coAuthor->publication->author_id;
         }
     }
 
     public function delete($user, CoAuthor $coAuthor)
     {
-        if ($coAuthor->publication->main_author_type === 'App\Models\Scholar') {
-            return $user instanceof Scholar && $user->id === (int) $coAuthor->publication->main_author_id;
+        if ($coAuthor->publication->author_type === 'App\Models\Scholar') {
+            return $user instanceof Scholar && $user->id === (int) $coAuthor->publication->author_id;
         }
     }
 }

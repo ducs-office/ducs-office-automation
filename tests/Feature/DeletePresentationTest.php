@@ -20,8 +20,8 @@ class DeletePresentationTest extends TestCase
         $this->signInScholar($scholar = create(Scholar::class));
 
         $publication = create(Publication::class, 1, [
-            'main_author_type' => Scholar::class,
-            'main_author_id' => $scholar->id,
+            'author_type' => Scholar::class,
+            'author_id' => $scholar->id,
         ]);
         $presentation = create(Presentation::class, 1, ['publication_id' => $publication->id, 'scholar_id' => $scholar->id]);
 

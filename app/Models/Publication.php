@@ -8,6 +8,7 @@ use App\Types\CitationIndex;
 use App\Types\PublicationType;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Publication extends Model
 {
@@ -23,15 +24,28 @@ class Publication extends Model
         'page_numbers',
         'city',
         'country',
-        'main_author_type',
-        'main_author_id',
+        'author_type',
+        'author_id',
+        'is_published',
+        'document_path',
+        'paper_link',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(static function ($publication) {
+            Storage::delete($publication->document_path);
+        });
+    }
 
     protected $dates = ['date'];
 
     protected $casts = [
         'indexed_in' => CustomTypeArray::class . ':' . CitationIndex::class,
         'page_numbers' => 'array',
+        'is_published' => 'boolean',
     ];
 
     public function scopeJournal(Builder $builder)
@@ -68,9 +82,9 @@ class Publication extends Model
         return explode('-', $value);
     }
 
-    public function mainAuthor()
+    public function author()
     {
-        return $this->morphTo('main_author');
+        return $this->morphTo('author');
     }
 
     public function presentations()
@@ -81,5 +95,10 @@ class Publication extends Model
     public function coAuthors()
     {
         return $this->hasMany(CoAuthor::class, 'publication_id');
+    }
+
+    public function isPublished()
+    {
+        return $this->is_published === true;
     }
 }

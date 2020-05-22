@@ -77,8 +77,8 @@ class UserTest extends TestCase
         $this->assertCount(0, $supervisor->publications);
 
         $publication = create(Publication::class, 1, [
-            'main_author_type' => User::class,
-            'main_author_id' => $supervisor->id,
+            'author_type' => User::class,
+            'author_id' => $supervisor->id,
         ]);
 
         $this->assertCount(1, $supervisor->fresh()->publications);

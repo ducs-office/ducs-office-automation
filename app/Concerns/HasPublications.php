@@ -10,7 +10,7 @@ trait HasPublications
 {
     public function publications()
     {
-        return $this->morphMany(Publication::class, 'main_author');
+        return $this->morphMany(Publication::class, 'author');
     }
 
     public function journals()

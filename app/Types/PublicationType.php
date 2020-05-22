@@ -6,6 +6,6 @@ use App\Types\BaseEnumType;
 
 class PublicationType extends BaseEnumType
 {
-    const JOURNAL = 'journal';
-    const CONFERENCE = 'conference';
+    const JOURNAL = 'Journal';
+    const CONFERENCE = 'Conference';
 }

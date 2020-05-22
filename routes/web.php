@@ -127,17 +127,12 @@ Route::prefix('/publications')
 ->namespace('Publications')
 ->as('publications.')
 ->group(static function () {
-    Route::get('/journal', 'JournalPublicationController@create')->name('journal.create');
-    Route::post('/journal', 'JournalPublicationController@store')->name('journal.store');
-    Route::get('/journal/{journal}/edit', 'JournalPublicationController@edit')->name('journal.edit');
-    Route::patch('/journal/{journal}', 'JournalPublicationController@update')->name('journal.update');
-    Route::delete('/journal/{journal}', 'JournalPublicationController@destroy')->name('journal.destroy');
-
-    Route::get('/conference', 'ConferencePublicationController@create')->name('conference.create');
-    Route::post('/conference', 'ConferencePublicationController@store')->name('conference.store');
-    Route::get('/conference/{conference}/edit', 'ConferencePublicationController@edit')->name('conference.edit');
-    Route::patch('/conference/{conference}', 'ConferencePublicationController@update')->name('conference.update');
-    Route::delete('/conference/{conference}', 'ConferencePublicationController@destroy')->name('conference.destroy');
+    Route::get('/', 'PublicationController@create')->name('create');
+    Route::get('/{publication}', 'PublicationController@show')->name('show');
+    Route::post('/', 'PublicationController@store')->name('store');
+    Route::get('/{publication}/edit', 'PublicationController@edit')->name('edit');
+    Route::patch('/{publication}', 'PublicationController@update')->name('update');
+    Route::delete('/{publication}', 'PublicationController@destroy')->name('destroy');
 
     Route::get('/co-authors/{coAuthor}', 'CoAuthorController@show')->name('co_authors.show');
     Route::delete('/co-authors/{coAuthor}', 'CoAuthorController@destroy')->name('co_authors.destroy');

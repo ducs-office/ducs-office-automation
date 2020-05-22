@@ -17,17 +17,20 @@ class CreatePublicationsTable extends Migration
         Schema::create('publications', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->enum('type', PublicationType::values());
-            $table->text('name');
             $table->text('paper_title');
-            $table->date('date');
+            $table->morphs('author');
+            $table->string('document_path');
+            $table->boolean('is_published')->default(false);
+            $table->text('name')->nullable();
+            $table->date('date')->nullable();
             $table->smallInteger('volume')->nullable();
             $table->string('publisher')->nullable();
             $table->integer('number')->nullable();
-            $table->string('indexed_in');
-            $table->string('page_numbers');
+            $table->string('indexed_in')->nullable();
+            $table->string('page_numbers')->nullable();
             $table->string('city')->nullable();
             $table->string('country')->nullable();
-            $table->morphs('main_author');
+            $table->string('paper_link')->nullable();
             $table->timestamps();
         });
     }

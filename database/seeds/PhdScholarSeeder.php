@@ -30,6 +30,7 @@ class PhdScholarSeeder extends Seeder
     protected $college_teachers;
     protected $externals;
     protected $nocPath;
+    protected $documentPath;
 
     /**
      * Run the database seeds.
@@ -41,7 +42,7 @@ class PhdScholarSeeder extends Seeder
         $this->createFacultyTeachers();
         $this->createCollegeTeachers();
         $this->createExternals();
-        $this->createNocDocument();
+        $this->createDocuments();
 
         // =========== Rajni Dabbas ============
         $rajni = Scholar::create([
@@ -133,6 +134,8 @@ class PhdScholarSeeder extends Seeder
             'number' => 3,
             'indexed_in' => CitationIndex::SCOPUS,
             'page_numbers' => [29, 43],
+            'is_published' => true,
+            'document_path' => $this->documentPath,
         ]);
         $sudhirPublication->coAuthors()->createMany([
             [
@@ -192,6 +195,8 @@ class PhdScholarSeeder extends Seeder
             'page_numbers' => [3, 37],
             'city' => 'Ahmedabad, Gujarat',
             'country' => 'India',
+            'is_published' => true,
+            'document_path' => $this->documentPath,
         ]);
         $sapnaPublication->coAuthors()->createMany([
             [
@@ -414,12 +419,15 @@ class PhdScholarSeeder extends Seeder
         ];
     }
 
-    public function createNocDocument()
+    public function createDocuments()
     {
         Storage::fake();
 
         $this->nocPath = UploadedFile::fake()
             ->create('noc.pdf', '10', 'application/pdf')
             ->store('publications/co_authors_noc');
+        $this->documentPath = UploadedFile::fake()
+            ->create('file.pdf', '10', 'application/pdf')
+            ->store('publications');
     }
 }

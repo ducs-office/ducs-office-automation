@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Psy\Command\DumpCommand;
 use Tests\TestCase;
 
 class PublicationTest extends TestCase
@@ -58,27 +59,27 @@ class PublicationTest extends TestCase
     }
 
     /** @test */
-    public function publication_belongs_to_main_author_via_morphTo()
+    public function publication_belongs_to_a_scholar_or_supervisor_author_via_morphTo()
     {
         $scholar = create(Scholar::class);
 
         $publication = create(Publication::class, 1, [
-            'main_author_type' => Scholar::class,
-            'main_author_id' => $scholar->id,
+            'author_type' => Scholar::class,
+            'author_id' => $scholar->id,
         ]);
 
-        $this->assertInstanceOf(MorphTo::class, $publication->mainAuthor());
-        $this->assertTrue($publication->mainAuthor->is($scholar));
+        $this->assertInstanceOf(MorphTo::class, $publication->author());
+        $this->assertTrue($publication->author->is($scholar));
 
         $supervisor = factory(User::class)->states('supervisor')->create();
 
         $publication = create(Publication::class, 1, [
-            'main_author_type' => User::class,
-            'main_author_id' => $supervisor->id,
+            'author_type' => User::class,
+            'author_id' => $supervisor->id,
         ]);
 
-        $this->assertInstanceOf(MorphTo::class, $publication->mainAuthor());
-        $this->assertTrue($publication->mainAuthor->is($supervisor));
+        $this->assertInstanceOf(MorphTo::class, $publication->author());
+        $this->assertTrue($publication->author->is($supervisor));
     }
 
     /** @test */
@@ -115,5 +116,17 @@ class PublicationTest extends TestCase
 
         $this->assertCount(3, $freshPublication->coAuthors);
         $this->assertEquals($coAuthors->pluck('id'), $freshPublication->coAuthors->pluck('id'));
+    }
+
+    /** @test */
+    public function isPublished_method_returns_boolean_value_for_publication_being_published_or_not()
+    {
+        $publication = create(Publication::class, 1, ['is_published' => false]);
+
+        $this->assertFalse($publication->isPublished());
+
+        $publication->update(['is_published' => true]);
+
+        $this->assertTrue($publication->fresh()->isPublished());
     }
 }

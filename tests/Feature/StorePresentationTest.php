@@ -20,8 +20,8 @@ class StorePresentationTest extends TestCase
     {
         $this->signInScholar($scholar = create(Scholar::class));
         $publication = create(Publication::class, 1, [
-            'main_author_type' => Scholar::class,
-            'main_author_id' => $scholar->id,
+            'author_type' => Scholar::class,
+            'author_id' => $scholar->id,
         ]);
 
         $presentation = [
@@ -53,8 +53,8 @@ class StorePresentationTest extends TestCase
     {
         $this->signInScholar($scholar = create(Scholar::class));
         $publication = create(Publication::class, 1, [
-            'main_author_type' => Scholar::class,
-            'main_author_id' => $scholar->id,
+            'author_type' => Scholar::class,
+            'author_id' => $scholar->id,
         ]);
 
         $this->assertEquals(0, Presentation::count());

@@ -37,8 +37,8 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
     {
         create(Publication::class, 1, [
             'type' => PublicationType::JOURNAL,
-            'main_author_type' => Scholar::class,
-            'main_author_id' => $scholar->id,
+            'author_type' => Scholar::class,
+            'author_id' => $scholar->id,
         ]);
     }
 

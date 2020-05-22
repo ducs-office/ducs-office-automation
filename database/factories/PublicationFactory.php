@@ -7,6 +7,8 @@ use App\Models\User;
 use App\Types\CitationIndex;
 use App\Types\PublicationType;
 use Faker\Generator as Faker;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 $factory->define(Publication::class, function (Faker $faker) {
     return [
@@ -27,9 +29,9 @@ $factory->define(Publication::class, function (Faker $faker) {
                 return $faker->randomElement(CitationIndex::values());
             }, $indexed_in);
         },
-        'main_author_type' => $type = $faker->randomElement([Scholar::class, User::class]),
-        'main_author_id' => function ($publication) {
-            return factory($publication['main_author_type'])->create()->id;
+        'author_type' => $type = $faker->randomElement([Scholar::class, User::class]),
+        'author_id' => function ($publication) {
+            return factory($publication['author_type'])->create()->id;
         },
         'number' => function ($publication) use ($faker) {
             return $publication['type'] === PublicationType::JOURNAL
@@ -46,6 +48,13 @@ $factory->define(Publication::class, function (Faker $faker) {
         'country' => function ($publication) use ($faker) {
             return $publication['type'] === PublicationType::CONFERENCE
                 ? $faker->country : null;
+        },
+        'is_published' => $faker->randomElement([true, false]),
+        'document_path' => static function () {
+            Storage::fake();
+            return UploadedFile::fake()
+                ->create('file.pdf', 100, 'application/pdf')
+                ->store('publications');
         },
     ];
 });

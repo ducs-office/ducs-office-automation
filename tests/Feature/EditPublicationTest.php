@@ -20,19 +20,19 @@ class EditPublicationTest extends TestCase
     {
         $this->signInScholar($scholar = create(Scholar::class));
 
-        $journal = create(Publication::class, 1, [
+        $publication = create(Publication::class, 1, [
             'type' => PublicationType::JOURNAL,
             'number' => 1234,
             'publisher' => 'O Rielly',
-            'main_author_type' => Scholar::class,
-            'main_author_id' => $scholar->id,
+            'author_type' => Scholar::class,
+            'author_id' => $scholar->id,
         ]);
 
         $this->withoutExceptionHandling()
-            ->get(route('publications.journal.edit', $journal))
+            ->get(route('publications.edit', $publication))
             ->assertSuccessful()
-            ->assertViewIs('publications.journals.edit')
-            ->assertViewHasAll(['journal', 'citationIndexes']);
+            ->assertViewIs('publications.edit')
+            ->assertViewHasAll(['publication', 'citationIndexes', 'months']);
     }
 
     /** @test */
@@ -42,19 +42,19 @@ class EditPublicationTest extends TestCase
 
         $this->signIn($supervisor);
 
-        $journal = create(Publication::class, 1, [
+        $publication = create(Publication::class, 1, [
             'type' => PublicationType::JOURNAL,
             'number' => 1234,
             'publisher' => 'O Rielly',
-            'main_author_type' => User::class,
-            'main_author_id' => $supervisor->id,
+            'author_type' => User::class,
+            'author_id' => $supervisor->id,
         ]);
 
         $this->withoutExceptionHandling()
-            ->get(route('publications.journal.edit', $journal))
+            ->get(route('publications.edit', $publication))
             ->assertSuccessful()
-            ->assertViewIs('publications.journals.edit')
-            ->assertViewHasAll(['journal', 'citationIndexes']);
+            ->assertViewIs('publications.edit')
+            ->assertViewHasAll(['publication', 'citationIndexes', 'months']);
     }
 
     /** @test */
@@ -66,15 +66,15 @@ class EditPublicationTest extends TestCase
             'type' => PublicationType::CONFERENCE,
             'city' => 'Delhi',
             'country' => 'India',
-            'main_author_type' => Scholar::class,
-            'main_author_id' => $scholar->id,
+            'author_type' => Scholar::class,
+            'author_id' => $scholar->id,
         ]);
 
         $this->withoutExceptionHandling()
-            ->get(route('publications.conference.edit', $conference))
+            ->get(route('publications.edit', $conference))
             ->assertSuccessful()
-            ->assertViewIs('publications.conferences.edit')
-            ->assertViewHasAll(['conference', 'citationIndexes']);
+            ->assertViewIs('publications.edit')
+            ->assertViewHasAll(['publication', 'citationIndexes', 'months']);
     }
 
     /** @test */
@@ -88,14 +88,14 @@ class EditPublicationTest extends TestCase
             'type' => PublicationType::CONFERENCE,
             'city' => 'Delhi',
             'country' => 'India',
-            'main_author_type' => User::class,
-            'main_author_id' => $supervisor->id,
+            'author_type' => User::class,
+            'author_id' => $supervisor->id,
         ]);
 
         $this->withoutExceptionHandling()
-            ->get(route('publications.conference.edit', $conference))
+            ->get(route('publications.edit', $conference))
             ->assertSuccessful()
-            ->assertViewIs('publications.conferences.edit')
-            ->assertViewHasAll(['conference', 'citationIndexes']);
+            ->assertViewIs('publications.edit')
+            ->assertViewHasAll(['publication', 'citationIndexes', 'months']);
     }
 }
