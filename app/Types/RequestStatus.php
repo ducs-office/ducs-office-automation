@@ -15,10 +15,10 @@ class RequestStatus extends BaseEnumType
     public function getContextCSS()
     {
         return [
-            self::APPROVED => 'text-green-500',
-            self::REJECTED => 'text-red-600',
-            self::RECOMMENDED => 'text-blue-600',
-            self::APPLIED => 'text-gray-700',
+            self::APPROVED => 'bg-green-300 text-green-500',
+            self::REJECTED => 'bg-red-300 text-red-600',
+            self::RECOMMENDED => 'bg-blue-300 text-blue-600',
+            self::APPLIED => 'bg-gray-300 text-gray-700',
         ][$this->value];
     }
 }

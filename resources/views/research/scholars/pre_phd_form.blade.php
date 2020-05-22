@@ -140,8 +140,9 @@
                     </div>
                 </div>
                 <div>
-                    <div class="font-bold">
+                    <div class="font-bold flex flex-wrap">
                         <p class="ml-1 p-1"> Title finalized at the PrePhD seminar: </p>
+                        <p class="ml-1 p-1 font-semibold"> {{ optional($scholar->prePhdSeminar)->finalized_title}} </p>
                     </div>
                     <div class="flex justify-between items-end h-32">
                         <p class="ml-1 p-1"> Date: </p>
@@ -153,7 +154,7 @@
             </div>
         </div>
     </div>
-    @can('createPhDSeminar', App\Models\ScholarAppeal::class)
+    @can('apply', [App\Models\PrePhdSeminar::class, $scholar])
         <div class="flex items-end justify-center">
             <div>
                 <p class="font-bold text-lg"> Are you sure you want to apply for Pre-Phd Seminar ? </p>

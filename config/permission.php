@@ -96,7 +96,7 @@ return [
             'phd course work' => ['mark completed'],
             'scholar progress reports' => ['add', 'view', 'delete'],
             'scholar documents' => ['add', 'view', 'delete'],
-            'scholar appeals' => ['mark complete'],
+            'phd seminar' => ['add schedule', 'finalize'],
             'scholar examiner' => ['recommend', 'approve'],
         ],
 
@@ -114,7 +114,7 @@ return [
                 'teachers' => ['view', 'create', 'edit', 'delete'],
                 'scholars' => ['view', 'create', 'edit', 'delete'],
                 'scholar documents' => ['add', 'view', 'delete'],
-                'scholar appeals' => ['mark complete'],
+                'phd seminar' => ['add schedule', 'finalize'],
                 'scholar examiner' => ['recommend', 'approve'],
             ],
             'DRC Member' => [
@@ -123,7 +123,7 @@ return [
                 'phd course work' => ['mark completed'],
                 'scholar progress reports' => ['add', 'view'],
                 'scholar documents' => ['add', 'view', 'delete'],
-                'scholar appeals' => ['mark complete'],
+                'phd seminar' => ['add schedule', 'finalize'],
             ],
         ],
     ],

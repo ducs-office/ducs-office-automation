@@ -42,31 +42,35 @@ Route::delete(
 )->name('scholars.documents.destroy')->middleware('auth:web,scholars');
 
 //=========== scholar pre-phd seminar =============
-
 Route::get(
-    '/scholars/{scholar}/pre-phd-seminar/',
-    'ScholarAppealController@showPhdSeminarForm'
-)->name('scholars.pre_phd_seminar.show')->middleware('auth:web,scholars');
+    '/scholars/{scholar}/pre-phd-seminar/request',
+    'ScholarPrePhdSeminarController@request'
+)->name('scholars.pre_phd_seminar.request')->middleware('auth:scholars');
 
 Route::post(
-    '/scholars/{scholar}/pre-phd-seminar/apply/',
-    'ScholarAppealController@storePhdSeminar'
+    '/scholars/{scholar}/pre-phd-seminar/apply',
+    'ScholarPrePhdSeminarController@apply'
 )->name('scholars.pre_phd_seminar.apply')->middleware('auth:scholars');
 
-Route::patch(
-    '/scholars/{scholar}/appeals/{appeal}/approve',
-    'ScholarAppealController@approve'
-)->name('scholars.appeals.approve')->middleware('auth:web');
+Route::get(
+    '/scholars/{scholar}/pre-phd-seminar/{appeal}/show',
+    'ScholarPrePhdSeminarController@show'
+)->name('scholars.pre_phd_seminar.show')->middleware('auth:web,scholars');
 
 Route::patch(
-    '/scholars/{scholar}/appeals/{appeal}/reject',
-    'ScholarAppealController@reject'
-)->name('scholars.appeals.reject')->middleware('auth:web');
+    '/scholars/{scholar}/appeals/{appeal}/forward',
+    'ScholarPrePhdSeminarController@forward'
+)->name('scholars.pre_phd_seminar.forward')->middleware('auth:web');
 
 Route::patch(
-    '/scholars/{scholar}/appeals/{appeal}/mark-complete',
-    'ScholarAppealController@markComplete'
-)->name('scholars.appeals.mark_complete')->middleware('auth:web');
+    '/scholars/{scholar}/appeals/{appeal}/schedule',
+    'ScholarPrePhdSeminarController@schedule'
+)->name('scholars.pre_phd_seminar.schedule')->middleware('auth:web');
+
+Route::patch(
+    '/scholars/{scholar}/appeals/{appeal}/finalize',
+    'ScholarPrePhdSeminarController@finalize'
+)->name('scholars.pre_phd_seminar.finalize')->middleware('auth:web');
 
 //================Scholar Title Approval =======================
 

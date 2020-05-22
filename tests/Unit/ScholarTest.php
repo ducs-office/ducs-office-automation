@@ -8,6 +8,7 @@ use App\Models\Cosupervisor;
 use App\Models\ExternalAuthority;
 use App\Models\Leave;
 use App\Models\PhdCourse;
+use App\Models\PrePhdSeminar;
 use App\Models\Presentation;
 use App\Models\ProgressReport;
 use App\Models\Publication;
@@ -25,14 +26,17 @@ use App\Types\EducationInfo;
 use App\Types\PrePhdCourseType;
 use App\Types\PublicationType;
 use App\Types\ScholarAppealTypes;
+use App\Types\ScholarDocumentType;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
 class ScholarTest extends TestCase
@@ -506,39 +510,83 @@ class ScholarTest extends TestCase
     }
 
     /** @test */
-    public function phdSeminarAppeals_method_returns_all_phd_seminar_appeals_of_the_scholar()
+    public function scholar_has_one_pre_phd_seminar()
     {
         $scholar = create(Scholar::class);
 
-        $phdSeminarAppeals = create(ScholarAppeal::class, 3, [
+        $this->assertInstanceOf(HasOne::class, $scholar->prePhdSeminar());
+
+        $prePhdSeminar = create(PrePhdSeminar::class, 1, [
             'scholar_id' => $scholar->id,
-            'type' => ScholarAppealTypes::PRE_PHD_SEMINAR,
         ]);
 
         $freshScholar = $scholar->fresh();
 
-        $this->assertEquals($phdSeminarAppeals->pluck('id'), $freshScholar->phdSeminarAppeals()->pluck('id'));
+        $this->assertTrue($prePhdSeminar->is($freshScholar->prePhdSeminar));
     }
 
     /** @test */
-    public function currentPhdSeminarAppeal_method_returns_the_latest_phd_seminar_appeal_of_the_scholar()
+    public function areCourseworksCompleted_returns_are_all_courseworks_of_scholar_complete_or_not()
     {
+        Storage::fake();
+        $marksheetPath = UploadedFile::fake()->create('fakefile.pdf', 20, 'application/pdf')->store('scholar_marksheets');
+
+        $course = create(PhdCourse::class);
         $scholar = create(Scholar::class);
 
-        $phdSeminarAppealOld = create(ScholarAppeal::class, 1, [
-            'scholar_id' => $scholar->id,
-            'type' => ScholarAppealTypes::PRE_PHD_SEMINAR,
+        $scholar->addCourse($course, [
+            'marksheet_path' => $marksheetPath,
+            'completed_on' => $completeDate = now()->format('Y-m-d'),
         ]);
 
-        Carbon::setTestNow($appealTime = now()->addDay());
+        $scholar = $scholar->fresh();
 
-        $phdSeminarAppealNew = create(ScholarAppeal::class, 1, [
-            'scholar_id' => $scholar->id,
-            'type' => ScholarAppealTypes::PRE_PHD_SEMINAR,
+        $this->assertTrue($scholar->areCourseworksCompleted());
+
+        $course = create(PhdCourse::class);
+
+        $scholar->addCourse($course);
+
+        $scholar = $scholar->fresh();
+
+        $this->assertFalse($scholar->areCourseworksCompleted());
+    }
+
+    /** @test */
+    public function canApplyForPrePhdSeminar_returns_true_if_all_documents_are_uploaded_journal_publications_are_added_and_courseworks_are_complete()
+    {
+        $scholar = create(Scholar::class, 1, [
+            'proposed_title' => Str::random(20),
         ]);
 
-        $freshScholar = $scholar->fresh();
+        $this->assertFalse($scholar->canApplyForPrePhdSeminar());
 
-        $this->assertEquals($phdSeminarAppealNew->id, $freshScholar->currentPhDSeminarAppeal()->id);
+        Storage::fake();
+        $document = UploadedFile::fake()->create('joining_letter.pdf', 20, 'application/pdf');
+
+        create(ScholarDocument::class, 1, [
+            'scholar_id' => $scholar->id,
+            'path' => $document,
+            'type' => ScholarDocumentType::JOINING_LETTER,
+        ]);
+
+        create(Publication::class, 1, [
+            'main_author_type' => Scholar::class,
+            'main_author_id' => $scholar->id,
+            'type' => PublicationType::JOURNAL,
+        ]);
+
+        $marksheetPath = UploadedFile::fake()->create('fakefile.pdf', 20, 'application/pdf')->store('scholar_marksheets');
+
+        $course = create(PhdCourse::class);
+
+        $scholar->addCourse($course, [
+            'marksheet_path' => $marksheetPath,
+            'completed_on' => $completeDate = now()->format('Y-m-d'),
+        ]);
+
+        $scholar = $scholar->fresh();
+
+        $this->assertTrue($scholar->canApplyForPrePhdSeminar());
     }
 }

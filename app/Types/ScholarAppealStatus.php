@@ -10,6 +10,7 @@ class ScholarAppealStatus extends BaseEnumType
     const APPROVED = 'approved';
     const REJECTED = 'rejected';
     const COMPLETED = 'completed';
+    const RECOMMENDED = 'recommend';
 
     public function getContextIcon()
     {
@@ -18,6 +19,7 @@ class ScholarAppealStatus extends BaseEnumType
             self::REJECTED => 'x-circle',
             self::APPLIED => 'alert-circle',
             self::COMPLETED => 'check-circle',
+            self::RECOMMENDED => 'check-circle',
         ][$this->value];
     }
 

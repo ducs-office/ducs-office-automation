@@ -164,9 +164,9 @@ class Scholar extends User
         return optional($this->phdSeminarAppeals())->first();
     }
 
-    public function phdSeminarAppeals()
+    public function prePhdSeminar()
     {
-        return $this->appeals()->phdSeminarAppeals();
+        return $this->hasOne(PrePhdSeminar::class);
     }
 
     public function isJoiningLetterUploaded()
@@ -189,10 +189,12 @@ class Scholar extends User
         return $this->documents()->where('type', ScholarDocumentType::PRE_PHD_SEMINAR_NOTICE)->exists();
     }
 
-    public function isDocumentListComplete()
+    public function canApplyForPrePhdSeminar()
     {
-        return $this->isAcceptanceLetterUploaded()
-            && $this->isJoiningLetterUploaded();
+        return $this->isJoiningLetterUploaded()
+            && $this->areCourseworksCompleted()
+            && $this->journals()->count()
+            && $this->proposed_title;
     }
 
     public function titleApprovalAppeal()
@@ -205,6 +207,11 @@ class Scholar extends User
         return $this->isJoiningLetterUploaded()
             && $this->isTableOfContentsOfThesisUploaded()
             && $this->isPrePhdSeminarNoticeUploaded();
+    }
+
+    public function areCourseworksCompleted()
+    {
+        return $this->courseworks()->whereNull('completed_on')->count() === 0;
     }
 
     // Helpers
