@@ -85,19 +85,19 @@ Route::post(
 )->name('scholars.title_approval.apply')->middleware('auth:scholars');
 
 Route::get(
-    '/scholars/{scholar}/title-approval/show',
+    '/scholars/{scholar}/title-approval/{appeal}/show',
     'ScholarTitleApprovalController@show'
 )->name('scholars.title_approval.show')->middleware('auth:web,scholars');
 
 Route::patch(
-    '/scholars/{scholar}/title-approval/{appeal}/approve',
-    'ScholarTitleApprovalController@approve'
-)->name('scholars.title_approval.approve')->middleware('auth:web,scholars');
+    '/scholars/{scholar}/title-approval/{appeal}/recommend',
+    'ScholarTitleApprovalController@recommend'
+)->name('scholars.title_approval.recommend')->middleware('auth:web');
 
 Route::patch(
-    '/scholars/{scholar}/title-approval/{appeal}/mark-complete',
-    'ScholarTitleApprovalController@markComplete'
-)->name('scholars.title_approval.mark_complete')->middleware('auth:web');
+    '/scholars/{scholar}/title-approval/{appeal}/approve',
+    'ScholarTitleApprovalController@approve'
+)->name('scholars.title_approval.approve')->middleware('auth:web');
 
 Route::get('/users/@{user}', 'UserProfileController@show')->name('profiles.show');
 Route::patch('/users/@{user}', 'UserProfileController@update')->name('profiles.update');

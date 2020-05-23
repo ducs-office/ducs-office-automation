@@ -97,6 +97,7 @@ return [
             'scholar progress reports' => ['add', 'view', 'delete'],
             'scholar documents' => ['add', 'view', 'delete'],
             'phd seminar' => ['add schedule', 'finalize'],
+            'title approval' => ['approve'],
             'scholar examiner' => ['recommend', 'approve'],
         ],
 
@@ -115,6 +116,7 @@ return [
                 'scholars' => ['view', 'create', 'edit', 'delete'],
                 'scholar documents' => ['add', 'view', 'delete'],
                 'phd seminar' => ['add schedule', 'finalize'],
+                'title approval' => ['approve'],
                 'scholar examiner' => ['recommend', 'approve'],
             ],
             'DRC Member' => [
@@ -124,6 +126,7 @@ return [
                 'scholar progress reports' => ['add', 'view'],
                 'scholar documents' => ['add', 'view', 'delete'],
                 'phd seminar' => ['add schedule', 'finalize'],
+                'title approval' => ['approve'],
             ],
         ],
     ],

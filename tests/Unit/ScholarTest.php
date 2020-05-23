@@ -20,11 +20,13 @@ use App\Models\ScholarDocument;
 use App\Models\ScholarEducationDegree;
 use App\Models\ScholarEducationInstitute;
 use App\Models\ScholarEducationSubject;
+use App\Models\TitleApproval;
 use App\Models\User;
 use App\Types\CitationIndex;
 use App\Types\EducationInfo;
 use App\Types\PrePhdCourseType;
 use App\Types\PublicationType;
+use App\Types\RequestStatus;
 use App\Types\ScholarAppealTypes;
 use App\Types\ScholarDocumentType;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -377,22 +379,6 @@ class ScholarTest extends TestCase
     }
 
     /** @test */
-    public function scholar_has_many_appeals()
-    {
-        $scholar = create(Scholar::class);
-
-        $this->assertInstanceOf(HasMany::class, $scholar->appeals());
-        $this->assertCount(0, $scholar->appeals);
-
-        $scholarAppeals = create(ScholarAppeal::class, 2, ['scholar_id' => $scholar->id]);
-
-        $freshScholar = $scholar->fresh();
-
-        $this->assertCount(2, $freshScholar->appeals);
-        $this->assertEquals($scholarAppeals->pluck('id'), $freshScholar->appeals->pluck('id'));
-    }
-
-    /** @test */
     public function countSCIOrSCIEJournals_returns_number_of_SCI_and_SCIE_journal_publications()
     {
         $scholar = Create(Scholar::class);
@@ -526,7 +512,7 @@ class ScholarTest extends TestCase
     }
 
     /** @test */
-    public function areCourseworksCompleted_returns_are_all_courseworks_of_scholar_complete_or_not()
+    public function areCourseworksCompleted_method_returns_are_all_courseworks_of_scholar_complete_or_not()
     {
         Storage::fake();
         $marksheetPath = UploadedFile::fake()->create('fakefile.pdf', 20, 'application/pdf')->store('scholar_marksheets');
@@ -553,7 +539,7 @@ class ScholarTest extends TestCase
     }
 
     /** @test */
-    public function canApplyForPrePhdSeminar_returns_true_if_all_documents_are_uploaded_journal_publications_are_added_and_courseworks_are_complete()
+    public function canApplyForPrePhdSeminar_method_returns_true_if_all_documents_are_uploaded_journal_publications_are_added_courseworks_are_complete_and_proposed_title_is_added()
     {
         $scholar = create(Scholar::class, 1, [
             'proposed_title' => Str::random(20),
@@ -570,6 +556,8 @@ class ScholarTest extends TestCase
             'type' => ScholarDocumentType::JOINING_LETTER,
         ]);
 
+        $this->assertFalse($scholar->fresh()->canApplyForPrePhdSeminar());
+
         create(Publication::class, 1, [
             'main_author_type' => Scholar::class,
             'main_author_id' => $scholar->id,
@@ -580,7 +568,11 @@ class ScholarTest extends TestCase
 
         $course = create(PhdCourse::class);
 
-        $scholar->addCourse($course, [
+        $scholar->addCourse($course);
+
+        $this->assertFalse($scholar->fresh()->canApplyForPrePhdSeminar());
+
+        $scholar->courseworks()->updateExistingPivot($course->id, [
             'marksheet_path' => $marksheetPath,
             'completed_on' => $completeDate = now()->format('Y-m-d'),
         ]);
@@ -588,5 +580,123 @@ class ScholarTest extends TestCase
         $scholar = $scholar->fresh();
 
         $this->assertTrue($scholar->canApplyForPrePhdSeminar());
+    }
+
+    /** @test */
+    public function scholar_has_one_title_approval()
+    {
+        $scholar = create(Scholar::class);
+
+        $this->assertInstanceOf(HasOne::class, $scholar->titleApproval());
+
+        $titleApproval = create(TitleApproval::class, 1, [
+            'scholar_id' => $scholar->id,
+        ]);
+
+        $freshScholar = $scholar->fresh();
+
+        $this->assertTrue($titleApproval->is($freshScholar->titleApproval));
+    }
+
+    /** @test */
+    public function canApplyForTitleApproval_method_returns_true_if_all_documents_are_uploaded_and_finalized_title_is_added()
+    {
+        $scholar = create(Scholar::class);
+
+        create(PrePhdSeminar::class, 1, [
+            'scholar_id' => $scholar->id,
+            'status' => RequestStatus::APPROVED,
+            'finalized_title' => Str::random(20),
+        ]);
+
+        $this->assertFalse($scholar->canApplyForTitleApproval());
+
+        Storage::fake();
+        $document = UploadedFile::fake()->create('joining_letter.pdf', 20, 'application/pdf');
+
+        create(ScholarDocument::class, 1, [
+            'scholar_id' => $scholar->id,
+            'path' => $document,
+            'type' => ScholarDocumentType::JOINING_LETTER,
+        ]);
+
+        $this->assertFalse($scholar->fresh()->canApplyForTitleApproval());
+
+        $document = UploadedFile::fake()->create('thesis_table_of_content.pdf', 20, 'application/pdf');
+
+        create(ScholarDocument::class, 1, [
+            'scholar_id' => $scholar->id,
+            'path' => $document,
+            'type' => ScholarDocumentType::THESIS_TOC,
+        ]);
+
+        $this->assertFalse($scholar->fresh()->canApplyForTitleApproval());
+
+        $document = UploadedFile::fake()->create('pre_phd_seminar_notice.pdf', 20, 'application/pdf');
+
+        create(ScholarDocument::class, 1, [
+            'scholar_id' => $scholar->id,
+            'path' => $document,
+            'type' => ScholarDocumentType::PRE_PHD_SEMINAR_NOTICE,
+        ]);
+
+        $this->assertTrue($scholar->fresh()->canApplyForTitleApproval());
+    }
+
+    /** @test */
+    public function isJoiningLetterUploaded_method_return_true_if_joining_letter_of_scholar_is_uploaded()
+    {
+        $scholar = create(Scholar::class);
+
+        $this->assertFalse($scholar->isJoiningLetterUploaded());
+
+        Storage::fake();
+        $file = UploadedFile::fake()->create('joining_letter.pdf', 20, 'application/pdf');
+
+        create(ScholarDocument::class, 1, [
+            'path' => $file,
+            'type' => ScholarDocumentType::JOINING_LETTER,
+            'scholar_id' => $scholar->id,
+        ]);
+
+        $this->assertTrue($scholar->isJoiningLetterUploaded());
+    }
+
+    /** @test */
+    public function isTableOfContentsOfThesisUploaded_method_return_true_if_scholar_document_of_type_THESIS_TOC_uploaded()
+    {
+        $scholar = create(Scholar::class);
+
+        $this->assertFalse($scholar->isTableOfContentsOfThesisUploaded());
+
+        Storage::fake();
+        $file = UploadedFile::fake()->create('thesis_toc.pdf', 20, 'application/pdf');
+
+        create(ScholarDocument::class, 1, [
+            'path' => $file,
+            'type' => ScholarDocumentType::THESIS_TOC,
+            'scholar_id' => $scholar->id,
+        ]);
+
+        $this->assertTrue($scholar->isTableOfContentsOfThesisUploaded());
+    }
+
+    /** @test */
+    public function isPrePhdSeminarNoticeUploaded_method_return_true_if_scholar_document_of_type_PRE_PHD_SEMINAR_NOTICE_uploaded()
+    {
+        $scholar = create(Scholar::class);
+
+        $this->assertFalse($scholar->isPrePhdSeminarNoticeUploaded());
+
+        Storage::fake();
+        $file = UploadedFile::fake()->create('pre_phd_seminar_notice.pdf', 20, 'application/pdf');
+
+        create(ScholarDocument::class, 1, [
+            'path' => $file,
+            'type' => ScholarDocumentType::PRE_PHD_SEMINAR_NOTICE,
+            'scholar_id' => $scholar->id,
+        ]);
+
+        $this->assertTrue($scholar->isPrePhdSeminarNoticeUploaded());
     }
 }

@@ -69,12 +69,12 @@
                         <p class="ml-1 p-1"> Date and Time of Pre Ph.D. Seminar </p>
                     </div>
                     <div>
-                        <p class="ml-1 p-1 font-semibold"> {{ optional($scholar->title_finalized_on)->format('d F, Y') }} </p>
+                        <p class="ml-1 p-1 font-semibold"> {{ $scholar->prePhdSeminar->scheduled_on->format('d F, Y H:i:s') }} </p>
                     </div>
                 </div>
                 <div class="flex flex-wrap h-12">
                     <p class="ml-1 p-1"> Title of the Thesis (finalized at the Pre-Ph.D. Seminar): </p>
-                    <p class="ml-1 p-1 font-semibold"> {{ $scholar->finalized_title }} </p>
+                    <p class="ml-1 p-1 font-semibold"> {{ $scholar->prePhdSeminar->finalized_title }} </p>
                 </div>
                 <div class="flex divide-x divide-black">
                     <div class="w-1/2"> 
@@ -133,8 +133,9 @@
                     </div>    
                 </div>
                 <div>
-                    <div class="font-bold">
+                    <div class="font-bold flex flex-wrap">
                         <p class="ml-1 p-1"> Title recommended by DRC and forwarded to BRS (Mathematical Sciences): </p>
+                        <p class="ml-1 p-1 font-semibold"> {{ optional($scholar->titleApproval)->recommended_title}} </p>
                     </div>
                     <div class="flex justify-between items-end h-32">
                         <p class="ml-1 p-1"> Date: </p>
@@ -144,7 +145,7 @@
             </div>
         </div>
     </div>
-    @can('applyTitleApproval', \App\Models\ScholarAppeal::class)
+    @can('apply', [\App\Models\TitleApproval::class, $scholar])
     <div class="flex items-end justify-center"> 
         <div>
             <p class="font-bold text-lg"> Are you sure you want to apply for Title Approval ? </p>
