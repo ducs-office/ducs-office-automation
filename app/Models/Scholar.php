@@ -93,7 +93,7 @@ class Scholar extends User
         });
     }
 
-    public function getRegistrationValidUptoAttribute()
+    public function registrationValidUpto()
     {
         return optional($this->registration_date)->addYears($this->term_duration);
     }

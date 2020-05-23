@@ -703,4 +703,16 @@ class ScholarTest extends TestCase
 
         $this->assertTrue($scholar->isPrePhdSeminarNoticeUploaded());
     }
+
+    /** @test */
+    public function registrationValidUpto_returns_the_date_to_which_the_scholars_registration_is_valid()
+    {
+        $this->signInScholar($scholar = create(Scholar::class));
+
+        $registrationValidUpto = $scholar->registration_date->addYears(
+            $scholar->term_duration
+        );
+
+        $this->assertEquals($registrationValidUpto, $scholar->registrationValidUpto());
+    }
 }

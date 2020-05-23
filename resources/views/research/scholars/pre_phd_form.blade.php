@@ -62,7 +62,7 @@
                 </div>
                 <div class="flex flex-wrap">
                     <p class="ml-1 p-1"> Registeraion valid up to: </p>
-                    <p class="ml-1 p-1 font-semibold"> {{ optional($scholar->registration_valid_upto)->format('d F, Y') }}
+                    <p class="ml-1 p-1 font-semibold"> {{ optional($scholar->registrationValidUpto())->format('d F, Y') }}
                 </div>
                 <div class="flex divide-x divide-black">
                     <div class="w-1/2">
