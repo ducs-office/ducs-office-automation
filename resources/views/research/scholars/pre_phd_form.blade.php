@@ -154,7 +154,7 @@
             </div>
         </div>
     </div>
-    @can('apply', [App\Models\PrePhdSeminar::class, $scholar])
+    @can('create', [App\Models\PrePhdSeminar::class, $scholar])
         <div class="flex items-end justify-center">
             <div>
                 <p class="font-bold text-lg"> Are you sure you want to apply for Pre-Phd Seminar ? </p>

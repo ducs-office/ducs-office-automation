@@ -21,20 +21,19 @@ class ScholarDocumentPolicy
      */
     public function view($user, ScholarDocument $document)
     {
-        return ((
-            get_class($user) === Scholar::class
-                && (int) $document->scholar_id === $user->id
-        )
-            || (
-                get_class($user) === User::class
-                && $user->can('scholar documents:view')
-            )
-            || (
-                method_exists($user, 'isSupervisor')
-                && $user->isSupervisor()
-                && $user->scholars->contains((int) $document->scholar_id)
-            )
-        );
+        if (get_class($user) === Scholar::class && (int) $document->scholar_id === $user->id) {
+            return true;
+        }
+
+        if (get_class($user) === User::class && $user->can('scholar documents:view')) {
+            return true;
+        }
+
+        if (get_class($user) === User::class && $user->isSupervisor() && $user->scholars->contains((int) $document->scholar_id)) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -65,14 +64,18 @@ class ScholarDocumentPolicy
      */
     public function delete($user, ScholarDocument $document)
     {
-        return $document->scholar->prePhdSeminar === null && (
-            (
-                get_class($user) === Scholar::class
-                    && (int) $document->scholar_id === $user->id
-            ) || (
-                get_class($user) === User::class
-                    && $user->can('scholar documents:delete')
-            )
-        );
+        if ($document->scholar->prePhdSeminar) {
+            return false;
+        }
+
+        if (get_class($user) === Scholar::class && (int) $document->scholar_id === $user->id) {
+            return true;
+        }
+
+        if (get_class($user) === User::class && $user->can('scholar documents:delete')) {
+            return true;
+        }
+
+        return false;
     }
 }

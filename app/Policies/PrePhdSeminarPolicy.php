@@ -21,7 +21,7 @@ class PrePhdSeminarPolicy
             && $user->prePhdSeminar === null;
     }
 
-    public function apply($user, Scholar $scholar)
+    public function create($user, Scholar $scholar)
     {
         return $user instanceof Scholar
             && $user->id === $scholar->id
@@ -29,9 +29,9 @@ class PrePhdSeminarPolicy
             && $scholar->canApplyForPrePhdSeminar();
     }
 
-    public function view($user, Scholar $scholar, PrePhdSeminar $appeal)
+    public function view($user, PrePhdSeminar $prePhdSeminar, Scholar $scholar)
     {
-        if ($scholar->prePhdSeminar && $scholar->is($appeal->scholar)) {
+        if ($scholar->prePhdSeminar && $scholar->is($prePhdSeminar->scholar)) {
             if (get_class($user) === Scholar::class) {
                 return (int) $user->id === (int) $scholar->id;
             } elseif ($user->isSupervisor()) {
@@ -45,30 +45,30 @@ class PrePhdSeminarPolicy
         return false;
     }
 
-    public function forward($user, Scholar $scholar, PrePhdSeminar $appeal)
+    public function forward($user, PrePhdSeminar $prePhdSeminar, Scholar $scholar)
     {
-        return $scholar->is($appeal->scholar)
+        return $scholar->is($prePhdSeminar->scholar)
             && get_class($user) === User::class
             && $user->isSupervisor()
             && $user->scholars->contains($scholar)
-            && $appeal->status == RequestStatus::APPLIED;
+            && $prePhdSeminar->status == RequestStatus::APPLIED;
     }
 
-    public function addSchedule($user, Scholar $scholar, PrePhdSeminar $appeal)
+    public function addSchedule($user, PrePhdSeminar $prePhdSeminar, Scholar $scholar)
     {
-        return $scholar->is($appeal->scholar)
+        return $scholar->is($prePhdSeminar->scholar)
             && $user instanceof User
-            && $appeal->status == RequestStatus::RECOMMENDED
-            && $appeal->scheduled_on === null
+            && $prePhdSeminar->status == RequestStatus::RECOMMENDED
+            && $prePhdSeminar->scheduled_on === null
             && $user->can('phd seminar:add schedule');
     }
 
-    public function finalize($user, Scholar $scholar, PrePhdSeminar $appeal)
+    public function finalize($user, PrePhdSeminar $prePhdSeminar, Scholar $scholar)
     {
-        return $scholar->is($appeal->scholar)
+        return $scholar->is($prePhdSeminar->scholar)
             && $user instanceof User
-            && $appeal->status == RequestStatus::RECOMMENDED
-            && $appeal->scheduled_on
+            && $prePhdSeminar->status == RequestStatus::RECOMMENDED
+            && $prePhdSeminar->scheduled_on
             && $user->can('phd seminar:finalize');
     }
 }

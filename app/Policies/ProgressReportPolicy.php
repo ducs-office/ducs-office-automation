@@ -35,17 +35,17 @@ class ProgressReportPolicy
      */
     public function view($user, ProgressReport $progressReport)
     {
-        return  (
-                    $user instanceof Scholar &&
-                    $progressReport->scholar_id == $user->id
-                ) || (
-                    method_exists($user, 'isSupervisor') &&
-                    $user->isSupervisor() &&
-                    $user->scholars->contains($progressReport->scholar->id)
-                ) || (
-                    $user instanceof User &&
-                    $user->can('scholar progress reports:view')
-                );
+        if ($user instanceof Scholar && $progressReport->scholar_id == $user->id) {
+            return true;
+        }
+
+        if ($user instanceof User && $user->isSupervisor() && $user->scholars->contains($progressReport->scholar->id)) {
+            return true;
+        }
+
+        if ($user instanceof User && $user->can('scholar progress reports:view')) {
+            return true;
+        }
     }
 
     /**

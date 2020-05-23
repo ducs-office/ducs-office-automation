@@ -53,22 +53,22 @@ Route::post(
 )->name('scholars.pre_phd_seminar.apply')->middleware('auth:scholars');
 
 Route::get(
-    '/scholars/{scholar}/pre-phd-seminar/{appeal}/show',
+    '/scholars/{scholar}/pre-phd-seminar/{prePhdSeminar}/show',
     'ScholarPrePhdSeminarController@show'
 )->name('scholars.pre_phd_seminar.show')->middleware('auth:web,scholars');
 
 Route::patch(
-    '/scholars/{scholar}/appeals/{appeal}/forward',
+    '/scholars/{scholar}/appeals/{prePhdSeminar}/forward',
     'ScholarPrePhdSeminarController@forward'
 )->name('scholars.pre_phd_seminar.forward')->middleware('auth:web');
 
 Route::patch(
-    '/scholars/{scholar}/appeals/{appeal}/schedule',
+    '/scholars/{scholar}/appeals/{prePhdSeminar}/schedule',
     'ScholarPrePhdSeminarController@schedule'
 )->name('scholars.pre_phd_seminar.schedule')->middleware('auth:web');
 
 Route::patch(
-    '/scholars/{scholar}/appeals/{appeal}/finalize',
+    '/scholars/{scholar}/appeals/{prePhdSeminar}/finalize',
     'ScholarPrePhdSeminarController@finalize'
 )->name('scholars.pre_phd_seminar.finalize')->middleware('auth:web');
 
@@ -85,17 +85,17 @@ Route::post(
 )->name('scholars.title_approval.apply')->middleware('auth:scholars');
 
 Route::get(
-    '/scholars/{scholar}/title-approval/{appeal}/show',
+    '/scholars/{scholar}/title-approval/{titleApproval}/show',
     'ScholarTitleApprovalController@show'
 )->name('scholars.title_approval.show')->middleware('auth:web,scholars');
 
 Route::patch(
-    '/scholars/{scholar}/title-approval/{appeal}/recommend',
+    '/scholars/{scholar}/title-approval/{titleApproval}/recommend',
     'ScholarTitleApprovalController@recommend'
 )->name('scholars.title_approval.recommend')->middleware('auth:web');
 
 Route::patch(
-    '/scholars/{scholar}/title-approval/{appeal}/approve',
+    '/scholars/{scholar}/title-approval/{titleApproval}/approve',
     'ScholarTitleApprovalController@approve'
 )->name('scholars.title_approval.approve')->middleware('auth:web');
 

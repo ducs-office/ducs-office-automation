@@ -30,7 +30,7 @@ class UpdatePublicationRequest extends FormRequest
             'paper_title' => ['sometimes', 'required', 'string', 'max:400'],
             'document' => ['sometimes', 'required'],
 
-            'is_published' => ['sometimes', 'required', Rule::in([true, false])],
+            'is_published' => ['sometimes', 'required', 'boolean'],
 
             'co_authors' => ['nullable', 'array', 'max:10', 'min:1'],
             'co_authors.*.name' => ['required', 'string'],
@@ -63,6 +63,6 @@ class UpdatePublicationRequest extends FormRequest
                 'name' => $coAuthor['name'],
                 'noc_path' => $coAuthor['noc']->store('/publications/co_authors_noc'),
             ];
-        }, $this['co_authors'] ?? []);
+        }, $this->co_authors ?? []);
     }
 }

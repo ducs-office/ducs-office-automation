@@ -20,7 +20,7 @@ class TitleApprovalPolicy
             && $user->titleApproval === null;
     }
 
-    public function apply($user, Scholar $scholar)
+    public function create($user, Scholar $scholar)
     {
         return $user instanceof Scholar
             && $user->id === $scholar->id
@@ -28,9 +28,9 @@ class TitleApprovalPolicy
             && $scholar->canApplyForTitleApproval();
     }
 
-    public function view($user, Scholar $scholar, TitleApproval $appeal)
+    public function view($user, TitleApproval $titleApproval, Scholar $scholar)
     {
-        if ($scholar->titleApproval && $scholar->is($appeal->scholar)) {
+        if ($scholar->titleApproval && $scholar->is($titleApproval->scholar)) {
             if (get_class($user) === Scholar::class) {
                 return (int) $user->id === (int) $scholar->id;
             } elseif ($user->isSupervisor()) {
@@ -43,20 +43,20 @@ class TitleApprovalPolicy
         return false;
     }
 
-    public function recommend($user, Scholar $scholar, TitleApproval $appeal)
+    public function recommend($user, TitleApproval $titleApproval, Scholar $scholar)
     {
-        return $scholar->is($appeal->scholar)
+        return $scholar->is($titleApproval->scholar)
             && get_class($user) === User::class
             && $user->isSupervisor()
             && $user->scholars->contains($scholar)
-            && $appeal->status == RequestStatus::APPLIED;
+            && $titleApproval->status == RequestStatus::APPLIED;
     }
 
-    public function approve($user, Scholar $scholar, TitleApproval $appeal)
+    public function approve($user, TitleApproval $titleApproval, Scholar $scholar)
     {
-        return $scholar->is($appeal->scholar)
+        return $scholar->is($titleApproval->scholar)
             && $user instanceof User
-            && $appeal->status == RequestStatus::RECOMMENDED
+            && $titleApproval->status == RequestStatus::RECOMMENDED
             && $user->can('title approval:approve');
     }
 }

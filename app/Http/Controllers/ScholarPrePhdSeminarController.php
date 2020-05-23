@@ -14,16 +14,16 @@ class ScholarPrePhdSeminarController extends Controller
 {
     public function request(Scholar $scholar)
     {
-        $this->authorize('apply', [PrePhdSeminar::class, $scholar]);
+        $this->authorize('create', [PrePhdSeminar::class, $scholar]);
 
         return view('research.scholars.pre_phd_form', [
             'scholar' => $scholar,
         ]);
     }
 
-    public function show(Scholar $scholar, PrePhdSeminar $appeal)
+    public function show(Scholar $scholar, PrePhdSeminar $prePhdSeminar)
     {
-        $this->authorize('view', [PrePhdSeminar::class, $scholar, $appeal]);
+        $this->authorize('view', [$prePhdSeminar, $scholar]);
 
         return view('research.scholars.pre_phd_form', [
             'scholar' => $scholar,
@@ -32,7 +32,7 @@ class ScholarPrePhdSeminarController extends Controller
 
     public function apply(Scholar $scholar)
     {
-        $this->authorize('apply', [PrePhdSeminar::class, $scholar]);
+        $this->authorize('create', [PrePhdSeminar::class, $scholar]);
 
         $scholar->prePhdSeminar()->create([
             'status' => RequestStatus::APPLIED,
@@ -43,11 +43,11 @@ class ScholarPrePhdSeminarController extends Controller
         return redirect(route('scholars.profile'));
     }
 
-    public function forward(Request $request, Scholar $scholar, PrePhdSeminar $appeal)
+    public function forward(Request $request, Scholar $scholar, PrePhdSeminar $prePhdSeminar)
     {
-        $this->authorize('forward', [PrePhdSeminar::class, $scholar, $appeal]);
+        $this->authorize('forward', [$prePhdSeminar, $scholar]);
 
-        $appeal->update([
+        $prePhdSeminar->update([
             'status' => RequestStatus::RECOMMENDED,
         ]);
 
@@ -56,30 +56,30 @@ class ScholarPrePhdSeminarController extends Controller
         return redirect()->back();
     }
 
-    public function schedule(Request $request, Scholar $scholar, PrePhdSeminar $appeal)
+    public function schedule(Request $request, Scholar $scholar, PrePhdSeminar $prePhdSeminar)
     {
-        $this->authorize('addSchedule', [PrePhdSeminar::class, $scholar, $appeal]);
+        $this->authorize('addSchedule', [$prePhdSeminar, $scholar]);
 
         $validSchedule = $request->validate([
             'scheduled_on' => ['required', 'date', 'after:today'],
         ]);
 
-        $appeal->update($validSchedule);
+        $prePhdSeminar->update($validSchedule);
 
         flash('Pre PhD seminar schedule added successfully!')->success();
 
         return redirect()->back();
     }
 
-    public function finalize(Request $request, Scholar $scholar, PrePhdSeminar $appeal)
+    public function finalize(Request $request, Scholar $scholar, PrePhdSeminar $prePhdSeminar)
     {
-        $this->authorize('finalize', [PrePhdSeminar::class, $scholar, $appeal]);
+        $this->authorize('finalize', [$prePhdSeminar, $scholar]);
 
         $validData = $request->validate([
             'finalized_title' => ['required', 'string'],
         ]);
 
-        $appeal->update($validData + ['status' => RequestStatus::APPROVED]);
+        $prePhdSeminar->update($validData + ['status' => RequestStatus::APPROVED]);
 
         flash("Scholar's appeal finalized successfully!")->success();
 

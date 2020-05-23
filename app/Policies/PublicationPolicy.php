@@ -34,22 +34,18 @@ class PublicationPolicy
      */
     public function view($user, Publication $publication)
     {
-        return ((
-            get_class($user) === Scholar::class
-                && $user->id === (int) $publication->author_id
-        ) || (
-                get_class($user) === User::class && $user->isSupervisor()
-                && (
-                    (
-                    $user->id === (int) $publication->author_id
-                        && $publication->author_type === User::class
-                ) || (
-                        $user->scholars->contains($publication->author_id)
-                        && $publication->author_type === Scholar::class
-                    )
-                )
-            )
-        );
+        if (get_class($user) === Scholar::class && $user->id === (int) $publication->author_id) {
+            return true;
+        }
+
+        if (get_class($user) === User::class && $user->isSupervisor()) {
+            if ($user->id === (int) $publication->author_id && $publication->author_type === User::class) {
+                return true;
+            }
+            if ($user->scholars->contains($publication->author_id) && $publication->author_type === Scholar::class) {
+                return true;
+            }
+        }
     }
 
     /**

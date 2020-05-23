@@ -8,7 +8,7 @@
                 <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
             </svg>
         </div> 
-        @can('apply',[ \App\Models\TitleApproval::class, $scholar]) 
+        @can('create',[ \App\Models\TitleApproval::class, $scholar]) 
         <a href="{{ route('scholars.title_approval.request', $scholar) }}" class="btn btn-magenta is-sm -ml-4 my-2">
            Request
         </a>
@@ -42,7 +42,7 @@
     </div>
     @if($scholar->titleApproval)
     <div class="flex-1 border rounded-lg m-2 flex items-center">
-        @can('view', [\App\Models\TitleApproval::class, $scholar, $scholar->titleApproval])
+        @can('view', [$scholar->titleApproval, $scholar])
         <a href="{{ route('scholars.title_approval.show', [$scholar, $scholar->titleApproval]) }}" target="_blank" class="inline-flex items-center underline px-3 py-1 bg-magenta-100 text-magenta-800 rounded font-bold mx-2">
             <x-feather-icon name="link" class="h-4 mr-2"> Title Approval Form </x-feather-icon>
             Title Approval Form
@@ -59,7 +59,7 @@
             {{ $scholar->titleApproval->status->getContextCSS() }}">
             {{ $scholar->titleApproval->status }}
         </p>
-        @can('recommend', [\App\Models\TitleApproval::class, $scholar, $scholar->titleApproval])
+        @can('recommend', [$scholar->titleApproval, $scholar])
         <form action="{{ route('scholars.title_approval.recommend', [$scholar, $scholar->titleApproval]) }}" method="POST">
             @method('PATCH') @csrf_token
             <button type="submit" class="px-4 py-2 mr-2 bg-green-500 hover:bg-green-600 text-white text-sm rounded font-bold"> 
@@ -67,7 +67,7 @@
             </button>
         </form>
         @endcan
-        @can('approve', [\App\Models\TitleApproval::class, $scholar, $scholar->titleApproval])
+        @can('approve', [$scholar->titleApproval, $scholar])
         <button class="px-4 py-2 mr-1 bg-green-500 hover:bg-green-600 text-white rounded font-bold" 
             x-on:click="$modal.show('mark-approve-modal')">
             Approve

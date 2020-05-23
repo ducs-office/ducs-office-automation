@@ -9,7 +9,7 @@
             </svg>
         </div>
         <div clas="mt-3 text-right">
-        @can('apply', [\App\Models\PrePhdSeminar::class, $scholar])
+        @can('create', [\App\Models\PrePhdSeminar::class, $scholar])
             <a href="{{ route('scholars.pre_phd_seminar.request', $scholar) }}" class="btn btn-magenta">
                 Request
             </a>
@@ -89,7 +89,7 @@
                 Applied On: <span class="mx-1 text-gray-600 font-noraml"> {{ $scholar->prePhdSeminar->applied_on }} </span>
             </p>
             @endif
-            @can('view', [\App\Models\PrePhdSeminar::class, $scholar, $scholar->prePhdSeminar])
+            @can('view', [$scholar->prePhdSeminar, $scholar])
             <div class="ml-4">            
                 <a href="{{ route('scholars.pre_phd_seminar.show', [$scholar, $scholar->prePhdSeminar]) }}" 
                     target="_blank" class="inline-flex items-center underline px-3 py-1 bg-magenta-100 text-magenta-800 rounded font-bold">
@@ -103,7 +103,7 @@
                     {{ $scholar->prePhdSeminar->status->getContextCSS() }}">
                     {{ $scholar->prePhdSeminar->status }}
                 </p>
-                @can('forward', [\App\Models\PrePhdSeminar::class, $scholar, $scholar->prePhdSeminar])
+                @can('forward', [$scholar->prePhdSeminar, $scholar])
                 <div class="ml-2">
                     <button type="submit" form="patch-form"
                         class="px-4 py-2 mr-2 bg-green-500 hover:bg-green-600 text-white text-sm rounded font-bold"
@@ -112,7 +112,7 @@
                     </button>
                 </div>
                 @endcan
-                @can('addSchedule', [\App\Models\PrePhdSeminar::class, $scholar, $scholar->prePhdSeminar])
+                @can('addSchedule', [$scholar->prePhdSeminar, $scholar])
                 <div class="ml-2">
                     <button class="px-4 py-2 mr-2 bg-green-500 hover:bg-green-600 text-white text-sm rounded font-bold"
                     x-on:click="$modal.show('schedule-seminar-appeal-modal')"> 
@@ -135,7 +135,7 @@
                     </x-modal>
                 </div>
                 @endcan
-                @can('finalize', [\App\Models\PrePhdSeminar::class, $scholar, $scholar->prePhdSeminar])
+                @can('finalize', [$scholar->prePhdSeminar, $scholar])
                 <div class="ml-2">
                         <button class="px-4 py-2 mr-2 bg-green-500 hover:bg-green-600 text-white text-sm rounded font-bold"
                         x-on:click="$modal.show('finalize-seminar-appeal-modal')"> 

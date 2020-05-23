@@ -14,7 +14,7 @@ class ScholarTitleApprovalController extends Controller
 {
     public function request(Request $request, Scholar $scholar)
     {
-        $this->authorize('apply', [TitleApproval::class, $scholar]);
+        $this->authorize('create', [TitleApproval::class, $scholar]);
 
         return view('research.scholars.title-approval-form', [
             'scholar' => $scholar,
@@ -23,7 +23,7 @@ class ScholarTitleApprovalController extends Controller
 
     public function apply(Request $request, Scholar $scholar)
     {
-        $this->authorize('apply', [TitleApproval::class, $scholar]);
+        $this->authorize('create', [TitleApproval::class, $scholar]);
 
         $scholar->titleApproval()->create([
             'status' => RequestStatus::APPLIED,
@@ -34,35 +34,35 @@ class ScholarTitleApprovalController extends Controller
         return redirect(route('scholars.profile'));
     }
 
-    public function show(Request $request, Scholar $scholar, TitleApproval $appeal)
+    public function show(Request $request, Scholar $scholar, TitleApproval $titleApproval)
     {
-        $this->authorize('view', [TitleApproval::class, $scholar, $appeal]);
+        $this->authorize('view', [$titleApproval, $scholar]);
 
         return view('research.scholars.title-approval-form', [
             'scholar' => $scholar,
         ]);
     }
 
-    public function recommend(Request $request, Scholar $scholar, TitleApproval $appeal)
+    public function recommend(Request $request, Scholar $scholar, TitleApproval $titleApproval)
     {
-        $this->authorize('recommend', [TitleApproval::class, $scholar, $appeal]);
+        $this->authorize('recommend', [$titleApproval, $scholar]);
 
-        $appeal->update(['status' => RequestStatus::RECOMMENDED]);
+        $titleApproval->update(['status' => RequestStatus::RECOMMENDED]);
 
         flash("Scholar's appeal recommended successfully!")->success();
 
         return redirect()->back();
     }
 
-    public function approve(Request $request, Scholar $scholar, TitleApproval $appeal)
+    public function approve(Request $request, Scholar $scholar, TitleApproval $titleApproval)
     {
-        $this->authorize('approve', [TitleApproval::class, $scholar, $appeal]);
+        $this->authorize('approve', [$titleApproval, $scholar]);
 
         $request->validate([
             'recommended_title' => ['required', 'string'],
         ]);
 
-        $appeal->update([
+        $titleApproval->update([
             'recommended_title' => $request->recommended_title,
             'status' => RequestStatus::APPROVED,
         ]);
