@@ -563,8 +563,8 @@ class ScholarTest extends TestCase
         $this->assertFalse($scholar->fresh()->canApplyForPrePhdSeminar());
 
         create(Publication::class, 1, [
-            'main_author_type' => Scholar::class,
-            'main_author_id' => $scholar->id,
+            'author_type' => Scholar::class,
+            'author_id' => $scholar->id,
             'type' => PublicationType::JOURNAL,
         ]);
 
