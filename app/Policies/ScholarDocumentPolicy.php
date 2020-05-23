@@ -65,13 +65,13 @@ class ScholarDocumentPolicy
      */
     public function delete($user, ScholarDocument $document)
     {
-        return ((
-            get_class($user) === Scholar::class
-                && (int) $document->scholar_id === $user->id
-        )
-            || (
+        return $document->scholar->prePhdSeminar === null && (
+            (
+                get_class($user) === Scholar::class
+                    && (int) $document->scholar_id === $user->id
+            ) || (
                 get_class($user) === User::class
-                && $user->can('scholar documents:delete')
+                    && $user->can('scholar documents:delete')
             )
         );
     }

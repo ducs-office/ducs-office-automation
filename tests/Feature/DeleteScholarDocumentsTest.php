@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\PrePhdSeminar;
 use App\Models\Scholar;
 use App\Models\ScholarDocument;
 use App\Models\User;
@@ -33,7 +34,7 @@ class DeleteScholarDocumentsTest extends TestCase
     }
 
     /** @test */
-    public function scholar_can_not_other_scholars_documents()
+    public function scholar_can_not_delete_other_scholars_documents()
     {
         $this->signInScholar($scholar = create(Scholar::class));
 
@@ -89,6 +90,40 @@ class DeleteScholarDocumentsTest extends TestCase
                 'scholar' => $scholar,
                 'document' => $document,
             ]))->assertForbidden();
+
+        $this->assertCount(1, $scholar->documents);
+    }
+
+    /** @test */
+    public function scholar_document_can_not_be_deleted_after_they_have_applied_for_pre_phd_seminar()
+    {
+        $scholar = create(Scholar::class);
+
+        $document = create(ScholarDocument::class, 1, [
+            'scholar_id' => $scholar->id,
+        ]);
+
+        $this->assertCount(1, $scholar->documents);
+
+        create(PrePhdSeminar::class, 1, [
+            'scholar_id' => $scholar->id,
+        ]);
+
+        $this->signIn($user = create(User::class), 'randomRole');
+
+        $user->roles->first()->givePermissionTo('scholar documents:delete');
+
+        $this->withExceptionHandling()
+            ->delete(route('scholars.documents.destroy', [$scholar, $document]))
+            ->assertForbidden();
+
+        $this->assertCount(1, $scholar->documents);
+
+        $this->signInScholar($scholar);
+
+        $this->withExceptionHandling()
+            ->delete(route('scholars.documents.destroy', [$scholar, $document]))
+            ->assertForbidden();
 
         $this->assertCount(1, $scholar->documents);
     }
