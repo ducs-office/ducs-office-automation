@@ -2,8 +2,10 @@
 
 namespace Tests\Feature;
 
+use App\Models\PrePhdSeminar;
 use App\Models\Scholar;
 use App\Models\ScholarAppeal;
+use App\Types\RequestStatus;
 use App\Types\ScholarAppealStatus;
 use App\Types\ScholarAppealTypes;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -37,10 +39,9 @@ class ScholarProposedTitleTest extends TestCase
 
         $proposedTitle = Str::random(30);
 
-        create(ScholarAppeal::class, 1, [
+        create(PrePhdSeminar::class, 1, [
             'scholar_id' => $scholar->id,
-            'type' => ScholarAppealTypes::PRE_PHD_SEMINAR,
-            'status' => ScholarAppealStatus::APPLIED,
+            'status' => RequestStatus::APPLIED,
         ]);
 
         $this->withExceptionHandling()

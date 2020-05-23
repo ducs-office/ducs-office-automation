@@ -48,10 +48,6 @@ class Scholar extends User
         'advisory_committee',
         'education_details',
         'old_advisory_committees',
-        'finalized_title',
-        'recommended_title',
-        'title_finalized_on',
-        'title_recommended_on',
         'proposed_title',
         'examiner_status',
         'examiner_applied_on',
@@ -61,8 +57,6 @@ class Scholar extends User
 
     protected $dates = [
         'registration_date',
-        'title_finalized_on',
-        'title_recommended_on',
         'examiner_applied_on',
         'examiner_recommended_on',
         'examiner_approved_on',
@@ -82,7 +76,6 @@ class Scholar extends User
         'presentations',
         'advisoryMeetings',
         'leaves', 'approvedLeaves',
-        'appeals',
     ];
 
     public static function boot()
@@ -154,16 +147,6 @@ class Scholar extends User
         return $this->hasMany(ProgressReport::class)->orderBy('date', 'desc');
     }
 
-    public function appeals()
-    {
-        return $this->hasMany(ScholarAppeal::class, 'scholar_id');
-    }
-
-    public function currentPhdSeminarAppeal()
-    {
-        return optional($this->phdSeminarAppeals())->first();
-    }
-
     public function prePhdSeminar()
     {
         return $this->hasOne(PrePhdSeminar::class);
@@ -172,11 +155,6 @@ class Scholar extends User
     public function isJoiningLetterUploaded()
     {
         return $this->documents()->where('type', ScholarDocumentType::JOINING_LETTER)->exists();
-    }
-
-    public function isAcceptanceLetterUploaded()
-    {
-        return $this->documents()->where('type', ScholarDocumentType::ACCEPTANCE_LETTER)->exists();
     }
 
     public function isTableOfContentsOfThesisUploaded()
@@ -192,26 +170,29 @@ class Scholar extends User
     public function canApplyForPrePhdSeminar()
     {
         return $this->isJoiningLetterUploaded()
+            && $this->courseworks_count
             && $this->areCourseworksCompleted()
-            && $this->journals()->count()
+            && $this->journals_count
             && $this->proposed_title;
     }
 
-    public function titleApprovalAppeal()
+    public function titleApproval()
     {
-        return $this->appeals()->where('type', ScholarAppealTypes::TITLE_APPROVAL)->orderBY('created_at', 'DESC')->first();
+        return $this->hasOne(TitleApproval::class);
     }
 
-    public function isTitleApprovalDocumentListCompleted()
+    public function canApplyForTitleApproval()
     {
         return $this->isJoiningLetterUploaded()
             && $this->isTableOfContentsOfThesisUploaded()
-            && $this->isPrePhdSeminarNoticeUploaded();
+            && $this->isPrePhdSeminarNoticeUploaded()
+            && $this->prePhdSeminar
+            && $this->prePhdSeminar->isCompleted();
     }
 
     public function areCourseworksCompleted()
     {
-        return $this->courseworks()->whereNull('completed_on')->count() === 0;
+        return $this->completed_courseworks_count === $this->courseworks_count;
     }
 
     // Helpers

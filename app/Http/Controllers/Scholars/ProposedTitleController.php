@@ -12,10 +12,7 @@ class ProposedTitleController extends Controller
     {
         abort_unless(
             auth()->id() == $scholar->id
-            && (
-                $scholar->currentPhdSeminarAppeal() === null
-                || $scholar->currentPhdSeminarAppeal()->isRejected()
-            ),
+            && $scholar->prePhdSeminar === null,
             401
         );
 

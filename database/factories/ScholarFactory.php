@@ -42,10 +42,6 @@ $factory->define(Scholar::class, function (Faker $faker) {
                 ]);
             }, range(1, (random_int(1, 4))));
         },
-        'finalized_title' => $faker->word,
-        'title_finalized_on' => $faker->date(),
-        'recommended_title' => $faker->word,
-        'title_recommended_on' => $faker->date(),
         'proposed_title' => $faker->word,
         'examiner_status' => null,
         'examiner_applied_on' => null,
