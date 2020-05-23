@@ -20,7 +20,7 @@
     @livewireScripts
 </head>
 <body class="font-sans leading-tight bg-gray-200 overflow-y-hidden">
-    <div x-data="{ ...modalsRoot() }" x-cloak class="h-screen flex transition-opacity ease-in duration-500">
+    <div x-data x-cloak class="h-screen flex transition-opacity ease-in duration-500">
         <div class="bg-magenta-800 text-white w-80 flex flex-col flex-shrink-0">
             @include('staff.partials.sidebar')
         </div>
@@ -33,5 +33,6 @@
         @stack('modals')
         @include('flash::message')
     </div>
+    @stack('scripts')
 </body>
 </html>

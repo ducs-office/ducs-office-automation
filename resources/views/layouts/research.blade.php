@@ -14,7 +14,7 @@
     </style>
 </head>
 <body class="font-sans leading-tight bg-gray-200 overflow-y-hidden">
-    <div x-data="{ ...modalsRoot() }" class="h-screen flex">
+    <div x-data class="h-screen flex">
         @auth('web')
         <div class="bg-magenta-800 text-white w-80 flex flex-col flex-shrink-0">
             @auth @include('staff.partials.sidebar') @endauth

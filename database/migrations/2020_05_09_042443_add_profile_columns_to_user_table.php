@@ -22,8 +22,8 @@ class AddProfileColumnsToUserTable extends Migration
                 ->onDelete('set null');
 
             $table->string('affiliation')->nullable();
+            $table->string('designation', 190)->nullable();
             $table->enum('status', TeacherStatus::values())->nullable();
-            $table->enum('designation', Designation::values())->nullable();
         });
     }
 

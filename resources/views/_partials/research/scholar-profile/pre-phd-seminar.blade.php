@@ -1,4 +1,4 @@
-<div class="page-card p-6 overflow-visible flex space-x-6" x-data="{isOpen: false, ...modalsRoot() }"> 
+<div class="page-card p-6 overflow-visible flex space-x-6" x-data="{ isOpen: false }">
     <div>
         <div class="w-64 pr-4 relative z-10 -ml-8 my-2">
             <h3 class="relative pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
@@ -15,37 +15,37 @@
                         class="btn btn-magenta">
                             Request
                     </a>
-                @else    
-                    <button class="btn btn-magenta" x-on:click="$modal.show('seminar-requirements-modal')"> 
+                @else
+                    <button class="btn btn-magenta" x-on:click="$modal.show('seminar-requirements-modal')">
                         Request
                     </button>
                 @endif
             @endcan
         </div>
     </div>
-    
+
 
     <x-modal name="seminar-requirements-modal" class="p-6">
-        <div> 
+        <div>
             <p class="text-lg mb-3 font-bold">Your profile needs to have the following before applying for Pre-PhD Seminar</p>
             <ul class="list-disc px-6">
-                <li class="font-bold m-2 
-                    {{ $scholar->proposed_title ? 'text-green-700' : 'text-gray-700 '}}"> 
-                    Proposed Title for the Seminar 
+                <li class="font-bold m-2
+                    {{ $scholar->proposed_title ? 'text-green-700' : 'text-gray-700 '}}">
+                    Proposed Title for the Seminar
                 </li>
-                <li class="font-bold m-2 
-                    {{$scholar->isJoiningLetterUploaded() ? 'text-green-700' : 'text-gray-700 '}}"> 
-                    Joining Letter 
+                <li class="font-bold m-2
+                    {{$scholar->isJoiningLetterUploaded() ? 'text-green-700' : 'text-gray-700 '}}">
+                    Joining Letter
                 </li>
                 <li class="font-bold m-2
                     {{$scholar->isAcceptanceLetterUploaded() ? 'text-green-700': 'text-gray-700'}}">
-                    Reprints/Preprints/Acceptance letter 
+                    Reprints/Preprints/Acceptance letter
                 </li>
                 <li class="font-bold m-2
-                    {{$scholar->publications->count() ? 'text-green-700': 'text-gray-700'}}"> 
+                    {{$scholar->publications->count() ? 'text-green-700': 'text-gray-700'}}">
                     At least 1 Publication
                 </li>
-                <li class="font-bold m-2 text-gray-700"> 
+                <li class="font-bold m-2 text-gray-700">
                     Extension Letter from BRS (if any)
                 </li>
             </ul>
@@ -67,13 +67,13 @@
             </div>
         </form>
     </x-modal>
-    
 
-    
+
+
     <form id="patch-form" method="POST" class="w-0">
         @csrf_token @method("PATCH")
     </form>
-    
+
     <div class="flex-1">
         <div class="ml-auto flex mb-4 px-4">
             @if (optional($scholar->currentPhdSeminarAppeal())->isCompleted())
@@ -100,12 +100,12 @@
                     </p>
                     <div class="ml-4">
                         @if ($phdSeminarAppeal->isRejected())
-                            <p class="text-gray-800"> 
+                            <p class="text-gray-800">
                                 {{ $phdSeminarAppeal->proposed_title }}
                             </p>
                         @else
                             @can('viewPhdSeminarForm', [\App\Models\ScholarAppeal::class, $scholar])
-                                <a href="{{ route('scholars.pre_phd_seminar.show', $scholar) }}" 
+                                <a href="{{ route('scholars.pre_phd_seminar.show', $scholar) }}"
                                     target="_blank" class="inline-flex items-center underline px-3 py-1 bg-magenta-100 text-magenta-800 rounded font-bold">
                                     <x-feather-icon name="link" class="h-4 mr-2"> Pre-Phd Seminar Form </x-feather-icon>
                                     Pre-PhD Seminar Form

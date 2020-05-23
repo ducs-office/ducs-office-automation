@@ -53,7 +53,6 @@ class User extends Authenticatable
      */
     protected $casts = [
         'category' => CustomType::class . ':' . UserCategory::class,
-        'designation' => CustomType::class . ':' . Designation::class,
         'status' => CustomType::class . ':' . TeacherStatus::class,
         'is_supervisor' => 'boolean',
         'is_cosupervisor' => 'boolean',
@@ -151,9 +150,9 @@ class User extends Authenticatable
         list($this->first_name, $this->last_name) = explode(' ', $name, 2);
     }
 
-    public function getAffiliationAttribute()
+    public function getAffiliationAttribute($affiliation)
     {
-        return $this->affiliation ?? optional($this->college)->name ?? 'Unknown';
+        return $affiliation ?? optional($this->college)->name ?? 'Unknown';
     }
 
     public function getAvatarUrl()

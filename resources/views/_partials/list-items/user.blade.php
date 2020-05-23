@@ -7,12 +7,12 @@
                     alt="{{ $user->name }}'s Avatar" />
             </div>
             <div class="ml-4">
-                <div class="leading-5 font-medium text-gray-900">{{ $user->name }}</div>
+                <div class="leading-5 font-bold text-gray-900"><a class="underline" href="{{ route('profiles.show', $user) }}">{{ $user->name }}</a></div>
                 <div class="leading-5 text-gray-600">{{ $user->email }}</div>
             </div>
         </div>
     </td>
-    <td class="table-fit px-6 py-4 whitespace-no-wrap border-b border-gray-200 leading-5 text-gray-600">
+    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200 leading-5 text-gray-600">
         {{ $user->category }}
     </td>
     <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
@@ -22,7 +22,8 @@
             @elseif($user->isCosupervisor()) / Cosupervisor
             @endif
         </div>
-        <div class="leading-5 text-gray-600">{{ ucwords($user->affiliation) }}</div>
+        <div class="max-w-24 truncate leading-5 text-gray-600"
+            title="{{ $user->affiliation }}">{{ Str::limit($user->affiliation, 25) }}</div>
     </td>
     <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
         @foreach ($user->roles as $role)
@@ -34,7 +35,7 @@
     <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200 leading-5 font-medium">
         <div class="flex justify-end items-center space-x-1">
             @can('update', App\Models\User::class)
-            <x-modal.trigger livewire="{{ $user->id }}" modal="edit-user-modal"  title="Edit"
+            <x-modal.trigger :livewire="['payload' => $user->id]" modal="edit-user-modal"  title="Edit"
                 class="p-1 text-gray-700 font-bold hover:text-blue-600 transition duration-300 transform hover:scale-110">
                 <x-feather-icon class="h-5" name="edit-3">Edit</x-feather-icon>
             </x-modal.trigger>

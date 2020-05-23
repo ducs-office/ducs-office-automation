@@ -18,6 +18,7 @@ use App\Models\ScholarEducationSubject;
 use App\Models\ScholarProfile;
 use App\Models\User;
 use App\Types\CourseType;
+use App\Types\Designation;
 use App\Types\ProgrammeType;
 use App\Types\UserCategory;
 use Illuminate\Database\Seeder;
@@ -102,27 +103,20 @@ class DatabaseSeeder extends Seeder
         });
 
         $andc = factory(College::class)->create([
-            'code' => 'DU-ANDC-001',
+            'code' => 'DU-ANDC',
             'name' => 'Acharya Narendra Dev College',
         ]);
         $andc->programmes()->sync($programmes->pluck('id')->toArray());
 
         factory(College::class)->create([
-            'code' => 'DU-KMV-002',
+            'code' => 'DU-KMV',
             'name' => 'Keshav Mahavidyalaya',
         ])->programmes()->sync($programmes->pluck('id')->toArray());
 
         factory(College::class)->create([
-            'code' => 'DU-HRC-003',
-            'name' => 'Hansraj College',
+            'code' => 'DU-HRC',
+            'name' => 'Hansraj College, University of Delhi',
         ])->programmes()->sync($programmes->pluck('id')->toArray());
-
-        $teacher = factory(User::class)->create([
-            'first_name' => 'Sharanjit',
-            'last_name' => 'Kaur',
-            'email' => 'kaur.sharanjit@andc.du.ac.in',
-            'category' => UserCategory::COLLEGE_TEACHER,
-        ]);
 
         $this->call(PhdCourseSeeder::class);
 

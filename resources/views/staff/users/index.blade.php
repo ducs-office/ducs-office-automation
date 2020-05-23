@@ -1,13 +1,13 @@
 @extends('layouts.master')
 @push('modals')
-    <x-modal name="create-user-modal" class="p-6 min-w-1/2">
+    <x-modal name="create-user-modal" class="p-6 min-w-1/2" :open="! $errors->default->isEmpty()">
         <h2 class="text-lg font-bold mb-8">Create Users</h2>
         @include('_partials.forms.create-user')
     </x-modal>
-    <livewire:edit-user-modal :roles="$roles" />
+    <livewire:edit-user-modal :error-bag="$errors->update" :roles="$roles" />
 @endpush
 @section('body')
-<div class="page-card p-0 m-2">
+<div class="page-card p-0">
     <div class="flex items-center px-6 py-2 border-b">
         <h1 class="page-header mb-0 px-0 mr-4">Users</h1>
         @can('create', App\Models\User::class)

@@ -30,13 +30,15 @@ class UserController extends Controller
 
     public function store(StoreUserRequest $request)
     {
+        $data = $request->validated();
+
         DB::beginTransaction();
 
-        $user = User::create($request->validated() + [
+        $user = User::create($data + [
             'password' => bcrypt(Str::random(16)), // Random password
         ]);
 
-        $user->syncRoles($request->roles);
+        $user->syncRoles($data['roles'] ?? []);
 
         DB::commit();
 

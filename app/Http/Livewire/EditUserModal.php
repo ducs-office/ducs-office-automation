@@ -16,11 +16,19 @@ class EditUserModal extends Component
     protected $user;
     public $roles;
 
-    public function mount($roles)
+    public function mount($roles, $errorBag = null)
     {
+        if ($errorBag != null) {
+            $this->setErrorBag($errorBag);
+        }
+
         $this->modalName = Str::kebab(class_basename($this));
-        $this->user = new User();
         $this->roles = $roles;
+        if (! $errorBag->isEmpty()) {
+            $this->show(old('user_id'));
+        } else {
+            $this->user = new User();
+        }
     }
 
     public function render()

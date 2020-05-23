@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\College;
 use App\Models\Cosupervisor;
 use App\Models\PhdCourse;
 use App\Models\Scholar;
@@ -368,8 +369,11 @@ class PhdScholarSeeder extends Seeder
                 'email' => 'vbsingh@gmail.com',
                 'password' => self::ENC_PASSWORD,
                 'designation' => Designation::PROFESSOR,
-                'category' => UserCategory::EXTERNAL,
-                'affiliation' => 'Delhi College of Arts & Commerce, University of Delhi',
+                'category' => UserCategory::COLLEGE_TEACHER,
+                'college_id' => College::firstOrCreate(
+                    ['code' => 'DU-DCAC'],
+                    ['name' => 'Delhi College of Arts & Commerce, University of Delhi'],
+                )->id,
             ]),
 
             'harmeet_kaur' => User::create([
@@ -378,8 +382,11 @@ class PhdScholarSeeder extends Seeder
                 'email' => 'harmeet@hc.du.ac.in',
                 'password' => self::ENC_PASSWORD,
                 'designation' => Designation::PROFESSOR,
-                'category' => UserCategory::EXTERNAL,
-                'affiliation' => 'Hansraj College, University of Delhi',
+                'category' => UserCategory::COLLEGE_TEACHER,
+                'college_id' => College::firstOrCreate(
+                    ['code' => 'DU-HRC'],
+                    ['name' => 'Hansraj College, University of Delhi'],
+                )->id,
             ]),
         ];
     }
