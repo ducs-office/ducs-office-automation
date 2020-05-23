@@ -25,15 +25,17 @@ class LeavePolicy
     }
 
     /**
-     * Determine whether the user can create leaves.
+     * Determine whether the user can create a leave. (apply for leave)
      *
      * @param mixed $user
+     * @param  \App\Models\Leave  $leave
      *
      * @return mixed
      */
-    public function create($user)
+    public function create($user, Scholar $scholar)
     {
-        return $user instanceof Scholar;
+        return get_class($user) === Scholar::class
+            && (int) $user->id === (int) $scholar->id;
     }
 
     /**

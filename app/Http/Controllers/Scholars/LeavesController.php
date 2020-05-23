@@ -14,6 +14,8 @@ class LeavesController extends Controller
 {
     public function store(Request $request)
     {
+        $this->authorize('create', [Leave::class, $request->user()]);
+
         $rules = [
             'from' => ['required', 'date'],
             'to' => ['required', 'date', 'after:from'],

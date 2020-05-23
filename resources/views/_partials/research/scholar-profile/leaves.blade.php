@@ -6,7 +6,7 @@
         <svg class="absolute left-0 w-2 text-magenta-900" viewBox="0 0 10 10">
             <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
         </svg>
-        @can('scholars.leaves.apply', $scholar)
+        @can('create', [Leave::class, $scholar])
         <div class="mt-3 text-right">
             <button class="btn btn-magenta is-sm"
                 @click="$modal.show('apply-for-leave-modal')">
