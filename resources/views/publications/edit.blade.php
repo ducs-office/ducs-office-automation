@@ -17,7 +17,7 @@
                     Type of Publication <span class="text-red-600">*</span>
                 </label>
                 <input type="text" name="type" value="{{$publication->type}}" 
-                 class="form-input w-full">
+                 class="form-input w-full cursor-not-allowed" readonly>
             </div>
             <div class="mb-4">
                 <label for="paper_title" class="form-label block mb-1">
@@ -69,9 +69,9 @@
             </div>
             <div class="flex mb-4 items-center" x-show="!'{{$publication->isPublished()}}'">
                 <input type="checkbox" name="is_published" id="is_published" 
-                    value="true" class="form-checkbox" 
-                    x-model="is_paper_published">
-                <label for="number" class="form-label block ml-2">
+                    class="form-checkbox" :checked="'{{$publication->isPublished()}}'"
+                    x-on:change="is_paper_published =!is_paper_published">
+                <label for="is_published" class="form-label block ml-2">
                     Is the paper published?
                 </label>
             </div>
@@ -99,7 +99,7 @@
                         Link for the Paper
                     </label>
                     <input type="text" name="paper_link" id="paper_link" value="{{ old('paper_link', $publication->paper_link) }}"
-                    class="form-input w-full {{ $errors->has('paper_link') ? ' border-red-600' : ''}}"">
+                    class="form-input w-full {{ $errors->has('paper_link') ? ' border-red-600' : ''}}">
                 </div>
                 <div class="flex mb-4">
                     <div class="w-1/2">
@@ -182,7 +182,7 @@
                     <div class="flex">
                         <input type="number" value="{{ old('page_numbers.0', optional($publication->page_numbers)[0]) }}" name="page_numbers[]"
                             class="form-input text-sm w-1/2 {{ $errors->has('page_numbers[0]') ? ' border-red-600' : ''}}">
-                        <input type="number" value="{{ old('page_numbers.to', optional($publication->page_numbers)[1]) }}" name="page_numbers[]"
+                        <input type="number" value="{{ old('page_numbers.1', optional($publication->page_numbers)[1]) }}" name="page_numbers[]"
                             class="form-input text-sm w-1/2 ml-4 {{ $errors->has('page_numbers[1]') ? ' border-red-600' : ''}}">
                     </div>
                 </div>
@@ -192,7 +192,7 @@
                     </label>
                     @foreach ($citationIndexes as $index)
                         @php($checked = in_array($index, array_map(
-                            'strval', old('indexed_in', $publication->indexed_in)
+                            'strval', old('indexed_in', [] )
                         )))
                         <div class="flex mb-1">
                             <input id="indexed-in-{{ $index }}"

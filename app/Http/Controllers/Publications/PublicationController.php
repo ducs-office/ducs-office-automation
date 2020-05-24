@@ -41,9 +41,10 @@ class PublicationController extends Controller
         $user = $request->user();
         $validData = $request->validated();
 
-        $validData['document_path'] = $request->file('document')->store('publications');
-
-        $publication = $user->publications()->create($validData);
+        $publication = $user->publications()->create(
+            $validData +
+            ['document_path' => $request->storeDocument()],
+        );
 
         $publication->coAuthors()->createMany($request->coAuthorsDetails());
 
@@ -71,12 +72,11 @@ class PublicationController extends Controller
     public function update(UpdatePublicationRequest $request, Publication $publication)
     {
         $validData = $request->validated();
-        if ($request['document']) {
-            Storage::delete($publication->document_path);
-            $validData['document_path'] = $request->file('document')->store('publications');
-        }
 
-        $publication->update($validData);
+        $publication->update(array_merge(
+            $validData,
+            $request->updateDocumentConditionally()
+        ));
 
         $publication->coAuthors()->createMany($request->coAuthorsDetails());
 

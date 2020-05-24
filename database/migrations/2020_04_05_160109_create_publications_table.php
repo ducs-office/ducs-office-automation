@@ -24,7 +24,7 @@ class CreatePublicationsTable extends Migration
             $table->text('name')->nullable();
             $table->date('date')->nullable();
             $table->smallInteger('volume')->nullable();
-            $table->string('publisher')->nullable();
+            $table->json('publisher')->nullable();
             $table->integer('number')->nullable();
             $table->string('indexed_in')->nullable();
             $table->string('page_numbers')->nullable();

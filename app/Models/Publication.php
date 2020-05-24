@@ -2,13 +2,16 @@
 
 namespace App\Models;
 
+use App\Casts\CustomType;
 use App\Casts\CustomTypeArray;
+use App\Exceptions\InvalidTypeValue;
 use App\Models\Presentation;
 use App\Types\CitationIndex;
 use App\Types\PublicationType;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class Publication extends Model
 {
@@ -56,30 +59,6 @@ class Publication extends Model
     public function scopeConference(Builder $builder)
     {
         return $builder->whereType(PublicationType::CONFERENCE)->orderBy('date', 'DESC');
-    }
-
-    public function setIndexedInAttribute($value)
-    {
-        if (is_array($value)) {
-            $this->attributes['indexed_in'] = implode('|', $value);
-        } else {
-            $this->attributes['indexed_in'] = $value;
-        }
-    }
-
-    public function getIndexedInAttribute($value)
-    {
-        return explode('|', $value);
-    }
-
-    public function setPageNumbersAttribute($value)
-    {
-        $this->attributes['page_numbers'] = implode('-', $value);
-    }
-
-    public function getPageNumbersAttribute($value)
-    {
-        return explode('-', $value);
     }
 
     public function author()

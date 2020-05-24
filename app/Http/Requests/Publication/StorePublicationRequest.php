@@ -17,8 +17,8 @@ class StorePublicationRequest extends FormRequest
      */
     protected function prepareForValidation()
     {
-        if ($this['date']) {
-            $this->merge(['date' => $this['date']['month'] . ' ' . $this['date']['year']]);
+        if ($this->date && isset($this->date['month']) && isset($this->date['year'])) {
+            $this->merge(['date' => $this->date['month'] . ' ' . $this->date['year']]);
         }
 
         $this->merge([
@@ -70,5 +70,10 @@ class StorePublicationRequest extends FormRequest
                 'noc_path' => $coAuthor['noc']->store('/publications/co_authors_noc'),
             ];
         }, $this->co_authors ?? []);
+    }
+
+    public function storeDocument()
+    {
+        return $this->file('document')->store('publications');
     }
 }

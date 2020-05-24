@@ -51,6 +51,7 @@ class UpdatePublicationTest extends TestCase
 
         $this->withoutExceptionHandling()
             ->patch(route('publications.update', $journal), [
+                'is_published' => true,
                 'type' => PublicationType::JOURNAL,
                 'number' => $number = 123,
                 'date' => [
@@ -105,6 +106,7 @@ class UpdatePublicationTest extends TestCase
 
         $this->withoutExceptionHandling()
             ->patch(route('publications.update', $journal), [
+                'is_published' => true,
                 'type' => PublicationType::JOURNAL,
                 'number' => $number = 987,
                 'date' => [
@@ -156,6 +158,7 @@ class UpdatePublicationTest extends TestCase
 
         $this->withoutExceptionHandling()
             ->patch(route('publications.update', $conference), [
+                'is_published' => true,
                 'type' => PublicationType::CONFERENCE,
                 'city' => $city = 'Agra',
                 'date' => [
@@ -210,6 +213,7 @@ class UpdatePublicationTest extends TestCase
 
         $this->withoutExceptionHandling()
             ->patch(route('publications.update', $conference), [
+                'is_published' => true,
                 'type' => PublicationType::CONFERENCE,
                 'city' => $city = 'Agra',
                 'date' => [
@@ -313,7 +317,7 @@ class UpdatePublicationTest extends TestCase
     }
 
     /** @test */
-    public function city_and_country_can_not_be_updated_to_null_if_publication_type_is_conference()
+    public function city_and_country_can_not_be_updated_to_null_if_publication_type_is_conference_and_publication_being_marked_published()
     {
         $supervisor = factory(User::class)->states('supervisor')->create();
 
@@ -328,6 +332,7 @@ class UpdatePublicationTest extends TestCase
         try {
             $this->withoutExceptionHandling()
                 ->patch(route('publications.update', $conference), [
+                    'is_published' => true,
                     'type' => PublicationType::CONFERENCE,
                     'date' => [
                         'month' => 'January',
@@ -348,7 +353,7 @@ class UpdatePublicationTest extends TestCase
     }
 
     /** @test */
-    public function publisher_can_not_be_updated_to_null_if_publication_type_is_journal()
+    public function publisher_can_not_be_updated_to_null_if_publication_type_is_journal_and_publication_being_marked_published()
     {
         $supervisor = factory(User::class)->states('supervisor')->create();
 
@@ -363,6 +368,7 @@ class UpdatePublicationTest extends TestCase
         try {
             $this->withoutExceptionHandling()
                 ->patch(route('publications.update', $journal), [
+                    'is_published' => true,
                     'type' => PublicationType::JOURNAL,
                     'date' => [
                         'month' => 'January',
@@ -395,6 +401,7 @@ class UpdatePublicationTest extends TestCase
         try {
             $this->withoutExceptionHandling()
                 ->patch(route('publications.update', $journal), [
+                    'is_published' => true,
                     'type' => PublicationType::JOURNAL,
                     'date' => [
                         'month' => '',
@@ -408,5 +415,35 @@ class UpdatePublicationTest extends TestCase
         }
 
         $this->assertEquals($journal->date, $journal->fresh()->date);
+    }
+
+    /** @test */
+    public function only_paper_title_of_the_publication_can_be_updated_if_it_is_not_being_marked_published()
+    {
+        $supervisor = factory(User::class)->states('supervisor')->create();
+
+        $this->signIn($supervisor);
+
+        $journal = create(Publication::class, 1, [
+            'author_type' => User::class,
+            'author_id' => $supervisor->id,
+            'type' => PublicationType::JOURNAL,
+        ]);
+
+        $this->withoutExceptionHandling()
+            ->patch(route('publications.update', $journal), [
+                'is_published' => '',
+                'type' => PublicationType::JOURNAL,
+                'date' => [
+                    'month' => 'January',
+                    'year' => 2019,
+                ],
+                'paper_title' => $newPaperTitle = 'This is the title',
+                'name' => 'new name',
+            ])->assertRedirect()
+            ->assertSessionHasFlash('success', 'Publication updated successfully!');
+
+        $this->assertEquals($newPaperTitle, $journal->fresh()->paper_title);
+        $this->assertEquals($journal->name, $journal->fresh()->name);
     }
 }
