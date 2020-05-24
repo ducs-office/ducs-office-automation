@@ -16,19 +16,34 @@
             New
         </x-modal.trigger>
         @endcan
-        <form class="ml-auto px-6" x-data>
-            <label for="category-filter" class="w-full form-label mb-1">Filter By Category</label>
-            <select id="category-filter" name="filters[category]" x-on:input="
-                        if ($event.target.value === 'all') {
-                            return window.location.replace(window.location.pathname);
-                        }
-                        return $el.submit();" class="w-full form-select">
-                <option @if(request('filters.category', 'all' )=='all' ) selected @endif value="all">All</option>
-                @foreach($categories as $category)
-                <option @if(request('filters.category', 'all' )==$category) selected @endif value="{{ $category }}">
-                    {{ $category }}</option>
-                @endforeach
-            </select>
+        <form class="flex ml-auto space-x-2 px-6" x-data="{ search: '{{ request('search') }}'}">
+            <div class="flex-1">
+                <label for="search-filter" class="w-full form-label mb-1">Search</label>
+                <div class="relative">
+                    <input id="search-filter" name="search" class="w-full form-input pr-8" placeholder="Search By Name..." x-model="search">
+                    <button x-show="search == ''" class="absolute right-0 inset-y-0 px-3">
+                        <x-feather-icon name="search" class="h-current"></x-feather-icon>
+                    </button>
+                    <button type="button" x-show="search != ''" class="absolute right-0 inset-y-0 px-3"
+                        x-on:click.prevent="
+                            search = '';
+                            $nextTick(() => $el.submit())
+                        ">
+                        <x-feather-icon name="times" class="h-current"></x-feather-icon>
+                    </button>
+                </div>
+            </div>
+            <div class="w-48">
+                <label for="category-filter" class="w-full form-label mb-1">Filter By Category</label>
+                <select id="category-filter" name="filters[category]" x-on:input="
+                    return $el.submit();" class="w-full form-select">
+                    <option @if(request('filters.category', '' ) == '') selected @endif value="">All</option>
+                    @foreach($categories as $category)
+                    <option @if(request('filters.category', '' ) == $category) selected @endif value="{{ $category }}">
+                        {{ $category }}</option>
+                    @endforeach
+                </select>
+            </div>
         </form>
     </div>
     <table class="min-w-full">

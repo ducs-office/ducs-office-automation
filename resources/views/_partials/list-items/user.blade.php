@@ -7,7 +7,7 @@
                     alt="{{ $user->name }}'s Avatar" />
             </div>
             <div class="ml-4">
-                <div class="leading-5 font-bold text-gray-900"><a class="underline" href="{{ route('profiles.show', $user) }}">{{ $user->name }}</a></div>
+                <div class="leading-5 font-bold text-gray-900"><a class="hover:underline" href="{{ route('profiles.show', $user) }}">{{ $user->name }}</a></div>
                 <div class="leading-5 text-gray-600">{{ $user->email }}</div>
             </div>
         </div>

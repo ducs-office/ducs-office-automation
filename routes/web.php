@@ -1,10 +1,6 @@
 <?php
 
-use App\Mail\UserRegisteredMail;
-use App\Models\User;
-use App\Notifications\WelcomeNotification;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Str;
 
 /*
 |---------------------------------------------------------------------------
@@ -66,7 +62,7 @@ Route::patch(
 Route::patch(
     '/scholars/{scholar}/appeals/{appeal}/mark-complete',
     'ScholarAppealController@markComplete'
-)->name('scholars.appeals.mark_complete')->middleware('auth:web,teachers');
+)->name('scholars.appeals.mark_complete')->middleware('auth:web');
 
 //================Scholar Title Approval =======================
 
@@ -261,7 +257,3 @@ Route::prefix('/scholars')
             'ProposedTitleController@update',
         )->name('proposed_title.update');
     });
-
-// Route::get('/external-authorities', 'ExternalAuthorityController@index')->name('external-authority.index');
-// Route::post('/external-authorities', 'ExternalAuthorityController@store')->name('external-authority.store');
-// Route::patch('/external-authorities/{externalAuthority}', 'ExternalAuthorityController@update')->name('external-authority.update');
