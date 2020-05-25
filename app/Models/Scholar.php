@@ -40,17 +40,10 @@ class Scholar extends User
         'enrolment_id',
         'education_details',
         'proposed_title',
-        'examiner_status',
-        'examiner_applied_on',
-        'examiner_recommended_on',
-        'examiner_approved_on',
     ];
 
     protected $dates = [
         'registration_date',
-        'examiner_applied_on',
-        'examiner_recommended_on',
-        'examiner_approved_on',
     ];
 
     protected $casts = [
@@ -58,7 +51,6 @@ class Scholar extends User
         'admission_mode' => CustomType::class . ':' . AdmissionMode::class,
         'gender' => CustomType::class . ':' . Gender::class,
         'education_details' => EducationDetails::class,
-        'examiner_status' => CustomType::class . ':' . RequestStatus::class,
     ];
 
     protected $withCount = [
@@ -184,6 +176,11 @@ class Scholar extends User
     public function areCourseworksCompleted()
     {
         return $this->completed_courseworks_count === $this->courseworks_count;
+    }
+
+    public function examiner()
+    {
+        return $this->hasOne(ScholarExaminer::class);
     }
 
     // Helpers

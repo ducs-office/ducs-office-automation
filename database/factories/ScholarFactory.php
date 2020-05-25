@@ -43,9 +43,5 @@ $factory->define(Scholar::class, function (Faker $faker) {
             }, range(1, (random_int(1, 4))));
         },
         'proposed_title' => $faker->word,
-        'examiner_status' => null,
-        'examiner_applied_on' => null,
-        'examiner_recommended_on' => null,
-        'examiner_approved_on' => null,
     ];
 });

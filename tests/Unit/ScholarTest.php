@@ -19,6 +19,7 @@ use App\Models\ScholarDocument;
 use App\Models\ScholarEducationDegree;
 use App\Models\ScholarEducationInstitute;
 use App\Models\ScholarEducationSubject;
+use App\Models\ScholarExaminer;
 use App\Models\TitleApproval;
 use App\Models\User;
 use App\Types\CitationIndex;
@@ -688,5 +689,19 @@ class ScholarTest extends TestCase
         );
 
         $this->assertEquals($registrationValidUpto, $scholar->registrationValidUpto());
+    }
+
+    /** @test */
+    public function scholar_has_one_scholar_examiner()
+    {
+        $scholar = create(Scholar::class);
+
+        $this->assertInstanceOf(HasOne::class, $scholar->examiner());
+
+        $scholarExaminer = create(ScholarExaminer::class, 1, [
+            'scholar_id' => $scholar->id,
+        ]);
+
+        $this->assertTrue($scholarExaminer->is($scholar->examiner));
     }
 }

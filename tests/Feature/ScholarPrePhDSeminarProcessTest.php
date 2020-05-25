@@ -353,7 +353,7 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
         $freshScholar = $scholar->fresh();
 
         $this->assertNotNull($freshScholar->prePhdSeminar);
-        $this->assertEquals(now()->format('d F Y'), $freshScholar->prePhdSeminar->applied_on);
+        $this->assertEquals(now()->format('d F Y'), $freshScholar->prePhdSeminar->applied_on->format('d F Y'));
         $this->assertEquals(RequestStatus::APPLIED, $freshScholar->prePhdSeminar->status);
     }
 

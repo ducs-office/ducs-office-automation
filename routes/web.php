@@ -106,15 +106,15 @@ Route::post('/teaching-records/start', 'TeachingRecordsController@start')->name(
 Route::patch('/teaching-records/extend', 'TeachingRecordsController@extend')->name('teaching-records.extend');
 
 //===================Scholar Examiner==============
-Route::patch('scholars/{scholar}/examiner/apply', 'ScholarExaminerController@apply')
+Route::post('scholars/{scholar}/examiner/apply', 'ScholarExaminerController@apply')
     ->middleware('auth:web')
     ->name('scholars.examiner.apply');
 
-Route::patch('scholar/{scholar}/examiner/recommend', 'ScholarExaminerController@recommend')
+Route::patch('scholars/{scholar}/examiner/{examiner}/recommend', 'ScholarExaminerController@recommend')
     ->middleware('auth:web')
     ->name('scholars.examiner.recommend');
 
-Route::patch('scholar/{scholar}/examiner/approve', 'ScholarExaminerController@approve')
+Route::patch('scholars/{scholar}/examiner/{examiner}/approve', 'ScholarExaminerController@approve')
     ->middleware('auth:web')
     ->name('scholars.examiner.approve');
 

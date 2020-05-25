@@ -21,7 +21,7 @@ class PrePhdSeminar extends Model
 
     public function getAppliedOnAttribute()
     {
-        return $this->created_at->format('d F Y');
+        return $this->created_at;
     }
 
     public function scholar()

@@ -16,11 +16,11 @@ class PrePhdSeminarTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function applied_on_is_the_created_at_attribute()
+    public function pre_ph_seminar_applied_on_is_the_created_at_attribute()
     {
         $prePhdSeminar = create(PrePhdSeminar::class);
 
-        $this->assertEquals($prePhdSeminar->created_at->format('d F Y'), $prePhdSeminar->applied_on);
+        $this->assertEquals($prePhdSeminar->created_at, $prePhdSeminar->applied_on);
     }
 
     /** @test */

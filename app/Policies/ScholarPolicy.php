@@ -42,27 +42,4 @@ class ScholarPolicy
     {
         return $user->can('scholars:delete');
     }
-
-    public function applyForExaminer($user, Scholar $scholar)
-    {
-        return $user instanceof User
-            && method_exists($user, 'isSupervisor')
-            && ($user->isSupervisor())
-            && ($user->scholars->contains($scholar->id))
-            && $scholar->examiner_status == null;
-    }
-
-    public function recommendExaminer($user, Scholar $scholar)
-    {
-        return $user instanceof User
-            && $user->can('scholar examiner:recommend')
-            && $scholar->examiner_status == RequestStatus::APPLIED;
-    }
-
-    public function approveExaminer($user, Scholar $scholar)
-    {
-        return $user instanceof User
-            && $user->can('scholar examiner:approve')
-            && $scholar->examiner_status == RequestStatus::RECOMMENDED;
-    }
 }
