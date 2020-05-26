@@ -40,9 +40,12 @@ class StorePublicationRequest extends FormRequest
 
             'is_published' => ['required', 'boolean'],
 
-            'co_authors' => ['nullable', 'array', 'max:10', 'min:1'],
-            'co_authors.*.name' => ['required', 'string'],
-            'co_authors.*.noc' => ['required', 'file', 'max:200', 'mimeTypes:application/pdf, image/*'],
+            'co_authors' => ['nullable', 'array', 'max:10'],
+            'co_authors.is_supervisor' => ['nullable'],
+            'co_authors.is_cosupervisor' => ['nullable'],
+            'co_authors.others' => ['nullable', 'array'],
+            'co_authors.others.*.name' => ['required', 'string'],
+            'co_authors.others.*.noc' => ['nullable', 'file', 'max:200', 'mimeTypes:application/pdf, image/*'],
 
             'name' => ['exclude_if:is_published,false', 'required', 'string', 'max:400'],
             'date' => ['exclude_if:is_published,false', 'required', 'date', 'before_or_equal:today'],
@@ -64,12 +67,29 @@ class StorePublicationRequest extends FormRequest
 
     public function coAuthorsDetails()
     {
-        return array_map(static function ($coAuthor) {
+        $coAuthors = array_map(static function ($coAuthor) {
             return [
                 'name' => $coAuthor['name'],
-                'noc_path' => $coAuthor['noc']->store('/publications/co_authors_noc'),
+                'noc_path' => ($coAuthor['noc']) ? $coAuthor['noc']->store('/publications/co_authors_noc') : '',
+                'type' => 0,
             ];
-        }, $this->co_authors ?? []);
+        }, $this->co_authors['others'] ?? []);
+
+        if ($this->filled('co_authors.is_supervisor')) {
+            $coAuthors[] = [
+                'user_id' => $this->user()->currentSupervisor->id,
+                'type' => 1,
+            ];
+        }
+
+        if ($this->filled('co_authors.is_cosupervisor')) {
+            $coAuthors[] = [
+                'user_id' => $this->user()->currentCosupervisor->id,
+                'type' => 2,
+            ];
+        }
+
+        return $coAuthors;
     }
 
     public function storeDocument()

@@ -19,14 +19,20 @@ class StorePublicationTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
+    protected $noc1;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        Storage::fake();
+        $this->noc1 = UploadedFile::fake()
+            ->create('noc1.pdf', 20, 'application/pdf');
+    }
+
     protected function fillPublication($overrides = [])
     {
         Storage::fake();
-        $noc1 = UploadedFile::fake()
-            ->create('noc1.pdf', 20, 'application/pdf');
-
-        $noc2 = UploadedFile::fake()
-            ->create('noc2.pdf', 20, 'application/pdf');
 
         $document = UploadedFile::fake()
             ->create('doc.pdf', 20, 'application/pdf');
@@ -43,6 +49,8 @@ class StorePublicationTest extends TestCase
             'type' => $type,
             'paper_title' => $this->faker->sentence,
             'document' => $document,
+            'co_authors' => [
+            ],
         ];
 
         if ($isPublished !== '') {
@@ -63,10 +71,6 @@ class StorePublicationTest extends TestCase
                     $this->faker->city : null,
                 'country' => $type === PublicationType::CONFERENCE ?
                     $this->faker->country : null,
-                'co_authors' => [
-                    ['name' => 'John Doe', 'noc' => $noc1],
-                    ['name' => 'Sally Burgman', 'noc' => $noc2],
-                ],
                 'paper_link' => $this->faker->url,
             ];
         }
@@ -102,10 +106,14 @@ class StorePublicationTest extends TestCase
             'is_published' => true,
         ]);
 
-        $this->withoutExceptionHandling()
+        try {
+            $this->withoutExceptionHandling()
             ->post(route('publications.store'), $journal)
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'Publication added successfully');
+        } catch (ValidationException $e) {
+            dd($e->errors());
+        }
 
         $this->assertCount(1, Publication::all());
         $this->assertCount(1, $scholar->journals);
@@ -119,16 +127,117 @@ class StorePublicationTest extends TestCase
             $journal['document']->hashName('publications'),
             $storedJournal->document_path
         );
+    }
 
-        $this->assertCount(2, $storedJournal->coAuthors);
+    /** @test */
+    public function publication_with_scholars_cosupervisor_as_co_author_can_be_stored()
+    {
+        $this->signInScholar($scholar = create(Scholar::class));
+
+        $journal = $this->fillPublication([
+            'co_authors' => [
+                'is_supervisor' => '',
+                'others' => [],
+                'is_cosupervisor' => true,
+            ],
+        ]);
+
+        $cosupervisor = factory(User::class)->states('cosupervisor')->create();
+        $scholar->cosupervisors()->attach([$cosupervisor->id]);
+
+        try {
+            $this->withoutExceptionHandling()
+                ->post(route('publications.store'), $journal)
+                ->assertRedirect()
+                ->assertSessionHasFlash('success', 'Publication added successfully');
+        } catch (ValidationException $e) {
+            dd($e->errors());
+        }
+
+        $this->assertCount(1, Publication::all());
+        $this->assertCount(1, $scholar->publications);
+
+        $storedPublication = $scholar->publications->first();
+
+        $this->assertCount(1, $storedPublication->coAuthors);
+
         $this->assertEquals(
-            $journal['co_authors'][0]['name'],
-            $storedJournal->coAuthors->first()->name
+            $scholar->currentCosupervisor->id,
+            $storedPublication->coAuthors->first()->id
         );
+
+        $this->assertEquals(2, $storedPublication->coAuthors->first()->type);
+    }
+
+    /** @test */
+    public function publication_with_others_as_co_author_can_be_stored()
+    {
+        $this->signInScholar($scholar = create(Scholar::class));
+
+        $journal = $this->fillPublication([
+            'co_authors' => [
+                'others' => $others = [
+                    ['name' => 'John Doe', 'noc' => $this->noc1],
+                ],
+            ],
+        ]);
+
+        $this->withoutExceptionHandling()
+            ->post(route('publications.store'), $journal)
+            ->assertRedirect()
+            ->assertSessionHasFlash('success', 'Publication added successfully');
+
+        $this->assertCount(1, Publication::all());
+        $this->assertCount(1, $scholar->publications);
+
+        $storedPublication = $scholar->publications->first();
+
+        $this->assertCount(1, $storedPublication->coAuthors);
+
         $this->assertEquals(
-            $journal['co_authors'][0]['noc']->hashName('publications/co_authors_noc'),
-            $storedJournal->coAuthors->first()->noc_path
+            $others[0]['name'],
+            $storedPublication->coAuthors->first()->name
         );
+
+        $this->assertEquals(
+            $others[0]['noc']->hashName('publications/co_authors_noc'),
+            $storedPublication->coAuthors->first()->noc_path
+        );
+
+        $this->assertEquals(0, $storedPublication->coAuthors->first()->type);
+    }
+
+    /** @test */
+    public function publication_with_others_as_co_author_can_be_stored_without_noc()
+    {
+        $this->signInScholar($scholar = create(Scholar::class));
+
+        $journal = $this->fillPublication([
+            'co_authors' => [
+                'others' => $others = [
+                    ['name' => 'John Doe', 'noc' => ''],
+                ],
+            ],
+        ]);
+
+        $this->withoutExceptionHandling()
+            ->post(route('publications.store'), $journal)
+            ->assertRedirect()
+            ->assertSessionHasFlash('success', 'Publication added successfully');
+
+        $this->assertCount(1, Publication::all());
+        $this->assertCount(1, $scholar->publications);
+
+        $storedPublication = $scholar->publications->first();
+
+        $this->assertCount(1, $storedPublication->coAuthors);
+
+        $this->assertEquals(
+            $others[0]['name'],
+            $storedPublication->coAuthors->first()->name
+        );
+
+        $this->assertEquals(0, $storedPublication->coAuthors->first()->type);
     }
 
     /** @test */
@@ -158,16 +267,6 @@ class StorePublicationTest extends TestCase
             $journal['document']->hashName('publications'),
             $storedJournal->document_path
         );
-
-        $this->assertCount(2, $storedJournal->coAuthors);
-        $this->assertEquals(
-            $journal['co_authors'][0]['name'],
-            $storedJournal->coAuthors->first()->name
-        );
-        $this->assertEquals(
-            $journal['co_authors'][0]['noc']->hashName('publications/co_authors_noc'),
-            $storedJournal->coAuthors->first()->noc_path
-        );
     }
 
     /** @test */
@@ -196,16 +295,6 @@ class StorePublicationTest extends TestCase
             $conference['document']->hashName('publications'),
             $storedConference->document_path
         );
-
-        $this->assertCount(2, $storedConference->coAuthors);
-        $this->assertEquals(
-            $conference['co_authors'][0]['name'],
-            $storedConference->coAuthors->first()->name
-        );
-        $this->assertEquals(
-            $conference['co_authors'][0]['noc']->hashName('publications/co_authors_noc'),
-            $storedConference->coAuthors->first()->noc_path
-        );
     }
 
     /** @test */
@@ -233,16 +322,6 @@ class StorePublicationTest extends TestCase
         $this->assertEquals(
             $conference['document']->hashName('publications'),
             $storedConference->document_path
-        );
-
-        $this->assertCount(2, $storedConference->coAuthors);
-        $this->assertEquals(
-            $conference['co_authors'][0]['name'],
-            $storedConference->coAuthors->first()->name
-        );
-        $this->assertEquals(
-            $conference['co_authors'][0]['noc']->hashName('publications/co_authors_noc'),
-            $storedConference->coAuthors->first()->noc_path
         );
     }
 
@@ -323,5 +402,31 @@ class StorePublicationTest extends TestCase
         }
 
         $this->assertCount(0, $supervisor->fresh()->journals);
+    }
+
+    /** @test */
+    public function coauthor_of_scholar_publication_can_be_supervisor()
+    {
+        $supervisor = factory(User::class)->states('supervisor')->create();
+
+        $this->signInScholar($scholar = create(Scholar::class));
+
+        $scholar->supervisors()->attach($supervisor->id);
+
+        $publication = $this->fillPublication([
+            'co_authors' => [
+                'is_supervisor' => true,
+            ],
+        ]);
+
+        $this->withoutExceptionHandling()
+            ->post(route('publications.store'), $publication);
+
+        $this->assertEquals(1, $scholar->publications->count());
+
+        $storedPublicationCoAuthor = $scholar->publications->first()->coAuthors->first();
+
+        $this->assertEquals($scholar->currentSupervisor->id, $storedPublicationCoAuthor->user_id);
+        $this->assertEquals(1, $storedPublicationCoAuthor->type);
     }
 }

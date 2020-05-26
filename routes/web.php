@@ -130,8 +130,10 @@ Route::prefix('/publications')
     Route::patch('/{publication}', 'PublicationController@update')->name('update');
     Route::delete('/{publication}', 'PublicationController@destroy')->name('destroy');
 
-    Route::get('/co-authors/{coAuthor}', 'CoAuthorController@show')->name('co_authors.show');
-    Route::delete('/co-authors/{coAuthor}', 'CoAuthorController@destroy')->name('co_authors.destroy');
+    Route::get('{publication}/co-authors/{coAuthor}', 'CoAuthorController@show')->name('co_authors.show');
+    Route::post('/{publication}/co-authors', 'CoAuthorController@store')->name('co_authors.store');
+    Route::patch('/{publication}/co-authors/{coAuthor}', 'CoAuthorController@update')->name('co_authors.update');
+    Route::delete('/{publication}/co-authors/{coAuthor}', 'CoAuthorController@destroy')->name('co_authors.destroy');
 });
 
 Route::post(

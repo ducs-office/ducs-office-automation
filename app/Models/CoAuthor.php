@@ -7,7 +7,13 @@ use Illuminate\Support\Facades\Storage;
 
 class CoAuthor extends Model
 {
-    protected $guarded = [];
+    protected $fillable = [
+        'name',
+        'type',
+        'noc_path',
+        'user_id',
+        'publication_id',
+    ];
 
     protected static function boot()
     {

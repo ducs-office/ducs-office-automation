@@ -29,7 +29,7 @@ $factory->define(Publication::class, function (Faker $faker) {
                 return $faker->randomElement(CitationIndex::values());
             }, $indexed_in);
         },
-        'author_type' => $type = $faker->randomElement([Scholar::class, User::class]),
+        'author_type' => $type = $faker->randomElement([User::class, Scholar::class]),
         'author_id' => function ($publication) {
             return factory($publication['author_type'])->create()->id;
         },
@@ -39,7 +39,7 @@ $factory->define(Publication::class, function (Faker $faker) {
         },
         'publisher' => function ($publication) use ($faker) {
             return $publication['type'] === PublicationType::JOURNAL
-                ? $faker->name : null;
+                ? 'publishere here' : null;
         },
         'city' => function ($publication) use ($faker) {
             return $publication['type'] === PublicationType::CONFERENCE
