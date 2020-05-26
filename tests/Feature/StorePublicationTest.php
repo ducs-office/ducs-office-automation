@@ -11,6 +11,7 @@ use App\Types\PublicationType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
@@ -37,11 +38,7 @@ class StorePublicationTest extends TestCase
         $document = UploadedFile::fake()
             ->create('doc.pdf', 20, 'application/pdf');
 
-        /** false won't work here for idPublished because it's being determined true or false
-         * in prepareForValidation using `filled` function, which only checks whether the field is set or not
-         * the value - false, would also mean being set
-         * */
-        $isPublished = $overrides['is_published'] ?? $this->faker->randomElement(['', true]);
+        $isPublished = Arr::exists($overrides, 'is_published');
         $type = $overrides['type'] ?? $this->faker->randomElement(PublicationType::values());
 
         $publicationFormDetails = [
@@ -49,31 +46,26 @@ class StorePublicationTest extends TestCase
             'type' => $type,
             'paper_title' => $this->faker->sentence,
             'document' => $document,
+            'name' => $this->faker->sentence,
+            'volume' => $this->faker->numberBetween(1, 20),
+            'page_numbers' => [random_int(1, 100), random_int(101, 1000)],
+            'date' => [
+                'month' => $this->faker->monthName(),
+                'year' => $this->faker->year(),
+            ],
+            'indexed_in' => $this->faker->randomElements(CitationIndex::values(), 2),
+            'number' => $type === PublicationType::JOURNAL ?
+                $this->faker->randomNumber(2) : null,
+            'publisher' => $type === PublicationType::JOURNAL ?
+                $this->faker->name : null,
+            'city' => $type === PublicationType::CONFERENCE ?
+                $this->faker->city : null,
+            'country' => $type === PublicationType::CONFERENCE ?
+                $this->faker->country : null,
             'co_authors' => [
             ],
+            'paper_link' => $this->faker->url,
         ];
-
-        if ($isPublished !== '') {
-            $publicationFormDetails = $publicationFormDetails + [
-                'name' => $this->faker->sentence,
-                'volume' => $this->faker->numberBetween(1, 20),
-                'page_numbers' => [random_int(1, 100), random_int(101, 1000)],
-                'date' => [
-                    'month' => $this->faker->monthName(),
-                    'year' => $this->faker->year(),
-                ],
-                'indexed_in' => $this->faker->randomElements(CitationIndex::values(), 2),
-                'number' => $type === PublicationType::JOURNAL ?
-                    $this->faker->randomNumber(2) : null,
-                'publisher' => $type === PublicationType::JOURNAL ?
-                    $this->faker->name : null,
-                'city' => $type === PublicationType::CONFERENCE ?
-                    $this->faker->city : null,
-                'country' => $type === PublicationType::CONFERENCE ?
-                    $this->faker->country : null,
-                'paper_link' => $this->faker->url,
-            ];
-        }
 
         return $this->mergeFormFields($publicationFormDetails, $overrides);
     }
@@ -83,9 +75,7 @@ class StorePublicationTest extends TestCase
     {
         $this->signInScholar($scholar = create(Scholar::class));
 
-        $journal = $this->fillPublication([
-            'is_published' => '',
-        ]);
+        $journal = $this->fillPublication();
 
         $this->withoutExceptionHandling()
             ->post(route('publications.store'), $journal)
@@ -145,14 +135,10 @@ class StorePublicationTest extends TestCase
         $cosupervisor = factory(User::class)->states('cosupervisor')->create();
         $scholar->cosupervisors()->attach([$cosupervisor->id]);
 
-        try {
-            $this->withoutExceptionHandling()
-                ->post(route('publications.store'), $journal)
-                ->assertRedirect()
-                ->assertSessionHasFlash('success', 'Publication added successfully');
-        } catch (ValidationException $e) {
-            dd($e->errors());
-        }
+        $this->withoutExceptionHandling()
+            ->post(route('publications.store'), $journal)
+            ->assertRedirect()
+            ->assertSessionHasFlash('success', 'Publication added successfully');
 
         $this->assertCount(1, Publication::all());
         $this->assertCount(1, $scholar->publications);

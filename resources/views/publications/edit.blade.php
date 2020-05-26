@@ -9,14 +9,14 @@
         </form>
         <form action="{{ route('publications.update' , $publication )}}" 
             method="post" class="px-6" 
-            enctype="multipart/form-data" x-data="{ is_paper_published: '{{$publication->isPublished()}}'}">
+            enctype="multipart/form-data" x-data="{ publication_type: '{{$publication->type}}', is_published: '{{array_key_exists('is_published', old()) ? true : $publication->isPublished()}}' }">
             @csrf_token
             @method('PATCH')
             <div class="mb-4">
                 <label for="type" class="form-label block mb-1">
                     Type of Publication <span class="text-red-600">*</span>
                 </label>
-                <input type="text" name="type" value="{{$publication->type}}" 
+                <input type="text" name="type" x-model="publication_type"
                  class="form-input w-full cursor-not-allowed" readonly>
             </div>
             <div class="mb-4">
@@ -25,7 +25,7 @@
                 </label>
                 <input type="text" value="{{ old('paper_title', $publication->paper_title) }}" name="paper_title"
                     class="form-input w-full {{ $errors->has('paper_title') ? ' border-red-600' : ''}}"
-                    placeholder="Title of the publication">
+                    placeholder="Title of the publication>
             </div>
             <div class="mb-4">
                 <label for="co_authors[]" class="form-label block mb-1">
@@ -67,28 +67,31 @@
                     </template>
                 </add-remove-elements>
             </div>
-            <div class="flex mb-4 items-center" x-show="!'{{$publication->isPublished()}}'">
-                <input type="checkbox" name="is_published" id="is_published" 
-                    class="form-checkbox" :checked="'{{$publication->isPublished()}}'"
-                    x-on:change="is_paper_published =!is_paper_published">
-                <label for="is_published" class="form-label block ml-2">
-                    Is the paper published?
-                </label>
-            </div>
-            <div x-show="is_paper_published">
-                <div class="mb-4" x-show="!'{{$publication->isPublished()}}'">
-                    <label for="document" class="form-label block">
-                        Upload the first page of the publication
+            @if(!$publication->isPublished())
+                <div class="flex mb-4 items-center">
+                    <input type="checkbox" name="is_published" id="is_published" 
+                        class="form-checkbox" x-model="is_published">
+                    <label for="is_published" class="form-label block ml-2">
+                        Is the paper published?
                     </label>
-                    <input type="file" name="document" id="document">
                 </div>
+            @endif
+            <div x-show="is_published">
+                @if(!$publication->isPublished())
+                    <div class="mb-4">
+                        <label for="document" class="form-label block">
+                            Upload the first page of the publication
+                        </label>
+                        <input type="file" name="document" id="document">
+                    </div>
+                @endif
                 <div class="mb-4">
                     <label for="name" class="form-label block mb-1"
-                    x-show="'{{$publication->type}}'== '{{App\Types\PublicationType::JOURNAL}}'">
+                    x-show="publication_type == '{{App\Types\PublicationType::JOURNAL}}'">
                         Journal<span class="text-red-600">*</span>
                     </label>
                     <label for="name" class="form-label block mb-1"
-                    x-show="'{{$publication->type}}'== '{{App\Types\PublicationType::CONFERENCE}}'">
+                    x-show="publication_type == '{{App\Types\PublicationType::CONFERENCE}}'">
                         Conference<span class="text-red-600">*</span>
                     </label>
                     <input type="text" value="{{ old('name', $publication->name) }}" name="name"
@@ -103,12 +106,7 @@
                 </div>
                 <div class="flex mb-4">
                     <div class="w-1/2">
-                        <label for="date[]" class="form-label block mb-1"
-                            x-show="'{{$publication->type}}'== '{{App\Types\PublicationType::JOURNAL}}'">
-                            Issue Date <span class="text-red-600">*</span>
-                        </label>
-                        <label for="date[]" class="form-label block mb-1"
-                            x-show="'{{$publication->type}}'== '{{App\Types\PublicationType::CONFERENCE}}'">
+                        <label for="date[]" class="form-label block mb-1">
                             Date <span class="text-red-600">*</span>
                         </label>
                         <div class="flex">
@@ -131,13 +129,8 @@
                         </div>
                     </div>
                     <div class="ml-4 w-1/2">
-                        <label for="volume" class="form-label block mb-1"
-                            x-show="'{{$publication->type}}'== '{{App\Types\PublicationType::JOURNAL}}'">
-                            Volume
-                        </label>
-                        <label for="volume" class="form-label block mb-1"
-                            x-show="'{{$publication->type}}'== '{{App\Types\PublicationType::CONFERENCE}}'">
-                            Edition
+                        <label for="volume" class="form-label block mb-1">
+                            Volume/ Edition
                         </label>
                         <input type="number" value="{{ old('volume', $publication->volume) }}" name="volume"
                             class="form-input w-full {{ $errors->has('volume') ? ' border-red-600' : ''}}">
@@ -192,7 +185,7 @@
                     </label>
                     @foreach ($citationIndexes as $index)
                         @php($checked = in_array($index, array_map(
-                            'strval', old('indexed_in', [] )
+                            'strval', old('indexed_in', $publication->indexed_in ?? [] )
                         )))
                         <div class="flex mb-1">
                             <input id="indexed-in-{{ $index }}"

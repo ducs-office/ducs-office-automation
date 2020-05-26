@@ -6,7 +6,7 @@
         </div>
         <form action="{{ route('publications.store')}}" method="post" 
             class="px-6" enctype="multipart/form-data"
-            x-data="{ publication_type: '{{old('type',App\Types\PublicationType::JOURNAL)}}', is_paper_published: false}">
+            x-data="{ publication_type: '{{old('type',App\Types\PublicationType::JOURNAL)}}', is_published: '{{array_key_exists('is_published', old())}}'}">
             @csrf_token
             <div class="mb-4">
             	<label for="type" class="form-label block mb-1">
@@ -31,20 +31,18 @@
             </div>
             <div class="flex mb-4">
                 <input type="checkbox" name="is_published" id="is_published" 
-                class="form-checkbox"
-                x-on:change="is_paper_published =!is_paper_published"
-                >
+                    class="form-checkbox" x-model="is_published">
                 <label for="number" class="form-label block ml-2">
                     Is the paper published?
                 </label>
             </div>
             <div class="mb-4">
                 <label for="document" class="form-label block mb-1"
-                x-show="is_paper_published">
+                x-show="is_published">
                     Upload the first page of the publication<span class="text-red-600">*</span>
                 </label>
                 <label for="document" class="form-label block mb-1"
-                x-show="!is_paper_published">
+                x-show="!is_published">
                     Upload the acceptance letter for the publication<span class="text-red-600">*</span>
                 </label>
                 <input type="file" name="document" id="document">
@@ -75,7 +73,7 @@
                     </template>
                 </add-remove-elements>
             </div>
-            <div x-show="is_paper_published">
+            <div x-show="is_published">
                 <div class="mb-4">
                     <label for="name" class="form-label block mb-1"
                     x-show="publication_type == '{{App\Types\PublicationType::JOURNAL}}'">
@@ -99,12 +97,7 @@
                 </div>
                 <div class="flex mb-4">
                     <div class="w-1/2">
-                        <label for="date[]" class="form-label block mb-1"
-                            x-show="publication_type == '{{App\Types\PublicationType::JOURNAL}}'">
-                            Issue Date <span class="text-red-600">*</span>
-                        </label>
-                        <label for="date[]" class="form-label block mb-1"
-                            x-show="publication_type == '{{App\Types\PublicationType::CONFERENCE}}'">
+                        <label for="date[]" class="form-label block mb-1">
                             Date <span class="text-red-600">*</span>
                         </label>
                         <div class="flex">
@@ -127,13 +120,8 @@
                         </div>
                     </div>
                     <div class="ml-4 w-1/2">
-                        <label for="volume" class="form-label block mb-1"
-                            x-show="publication_type == '{{App\Types\PublicationType::JOURNAL}}'">
-                            Volume
-                        </label>
-                        <label for="volume" class="form-label block mb-1"
-                            x-show="publication_type == '{{App\Types\PublicationType::CONFERENCE}}'">
-                            Edition
+                        <label for="volume" class="form-label block mb-1">
+                            Volume/ Edition
                         </label>
                         <input type="number" value="{{ old('volume') }}" name="volume"
                             class="form-input w-full {{ $errors->has('volume') ? ' border-red-600' : ''}}"

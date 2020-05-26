@@ -432,7 +432,6 @@ class UpdatePublicationTest extends TestCase
 
         $this->withoutExceptionHandling()
             ->patch(route('publications.update', $journal), [
-                'is_published' => '',
                 'type' => PublicationType::JOURNAL,
                 'date' => [
                     'month' => 'January',

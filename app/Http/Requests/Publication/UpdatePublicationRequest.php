@@ -23,7 +23,7 @@ class UpdatePublicationRequest extends FormRequest
         }
 
         $this->merge([
-            'is_published' => $this->filled('is_published') ?? false,
+            'is_published' => $this->has('is_published'),
         ]);
     }
 

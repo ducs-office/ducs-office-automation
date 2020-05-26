@@ -125,8 +125,7 @@
                         </div>
                         <div class="w-2/5">
                             <div class="flex m-2">
-                                <h4 class="font-semibold" x-show="'{{$publication->type}}' == '{{App\Types\PublicationType::JOURNAL}}'"> Issue Date: </h4>
-                                <h4 class="font-semibold" x-show="'{{$publication->type}}' == '{{App\Types\PublicationType::CONFERENCE}}'"> Date: </h4>
+                                <h4 class="font-semibold"> Date: </h4>
                                 <p class="ml-2"> {{ $publication->date->format('F Y') }} </p>
                             </div>
                             @if($publication->number)

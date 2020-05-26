@@ -41,7 +41,7 @@ abstract class BaseEnumType
 
     public static function isValid($value): bool
     {
-        return in_array($value, self::values());
+        return in_array($value, self::values()) || $value === '';
     }
 
     public function __construct($value)

@@ -22,7 +22,7 @@ class StorePublicationRequest extends FormRequest
         }
 
         $this->merge([
-            'is_published' => $this->filled('is_published'),
+            'is_published' => $this->has('is_published'),
         ]);
     }
 
