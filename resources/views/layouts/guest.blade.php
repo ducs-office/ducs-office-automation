@@ -6,10 +6,11 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{{ config('app.name') }}</title>
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    @livewireStyles
     @routes
 </head>
 <body class="font-sans leading-tight bg-magenta-800">
-    <div id="app" class="min-h-screen px-4 space-y-8">
+    <div class="min-h-screen px-4 space-y-8">
         <header class="max-w-lg mx-auto">
             <a href="/" class="flex items-center py-8 px-4">
                 <img src="{{ asset('images/university-logo.png') }}" alt="University of Delhi - Logo" class="w-16 sm:w-20 flex-shrink-0 mr-3">
@@ -24,6 +25,8 @@
         </main>
         @include('flash::message')
     </div>
+    @livewireScripts
     <script src="{{ asset('js/app.js') }}"></script>
+    @stack('scripts')
 </body>
 </html>
