@@ -8,14 +8,13 @@ use App\Models\Cosupervisor;
 use App\Models\ExternalAuthority;
 use App\Models\Leave;
 use App\Models\PhdCourse;
+use App\Models\Pivot\ScholarCosupervisor;
 use App\Models\PrePhdSeminar;
 use App\Models\Presentation;
 use App\Models\ProgressReport;
 use App\Models\Publication;
 use App\Models\Scholar;
-use App\Models\ScholarAdvisor;
 use App\Models\ScholarAppeal;
-use App\Models\ScholarCosupervisor;
 use App\Models\ScholarDocument;
 use App\Models\ScholarEducationDegree;
 use App\Models\ScholarEducationInstitute;
@@ -129,19 +128,15 @@ class ScholarTest extends TestCase
     {
         $scholar = create(Scholar::class);
 
-        $this->assertInstanceOf(HasMany::class, $scholar->cosupervisors());
+        $this->assertInstanceOf(BelongsToMany::class, $scholar->cosupervisors());
 
-        $anotherSupervisor = factory(User::class)->states('supervisor')->create();
-        $cosupervisor = factory(ScholarCosupervisor::class)->states('user')->make([
-            'person_id' => $anotherSupervisor->id,
-        ]);
+        $cosupervisor = factory(User::class)->states('cosupervisor')->create();
+        $scholar->cosupervisors()->attach($cosupervisor);
 
-        $scholar->cosupervisors()->save($cosupervisor);
-
-        $cosupervisors = $scholar->cosupervisors()->get();
-        $this->assertCount(1, $cosupervisors);
-        $this->assertEquals(User::class, $cosupervisors->first()->person_type);
-        $this->assertEquals($anotherSupervisor->id, $cosupervisors->first()->person_id);
+        $relatedCosupervisors = $scholar->cosupervisors()->get();
+        $this->assertCount(1, $relatedCosupervisors);
+        $this->assertInstanceOf(User::class, $relatedCosupervisors->first());
+        $this->assertInstanceOf(ScholarCosupervisor::class, $relatedCosupervisors->first()->pivot);
     }
 
     /** @test */
@@ -149,24 +144,22 @@ class ScholarTest extends TestCase
     {
         $scholar = create(Scholar::class);
 
-        $oldCosupervisor = factory(ScholarCosupervisor::class)->make([
+        $oldCosupervisor = factory(ScholarCosupervisor::class)->create([
+            'scholar_id' => $scholar->id,
             'started_on' => today()->subMonths(8),
             'ended_on' => today()->subMonths(3),
         ]);
-        $currentCosupervisor = factory(ScholarCosupervisor::class)->make([
+        $currentCosupervisor = factory(ScholarCosupervisor::class)->create([
+            'scholar_id' => $scholar->id,
             'started_on' => today()->subMonths(3),
-        ]);
-        $scholar->cosupervisors()->createMany([
-            $oldCosupervisor->attributesToArray(),
-            $currentCosupervisor->attributesToArray(),
         ]);
 
         $scholar->refresh();
 
         $this->assertCount(2, $scholar->cosupervisors);
 
-        $scholarsCurrentCosupervisor = $scholar->currentCosupervisor()->where($currentCosupervisor->toArray());
-        $this->assertNotNull($scholarsCurrentCosupervisor, 'current cosupervisor wasnt returned');
+        $scholarsCurrentCosupervisor = $scholar->currentCosupervisor;
+        $this->assertInstanceOf(User::class, $scholarsCurrentCosupervisor);
     }
 
     /** @test */
@@ -174,25 +167,16 @@ class ScholarTest extends TestCase
     {
         $scholar = create(Scholar::class);
 
-        $this->assertInstanceOf(HasMany::class, $scholar->advisors());
+        $this->assertInstanceOf(BelongsToMany::class, $scholar->advisors());
 
-        $cosupervisor = factory(ScholarCosupervisor::class)->states('user')->create();
-        $external = create(ExternalAuthority::class);
+        $cosupervisor = factory(User::class)->states('cosupervisor')->create();
+        $external = factory(User::class)->states('external')->create();
 
-        $scholar->advisors()->createMany([
-            [
-                'advisor_type' => $cosupervisor->person_type,
-                'advisor_id' => $cosupervisor->person_id,
-            ],
-            [
-                'advisor_type' => ExternalAuthority::class,
-                'advisor_id' => $external->id,
-            ],
-        ]);
+        $scholar->advisors()->attach([$cosupervisor->id, $external->id]);
 
         $scholar->refresh();
         $this->assertCount(2, $scholar->advisors);
-        $this->assertInstanceOf(ScholarAdvisor::class, $scholar->advisors->first());
+        $this->assertInstanceOf(User::class, $scholar->advisors->first());
     }
 
     /** @test */
@@ -200,28 +184,18 @@ class ScholarTest extends TestCase
     {
         $scholar = create(Scholar::class);
 
-        $this->assertInstanceOf(HasMany::class, $scholar->currentAdvisors());
+        $this->assertInstanceOf(BelongsToMany::class, $scholar->currentAdvisors());
 
-        $oldAdvisors = create(ScholarCosupervisor::class, 2)
-            ->map(function ($cosup) {
-                return [
-                    'advisor_type' => $cosup->person_type,
-                    'advisor_id' => $cosup->person_id,
-                    'started_on' => today()->subMonths(10),
-                    'ended_on' => today()->subMonths(5),
-                ];
-            })->toArray();
-        $oldAdvisors = $scholar->advisors()->createMany($oldAdvisors);
+        $oldAdvisors = factory(User::class, 2)->states('external')->create();
+        $scholar->advisors()->attach($oldAdvisors, [
+            'started_on' => today()->subMonths(10),
+            'ended_on' => today()->subMonths(5),
+        ]);
 
-        $currentAdvisors = create(ScholarCosupervisor::class, 2)
-            ->map(function ($cosup) {
-                return [
-                    'advisor_type' => $cosup->person_type,
-                    'advisor_id' => $cosup->person_id,
-                    'started_on' => today()->subMonths(5),
-                ];
-            })->toArray();
-        $currentAdvisors = $scholar->advisors()->createMany($currentAdvisors);
+        $currentAdvisors = factory(User::class, 2)->states('external')->create();
+        $scholar->advisors()->attach($currentAdvisors, [
+            'started_on' => today()->subMonths(5),
+        ]);
 
         $scholar->refresh();
 

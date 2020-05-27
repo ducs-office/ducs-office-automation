@@ -26,10 +26,7 @@ class ReplaceScholarMentorTest extends TestCase
             factory(User::class)->states('supervisor')->create()
         );
         $cosupervisor = factory(User::class)->states('cosupervisor')->create();
-        $scholar->cosupervisors()->create([
-            'person_type' => User::class,
-            'person_id' => $cosupervisor->id,
-        ]);
+        $scholar->cosupervisors()->attach($cosupervisor);
 
         $exisitngCosupervisor = factory(User::class)->states('cosupervisor')->create();
         $this->signIn();
@@ -45,10 +42,9 @@ class ReplaceScholarMentorTest extends TestCase
             ->get();
 
         $newCosupervisors = $scholar->cosupervisors()
-            ->where('ended_on', null)
-            ->where('started_on', today())
-            ->where('person_type', User::class)
-            ->where('person_id', $exisitngCosupervisor->id)
+            ->wherePivot('ended_on', null)
+            ->wherePivot('started_on', today())
+            ->wherePivot('user_id', $exisitngCosupervisor->id)
             ->get();
 
         $this->assertCount(1, $oldCosupervisors);
@@ -63,29 +59,26 @@ class ReplaceScholarMentorTest extends TestCase
             factory(User::class)->states('supervisor')->create()
         );
         $cosupervisor = factory(User::class)->states('cosupervisor')->create();
-        $scholar->cosupervisors()->create([
-            'person_type' => User::class,
-            'person_id' => $cosupervisor->id,
-        ]);
-        $externalCosupervisor = factory(ExternalAuthority::class)->states('cosupervisor')->create();
+        $scholar->cosupervisors()->attach($cosupervisor);
+
+        $externalCosupervisor = factory(User::class)->states(['cosupervisor', 'external'])->create();
 
         $this->signIn();
 
         $this->withoutExceptionHandling()
             ->patch(route('staff.scholars.cosupervisor.replace', $scholar), [
-                'external_id' => $externalCosupervisor->id,
+                'user_id' => $externalCosupervisor->id,
             ])
             ->assertSessionHasFlash('success', 'Co-Supervisor replaced successfully!');
 
         $oldCosupervisors = $scholar->cosupervisors()
-            ->where('ended_on', today())
+            ->wherePivot('ended_on', today())
             ->get();
 
         $newCosupervisors = $scholar->cosupervisors()
-            ->where('ended_on', null)
-            ->where('started_on', today())
-            ->where('person_type', ExternalAuthority::class)
-            ->where('person_id', $externalCosupervisor->id)
+            ->wherePivot('ended_on', null)
+            ->wherePivot('started_on', today())
+            ->wherePivot('user_id', $externalCosupervisor->id)
             ->get();
 
         $this->assertCount(1, $oldCosupervisors);
@@ -100,10 +93,7 @@ class ReplaceScholarMentorTest extends TestCase
             factory(User::class)->states('supervisor')->create()
         );
         $cosupervisor = factory(User::class)->states('cosupervisor')->create();
-        $scholar->cosupervisors()->create([
-            'person_type' => User::class,
-            'person_id' => $cosupervisor->id,
-        ]);
+        $scholar->cosupervisors()->attach($cosupervisor);
         $anotherSupervisor = factory(User::class)->states('supervisor')->create();
 
         $this->signIn();
@@ -119,10 +109,9 @@ class ReplaceScholarMentorTest extends TestCase
             ->get();
 
         $newCosupervisors = $scholar->cosupervisors()
-            ->where('ended_on', null)
-            ->where('started_on', today())
-            ->where('person_type', User::class)
-            ->where('person_id', $anotherSupervisor->id)
+            ->wherePivot('ended_on', null)
+            ->wherePivot('started_on', today())
+            ->wherePivot('user_id', $anotherSupervisor->id)
             ->get();
 
         $this->assertCount(1, $oldCosupervisors);
@@ -153,11 +142,10 @@ class ReplaceScholarMentorTest extends TestCase
         $this->assertCount(1, $scholar->fresh()->cosupervisors); // Only one new Cosupervisor
 
         $newCosupervisors = $scholar->cosupervisors()
-            ->where('ended_on', null)
+            ->wherePivot('ended_on', null)
             // start date is recorded from today so that we know a term when there was no cosupervisor assigned.
-            ->where('started_on', today())
-            ->where('person_type', User::class)
-            ->where('person_id', $exisitngCosupervisor->id)
+            ->wherePivot('started_on', today())
+            ->wherePivot('user_id', $exisitngCosupervisor->id)
             ->get();
 
         $this->assertCount(1, $newCosupervisors);
@@ -171,10 +159,7 @@ class ReplaceScholarMentorTest extends TestCase
         $cosupervisor = factory(User::class)->states('cosupervisor')->create();
         $scholar = create(Scholar::class);
         $scholar->supervisors()->attach($supervisor);
-        $scholar->cosupervisors()->create([
-            'person_type' => User::class,
-            'person_id' => $cosupervisor->id,
-        ]);
+        $scholar->cosupervisors()->attach($cosupervisor);
 
         try {
             $this->withoutExceptionHandling()

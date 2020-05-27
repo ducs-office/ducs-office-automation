@@ -16,7 +16,7 @@
         <script src="{{ asset('js/app.js') }}" defer></script>
     </head>
     <body class="font-sans leading-tight bg-gray-200">
-        <div x-data="{ ...modalsRoot() }" class="h-screen flex">
+        <div x-data class="h-screen flex">
             <div class="bg-magenta-800 text-white w-80 flex flex-col flex-shrink-0">
                 @include('scholars.partials.sidebar')
             </div>

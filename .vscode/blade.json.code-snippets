@@ -1,0 +1,72 @@
+{
+	// Place your ducs-office-automation workspace snippets here. Each snippet is defined under a snippet name and has a scope, prefix, body and
+	// description. Add comma separated ids of the languages where the snippet is applicable in the scope field. If scope
+	// is left empty or omitted, the snippet gets applied to all languages. The prefix is what is
+	// used to trigger the snippet and the body will be expanded and inserted. Possible variables are:
+	// $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders.
+	// Placeholders with the same ids are connected.
+	// Example:
+	"Generate Form Text Field": {
+        "scope": "blade",
+		"prefix": "field:text",
+		"body": [
+			"<div class=\"space-y-1\">",
+			"    <label for=\"${1:id}\"",
+			"        class=\"w-full form-label @error('${2:field_name}') text-red-500 @enderror\">",
+			"        ${0:Label} <span class=\"text-red-500\">*</span>",
+			"    </label>",
+			"    <input id=\"${1:id}\" type=\"text\" name=\"${2:field_name}\"",
+            "        class=\"w-full form-input @error('${2:field_name}') border-red-500 hover:border-red-700 @enderror\"",
+            "        value=\"{{ old('${2:field_name}') }}\"",
+            "        required>",
+			"    @error('${2:field_name}')",
+			"       <p class=\"text-red-500\">{{ \\$message }}</p>",
+			"    @enderror",
+			"</div>",
+		],
+		"description": "render form field of type text with errors"
+    },
+    "Generate Form Textarea": {
+        "scope": "blade",
+		"prefix": "field:textarea",
+		"body": [
+			"<div class=\"space-y-1\">",
+			"    <label for=\"${1:id}\"",
+			"        class=\"w-full form-label @error('${2:field_name}') text-red-500 @enderror\">",
+			"        ${0:Label} <span class=\"text-red-500\">*</span>",
+			"    </label>",
+			"    <textarea id=\"${1:id}\" type=\"text\" name=\"${2:field_name}\"",
+            "        class=\"w-full form-texarea @error('${2:field_name}') border-red-500 hover:border-red-700 @enderror\"",
+            "        required>{{ old('${2:field_name}') }}\"</textarea>",
+			"    @error('${2:field_name}')",
+			"       <p class=\"text-red-500\">{{ \\$message }}</p>",
+			"    @enderror",
+			"</div>",
+		],
+		"description": "render form field of type text with errors"
+    },
+
+    "Generate Form Select Field": {
+        "scope": "blade",
+		"prefix": "field:select",
+		"body": [
+			"<div class=\"space-y-1\">",
+			"    <label for=\"${1:id}\"",
+			"        class=\"w-full form-label @error('${2:field_name}') text-red-500 @enderror\">",
+			"        ${3:Label} <span class=\"text-red-500\">*</span>",
+			"    </label>",
+			"    <select id=\"${1:id}\" name=\"${2:field_name}\"",
+            "        class=\"w-full form-select @error('${2:field_name}') border-red-500 hover:border-red-700 @enderror\"",
+            "        required>",
+            "        @foreach($4 as $5)",
+            "        <option value=\"{{ $5 }}\" {{ old('${2:field_name}') == $5 }}>{{ $5 }}</option>",
+            "        @endforeach",
+            "    </select>",
+			"    @error('${2:field_name}')",
+			"       <p class=\"text-red-500\">{{ \\$message }}</p>",
+			"    @enderror",
+			"</div>",
+		],
+		"description": "render form field of type select with errors"
+	}
+}

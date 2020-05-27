@@ -36,13 +36,13 @@ class UpdateScholarRequest extends FormRequest
                 Rule::notIn([optional($this->route('scholar')->currentSupervisor)->id]),
                 Rule::exists('users', 'id')->where('is_supervisor', true),
             ],
-            'cosupervisor_user_id' => [
+            'cosupervisor_id' => [
                 'nullable', 'different:supervisor_id',
-                Rule::exists(User::class, 'id')
-                    ->where('is_cosupervisor', true),
-            ],
-            'cosupervisor_external_id' => [
-                'nullable', Rule::exists(ExternalAuthority::class, 'id')->where('is_cosupervisor', true),
+                Rule::notIn([optional($this->route('scholar')->currentSupervisor)->id]),
+                Rule::exists(User::class, 'id')->where(function ($query) {
+                    return $query->where('is_cosupervisor', true)
+                        ->orWhere('is_supervisor', true);
+                }),
             ],
         ];
     }

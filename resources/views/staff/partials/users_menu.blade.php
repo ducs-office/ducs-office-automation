@@ -1,4 +1,4 @@
-<div class="ml-auto mr-3" x-data="{ isOpen: false, ...modalsRoot() }">
+<div class="ml-auto mr-3" x-data="{ isOpen: false }">
     <button class="relative z-20 flex items-center btn" x-on:click="isOpen = !isOpen">
         <img src="https://gravatar.com/avatar/{{ md5(strtolower(trim(Auth::user()->email))) }}?s=48&d=identicon"
             alt="{{ Auth::user()->name }}" width="32" height="32" class="w-6 h-6 rounded-full mr-2">
@@ -10,7 +10,7 @@
             <ul x-on:click.away="isOpen = false"
                 class="absolute mt-4 right-0 z-50 min-w-48 max-w-xs p-4 bg-white rounded shadow-lg space-y-2">
                 <li>
-                    <a href="{{ route('scholars.profile') }}" class="w-full inline-flex items-center btn border-0 bg-transparent hover:bg-gray-200">
+                    <a href="{{ route('profiles.show', auth()->user()) }}" class="w-full inline-flex items-center btn border-0 bg-transparent hover:bg-gray-200">
                         <x-feather-icon name="user" class="h-current" stroke-width="2">Change Password Icon</x-feather-icon>
                         <span class="ml-2 whitespace-no-wrap">Profile</span>
                     </a>

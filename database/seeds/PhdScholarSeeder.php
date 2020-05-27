@@ -1,7 +1,7 @@
 <?php
 
+use App\Models\College;
 use App\Models\Cosupervisor;
-use App\Models\ExternalAuthority;
 use App\Models\PhdCourse;
 use App\Models\Scholar;
 use App\Models\ScholarEducationDegree;
@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Types\AdmissionMode;
 use App\Types\AdvisoryCommitteeMember;
 use App\Types\CitationIndex;
+use App\Types\Designation;
 use App\Types\EducationInfo;
 use App\Types\Gender;
 use App\Types\PresentationEventType;
@@ -84,15 +85,9 @@ class PhdScholarSeeder extends Seeder
             ],
         ]);
         $rajni->supervisors()->attach($this->faculty->neelima_gupta);
-        $rajni->currentAdvisors()->createMany([
-            [
-                'advisor_type' => ExternalAuthority::class,
-                'advisor_id' => $this->externals->naveen_garg->id,
-            ],
-            [
-                'advisor_type' => User::class,
-                'advisor_id' => $this->faculty->naveen_kumar->id,
-            ],
+        $rajni->advisors()->attach([
+            $this->externals->naveen_garg->id,
+            $this->faculty->naveen_kumar->id,
         ]);
         $rajni->courseworks()->attach(PhdCourse::whereCode('RCS004')->first());
 
@@ -112,15 +107,9 @@ class PhdScholarSeeder extends Seeder
             'registration_date' => '2019-12-10',
         ]);
         $sudhir->supervisors()->attach($this->college_teachers->sangeeta_srivastava);
-        $sudhir->currentAdvisors()->createMany([
-            [
-                'advisor_type' => User::class,
-                'advisor_id' => $this->faculty->poonam_bedi->id,
-            ],
-            [
-                'advisor_type' => ExternalAuthority::class,
-                'advisor_id' => $this->externals->vb_singh->id,
-            ],
+        $sudhir->advisors()->attach([
+            $this->faculty->poonam_bedi->id,
+            $this->externals->vb_singh->id,
         ]);
         $sudhir->courseworks()->attach(
             PhdCourse::whereCode('RCS023')->first()
@@ -172,15 +161,9 @@ class PhdScholarSeeder extends Seeder
             'registration_date' => '2017-04-05',
         ]);
         $sapna->supervisors()->attach($this->faculty->neelima_gupta);
-        $sapna->currentAdvisors()->createMany([
-            [
-                'advisor_type' => User::class,
-                'advisor_id' => $this->faculty->naveen_kumar->id,
-            ],
-            [
-                'advisor_type' => ExternalAuthority::class,
-                'advisor_id' => $this->externals->naveen_garg->id,
-            ],
+        $sapna->advisors()->attach([
+            $this->faculty->naveen_kumar->id,
+            $this->externals->naveen_garg->id,
         ]);
         $sapna->courseworks()->attach(
             PhdCourse::whereCode('RCS003')->first()
@@ -237,19 +220,10 @@ class PhdScholarSeeder extends Seeder
             'registration_date' => '2018-11-26',
         ]);
         $nisha->supervisors()->attach($this->college_teachers->archana_singhal);
-        $nisha->cosupervisors()->create([
-            'person_type' => User::class,
-            'person_id' => $this->faculty->sk_mutto->id,
-        ]);
-        $nisha->currentAdvisors()->createMany([
-            [
-                'advisor_type' => User::class,
-                'advisor_id' => $this->faculty->poonam_bedi->id,
-            ],
-            [
-                'advisor_type' => ExternalAuthority::class,
-                'advisor_id' => $this->externals->harmeet_kaur->id,
-            ],
+        $nisha->cosupervisors()->attach($this->faculty->sk_mutto);
+        $nisha->advisors()->attach([
+            $this->faculty->poonam_bedi->id,
+            $this->externals->harmeet_kaur->id,
         ]);
         $nisha->courseworks()->attach(
             PhdCourse::whereCode('RCS008')->first()
@@ -271,14 +245,8 @@ class PhdScholarSeeder extends Seeder
             'registration_date' => '2018-05-12',
         ]);
         $megha->supervisors()->attach($this->college_teachers->arpita_sharma);
-        $megha->cosupervisors()->create([
-            'person_type' => User::class,
-            'person_id' => $this->college_teachers->anurag_mishra->id,
-        ]);
-        $megha->currentAdvisors()->create([
-            'advisor_type' => User::class,
-            'advisor_id' => $this->faculty->poonam_bedi->id,
-        ]);
+        $megha->cosupervisors()->attach($this->college_teachers->anurag_mishra);
+        $megha->advisors()->attach($this->faculty->poonam_bedi);
         $megha->courseworks()->attach(
             PhdCourse::whereCode('RCS008')->first()
         );
@@ -298,15 +266,9 @@ class PhdScholarSeeder extends Seeder
             'registration_date' => '2019-06-11',
         ]);
         $kountay->supervisors()->attach($this->college_teachers->sangeeta_srivastava);
-        $kountay->currentAdvisors()->createMany([
-            [
-                'advisor_type' => User::class,
-                'advisor_id' => $this->faculty->poonam_bedi->id,
-            ],
-            [
-                'advisor_type' => ExternalAuthority::class,
-                'advisor_id' => $this->externals->vb_singh->id,
-            ],
+        $kountay->advisors()->attach([
+            $this->faculty->poonam_bedi->id,
+            $this->externals->vb_singh->id,
         ]);
         $kountay->courseworks()->attach(
             PhdCourse::whereCode('RCS023')->first()
@@ -395,26 +357,41 @@ class PhdScholarSeeder extends Seeder
     public function createExternals()
     {
         $this->externals = (object) [
-            'naveen_garg' => ExternalAuthority::create([
-                'name' => 'Naveen Garg',
+            'naveen_garg' => User::create([
+                'first_name' => 'Naveen',
+                'last_name' => 'Garg',
                 'email' => 'naveen@.iitd.ac.in',
-                'designation' => 'Professor',
+                'password' => self::ENC_PASSWORD,
+                'designation' => Designation::PROFESSOR,
+                'category' => UserCategory::EXTERNAL,
                 'affiliation' => 'Indian Institute of Technology Delhi',
                 'is_cosupervisor' => true,
             ]),
 
-            'vb_singh' => ExternalAuthority::create([
-                'name' => 'V.B. Singh',
+            'vb_singh' => User::create([
+                'first_name' => 'VB',
+                'last_name' => 'Singh',
                 'email' => 'vbsingh@gmail.com',
-                'designation' => 'Dr.',
-                'affiliation' => 'Delhi College of Arts & Commerce, University of Delhi',
+                'password' => self::ENC_PASSWORD,
+                'designation' => Designation::PROFESSOR,
+                'category' => UserCategory::COLLEGE_TEACHER,
+                'college_id' => College::firstOrCreate(
+                    ['code' => 'DU-DCAC'],
+                    ['name' => 'Delhi College of Arts & Commerce, University of Delhi'],
+                )->id,
             ]),
 
-            'harmeet_kaur' => ExternalAuthority::create([
-                'name' => 'Harmeet Kaur',
+            'harmeet_kaur' => User::create([
+                'first_name' => 'Harmeet',
+                'last_name' => 'Kaur',
                 'email' => 'harmeet@hc.du.ac.in',
-                'designation' => 'Professor',
-                'affiliation' => 'Hansraj college, University of Delhi',
+                'password' => self::ENC_PASSWORD,
+                'designation' => Designation::PROFESSOR,
+                'category' => UserCategory::COLLEGE_TEACHER,
+                'college_id' => College::firstOrCreate(
+                    ['code' => 'DU-HRC'],
+                    ['name' => 'Hansraj College, University of Delhi'],
+                )->id,
             ]),
         ];
     }

@@ -2,9 +2,9 @@
 
 namespace App\Concerns;
 
+use App\Models\Pivot\ScholarAdvisor;
+use App\Models\Pivot\ScholarCosupervisor;
 use App\Models\Pivot\ScholarSupervisor;
-use App\Models\ScholarAdvisor;
-use App\Models\ScholarCosupervisor;
 use App\Models\User;
 
 trait HasResearchCommittee
@@ -23,30 +23,32 @@ trait HasResearchCommittee
 
     public function getCurrentSupervisorAttribute()
     {
-        return $this->supervisors
-            ->firstWhere('pivot.ended_on', null);
+        return $this->supervisors->firstWhere('pivot.ended_on', null);
     }
 
     public function cosupervisors()
     {
-        return $this->hasMany(ScholarCosupervisor::class);
+        return $this->belongsToMany(User::class, 'cosupervisor_scholar')
+            ->withPivot(['started_on', 'ended_on'])
+            ->using(ScholarCosupervisor::class);
     }
 
-    public function currentCosupervisor()
+    public function getCurrentCosupervisorAttribute()
     {
-        return $this->hasOne(ScholarCosupervisor::class)->whereNull('ended_on');
+        return $this->cosupervisors->firstWhere('pivot.ended_on', null);
     }
 
     public function advisors()
     {
-        return $this->hasMany(ScholarAdvisor::class)->orderBy('started_on', 'desc');
+        return $this->belongsToMany(User::class, 'advisor_scholar')
+            ->withPivot(['started_on', 'ended_on'])
+            ->using(ScholarAdvisor::class)
+            ->orderBy('started_on', 'desc');
     }
 
     public function currentAdvisors()
     {
-        return $this->hasMany(ScholarAdvisor::class)
-            ->whereNull('ended_on')
-            ->orderBy('started_on', 'desc');
+        return $this->advisors()->wherePivot('ended_on', null);
     }
 
     public function getCommitteeAttribute()

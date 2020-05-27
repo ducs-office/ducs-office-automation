@@ -1,4 +1,4 @@
-<div class="ml-auto mr-3" x-data="{ isOpen: false, ...modalsRoot() }">
+<div class="ml-auto mr-3" x-data="{ isOpen: false, }">
     <button class="relative z-20 flex items-center btn" x-on:click="isOpen = !isOpen">
         <img src=" {{ route('scholars.profile.avatar') }}"
             alt="{{ Auth::user()->name }}" width="32" height="32" class="w-6 h-6 rounded-full mr-2">

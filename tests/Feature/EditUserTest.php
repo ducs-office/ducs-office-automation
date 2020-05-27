@@ -47,12 +47,13 @@ class EditUserTest extends TestCase
 
         $this->withoutExceptionHandling()
             ->patch(route('staff.users.update', $john), [
-                'name' => $correctName = 'John Doe',
+                'first_name' => 'John',
+                'last_name' => 'Doe',
             ])->assertRedirect()
             ->assertSessionHasFlash('success', 'User updated successfully!');
 
-        tap($john->fresh(), function ($updated) use ($john, $correctName) {
-            $this->assertEquals($correctName, $updated->name);
+        tap($john->fresh(), function ($updated) use ($john) {
+            $this->assertEquals('John Doe', $updated->name);
             $this->assertEquals($john->email, $updated->email);
             $this->assertEquals($john->category, $updated->category);
         });
@@ -117,14 +118,14 @@ class EditUserTest extends TestCase
         $this->withoutExceptionHandling()
             ->patch(route('staff.users.update', $user), [
                 'email' => $user->email,
-                'name' => $newName = 'New name',
+                'first_name' => $newName = 'New name',
                 'category' => $newType = UserCategory::OFFICE_STAFF,
             ])->assertRedirect()
         ->assertSessionHasNoErrors()
         ->assertSessionHasFlash('success', 'User updated successfully!');
 
         $this->assertEquals(2, User::count());
-        $this->assertEquals($newName, $user->fresh()->name);
+        $this->assertEquals($newName, $user->fresh()->first_name);
         $this->assertEquals($newType, $user->fresh()->category);
     }
 
@@ -137,7 +138,8 @@ class EditUserTest extends TestCase
 
         $this->withoutExceptionHandling()
             ->patch(route('staff.users.update', $user), [
-                'is_supervisor' => true,
+                'category' => UserCategory::FACULTY_TEACHER,
+                'is_supervisor' => 'on',
             ])
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'User updated successfully!');
@@ -148,25 +150,39 @@ class EditUserTest extends TestCase
     /** @test */
     public function only_college_teacher_faculty_teacher_can_be_made_a_supervisor()
     {
-        //TODO: Fill this test
-        $this->assertTrue(true);
+        $this->signIn();
+
+        $staff = create(User::class, 1, [
+            'category' => UserCategory::OFFICE_STAFF,
+        ]);
+
+        $this->withoutExceptionHandling()
+            ->patch(route('staff.users.update', $staff), [
+                'is_supervisor' => 'on',
+            ])
+            ->assertRedirect()
+            ->assertSessionHasNoErrors()
+            ->assertSessionHasFlash('success', 'User updated successfully');
+
+        $this->assertFalse($staff->fresh()->isSupervisor(), 'staff was able to become a supervisor');
     }
 
     /** @test */
-    public function user_of_type_teacher_can_be_made_a_supervisor_only_if_their_profile_has_a_college_set()
+    public function user_of_type_teacher_can_be_made_a_supervisor()
     {
         $this->signIn();
 
         $teacher = create(User::class, 1, [
             'category' => UserCategory::COLLEGE_TEACHER,
-            'college_id' => null,
         ]);
 
         $this->withoutExceptionHandling()
             ->patch(route('staff.users.update', $teacher), [
-                'is_supervisor' => true,
+                'category' => UserCategory::FACULTY_TEACHER,
+                'is_supervisor' => 'on',
             ])
             ->assertRedirect()
+            ->assertSessionHasNoErrors()
             ->assertSessionHasFlash('success', 'User updated successfully');
 
         $this->assertTrue($teacher->fresh()->isSupervisor(), 'teacher wasn\'t made a supervisor');

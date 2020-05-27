@@ -169,6 +169,7 @@ return [
          */
         Laracasts\Flash\FlashServiceProvider::class,
         NunoMaduro\LaravelMojito\MojitoServiceProvider::class,
+        Livewire\LivewireServiceProvider::class,
 
         /*
          * Application Service Providers...

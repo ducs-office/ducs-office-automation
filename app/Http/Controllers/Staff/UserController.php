@@ -22,7 +22,7 @@ class UserController extends Controller
     public function index()
     {
         return view('staff.users.index', [
-            'users' => User::with('roles')->get(),
+            'users' => User::with('roles')->filter()->get(),
             'roles' => Role::all(),
             'categories' => UserCategory::values(),
         ]);
@@ -30,17 +30,15 @@ class UserController extends Controller
 
     public function store(StoreUserRequest $request)
     {
+        $data = $request->validated();
+
         DB::beginTransaction();
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'category' => $request->category,
+        $user = User::create($data + [
             'password' => bcrypt(Str::random(16)), // Random password
-            'is_supervisor' => $request->is_supervisor ?? false,
         ]);
 
-        $user->syncRoles($request->roles);
+        $user->syncRoles($data['roles'] ?? []);
 
         DB::commit();
 

@@ -1,4 +1,4 @@
-<div class="page-card p-6 overflow-visible flex space-x-6" x-data="{isOpen: false, ...modalsRoot() }"> 
+<div class="page-card p-6 overflow-visible flex space-x-6" x-data="{ isOpen: false }">
     <div>
         <div class="w-64 pr-4 relative z-10 -ml-8 my-2">
             <h3 class="relative pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
@@ -14,33 +14,33 @@
                 Request
             </a>
         @elsecan('request', [\App\Models\PrePhdSeminar::class, $scholar])
-            <button class="btn btn-magenta" x-on:click="$modal.show('seminar-requirements-modal')"> 
+            <button class="btn btn-magenta" x-on:click="$modal.show('seminar-requirements-modal')">
                 Request
             </button>
         @endcan
         </div>
     </div>
-    
+
 
     <x-modal name="seminar-requirements-modal" class="p-6">
-        <div> 
+        <div>
             <p class="text-lg mb-3 font-bold">Your profile needs to have the following before applying for Pre-PhD Seminar</p>
             <ul class="list-disc px-6">
-                <li class="font-bold m-2 {{$scholar->isJoiningLetterUploaded() ? 'text-green-700' : 'text-gray-700 '}}"> 
-                Joining Letter 
-            </li>
-            <li class="font-bold m-2 {{$scholar->journals->count() ? 'text-green-700': 'text-gray-700'}}"> 
-                At least 1 Journal Publication
-            </li>
-            <li class="font-bold m-2 text-gray-700"> 
-                Extension Letter from BRS (if any)
-            </li>
-            <li class="font-bold m-2 {{ $scholar->proposed_title ? 'text-green-700' : 'text-gray-700 '}}"> 
-                Proposed Title for the Seminar 
-            </li>
-            <li class="font-bold m-2 {{ $scholar->areCourseworksCompleted() ? 'text-green-700' : 'text-gray-700 '}}"> 
-                All Courseworks should be completed
-            </li>
+                <li class="font-bold m-2 {{$scholar->isJoiningLetterUploaded() ? 'text-green-700' : 'text-gray-700 '}}">
+                    Joining Letter
+                </li>
+                <li class="font-bold m-2 {{$scholar->journals->count() ? 'text-green-700': 'text-gray-700'}}">
+                    At least 1 Journal Publication
+                </li>
+                <li class="font-bold m-2 text-gray-700">
+                    Extension Letter from BRS (if any)
+                </li>
+                <li class="font-bold m-2 {{ $scholar->proposed_title ? 'text-green-700' : 'text-gray-700 '}}">
+                    Proposed Title for the Seminar
+                </li>
+                <li class="font-bold m-2 {{ $scholar->areCourseworksCompleted() ? 'text-green-700' : 'text-gray-700 '}}">
+                    All Courseworks should be completed
+                </li>
             </ul>
         </div>
     </x-modal>
@@ -60,7 +60,6 @@
             </div>
         </form>
     </x-modal>
-    
     <div class="flex-1">
         @if (optional($scholar->prePhdSeminar)->isCompleted())
         <div class="ml-auto flex items-baseline justify-end w-full">
@@ -90,8 +89,8 @@
             </p>
             @endif
             @can('view', [$scholar->prePhdSeminar, $scholar])
-            <div class="ml-4">            
-                <a href="{{ route('scholars.pre_phd_seminar.show', [$scholar, $scholar->prePhdSeminar]) }}" 
+            <div class="ml-4">
+                <a href="{{ route('scholars.pre_phd_seminar.show', [$scholar, $scholar->prePhdSeminar]) }}"
                     target="_blank" class="inline-flex items-center underline px-3 py-1 bg-magenta-100 text-magenta-800 rounded font-bold">
                     <x-feather-icon name="link" class="h-4 mr-2"> Pre-Phd Seminar Form </x-feather-icon>
                     Pre-PhD Seminar Form
@@ -115,8 +114,8 @@
                 @can('addSchedule', [$scholar->prePhdSeminar, $scholar])
                 <div class="ml-2">
                     <button class="px-4 py-2 mr-2 bg-green-500 hover:bg-green-600 text-white text-sm rounded font-bold"
-                    x-on:click="$modal.show('schedule-seminar-appeal-modal')"> 
-                        Schedule 
+                    x-on:click="$modal.show('schedule-seminar-appeal-modal')">
+                        Schedule
                     </button>
                     <x-modal name="schedule-seminar-appeal-modal" class="p-6">
                         <h2 class="text-lg font-bold mb-6">Add Schedule Of Seminar Appeal</h2>
@@ -138,8 +137,8 @@
                 @can('finalize', [$scholar->prePhdSeminar, $scholar])
                 <div class="ml-2">
                         <button class="px-4 py-2 mr-2 bg-green-500 hover:bg-green-600 text-white text-sm rounded font-bold"
-                        x-on:click="$modal.show('finalize-seminar-appeal-modal')"> 
-                            Finalize 
+                        x-on:click="$modal.show('finalize-seminar-appeal-modal')">
+                            Finalize
                         </button>
                         <x-modal name="finalize-seminar-appeal-modal" class="p-6">
                             <h2 class="text-lg font-bold mb-6">Finalize Seminar Appeal</h2>
