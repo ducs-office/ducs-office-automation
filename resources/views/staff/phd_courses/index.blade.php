@@ -1,55 +1,44 @@
 @extends('layouts.master')
+@push('modals')
+    <x-modal name="create-phd-course-modal" class="p-6 w-1/2" :open="! $errors->default->isEmpty()">
+        <h2 class="text-lg font-bold mb-8">Create Pre-PhD Course</h2>
+        @include('_partials.forms.create-phd-course')
+    </x-modal>
+    <livewire:edit-phd-course-modal :error-bag="$errors->update" />
+@endpush
 @section('body')
-    <div class="m-6">
-        <div class="flex items-baseline px-6 pb-4">
+    <div class="page-card p-0">
+        <div class="flex items-center px-6 py-4 border-b">
             <h1 class="page-header mb-0 px-0 mr-4">Pre-PhD Courses</h1>
             @can('create', App\Models\PhdCourse::class)
-            <button class="btn btn-magenta is-sm shadow-inset" @click="$modal.show('create-courses-modal')">
+            <x-modal.trigger modal="create-phd-course-modal"
+                class="btn btn-magenta is-sm shadow-inset">
                 New
-            </button>
-            @include('staff.phd_courses.modals.create', [
-                'modalName' => 'create-college-modal',
-                'courseTypes' => $courseTypes,
-            ])
+            </x-modal.trigger>
             @endcan
         </div>
-        @can('update', App\Models\PhdCourse::class)
-        @include('staff.phd_courses.modals.edit', [
-            'modalName' => 'edit-course-modal',
-            'courseTypes' => $courseTypes,
-        ])
-        @endcan
-        <div class="space-y-5 leading-none">
-            @foreach ($courses as $course)
-                <div class="relative px-6 py-4 page-card flex items-center">
-                    <span class="px-2 py-1 rounded text-sm uppercase text-white bg-black font-bold font-mono">
-                        {{ $course->type }}
-                    </span>
-                    <span class="font-bold text-gray-700 ml-2">{{ $course->code }}</span>
-                    <h3 class="font-bold text-lg capitalize mx-4">{{ $course->name }}</h3>
-
-                    <div class="ml-auto flex items-center">
-                        @can('update', App\Models\PhdCourse::class)
-                        <button class="p-1 hover:text-blue-500 mr-2"
-                        @click.prevent="$modal.show('edit-course-modal', {
-                            course: {{ $course->toJson() }}
-                        })">
-                            <feather-icon name="edit" class="h-current">Edit</feather-icon>
-                        </button>
-                        @endcan
-                        @can('delete', App\Models\PhdCourse::class)
-                        <form action="{{ route('staff.phd_courses.destroy', $course) }}" method="POST"
-                            onsubmit="return confirm('Do you really want to delete course?');">
-                            @csrf_token
-                            @method('DELETE')
-                            <button type="submit" class="p-1 hover:text-red-700">
-                                <feather-icon name="trash-2" class="h-current">Delete</feather-icon>
-                            </button>
-                        </form>
-                        @endcan
-                    </div>
-                </div>
-            @endforeach
+        <table class="min-w-full">
+            <thead>
+                <tr>
+                    <th class="px-6 py-3 border-b border-gray-200 bg-gray-100 text-left text-xs leading-4 text-gray-600 uppercase tracking-wider">
+                        Type
+                    </th>
+                    <th class="px-6 py-3 border-b border-gray-200 bg-gray-100 text-left text-xs leading-4 text-gray-600 uppercase tracking-wider">
+                        Code
+                    </th>
+                    <th class="px-6 py-3 border-b border-gray-200 bg-gray-100 text-left text-xs leading-4 text-gray-600 uppercase tracking-wider">
+                        Name
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($courses as $course)
+                    @include('_partials.list-items.phd-course')
+                @endforeach
+            </tbody>
+        </table>
+        <div class="space-y-1 py-4 px-6">
+            {{ $courses->links()  }}
         </div>
     </div>
 @endsection

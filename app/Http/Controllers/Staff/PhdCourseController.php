@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Staff;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Staff\StorePhdCourseRequest;
+use App\Http\Requests\Staff\UpdatePhdCourseRequest;
 use App\Models\PhdCourse;
 use App\Types\PrePhdCourseType;
 use Illuminate\Http\Request;
@@ -18,18 +20,14 @@ class PhdCourseController extends Controller
     public function index(Request $request)
     {
         return view('staff.phd_courses.index', [
-            'courses' => PhdCourse::paginate(),
+            'courses' => PhdCourse::paginate(15),
             'courseTypes' => PrePhdCourseType::values(),
         ]);
     }
 
-    public function store(Request $request)
+    public function store(StorePhdCourseRequest $request)
     {
-        $data = $request->validate([
-            'code' => ['required', 'min:3', 'max:60', 'unique:phd_courses'],
-            'name' => ['required', 'min:3', 'max:190'],
-            'type' => ['required', Rule::in(PrePhdCourseType::values())],
-        ]);
+        $data = $request->validated();
 
         PhdCourse::create($data);
 
@@ -38,15 +36,9 @@ class PhdCourseController extends Controller
         return redirect()->back();
     }
 
-    public function update(Request $request, PhdCourse $course)
+    public function update(UpdatePhdCourseRequest $request, PhdCourse $course)
     {
-        $data = $request->validate([
-            'code' => ['sometimes', 'required', 'min:3', 'max:60', Rule::unique('phd_courses')->ignore($course)],
-            'name' => ['sometimes', 'required', 'min:3', 'max:190'],
-            'type' => ['sometimes', 'required', Rule::in(PrePhdCourseType::values())],
-        ]);
-
-        $course->update($data);
+        $course->update($request->validated());
 
         flash('PhD Course updated successfully!')->success();
 

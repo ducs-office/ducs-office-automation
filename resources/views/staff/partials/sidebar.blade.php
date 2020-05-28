@@ -46,7 +46,7 @@
         <li class="mb-1 last:mb-0">
             <a href="{{ route('staff.phd_courses.index') }}" class="flex items-center py-2 px-4 hover:bg-magenta-700 hover:text-white rounded">
                 <x-feather-icon name="file-text" class="h-4 mr-2">Pre-PhD Courses</x-feather-icon>
-                PhD Courses
+                Pre-PhD Courses
             </a>
         </li>
         @endcan
