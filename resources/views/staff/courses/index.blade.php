@@ -1,24 +1,21 @@
 @extends('layouts.master')
+@push('modals')
+    <x-modal name="create-course-modal" class="p-6 min-w-1/2" :open="! $errors->default->isEmpty()">
+        <h2 class="mb-8 font-bold text-lg">Create New Course</h2>
+        @include('_partials.forms.create-course')
+    </x-modal>
+    <livewire:edit-course-modal :error-bag="$errors->update" :courseTypes="$courseTypes" />
+@endpush
 @section('body')
     <div class="m-6">
         <div class="flex items-baseline px-6 pb-4">
             <h1 class="page-header mb-0 px-0 mr-4">Courses</h1>
             @can('create', App\Models\Course::class)
-            <button class="btn btn-magenta is-sm shadow-inset" @click="$modal.show('create-courses-modal')">
+            <x-modal.trigger class="btn btn-magenta is-sm shadow-inner" modal="create-course-modal">
                 New
-            </button>
-            @include('staff.courses.modals.create', [
-                'modalName' => 'create-college-modal',
-                'courseTypes' => $courseTypes,
-            ])
+            </x-modal.trigger>
             @endcan
         </div>
-        @can('update', App\Models\Course::class)
-        @include('staff.courses.modals.edit', [
-            'modalName' => 'edit-course-modal',
-            'courseTypes' => $courseTypes,
-        ])
-        @endcan
         <div class="space-y-5 leading-none">
             @foreach ($courses as $course)
                 <div class="relative p-6 page-card">
@@ -39,21 +36,23 @@
                             ]) }}" class="ml-2">
                                 @csrf_token @method('DELETE')
                                 <button type="submit" class="p-2 text-sm text-gray-700 hover:text-red-600 hover:bg-gray-300 rounded">
-                                    <feather-icon name="trash-2" class="h-current"></feather-icon>
+                                    <x-feather-icon name="trash-2" class="h-current"></x-feather-icon>
                                 </button>
                             </form>
                         </div>
                         <div class="flex flex-wrap -mx-2 -my-1">
                             @foreach ($latestRevision->attachments as $attachment)
                             <div class="inline-flex items-center p-2 rounded border hover:bg-gray-300 text-gray-600 mx-2 my-1">
+                                @can('view', $attachment)
                                 <a href="{{ route('staff.attachments.show', $attachment) }}" target="__blank" class="inline-flex items-center mr-1">
-                                    <feather-icon name="paperclip" class="h-4 mr-2" stroke-width="2">View Attachment</feather-icon>
+                                    <x-feather-icon name="paperclip" class="h-4 mr-2" stroke-width="2">View Attachment</x-feather-icon>
                                     <span>{{ $attachment->original_name }}</span>
                                 </a>
+                                @endcan
                                 @can('delete', $attachment)
                                 <button type="submit" form="remove-attachment" formaction="{{ route('staff.attachments.destroy', $attachment) }}"
                                     class="p-1 rounded hover:bg-red-500 hover:text-white">
-                                    <feather-icon name="x" class="h-4" stroke-width="2">Delete Attachment</feather-icon>
+                                    <x-feather-icon name="x" class="h-4" stroke-width="2">Delete Attachment</x-feather-icon>
                                 </button>
                                 @endcan
                             </div>
@@ -76,20 +75,20 @@
                                     </label>
                                     <input type="date" name="revised_at" id="revision_date" class="w-full form-input">
                                 </div>
-                                <v-file-input id="revision_attachments" name="attachments[]"
-                                    accept="application/pdf, image/*"
-                                    class="flex-1 ml-1 overflow-x-hidden"
-                                    placeholder="Select multiple files" multiple required>
-                                    <template v-slot="{ label }">
-                                        <span class="w-full form-label mb-1">
-                                            Upload Syllabus <span class="text-red-600">*</span>
-                                        </span>
-                                        <div class="w-full form-input flex items-center" tabindex="0">
-                                            <feather-icon name="upload" class="h-4 mr-2 text-gray-700 flex-shrink-0"></feather-icon>
-                                            <span class="truncate" v-text="label"></span>
-                                        </div>
-                                    </template>
-                                </v-file-input>
+                                <div class="space-y-1">
+                                    <label for="course_attachments" 
+                                        class="w-full form-label">
+                                        Upload Syllabus <span class="text-red-600">*</span>
+                                    </label>
+                                    <input type="file" id="course_attachments" name="attachments[]"
+                                        class="w-full form-input  inline-flex items-center"
+                                        tabindex="0"
+                                        accept="application/pdf, image/*"
+                                        placeholder="select multiple files"
+                                        multiple 
+                                        required>
+                                    </input>
+                                </div>
                                 <div class="ml-1 flex-shrink-0">
                                     <button type="submit" class="btn btn-magenta px-6">Add</button>
                                 </div>
@@ -112,21 +111,23 @@
                                         class="ml-2">
                                         @csrf_token @method('DELETE')
                                         <button type="submit" class="p-2 text-gray-700 hover:text-red-600 hover:bg-gray-300 rounded">
-                                            <feather-icon name="trash-2" class="h-current"></feather-icon>
+                                            <x-feather-icon name="trash-2" class="h-current"></x-feather-icon>
                                         </button>
                                     </form>
                                 </div>
                                 <div class="flex flex-wrap -mx-2">
                                     @foreach ($courseRevision->attachments as $attachment)
                                         <div class="inline-flex items-center p-2 rounded border hover:bg-gray-300 text-gray-600 mx-2 my-1">
+                                            @can('view', $attachment)
                                             <a href="{{ route('staff.attachments.show', $attachment) }}" target="__blank" class="inline-flex items-center mr-1">
-                                                <feather-icon name="paperclip" class="h-4 mr-2" stroke-width="2">View Attachment</feather-icon>
+                                                <x-feather-icon name="paperclip" class="h-4 mr-2" stroke-width="2">View Attachment</x-feather-icon>
                                                 <span>{{ $attachment->original_name }}</span>
                                             </a>
+                                            @endcan
                                             @can('delete', $attachment)
                                             <button type="submit" form="remove-attachment" formaction="{{ route('staff.attachments.destroy', $attachment) }}"
                                                 class="p-1 rounded hover:bg-red-500 hover:text-white">
-                                                <feather-icon name="x" class="h-4" stroke-width="2">Delete Attachment</feather-icon>
+                                                <x-feather-icon name="x" class="h-4" stroke-width="2">Delete Attachment</x-feather-icon>
                                             </button>
                                             @endcan
                                         </div>
@@ -140,12 +141,10 @@
                     </details>
                     <div class="absolute top-0 right-0 mt-4 mr-4 flex items-center">
                         @can('update', App\Models\Course::class)
-                        <button class="p-1 hover:text-blue-500 mr-2"
-                        @click.prevent="$modal.show('edit-course-modal', {
-                            course: {{ $course->toJson() }}
-                        })">
-                            <feather-icon name="edit" class="h-current">Edit</feather-icon>
-                        </button>
+                        <x-modal.trigger :livewire="['payload' => $course->id]" modal="edit-course-modal" title="Edit"
+                            class="p-1 text-gray-700 font-bold hover:text-blue-600 transition duration-300 transform hover:scale-110">
+                            <x-feather-icon class="h-5" name="edit-3">Edit</x-feather-icon>
+                        </x-modal.trigger>
                         @endcan
                         @can('delete', App\Models\Course::class)
                         <form action="{{ route('staff.courses.destroy', $course) }}" method="POST"
@@ -153,7 +152,7 @@
                             @csrf_token
                             @method('DELETE')
                             <button type="submit" class="p-1 hover:text-red-700">
-                                <feather-icon name="trash-2" class="h-current">Delete</feather-icon>
+                                <x-feather-icon name="trash-2" class="h-current">Delete</x-feather-icon>
                             </button>
                         </form>
                         @endcan
@@ -162,4 +161,9 @@
             @endforeach
         </div>
     </div>
+    <form id="remove-attachment"
+    method="POST"
+    onsubmit="return confirm('Do you really want to delete attachment?');">
+    @csrf_token @method('DELETE')
+    </form>
 @endsection
