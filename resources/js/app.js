@@ -21,8 +21,8 @@ import CourseProgrammeRevisionSelector from './components/CourseProgrammeRevisio
 import SelectWithOther from './components/SelectWithOther.vue';
 import AdvisoryCommitteeMemberElement from './components/AdvisoryCommitteeMemberElement.vue';
 
-
 import ClickOutside from './click-outside.js';
+import customSelect from './custom-select';
 
 Vue.use(VueJsModal);
 
@@ -45,7 +45,6 @@ Vue.component('add-remove-elements', AddRemoveElements);
 Vue.component("course-programme-revision-selector", CourseProgrammeRevisionSelector);
 Vue.component('select-with-other', SelectWithOther);
 Vue.component('advisory-committee-member', AdvisoryCommitteeMemberElement);
-
 
 Vue.mixin({
     computed: {
