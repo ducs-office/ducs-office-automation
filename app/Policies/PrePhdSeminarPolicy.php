@@ -17,13 +17,13 @@ class PrePhdSeminarPolicy
 
     public function request($user)
     {
-        return $user instanceof Scholar
+        return get_class($user) === Scholar::class
             && $user->prePhdSeminar === null;
     }
 
     public function create($user, Scholar $scholar)
     {
-        return $user instanceof Scholar
+        return get_class($user) === Scholar::class
             && $user->id === $scholar->id
             && $scholar->prePhdSeminar === null
             && $scholar->canApplyForPrePhdSeminar();
@@ -57,7 +57,7 @@ class PrePhdSeminarPolicy
     public function addSchedule($user, PrePhdSeminar $prePhdSeminar, Scholar $scholar)
     {
         return $scholar->is($prePhdSeminar->scholar)
-            && $user instanceof User
+            && get_class($user) === User::class
             && $prePhdSeminar->status == RequestStatus::RECOMMENDED
             && $prePhdSeminar->scheduled_on === null
             && $user->can('phd seminar:add schedule');
@@ -66,7 +66,7 @@ class PrePhdSeminarPolicy
     public function finalize($user, PrePhdSeminar $prePhdSeminar, Scholar $scholar)
     {
         return $scholar->is($prePhdSeminar->scholar)
-            && $user instanceof User
+            && get_class($user) === User::class
             && $prePhdSeminar->status == RequestStatus::RECOMMENDED
             && $prePhdSeminar->scheduled_on
             && $user->can('phd seminar:finalize');

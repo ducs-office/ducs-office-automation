@@ -14,7 +14,7 @@ class TitleApprovalPolicy
 
     public function request($user)
     {
-        return $user instanceof Scholar
+        return get_class($user) === Scholar::class
             && $user->prePhdSeminar
             && $user->prePhdSeminar->isCompleted()
             && $user->titleApproval === null;
@@ -22,7 +22,7 @@ class TitleApprovalPolicy
 
     public function create($user, Scholar $scholar)
     {
-        return $user instanceof Scholar
+        return get_class($user) === Scholar::class
             && $user->id === $scholar->id
             && $scholar->titleApproval === null
             && $scholar->canApplyForTitleApproval();
@@ -55,7 +55,7 @@ class TitleApprovalPolicy
     public function approve($user, TitleApproval $titleApproval, Scholar $scholar)
     {
         return $scholar->is($titleApproval->scholar)
-            && $user instanceof User
+            && get_class($user) === User::class
             && $titleApproval->status == RequestStatus::RECOMMENDED
             && $user->can('title approval:approve');
     }

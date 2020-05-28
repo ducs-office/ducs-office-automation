@@ -21,7 +21,7 @@ class LeavePolicy
      */
     public function view($user, Leave $leave)
     {
-        return $user instanceof Scholar && $leave->scholar_id == $user->id;
+        return get_class($user) === Scholar::class && $leave->scholar_id == $user->id;
     }
 
     /**

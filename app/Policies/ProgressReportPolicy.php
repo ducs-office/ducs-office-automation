@@ -20,9 +20,9 @@ class ProgressReportPolicy
      */
     public function viewAny($user)
     {
-        return $user instanceof Scholar ||
+        return get_class($user) === Scholar::class ||
                (method_exists($user, 'isSupervisor') && $user->isSupervisor()) ||
-               ($user instanceof User && $user->can('scholar progress reports:view'));
+               (get_class($user) === User::class && $user->can('scholar progress reports:view'));
     }
 
     /**
@@ -35,15 +35,15 @@ class ProgressReportPolicy
      */
     public function view($user, ProgressReport $progressReport)
     {
-        if ($user instanceof Scholar && $progressReport->scholar_id == $user->id) {
+        if (get_class($user) === Scholar::class && $progressReport->scholar_id == $user->id) {
             return true;
         }
 
-        if ($user instanceof User && $user->isSupervisor() && $user->scholars->contains($progressReport->scholar->id)) {
+        if (get_class($user) === User::class && $user->isSupervisor() && $user->scholars->contains($progressReport->scholar->id)) {
             return true;
         }
 
-        if ($user instanceof User && $user->can('scholar progress reports:view')) {
+        if (get_class($user) === User::class && $user->can('scholar progress reports:view')) {
             return true;
         }
     }
@@ -57,7 +57,7 @@ class ProgressReportPolicy
      */
     public function create($user)
     {
-        return $user instanceof User &&
+        return get_class($user) === User::class &&
                $user->can('scholar progress reports:add');
     }
 
@@ -71,7 +71,7 @@ class ProgressReportPolicy
      */
     public function delete($user, ProgressReport $progressReport)
     {
-        return $user instanceof User &&
+        return get_class($user) === User::class &&
                $user->can('scholar progress reports:delete');
     }
 }
