@@ -375,10 +375,14 @@ class PhdScholarSeeder extends Seeder
                 'password' => self::ENC_PASSWORD,
                 'designation' => Designation::PROFESSOR,
                 'category' => UserCategory::COLLEGE_TEACHER,
-                'college_id' => College::firstOrCreate(
-                    ['code' => 'DU-DCAC'],
-                    ['name' => 'Delhi College of Arts & Commerce, University of Delhi'],
-                )->id,
+                'college_id' => College::firstOrCreate([
+                    'code' => 'DU-DCAC',
+                    'name' => 'Delhi College of Arts & Commerce, University of Delhi',
+                    'principal_name' => 'Anuradha Gupta',
+                    'principal_emails' => 'agupta@du.ac.in',
+                    'principal_phones' => '1234567890',
+                    'address' => 'New Moti Bagh, Netaji Nagar, New Delhi, Delhi 110023',
+                ])->id,
             ]),
 
             'harmeet_kaur' => User::create([
@@ -388,10 +392,10 @@ class PhdScholarSeeder extends Seeder
                 'password' => self::ENC_PASSWORD,
                 'designation' => Designation::PROFESSOR,
                 'category' => UserCategory::COLLEGE_TEACHER,
-                'college_id' => College::firstOrCreate(
-                    ['code' => 'DU-HRC'],
-                    ['name' => 'Hansraj College, University of Delhi'],
-                )->id,
+                'college_id' => College::firstOrCreate([
+                    'code' => 'DU-HRC',
+                    'name' => 'Hansraj College, University of Delhi',
+                ])->id,
             ]),
         ];
     }
