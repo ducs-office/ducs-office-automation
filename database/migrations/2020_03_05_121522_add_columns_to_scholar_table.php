@@ -1,6 +1,7 @@
 <?php
 
 use App\Types\AdmissionMode;
+use App\Types\FundingType;
 use App\Types\Gender;
 use App\Types\RequestStatus;
 use App\Types\ReservationCategory;
@@ -23,6 +24,7 @@ class AddColumnsToScholarTable extends Migration
             $table->enum('gender', Gender::values())->nullable();
             $table->enum('category', ReservationCategory::values())->nullable();
             $table->enum('admission_mode', AdmissionMode::values())->nullable();
+            $table->enum('funding', FundingType::values())->nullable();
             $table->text('research_area', 501)->nullable();
             $table->string('enrolment_id', 30)->nullable();
             $table->date('registration_date')->nullable();

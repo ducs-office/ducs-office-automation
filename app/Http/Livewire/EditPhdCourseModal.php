@@ -22,7 +22,7 @@ class EditPhdCourseModal extends Component
         }
 
         $this->modalName = Str::kebab(class_basename($this));
-        if (!$errorBag->isEmpty()) {
+        if (! $errorBag->isEmpty()) {
             $this->show(old(('course_id')));
         } else {
             $this->course = new PhdCourse();

@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Types\AdmissionMode;
 use App\Types\AdvisoryCommitteeMember;
 use App\Types\EducationInfo;
+use App\Types\FundingType;
 use App\Types\Gender;
 use App\Types\RequestStatus;
 use App\Types\ReservationCategory;
@@ -29,6 +30,7 @@ $factory->define(Scholar::class, function (Faker $faker) {
         'gender' => $faker->randomElement(Gender::values()),
         'category' => $faker->randomElement(ReservationCategory::values()),
         'admission_mode' => $faker->randomElement(AdmissionMode::values()),
+        'funding' => $faker->randomElement(FundingType::values()),
         'research_area' => $faker->sentence(),
         'registration_date' => $faker->date($format = 'Y-m-d', $max = now()),
         'enrolment_id' => $faker->regexify('[A-Za-z0-9]{30}'),

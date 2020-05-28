@@ -11,6 +11,7 @@ use App\Models\ScholarEducationSubject;
 use App\Models\User;
 use App\Types\AdmissionMode;
 use App\Types\EducationInfo;
+use App\Types\FundingType;
 use App\Types\Gender;
 use App\Types\PresentationEventType;
 use App\Types\ReservationCategory;
@@ -48,6 +49,7 @@ class ProfileController extends Controller
             'scholar' => $scholar,
             'categories' => ReservationCategory::values(),
             'admissionModes' => AdmissionMode::values(),
+            'fundings' => FundingType::values(),
             'genders' => Gender::values(),
             'subjects' => ScholarEducationSubject::all()->pluck('name')->toArray(),
             'degrees' => ScholarEducationDegree::all()->pluck('name')->toArray(),

@@ -10,6 +10,7 @@ use App\Models\ScholarEducationSubject;
 use App\Models\User;
 use App\Types\AdmissionMode;
 use App\Types\EducationInfo;
+use App\Types\FundingType;
 use App\Types\ReservationCategory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -37,6 +38,7 @@ class UpdateScholarProfileTest extends TestCase
             'address' => 'new address, new delhi',
             'category' => ReservationCategory::SC,
             'admission_mode' => AdmissionMode::UGC_NET,
+            'funding' => FundingType::NON_NET,
             'profile_picture' => $profilePicture = UploadedFile::fake()->image('picture.jpeg'),
             'registration_date' => now()->subMonth(1)->format('Y-m-d'),
             'research_area' => 'Artificial Intelligence',
@@ -66,6 +68,7 @@ class UpdateScholarProfileTest extends TestCase
         $this->assertEquals($updateDetails['address'], $freshScholar->address);
         $this->assertEquals($updateDetails['category'], $freshScholar->category);
         $this->assertEquals($updateDetails['admission_mode'], $freshScholar->admission_mode);
+        $this->assertEquals($updateDetails['funding'], $freshScholar->funding);
         $this->assertEquals($updateDetails['registration_date'], $freshScholar->registration_date->format('Y-m-d'));
         $this->assertEquals($updateDetails['research_area'], $freshScholar->research_area);
         $this->assertEquals($updateDetails['enrolment_id'], $freshScholar->enrolment_id);
@@ -93,6 +96,7 @@ class UpdateScholarProfileTest extends TestCase
                 'address' => null,
                 'category' => null,
                 'admission_mode' => null,
+                'funding' => null,
                 'research_area' => null,
                 'enrolment_id' => null,
             ])

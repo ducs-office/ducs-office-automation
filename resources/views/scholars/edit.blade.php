@@ -92,6 +92,18 @@
                             @endforeach
                         </select>
                     </div>
+                    <div class="flex items-baseline">
+                        <label for="funding" class="w-48 form-label">Funding</label>
+                        <select id="funding" name="funding" class="w-full form-select flex-1">
+                            <option value="" selected> Choose the funding type </option>
+                            @foreach ($fundings as $funding)
+                            <option value="{{ $funding }}"
+                                {{ $funding === old('funding', (string) $scholar->funding) ? 'selected': '' }}>
+                                {{ $funding }}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
             </div>
 

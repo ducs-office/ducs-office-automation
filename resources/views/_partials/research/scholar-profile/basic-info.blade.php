@@ -96,7 +96,7 @@
                     <li class="px-4 py-3 flex space-x-4">
                         <p class="whitespace-no-wrap font-bold w-48"> Funding </p>
                         <p class="flex-1 text-gray-800">
-                            {{ optional($scholar->admission_mode)->getFunding() ?? '-'}}
+                            {{ $scholar->funding ?? '-' }}
                         </p>
                     </li>
                     <li class="px-4 py-3 flex space-x-4">

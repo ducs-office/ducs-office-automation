@@ -9,6 +9,7 @@ use App\Concerns\HasResearchCommittee;
 use App\Models\Pivot\ScholarCoursework;
 use App\Models\ScholarAppeal;
 use App\Types\AdmissionMode;
+use App\Types\FundingType;
 use App\Types\Gender;
 use App\Types\LeaveStatus;
 use App\Types\RequestStatus;
@@ -34,6 +35,7 @@ class Scholar extends User
         'address',
         'category',
         'admission_mode',
+        'funding',
         'gender',
         'research_area',
         'registration_date',
@@ -51,6 +53,7 @@ class Scholar extends User
         'admission_mode' => CustomType::class . ':' . AdmissionMode::class,
         'gender' => CustomType::class . ':' . Gender::class,
         'education_details' => EducationDetails::class,
+        'funding' => CustomType::class . ':' . FundingType::class,
     ];
 
     protected $withCount = [

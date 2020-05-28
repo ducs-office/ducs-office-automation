@@ -42,30 +42,35 @@ class StorePublicationTest extends TestCase
         $type = $overrides['type'] ?? $this->faker->randomElement(PublicationType::values());
 
         $publicationFormDetails = [
-            'is_published' => $isPublished,
             'type' => $type,
             'paper_title' => $this->faker->sentence,
             'document' => $document,
-            'name' => $this->faker->sentence,
-            'volume' => $this->faker->numberBetween(1, 20),
-            'page_numbers' => [random_int(1, 100), random_int(101, 1000)],
-            'date' => [
-                'month' => $this->faker->monthName(),
-                'year' => $this->faker->year(),
-            ],
-            'indexed_in' => $this->faker->randomElements(CitationIndex::values(), 2),
-            'number' => $type === PublicationType::JOURNAL ?
-                $this->faker->randomNumber(2) : null,
-            'publisher' => $type === PublicationType::JOURNAL ?
-                $this->faker->name : null,
-            'city' => $type === PublicationType::CONFERENCE ?
-                $this->faker->city : null,
-            'country' => $type === PublicationType::CONFERENCE ?
-                $this->faker->country : null,
-            'co_authors' => [
-            ],
-            'paper_link' => $this->faker->url,
         ];
+
+        if ($isPublished) {
+            $publicationFormDetails = $publicationFormDetails + [
+                'is_published' => true,
+                'name' => $this->faker->sentence,
+                'volume' => $this->faker->numberBetween(1, 20),
+                'page_numbers' => [random_int(1, 100), random_int(101, 1000)],
+                'date' => [
+                    'month' => $this->faker->monthName(),
+                    'year' => $this->faker->year(),
+                ],
+                'indexed_in' => $this->faker->randomElements(CitationIndex::values(), 2),
+                'number' => $type === PublicationType::JOURNAL ?
+                    $this->faker->randomNumber(2) : null,
+                'publisher' => $type === PublicationType::JOURNAL ?
+                    $this->faker->name : null,
+                'city' => $type === PublicationType::CONFERENCE ?
+                    $this->faker->city : null,
+                'country' => $type === PublicationType::CONFERENCE ?
+                    $this->faker->country : null,
+                'co_authors' => [
+                ],
+                'paper_link' => $this->faker->url,
+            ];
+        }
 
         return $this->mergeFormFields($publicationFormDetails, $overrides);
     }

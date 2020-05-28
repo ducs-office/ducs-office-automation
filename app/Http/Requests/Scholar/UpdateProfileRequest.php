@@ -2,6 +2,9 @@
 
 namespace App\Http\Requests\Scholar;
 
+use App\Types\AdmissionMode;
+use App\Types\FundingType;
+use App\Types\ReservationCategory;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -18,8 +21,18 @@ class UpdateProfileRequest extends FormRequest
         return [
             'phone_no' => [Rule::requiredIf($scholar->phone_no != null)],
             'address' => [Rule::requiredIf($scholar->address != null)],
-            'category' => [Rule::requiredIf($scholar->category != null)],
-            'admission_mode' => [Rule::requiredIf($scholar->admission_mode != null)],
+            'category' => [
+                Rule::requiredIf($scholar->category != null),
+                Rule::in(ReservationCategory::values()),
+            ],
+            'admission_mode' => [
+                Rule::requiredIf($scholar->admission_mode != null),
+                Rule::in(AdmissionMode::values()),
+            ],
+            'funding' => [
+                Rule::requiredIf($scholar->funding != null),
+                Rule::in(FundingType::values()),
+            ],
             'profile_picture' => ['nullable', 'image'],
             'research_area' => [Rule::requiredIf($scholar->research_area != null)],
             'registration_date' => ['nullable', 'date', 'before:today'],
