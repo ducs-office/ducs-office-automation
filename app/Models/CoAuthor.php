@@ -28,4 +28,14 @@ class CoAuthor extends Model
     {
         return $this->belongsTo(Publication::class);
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function getNameAttribute()
+    {
+        return ($this->user_id) ? $this->user->name : $this->attributes['name'];
+    }
 }

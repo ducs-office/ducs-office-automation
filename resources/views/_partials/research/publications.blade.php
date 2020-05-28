@@ -7,7 +7,7 @@
                 <li class="flex items-baseline">
                     <div class="inline-flex items-center p-2 rounded border hover:bg-gray-300 mx-2">
                         @can('view', $coAuthor)
-                        <a href="{{ route('publications.co_authors.show', $coAuthor) }}" target="__blank" class="inline-flex items-center mr-1">
+                        <a href="{{ route('publications.co_authors.show', [$publication, $coAuthor]) }}" target="__blank" class="inline-flex items-center mr-1">
                             <x-feather-icon name="paperclip" class="h-4 mr-2" stroke-width="2">NOC</x-feather-icon>
                             <span>{{ $coAuthor->name }}</span>
                         </a>
