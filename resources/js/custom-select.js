@@ -114,7 +114,7 @@ const addSingleSelectFeature = () => ({
     onChanged(value) {},
 });
 
-const addRegisterOptionsFeature = () => ({
+const addRegisterOptionsFeature = (multiple = false) => ({
     options: [],
     initializeOptions(optionHTMLs) {
         this.options = optionHTMLs.map(this.registerOption.bind(this));
@@ -129,7 +129,11 @@ const addRegisterOptionsFeature = () => ({
             : null;
 
         optionEl.addEventListener('mouseover', e => this.highlight(index));
-        optionEl.addEventListener('click', e => this.select(optionEl.value));
+        if(! multiple) {
+            optionEl.addEventListener('click', e => this.select(optionEl.value));
+        } else {
+            optionEl.addEventListener('click', e => this.toggleValue(optionEl.value));
+        }
 
         return optionEl;
     },
@@ -143,7 +147,7 @@ export default ({
     ...addVisibiltyFeature(),
     ...addHighlightingFeature(),
     ...(multiple ? addMultipleSelectFeature() : addSingleSelectFeature()),
-    ...addRegisterOptionsFeature(),
+    ...addRegisterOptionsFeature(multiple),
     init() {
         const optionsContainer = this.$refs.options;
         const renderContainer = this.$refs.dom;

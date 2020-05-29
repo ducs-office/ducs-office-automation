@@ -1,13 +1,14 @@
-@dump(request()->all())
-
 @extends('layouts.guest')
 @section('body')
-
 <div class="page-card p-4 w-1/2 mx-auto overflow-visible">
     <form class="space-y-2">
         <div>
             <label for="" class="w-full form-label">Subject</label>
-            <input type="text" name="subject" class="w-full form-input">
+            <select type="text" name="subject" class="w-full form-select">
+                @foreach(['John', 'Mary', 'Jane', 'Foo', 'Bar', 'hello', 'there'] as $index => $user)
+                    <option selected="false" value="{{$index}}">{{ $user }}</option>
+                @endforeach
+            </select>
         </div>
         <div>
             <label for="name" class="w-full form-label">Sender</label>

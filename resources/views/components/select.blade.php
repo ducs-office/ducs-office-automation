@@ -5,7 +5,18 @@
     'searchPlaceholder' => 'Search an item',
     'queryModel' => 'searchQuery',
 ])
-<div x-data="CustomSelect({multiple: {{ json_encode($multiple) }}})" x-init="init()"
+<div x-data="CustomSelect({
+    multiple: {{ json_encode($multiple) }}
+})" x-init="init()"
+    @if($multiple)
+    x-on:keydown.backspace="onBackspace()"
+    x-on:keydown.enter.prevent="toggleHighlighted()"
+    @else
+    x-on:keydown.enter.prevent="selectHighlighted()"
+    @endif
+    x-on:keydown.arrow-down="highlightNext()"
+    x-on:keydown.arrow-up="highlightPrev()"
+    x-on:keydown.escape.prevent="close()"
     {{ $attributes->merge(['class' => 'relative w-full']) }}>
     <button type="button"
         class="text-left form-select w-full"
@@ -17,7 +28,7 @@
         <template x-for="(optionHTML,index) in selectedOptionHTMLs">
             <div x-key="index" class="inline-flex px-2 py-1 space-x-1 bg-magenta-700 text-white text-sm rounded">
                 <span x-html="optionHTML"></span>
-                <button class="p-1" x-on:click="deselect(index)">
+                <button class="p-1" x-on:click.stop.prevent="deselect(index)">
                     <x-feather-icon name="x" class="h-current"></x-feather-icon>
                 </button>
             </div>
@@ -34,26 +45,10 @@
     </template>
     @endif
     <div x-show="opened" x-on:click.away="close()"
-        class="absolute z-20 page-card border shadow-lg rounded p-4 w-full inset-x-0 mt-1">
-        <input x-ref="input" type="text"
-            placeholder="{{ $searchPlaceholder }}"
-            class="w-full form-input mb-4"
-            wire:model="{{ $queryModel }}"
-            x-on:input.stop
-            @if($multiple)
-            x-on:keydown.backspace="onBackspace()"
-            @endif
-            x-on:keydown.arrow-down="highlightNext()"
-            x-on:keydown.arrow-up="highlightPrev()"
-            @if(!$multiple)
-            x-on:keydown.enter.prevent="selectHighlighted()"
-            @else
-            x-on:keydown.enter.prevent="toggleHighlighted()"
-            @endif
-            x-on:keydown.escape.prevent="close()">
-        <div x-ref="dom" wire:ignore class="-mx-4 max-h-48 overflow-y-auto"></div>
-        <div x-ref="options" x-show="false">
-            {{ $slot }}
-        </div>
+        x-ref="dom" wire:ignore
+        class="absolute z-20 page-card px-0 py-2 border shadow-lg rounded p-4 w-full inset-x-0 mt-1 min-h-64 overflow-y-auto">
+    </div>
+    <div x-ref="options" x-show="false">
+        {{ $slot }}
     </div>
 </div>
