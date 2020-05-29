@@ -4,7 +4,7 @@
         <h2 class="mb-8 font-bold text-lg">Create New Course</h2>
         @include('_partials.forms.create-course')
     </x-modal>
-    <livewire:edit-course-modal :error-bag="$errors->update" :courseTypes="$courseTypes" />
+    <livewire:edit-course-modal :error-bag="$errors->update"/>
 @endpush
 @section('body')
     <div class="m-6">

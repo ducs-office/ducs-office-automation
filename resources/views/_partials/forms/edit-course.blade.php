@@ -50,7 +50,7 @@
     <div class="space-y-1">
         <label for="course_attachments" 
             class="w-full form-label @error('attachments') text-red-500 @enderror">
-            Upload Syllabus <span class="text-red-600">*</span>
+            Upload Syllabus
         </label>
         <input type="file" id="course_attachments" name="attachments[]"
             class="w-full form-input  inline-flex items-center @error('attachments') border-red-500 hover:border-red-700 @enderror"

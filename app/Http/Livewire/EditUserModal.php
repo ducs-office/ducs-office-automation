@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Concerns\HasEditModal;
 use App\Models\User;
 use App\Types\UserCategory;
 use Illuminate\Support\Str;
@@ -9,6 +10,8 @@ use Livewire\Component;
 
 class EditUserModal extends Component
 {
+    use HasEditModal;
+
     protected $listeners = ['show'];
     public $showModal = false;
     public $modalName;
@@ -43,10 +46,6 @@ class EditUserModal extends Component
     {
         $this->user = User::find($userId);
         $this->showModal = true;
-    }
-
-    public function close()
-    {
-        $this->showModal = false;
+        $this->onShow();
     }
 }

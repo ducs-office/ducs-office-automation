@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Concerns\HasEditModal;
 use App\Models\PhdCourse;
 use App\Types\PrePhdCourseType;
 use Illuminate\Support\Str;
@@ -9,6 +10,8 @@ use Livewire\Component;
 
 class EditPhdCourseModal extends Component
 {
+    use HasEditModal;
+
     protected $listeners = ['show'];
     public $showModal = false;
     public $modalName;
@@ -41,10 +44,6 @@ class EditPhdCourseModal extends Component
     {
         $this->course = PhdCourse::find($courseId);
         $this->showModal = true;
-    }
-
-    public function close()
-    {
-        $this->showModal = false;
+        $this->onShow();
     }
 }

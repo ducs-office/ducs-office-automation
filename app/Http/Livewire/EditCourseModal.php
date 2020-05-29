@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Concerns\HasEditModal;
 use App\Models\Course;
 use App\Types\CourseType;
 use Illuminate\Support\Str;
@@ -9,21 +10,21 @@ use Livewire\Component;
 
 class EditCourseModal extends Component
 {
+    use HasEditModal;
+
     protected $listeners = ['show'];
-    public $showModal = false;
     public $modalName;
+    public $showModal = false;
 
     protected $course;
-    public $courseTypes;
 
-    public function mount($courseTypes, $errorBag = null)
+    public function mount($errorBag = null)
     {
         if ($errorBag != null) {
             $this->setErrorBag($errorBag);
         }
 
         $this->modalName = Str::kebab(class_basename($this));
-        $this->courseTypes = $courseTypes;
 
         if (! $errorBag->isEmpty()) {
             $this->show(old('course_id'));
@@ -44,10 +45,6 @@ class EditCourseModal extends Component
     {
         $this->course = Course::find($courseId);
         $this->showModal = true;
-    }
-
-    public function close()
-    {
-        $this->showModal = false;
+        $this->onShow();
     }
 }
