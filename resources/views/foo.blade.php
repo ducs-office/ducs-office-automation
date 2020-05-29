@@ -21,7 +21,13 @@
         </div>
         <div>
             <label for="" class="w-full form-label">Date</label>
-            <input type="text" name="date" class="w-full form-input">
+            <x-select id="select-names" name="names[]" :multiple="true">
+                @foreach(['John', 'Mary', 'Jane', 'Foo', 'Bar', 'hello', 'there'] as $index => $user)
+                <div class="px-4 py-2" value="{{ $index }}">
+                    <span>{{ $index }} => {{ $user }}</span>
+                </div>
+                @endforeach
+            </x-select>
         </div>
         <div>
             <button class="btn btn-magenta w-full">Submit</button>

@@ -52,9 +52,9 @@ const addMultipleSelectFeature = () => ({
             this.selectedValue.push(value);
         }
 
-        this.selectedOptionHTMLs = this.options.filter(
-            option => values.includes(option.value)
-        ).map(option => option.innerHTML);
+        this.options
+            .filter(option => values.includes(option.value))
+            .forEach(option => this.selectedOptionHTMLs.push(option.innerHTML));
 
         this.onChanged(this.selectedValue);
     },
@@ -64,6 +64,7 @@ const addMultipleSelectFeature = () => ({
         }
 
         this.selectedValue.splice(index, 1);
+        this.selectedOptionHTMLs.splice(index, 1);
         this.onChanged(this.selectedValue);
     },
     deselectLast() {
@@ -80,6 +81,9 @@ const addMultipleSelectFeature = () => ({
         } else {
             this.select(value);
         }
+    },
+    toggleHighlighted() {
+        this.toggleValue(this.options[this.highlighted].value);
     },
     isEmpty() {
         return this.selectedValue == null || this.selectedValue.length === 0;
@@ -132,8 +136,8 @@ const addRegisterOptionsFeature = () => ({
 })
 
 export default ({
-    selectedClasses = 'bg-magenta-700 text-white',
-    highlightClasses = 'bg-gray-200',
+    selectedClasses = 'bg-gray-300',
+    highlightClasses = 'bg-magenta-600 text-white',
     multiple = false
 } = {}) => ({
     ...addVisibiltyFeature(),
@@ -169,7 +173,24 @@ export default ({
             renderContainer.appendChild(option)
         );
 
-        this.selectInitialValue();
+        if(multiple) {
+            this.selectMultipleInitialValues();
+        } else {
+            this.selectInitialValue();
+        }
+    },
+    selectMultipleInitialValues() {
+        const value = this.$el.attributes.value
+            ? this.$el.attributes.value.nodeValue
+            : this.$el.value;
+
+        if(value == null) {
+            return;
+        }
+
+        this.select(
+            ...(Array.isArray(value) ? value : [value])
+        );
     },
     selectInitialValue() {
         this.select(
