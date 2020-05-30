@@ -125,3 +125,26 @@ window.featherIcon = function(name) {
         ? feather.icons[name].contents
         : feather.icons["x"].contents;
 }
+
+window.addRemoveElement = (existingElements) => ({
+    elements: existingElements ? existingElements  : [],
+    logElements() {
+        console.log(this.elements);
+    },
+    addElement() {
+        this.elements.push(this.createElement());
+    },
+    removeElement(index) {
+        this.elements.splice(index, 1);
+    },
+    createElement() {
+        let el = '';
+        if(this.elements.length) {
+            el = JSON.parse(JSON.stringify(this.elements[0]));
+            Object.keys(el).map((key) => {
+                el[key] = '';
+            });
+        }
+        return el;
+    }
+});

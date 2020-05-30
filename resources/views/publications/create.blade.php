@@ -48,30 +48,17 @@
                 <input type="file" name="document" id="document">
             </div>
             <div class="mb-4">
-                <add-remove-elements>
-                    <template v-slot="{ elements, addElement, removeElement }">
+                <x-add-remove-element class="mb-2">
+                    <x-slot name="title">
                         <div class="flex items-baseline mb-2">
                             <label foAr="co_authors[]" class="form-label block mb-1">
                                 Co-Author(s)
                             </label>
                         </div>
-                        <div v-for="(element, index) in elements" :key="index" class="flex items-start mb-2">
-                            <input type="text" 
-                                :name="`co_authors[${index}][name]`" class="form-input mr-2" placeholder="Co-Author's name">
-                            <v-file-input :id="`co_authors[${index}][noc]`" :name="`co_authors[${index}][noc]`" accept="application/pdf" 
-                                class="form-input overflow-hidden text-gray-500 flex-1" placeholder="Upload Co-Author's NOC ">
-                                <template v-slot="{ label }">
-                                    <div class="flex-1 inline-flex items-center">
-                                        <feather-icon name="upload" class="h-4 mr-2 text-gray-700 flex-shrink-0"></feather-icon>
-                                        <span v-text="label" class="truncate"></span>
-                                    </div>
-                                </template>
-                            </v-file-input>
-                            <button v-on:click.prevent="removeElement(index)" class="btn is-md ml-2 text-red-600">x</button>
-                        </div>
-                        <button class="link" @click.prevent="addElement">Add more...</button>
-                    </template>
-                </add-remove-elements>
+                    </x-slot>
+                    <input type="text" :name="`co_authors[others][${index}][name]`" class="form-input mr-2" placeholder="Co-Author's name">
+                    <input type="file" :name="`co_authors[others][${index}][noc]`" class="form-input">
+                </x-add-remove-element>
             </div>
             <div x-show="is_published">
                 <div class="mb-4">
