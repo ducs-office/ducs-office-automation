@@ -1,8 +1,6 @@
 <form action="{{ route('staff.phd_courses.update', $course) }}" method="POST" enctype="multipart/form-data"
     class="space-y-3"
-    x-data="phdCourseForm({
-        type: '{{ old('type', $course->type) }}',
-    })">
+    x-data="{type: '{{ old('type', $course->type) }}'}">
     @csrf_token @method('PATCH')
     <div class="space-y-1">
         <label for="course_code" 

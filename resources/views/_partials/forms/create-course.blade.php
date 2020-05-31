@@ -1,7 +1,7 @@
 <form action="{{ route('staff.courses.store') }}" method="POST" 
-class="space-y-3" 
-enctype="multipart/form-data"
-x-data="courseForm({{ json_encode(old()) }})">
+    class="space-y-3" 
+    enctype="multipart/form-data"
+    x-data="{ type: '{{ old('type') }}' }">
     @csrf_token
     <div class="space-y-1">
         <label for="unique-course-code" 
@@ -38,7 +38,7 @@ x-data="courseForm({{ json_encode(old()) }})">
         </label>
         <select name="type"
             class="w-full form-select @error('type') border-red-500 hover:border-red-700 @enderror"
-            x-model="$form.type" 
+            x-model="type" 
             required>
             <option value="" disabled>-- Select Course Type --</option>
             @foreach ($courseTypes as $type)
@@ -85,15 +85,3 @@ x-data="courseForm({{ json_encode(old()) }})">
         <button type="submit" class="btn btn-magenta">Create</button>
     </div>
 </form>
-@push('scripts')
-<script>
-    function courseForm(old)
-    {
-        return {
-            $form: {
-                type: old.type || ''
-            }
-        }
-    }
-</script>    
-@endpush

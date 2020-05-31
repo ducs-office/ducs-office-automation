@@ -10,8 +10,6 @@ use Livewire\Component;
 
 class EditUserModal extends Component
 {
-    use HasEditModal;
-
     protected $listeners = ['show'];
     public $showModal = false;
     public $modalName;
@@ -46,6 +44,5 @@ class EditUserModal extends Component
     {
         $this->user = User::find($userId);
         $this->showModal = true;
-        $this->onShow();
     }
 }

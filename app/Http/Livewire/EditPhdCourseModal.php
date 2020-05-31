@@ -12,20 +12,11 @@ class EditPhdCourseModal extends Component
 {
     use HasEditModal;
 
-    protected $listeners = ['show'];
-    public $showModal = false;
-    public $modalName;
-
     protected $course;
 
-    public function mount($errorBag = null)
+    public function mount($errorBag)
     {
-        if ($errorBag != null) {
-            $this->setErrorBag($errorBag);
-        }
-
-        $this->modalName = Str::kebab(class_basename($this));
-        if (! $errorBag->isEmpty()) {
+        if (! $this->getErrorBag()->isEmpty()) {
             $this->show(old(('course_id')));
         } else {
             $this->course = new PhdCourse();
@@ -40,10 +31,8 @@ class EditPhdCourseModal extends Component
         ]);
     }
 
-    public function show($courseId)
+    public function beforeShow($data)
     {
-        $this->course = PhdCourse::find($courseId);
-        $this->showModal = true;
-        $this->onShow();
+        $this->course = PhdCourse::find($data['course_id']);
     }
 }

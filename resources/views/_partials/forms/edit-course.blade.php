@@ -1,8 +1,6 @@
 <form action="{{ route('staff.courses.update', $course) }}" method="POST" 
     class="space-y-3"
-    x-data="courseForm({
-        type: '{{ old('type', $course->type) }}',
-    })"
+    x-data="{type: '{{ old('type', $course->type) }}'}"
     enctype="multipart/form-data">
     @csrf_token 
     @method('PATCH')
@@ -36,11 +34,11 @@
             Type<span class="h-current text-red-500 text-lg">*</span></label>
         <select name="type"
             class="w-full form-input @error('type') border-red-500 hover:border-red-700 @enderror" 
-            x-model="$form.type"
+            x-model="type"
             required> 
             <option value="" disabled>-- Select Course Type --</option>
             @foreach ($courseTypes as $type)
-                <option value="{{ $type }}" {{ old('type') == $type }}> {{ $type }} </option>
+                <option value="{{ $type }}"> {{ $type }} </option>
             @endforeach
             </select>
             @error('type')

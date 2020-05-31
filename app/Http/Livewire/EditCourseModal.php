@@ -12,21 +12,11 @@ class EditCourseModal extends Component
 {
     use HasEditModal;
 
-    protected $listeners = ['show'];
-    public $modalName;
-    public $showModal = false;
-
     protected $course;
 
-    public function mount($errorBag = null)
+    public function mount($errorBag)
     {
-        if ($errorBag != null) {
-            $this->setErrorBag($errorBag);
-        }
-
-        $this->modalName = Str::kebab(class_basename($this));
-
-        if (! $errorBag->isEmpty()) {
+        if (! $this->getErrorBag()->isEmpty()) {
             $this->show(old('course_id'));
         } else {
             $this->course = new Course();
@@ -41,10 +31,8 @@ class EditCourseModal extends Component
         ]);
     }
 
-    public function show($courseId)
+    public function beforeShow($data)
     {
-        $this->course = Course::find($courseId);
-        $this->showModal = true;
-        $this->onShow();
+        $this->course = Course::find($data['course_id']);
     }
 }
