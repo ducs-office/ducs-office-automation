@@ -1,34 +1,36 @@
 @props([
     'multiple' => false,
     'name' => '',
+    'value' => null,
     'placeholder' => 'Select an item',
-    'searchPlaceholder' => 'Search an item',
-    'queryModel' => 'searchQuery',
 ])
 <div x-data="CustomSelect({
     multiple: {{ json_encode($multiple) }}
-})" x-init="init()"
+})" x-init="init({{ json_encode($value) }})"
+    {{-- wait for click to be fired first, incase focus received due to click, so that there is no double toggle --}}
+    x-on:focusin="setTimeout(() => open(), 150)"
+    x-on:focusout="close()"
     @if($multiple)
     x-on:keydown.backspace="onBackspace()"
-    x-on:keydown.enter.prevent="toggleHighlighted()"
+    x-on:keydown.enter.prevent="opened ? toggleHighlighted() : open()"
     @else
-    x-on:keydown.enter.prevent="selectHighlighted()"
+    x-on:keydown.enter.prevent="opened ? selectHighlighted() : open()"
     @endif
     x-on:keydown.arrow-down="highlightNext()"
     x-on:keydown.arrow-up="highlightPrev()"
     x-on:keydown.escape.prevent="close()"
     {{ $attributes->merge(['class' => 'relative w-full']) }}>
     <button type="button"
-        class="text-left form-select w-full"
-        x-on:click.prevent="toggle()">
+        x-on:click="toggle()"
+        class="text-left form-select w-full">
         <span x-show="isEmpty()" class="opacity-50">{{ $placeholder }}</span>
         @if(! $multiple)
             <span x-show="! isEmpty()" x-html="selectedOptionHTML"></span>
         @else
         <template x-for="(optionHTML,index) in selectedOptionHTMLs">
-            <div x-key="index" class="inline-flex px-2 py-1 space-x-1 bg-magenta-700 text-white text-sm rounded">
+            <div x-key="index" class="inline-flex px-2 py-1 leading-none space-x-1 bg-magenta-700 text-white text-sm rounded-full">
                 <span x-html="optionHTML"></span>
-                <button class="p-1" x-on:click.stop.prevent="deselect(index)">
+                <button x-on:click.stop.prevent="deselect(index)">
                     <x-feather-icon name="x" class="h-current"></x-feather-icon>
                 </button>
             </div>

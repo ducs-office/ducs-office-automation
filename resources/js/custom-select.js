@@ -148,7 +148,7 @@ export default ({
     ...addHighlightingFeature(),
     ...(multiple ? addMultipleSelectFeature() : addSingleSelectFeature()),
     ...addRegisterOptionsFeature(multiple),
-    init() {
+    init(value = null) {
         const optionsContainer = this.$refs.options;
         const renderContainer = this.$refs.dom;
 
@@ -178,16 +178,12 @@ export default ({
         );
 
         if(multiple) {
-            this.selectMultipleInitialValues();
+            this.selectMultipleInitialValues(value);
         } else {
-            this.selectInitialValue();
+            this.selectInitialValue(value);
         }
     },
-    selectMultipleInitialValues() {
-        const value = this.$el.attributes.value
-            ? this.$el.attributes.value.nodeValue
-            : this.$el.value;
-
+    selectMultipleInitialValues(value) {
         if(value == null) {
             return;
         }
@@ -196,12 +192,8 @@ export default ({
             ...(Array.isArray(value) ? value : [value])
         );
     },
-    selectInitialValue() {
-        this.select(
-            this.$el.attributes.value
-                ? this.$el.attributes.value.nodeValue
-                : this.$el.value
-        );
+    selectInitialValue(value) {
+        this.select(value);
     },
     selectHighlighted() {
         this.select(this.highlighted);
