@@ -14,8 +14,14 @@ class EditCourseModal extends Component
 
     protected $course;
 
-    public function mount($errorBag)
+    public function mount($modalName = null, $errorBag = null)
     {
+        if ($errorBag != null) {
+            $this->setErrorBag($errorBag);
+        }
+
+        $this->modalName = $modalName ?? Str::kebab(class_basename($this));
+
         if (! $this->getErrorBag()->isEmpty()) {
             $this->show(old('course_id'));
         } else {
@@ -33,6 +39,6 @@ class EditCourseModal extends Component
 
     public function beforeShow($data)
     {
-        $this->course = Course::find($data['course_id']);
+        $this->course = Course::find($data);
     }
 }

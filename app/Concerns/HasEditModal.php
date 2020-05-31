@@ -2,25 +2,14 @@
 
 namespace App\Concerns;
 
-use App\Models\Course;
-use Illuminate\Support\Str;
-
 trait HasEditModal
 {
     public $modalName;
     public $showModal = false;
 
-    public function mount($errorBag = null)
+    public function getListeners()
     {
-        $this->listeners = ['show'];
-
-        if ($errorBag != null) {
-            $this->setErrorBag($errorBag);
-        }
-
-        $this->modalName = Str::kebab(class_basename($this));
-
-        parent::mount($errorBag);
+        return array_merge($this->listeners, ['show']);
     }
 
     public function close()

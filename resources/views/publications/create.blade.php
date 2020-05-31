@@ -4,7 +4,7 @@
         <div class="page-header flex items-baseline">
             <h2 class="mr-6">Create Publication</h2>
         </div>
-        <form action="{{ route('publications.store')}}" method="post" 
+        <form action="{{ route('publications.store')}}" method="post"
             class="px-6" enctype="multipart/form-data"
             x-data="{ publication_type: '{{old('type',App\Types\PublicationType::JOURNAL)}}', is_published: '{{array_key_exists('is_published', old())}}'}">
             @csrf_token
@@ -30,7 +30,7 @@
                     placeholder="Title of the publication">
             </div>
             <div class="flex mb-4">
-                <input type="checkbox" name="is_published" id="is_published" 
+                <input type="checkbox" name="is_published" id="is_published"
                     class="form-checkbox" x-model="is_published">
                 <label for="number" class="form-label block ml-2">
                     Is the paper published?
@@ -47,19 +47,21 @@
                 </label>
                 <input type="file" name="document" id="document">
             </div>
-            <div class="mb-4">
-                <x-add-remove-element class="mb-2">
-                    <x-slot name="title">
-                        <div class="flex items-baseline mb-2">
-                            <label foAr="co_authors[]" class="form-label block mb-1">
-                                Co-Author(s)
-                            </label>
-                        </div>
-                    </x-slot>
-                    <input type="text" :name="`co_authors[others][${index}][name]`" class="form-input mr-2" placeholder="Co-Author's name">
-                    <input type="file" :name="`co_authors[others][${index}][noc]`" class="form-input">
-                </x-add-remove-element>
-            </div>
+            <x-add-remove-element class="mb-4" count="1" :max="10" :new-object="['name' => '']">
+                <label class="form-label block mb-1">
+                    Co-Author(s)
+                </label>
+                <template x-for="(item, index) in items" x-bind:key="index">
+                    <div class="flex items-center space-x-2">
+                        <input type="text" x-model="item.name" :name="`co_authors[others][${index}][name]`" class="form-input mr-2" placeholder="Co-Author's name">
+                        <input type="file" :name="`co_authors[others][${index}][noc]`" class="form-input">
+                        <button type="button" class="p-1" x-on:click="remove(index)">
+                            <x-feather-icon name="x" class="h-current">remove</x-feather-icon>
+                        </button>
+                    </div>
+                </template>
+                <button type="button" class="link" x-on:click.prevent="add()">add more...</button>
+            </x-add-remove-element>
             <div x-show="is_published">
                 <div class="mb-4">
                     <label for="name" class="form-label block mb-1"
@@ -98,7 +100,7 @@
                             </select>
                             <select name="date[year]" id="date_year" class="form-select flex-1 ml-4">
                                 @foreach(range($currentYear-10, $currentYear) as $year)
-                                <option value="{{ $year}}" 
+                                <option value="{{ $year}}"
                                 :selected="'{{ $year== old('date.year', now()->format('Y'))}}'">
                                     {{$year}}
                                 </option>
