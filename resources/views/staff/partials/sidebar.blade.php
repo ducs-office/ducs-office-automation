@@ -1,10 +1,10 @@
-<div class="h-20 flex items-center px-4 mb-8">
+<div class="h-20 flex items-center px-4 py-6">
     <img src="{{ asset('images/university-logo.png') }}" alt="DU Logo" class="h-12 mr-3">
     <a href="{{ route('staff.dashboard') }}" class="inline-block logo leading-tight max-w-sm mr-4">
         <h1 class="text-lg font-bold">Department of <br> Computer Science</h1>
     </a>
 </div>
-<nav class="flex-1 px-4">
+<nav class="flex-1 px-4 py-6">
     <ul class="font-bold text-white-80">
         <li class="mb-1 last:mb-0">
             <a href="{{ route('staff.dashboard') }}" class="flex items-center py-2 px-4 hover:bg-magenta-700 hover:text-white rounded">

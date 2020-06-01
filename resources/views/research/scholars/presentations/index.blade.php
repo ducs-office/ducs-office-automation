@@ -4,14 +4,14 @@
             <div class="ml-2">
                 <div class="flex m-2">
                     <div class="w-30 flex">
-                        <feather-icon name="users" class="h-current text-blue-600"></feather-icon>
+                        <x-feather-icon name="users" class="h-current text-blue-600"></x-feather-icon>
                         <h4 class="ml-1 font-semibold"> Author: </h4>
                     </div>
                     <p class="ml-2"> {{ auth()->user()->name . ',' . implode(',', $presentation->publication->coAuthors->map->name->toArray()) }} </p>
                 </div>
                 <div class="m-2 flex">
                     <div class="w-30 flex">
-                        <feather-icon name="book-open" class="h-current text-blue-600"></feather-icon>
+                        <x-feather-icon name="book-open" class="h-current text-blue-600"></x-feather-icon>
                         <h4 class="ml-1 font-semibold"> Title: </h4>
                     </div>
                     <p class="ml-2 italic"> {{ $presentation->publication->paper_title }} </p>

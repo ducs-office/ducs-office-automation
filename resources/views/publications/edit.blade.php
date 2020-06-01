@@ -7,8 +7,8 @@
         <form id="remove-noc" method="POST" onsubmit="return confirm('Do you really want to delete co-author?');">
             @csrf_token @method('DELETE')
         </form>
-        <form action="{{ route('publications.update' , $publication )}}" 
-            method="post" class="px-6" 
+        <form action="{{ route('publications.update' , $publication )}}"
+            method="post" class="px-6"
             enctype="multipart/form-data" x-data="{ publication_type: '{{$publication->type}}', is_published: '{{array_key_exists('is_published', old()) ? true : $publication->isPublished()}}' }">
             @csrf_token
             @method('PATCH')
@@ -29,15 +29,15 @@
             </div>
             <div class="mb-4">
                 <label for="co_authors[]" class="form-label block mb-1">
-                    Co-Authors 
-                </label> 
+                    Co-Authors
+                </label>
                 @foreach($publication->coAuthors as $coAuthor)
                 <div class="flex items-start mb-2">
                     <input type="text" value="{{$coAuthor->name}}" disabled class="form-input mr-2 text-gray-500 bg-transparent">
                     @can('view', $coAuthor)
-                    <a href="{{ route('publications.co_authors.show', $coAuthor) }}" target="__blank" 
+                    <a href="{{ route('publications.co_authors.show', $coAuthor) }}" target="__blank"
                     class="form-input overflow-hidden flex flex-1 text-gray-500 items-baseline">
-                        <feather-icon name="paperclip" class="h-4 mr-2" stroke-width="2">NOC</feather-icon>
+                        <x-feather-icon name="paperclip" class="h-4 mr-2" stroke-width="2">NOC</x-feather-icon>
                         <span>NOC</span>
                     </a>
                     @endcan
@@ -50,13 +50,13 @@
                 <add-remove-elements>
                     <template v-slot="{ elements, addElement, removeElement }">
                         <div v-for="(element, index) in elements" :key="index" class="flex items-start mb-2">
-                            <input type="text" 
+                            <input type="text"
                                 :name="`co_authors[${index}][name]`" class="form-input mr-2" placeholder="Co-Author's name">
-                                <v-file-input :id="`co_authors[${index}][noc]`" :name="`co_authors[${index}][noc]`" accept="application/pdf" 
+                                <v-file-input :id="`co_authors[${index}][noc]`" :name="`co_authors[${index}][noc]`" accept="application/pdf"
                                 class="form-input overflow-hidden text-gray-500 flex-1" placeholder="Upload Co-Author's NOC ">
                                 <template v-slot="{ label }">
                                     <div class="flex-1 inline-flex items-center">
-                                        <feather-icon name="upload" class="h-4 mr-2 text-gray-700 flex-shrink-0"></feather-icon>
+                                        <x-feather-icon name="upload" class="h-4 mr-2 text-gray-700 flex-shrink-0"></x-feather-icon>
                                         <span v-text="label" class="truncate"></span>
                                     </div>
                                 </template>
@@ -69,7 +69,7 @@
             </div>
             @if(!$publication->isPublished())
                 <div class="flex mb-4 items-center">
-                    <input type="checkbox" name="is_published" id="is_published" 
+                    <input type="checkbox" name="is_published" id="is_published"
                         class="form-checkbox" x-model="is_published">
                     <label for="is_published" class="form-label block ml-2">
                         Is the paper published?

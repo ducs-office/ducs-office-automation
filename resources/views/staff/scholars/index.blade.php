@@ -40,7 +40,7 @@
                     @can('update', App\Scholar::class)
                     <button type="submit" class="p-1 hover:text-red-700 mr-2"
                         @click="$modal.show('edit-scholar-modal')">
-                        <feather-icon class="h-current" name="edit">Edit</feather-icon>
+                        <x-feather-icon class="h-current" name="edit">Edit</x-feather-icon>
                     </button>
                     @endcan
                     @can('delete', $scholar)
@@ -48,7 +48,7 @@
                         onsubmit="return confirm('Do you really want to delete scholar \' {{ $scholar->name }}\'?');">
                         @csrf_token @method('delete')
                         <button type="submit" class="p-1 hover:text-red-700">
-                            <feather-icon class="h-current" name="trash-2">Trash</feather-icon>
+                            <x-feather-icon class="h-current" name="trash-2">Trash</x-feather-icon>
                         </button>
                     </form>
                     @endcan
@@ -60,7 +60,7 @@
                         <h2 class="font-bold underline"> Supervisor </h2>
                         <button type="submit" class="ml-2 text-blue-500"
                             @click="$modal.show('replace-scholar-supervisor-modal')">
-                            <feather-icon class="h-current" name="refresh-cw">Replace Supervisor</feather-icon>
+                            <x-feather-icon class="h-current" name="refresh-cw">Replace Supervisor</x-feather-icon>
                         </button>
                     </div>
                     <p class="pt-1">{{ $scholar->currentSupervisor->name }}</p>
@@ -70,7 +70,7 @@
                         <h2 class="font-bold underline"> Co-Supervisor </h2>
                         <button type="submit" class="ml-2 text-blue-500"
                             @click="$modal.show('replace-scholar-cosupervisor-modal')">
-                            <feather-icon class="h-current" name="refresh-cw">Replace Co-Supervisor</feather-icon>
+                            <x-feather-icon class="h-current" name="refresh-cw">Replace Co-Supervisor</x-feather-icon>
                         </button>
                     </div>
                     <p class="pt-1">
@@ -85,7 +85,7 @@
         </div>
     @empty
         <div class="py-8 flex flex-col items-center justify-center text-gray-500">
-            <feather-icon name="frown" class="h-16"></feather-icon>
+            <x-feather-icon name="frown" class="h-16"></x-feather-icon>
             <p class="mt-4 mb-2 font-bold">
                 Sorry! No Scholars added yet.
             </p>

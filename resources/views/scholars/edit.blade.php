@@ -12,7 +12,7 @@
                     <template v-slot="{ imageUrl }">
                         <img :src="imageUrl" class="w-32 h-32 object-cover rounded border shadow">
                         <div class="absolute inset-0 hidden group-hover:flex items-center justify-center bg-black-50 text-white p-4">
-                            <feather-icon name="camera" class="flex-shrink-0 h-6">Camera</feather-icon>
+                            <x-feather-icon name="camera" class="flex-shrink-0 h-6">Camera</x-feather-icon>
                             <span class="ml-3 group-hover:underline">Upload Picture</span>
                         </div>
                     </template>

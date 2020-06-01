@@ -8,16 +8,16 @@
             <h5 class="mr-12 text-gray-700 font-bold">{{ $letter->date->format('M d, Y') }}</h5>
             <div class="flex items-center text-gray-700">
                 {{ $letter->sender->name }}
-                <feather-icon name="arrow-up-right"
+                <x-feather-icon name="arrow-up-right"
                 stroke-width="3"
-                class="h-current text-green-600 mx-2">Sent to</feather-icon>
+                class="h-current text-green-600 mx-2">Sent to</x-feather-icon>
                 {{ $letter->recipient }}
             </div>
             <div class="ml-auto flex">
                 @can('update', $letter)
                 <a href="{{ route('staff.outgoing_letters.edit', $letter) }}"
                     class="p-1 text-gray-500 text-blue-600 hover:bg-gray-200 rounded mr-3" title="Edit">
-                    <feather-icon name="edit-3" stroke-width="2.5" class="h-current">Edit</feather-icon>
+                    <x-feather-icon name="edit-3" stroke-width="2.5" class="h-current">Edit</x-feather-icon>
                 </a>
                 @endcan
                 @can('delete', $letter)
@@ -26,7 +26,7 @@
                     @csrf_token
                     @method('DELETE')
                     <button type="submit" class="p-1 hover:bg-gray-200 text-red-700 rounded">
-                        <feather-icon name="trash-2" stroke-width="2.5" class="h-current">Delete</feather-icon>
+                        <x-feather-icon name="trash-2" stroke-width="2.5" class="h-current">Delete</x-feather-icon>
                     </button>
                 </form>
                 @endcan
@@ -50,13 +50,13 @@
             @foreach ($letter->attachments as $attachment)
             <div class="inline-flex items-center p-2 rounded border hover:bg-gray-300 text-gray-600 mx-2 my-1">
                 <a href="{{ route('staff.attachments.show', $attachment) }}" target="__blank" class="inline-flex items-center mr-1">
-                    <feather-icon name="paperclip" class="h-4 mr-2" stroke-width="2">View Attachment</feather-icon>
+                    <x-feather-icon name="paperclip" class="h-4 mr-2" stroke-width="2">View Attachment</x-feather-icon>
                     <span>{{ $attachment->original_name }}</span>
                 </a>
                 @can('delete', $attachment)
                 <button type="submit" form="remove-attachment" formaction="{{ route('staff.attachments.destroy', $attachment) }}"
                     class="p-1 rounded hover:bg-red-500 hover:text-white">
-                    <feather-icon name="x" class="h-4" stroke-width="2">Delete Attachment</feather-icon>
+                    <x-feather-icon name="x" class="h-4" stroke-width="2">Delete Attachment</x-feather-icon>
                 </button>
                 @endcan
             </div>
@@ -74,7 +74,7 @@
                         'bg-gray-300': !isActive('remarks'),
                     }"
                     @click="select('remarks')">
-                    <feather-icon name="list" class="h-current mr-1">Remarks</feather-icon>
+                    <x-feather-icon name="list" class="h-current mr-1">Remarks</x-feather-icon>
                     Remarks
                     <span class="ml-3 py-1 px-2 inline-flex items-center rounded-full bg-gray-500 text-xs text-black">{{ $letter->remarks->count() }}</span>
                 </button>
@@ -87,7 +87,7 @@
                         'bg-gray-300': !isActive('reminders'),
                     }"
                     @click="select('reminders')">
-                    <feather-icon name="bell" class="h-current mr-1">Reminders</feather-icon>
+                    <x-feather-icon name="bell" class="h-current mr-1">Reminders</x-feather-icon>
                     Reminders
                     <span class="ml-3 py-1 px-2 inline-flex items-center rounded-full bg-gray-500 text-xs text-black">{{ $letter->reminders->count() }}</span>
                 </button>

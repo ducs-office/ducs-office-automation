@@ -30,7 +30,7 @@
                         @click.prevent="$modal.show('edit-programme-modal',{
                             programme: {{ $programme->toJson()}}
                         })">
-                            <feather-icon class="h-current" name="edit">Edit</feather-icon>
+                            <x-feather-icon class="h-current" name="edit">Edit</x-feather-icon>
                         </button>
                         @endcan
                         @can('delete', App\Models\Programme::class)
@@ -38,7 +38,7 @@
                             onsubmit="return confirm('Do you really want to delete programme?');">
                             @csrf_token @method('delete')
                             <button type="submit" class="p-1 hover:text-red-700">
-                                <feather-icon class="h-current" name="trash-2">Trash</feather-icon>
+                                <x-feather-icon class="h-current" name="trash-2">Trash</x-feather-icon>
                             </button>
                         </form>
                         @endcan

@@ -89,18 +89,18 @@
                     </h5>
                     <a target="_blank" href="{{ route('scholars.leaves.application', $leave) }}"
                         class="btn inline-flex items-center ml-2">
-                        <feather-icon name="paperclip" class="h-current mr-2"></feather-icon>
+                        <x-feather-icon name="paperclip" class="h-current mr-2"></x-feather-icon>
                         Application
                     </a>
                     @if ($leave->isApproved() || $leave->isRejected())
                         <a target="_blank" href="{{ route('scholars.leaves.response_letter', $leave) }}" class="btn inline-flex items-center ml-2">
-                            <feather-icon name="paperclip" class="h-current mr-2"></feather-icon>
+                            <x-feather-icon name="paperclip" class="h-current mr-2"></x-feather-icon>
                             Response
                         </a>
                     @endif
                     <div class="flex items-center px-4">
-                        <feather-icon name="{{ $leave->status->getContextIcon() }}"
-                            class="h-current {{ $leave->status->getContextCSS() }} mr-2" stroke-width="2.5"></feather-icon>
+                        <x-feather-icon name="{{ $leave->status->getContextIcon() }}"
+                            class="h-current {{ $leave->status->getContextCSS() }} mr-2" stroke-width="2.5"></x-feather-icon>
                         <div class="capitalize">
                             {{ $leave->status }}
                         </div>
@@ -142,19 +142,19 @@
                             </div>
                         </h5>
                         <a target="_blank" href="{{ route('research.scholars.leaves.application', [$scholar, $leave]) }}" class="btn inline-flex items-center ml-2">
-                            <feather-icon name="paperclip" class="h-current mr-2"></feather-icon>
+                            <x-feather-icon name="paperclip" class="h-current mr-2"></x-feather-icon>
                             Application
                         </a>
                         @if ($extensionLeave->isApproved() || $extensionLeave->isRejected())
                             <a target="_blank" href="{{ route('research.scholars.leaves.response_letter', [$scholar, $leave]) }}" class="btn inline-flex items-center ml-2">
-                                <feather-icon name="paperclip" class="h-current mr-2"></feather-icon>
+                                <x-feather-icon name="paperclip" class="h-current mr-2"></x-feather-icon>
                                 Response
                             </a>
                         @endif
                         <div class="flex items-center px-4">
-                            <feather-icon name="{{ $extensionLeave->status->getContextIcon() }}"
+                            <x-feather-icon name="{{ $extensionLeave->status->getContextIcon() }}"
                                 class="h-current {{ $extensionLeave->status->getContextCSS() }} mr-2" stroke-width="2.5">
-                            </feather-icon>
+                            </x-feather-icon>
                             <div class="capitalize">
                                 {{ $extensionLeave->status }}
                             </div>

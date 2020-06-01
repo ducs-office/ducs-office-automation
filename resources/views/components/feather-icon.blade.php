@@ -1,4 +1,6 @@
-<svg x-data viewBox="0 0 24 24" {{ $attributes->merge([
+<svg x-data="{iconHTML: '', name: null}"
+    x-init="iconHTML = featherIcon(name || '{{ $attributes['name'] }}')"
+    viewBox="0 0 24 24" {{ $attributes->merge([
         'stroke-width' => '2',
         'fill' => 'none',
         'stroke' => 'currentColor',
@@ -6,5 +8,5 @@
         'stroke-linejoin' => 'round',
     ]) }} >
     <title>{{ $slot }}</title>
-    <g x-html="featherIcon('{{ $attributes['name'] }}')"></g>
+    <g x-html="iconHTML"></g>
 </svg>

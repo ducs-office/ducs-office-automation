@@ -120,8 +120,8 @@ window.tabbedPane = (initial = '') => ({
     }
 });
 
-window.featherIcon = function(name) {
-    return feather.icons.hasOwnProperty(name || "x")
+window.featherIcon = function(name = 'x') {
+    return feather.icons.hasOwnProperty(name)
         ? feather.icons[name].contents
         : feather.icons["x"].contents;
 }

@@ -12,7 +12,7 @@
         <ul class="border rounded-lg overflow-hidden mb-4 divide-y">
             @forelse ($scholar->documents as $document)
                 @can('view', $document)
-                <li class="px-4 py-3">   
+                <li class="px-4 py-3">
                     <div class="flex items-center">
                         <div class="flex-1">
                             <p class="font-bold mr-2">{{ $document->date->format('d F Y') }}</p>
@@ -20,7 +20,7 @@
                         </div>
                         <a href="{{ route('scholars.documents.show', [$scholar, $document]) }}"
                             class="inline-flex items-center underline px-3 py-1 bg-gray-100 text-gray-900 rounded font-bold">
-                        <feather-icon name="paperclip" class="h-4 mr-2"></feather-icon>
+                        <x-feather-icon name="paperclip" class="h-4 mr-2"></x-feather-icon>
                             {{ $document->type }}
                         </a>
                         @can('delete', $document)
@@ -29,7 +29,7 @@
                                 @csrf_token
                                 @method('DELETE')
                                 <button type="submit" class="p-1 hover:bg-gray-200 text-red-700 rounded">
-                                    <feather-icon name="trash-2" stroke-width="2.5" class="h-current">Delete</feather-icon>
+                                    <x-feather-icon name="trash-2" stroke-width="2.5" class="h-current">Delete</x-feather-icon>
                                 </button>
                             </form>
                         @endcan

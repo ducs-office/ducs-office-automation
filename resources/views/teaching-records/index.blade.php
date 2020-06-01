@@ -83,17 +83,17 @@
         <div class="flex">
             <button type="button" class="inline-flex items-center btn hover:text-red-700 mr-2"
                 onclick="window.location.replace(window.location.pathname)">
-                <feather-icon name="x-circle" stroke-width="2.5" class="h-5 mr-2">Clear</feather-icon>
+                <x-feather-icon name="x-circle" stroke-width="2.5" class="h-5 mr-2">Clear</x-feather-icon>
                 Reset
             </button>
             <button type="submit" formaction="{{ route('teaching-records.index') }}"
                 class="inline-flex items-center btn btn-magenta mr-2">
-                <feather-icon name="filter" stroke-width="2.5" class="h-5 mr-2">Filter</feather-icon>
+                <x-feather-icon name="filter" stroke-width="2.5" class="h-5 mr-2">Filter</x-feather-icon>
                 Filter
             </button>
             <button type="submit" formaction="{{ route('teaching-records.export') }}"
                 class="inline-flex items-center btn btn-magenta mr-2">
-                <feather-icon name="download" stroke-width="2.5" class="h-5 mr-2">Export</feather-icon>
+                <x-feather-icon name="download" stroke-width="2.5" class="h-5 mr-2">Export</x-feather-icon>
                 Export CSV
             </button>
         </div>
@@ -132,7 +132,7 @@
             <tr>
                 <td class="px-6" colspan="7">
                     <div class="pt-6 pb-4 flex flex-col items-center justify-center text-gray-500">
-                        <feather-icon name="frown" class="h-16"></feather-icon>
+                        <x-feather-icon name="frown" class="h-16"></x-feather-icon>
                         <p class="mt-4 mb-2  font-bold">
                             Sorry! No Records
                             {{ count(request()->filters ?? []) ? 'found for your query.' : 'added yet.' }}

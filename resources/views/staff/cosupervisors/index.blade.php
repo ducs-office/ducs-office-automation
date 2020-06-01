@@ -46,12 +46,12 @@
                                     affiliation: {{ json_encode($cosupervisor->affiliation) }},
                                 },
                             })">
-                        <feather-icon class="h-current" name="edit">Edit</feather-icon>
+                        <x-feather-icon class="h-current" name="edit">Edit</x-feather-icon>
                     </button>
                     <form action="{{ route('staff.cosupervisors.destroy', $cosupervisor) }}" method="POST">
                         @csrf_token @method('delete')
                         <button type="submit" class="p-1 hover:text-red-700">
-                            <feather-icon class="h-current" name="trash-2">Trash</feather-icon>
+                            <x-feather-icon class="h-current" name="trash-2">Trash</x-feather-icon>
                         </button>
                     </form>
                 </div>

@@ -48,7 +48,7 @@
                 @click.prevent="$modal.show('edit-remark-modal',{
                     remark: {{ $remark->toJson() }}
                 })">
-                <feather-icon name="edit-3" stroke-width="2.5" class="h-current">Edit</feather-icon>
+                <x-feather-icon name="edit-3" stroke-width="2.5" class="h-current">Edit</x-feather-icon>
             </button>
             @endcan
             @can('delete', $remark)
@@ -56,7 +56,7 @@
                 onsubmit="return confirm('Do you really want to delete remark?');">
                 @csrf_token @method('DELETE')
                 <button class="p-1 hover:bg-gray-200 text-red-700 rounded">
-                    <feather-icon name="trash-2" stroke-width="2.5" class="h-current">Delete</feather-icon>
+                    <x-feather-icon name="trash-2" stroke-width="2.5" class="h-current">Delete</x-feather-icon>
                 </button>
             </form>
             @endcan

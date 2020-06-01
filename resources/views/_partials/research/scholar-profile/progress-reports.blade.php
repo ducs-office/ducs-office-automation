@@ -17,10 +17,10 @@
                     <div class="flex items-center justify-between">
                         <div class="flex items-center space-x-4 mr-4">
                             <p class="font-bold w-32">{{ $progressReport->date->format('d F Y') }}</p>
-                            <a  target="_blank" 
+                            <a  target="_blank"
                                 href="{{ route('scholars.progress_reports.show', [$scholar, $progressReport]) }}"
                                 class="inline-flex items-center underline px-3 py-1 bg-gray-100 text-gray-900 rounded font-bold">
-                                <feather-icon name="paperclip" class="h-4 mr-2">Attachment</feather-icon>
+                                <x-feather-icon name="paperclip" class="h-4 mr-2">Attachment</x-feather-icon>
                                 Attachment
                             </a>
                         </div>
@@ -35,7 +35,7 @@
                                 @csrf_token
                                 @method('DELETE')
                                 <button type="submit" class="p-1 hover:bg-gray-200 text-red-700 rounded">
-                                    <feather-icon name="trash-2" stroke-width="2.5" class="h-current">Delete</feather-icon>
+                                    <x-feather-icon name="trash-2" stroke-width="2.5" class="h-current">Delete</x-feather-icon>
                                 </button>
                             </form>
                             @endcan

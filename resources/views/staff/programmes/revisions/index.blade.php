@@ -30,7 +30,7 @@
                             @can('update', $programmeRevision)
                             <a href="{{ route('staff.programmes.revisions.edit', [$programme, $programmeRevision]) }}"
                                 class="p-1 text-gray-700 hover:text-blue-600 hover:bg-gray-200 rounded" title="Edit">
-                                <feather-icon name="edit-3" stroke-width="2.5" class="h-current">Edit</feather-icon>
+                                <x-feather-icon name="edit-3" stroke-width="2.5" class="h-current">Edit</x-feather-icon>
                             </a>
                             @endcan
                             @can('delete', $programmeRevision)
@@ -41,7 +41,7 @@
                                 onsubmit="return confirm('Do you really want to delete programme revision?');">
                                 @csrf_token @method('delete')
                                 <button type="submit" class="p-1 hover:text-red-700">
-                                    <feather-icon class="h-current" name="trash-2">Trash</feather-icon>
+                                    <x-feather-icon class="h-current" name="trash-2">Trash</x-feather-icon>
                                 </button>
                             </form>
                             @endcan

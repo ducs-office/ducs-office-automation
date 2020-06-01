@@ -26,7 +26,7 @@
                                 href="{{ route('research.scholars.courseworks.marksheet', [ $scholar, $course->pivot])}}"
                                 class="btn inline-flex items-center ml-2">
 
-                                <feather-icon name="paperclip" class="h-current mr-2"></feather-icon>
+                                <x-feather-icon name="paperclip" class="h-current mr-2"></x-feather-icon>
                                     Marksheet
                                 </a>
                                 <div class="w-5 h-5 inline-flex items-center justify-center bg-green-500 text-white font-extrabold leading-none rounded-full mr-2">&checkmark;</div>

@@ -1,7 +1,7 @@
 <toggle-visibility class="relative ml-auto">
     <template v-slot="{ isVisible, toggle, hide }">
         <button class="mr-2 btn btn-black is-sm ml-auto" @click="toggle">
-            <feather-icon name="filter" class="h-4" stroke-width="2"></feather-icon>
+            <x-feather-icon name="filter" class="h-4" stroke-width="2"></x-feather-icon>
         </button>
         <transition enter-active-class="transition duration-300" leave-active-class="transition duration-300"
             enter-class="transform translate-x-full opacity-0"
@@ -10,7 +10,7 @@
                 class="fixed inset-y-0 right-0 border max-w-md shadow-lg overflow-y-auto bg-white p-4 z-10">
                 <div class="mb-2 text-right">
                     <button type="button" @click.prevent="toggle" class="btn text-lg p-3">
-                        <feather-icon name="times" class="h-current"></feather-icon>
+                        <x-feather-icon name="times" class="h-current"></x-feather-icon>
                     </button>
                 </div>
                 <input type="text" name="search" class="w-full form-input is-sm w-full mb-4"

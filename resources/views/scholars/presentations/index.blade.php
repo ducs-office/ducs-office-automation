@@ -6,14 +6,14 @@
                 <div class="ml-2 w-4/5">
                     <div class="flex m-2">
                         <div class="w-30 flex">
-                            <feather-icon name="users" class="h-current text-blue-600"></feather-icon>
+                            <x-feather-icon name="users" class="h-current text-blue-600"></x-feather-icon>
                             <h4 class="ml-1 font-semibold"> Author: </h4>
                         </div>
                         <p class="ml-2"> {{ implode(', ', $presentation->publication->authors) }} </p>
                     </div>
                     <div class="m-2 flex">
                         <div class="w-30 flex">
-                            <feather-icon name="book-open" class="h-current text-blue-600"></feather-icon>
+                            <x-feather-icon name="book-open" class="h-current text-blue-600"></x-feather-icon>
                             <h4 class="ml-1 font-semibold"> Title: </h4>
                         </div>
                         <p class="ml-2 italic"> {{ $presentation->publication->paper_title }} </p>
@@ -45,7 +45,7 @@
                     @can('update', $presentation)
                     <a href="{{ route('scholars.presentation.edit', $presentation) }}"
                         class="p-1 text-blue-600 hover:bg-gray-200 rounded mr-3 h-6" title="Edit">
-                        <feather-icon name="edit-3" stroke-width="2.5" class="h-current">Edit</feather-icon>
+                        <x-feather-icon name="edit-3" stroke-width="2.5" class="h-current">Edit</x-feather-icon>
                     </a>
                     @endcan
                     @can('delete', $presentation)
@@ -54,7 +54,7 @@
                         @csrf_token
                         @method('DELETE')
                         <button type="submit" class="p-1 hover:bg-gray-200 text-red-700 rounded">
-                            <feather-icon name="trash-2" stroke-width="2.5" class="h-current">Delete</feather-icon>
+                            <x-feather-icon name="trash-2" stroke-width="2.5" class="h-current">Delete</x-feather-icon>
                         </button>
                     </form>
                     @endcan

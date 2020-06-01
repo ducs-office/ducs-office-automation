@@ -15,13 +15,13 @@
             <div class="ml-auto px-2 flex items-center">
                 <a href="{{ route('research.scholars.show', $scholar) }}"
                     class="p-1 hover:text-blue-700 mr-2">
-                    <feather-icon class="h-4" name="eye" stroke-width="2.5">View</feather-icon>
+                    <x-feather-icon class="h-4" name="eye" stroke-width="2.5">View</x-feather-icon>
                 </a>
             </div>
         </div>
     @empty
         <div class="py-8 flex flex-col items-center justify-center text-gray-500">
-            <feather-icon name="frown" class="h-16"></feather-icon>
+            <x-feather-icon name="frown" class="h-16"></x-feather-icon>
             <p class="mt-4 mb-2 font-bold">
                 You don't supervise any scholars yet.
             </p>

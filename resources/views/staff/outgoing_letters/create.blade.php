@@ -109,7 +109,7 @@
                     placeholder="Choose a PDF file">
                     <template v-slot="{ label }">
                         <div class="w-full inline-flex items-center">
-                            <feather-icon name="upload" class="h-4 mr-2 text-gray-700 flex-shrink-0"></feather-icon>
+                            <x-feather-icon name="upload" class="h-4 mr-2 text-gray-700 flex-shrink-0"></x-feather-icon>
                             <span v-text="label" class="truncate"></span>
                         </div>
                     </template>
@@ -118,7 +118,7 @@
                     placeholder="Choose a Scanned Image">
                     <template v-slot="{ label }">
                         <div class="w-full inline-flex items-center">
-                            <feather-icon name="upload" class="h-4 mr-2 text-gray-700 flex-shrink-0"></feather-icon>
+                            <x-feather-icon name="upload" class="h-4 mr-2 text-gray-700 flex-shrink-0"></x-feather-icon>
                             <span v-text="label" class="truncate"></span>
                         </div>
                     </template>

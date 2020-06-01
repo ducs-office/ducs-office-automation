@@ -11,7 +11,7 @@
                 placeholder="Choose a PDF file">
                 <template v-slot="{ label }">
                     <div class="w-full inline-flex items-center">
-                        <feather-icon name="upload" class="h-4 mr-2 text-gray-700 flex-shrink-0"></feather-icon>
+                        <x-feather-icon name="upload" class="h-4 mr-2 text-gray-700 flex-shrink-0"></x-feather-icon>
                         <span v-text="label" class="truncate"></span>
                     </div>
                 </template>
@@ -20,7 +20,7 @@
                 placeholder="Choose a Scanned Image">
                 <template v-slot="{ label }">
                     <div class="w-full inline-flex items-center">
-                        <feather-icon name="upload" class="h-4 mr-2 text-gray-700 flex-shrink-0"></feather-icon>
+                        <x-feather-icon name="upload" class="h-4 mr-2 text-gray-700 flex-shrink-0"></x-feather-icon>
                         <span v-text="label" class="truncate"></span>
                     </div>
                 </template>
@@ -37,13 +37,13 @@
             @foreach ($reminder->attachments as $attachment)
             <div class="inline-flex items-center px-2 py-1 rounded border hover:bg-gray-300 text-gray-600 mx-2 my-1">
                 <a href="{{ route('staff.attachments.show', $attachment) }}" target="__blank" class="inline-flex items-center mr-1">
-                    <feather-icon name="paperclip" class="h-4 mr-2" stroke-width="2">View Attachment</feather-icon>
+                    <x-feather-icon name="paperclip" class="h-4 mr-2" stroke-width="2">View Attachment</x-feather-icon>
                     <span>{{ $attachment->original_name }}</span>
                 </a>
                 @can('delete', $attachment)
                 <button type="submit" form="remove-attachment" formaction="{{ route('staff.attachments.destroy', $attachment) }}"
                     class="p-1 rounded hover:bg-red-500 hover:text-white">
-                    <feather-icon name="x" class="h-4" stroke-width="2">Delete Attachment</feather-icon>
+                    <x-feather-icon name="x" class="h-4" stroke-width="2">Delete Attachment</x-feather-icon>
                 </button>
                 @endcan
             </div>
@@ -55,7 +55,7 @@
                 @click.prevent="$modal.show('edit-reminder-modal',{
                                 reminder: {{ $reminder->toJson() }}
                             })">
-                <feather-icon name="edit-3" stroke-width="2.5" class="h-current">Edit</feather-icon>
+                <x-feather-icon name="edit-3" stroke-width="2.5" class="h-current">Edit</x-feather-icon>
             </button>
             @endcan
             @can('delete', $reminder)
@@ -64,7 +64,7 @@
                 @csrf_token
                 @method('DELETE')
                 <button class="p-1 hover:bg-gray-200 text-red-700 rounded">
-                    <feather-icon name="trash-2" stroke-width="2.5" class="h-current">Delete</feather-icon>
+                    <x-feather-icon name="trash-2" stroke-width="2.5" class="h-current">Delete</x-feather-icon>
                 </button>
             </form>
             @endcan

@@ -26,7 +26,7 @@
                     {{ $college->address }}
                 </address>
                 <a class="text-magenta-700 underline flex items-center my-2" href="{{ $college->website }}" target="__blank">
-                    <feather-icon name="link" class="h-current mr-2 text-gray-700">External Link</feather-icon>
+                    <x-feather-icon name="link" class="h-current mr-2 text-gray-700">External Link</x-feather-icon>
                     <span>Goto College Website</span>
                 </a>
                 <div class="relative z-10 -ml-8 my-4">
@@ -38,13 +38,13 @@
                 <div class="mb-4">
                     <p class="font-bold mb-2">{{ $college->principal_name }}</p>
                     <p class="mb-1">
-                        <feather-icon name="phone" class="inline-block h-current mr-4"></feather-icon>
+                        <x-feather-icon name="phone" class="inline-block h-current mr-4"></x-feather-icon>
                         @foreach ($college->principal_phones as $phone)
                             <a href="tel:+91{{ $phone }}" class="text-magenta-700 underline mr-2">+91 {{ $phone }}</a>
                         @endforeach
                     </p>
                     <p class="mb-1">
-                        <feather-icon name="at-sign" class="inline-block h-current mr-4"></feather-icon>
+                        <x-feather-icon name="at-sign" class="inline-block h-current mr-4"></x-feather-icon>
                         @foreach ($college->principal_emails as $email)
                         <a href="mailto:{{ $email }}" class="text-magenta-700 underline mr-2">{{ $email }}</a>
                         @endforeach
@@ -69,7 +69,7 @@
                                 college: {{$college->toJson()}},
                                 college_programmes: {{$college->programmes->pluck('id')->toJson()}}
                             })">
-                        <feather-icon class="h-current" name="edit">Edit</feather-icon>
+                        <x-feather-icon class="h-current" name="edit">Edit</x-feather-icon>
                     </button>
                     @endcan
                     @can('delete', App\Models\College::class)
@@ -77,7 +77,7 @@
                         onsubmit="return confirm('Do you really want to delete College?');">
                         @csrf_token @method('delete')
                         <button type="submit" class="p-1 hover:text-red-700">
-                            <feather-icon class="h-current" name="trash-2">Trash</feather-icon>
+                            <x-feather-icon class="h-current" name="trash-2">Trash</x-feather-icon>
                         </button>
                     </form>
                     @endcan

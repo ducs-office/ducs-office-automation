@@ -18,7 +18,7 @@
                     </h5>
                     <a href="{{ route('research.scholars.advisory_meetings.minutes_of_meeting', $meeting) }}"
                         class="inline-flex items-center underline px-4 py-2 text-gray-900 rounded font-bold">
-                        <feather-icon name="paperclip" class="h-4 mr-2"></feather-icon>
+                        <x-feather-icon name="paperclip" class="h-4 mr-2"></x-feather-icon>
                         Minutes of Meeting
                     </a>
                 </div>

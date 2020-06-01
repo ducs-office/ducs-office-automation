@@ -56,7 +56,7 @@
                                 permissions: {{ $role->permissions->pluck('id')->toJson() }}
                             }
                         })">
-                <feather-icon class="h-current" name="edit">Edit</feather-icon>
+                <x-feather-icon class="h-current" name="edit">Edit</x-feather-icon>
             </button>
             @endcan
             @can('delete', $role)
@@ -64,7 +64,7 @@
                 onsubmit="return confirm('Do you really want to delete role?');">
                 @csrf_token @method('delete')
                 <button type="submit" class="p-1 hover:text-red-700">
-                    <feather-icon class="h-current" name="trash-2">Trash</feather-icon>
+                    <x-feather-icon class="h-current" name="trash-2">Trash</x-feather-icon>
                 </button>
             </form>
             @endcan
@@ -72,7 +72,7 @@
     </div>
     @empty
     <div class="py-8 flex flex-col items-center justify-center text-gray-500">
-        <feather-icon name="frown" class="h-16"></feather-icon>
+        <x-feather-icon name="frown" class="h-16"></x-feather-icon>
         <p class="mt-4 mb-2  font-bold">
             Sorry! No Roles added yet.
         </p>
