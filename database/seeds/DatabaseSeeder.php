@@ -123,11 +123,5 @@ class DatabaseSeeder extends Seeder
         $this->call(PhdScholarSeeder::class);
 
         $this->call(ScholarEducationSeeder::class);
-
-        $scholar = factory(Scholar::class)->create([
-            'first_name' => 'Pushkar',
-            'last_name' => 'Gole',
-            'email' => 'pushkar@cs.du.ac.in',
-        ]);
     }
 }

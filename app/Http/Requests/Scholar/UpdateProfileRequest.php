@@ -19,7 +19,7 @@ class UpdateProfileRequest extends FormRequest
     {
         $scholar = $this->user();
         return [
-            'phone_no' => [Rule::requiredIf($scholar->phone_no != null)],
+            'phone' => [Rule::requiredIf($scholar->phone != null)],
             'address' => [Rule::requiredIf($scholar->address != null)],
             'category' => [
                 Rule::requiredIf($scholar->category != null),

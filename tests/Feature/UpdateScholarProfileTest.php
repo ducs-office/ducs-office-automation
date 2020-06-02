@@ -34,7 +34,7 @@ class UpdateScholarProfileTest extends TestCase
         $institute = create(ScholarEducationInstitute::class);
 
         $updateDetails = [
-            'phone_no' => '12345678',
+            'phone' => '12345678',
             'address' => 'new address, new delhi',
             'category' => ReservationCategory::SC,
             'admission_mode' => AdmissionMode::UGC_NET,
@@ -52,19 +52,16 @@ class UpdateScholarProfileTest extends TestCase
             ],
             'enrolment_id' => Str::random(20),
         ];
-        try {
-            $this->withoutExceptionHandling()
-                ->patch(route('scholars.profile.update'), $updateDetails)
-                ->assertRedirect()
-                ->assertSessionHasFlash('success', 'Profile updated successfully!');
-        } catch (ValidationException $e) {
-            dd($e->errors(), $degree->name, $subject->name);
-        }
+
+        $this->withoutExceptionHandling()
+            ->patch(route('scholars.profile.update'), $updateDetails)
+            ->assertRedirect()
+            ->assertSessionHasFlash('success', 'Profile updated successfully!');
 
         $this->assertEquals(1, Scholar::count());
 
         $freshScholar = $scholar->fresh();
-        $this->assertEquals($updateDetails['phone_no'], $freshScholar->phone_no);
+        $this->assertEquals($updateDetails['phone'], $freshScholar->phone);
         $this->assertEquals($updateDetails['address'], $freshScholar->address);
         $this->assertEquals($updateDetails['category'], $freshScholar->category);
         $this->assertEquals($updateDetails['admission_mode'], $freshScholar->admission_mode);
@@ -92,7 +89,7 @@ class UpdateScholarProfileTest extends TestCase
         $this->signInScholar(
             $scholar = create(Scholar::class, 1, [
                 'education_details' => [],
-                'phone_no' => null,
+                'phone' => null,
                 'address' => null,
                 'category' => null,
                 'admission_mode' => null,
@@ -161,7 +158,7 @@ class UpdateScholarProfileTest extends TestCase
         $this->signInScholar(
             $scholar = create(Scholar::class, 1, [
                 'education_details' => [],
-                'phone_no' => null,
+                'phone' => null,
                 'address' => null,
                 'category' => null,
                 'admission_mode' => null,

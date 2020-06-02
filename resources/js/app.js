@@ -66,9 +66,18 @@ if(document.getElementById('app')) {
 }
 
 window.$modals = {
-    open: (name, livewire = null) => window.dispatchEvent(
-        new CustomEvent('openmodal', { detail: { name, livewire } })
-    ),
+    open: (name, livewire = null) => {
+        window.dispatchEvent(
+            new CustomEvent('openmodal', { detail: { name, livewire } })
+        );
+        if(livewire) {
+            window.livewire.emitTo(
+                livewire.component || name,
+                livewire.event || 'show',
+                livewire.payload || {}
+            );
+        }
+    },
     close: (name) => window.dispatchEvent(
         new CustomEvent('closemodal', { detail: { name } })
     ),
@@ -83,14 +92,6 @@ window.modal = (name, isOpen = false) => ({
     handleOpenEvent(event) {
         // close the modal if any other modal was fired open
         this.isOpen = event.detail.name == name;
-
-        if (event.detail.livewire) {
-            window.livewire.emitTo(
-                event.detail.livewire.component || this.name,
-                event.detail.livewire.event || 'show',
-                event.detail.livewire.payload || {}
-            );
-        }
     },
     handleCloseEvent(event) {
         if (event.detail.name == this.name) {

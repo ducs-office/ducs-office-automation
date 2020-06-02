@@ -92,15 +92,7 @@
         <li class="mb-1 last:mb-0">
             <a href="{{ route('staff.scholars.index') }}" class="flex items-center py-2 px-4 hover:bg-magenta-700 hover:text-white rounded">
                 <x-feather-icon name="users" class="h-4 mr-2">Scholar</x-feather-icon>
-                Scholar Logins
-            </a>
-        </li>
-        @endcan
-        @can('viewAny', App\Models\Scholar::class)
-        <li class="mb-1 last:mb-0">
-            <a href="{{ route('research.scholars.index') }}" class="flex items-center py-2 px-4 hover:bg-magenta-700 hover:text-white rounded">
-                <x-feather-icon name="users" class="h-4 mr-2">Scholar</x-feather-icon>
-                Research Scholars
+                Scholars
             </a>
         </li>
         @endcan

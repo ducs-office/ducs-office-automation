@@ -46,7 +46,7 @@
                     </li>
                     <li class="px-4 py-3 flex space-x-4">
                         <p class="whitespace-no-wrap font-bold w-48">Contact Number</p>
-                        <p class="flex-1 text-gray-800">{{ $scholar->phone_no }}</p>
+                        <p class="flex-1 text-gray-800">{{ $scholar->phone }}</p>
                     </li>
                     <li class="px-4 py-3 flex space-x-4">
                         <p class="whitespace-no-wrap font-bold w-48">Address</p>

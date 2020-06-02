@@ -48,7 +48,7 @@ class ViewScholarTest extends TestCase
 
         $this->signIn($supervisor, null);
         $scholars = $this->withoutExceptionHandling()
-            ->get(route('research.scholars.index'))
+            ->get(route('staff.scholars.index'))
             ->assertViewHas('scholars')
             ->viewData('scholars');
 
@@ -69,7 +69,7 @@ class ViewScholarTest extends TestCase
         $this->signIn($teacher, null);
 
         $this->withExceptionHandling()
-            ->get(route('research.scholars.index'))
+            ->get(route('staff.scholars.index'))
             ->assertForbidden();
     }
 

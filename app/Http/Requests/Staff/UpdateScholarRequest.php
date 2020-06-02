@@ -33,7 +33,6 @@ class UpdateScholarRequest extends FormRequest
             'email' => ['sometimes', 'required', Rule::unique('scholars')->ignore($this->route('scholar'))],
             'supervisor_id' => [
                 'sometimes', 'required',
-                Rule::notIn([optional($this->route('scholar')->currentSupervisor)->id]),
                 Rule::exists('users', 'id')->where('is_supervisor', true),
             ],
             'cosupervisor_id' => [

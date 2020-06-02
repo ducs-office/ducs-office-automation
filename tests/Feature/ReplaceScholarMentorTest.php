@@ -33,7 +33,7 @@ class ReplaceScholarMentorTest extends TestCase
 
         $this->withoutExceptionHandling()
             ->patch(route('staff.scholars.cosupervisor.replace', $scholar), [
-                'user_id' => $exisitngCosupervisor->id,
+                'cosupervisor_id' => $exisitngCosupervisor->id,
             ])
             ->assertSessionHasFlash('success', 'Co-Supervisor replaced successfully!');
 
@@ -67,7 +67,7 @@ class ReplaceScholarMentorTest extends TestCase
 
         $this->withoutExceptionHandling()
             ->patch(route('staff.scholars.cosupervisor.replace', $scholar), [
-                'user_id' => $externalCosupervisor->id,
+                'cosupervisor_id' => $externalCosupervisor->id,
             ])
             ->assertSessionHasFlash('success', 'Co-Supervisor replaced successfully!');
 
@@ -100,7 +100,7 @@ class ReplaceScholarMentorTest extends TestCase
 
         $this->withoutExceptionHandling()
             ->patch(route('staff.scholars.cosupervisor.replace', $scholar), [
-                'user_id' => $anotherSupervisor->id,
+                'cosupervisor_id' => $anotherSupervisor->id,
             ])
             ->assertSessionHasFlash('success', 'Co-Supervisor replaced successfully!');
 
@@ -135,7 +135,7 @@ class ReplaceScholarMentorTest extends TestCase
 
         $this->withoutExceptionHandling()
             ->patch(route('staff.scholars.cosupervisor.replace', $scholar), [
-                'user_id' => $exisitngCosupervisor->id,
+                'cosupervisor_id' => $exisitngCosupervisor->id,
             ])
             ->assertSessionHasFlash('success', 'Co-Supervisor replaced successfully!');
 
@@ -164,11 +164,11 @@ class ReplaceScholarMentorTest extends TestCase
         try {
             $this->withoutExceptionHandling()
                 ->patch(route('staff.scholars.cosupervisor.replace', $scholar), [
-                    'user_id' => $cosupervisor->id,
+                    'cosupervisor_id' => $cosupervisor->id,
                 ]);
             $this->fail('Cosupervisor was allowed to replace with the same current cosupervisor. Validation Error was expected.');
         } catch (ValidationException $e) {
-            $this->assertArrayHasKey('user_id', $e->errors());
+            $this->assertArrayHasKey('cosupervisor_id', $e->errors());
         }
         $this->assertCount(1, $scholar->fresh()->cosupervisors);
 
@@ -176,11 +176,11 @@ class ReplaceScholarMentorTest extends TestCase
         try {
             $this->withoutExceptionHandling()
                 ->patch(route('staff.scholars.cosupervisor.replace', $scholar), [
-                    'user_id' => $supervisor->id,
+                    'cosupervisor_id' => $supervisor->id,
                 ]);
             $this->fail('cosupervisor was allowed to replace with the current supervisor. Validation Errror was expected');
         } catch (ValidationException $e) {
-            $this->assertArrayHasKey('user_id', $e->errors());
+            $this->assertArrayHasKey('cosupervisor_id', $e->errors());
         }
 
         $this->assertCount(1, $scholar->fresh()->cosupervisors);

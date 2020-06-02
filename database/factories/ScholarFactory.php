@@ -25,7 +25,7 @@ $factory->define(Scholar::class, function (Faker $faker) {
         'email' => $faker->email(),
         'password' => '$2y$10$BrUcxS6jKnitbT4tRCog2eR00DCkJT.VXOhxRAv2Xxoq.77ow2fV2', // password
         'term_duration' => $faker->numberBetween(4, 6),
-        'phone_no' => $faker->phoneNumber(),
+        'phone' => $faker->phoneNumber(),
         'address' => $faker->address(),
         'gender' => $faker->randomElement(Gender::values()),
         'category' => $faker->randomElement(ReservationCategory::values()),

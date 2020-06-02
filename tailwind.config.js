@@ -8,7 +8,7 @@ module.exports = {
                 "input, select, multiselect, textarea, checkbox, radio": {
                     "&:disabled": {
                         backgroundColor: theme("colors.gray.200"),
-                        cursor: 'not-allowed',
+                        cursor: "not-allowed"
                     },
                     "&:hover, &:focus, &:focus-within": {
                         borderColor: theme("colors.magenta.600")
@@ -74,7 +74,10 @@ module.exports = {
             minWidth: {
                 "32": "8rem",
                 "48": "12rem",
-                "64": "16rem"
+                "64": "16rem",
+                "1/2": "50%",
+                "1/3": "33.333333%",
+                "2/3": "66.666666%",
             },
             height: {
                 current: "1em"
@@ -90,7 +93,7 @@ module.exports = {
                 "56": "14rem",
                 "64": "16rem",
                 "screen-1/2": "50vh"
-            },
+            }
         }
     },
     variants: {

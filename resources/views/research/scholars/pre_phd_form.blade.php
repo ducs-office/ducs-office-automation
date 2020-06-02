@@ -47,7 +47,7 @@
                     </div>
                     <div class="flex flex-wrap">
                         <p class="ml-1 p-1"> Mobile: </p>
-                        <p class="ml-1 p-1 font-semibold"> {{ $scholar->phone_no ?? '-'}} </p>
+                        <p class="ml-1 p-1 font-semibold"> {{ $scholar->phone ?? '-'}} </p>
                     </div>
                 </div>
                 <div class="flex divide-x divide-black">
@@ -95,11 +95,11 @@
                 <div class="flex divide-x divide-black">
                     <div class="w-1/2 flex flex-wrap">
                         <p class="ml-1 p-1"> Mobile: </p>
-                        <p class="ml-1 p-1 font-semibold"> {{ $scholar->currentSupervisor->phone_no }} </p>
+                        <p class="ml-1 p-1 font-semibold"> {{ $scholar->currentSupervisor->phone }} </p>
                     </div>
                     <div class="flex flex-wrap">
                         <p class="ml-1 p-1"> Mobile: </p>
-                        <p class="ml-1 p-1 font-semibold"> {{ optional($scholar->currentCosupervisor)->phone_no }} </p>
+                        <p class="ml-1 p-1 font-semibold"> {{ optional($scholar->currentCosupervisor)->phone }} </p>
                     </div>
                 </div>
                 <div class="flex divide-x divide-black h-24">

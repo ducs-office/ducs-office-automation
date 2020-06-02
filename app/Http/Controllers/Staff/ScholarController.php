@@ -16,13 +16,24 @@ use Illuminate\Validation\Rule;
 
 class ScholarController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $this->authorize('viewAny', Scholar::class);
+
         $cosupervisors = User::select(['id', 'first_name', 'last_name', 'is_supervisor', 'is_cosupervisor'])
             ->allCosupervisors()->get();
 
+        $scholars = Scholar::query();
+
+        if (! $request->user()->can('scholars:view') && $request->user()->isSupervisor()) {
+            $scholars->whereHas('supervisors', function ($query) use ($request) {
+                $query->where('ended_on', null)
+                    ->where('users.id', $request->user()->id);
+            });
+        }
+
         return view('staff.scholars.index', [
-            'scholars' => Scholar::all(),
+            'scholars' => $scholars->get(),
             'supervisors' => $cosupervisors->where('is_supervisor', true)->pluck('name', 'id'),
             'cosupervisors' => $cosupervisors->pluck('name', 'id'),
         ]);
@@ -76,7 +87,7 @@ class ScholarController extends Controller
             ]);
         }
 
-        if ($request->has('cosupervisor_id')) {
+        if ($request->cosupervisor_id != null) {
             $scholar->cosupervisors()->wherePivot('ended_on', null)->sync([
                 $request->cosupervisor_id => [
                     'started_on' => $scholar->currentCosupervisor
@@ -84,6 +95,11 @@ class ScholarController extends Controller
                         : today(),
                 ],
             ]);
+        } else {
+            // dd($request->cosupervisor_id);
+            // TODO: Write a test for this.
+            // changing cosupervisor to null without tracking change.
+            $scholar->cosupervisors()->wherePivot('ended_on', null)->sync([]);
         }
 
         flash('Scholar updated successfully!')->success();
@@ -108,7 +124,7 @@ class ScholarController extends Controller
         ];
 
         $request->validate([
-            'user_id' => [
+            'cosupervisor_id' => [
                 'nullable', 'integer', Rule::notIn($conflicts),
                 Rule::exists(User::class, 'id')
                     ->where(function ($q) {
@@ -122,8 +138,8 @@ class ScholarController extends Controller
             $scholar->currentCosupervisor->pivot->update(['ended_on' => today()]);
         }
 
-        if ($request->user_id) {
-            $scholar->cosupervisors()->attach($request->user_id);
+        if ($request->cosupervisor_id) {
+            $scholar->cosupervisors()->attach($request->cosupervisor_id);
         }
 
         flash('Co-Supervisor replaced successfully!')->success();

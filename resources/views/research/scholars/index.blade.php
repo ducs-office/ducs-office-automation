@@ -1,7 +1,7 @@
-@extends('layouts.research')
+@extends('layouts.master')
 @section('body')
-<div class="page-card m-6">
-    <div class="flex items-center px-6 pb-4 border-b">
+<div class="page-card p-0">
+    <div class="flex items-center p-6 border-b">
         <h1 class="page-header mb-0 px-0 mr-4">Research Scholars</h1>
     </div>
     @forelse($scholars as $scholar)

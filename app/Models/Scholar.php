@@ -31,7 +31,7 @@ class Scholar extends User
         'email',
         'password',
         'term_duration',
-        'phone_no',
+        'phone',
         'address',
         'category',
         'admission_mode',

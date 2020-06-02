@@ -6,13 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ChangeScholarAdvisorsRequest;
 use App\Models\PhdCourse;
 use App\Models\Scholar;
-use App\Models\User;
 use App\Types\AdmissionMode;
 use App\Types\Gender;
 use App\Types\PresentationEventType;
 use App\Types\ReservationCategory;
 use App\Types\ScholarDocumentType;
-use Illuminate\Http\Request;
 
 class ScholarController extends Controller
 {
@@ -21,29 +19,8 @@ class ScholarController extends Controller
         return $this->authorizeResource(Scholar::class, 'scholar');
     }
 
-    public function index(Request $request)
-    {
-        $user = $request->user();
-
-        if (! $user->isSupervisor()) {
-            $scholars = Scholar::all();
-        } else {
-            $scholars = $user->scholars;
-        }
-
-        return view('research.scholars.index', [
-            'scholars' => $scholars,
-        ]);
-    }
-
     public function show(Scholar $scholar)
     {
-        $existingSupervisors = User::query()
-            ->select('id', 'first_name', 'last_name')
-            ->supervisors()->get()
-            ->pluck('name', 'id')
-            ->forget($scholar->currentSupervisor->id);
-
         return view('research.scholars.show', [
             'scholar' => $scholar->load(['courseworks', 'progressReports', 'documents', 'publications']),
             'courses' => PhdCourse::whereNotIn('id', $scholar->courseworks()->allRelatedIds())->get(),

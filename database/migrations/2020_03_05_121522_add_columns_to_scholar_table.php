@@ -19,7 +19,7 @@ class AddColumnsToScholarTable extends Migration
     public function up()
     {
         Schema::table('scholars', function (Blueprint $table) {
-            $table->string('phone_no')->nullable();
+            $table->string('phone')->nullable();
             $table->text('address', 251)->nullable();
             $table->enum('gender', Gender::values())->nullable();
             $table->enum('category', ReservationCategory::values())->nullable();

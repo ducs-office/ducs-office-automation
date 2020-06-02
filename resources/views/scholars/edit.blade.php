@@ -53,8 +53,8 @@
                         value="{{ $scholar->email }}">
                 </div>
                 <div class="flex items-baseline">
-                    <label for="phone_no" class="w-48 form-label">Phone Number:</label>
-                    <input id="phone_no" type="text" name="phone_no" class="w-full form-input flex-1" value="{{ old('phone_no', $scholar->phone_no) }}">
+                    <label for="phone" class="w-48 form-label">Phone Number:</label>
+                    <input id="phone" type="text" name="phone" class="w-full form-input flex-1" value="{{ old('phone', $scholar->phone) }}">
                 </div>
                 <div class="flex items-baseline">
                     <label for="address" class="w-48 form-label">Address:</label>
