@@ -14,12 +14,17 @@ class EditPhdCourseModal extends Component
 
     protected $course;
 
-    public function mount($errorBag)
+    public function mount($errorBag = null)
     {
+        if ($errorBag != null) {
+            $this->setErrorBag($errorBag);
+        }
+
+        $this->modalName = Str::kebab(class_basename($this));
+        $this->course = new PhdCourse();
+
         if (! $this->getErrorBag()->isEmpty()) {
             $this->show(old(('course_id')));
-        } else {
-            $this->course = new PhdCourse();
         }
     }
 
@@ -31,8 +36,8 @@ class EditPhdCourseModal extends Component
         ]);
     }
 
-    public function beforeShow($data)
+    public function beforeShow($courseId)
     {
-        $this->course = PhdCourse::find($data['course_id']);
+        $this->course = PhdCourse::find($courseId);
     }
 }

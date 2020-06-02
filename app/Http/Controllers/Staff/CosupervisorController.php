@@ -12,14 +12,17 @@ class CosupervisorController extends Controller
 {
     public function index()
     {
-        $nonCosupervisors = User::select(['id', 'first_name', 'last_name'])
-            ->nonCosupervisors()
-            ->nonSupervisors()
-            ->get();
-        $currentCosupervisors = User::select(['id', 'first_name', 'last_name'])
-            ->cosupervisors()
-            ->nonSupervisors()
-            ->get();
+        list($nonCosupervisors, $currentCosupervisors) = User::query()
+            ->where('is_supervisor', false)
+            ->whereIn('category', [
+                UserCategory::COLLEGE_TEACHER,
+                UserCategory::FACULTY_TEACHER,
+                UserCategory::EXTERNAL,
+            ])
+            ->get()
+            ->partition(function ($user) {
+                return ! $user->isSupervisor() && ! $user->isCosupervisor();
+            });
 
         return view('staff.cosupervisors.index', [
             'cosupervisors' => $currentCosupervisors,

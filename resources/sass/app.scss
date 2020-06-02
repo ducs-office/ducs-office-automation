@@ -26,7 +26,7 @@
 }
 
 .btn {
-    @apply inline-block px-3 py-2 bg-gray-100 text-black border border-gray-100 font-bold rounded;
+    @apply inline-block px-4 py-2 leading-normal bg-gray-100 text-black border border-gray-100 font-bold rounded;
     &:hover {
         @apply bg-gray-300 border-gray-300;
     }

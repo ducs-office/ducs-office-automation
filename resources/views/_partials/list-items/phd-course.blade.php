@@ -1,16 +1,16 @@
 <tr class="hover:bg-gray-100">
-    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-        <span class="rounded-full px-2 py-1 bg-gray-200 text-gray-800 font-semibold">
-            {{ $course->type }}
-        </span>
-    </td>
-    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200 leading-5 text-gray-600">
+    <td class="table-fit px-6 py-4 whitespace-no-wrap border-b border-gray-200 leading-5 text-gray-600">
         <span class="text-gray-800">
             {{ $course->code }}
         </span>
     </td>
     <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
         <h3>{{ $course->name }}</h3>
+    </td>
+    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+        <span class="rounded-full text-sm px-3 py-1 bg-gray-200 text-gray-800 font-semibold">
+            {{ $course->type }}
+        </span>
     </td>
     <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200 leading-5 font-medium">
         <div class="flex justify-end items-center space-x-1">

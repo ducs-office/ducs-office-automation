@@ -69,7 +69,7 @@
                 @include('_partials.list-items.user')
             @empty
                 <tr>
-                    <td colspan="4" class="px-4 py-8 text-gray-500">
+                    <td colspan="5" class="px-4 py-8 text-gray-500">
                         <x-feather-icon name="frown" class="w-16 mx-auto"></x-feather-icon>
                         <p class="mt-4 text-center font-bold">
                             Sorry! No Users {{ count(request()->query()) ? 'found for your query.' : 'added yet.' }}
