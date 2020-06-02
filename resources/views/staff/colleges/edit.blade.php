@@ -25,8 +25,8 @@
         <div class="mb-2">
             <label for="college_address" class="w-full form-label mb-1">Address<span
                     class="h-current text-red-500 text-lg">*</span></label>
-            <textarea id="college_address" name="address" rows="3" class="w-full form-input"
-                required>{{ old('address', $college->address) }}</textarea>
+            <input id="college_address" type="text" name="address" class="w-full form-input"
+                required value="{{ old('address', $college->address) }}">
         </div>
         <div class="mb-2">
             <label for="programme" class="w-full form-label mb-1">Programmes <span
@@ -35,7 +35,7 @@
                 @php($programmeIds = old('programmes', $college->programmes->pluck('id')->toArray()))
                 @foreach ($programmes as $programme)
                 <option value="{{ $programme->id }}"
-                    :selected="{{ in_array($programme->id, $programmeIds) }}">
+                    @if(in_array($programme->id, $programmeIds)) selected @endif>
                     {{ $programme->code }} - {{ ucwords($programme->name) }}
                 </option>
                 @endforeach

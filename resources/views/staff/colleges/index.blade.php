@@ -8,16 +8,9 @@
             href="{{ route('staff.colleges.create') }}">New</a>
         @endcan
     </div>
-
-    {{-- @can('update', App\Models\College::class)
-        @include('staff.colleges.modals.edit', [
-            'modalName' => 'edit-college-modal',
-            'programmes' => $programmes
-        ])
-    @endcan --}}
     <div class="bg-gray-200 py-4 space-y-6">
         @foreach($colleges as $college)
-            <div class="relative px-6 py-8 page-card">
+            <div class="relative p-6 page-card overflow-visible">
                 <h3 class="flex items-center text-lg font-bold mb-1">
                     {{ ucwords($college->name) }}
                     <span class="ml-2 px-2 py-1 bg-gray-900 text-white rounded text-sm font-mono">{{ $college->code }}</span>
@@ -39,9 +32,11 @@
                     <p class="font-bold mb-2">{{ $college->principal_name }}</p>
                     <p class="mb-1">
                         <x-feather-icon name="phone" class="inline-block h-current mr-4"></x-feather-icon>
-                        @foreach ($college->principal_phones as $phone)
+                        @forelse ($college->principal_phones as $phone)
                             <a href="tel:+91{{ $phone }}" class="text-magenta-700 underline mr-2">+91 {{ $phone }}</a>
-                        @endforeach
+                        @empty
+                            NA
+                        @endforelse
                     </p>
                     <p class="mb-1">
                         <x-feather-icon name="at-sign" class="inline-block h-current mr-4"></x-feather-icon>
@@ -63,14 +58,9 @@
 
                 <div class="absolute top-0 right-0 mt-4 mr-4 flex">
                     @can('update', App\Models\College::class)
-                    <button class="p-1 hover:text-blue-500 mr-1"
-                        @click="
-                            $modal.show('edit-college-modal',{
-                                college: {{$college->toJson()}},
-                                college_programmes: {{$college->programmes->pluck('id')->toJson()}}
-                            })">
+                    <a href="{{ route('staff.colleges.edit', $college) }}" class="p-1 hover:text-blue-500 mr-1">
                         <x-feather-icon class="h-current" name="edit">Edit</x-feather-icon>
-                    </button>
+                    </a>
                     @endcan
                     @can('delete', App\Models\College::class)
                     <form action="{{ route('staff.colleges.destroy', $college) }}" method="POST"
