@@ -1,26 +1,22 @@
 @extends('layouts.master')
+@push('modals')
+    <x-modal name="create-role-modal" class="page-card p-6" :open="! $errors->default->isEmpty()">
+        <h2 class="text-lg font-bold mb-8">Create Role</h2>
+        @include('_partials.forms.create-role')
+    </x-modal>
+    <livewire:edit-role-modal />
+@endpush
 @section('body')
 <div class="page-card m-6">
     <div class="flex items-baseline px-6 pb-4 border-b">
         <h1 class="page-header mb-0 px-0 mr-4">Roles & Permissions</h1>
         @can('create', Spatie\Permission\Models\Role::class)
-            <button class="btn btn-magenta is-sm shadow-inner"
-                @click.prevent="$modal.show('create-role-modal')">
-                New
-            </button>
-            @include('staff.roles.modals.create', [
-                'modalName' => 'create-role-modal',
-                'permissions' => $permissions,
-            ])
+            <x-modal.trigger modal="create-role-modal"
+                class="btn btn-magenta is-sm shadow-inner">
+                Add New Role
+            </x-modal.trigger>
         @endcan
     </div>
-
-    @can('update', Spatie\Permission\Models\Role::class)
-    @include('staff.roles.modals.edit', [
-        'modalName' => 'update-role-modal',
-        'permissions' => $permissions,
-    ])
-    @endcan
     @forelse($roles as $role)
     <div class="px-4 py-2 hover:bg-gray-100 border-b flex">
         <div class="px-2 w-64">
@@ -47,17 +43,11 @@
         </table>
         <div class="ml-auto px-2 flex items-center">
             @can('update', Spatie\Permission\Models\Role::class)
-            <button type="submit" class="p-1 hover:text-red-700 mr-2" @click="
-                        $modal.show('update-role-modal', {
-                            role: {
-                                id: {{ $role->id }},
-                                name: '{{ $role->name }}',
-                                guard_name: '{{ $role->guard_name }}',
-                                permissions: {{ $role->permissions->pluck('id')->toJson() }}
-                            }
-                        })">
-                <x-feather-icon class="h-current" name="edit">Edit</x-feather-icon>
-            </button>
+            <x-modal.trigger modal="edit-role-modal"
+                :livewire="['payload' => $role->id]"
+                class="p-1 hover:text-red-700 mr-2">
+                <x-feather-icon name="edit" class="h-current">Edit</x-feather-icon>
+            </x-modal.trigger>
             @endcan
             @can('delete', $role)
             <form action="{{ route('staff.roles.destroy', $role) }}" method="POST"
