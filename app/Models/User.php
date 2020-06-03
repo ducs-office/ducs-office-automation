@@ -15,6 +15,7 @@ use App\Types\UserCategory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Spatie\Permission\Traits\HasRoles;
 
@@ -159,7 +160,7 @@ class User extends Authenticatable
 
     public function getAvatarUrl()
     {
-        if ($this->avatar_path != null) {
+        if ($this->avatar_path != null && Storage::exists($this->avatar_path)) {
             return route('profiles.avatar', $this);
         }
 

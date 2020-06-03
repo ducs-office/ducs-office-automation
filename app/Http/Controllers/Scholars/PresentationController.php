@@ -35,7 +35,7 @@ class PresentationController extends Controller
 
         flash('Presentation created successfully!')->success();
 
-        return redirect(route('scholars.profile'));
+        return redirect()->back();
     }
 
     public function edit(Request $request, Presentation $presentation)
@@ -55,7 +55,7 @@ class PresentationController extends Controller
 
         flash('Presentation updated successfully!')->success();
 
-        return redirect(route('scholars.profile'));
+        return redirect()->back();
     }
 
     public function destroy(Request $request, Presentation $presentation)

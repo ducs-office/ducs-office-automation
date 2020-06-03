@@ -39,7 +39,7 @@ class UpdateScholarProfileTest extends TestCase
             'category' => ReservationCategory::SC,
             'admission_mode' => AdmissionMode::UGC_NET,
             'funding' => FundingType::NON_NET,
-            'profile_picture' => $profilePicture = UploadedFile::fake()->image('picture.jpeg'),
+            'avatar' => $avatar = UploadedFile::fake()->image('picture.jpg'),
             'registration_date' => now()->subMonth(1)->format('Y-m-d'),
             'research_area' => 'Artificial Intelligence',
             'education_details' => [
@@ -54,7 +54,7 @@ class UpdateScholarProfileTest extends TestCase
         ];
 
         $this->withoutExceptionHandling()
-            ->patch(route('scholars.profile.update'), $updateDetails)
+            ->patch(route('scholars.profile.update', $scholar), $updateDetails)
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'Profile updated successfully!');
 
@@ -73,10 +73,10 @@ class UpdateScholarProfileTest extends TestCase
         $this->assertEquals($degree->name, $freshScholar->education_details[0]->degree);
 
         $this->assertEquals(
-            'scholar_attachments/profile_picture/' . $profilePicture->hashName(),
-            $freshScholar->profilePicture->path
+            'avatars/scholars/' . $avatar->hashName(),
+            $freshScholar->avatar_path
         );
-        Storage::assertExists('scholar_attachments/profile_picture/' . $profilePicture->hashName());
+        Storage::assertExists($freshScholar->avatar_path);
     }
 
     /** @test */
@@ -100,7 +100,7 @@ class UpdateScholarProfileTest extends TestCase
         );
 
         $this->withoutExceptionHandling()
-            ->patch(route('scholars.profile.update'), [
+            ->patch(route('scholars.profile.update', $scholar), [
                 'education_details' => [
                     [
                         'degree' => $degrees[0]->name,
@@ -126,7 +126,7 @@ class UpdateScholarProfileTest extends TestCase
         $this->assertEquals($institutes[0]->name, $education->institute);
 
         $this->withoutExceptionHandling()
-            ->patch(route('scholars.profile.update'), [
+            ->patch(route('scholars.profile.update', $scholar), [
                 'education_details' => [
                     [
                         'degree' => 'New Degree',
@@ -169,7 +169,7 @@ class UpdateScholarProfileTest extends TestCase
 
         try {
             $this->withoutExceptionHandling()
-                ->patch(route('scholars.profile.update'), [
+                ->patch(route('scholars.profile.update', $scholar), [
                     'education_details' => [
                         [
                             'degree' => 'BSc(H)',

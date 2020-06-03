@@ -2,8 +2,7 @@
     @if($showModal)
     <h2 class="text-lg font-bold flex items-center space-x-4 mb-8">
         <img class="h-8 w-8 bg-gray-400 rounded-full overflow-hidden flex-shrink-0"
-            {{-- TODO: replace with avatar URL --}}
-            src="#"
+            src="{{ $scholar->getAvatarUrl() }}"
             alt="{{ $scholar->name }}'s Avatar" />
         <span>Replace {{ $scholar->first_name }}'s Supervisor</span>
     </h2>

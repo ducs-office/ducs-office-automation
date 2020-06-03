@@ -31,7 +31,7 @@ class ScholarTitleApprovalController extends Controller
 
         flash('Request for Title Approval applied successfully!')->success();
 
-        return redirect(route('scholars.profile'));
+        return redirect()->back();
     }
 
     public function show(Request $request, Scholar $scholar, TitleApproval $titleApproval)

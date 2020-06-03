@@ -18,6 +18,7 @@ use App\Types\ScholarAppealTypes;
 use App\Types\ScholarDocumentType;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 
 class Scholar extends User
 {
@@ -26,29 +27,18 @@ class Scholar extends User
     protected $hidden = ['password'];
 
     protected $fillable = [
-        'first_name',
-        'last_name',
-        'email',
-        'password',
-        'term_duration',
-        'phone',
-        'address',
-        'category',
-        'admission_mode',
-        'funding',
-        'gender',
-        'research_area',
-        'registration_date',
-        'enrolment_id',
+        'first_name', 'last_name',
+        'email', 'password', 'gender', 'phone', 'address',
+        'avatar_path',
+        'category', 'admission_mode', 'funding',
+        'registration_date', 'enrolment_id',
+        'term_duration', 'research_area',
         'education_details',
         'proposed_title',
     ];
 
-    protected $dates = [
-        'registration_date',
-    ];
-
     protected $casts = [
+        'registration_date' => 'datetime',
         'category' => CustomType::class . ':' . ReservationCategory::class,
         'admission_mode' => CustomType::class . ':' . AdmissionMode::class,
         'gender' => CustomType::class . ':' . Gender::class,
@@ -82,11 +72,6 @@ class Scholar extends User
     public function registrationValidUpto()
     {
         return optional($this->registration_date)->addYears($this->term_duration);
-    }
-
-    public function profilePicture()
-    {
-        return $this->morphOne(Attachment::class, 'attachable');
     }
 
     public function presentations()
@@ -190,6 +175,17 @@ class Scholar extends User
     public function addCourse(PhdCourse $course, $attributes = [])
     {
         return $this->courseworks()->syncWithoutDetaching([$course->id => $attributes]);
+    }
+
+    public function getAvatarUrl()
+    {
+        if ($this->avatar_path != null && Storage::exists($this->avatar_path)) {
+            return route('scholars.profile.avatar', $this);
+        }
+
+        return 'https://gravatar.com/avatar/'
+            . md5(strtolower(trim($this->email)))
+            . '?s=200&d=identicon';
     }
 
     // Accessors

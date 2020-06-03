@@ -1,14 +1,14 @@
 <div class="page-card p-6 overflow-visible">
     <div class="-mt-6 -mx-6 bg-magenta-800 h-48 rounded-t-md flex justify-end items-end p-4">
         @if((int)auth('scholars')->id() === (int)$scholar->id)
-        <a href="{{ route('scholars.profile.edit', $scholar) }}" class="btn inline-flex">
+        <a href="#" class="btn inline-flex">
             <x-feather-icon name="edit" class="h-current mr-2"></x-feather-icon>
             Edit
         </a>
         @endif
     </div>
     <div class="-mt-24 space-y-4 text-center mb-8">
-        <img src="{{ route('scholars.profile.avatar')}}"
+        <img src="{{ $scholar->getAvatarUrl() }}"
         class="flex items-center justify-center w-48 h-48 mx-auto object-cover border-4 border-white bg-white rounded-full shadow-md overflow-hidden"
         alt="{{ $scholar->name }}'s avatar">
         <div>

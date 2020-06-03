@@ -50,11 +50,7 @@ class PublicationController extends Controller
 
         flash('Publication added successfully')->success();
 
-        if (Auth::guard('scholars')->check()) {
-            return redirect(route('scholars.profile'));
-        } else {
-            return redirect(route('research.publications.index'));
-        }
+        return redirect()->back();
     }
 
     public function edit(Publication $publication)
@@ -82,11 +78,7 @@ class PublicationController extends Controller
 
         flash('Publication updated successfully!')->success();
 
-        if (Auth::guard('scholars')->check()) {
-            return redirect(route('scholars.profile'));
-        } else {
-            return redirect(route('research.publications.index'));
-        }
+        return redirect()->back();
     }
 
     public function destroy(Publication $publication)

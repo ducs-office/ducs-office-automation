@@ -11,7 +11,7 @@
             @endif
         </div>
         <div class="-mt-24 space-y-4 text-center mb-8">
-            <img src="{{ route('scholars.profile.avatar') }}"
+            <img src="{{ $user->getAvatarUrl() }}"
                 class="flex items-center justify-center w-48 h-48 mx-auto object-cover border-4 border-white bg-white rounded-full shadow-md overflow-hidden"
                 alt="{{ $user->name }}'s avatar">
             <div>

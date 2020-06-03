@@ -154,13 +154,15 @@ Route::delete(
 )->name('scholars.progress_reports.destroy')
 ->middleware('auth:web');
 
+Route::get('/scholars/@{scholar}', 'Scholars\ProfileController@show')->name('scholars.profile.show')->middleware('auth:web,scholars');
+Route::patch('/scholars/@{scholar}', 'Scholars\ProfileController@update')->name('scholars.profile.update')->middleware('auth:web,scholars');
+Route::get('/scholars/@{scholar}/avatar', 'Scholars\ProfileController@avatar')->name('scholars.profile.avatar')->middleware('auth:web,scholars');
+
 Route::prefix('/research')
     ->middleware(['auth:web'])
     ->namespace('Research')
     ->as('research.')
     ->group(static function () {
-        Route::get('/scholars/{scholar}', 'ScholarController@show')->name('scholars.show');
-
         Route::post(
             '/scholars/{scholar}/coursework',
             'ScholarCourseworkController@store'
@@ -232,10 +234,6 @@ Route::prefix('/scholars')
     ->as('scholars.')
     ->group(static function () {
         Route::get('/', 'DashboardController@index')->name('dashboard');
-        Route::get('/profile', 'ProfileController@index')->name('profile');
-        Route::get('/profile/edit', 'ProfileController@edit')->name('profile.edit');
-        Route::patch('/profile', 'ProfileController@update')->name('profile.update');
-        Route::get('/profile/avatar', 'ProfileController@avatar')->name('profile.avatar');
 
         Route::get('/presentation', 'PresentationController@create')->name('presentation.create');
         Route::post('/presentation', 'PresentationController@store')->name('presentation.store');

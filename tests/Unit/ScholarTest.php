@@ -2,10 +2,7 @@
 
 namespace Tests\Unit;
 
-use App\Http\Requests\ExternalAuthorityUpdateRequest;
 use App\Models\AdvisoryMeeting;
-use App\Models\Cosupervisor;
-use App\Models\ExternalAuthority;
 use App\Models\Leave;
 use App\Models\PhdCourse;
 use App\Models\Pivot\ScholarCosupervisor;
@@ -14,29 +11,22 @@ use App\Models\Presentation;
 use App\Models\ProgressReport;
 use App\Models\Publication;
 use App\Models\Scholar;
-use App\Models\ScholarAppeal;
 use App\Models\ScholarDocument;
-use App\Models\ScholarEducationDegree;
-use App\Models\ScholarEducationInstitute;
-use App\Models\ScholarEducationSubject;
 use App\Models\ScholarExaminer;
 use App\Models\TitleApproval;
 use App\Models\User;
 use App\Types\CitationIndex;
-use App\Types\EducationInfo;
 use App\Types\PrePhdCourseType;
 use App\Types\PublicationType;
 use App\Types\RequestStatus;
-use App\Types\ScholarAppealTypes;
 use App\Types\ScholarDocumentType;
+use Illuminate\Contracts\Cache\Store;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Tests\TestCase;
@@ -178,6 +168,26 @@ class ScholarTest extends TestCase
         $scholar->refresh();
         $this->assertCount(2, $scholar->advisors);
         $this->assertInstanceOf(User::class, $scholar->advisors->first());
+    }
+
+    /** @test */
+    public function getAvatarPath_gives_accessible_avatar_url()
+    {
+        $scholar = create(Scholar::class);
+
+        $gravatar = 'https://gravatar.com/avatar/'
+            . md5(strtolower(trim($scholar->email)))
+            . '?s=200&d=identicon';
+
+        $this->assertEquals($gravatar, $scholar->getAvatarUrl());
+
+        $scholar->avatar_path = '/avatars/file/thatdoesntexist.jpg';
+        $this->assertEquals($gravatar, $scholar->getAvatarUrl());
+
+        Storage::fake();
+        $scholar->avatar_path = UploadedFile::fake()->image('file.jpg')->store('/avatars');
+        Storage::assertExists($scholar->avatar_path);
+        $this->assertEquals(route('scholars.profile.avatar', $scholar), $scholar->getAvatarUrl());
     }
 
     /** @test */

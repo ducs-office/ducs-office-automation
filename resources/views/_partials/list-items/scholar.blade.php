@@ -3,12 +3,12 @@
         <div class="flex items-center">
             <div class="flex-shrink-0 h-10 w-10">
                 <img class="h-10 w-10 bg-gray-400 rounded-full overflow-hidden"
-                    src="#"
+                    src="{{ $scholar->getAvatarUrl() }}"
                     alt="{{ $scholar->name }}'s Avatar" />
             </div>
             <div class="ml-4">
                 <div class="leading-5 font-bold text-gray-900">
-                    <a class="hover:underline" href="{{ route('research.scholars.show', $scholar) }}">{{ $scholar->name }}</a>
+                    <a class="hover:underline" href="{{ route('scholars.profile.show', $scholar) }}">{{ $scholar->name }}</a>
                 </div>
                 <div class="leading-5 text-gray-600">{{ $scholar->email }}</div>
             </div>

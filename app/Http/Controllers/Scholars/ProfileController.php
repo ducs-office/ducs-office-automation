@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Scholars;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Scholar\UpdateProfileRequest;
 use App\Models\Cosupervisor;
+use App\Models\Scholar;
 use App\Models\ScholarEducationDegree;
 use App\Models\ScholarEducationInstitute;
 use App\Models\ScholarEducationSubject;
@@ -24,9 +25,9 @@ use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
-    public function index(Request $request)
+    public function show(Scholar $scholar, Request $request)
     {
-        $scholar = $request->user()->load([
+        $scholar = $scholar->load([
             'publications',
             'presentations.publication',
         ]);
@@ -41,30 +42,11 @@ class ProfileController extends Controller
         ]);
     }
 
-    public function edit(Request $request)
+    public function update(Scholar $scholar, UpdateProfileRequest $request)
     {
-        $scholar = $request->user();
+        $data = $request->validated();
 
-        return view('scholars.edit', [
-            'scholar' => $scholar,
-            'categories' => ReservationCategory::values(),
-            'admissionModes' => AdmissionMode::values(),
-            'fundings' => FundingType::values(),
-            'genders' => Gender::values(),
-            'subjects' => ScholarEducationSubject::all()->pluck('name')->toArray(),
-            'degrees' => ScholarEducationDegree::all()->pluck('name')->toArray(),
-            'institutes' => ScholarEducationInstitute::all()->pluck('name')->toArray(),
-        ]);
-    }
-
-    public function update(UpdateProfileRequest $request)
-    {
-        $scholar = $request->user();
-
-        DB::beginTransaction();
-
-        $validData = $request->validated();
-        $validData['education_details'] = collect($request->education_details)
+        $data['education_details'] = collect($request->education_details)
             ->map(function ($education) {
                 ScholarEducationSubject::firstOrCreate(['name' => $education['subject']]);
                 ScholarEducationDegree::firstOrCreate(['name' => $education['degree']]);
@@ -72,35 +54,29 @@ class ProfileController extends Controller
                 return new EducationInfo($education);
             })->toArray();
 
-        $scholar->update($validData);
-
-        if ($request->has('profile_picture')) {
-            $scholar->profilePicture()->create([
-                'original_name' => $validData['profile_picture']->getClientOriginalName(),
-                'path' => $validData['profile_picture']->store('/scholar_attachments/profile_picture'),
-            ]);
+        if ($request->hasFile('avatar')) {
+            $data['avatar_path'] = $request->file('avatar')->store('/avatars/scholars');
         }
 
-        DB::commit();
+        $scholar->update($data);
 
         flash('Profile updated successfully!')->success();
 
-        return redirect(route('scholars.profile'));
+        return redirect()->back();
     }
 
-    public function avatar()
+    public function avatar(Scholar $scholar)
     {
-        $attachmentPicture = auth()->user()->profilePicture;
+        $avatarPath = $scholar->avatar_path;
 
-        if ($attachmentPicture && Storage::exists($attachmentPicture->path)) {
-            return Response::file(Storage::path($attachmentPicture->path));
+        if ($avatarPath && Storage::exists($avatarPath)) {
+            return Response::file(Storage::path($avatarPath));
         }
 
-        $gravatarHash = md5(strtolower(trim(auth()->user()->email)));
-        $avatar = file_get_contents('https://gravatar.com/avatar/' . $gravatarHash . '?s=200&d=identicon');
+        $gravatar_contents = file_get_contents($scholar->getAvatarUrl());
 
-        return Response::make($avatar, 200, [
-            'Content-type' => 'image/jpg',
+        return Response::make($gravatar_contents, 200, [
+            'Content-Type' => 'image/jpg',
         ]);
     }
 }

@@ -33,7 +33,7 @@ class UpdateProfileRequest extends FormRequest
                 Rule::requiredIf($scholar->funding != null),
                 Rule::in(FundingType::values()),
             ],
-            'profile_picture' => ['nullable', 'image'],
+            'avatar' => ['nullable', 'image'],
             'research_area' => [Rule::requiredIf($scholar->research_area != null)],
             'registration_date' => ['nullable', 'date', 'before:today'],
             'enrolment_id' => ['nullable', 'string', 'max:30'],

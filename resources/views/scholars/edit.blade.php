@@ -8,7 +8,7 @@
                 <image-upload-input id="profile_picture"
                     name="profile_picture"
                     class="relative group mr-4 cursor-pointer"
-                    placeholder-src="{{ route('scholars.profile.avatar') }}">
+                    placeholder-src="{{ $scholar->getAvatarUrl() }}">
                     <template v-slot="{ imageUrl }">
                         <img :src="imageUrl" class="w-32 h-32 object-cover rounded border shadow">
                         <div class="absolute inset-0 hidden group-hover:flex items-center justify-center bg-black-50 text-white p-4">

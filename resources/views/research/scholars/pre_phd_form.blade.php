@@ -165,7 +165,7 @@
                             Apply
                         </button>
                     </form>
-                    <a href="{{ route('scholars.profile') }}" class="btn btn-magenta is-sm m-2">
+                    <a href="{{ route('scholars.profile.show', $scholar) }}" class="btn btn-magenta is-sm m-2">
                         Cancel
                     </a>
                 </div>

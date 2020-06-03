@@ -18,6 +18,7 @@ class CreateScholarsTable extends Migration
             $table->string('first_name');
             $table->string('last_name');
             $table->string('email')->unique();
+            $table->string('avatar_path')->nullable();
             $table->unsignedTinyInteger('term_duration');
             $table->string('password', 60);
             $table->rememberToken();
