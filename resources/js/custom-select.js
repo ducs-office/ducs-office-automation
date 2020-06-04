@@ -76,6 +76,7 @@ const addMultipleSelectFeature = () => ({
         }
     },
     toggleValue(value) {
+        console.log({selected: this.selectedValue, value})
         if (this.selectedValue.includes(value)) {
             this.deselectByValue(value);
         } else {
@@ -114,7 +115,7 @@ const addSingleSelectFeature = () => ({
     onChanged(value) {},
 });
 
-const addRegisterOptionsFeature = (multiple = false) => ({
+const addRegisterOptionsFeature = () => ({
     options: [],
     initializeOptions(optionHTMLs) {
         this.options = optionHTMLs.map(this.registerOption.bind(this));
@@ -129,7 +130,7 @@ const addRegisterOptionsFeature = (multiple = false) => ({
             : null;
 
         optionEl.addEventListener('mouseover', e => this.highlight(index));
-        if(! multiple) {
+        if(! this.multiple) {
             optionEl.addEventListener('click', e => this.select(optionEl.value));
         } else {
             optionEl.addEventListener('click', e => this.toggleValue(optionEl.value));
@@ -139,15 +140,14 @@ const addRegisterOptionsFeature = (multiple = false) => ({
     },
 })
 
-export default ({
-    selectedClasses = 'bg-gray-300',
-    highlightClasses = 'bg-magenta-600 text-white',
-    multiple = false
-} = {}) => ({
+export default (config) => ({
+    multiple: false,
+    selectedClasses: 'bg-gray-300',
+    highlightClasses: 'bg-magenta-600 text-white',
     ...addVisibiltyFeature(),
     ...addHighlightingFeature(),
-    ...(multiple ? addMultipleSelectFeature() : addSingleSelectFeature()),
-    ...addRegisterOptionsFeature(multiple),
+    ...(config.multiple || false ? addMultipleSelectFeature() : addSingleSelectFeature()),
+    ...addRegisterOptionsFeature(),
     init(value = null) {
         const optionsContainer = this.$refs.options;
         const renderContainer = this.$refs.dom;
@@ -162,7 +162,7 @@ export default ({
                     optionEl => optionEl.outerHTML
                 )
             );
-
+            renderContainer.innerHTML = '';
             this.options.forEach(option => renderContainer.appendChild(option));
         });
         childListObserver.observe(optionsContainer, { childList: true });
@@ -177,7 +177,7 @@ export default ({
             renderContainer.appendChild(option)
         );
 
-        if(multiple) {
+        if(this.multiple) {
             this.selectMultipleInitialValues(value);
         } else {
             this.selectInitialValue(value);
@@ -207,34 +207,35 @@ export default ({
 
         for (let option of this.options) {
             if (this.isSelected(option.value)) {
-                selectedClasses.split(' ').forEach(
+                this.selectedClasses.split(' ').forEach(
                     cssClass => option.classList.add(cssClass)
                 );
             } else {
-                selectedClasses.split(' ').forEach(
+                this.selectedClasses.split(' ').forEach(
                     cssClass => option.classList.remove(cssClass)
                 );
             }
         }
 
-        if (!multiple) {
+        if (!this.multiple) {
             this.close();
         }
     },
     onHighlighted(index) {
         for (let option of this.options) {
-            highlightClasses.split(' ').forEach(
+            this.highlightClasses.split(' ').forEach(
                 cssClass => option.classList.remove(cssClass)
             );
         }
-        highlightClasses.split(' ').forEach(
+        this.highlightClasses.split(' ').forEach(
             cssClass => this.options[index].classList.add(cssClass)
         );
         this.options[index].scrollIntoView({block: 'nearest'});
     },
     onBackspaceKey(event) {
-        if (multiple && event.target.value == "") {
+        if (this.multiple && event.target.value == "") {
             this.deleteLast();
         }
-    }
+    },
+    ...config
 });

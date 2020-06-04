@@ -4,7 +4,7 @@
     <div class="flex items-baseline px-6 pb-4 border-b">
         <h1 class="page-header mb-0 px-0 mr-4">Programmes</h1>
         @can('create', App\Models\Programme::class)
-        <a href="{{route('staff.programmes.create')}}" class="btn btn-magenta is-sm shadow-inset">
+        <a href="{{ route('staff.programmes.create') }}" class="btn btn-magenta is-sm shadow-inset">
             New
         </a>
         @endcan

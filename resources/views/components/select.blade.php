@@ -7,18 +7,17 @@
 <div x-data="CustomSelect({
     multiple: {{ json_encode($multiple) }}
 })" x-init="init({{ json_encode($value) }})"
-    {{-- wait for click to be fired first, incase focus received due to click, so that there is no double toggle --}}
-    x-on:focusin="setTimeout(() => open(), 150)"
+    x-model="selectedValue"
     x-on:focusout="close()"
     @if($multiple)
     x-on:keydown.backspace="onBackspace()"
-    x-on:keydown.enter.prevent="opened ? toggleHighlighted() : open()"
+    x-on:keydown.enter.prevent.stop="opened ? toggleHighlighted() : open()"
     @else
-    x-on:keydown.enter.prevent="opened ? selectHighlighted() : open()"
+    x-on:keydown.enter.prevent.stop="opened ? selectHighlighted() : open()"
     @endif
-    x-on:keydown.arrow-down="highlightNext()"
-    x-on:keydown.arrow-up="highlightPrev()"
-    x-on:keydown.escape.prevent="close()"
+    x-on:keydown.arrow-down.prevent.stop="highlightNext()"
+    x-on:keydown.arrow-up.prevent.stop="highlightPrev()"
+    x-on:keydown.escape.prevent.stop="close()"
     {{ $attributes->merge(['class' => 'relative w-full']) }}>
     <button type="button"
         x-on:click="toggle()"
@@ -27,14 +26,16 @@
         @if(! $multiple)
             <span x-show="! isEmpty()" x-html="selectedOptionHTML"></span>
         @else
-        <template x-for="(optionHTML,index) in selectedOptionHTMLs">
-            <div x-key="index" class="inline-flex px-2 py-1 leading-none space-x-1 bg-magenta-700 text-white text-sm rounded-full">
-                <span x-html="optionHTML"></span>
-                <button x-on:click.stop.prevent="deselect(index)">
-                    <x-feather-icon name="x" class="h-current"></x-feather-icon>
-                </button>
-            </div>
-        </template>
+        <div class="flex flex-wrap">
+            <template x-for="(optionHTML,index) in selectedOptionHTMLs">
+                <div x-key="index" class="inline-flex px-2 py-1 leading-none space-x-1 bg-magenta-700 text-white text-sm rounded-full m-1">
+                    <span x-html="optionHTML"></span>
+                    <button x-on:click.stop.prevent="deselect(index)">
+                        <x-feather-icon name="x" class="h-current"></x-feather-icon>
+                    </button>
+                </div>
+            </template>
+        </div>
         @endif
     </button>
     @if(! $multiple)
@@ -47,8 +48,9 @@
     </template>
     @endif
     <div x-show="opened" x-on:click.away="close()"
-        x-ref="dom" wire:ignore
-        class="absolute z-20 page-card px-0 py-2 border shadow-lg rounded p-4 w-full inset-x-0 mt-1 min-h-64 overflow-y-auto">
+        class="absolute z-20 page-card p-0 border shadow-lg rounded w-full inset-x-0 mt-1">
+        @isset($query) {{ $query }} @endisset
+        <ul tabindex="-1" x-ref="dom" wire:ignore class="py-2 max-h-64 overflow-y-auto"></ul>
     </div>
     <div x-ref="options" x-show="false">
         {{ $slot }}
