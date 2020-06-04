@@ -20,7 +20,9 @@ Before you begin installing make sure you run `sudo apt update` to get the lates
 sudo apt install mysql-server
 
 # php & required extensions
-sudo apt install php7.2 php7.2-mysql php7.2-xml php7.2-mbstring php7.2-bcmath php7.2-sqlite php7.2-json
+sudo add-apt-repository ppa:ondrej/php
+sudo apt-get update
+sudo apt-get install php7.3 php7.3-mysql php7.3-xml php7.3-mbstring php7.3-bcmath php7.3-sqlite php7.3-json
 
 # composer & nodejs
 sudo apt install nodejs composer
@@ -68,7 +70,18 @@ cp .env.example .env
 ```
 
 To generate an application key use: 
-`php artisan key:generate` this will add an application to your `.env` file. 
+`php artisan key:generate` this will add an application to your `.env` file.
+
+Create new `mysql` user and database
+```bash
+mysql -u root -h localhost -p
+mysql> CREATE USER 'username'@'localhost' IDENTIFIED BY 'password';
+mysql> GRANT ALL PRIVILEGES ON office_automation.* TO 'username'@'localhost' WITH GRANT OPTION;
+mysql> ALTER USER 'username'@'localhost' IDENTIFIED WITH mysql_native_password by 'password';
+mysql> \q
+mysql -u username -h localhost -p
+mysql> CREATE DATABASE office_automation;
+```
 
 Setup `Database` connection in `.env` file:
 
@@ -77,9 +90,9 @@ Setup `Database` connection in `.env` file:
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
-DB_DATABASE=homestead
-DB_USERNAME=homestead
-DB_PASSWORD=secret
+DB_DATABASE=office_automation
+DB_USERNAME=username
+DB_PASSWORD=password
 ...
 ```
 Make sure you change database configuration according to your credentials. Mostly, you'd need to change values for these variables:
@@ -110,6 +123,6 @@ This will serve your website at `localhost:8000`, you can now open this up in yo
 ### Default login credentials
 
 ```
-Email: himani@ducs.in
-Password: secret
+Email: admin@cs.du.ac.in
+Password: password
 ```
