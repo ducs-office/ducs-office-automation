@@ -110,6 +110,6 @@ This will serve your website at `localhost:8000`, you can now open this up in yo
 ### Default login credentials
 
 ```
-Email: himani@ducs.in
-Password: secret
+Email: admin@cs.du.ac.in
+Password: password
 ```
