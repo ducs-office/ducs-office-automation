@@ -19,7 +19,10 @@ class NewProgrammeForm extends Component
         $this->code = old('code', '');
         $this->duration = old('duration', 3);
         $this->type = old('type', '');
-        $this->semester_courses = old('semester_courses', []);
+        $this->semester_courses = old('semester_courses', [
+            '1' => [], '2' => [], '3' => [],
+            '4' => [], '5' => [], '6' => [],
+        ]);
     }
 
     public function render()
@@ -34,7 +37,7 @@ class NewProgrammeForm extends Component
     {
         return Course::query()
             ->where('code', 'like', $this->code . '%')
-            ->whereNotIn('id', $this->selectedCourses)
+            ->orWhereIn('id', $this->selectedCourses)
             ->get();
     }
 
@@ -49,16 +52,25 @@ class NewProgrammeForm extends Component
         );
     }
 
+    public function updateDuration()
+    {
+        foreach (range(1, $this->duration * 2) as $semester) {
+            if (! array_key_exists($semester, $this->semester_courses)) {
+                $this->semester_courses["{$semester}"] = [];
+            }
+        }
+    }
+
     public function updatedCode()
     {
-        $this->semester_courses = $this->courses->groupBy(function ($course) {
+        $this->courses->each(function ($course) {
             $matches = [];
-            if (preg_match('~[0-9]+~', $course->code, $matches) <= 0) {
+
+            if (preg_match('~([0-9])[0-9]*$~', $course->code, $matches) <= 0) {
                 return null;
             }
-            return $matches[0][0];
-        })
-        ->map(function ($group) { return $group->map->id; })
-        ->toArray();
+
+            array_push($this->semester_courses[$matches[1]], $course->id);
+        });
     }
 }

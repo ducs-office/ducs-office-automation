@@ -1,236 +1,90 @@
-const addVisibiltyFeature = (initialState = false) => ({
-    opened: initialState,
-    toggle() {
-        this.opened ? this.close() : this.open();
-    },
-    open() {
-        if (! this.opened) {
-            this.opened = true;
-            this.onOpen();
-        }
-    },
-    close() {
-        if (this.opened) {
-            this.opened = false;
-            this.onClose();
-        }
-    },
-    onOpen(){},
-    onClose(){},
-});
-
-const addHighlightingFeature = () => ({
-    options: [], // duplication, so that it doesnt break without add addRegisterOptionsFeature
-    highlighted: -1,
-    isHighlighted(index) {
-        return this.highlighted == index;
-    },
-    highlightNext() {
-        this.highlight((this.highlighted + 1) % this.options.length);
-    },
-    highlightPrev() {
-        this.highlight(
-            this.highlighted == 0 ? this.options.length - 1 : this.highlighted - 1
-        );
-    },
-    highlight(index) {
-        this.highlighted = index;
-        this.onHighlighted(index);
-    },
-    onHighlighted(index) {}
-});
-
 const addMultipleSelectFeature = () => ({
-    options: [],
-    selectedOptionHTMLs: [],
-    selectedValue: [],
-    isSelected(value) {
-        return this.selectedValue.includes(value);
-    },
-    select(...values) {
-        for (let value of values) {
-            this.selectedValue.push(value);
-        }
-
-        this.options
-            .filter(option => values.includes(option.value))
-            .forEach(option => this.selectedOptionHTMLs.push(option.innerHTML));
-
-        this.onChanged(this.selectedValue);
-    },
+    value: [],
+    isEmpty() { return this.value == null || this.value.length === 0 },
+    isSelected(value) { return this.value.includes(value) },
+    select(...values) { this.value = [...this.value, ...values] },
     deselect(index) {
-        if (index < 0 || index >= this.selectedValue.length) {
-            return;
-        }
+        if (index < 0 ) { return }
 
-        this.selectedValue.splice(index, 1);
-        this.selectedOptionHTMLs.splice(index, 1);
-        this.onChanged(this.selectedValue);
+        this.value.splice(index, 1);
     },
-    deselectLast() {
-        this.deselect(this.selectedValue.length - 1);
-    },
-    deselectByValue(value) {
-        if (this.isSelected(value)) {
-            this.deselect(this.selectedValue.indexOf(value));
-        }
-    },
-    toggleValue(value) {
-        console.log({selected: this.selectedValue, value})
-        if (this.selectedValue.includes(value)) {
-            this.deselectByValue(value);
-        } else {
-            this.select(value);
-        }
-    },
-    toggleHighlighted() {
-        this.toggleValue(this.options[this.highlighted].value);
-    },
-    isEmpty() {
-        return this.selectedValue == null || this.selectedValue.length === 0;
-    },
-    onChanged(value) {}
+    deselectLast() { this.deselect(this.value.length - 1) },
+    deselectByValue(value) { this.deselect(this.value.indexOf(value)) },
+    toggleChoice(value) { this.isSelected(value) ? this.deselectByValue(value) : this.select(value) },
+    toggleHighlighted() { this.toggleChoice(this.choices[this.highlighted][this.valueKey]) },
+    selectedChoices() { return this.value.map(val => this.choices.find(choice => val == choice[this.valueKey])) }
 });
 
 const addSingleSelectFeature = () => ({
-    options: [],
-    selectedValue: '',
-    selectedOptionHTML: '',
-    isSelected(value) {
-        return this.selectedValue == value;
-    },
-    select(value) {
-        this.selectedValue = value;
-
-        const index = this.options.findIndex(option => option.value == value);
-        if(index > -1 && index < this.options.length) {
-            this.selectedOptionHTML = this.options[index].innerHTML;
-        }
-
-        this.onChanged(value);
-    },
-    isEmpty() {
-        return this.selectedValue == '' || this.selectedValue == null;
-    },
-    onChanged(value) {},
+    value: null,
+    isEmpty() { return this.value == '' || this.value == null },
+    isSelected(value) { return this.value == value },
+    selectHighlighted() { this.select(this.highlighted) },
+    select(value) { this.value = value },
+    selectedChoice() { this.choices.find(choice => this.value == choice[this.valueKey]) }
 });
 
-const addRegisterOptionsFeature = () => ({
-    options: [],
-    initializeOptions(optionHTMLs) {
-        this.options = optionHTMLs.map(this.registerOption.bind(this));
-    },
-    registerOption(optionHTML, index) {
-        const optionTemplate = document.createElement('template');
-        optionTemplate.innerHTML = optionHTML.trim();
-        const optionEl = optionTemplate.content.firstChild;
+export default config => ({
+    init() {
+        this.choicesCount = this.$refs[this.choicesRef].children.length;
 
-        optionEl.value = optionEl.attributes.value
-            ? optionEl.attributes.value.nodeValue
-            : null;
-
-        optionEl.addEventListener('mouseover', e => this.highlight(index));
-        if(! this.multiple) {
-            optionEl.addEventListener('click', e => this.select(optionEl.value));
-        } else {
-            optionEl.addEventListener('click', e => this.toggleValue(optionEl.value));
-        }
-
-        return optionEl;
-    },
-})
-
-export default (config) => ({
-    multiple: false,
-    selectedClasses: 'bg-gray-300',
-    highlightClasses: 'bg-magenta-600 text-white',
-    ...addVisibiltyFeature(),
-    ...addHighlightingFeature(),
-    ...(config.multiple || false ? addMultipleSelectFeature() : addSingleSelectFeature()),
-    ...addRegisterOptionsFeature(),
-    init(value = null) {
-        const optionsContainer = this.$refs.options;
-        const renderContainer = this.$refs.dom;
-
-        const childListObserver = new MutationObserver(mutationsList => {
-            if (mutationsList.length == 0) {
-                return;
-            }
-
-            this.initializeOptions(
-                Array.from(optionsContainer.children).map(
-                    optionEl => optionEl.outerHTML
-                )
-            );
-            renderContainer.innerHTML = '';
-            this.options.forEach(option => renderContainer.appendChild(option));
+        this.$watch("highlighted", () => {
+            this.$refs[this.choicesRef]
+                .children[this.highlighted]
+                .scrollIntoView({ block: "nearest" });
         });
-        childListObserver.observe(optionsContainer, { childList: true });
 
-        this.initializeOptions(
-            Array.from(optionsContainer.children).map(
-                optionEl => optionEl.outerHTML
-            )
-        );
+        this.$watch("value", (value) => {
+            this.$refs[this.choicesRef].value = value;
+            this.$refs[this.choicesRef].dispatchEvent(new Event("input", {
+                bubbles: true,
+                cancelable: true,
+            }));
+        });
 
-        this.options.forEach(option =>
-            renderContainer.appendChild(option)
-        );
-
-        if(this.multiple) {
-            this.selectMultipleInitialValues(value);
-        } else {
-            this.selectInitialValue(value);
+        if(this.multiple && this.value == null) {
+            this.value = [];
         }
+
+        this.$refs[this.choicesRef].value = this.value;
     },
-    selectMultipleInitialValues(value) {
-        if(value == null) {
+    open: false,
+    multiple: false,
+    valueKey: "value",
+    choices: [],
+    choicesRef: "choices",
+    highlighted: 0,
+    isHighlighted(index) { return index == this.highlighted },
+    highlightNext() { this.highlight((this.highlighted + 1) % this.choicesCount) },
+    highlightPrev() { this.highlight(this.highlighted == 0 ? this.choicesCount - 1 : this.highlighted - 1) },
+    highlight(index) {
+        if (index < 0 || index >= this.choicesCount) {
             return;
         }
+        this.highlighted = index;
+    },
+    ...(config.multiple || false
+        ? addMultipleSelectFeature()
+        : addSingleSelectFeature()),
+    onButtonClick() {
+        if (this.open) return;
 
-        this.select(
-            ...(Array.isArray(value) ? value : [value])
-        );
+        this.open = true;
+        this.$nextTick(() => {
+            this.$refs[this.choicesRef].focus();
+            this.$refs[this.choicesRef].children[this.highlighted].scrollIntoView({ block: 'nearest' })
+        });
     },
-    selectInitialValue(value) {
-        this.select(value);
-    },
-    selectHighlighted() {
-        this.select(this.highlighted);
-    },
-    onChanged(value) {
-        this.$el.value = value;
-        this.$el.dispatchEvent(new Event("input", {
-            bubbles: true,
-            cancelable: true
-        }));
-
-        for (let option of this.options) {
-            if (this.isSelected(option.value)) {
-                this.selectedClasses.split(' ').forEach(
-                    cssClass => option.classList.add(cssClass)
-                );
-            } else {
-                this.selectedClasses.split(' ').forEach(
-                    cssClass => option.classList.remove(cssClass)
-                );
-            }
+    onOptionSelected() {
+        if(! this.open) {
+            return (this.open = true);
         }
 
-        if (!this.multiple) {
-            this.close();
-        }
+        return this.multiple ? this.toggleHighlighted() : this.selectHighlighted();
     },
-    onHighlighted(index) {
-        for (let option of this.options) {
-            this.highlightClasses.split(' ').forEach(
-                cssClass => option.classList.remove(cssClass)
-            );
-        }
-        this.highlightClasses.split(' ').forEach(
-            cssClass => this.options[index].classList.add(cssClass)
-        );
-        this.options[index].scrollIntoView({block: 'nearest'});
+    onEscape() {
+        this.open = false;
+        this.$refs.button.focus();
     },
     onBackspaceKey(event) {
         if (this.multiple && event.target.value == "") {

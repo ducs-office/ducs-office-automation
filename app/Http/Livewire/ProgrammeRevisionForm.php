@@ -32,7 +32,7 @@ class ProgrammeRevisionForm extends Component
     {
         return Course::query()
             ->where('code', 'like', $this->programme->code . '%')
-            ->whereNotIn('id', $this->selectedCourses)
+            ->orWhereIn('id', $this->selectedCourses)
             ->get();
     }
 

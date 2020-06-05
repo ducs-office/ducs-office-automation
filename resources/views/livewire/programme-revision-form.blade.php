@@ -28,15 +28,28 @@
                     :class="$errors->has('semester_courses.' . $semester) ? 'border-red-500 hover:border-red-500' : ''"
                     name="semester_courses[{{ $semester }}][]"
                     :multiple="true"
+                    :choices="$courses"
+                    :value="$semester_courses[$semester]"
                     wire:model="semester_courses.{{ $semester }}">
-                    @foreach ($courses as $course)
-                        <div class="px-4 py-2" value="{{ $course->id }}">
+                    @foreach($courses as $index => $course)
+                        <li class="px-4 py-2 cursor-pointer" x-bind:class="{
+                            'bg-magenta-700 text-white': isHighlighted({{ $index }}),
+                            'bg-gray-100': isSelected({{ $course->id }}),
+                        }"
+                        x-on:mouseover="highlight({{ $index }})"
+                        x-on:click.prevent="onOptionSelected()">
                             <div class="flex space-x-2 items-center">
                                 <span>{{ $course->code }}</span>
-                                <span>{{ $course->name }}</span>
+                                <span>{{ $course->name   }}</span>
                             </div>
-                        </div>
+                        </li>
                     @endforeach
+                    <x-slot name="selectedChoice">
+                        <div class="inline-flex space-x-2 items-center">
+                            <span x-text="selectedChoice.code"></span>
+                            <span x-text="selectedChoice.name"></span>
+                        </div>
+                    </x-slot>
                 </x-select>
                 @error('semester_courses.' . $semester)
                     <p class="text-red-500 font-bold">{{ $message }}</p>
