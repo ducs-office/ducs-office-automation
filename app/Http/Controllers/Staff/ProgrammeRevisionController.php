@@ -44,7 +44,7 @@ class ProgrammeRevisionController extends Controller
             ->courses
             ->groupBy('pivot.semester')
             ->map
-            ->pluck('id');
+            ->pluck('id')->toArray();
 
         return view('staff.programmes.revisions.create', [
             'programme' => $programme,
@@ -83,7 +83,8 @@ class ProgrammeRevisionController extends Controller
         $semesterCourses = $revision->courses
             ->groupBy('pivot.semester')
             ->map
-            ->pluck('id');
+            ->pluck('id')
+            ->toArray();
 
         return view('staff.programmes.revisions.edit', [
             'programme' => $programme,

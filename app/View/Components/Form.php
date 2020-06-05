@@ -55,7 +55,7 @@ class Form extends Component
                 @if ($method !== 'GET' && $method !== 'POST')
                 @method($method)
                 @endif
-                @csrf
+                @csrf_token
                 {{ $slot }}
             </form>
         HTML;

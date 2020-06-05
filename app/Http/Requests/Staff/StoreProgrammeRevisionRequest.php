@@ -34,9 +34,9 @@ class StoreProgrammeRevisionRequest extends FormRequest
         return [
             'revised_at' => ['required', 'date', Rule::notIn($revision_dates)],
             'semester_courses' => [
-                'sometimes', 'required', 'array', 'size:' . ($programme->duration * 2),
+                'required', 'array', 'size:' . ($programme->duration * 2),
             ],
-            'semester_courses.*' => ['required', 'array', 'min:1'],
+            'semester_courses.*' => ['required', 'array'],
             'semester_courses.*.*' => [
                 'numeric', 'distinct', 'exists:courses,id',
                 Rule::unique(CourseProgrammeRevision::class, 'course_id')
