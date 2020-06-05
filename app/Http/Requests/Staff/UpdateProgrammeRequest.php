@@ -3,8 +3,10 @@
 namespace App\Http\Requests\Staff;
 
 use App\Types\ProgrammeType;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 class UpdateProgrammeRequest extends FormRequest
 {
@@ -34,5 +36,14 @@ class UpdateProgrammeRequest extends FormRequest
             'type' => ['sometimes', 'required', Rule::in(ProgrammeType::values())],
             'name' => ['sometimes', 'required', 'min:3', 'max:190'],
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        $response = redirect()->back()
+            ->withInput($this->input() + ['programme_id' => $this->route('programme')->id])
+            ->withErrors($validator->errors()->messages(), 'update');
+
+        throw new ValidationException($validator, $response);
     }
 }

@@ -10,9 +10,7 @@
         @endcan
     </div>
     @can('update', App\Models\Programme::class)
-    @include('staff.programmes.modals.edit',[
-        'modalName' => 'edit-programme-modal'
-    ])
+        <livewire:edit-programme-modal />
     @endcan
     <div class="space-y-5">
         @foreach ($programmes as $index => $programme)
@@ -26,12 +24,11 @@
                     </div>
                     <div class="flex">
                         @can('update', $programme)
-                        <button class="p-1 hover:text-blue-500 mr-1"
-                        @click.prevent="$modal.show('edit-programme-modal',{
-                            programme: {{ $programme->toJson()}}
-                        })">
+                        <x-modal.trigger class="p-1 hover:text-blue-500 mr-1"
+                            modal="edit-programme-modal"
+                            :livewire="['payload' => $programme->id]">
                             <x-feather-icon class="h-current" name="edit">Edit</x-feather-icon>
-                        </button>
+                        </x-modal.trigger>
                         @endcan
                         @can('delete', App\Models\Programme::class)
                         <form action="{{ route('staff.programmes.destroy', $programme) }}" method="POST"
