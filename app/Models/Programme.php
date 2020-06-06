@@ -30,7 +30,7 @@ class Programme extends Model
 
     public function latestRevision()
     {
-        return $this->hasOne(ProgrammeRevision::class);
+        return $this->belongsTo(ProgrammeRevision::class);
     }
 
     public function scopeWithLatestRevision($query)
