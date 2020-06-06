@@ -16,6 +16,11 @@ class ProgrammeRevisionForm extends Component
     {
         $this->programme = $programme;
         $this->semester_courses = old('semester_courses', $semesterCourses);
+        foreach (range(1, $programme->duration * 2) as $semester) {
+            if (! array_key_exists($semester, $this->semester_courses)) {
+                $this->semester_courses[$semester] = [];
+            }
+        }
         $this->revised_at = old('revised_at', optional($revisedAt)->format('Y-m-d') ?? '');
 
         $this->setErrorBag(session()->get('errors', new ViewErrorBag)->default);
@@ -45,5 +50,23 @@ class ProgrammeRevisionForm extends Component
             },
             []
         );
+    }
+
+    public function disabledIndices($semester)
+    {
+        return $this->courses->filter(function ($course) use ($semester) {
+            return $this->isSelectedExcludingSemester($course->id, $semester);
+        })->keys()->all();
+    }
+
+    public function isSelectedExcludingSemester($courseId, $currentSemester)
+    {
+        foreach ($this->semester_courses as $semester => $courses) {
+            if ($currentSemester != $semester && in_array($courseId, $courses)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

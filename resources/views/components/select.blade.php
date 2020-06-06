@@ -3,7 +3,8 @@
     'name' => '',
     'value' => null,
     'valueKey' => 'id',
-    'choices' => '[]',
+    'choices' => [],
+    'disabledChoices' => [],
     'choicesRef' => 'listbox',
     'placeholder' => 'Select Item',
 ])
@@ -12,9 +13,9 @@
     value: {{ json_encode($value) }},
     valueKey: {{ json_encode($valueKey) }},
     choices: {{ json_encode($choices) }},
+    disabledChoices: {{ json_encode($disabledChoices) }},
     choicesRef: {{ json_encode($choicesRef) }}
 })" x-init="init()"
-    x-on:input="console.log($event.target.value)"
     {{ $attributes->merge(['class' => 'relative w-full']) }}>
     <button type="button"
         x-ref="button"
@@ -55,9 +56,9 @@
     @endif
     <div x-show="open"
         x-on:click.away="open = false"
-        class="absolute z-20 bg-white border shadow-lg rounded w-full inset-x-0 mt-1">
+        class="z-20 bg-white border shadow-lg rounded w-full">
         @isset($query) {{ $query }} @endisset
-        <ul tabindex="-1" x-ref="listbox" class="py-2 max-h-64 overflow-y-auto"
+        <ul tabindex="-1" x-ref="listbox" class="py-2 max-h-64 overflow-y-auto focus:outline-none"
             x-on:keydown.escape="onEscape()"
             x-on:keydown.enter.prevent.stop="onOptionSelected()"
             x-on:keydown.arrow-down.prevent.stop="highlightNext()"

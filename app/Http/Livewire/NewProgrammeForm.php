@@ -52,17 +52,42 @@ class NewProgrammeForm extends Component
         );
     }
 
-    public function updateDuration()
+    public function disabledIndices($semester)
+    {
+        return $this->courses->filter(function ($course) use ($semester) {
+            return $this->isSelectedExcludingSemester($course->id, $semester);
+        })->keys()->all();
+    }
+
+    public function isSelectedExcludingSemester($courseId, $currentSemester)
+    {
+        foreach ($this->semester_courses as $semester => $courses) {
+            if ($currentSemester != $semester && in_array($courseId, $courses)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    protected function initializeSemesterCoursesArray($clear = false)
     {
         foreach (range(1, $this->duration * 2) as $semester) {
-            if (! array_key_exists($semester, $this->semester_courses)) {
+            if ($clear || ! array_key_exists($semester, $this->semester_courses)) {
                 $this->semester_courses["{$semester}"] = [];
             }
         }
     }
 
+    public function updateDuration()
+    {
+        $this->initializeSemesterCoursesArray();
+    }
+
     public function updatedCode()
     {
+        $this->initializeSemesterCoursesArray($clear = true);
+
         $this->courses->each(function ($course) {
             $matches = [];
 

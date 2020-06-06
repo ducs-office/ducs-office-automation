@@ -88,26 +88,21 @@
                     class="w-full form-label"
                     >Courses for Semester {{ $semester }}</label>
                     <x-select id="semester-{{$semester}}-courses"
-                        :class="$errors->has('semester_courses.' . $semester) ? 'border-red-500 hover:border-red-500' : ''"
                         name="semester_courses[{{ $semester }}][]"
+                        :class="$errors->has('semester_courses.' . $semester) ? 'border-red-500 hover:border-red-500' : ''"
                         :multiple="true"
                         :choices="$courses"
+                        :disabled-choices="$this->disabledIndices($semester)"
                         :value="$semester_courses[$semester]"
-                        {{-- this is causing re-render which closes the select input as one item is selected. --}}
-                        wire:model="semester_courses.{{ $semester }}"
-                        >
+                        {{-- this is causing re-render which closes the select input as soon as one item is selected. --}}
+                        wire:model="semester_courses.{{ $semester }}">
                         @foreach($courses as $index => $course)
-                            <li class="px-4 py-2 cursor-pointer" x-bind:class="{
-                                'bg-magenta-700 text-white': isHighlighted({{ $index }}),
-                                'bg-gray-100': isSelected({{ $course->id }}),
-                            }"
-                            x-on:mouseover="highlight({{ $index }})"
-                            x-on:click.prevent="onOptionSelected()">
-                                <div class="flex space-x-2 items-center">
-                                    <span>{{ $course->code }}</span>
-                                    <span>{{ $course->name   }}</span>
-                                </div>
-                            </li>
+                        <x-select.option class="px-4 py-2" :value="$course->id" :index="$index">
+                            <div class="flex space-x-2 items-center">
+                                <span>{{ $course->code }}</span>
+                                <span>{{ $course->name }}</span>
+                            </div>
+                        </x-select.option>
                         @endforeach
                         <x-slot name="selectedChoice">
                             <div class="inline-flex space-x-2 items-center">

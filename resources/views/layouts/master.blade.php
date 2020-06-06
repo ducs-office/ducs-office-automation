@@ -37,7 +37,7 @@
             x-transition:leave-end="transform -translate-x-full">
             @include('staff.partials.sidebar')
         </div>
-        <div class="flex-1 flex flex-col h-full overflow-y-auto transition duration-300">
+        <div class="flex-1 flex flex-col h-full overflow-y-auto">
             @include('staff.partials.header')
             <main class="flex-1 h-full p-4 space-y-4">
                 @yield('body')
