@@ -57,9 +57,8 @@ class CourseRevisionController extends Controller
      */
     public function destroy($course, CourseRevision $revision)
     {
-        $this->authorize($revision);
+        $this->authorize('delete', $revision);
 
-        $revision->attachments()->delete();
         $revision->delete();
 
         flash('Course Revision deleted!')->success();

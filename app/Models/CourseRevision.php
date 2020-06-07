@@ -12,8 +12,22 @@ class CourseRevision extends Model
 
     public $timestamps = false;
 
+    public static function boot()
+    {
+        parent::boot();
+
+        static::deleting(static function ($courseRevision) {
+            $courseRevision->attachments->each->delete();
+        });
+    }
+
     public function attachments()
     {
         return $this->morphMany(Attachment::class, 'attachable');
+    }
+
+    public function course()
+    {
+        return $this->belongsTo(Course::class);
     }
 }

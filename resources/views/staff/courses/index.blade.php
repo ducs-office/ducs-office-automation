@@ -30,15 +30,17 @@
                     <div class="leading-none my-4">
                         <div class="flex items-center mb-1">
                             <h5 class="font-medium">Latest Revision w.e.f <strong>{{ $latestRevision->revised_at->format('M, Y') }}</strong></h5>
-                            <form method="POST" action="{{ route('staff.courses.revisions.destroy', [
-                                'course' => $course,
-                                'revision' => $latestRevision
-                            ]) }}" class="ml-2">
-                                @csrf_token @method('DELETE')
-                                <button type="submit" class="p-2 text-sm text-gray-700 hover:text-red-600 hover:bg-gray-300 rounded">
-                                    <x-feather-icon name="trash-2" class="h-current"></x-feather-icon>
-                                </button>
-                            </form>
+                            @can('delete', $latestRevision)
+                                <form method="POST" action="{{ route('staff.courses.revisions.destroy', [
+                                    'course' => $course,
+                                    'revision' => $latestRevision
+                                ]) }}" class="ml-2">
+                                    @csrf_token @method('DELETE')
+                                    <button type="submit" class="p-2 text-sm text-gray-700 hover:text-red-600 hover:bg-gray-300 rounded">
+                                        <x-feather-icon name="trash-2" class="h-current"></x-feather-icon>
+                                    </button>
+                                </form>
+                            @endcan
                         </div>
                         <div class="flex flex-wrap -mx-2 -my-1">
                             @foreach ($latestRevision->attachments as $attachment)
@@ -103,16 +105,18 @@
                             <li>
                                 <div class="flex items-center mb-1">
                                     <h5 class="font-medium">Revision w.e.f <strong>{{ $courseRevision->revised_at->format('M, Y') }}</strong></h5>
-                                    <form method="POST" action="{{ route('staff.courses.revisions.destroy', ([
-                                        'course' => $course,
-                                        'revision' => $courseRevision
-                                        ])) }}"
-                                        class="ml-2">
-                                        @csrf_token @method('DELETE')
-                                        <button type="submit" class="p-2 text-gray-700 hover:text-red-600 hover:bg-gray-300 rounded">
-                                            <x-feather-icon name="trash-2" class="h-current"></x-feather-icon>
-                                        </button>
-                                    </form>
+                                    @can('delete', $courseRevision)
+                                        <form method="POST" action="{{ route('staff.courses.revisions.destroy', ([
+                                            'course' => $course,
+                                            'revision' => $courseRevision
+                                            ])) }}"
+                                            class="ml-2">
+                                            @csrf_token @method('DELETE')
+                                            <button type="submit" class="p-2 text-gray-700 hover:text-red-600 hover:bg-gray-300 rounded">
+                                                <x-feather-icon name="trash-2" class="h-current"></x-feather-icon>
+                                            </button>
+                                        </form>
+                                    @endcan
                                 </div>
                                 <div class="flex flex-wrap -mx-2">
                                     @foreach ($courseRevision->attachments as $attachment)

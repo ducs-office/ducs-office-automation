@@ -50,4 +50,51 @@ class DeleteCourseRevisionTest extends TestCase
 
         Storage::assertMissing($attachment->path);
     }
+
+    /** @test */
+    public function all_revisions_of_a_course_can_not_be_deleted()
+    {
+        Storage::fake();
+
+        $course = create(Course::class);
+
+        $revisions = $course->revisions()->createMany([
+            ['revised_at' => now()],
+            ['revised_at' => now()->subYears(2)],
+        ]);
+
+        $attachments = [];
+
+        foreach ($revisions as $index => $revision) {
+            $attachments[$index] = $revision->attachments()->create([
+                'original_name' => 'file.pdf',
+                'path' => UploadedFile::fake()->create('file.pdf')->store('some_place'),
+            ]);
+        }
+
+        $this->signIn();
+
+        $this->withoutExceptionHandling()
+            ->delete(route('staff.courses.revisions.destroy', [
+                'course' => $course,
+                'revision' => $revisions[0],
+            ]))
+            ->assertRedirect()
+            ->assertSessionHasNoErrors();
+
+        $this->withExceptionHandling()
+            ->delete(route('staff.courses.revisions.destroy', [
+                'course' => $course,
+                'revision' => $revisions[1],
+            ]))
+            ->assertForbidden();
+
+        $this->assertNull($revisions[0]->fresh());
+        Storage::assertMissing($attachments[0]->path);
+
+        $this->assertEquals(1, $course->revisions->count());
+        $this->assertEquals(1, CourseRevision::count());
+        $this->assertEquals(1, Course::count());
+        Storage::assertExists($attachments[1]->path);
+    }
 }

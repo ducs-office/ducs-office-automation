@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Models\Course;
+use App\Models\CourseRevision;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -20,8 +21,9 @@ class CourseRevisionPolicy
         return $user->can('update', Course::class);
     }
 
-    public function delete($user)
+    public function delete($user, CourseRevision $courseRevision)
     {
-        return $user->can('delete', Course::class);
+        return $user->can('update', Course::class)
+            && $courseRevision->course->revisions->count() > 1;
     }
 }
