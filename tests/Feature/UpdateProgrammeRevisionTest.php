@@ -14,38 +14,70 @@ class UpdateProgrammeRevisionTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected $semester_courses;
+    protected $programme;
+    protected $revision;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->programme = create(Programme::class, 1, [
+            'duration' => '1',
+        ]);
+
+        $this->revision = create(ProgrammeRevision::class, 1, [
+            'programme_id' => $this->programme->id,
+        ]);
+
+        $this->semester_courses = create(Course::class, 2);
+
+        collect($this->semester_courses)->map(function ($course, $index) {
+            $course->programmeRevisions()->attach($this->revision, [
+                'semester' => $index + 1,
+            ]);
+        });
+    }
+
     /** @test */
-    public function revision_of_programme_can_be_edited()
+    public function revision_of_programme_can_be_updated()
     {
         $this->withoutExceptionHandling()
             ->signIn();
 
-        $programme = create(Programme::
-        class, 1, ['wef' => '1973-02-08', 'duration' => '1']);
-        $revision = create(ProgrammeRevision::class, 1, ['revised_at' => $programme->wef, 'programme_id' => $programme->id]);
-        $semester_courses = create(Course::class, 2);
+        $revised_at = '2000-02-01';
 
-        foreach ($semester_courses as $index => $course) {
-            $course->programmeRevisions()->attach($revision, ['semester' => $index + 1]);
-        }
-
-        $revised_at = '2000-02-01'; //now('Y-m-d H:i:s')
+        $courses = create(Course::class, 2);
+        $updateCourses = array_combine([1, 2], [
+            [$courses[0]->id],
+            [$courses[1]->id],
+        ]);
 
         $this->patch(
             route('staff.programmes.revisions.update', [
-                'programme' => $programme,
-                'revision' => $revision,
+                'programme' => $this->programme,
+                'revision' => $this->revision,
             ]),
             [
                 'revised_at' => $revised_at,
-                'semester_courses' => [[$semester_courses[1]->id], [$semester_courses[0]->id]],
+                'semester_courses' => $updateCourses,
             ]
         )
             ->assertRedirect()
             ->assertSessionHasFlash('success', "Programme's revision edited successfully!");
 
         $this->assertEquals(1, ProgrammeRevision::count());
-        $this->assertEquals($revised_at, $programme->fresh()->revisions()->find(1)->revised_at->format('Y-m-d'));
+        $this->assertEquals($revised_at, $this->programme->refresh()->revisions->first()->revised_at->format('Y-m-d'));
+        $this->assertEquals(
+            [1, $updateCourses[1][0]],
+            [(int) $this->programme->revisions->first()->courses[0]->pivot->semester,
+                $this->programme->revisions->first()->courses[0]->id, ]
+        );
+        $this->assertEquals(
+            [2, $updateCourses[2][0]],
+            [(int) $this->programme->revisions->first()->courses[1]->pivot->semester,
+                $this->programme->revisions->first()->courses[1]->id, ]
+        );
     }
 
     /** @test */
@@ -53,24 +85,15 @@ class UpdateProgrammeRevisionTest extends TestCase
     {
         $this->signIn();
 
-        $programme = create(Programme::class, 1, ['duration' => 1, 'wef' => '2000-01-09']);
-        $revision = create(ProgrammeRevision::class, 1, ['revised_at' => $programme->wef, 'programme_id' => $programme->id]);
-        $semester_courses = create(Course::class, 2);
-
-        foreach ($semester_courses as $index => $course) {
-            $course->programmeRevisions()->attach($revision, ['semester' => $index + 1]);
-        }
-
         try {
             $this->withoutExceptionHandling()
                 ->patch(
                     route('staff.programmes.revisions.update', [
-                        'programme' => $programme,
-                        'revision' => $revision,
+                        'programme' => $this->programme,
+                        'revision' => $this->revision,
                     ]),
                     [
                         'revised_at' => '',
-                        'semester_courses' => [[$semester_courses[0]->id], [$semester_courses[1]->id]],
                     ]
                 );
         } catch (ValidationException $e) {
@@ -78,207 +101,153 @@ class UpdateProgrammeRevisionTest extends TestCase
         }
 
         $this->assertEquals(1, ProgrammeRevision::count());
-        $this->assertEquals('2000-01-09', $revision->fresh()->revised_at->format('Y-m-d'));
+        $this->assertEquals($this->revision->revised_at->format('Y-m-d'), $this->revision->fresh()->revised_at->format('Y-m-d'));
     }
 
     /** @test */
-    public function request_validates_revised_at_field_is_unique()
+    public function request_validates_revised_at_should_not_be_the_same_as_any_existing_revisions_revised_at_that_belong_to_the_same_programme()
     {
         $this->signIn();
 
-        $programme = create(Programme::class, 1, ['duration' => 1, 'wef' => '2000-01-09']);
-        $revision1 = create(ProgrammeRevision::class, 1, ['revised_at' => $programme->wef, 'programme_id' => $programme->id]);
-        $revision2 = create(ProgrammeRevision::class, 1, ['revised_at' => '2019-09-09', 'programme_id' => $programme->id]);
-        $semester_courses = create(Course::class, 2);
-
-        foreach ($semester_courses as $index => $course) {
-            $course->programmeRevisions()->attach($revision2, ['semester' => $index + 1]);
-        }
+        $revision2 = create(ProgrammeRevision::class, 1, [
+            'programme_id' => $this->programme->id,
+        ]);
 
         try {
             $this->withoutExceptionHandling()
                 ->patch(
                     route('staff.programmes.revisions.update', [
-                        'programme' => $programme,
-                        'revision' => $revision2,
+                        'programme' => $this->programme,
+                        'revision' => $this->revision,
                     ]),
                     [
-                        'revised_at' => $programme->wef->format('Y-m-d'),
-                        'semester_courses' => [[$semester_courses[0]->id], [$semester_courses[1]->id]],
+                        'revised_at' => $revision2->revised_at->format('Y-m-d'),
                     ]
                 );
-            $this->fail('No validation error occured.');
+            $this->fail('Validation error was expected. Any two revisions of a programme can not have the same revised_at date');
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('revised_at', $e->errors());
         }
 
         $this->assertEquals(2, ProgrammeRevision::count());
-        $this->assertEquals('2019-09-09', $revision2->fresh()->revised_at->format('Y-m-d'));
+        $this->assertEquals($this->revision->revised_at->format('Y-m-d'), $this->revision->fresh()->revised_at->format('Y-m-d'));
     }
 
     /** @test */
-    public function request_validates_revised_at_field_is_date()
+    public function request_validates_revised_at_field_is_a_date()
     {
         $this->signIn();
-
-        $programme = create(Programme::class, 1, ['duration' => 1, 'wef' => '2000-01-09']);
-        $revision = create(ProgrammeRevision::class, 1, ['revised_at' => $programme->wef, 'programme_id' => $programme->id]);
-        $courses = create(Course::class, 2);
-
-        foreach ($courses as $index => $course) {
-            $course->programmeRevisions()->attach($revision, ['semester' => $index + 1]);
-        }
 
         try {
             $this->withoutExceptionHandling()
                 ->patch(route('staff.programmes.revisions.update', [
-                    'programme' => $programme,
-                    'revision' => $revision,
+                    'programme' => $this->programme,
+                    'revision' => $this->revision,
                 ]), [
                     'revised_at' => 'some random string',
-                    'semester_courses' => [[$courses[0]->id], [$courses[1]->id]],
                 ]);
+            $this->fail('Validation error was expected');
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('revised_at', $e->errors());
         }
 
-        $this->assertEquals($programme->wef, $revision->fresh()->revised_at);
-
-        $revised_at = '2019-09-08';
-
-        $this->withoutExceptionHandling()
-        ->patch(route('staff.programmes.revisions.update', [
-            'programme' => $programme,
-            'revision' => $revision,
-        ]), [
-            'revised_at' => $revised_at,
-            'semester_courses' => [[$courses[0]->id], [$courses[1]->id]],
-        ]);
-
-        $this->assertEquals($revised_at, $revision->fresh()->revised_at->format('Y-m-d'));
+        $this->assertEquals($this->revision->revised_at->format('Y-m-d'), $this->revision->fresh()->revised_at->format('Y-m-d'));
     }
 
     /** @test */
-    public function wef_field_of_proramme_updates_when_revised_on_field_updates()
+    public function courses_already_assigned_to_a_programmes_revision_can_not_be_assigned_to_any_other_programmes_revision()
     {
         $this->signIn();
 
-        $programme = create(Programme::class, 1, ['duration' => 1, 'wef' => '2000-01-09']);
-        $revision = create(ProgrammeRevision::class, 1, ['revised_at' => $programme->wef, 'programme_id' => $programme->id]);
-        $courses = create(Course::class, 2);
-
-        foreach ($courses as $index => $course) {
-            $course->programmeRevisions()->attach($revision, ['semester' => $index + 1]);
-        }
-
-        $revised_at = '2019-09-08';
-
-        $this->withoutExceptionHandling()
-        ->patch(route('staff.programmes.revisions.update', [
-            'programme' => $programme,
-            'revision' => $revision,
-        ]), [
-            'revised_at' => $revised_at,
-            'semester_courses' => [[$courses[0]->id], [$courses[1]->id]],
+        $programme2 = create(Programme::class, 1, [
+            'duration' => 1,
         ]);
 
-        $this->assertEquals($revised_at, Programme::find(1)->wef->format('Y-m-d'));
-    }
+        $programme2Revision = create(ProgrammeRevision::class, 1, [
+            'programme_id' => $programme2->id,
+        ]);
 
-    /** @test */
-    public function assigned_courses_can_not_be_assigned_to_the_programme()
-    {
-        $this->signIn();
+        $programme2RevisionCourse = create(Course::class);
 
-        $assignedCourse = create(Course::class);
-        $programme1 = create(Programme::class, 1, ['wef' => '1999-09-08', 'duration' => '1']);
-        $revision1 = create(ProgrammeRevision::class, 1, ['revised_at' => $programme1->wef, 'programme_id' => $programme1->id]);
-        $assignedCourse->programmeRevisions()->attach($revision1, ['semester' => 1]);
-        $unassignedCourses = create(Course::class, 2);
+        $programme2Revision->courses()->attach($programme2RevisionCourse, ['semester' => 1]);
 
-        $programme2 = create(Programme::class, 1, ['duration' => 1, 'wef' => '2000-09-08']);
-        $revision2 = create(ProgrammeRevision::class, 1, ['revised_at' => $programme2->wef, 'programme_id' => $programme2->id]);
-        foreach ($unassignedCourses as $index => $course) {
-            $course->programmeRevisions()->attach($revision2, ['semester' => $index + 1]);
-        }
+        $updateCourses = array_combine([1, 2], [
+            [$this->semester_courses[1][0]], // this course belongs to another programmes revision
+            [$programme2RevisionCourse->id],
+        ]);
 
         try {
             $this->withoutExceptionHandling()
                 ->patch(route('staff.programmes.revisions.update', [
-                    'programme' => $programme2,
-                    'revision' => $revision2,
+                    'programme' => $this->programme,
+                    'revision' => $this->revision,
                 ]), [
-                    'revised_at' => $revised_at = '2021-09-08',
-                    'semester_courses' => [
-                        [$assignedCourse->id],
-                        [$unassignedCourses[0]->id],
-                    ],
+                    'semester_courses' => $updateCourses,
                 ]);
-            $this->fail('No validation exception occured.');
+            $this->fail('Validation error was expected. revisions of different programmes should not be able to share course(s)');
         } catch (ValidationException $e) {
-            $this->assertArrayHasKey('semester_courses.0.0', $e->errors());
+            $this->assertArrayHasKey('semester_courses.1.0', $e->errors());
         }
-
-        $this->assertEquals(1, $programme2->fresh()->revisions->count());
-        $this->assertEquals('2000-09-08', $programme2->fresh()->revisions()->first()->revised_at->format('Y-m-d'));
     }
 
     /** @test */
-    public function assigned_courses_can_be_moved_to_other_semester_of_the_programme()
+    public function assigned_courses_can_be_moved_to_other_semester_of_a_programmes_revision()
     {
         $this->signIn();
 
-        $programme = create(Programme::class, 1, ['wef' => '2000-10-10', 'duration' => 1]);
-        $courses = create(Course::class, 3);
-        $revision = create(ProgrammeRevision::class, 1, ['revised_at' => $programme->wef, 'programme_id' => $programme->id]);
-
-        $courses[1]->programmeRevisions()->attach($revision, ['semester' => 1]);
+        // interchange the semester courses,
+        $updateCourses = array_combine([1, 2], [
+            [$this->semester_courses[1]->id],
+            [$this->semester_courses[0]->id],
+        ]);
 
         $this->withoutExceptionHandling()
             ->patch(route('staff.programmes.revisions.update', [
-                'programme' => $programme,
-                'revision' => $revision,
+                'programme' => $this->programme,
+                'revision' => $this->revision,
             ]), [
                 'revised_at' => '2019-09-09',
-                'semester_courses' => [
-                    1 => [$courses[0]->id, $courses[1]->id],
-                    2 => [$courses[2]->id],
-                ],
+                'semester_courses' => $updateCourses,
             ])->assertRedirect()
             ->assertSessionHasNoErrors()
             ->assertSessionHasFlash('success', "Programme's revision edited successfully!");
 
-        $this->assertEquals(2, $programme->fresh()->revisions()->find(1)->courses()->wherePivot('semester', 1)->count());
+        $this->assertEquals(
+            [1, $updateCourses[1][0]],
+            [(int) $this->programme->revisions->first()->courses[0]->pivot->semester,
+                $this->programme->revisions->first()->courses[0]->id, ]
+        );
+        $this->assertEquals(
+            [2, $updateCourses[2][0]],
+            [(int) $this->programme->revisions->first()->courses[1]->pivot->semester,
+                $this->programme->revisions->first()->courses[1]->id, ]
+        );
     }
 
     /** @test */
-    public function same_courses_cannot_be_assigned_to_different_semesters_of_programme()
+    public function same_courses_cannot_be_assigned_to_different_semesters_of_a_programme_revision()
     {
         $this->signIn();
 
-        $programme = create(Programme::class, 1, ['wef' => '2000-09-09', 'duration' => '1']);
-        $courses = create(course::class, 2);
-        $revision = create(ProgrammeRevision::class, 1, ['revised_at' => $programme->wef, 'programme_id' => $programme->id]);
+        $course = create(Course::class);
 
-        foreach ($courses as $index => $course) {
-            $course->programmeRevisions()->attach($revision, ['semester' => $index + 1]);
-        }
-
-        $revised_at = '2019-09-08';
+        $updateCourses = array_combine([1, 2], [
+            [$course->id],
+            [$course->id],
+        ]);
 
         try {
             $this->withoutExceptionHandling()
             ->patch(route('staff.programmes.revisions.update', [
-                'programme' => $programme,
-                'revision' => $revision,
+                'programme' => $this->programme,
+                'revision' => $this->revision,
             ]), [
-                'revised_at' => $revised_at,
-                'semester_courses' => [[$courses[0]->id], [$courses[1]->id, $courses[0]->id]],
+                'semester_courses' => $updateCourses,
             ]);
-        } catch (ValidationException $e) {
-            $this->assertArrayHasKey('semester_courses.1.1', $e->errors());
-        }
 
-        $this->assertEquals(1, $programme->fresh()->revisions()->find(1)->courses()->wherePivot('semester', 2)->count());
+            $this->fail('Validation error was expected. No two semesters of a programme can have a common course');
+        } catch (ValidationException $e) {
+            $this->assertArrayHasKey('semester_courses.1.0', $e->errors());
+        }
     }
 }

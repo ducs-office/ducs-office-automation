@@ -21,12 +21,11 @@ class ViewRolesTest extends TestCase
         $response = $this->withoutExceptionHandling()->get(route('staff.roles.index'))
             ->assertSuccessful()
             ->assertViewIs('staff.roles.index')
-            ->assertViewHasAll(['roles', 'permissions']);
+            ->assertViewHasAll(['roles']);
 
         $viewRoles = $response->viewData('roles');
-        $viewPermissions = $response->viewData('permissions');
 
         $this->assertEquals(Role::count(), $viewRoles->count());
-        $this->assertEquals(Permission::count(), $viewPermissions->flatten()->count());
+        $this->assertArrayHasKey('permissions', $viewRoles->first()->toArray());
     }
 }

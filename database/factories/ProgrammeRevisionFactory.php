@@ -11,6 +11,6 @@ $factory->define(ProgrammeRevision::class, static function (Faker $faker) {
         'programme_id' => static function () {
             return factory(Programme::class)->create()->id;
         },
-        'revised_at' => $faker->dateTime(),
+        'revised_at' => $faker->dateTime($max = 'now'),
     ];
 });

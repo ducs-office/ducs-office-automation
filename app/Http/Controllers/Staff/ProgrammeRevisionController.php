@@ -37,7 +37,6 @@ class ProgrammeRevisionController extends Controller
         $courses = Course::where('code', 'like', "{$programme->code}%")->get();
         $revision = $programme->revisions()
             ->with('courses')
-            ->where('revised_at', $programme->wef)
             ->first();
 
         $semesterCourses = ! $revision ? [] : $revision
@@ -48,7 +47,6 @@ class ProgrammeRevisionController extends Controller
 
         return view('staff.programmes.revisions.create', [
             'programme' => $programme,
-            'revision' => $revision,
             'semesterCourses' => $semesterCourses,
             'courses' => $courses,
         ]);
@@ -65,10 +63,6 @@ class ProgrammeRevisionController extends Controller
 
         $revision->courses()->sync($request->getSemesterCourses());
 
-        if ($programme->wef < $data['revised_at']) {
-            $programme->update(['wef' => $data['revised_at']]);
-        }
-
         flash("Programme's revision created successfully!", 'success');
 
         return redirect(route('staff.programmes.index'));
@@ -76,10 +70,6 @@ class ProgrammeRevisionController extends Controller
 
     public function edit(Programme $programme, ProgrammeRevision $revision)
     {
-        if ((int) $revision->programme_id !== (int) $programme->id) {
-            return redirect(route('staff.programmes.index'));
-        }
-
         $semesterCourses = $revision->courses
             ->groupBy('pivot.semester')
             ->map
@@ -103,10 +93,6 @@ class ProgrammeRevisionController extends Controller
 
         DB::commit();
 
-        if ($programme->wef->format('Y-m-d') < $request->revised_at) {
-            $programme->update(['wef' => $request->revised_at]);
-        }
-
         flash("Programme's revision edited successfully!", 'success');
 
         return redirect(route('staff.programmes.revisions.show', $programme));
@@ -116,13 +102,6 @@ class ProgrammeRevisionController extends Controller
     {
         $revision->delete();
 
-        if ($programme->revisions->count() === 0) {
-            $programme->delete();
-            return redirect(route('staff.programmes.index'));
-        }
-
-        $lastRevision = $programme->revisions->max('revised_at');
-        $programme->update(['wef' => $lastRevision]);
         return redirect(route('staff.programmes.revisions.show', $programme));
     }
 }

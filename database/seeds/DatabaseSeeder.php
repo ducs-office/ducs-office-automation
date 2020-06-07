@@ -61,7 +61,7 @@ class DatabaseSeeder extends Seeder
 
         $programme_revisions = $programmes->map(static function ($programme) {
             return factory(ProgrammeRevision::class)->create([
-                'revised_at' => $programme->wef,
+                'revised_at' => now(),
                 'programme_id' => $programme->id,
             ]);
         });

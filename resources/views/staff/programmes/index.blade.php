@@ -32,7 +32,7 @@
                         @endcan
                         @can('delete', App\Models\Programme::class)
                         <form action="{{ route('staff.programmes.destroy', $programme) }}" method="POST"
-                            onsubmit="return confirm('Do you really want to delete programme?');">
+                            onsubmit="return confirm('Do you really want to delete this programme? All revisions of the programme will also be deleted.');">
                             @csrf_token @method('delete')
                             <button type="submit" class="p-1 hover:text-red-700">
                                 <x-feather-icon class="h-current" name="trash-2">Trash</x-feather-icon>
@@ -49,7 +49,7 @@
                 <div class="flex items-center">
                     <div class="relative z-10 -ml-8 my-4">
                         <h5 class="relative z-20 pl-8 pr-4 py-2 inline-block font-bold bg-magenta-700 text-white shadow">
-                            Latest revision (w.e.f {{ $programme->latestRevision->revised_at->format('Y') }})
+                            Latest revision (w.e.f {{ $programme->revisions->first()->revised_at->format('Y') }})
                         </h5>
                         <svg class="absolute left-0 w-2 text-magenta-900" viewBox="0 0 10 10">
                             <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>

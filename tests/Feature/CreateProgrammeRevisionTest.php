@@ -20,7 +20,7 @@ class CreateProgrammeRevisionTest extends TestCase
         $this->signIn();
 
         $programme = create(Programme::class);
-        $revision = create(ProgrammeRevision::class, 1, ['revised_at' => $programme->wef, 'programme_id' => $programme->id]);
+        $revision = create(ProgrammeRevision::class, 1, ['programme_id' => $programme->id]);
         $semester_courses = create(Course::class, 2);
 
         foreach ($semester_courses as $index => $course) {

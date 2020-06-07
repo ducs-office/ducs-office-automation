@@ -14,19 +14,6 @@
         @enderror
     </div>
     <div class="space-y-1">
-        <label for="programme-data"
-            class="w-full form-label @error('wef') text-red-500 @enderror">
-            Date (w.e.f) <span class="text-red-500">*</span>
-        </label>
-        <input id="programme-data" type="date" name="wef"
-            class="w-full form-input @error('wef') border-red-500 hover:border-red-700 @enderror"
-            value="{{ old('wef', $programme->wef->format('Y-m-d')) }}"
-            required>
-        @error('wef')
-           <p class="text-red-500">{{ $message }}</p>
-        @enderror
-    </div>
-    <div class="space-y-1">
         <label for="programme-name"
             class="w-full form-label @error('name') text-red-500 @enderror">
             Name <span class="text-red-500">*</span>
@@ -48,7 +35,7 @@
             class="w-full form-select @error('type') border-red-500 hover:border-red-700 @enderror"
             required>
             @foreach($types as $type)
-                <option value="{{ $type }}" {{ old('type', $programme->type) == $type }}>{{ $type }}</option>
+                <option value="{{ $type }}" {{ old('type', $programme->type) == $type ? 'selected': '' }}>{{ $type }}</option>
             @endforeach
         </select>
         @error('type')

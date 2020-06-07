@@ -18,7 +18,7 @@ class CreateProgrammeRevisionsTable extends Migration
             $table->unsignedBigInteger('programme_id');
             $table->timestamp('revised_at');
 
-            $table->foreign('programme_id')->references('id')->on('programmes');
+            $table->foreign('programme_id')->references('id')->on('programmes')->cascadeOnDelete();
             $table->timestamps();
         });
     }

@@ -8,9 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Programme extends Model
 {
-    protected $fillable = ['code', 'wef', 'name', 'type', 'duration'];
-
-    protected $dates = ['wef'];
+    protected $fillable = ['code', 'name', 'type', 'duration'];
 
     protected $casts = [
         'wef' => 'date:Y-m-d',

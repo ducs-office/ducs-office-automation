@@ -20,7 +20,7 @@ class CourseTest extends TestCase
     public function course_belongs_to_a_programme_revsion()
     {
         $programme = create(Programme::class);
-        $revision = create(ProgrammeRevision::class, 1, ['revised_at' => $programme->wef, 'programme_id' => $programme->id]);
+        $revision = create(ProgrammeRevision::class, 1, ['programme_id' => $programme->id]);
         $course = create(Course::class);
         $course->programmeRevisions()->attach($revision, ['semester' => 1]);
 

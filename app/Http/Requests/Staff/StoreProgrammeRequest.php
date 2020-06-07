@@ -4,6 +4,7 @@ namespace App\Http\Requests\Staff;
 
 use App\Models\Pivot\CourseProgrammeRevision;
 use App\Models\Programme;
+use App\Models\ProgrammeRevision;
 use App\Types\ProgrammeType;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -39,5 +40,14 @@ class StoreProgrammeRequest extends FormRequest
                 Rule::unique(CourseProgrammeRevision::class, 'course_id'),
             ],
         ];
+    }
+
+    public function createProgrammeRevision(Programme $programme)
+    {
+        $revision = $programme->revisions()->create(['revised_at' => $this->wef]);
+
+        collect($this->semester_courses)->map(function ($courses, $semester) use ($revision) {
+            return $revision->courses()->attach($courses, ['semester' => $semester]);
+        });
     }
 }

@@ -31,27 +31,6 @@ class UpdateProgrammeTest extends TestCase
     }
 
     /** @test */
-    public function programme_date_wef_can_be_updated()
-    {
-        $this->withoutExceptionHandling()
-            ->signIn();
-
-        $programme = create(Programme::class);
-        $course = create(Course::class);
-
-        $programmeRevision = $programme->revisions()->create(['revised_at' => $programme->wef]);
-        $programmeRevision->courses()->attach($course, ['semester' => 1]);
-
-        $response = $this->patch(route('staff.programmes.update', $programme), [
-            'wef' => $newDate = now()->format('Y-m-d H:i:s'),
-        ])->assertRedirect()
-        ->assertSessionHasFlash('success', 'Programme updated successfully!');
-
-        $this->assertEquals(1, Programme::count());
-        $this->assertEquals($newDate, $programme->fresh()->wef);
-    }
-
-    /** @test */
     public function programme_is_not_validated_for_uniqueness_if_code_is_not_changed()
     {
         $this->withoutExceptionHandling()

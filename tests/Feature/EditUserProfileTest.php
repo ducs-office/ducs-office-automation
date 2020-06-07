@@ -50,8 +50,9 @@ class EditUserProfileTest extends TestCase
         $college = create(College::class);
         $programme = create(Programme::class);
         $courses = create(Course::class, 2);
-        create(ProgrammeRevision::class, 2);
-        $revision = $programme->revisions()->create(['revised_at' => $programme->wef]);
+        $revision = create(ProgrammeRevision::class, 1, [
+            'programme_id' => $programme->id,
+        ]);
 
         foreach ($courses as $course) {
             $revision->courses()->attach($course, ['semester' => 1]);

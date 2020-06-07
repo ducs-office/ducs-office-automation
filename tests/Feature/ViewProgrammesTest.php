@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Course;
 use App\Models\Programme;
+use App\Models\ProgrammeRevision;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -32,8 +33,8 @@ class ViewProgrammesTest extends TestCase
         $courses = create(Course::class, 3);
 
         foreach ($programmes as $index => $programme) {
-            $programmeRevision = $programme->revisions()->create(['revised_at' => $programme->wef]);
-            $programmeRevision->courses()->attach($courses[$index], ['semester' => 1]);
+            $revision = create(ProgrammeRevision::class, 1, ['programme_id' => $programme->id]);
+            $revision->courses()->attach($courses[$index], ['semester' => 1]);
         }
 
         $this->withoutExceptionHandling();

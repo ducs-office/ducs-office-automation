@@ -20,7 +20,9 @@ class EditProgrammeRevisionTest extends TestCase
         $this->signIn();
 
         $programme = create(Programme::class);
-        $revision = create(ProgrammeRevision::class, 1, ['revised_at' => $programme->wef, 'programme_id' => $programme->id]);
+        $revision = create(ProgrammeRevision::class, 1, [
+            'programme_id' => $programme->id,
+        ]);
         $semesterCourses = create(Course::class, 2);
 
         foreach ($semesterCourses as $index => $course) {
@@ -45,31 +47,14 @@ class EditProgrammeRevisionTest extends TestCase
         $this->expectException(AuthenticationException::class);
 
         $programme = create(Programme::class);
-        $revision = create(ProgrammeRevision::class, 1, ['revised_at' => $programme->wef, 'programme_id' => $programme->id]);
+        $revision = create(ProgrammeRevision::class, 1, [
+            'programme_id' => $programme->id,
+        ]);
 
         $this->withoutExceptionHandling()
             ->get(route('staff.programmes.revisions.edit', [
                 'programme' => $programme,
                 'revision' => $revision,
             ]));
-    }
-
-    /** @test */
-    public function revision_id_should_be_programmes_revision_id()
-    {
-        $this->signIn();
-
-        $programme1 = create(Programme::class);
-        $revision1 = create(ProgrammeRevision::class, 1, ['revised_at' => $programme1->wef, 'programme_id' => $programme1->id]);
-
-        $programme2 = create(Programme::class);
-        $revision2 = create(ProgrammeRevision::class, 1, ['revised_at' => $programme2->wef, 'programme_id' => $programme2->id]);
-
-        $this->withoutExceptionHandling()
-            ->get(route('staff.programmes.revisions.edit', [
-                'programme' => $programme1,
-                'revision' => $revision2,
-            ]))
-            ->assertRedirect();
     }
 }

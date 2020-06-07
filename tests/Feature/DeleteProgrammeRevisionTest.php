@@ -28,29 +28,6 @@ class DeleteProgrammeRevisionTest extends TestCase
     }
 
     /** @test */
-    public function programme_revision_can_only_be_deleted_when_there_are_more_than_2_revisions()
-    {
-        $this->signIn();
-
-        $programme = create(Programme::class);
-
-        $revisions = $programme->revisions()->createMany([
-            ['revised_at' => now()->subYear()],
-            ['revised_at' => now()],
-        ]);
-
-        $this->withExceptionHandling()
-            ->delete(route('staff.programmes.revisions.destroy', [
-                'programme' => $programme,
-                'revision' => $revisions[0],
-            ]))
-            ->assertRedirect();
-
-        $this->assertNull($revisions[0]->fresh());
-        $this->assertEquals(1, ProgrammeRevision::count());
-    }
-
-    /** @test */
     public function all_revisions_of_a_programme_cannot_be_deleted()
     {
         $this->signIn();
@@ -59,8 +36,8 @@ class DeleteProgrammeRevisionTest extends TestCase
         $courses = create(Course::class, 2);
 
         $revisions = $programme->revisions()->createMany([
-            ['revised_at' => $programme->wef],
-            ['revised_at' => $programme->wef->addYear()],
+            ['revised_at' => now()],
+            ['revised_at' => now()->addYear()],
         ]);
 
         foreach ($revisions as $index => $revision) {

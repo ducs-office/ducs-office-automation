@@ -49,7 +49,7 @@ class ProgrammesController extends Controller
     {
         $programme = Programme::create($request->validated());
 
-        event(new ProgrammeCreated($programme, $request->semester_courses));
+        $request->createProgrammeRevision($programme);
 
         flash('Programme created successfully!', 'success');
 
@@ -66,17 +66,7 @@ class ProgrammesController extends Controller
 
     public function update(UpdateProgrammeRequest $request, Programme $programme)
     {
-        if ($request->has('wef')) {
-            // @todo: Discuss the need
-            $programme->revisions()
-                ->where('revised_at', $programme->wef)
-                ->update(['revised_at' => $request->wef]);
-
-            $latestRevision = $programme->revisions()->max('revised_at');
-            $programme->update(['wef' => $latestRevision]);
-        }
-
-        $programme->update($request->only(['code', 'name', 'type']));
+        $programme->update($request->validated());
 
         flash('Programme updated successfully!', 'success');
 
@@ -85,8 +75,6 @@ class ProgrammesController extends Controller
 
     public function destroy(Programme $programme)
     {
-        $programme->revisions->each->delete();
-
         $programme->delete();
 
         flash('Programme deleted successfully!', 'success');

@@ -32,7 +32,6 @@ class UpdateProgrammeRequest extends FormRequest
                 'sometimes', 'required', 'min:3', 'max:60',
                 Rule::unique('programmes')->ignore($this->programme),
             ],
-            'wef' => ['sometimes', 'required', 'date'],
             'type' => ['sometimes', 'required', Rule::in(ProgrammeType::values())],
             'name' => ['sometimes', 'required', 'min:3', 'max:190'],
         ];
