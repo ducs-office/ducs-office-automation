@@ -39,6 +39,10 @@ class User extends Authenticatable
         'status', 'avatar_path', 'is_supervisor', 'is_cosupervisor',
     ];
 
+    protected $appends = [
+        'name', 'avatar_url',
+    ];
+
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -158,7 +162,7 @@ class User extends Authenticatable
         return $affiliation ?? optional($this->college)->name ?? 'Unknown';
     }
 
-    public function getAvatarUrl()
+    public function getAvatarUrlAttribute()
     {
         if ($this->avatar_path != null && Storage::exists($this->avatar_path)) {
             return route('profiles.avatar', $this);

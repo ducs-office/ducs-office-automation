@@ -26,7 +26,6 @@ const addMultipleSelectFeature = () => ({
 
         this.toggleChoice(this.choices[this.highlighted][this.valueKey]);
     },
-    selectedChoices() { return this.value.map(val => this.choices.find(choice => val == choice[this.valueKey])) }
 });
 
 const addSingleSelectFeature = () => ({
@@ -35,18 +34,24 @@ const addSingleSelectFeature = () => ({
     isSelected(value) { return this.value == value },
     selectHighlighted() {
         if (this.highlighted < 0 || this.highlighted >= this.choices.length) return;
-        this.select(this.highlighted);
+        this.select(this.choices[this.highlighted][this.valueKey]);
     },
     select(value) { this.value = value },
-    selectedChoice() { this.choices.find(choice => this.value == choice[this.valueKey]) }
 });
 
 export default config => ({
+    getSelectedChoices() {
+        if (this.value == null ) return [];
+        return (this.multiple ? this.value : [this.value])
+            .map(val => this.choices.find(choice => val == choice[this.valueKey]))
+            .filter(option => option != null)
+    },
     init() {
         this.$watch("highlighted", () => this.scrollToHighlighted());
 
         this.$watch("value", (value) => {
             this.$refs[this.choicesRef].value = value;
+            this.selectedChoices = this.getSelectedChoices();
             this.$refs[this.choicesRef].dispatchEvent(new Event("input", {
                 bubbles: true,
                 cancelable: true,
@@ -57,6 +62,7 @@ export default config => ({
             this.value = [];
         }
 
+        this.selectedChoices = this.getSelectedChoices();
         this.$refs[this.choicesRef].value = this.value;
         this.highlightNext();
     },
@@ -64,6 +70,7 @@ export default config => ({
     multiple: false,
     valueKey: "value",
     choices: [],
+    selectedChoices: [],
     disabledChoices: [],
     choicesRef: "choices",
     highlighted: -1,
@@ -114,7 +121,7 @@ export default config => ({
 
         this.open = true;
         this.$nextTick(() => {
-            this.$refs[this.choicesRef].focus();
+            (this.$refs[this.inputRef] || this.$refs[this.choicesRef]).focus();
             this.scrollToHighlighted();
             createPopper(
                 this.$refs.button,
@@ -136,7 +143,14 @@ export default config => ({
             return (this.open = true);
         }
 
-        return this.multiple ? this.toggleHighlighted() : this.selectHighlighted();
+        if(! this.multiple) {
+            this.selectHighlighted();
+            this.open = false;
+            this.$refs.button.focus();
+        } else {
+            this.toggleHighlighted();
+        }
+
     },
     onEscape() {
         this.open = false;

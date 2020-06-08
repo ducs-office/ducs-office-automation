@@ -36,7 +36,7 @@ class Form extends Component
      *
      * @return void
      */
-    public function __construct($method, $action, $hasFiles = false)
+    public function __construct($method, $action = '', $hasFiles = false)
     {
         $this->method = strtoupper($method);
         $this->action = $action;

@@ -12,6 +12,7 @@
                 name="date"
                 value="{{ old('date') }}"
                 class="w-full form-input{{ $errors->has('date') ? ' border-red-600' : '' }}"
+                autofocus
                 required>
             @if($errors->has('date'))
                 <p class="mt-1 text-red-600">{{ $errors->first('date') }}</p>
@@ -37,24 +38,21 @@
             @endif
         </div>
         <div class="flex -mx-2 mb-2">
-            <div class="mx-2">
+            <div class="flex-1 mx-2">
                 <label for="sender" class="w-full form-label mb-1">
                     Sender <span class="text-red-600">*</span>
                 </label>
-                <vue-typeahead
+                <livewire:typeahead-users id="sender"
                     name="sender_id"
-                    source="/api/users"
-                    find-source="/api/users/{value}"
-                    limit="5"
-                    value="{{ old('sender_id') }}"
+                    :limit="15"
+                    :value="old('sender_id')"
                     placeholder="Sender"
-                    :has-errors="{{ $errors->has('sender_id') ? 'true' : 'false'}}">
-                </vue-typeahead>
+                    searchPlaceholder="Search from users..."/>
                 @if($errors->has('sender_id'))
                     <p class="mt-1 text-red-600">{{ $errors->first('sender_id') }}</p>
                 @endif
             </div>
-            <div class="mx-2">
+            <div class="flex-1 mx-2">
                 <label for="recipient" class="w-full form-label mb-1">
                     Recipient <span class="text-red-600">*</span>
                 </label>
@@ -102,28 +100,12 @@
         </div>
         <div class="mb-2">
             <label class="form-label mb-1">
-                Attachments (Min: 1) <span class="text-red-600">*</span>
+                <span>Attachments (Min: 1) <span class="text-red-600">*</span></span>
             </label>
-            <div class="flex items-center">
-                <v-file-input id="pdf" name="attachments[]" accept="application/pdf" class="flex-1 form-input overflow-hidden mr-2"
-                    placeholder="Choose a PDF file">
-                    <template v-slot="{ label }">
-                        <div class="w-full inline-flex items-center">
-                            <x-feather-icon name="upload" class="h-4 mr-2 text-gray-700 flex-shrink-0"></x-feather-icon>
-                            <span v-text="label" class="truncate"></span>
-                        </div>
-                    </template>
-                </v-file-input>
-                <v-file-input id="scan" name="attachments[]" accept="image/*" class="flex-1 form-input overflow-hidden"
-                    placeholder="Choose a Scanned Image">
-                    <template v-slot="{ label }">
-                        <div class="w-full inline-flex items-center">
-                            <x-feather-icon name="upload" class="h-4 mr-2 text-gray-700 flex-shrink-0"></x-feather-icon>
-                            <span v-text="label" class="truncate"></span>
-                        </div>
-                    </template>
-                </v-file-input>
-            </div>
+            <x-input.file id="pdf" name="attachments[]" accept="application/pdf, image/*"
+                :multiple="true"
+                class="w-full form-input overflow-hidden"
+                placeholder="Upload maximum 2 PDF or Scanned Image file(s)" />
             @if($errors->has('attachments'))
                 <p class="mt-1 text-red-600">{{ $errors->first('attachments') }}</p>
             @endif
