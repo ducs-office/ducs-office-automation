@@ -24,8 +24,6 @@ class Scholar extends User
 {
     use Notifiable, HasPublications, HasResearchCommittee;
 
-    protected $hidden = ['password'];
-
     protected $fillable = [
         'first_name', 'last_name',
         'email', 'password', 'gender', 'phone', 'address',
@@ -52,6 +50,19 @@ class Scholar extends User
         'presentations',
         'advisoryMeetings',
         'leaves', 'approvedLeaves',
+    ];
+
+    protected $appends = [
+        'name', 'avatar_url',
+    ];
+
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'password', 'remember_token', 'avatar_path',
     ];
 
     public static function boot()
@@ -177,7 +188,7 @@ class Scholar extends User
         return $this->courseworks()->syncWithoutDetaching([$course->id => $attributes]);
     }
 
-    public function getAvatarUrl()
+    public function getAvatarUrlAttribute()
     {
         if ($this->avatar_path != null && Storage::exists($this->avatar_path)) {
             return route('scholars.profile.avatar', $this);

@@ -3,7 +3,7 @@
         <div class="flex items-center">
             <div class="flex-shrink-0 h-10 w-10">
                 <img class="h-10 w-10 bg-gray-400 rounded-full overflow-hidden"
-                    src="{{ $scholar->getAvatarUrl() }}"
+                    src="{{ $scholar->avatar_url }}"
                     alt="{{ $scholar->name }}'s Avatar" />
             </div>
             <div class="ml-4">
@@ -26,7 +26,7 @@
         @if($scholar->currentSupervisor)
             <div class="flex items-center leading-5 text-gray-900 space-x-2">
                 <img class="h-8 w-8 bg-gray-400 rounded-full overflow-hidden flex-shrink-0"
-                    src="{{ $scholar->currentSupervisor->getAvatarUrl() }}"
+                    src="{{ $scholar->currentSupervisor->avatar_url }}"
                     alt="{{ $scholar->currentSupervisor->name }}'s Avatar" />
                 <div>
                     <h6>{{ $scholar->currentSupervisor->name }}</h6>
@@ -43,7 +43,7 @@
     <td class="px-6 py-4 leading-5 whitespace-no-wrap border-b border-gray-200">
         <div class="flex items-center text-gray-900 space-x-2">
             <img class="h-8 w-8 bg-gray-400 rounded-full overflow-hidden flex-shrink-0"
-                src="{{ optional($scholar->currentCosupervisor)->getAvatarUrl() ?? '#' }}"
+                src="{{ optional($scholar->currentCosupervisor)->avatar_url ?? '#' }}"
                 alt="{{ $scholar->currentCosupervisor ? $scholar->currentCosupervisor->name . '\'s Avatar' : '' }}" />
             <div>
                 @if($scholar->currentCosupervisor)

@@ -1,6 +1,6 @@
 <div class="ml-auto mr-3" x-data="{ isOpen: false, }">
     <button class="relative z-20 flex items-center btn" x-on:click="isOpen = !isOpen">
-        <img src=" {{ auth()->user()->getAvatarUrl() }}"
+        <img src=" {{ auth()->user()->avatar_url }}"
             alt="{{ Auth::user()->name }}" width="32" height="32" class="w-6 h-6 rounded-full mr-2">
         <h2 class="font-bold truncate max-w-32">{{ Auth::user()->first_name }}</h2>
     </button>

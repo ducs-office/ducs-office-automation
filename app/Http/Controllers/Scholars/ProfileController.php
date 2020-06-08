@@ -73,7 +73,7 @@ class ProfileController extends Controller
             return Response::file(Storage::path($avatarPath));
         }
 
-        $gravatar_contents = file_get_contents($scholar->getAvatarUrl());
+        $gravatar_contents = file_get_contents($scholar->avatar_url);
 
         return Response::make($gravatar_contents, 200, [
             'Content-Type' => 'image/jpg',

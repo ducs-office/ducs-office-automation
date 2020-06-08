@@ -3,7 +3,7 @@
         <div class="flex items-center">
             <div class="flex-shrink-0 h-10 w-10">
                 <img class="h-10 w-10 rounded-full overflow-hidden"
-                    src="{{ $user->getAvatarUrl() }}"
+                    src="{{ $user->avatar_url }}"
                     alt="{{ $user->name }}'s Avatar" />
             </div>
             <div class="ml-4">

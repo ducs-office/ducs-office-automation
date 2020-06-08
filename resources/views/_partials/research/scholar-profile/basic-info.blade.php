@@ -8,7 +8,7 @@
         @endif
     </div>
     <div class="-mt-24 space-y-4 text-center mb-8">
-        <img src="{{ $scholar->getAvatarUrl() }}"
+        <img src="{{ $scholar->avatar_url }}"
         class="flex items-center justify-center w-48 h-48 mx-auto object-cover border-4 border-white bg-white rounded-full shadow-md overflow-hidden"
         alt="{{ $scholar->name }}'s avatar">
         <div>

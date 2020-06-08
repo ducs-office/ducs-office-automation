@@ -179,15 +179,15 @@ class ScholarTest extends TestCase
             . md5(strtolower(trim($scholar->email)))
             . '?s=200&d=identicon';
 
-        $this->assertEquals($gravatar, $scholar->getAvatarUrl());
+        $this->assertEquals($gravatar, $scholar->avatar_url);
 
         $scholar->avatar_path = '/avatars/file/thatdoesntexist.jpg';
-        $this->assertEquals($gravatar, $scholar->getAvatarUrl());
+        $this->assertEquals($gravatar, $scholar->avatar_url);
 
         Storage::fake();
         $scholar->avatar_path = UploadedFile::fake()->image('file.jpg')->store('/avatars');
         Storage::assertExists($scholar->avatar_path);
-        $this->assertEquals(route('scholars.profile.avatar', $scholar), $scholar->getAvatarUrl());
+        $this->assertEquals(route('scholars.profile.avatar', $scholar), $scholar->avatar_url);
     }
 
     /** @test */

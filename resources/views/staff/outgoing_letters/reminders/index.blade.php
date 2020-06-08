@@ -1,31 +1,20 @@
-
 <div>
-    @include('staff.outgoing_letters.reminders.modals.edit', [
-        'modalName' => 'edit-reminder-modal'
-    ])
+    <livewire:edit-reminder-modal />
     @can('create', [\App\Models\LetterReminder::class, $letter])
     <form action="{{ route('staff.outgoing_letters.reminders.store', $letter) }}" method="POST" enctype="multipart/form-data" class="px-6 py-2 bg-gray-100 border-b">
         @csrf_token
-        <div class="flex items-stretch">
-            <v-file-input id="pdf" name="attachments[]" accept="application/pdf" class="flex-1 form-input overflow-hidden mr-2"
-                placeholder="Choose a PDF file">
-                <template v-slot="{ label }">
-                    <div class="w-full inline-flex items-center">
-                        <x-feather-icon name="upload" class="h-4 mr-2 text-gray-700 flex-shrink-0"></x-feather-icon>
-                        <span v-text="label" class="truncate"></span>
-                    </div>
-                </template>
-            </v-file-input>
-            <v-file-input id="scan" name="attachments[]" accept="image/*" class="flex-1 form-input overflow-hidden mr-2"
-                placeholder="Choose a Scanned Image">
-                <template v-slot="{ label }">
-                    <div class="w-full inline-flex items-center">
-                        <x-feather-icon name="upload" class="h-4 mr-2 text-gray-700 flex-shrink-0"></x-feather-icon>
-                        <span v-text="label" class="truncate"></span>
-                    </div>
-                </template>
-            </v-file-input>
-            <button type="submit" class="btn btn-magenta is-sm">Add Reminder</button>
+        <div class="flex items-start space-x-2">
+            <div class="flex-1">
+                <x-input.file id="pdf" :multiple="true"
+                    name="attachments[]" accept="application/pdf, image/*"
+                    class="w-full form-input overflow-hidden"
+                    placeholder="Upload maximum 2 PDF or Scanned Image file(s)">
+                </x-input.file>
+                @if($errors->has('attachments'))
+                <p class="mt-1 text-red-600">{{ $errors->first('attachments') }}</p>
+                @endif
+            </div>
+            <button type="submit" class="btn btn-magenta">Add Reminder</button>
         </div>
     </form>
     @endcan
@@ -51,12 +40,9 @@
         </div>
         <div class="ml-auto px-2 flex items-baseline">
             @can('update', $reminder)
-            <button class="p-1 text-gray-500 hover:bg-gray-200 text-blue-600 rounded mr-3" title="Edit"
-                @click.prevent="$modal.show('edit-reminder-modal',{
-                                reminder: {{ $reminder->toJson() }}
-                            })">
+            <x-modal.trigger modal="edit-reminder-modal" :livewire="['payload' => $reminder->id]" class="p-1 text-gray-500 hover:bg-gray-200 text-blue-600 rounded mr-3" title="Edit">
                 <x-feather-icon name="edit-3" stroke-width="2.5" class="h-current">Edit</x-feather-icon>
-            </button>
+            </x-modal.trigger>
             @endcan
             @can('delete', $reminder)
             <form action="{{ route('staff.reminders.destroy', $reminder) }}" method="POST"

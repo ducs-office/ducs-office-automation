@@ -63,48 +63,38 @@
             @endforeach
         </div>
     </div>
-    <v-tabbed-pane default-tab="remarks">
-        <template v-slot:tabs="{ select, isActive }">
-            <div class="flex px-6 border-b">
+    <x-tabbed-pane current-tab="remarks">
+        <x-slot name="tabs">
+            <div class="flex items-center space-x-3 border-b px-6">
                 @can('viewAny', App\Models\Remark::class)
-                <button class="inline-flex items-center border border-b-0 rounded-t px-3 py-2 mx-1"
-                    style="margin-bottom: -1px;" role="tab"
-                    :class="{
-                        'bg-gray-100': isActive('remarks'),
-                        'bg-gray-300': !isActive('remarks'),
-                    }"
-                    @click="select('remarks')">
-                    <x-feather-icon name="list" class="h-current mr-1">Remarks</x-feather-icon>
-                    Remarks
-                    <span class="ml-3 py-1 px-2 inline-flex items-center rounded-full bg-gray-500 text-xs text-black">{{ $letter->remarks->count() }}</span>
-                </button>
+                <x-tab name="remarks" class="flex items-center space-x-3">
+                    <x-feather-icon name="list" class="h-current">Remarks</x-feather-icon>
+                    <span>Remarks</span>
+                    <span class="ml-3 py-1 px-2 inline-flex items-center rounded-full bg-gray-500 text-xs text-black">
+                        {{ $letter->remarks->count() }}
+                    </span>
+                </x-tab>
                 @endcan
                 @can('viewAny', App\Models\LetterReminder::class)
-                <button class="inline-flex items-center border border-b-0 rounded-t px-3 py-2 mx-1"
-                    style="margin-bottom: -1px;" role="tab"
-                    :class="{
-                        'bg-gray-100': isActive('reminders'),
-                        'bg-gray-300': !isActive('reminders'),
-                    }"
-                    @click="select('reminders')">
-                    <x-feather-icon name="bell" class="h-current mr-1">Reminders</x-feather-icon>
-                    Reminders
-                    <span class="ml-3 py-1 px-2 inline-flex items-center rounded-full bg-gray-500 text-xs text-black">{{ $letter->reminders->count() }}</span>
-                </button>
+                <x-tab name="reminders" class="flex items-center space-x-3">
+                    <x-feather-icon name="bell" class="h-current mr-1"></x-feather-icon>
+                    <span>Reminders</span>
+                    <span class="ml-3 py-1 px-2 inline-flex items-center rounded-full bg-gray-500 text-xs text-black">
+                        {{ $letter->reminders->count() }}
+                    </span>
+                </x-tab>
                 @endcan
             </div>
-        </template>
-        <template v-slot:default="{ isActive }">
-            @can('viewAny', App\Models\Remark::class)
-            <div v-show="isActive('remarks')">
-                @include('staff.outgoing_letters.remarks.index')
-            </div>
-            @endcan
-            @can('viewAny', App\Models\LetterReminder::class)
-            <div v-show="isActive('reminders')">
-                @include('staff.outgoing_letters.reminders.index')
-            </div>
-            @endcan
-        </template>
-    </v-tabbed-pane>
+        </x-slot>
+        @can('viewAny', App\Models\Remark::class)
+        <x-tab-content tab="remarks">
+            @include('staff.outgoing_letters.remarks.index')
+        </x-tab-content>
+        @endcan
+        @can('viewAny', App\Models\LetterReminder::class)
+        <x-tab-content tab="reminders">
+            @include('staff.outgoing_letters.reminders.index')
+        </x-tab-content>
+        @endcan
+    </x-tabbed-pane>
 </div>
