@@ -74,9 +74,18 @@
             </a>
         </li>
         @endcan
-        @can('viewAny', App\Models\TeachingRecord::class)
+        @canany(['viewAny', 'create'], App\Models\TeachingDetail::class)
         <li class="mb-1 last:mb-0">
-            <a href="{{ route('teaching_records.index') }}" class="flex items-center py-2 px-4 hover:bg-magenta-700 hover:text-white rounded">
+            <a href="{{ route('teaching-details.index') }}"
+                class="flex items-center py-2 px-4 hover:bg-magenta-700 hover:text-white rounded">
+                <x-feather-icon name="database" class="h-4 mr-2">My Teaching Details</x-feather-icon>
+                My Teaching Details
+            </a>
+        </li>
+        @endcan
+        @canany(['viewAny', 'start', 'extend'], App\Models\TeachingRecord::class)
+        <li class="mb-1 last:mb-0">
+            <a href="{{ route('teaching-records.index') }}" class="flex items-center py-2 px-4 hover:bg-magenta-700 hover:text-white rounded">
                 <x-feather-icon name="database" class="h-4 mr-2">UG Teaching Records</x-feather-icon>
                 UG Teaching Records
             </a>

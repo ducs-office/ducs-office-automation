@@ -88,71 +88,11 @@
             </x-tab-content>
         </x-tabbed-pane>
     </div>
-    @if($user->isCollegeTeacher())
-        <div class="page-card p-0 divide-y">
-            <div class="px-6 pt-4 pb-3">
-                <h4 class="text-xl font-bold">Current Teaching Details</h4>
-            </div>
-            <ul class="divide-y">
-                @forelse($user->teachingDetails as $detail)
-                <li class="px-6 py-4">
-                    <div class="flex items-baseline">
-                        <span class="text-lg text-gray-700 font-mono mr-4">{{ $detail->course->code }}</span>
-                        <div class="flex-1">
-                            <div class="text-lg capitalize font-bold">{{ $detail->course->name }}</div>
-                            <div class="text-gray-700">
-                                <span class="capitalize mr-1">{{ $detail->programmeRevision->programme->name }}</span>
-                                (w.e.f. {{ $detail->programmeRevision->revised_at->year }})
-                            </div>
-                        </div>
-                    </div>
-                </li>
-                @empty
-                <li class="p-4 text-gray-600 font-bold"> Nothing to see here. </li>
-                @endforelse
-            </ul>
-            <div class="px-6 py-3">
-                @can('create', App\Models\TeachingRecord::class)
-                <form action="{{ route('teachers.profile.submit') }}" method="POST">
-                    @csrf_token
-                    <button type="submit" class="btn btn-magenta mt-6"> Submit Details </button>
-                </form>
-                @else
-                <button disabled
-                    class="btn bg-gray-400 hover:bg-gray-400 cursor-not-allowed border-0">
-                    Submit Details
-                </button>
-                @endcan
-            </div>
-        </div>
-        <div class="page-card p-6">
-            <div class="border-b -mx-6 px-6 -mt-6 pt-4 pb-3 mb-3">
-                <h4 class="text-xl font-bold flex items-center">
-                    <x-feather-icon name="git-commit" class="h-current mr-4"></x-feather-icon>
-                    <span>Teaching History</span>
-                </h4>
-            </div>
-            @forelse ($user->teachingRecords->take(5)->groupBy(function($record) {
-                    return $record->valid_from->format('M, Y');
-                }) as $date => $records)
-            <x-timeline-item icon="circle" color="text-gray-400">
-                <h4 class="font-bold mb-3">{{ $date }}</h4>
-                <ul class="border rounded divide-y">
-                    @foreach($records as $record)
-                    <li class="px-4 py-2">
-                        Taught <b>{{ $record->course->name }} <em>({{ $record->course->code }})</em></b>
-                        under {{ $record->programmeRevision->programme->name }}
-                        (w.e.f {{ $record->programmeRevision->revised_at->year }})
-                        in <em class="underline">{{ $record->college->name }}</em> as
-                        <strong>{{ $record->designation }}</strong> teacher.
-                    </li>
-                    @endforeach
-                </ul>
-            </x-timeline-item>
-            @empty
-            <div class="mt-6 text-gray-600 font-bold"> Nothing to see here. </div>
-            @endforelse
-        </div>
-    @endif
+
+    <div class="col-span-2">
+        @include('_partials.user-profile.current-teaching-detail', [
+            'currentTeachingDetails' => $user->teachingDetails
+        ])
+    </div>
 </div>
 @endsection

@@ -1,63 +1,25 @@
 @extends('layouts.master')
 @section('body')
-<div class="page-card p-6 m-6">
-    <h2 class="text-lg font-bold mb-2">Manage Record Submission</h1>
-        <form method="POST">
-            @csrf_token
-            @if(App\Models\TeachingRecord::isAccepting())
-            @method('PATCH')
-            <p class="mb-4">We've started accepting submissions, you can extend the deadline.</p>
-            <div class="flex items-end">
-                <div class="flex-1">
-                    <label for="start_date" class="w-full form-label mb-1">Start Date</label>
-                    <input type="date" disabled id="start_date" class="w-full form-input"
-                        value="{{ $startDate->format('Y-m-d') }}">
-                </div>
-                <div class="flex-1 ml-2">
-                    <label for="end_date" class="w-full form-label mb-1">Deadline</label>
-                    <input type="date" name="extend_to" id="end_date" class="w-full form-input"
-                        value="{{ $endDate->format('Y-m-d') }}">
-                </div>
-                <div class="ml-1">
-                    <button class="btn btn-magenta" formaction="{{ route('teaching-records.extend') }}">
-                        Extend Submission Deadline
-                    </button>
-                </div>
-            </div>
-            @else
-            @if($startDate && $startDate < now()) <p class="mb-4">
-                We previously accepted submission from {{$startDate->format('d M, Y')}} to
-                {{$endDate->format('d M, Y')}}
-                </p>
-                @elseif($endDate && $endDate > now())
-                <p class="mb-4">
-                    We will start accepting submission from {{$startDate->format('d M, Y')}} to
-                    {{$endDate->format('d M, Y')}}
-                </p>
-                @else
-                <p class="mb-4">We never accepted details in the past.</p>
-                @endif
-                <div class="flex items-end">
-                    <div class="flex-1">
-                        <label for="start_date" class="w-full form-label mb-1">Start From</label>
-                        <input type="date" name="start_date" id="start_date" class="w-full form-input"
-                            value="{{ old('start_date', $endDate ? $endDate->format('Y-m-d') : now()->format('Y-m-d')) }}">
-                    </div>
-                    <div class="flex-1 ml-2">
-                        <label for="end_date" class="w-full form-label mb-1">Deadline</label>
-                        <input type="date" name="end_date" id="end_date" class="w-full form-input"
-                            value="{{ old('end_date', $endDate ? $endDate->format('Y-m-d') : now()->addMonth()->format('Y-m-d')) }}">
-                    </div>
-                    <div class="ml-1">
-                        <button class="btn btn-magenta" formaction="{{ route('teaching-records.start') }}">
-                            Update Submission Period
-                        </button>
-                    </div>
-                </div>
-                @endif
+@canany(['start', 'extend'], App\Models\TeachingRecord::class)
+<div class="page-card p-6">
+    <h2 class="text-xl font-bold mb-2">Manage Record Submission</h1>
+    @if(App\Models\TeachingRecord::isAccepting())
+        @can('extend', App\Models\TeachingRecord::class)
+            @include('_partials.forms.extend-teaching-records')
+        @else
+            <p class="text-gray-600 font-bold">We've started accepting teaching records. You don't have enough permissions to extend the deadline.</p>
+        @endcan
+    @else
+        @can('start', App\Models\TeachingRecord::class)
+            @include('_partials.forms.start-teaching-records')
+        @else
+            <p class="text-gray-600 font-bold">We're not accepting records. You don't have enough permissions to start accepting submissions.</p>
+        @endcan
+    @endif
 </div>
-</div>
-<div class="page-card m-6 pb-0">
+@endcanany
+@can('viewAny', App\Models\TeachingRecord::class)
+<div class="page-card pb-0">
     <div class="flex items-center px-6 pb-4 border-b">
         <h1 class="page-header mb-0 px-0 mr-4">UG Teaching Records</h1>
     </div>
@@ -143,6 +105,6 @@
             @endforelse
         </tbody>
     </table>
-
 </div>
+@endcan
 @endsection

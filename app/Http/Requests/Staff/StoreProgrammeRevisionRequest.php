@@ -32,7 +32,7 @@ class StoreProgrammeRevisionRequest extends FormRequest
             ->toArray();
 
         return [
-            'revised_at' => ['required', 'date', Rule::notIn($revision_dates)],
+            'revised_at' => ['required', 'date', 'before_or_equal:today', Rule::notIn($revision_dates)],
             'semester_courses' => [
                 'required', 'array', 'size:' . ($programme->duration * 2),
             ],

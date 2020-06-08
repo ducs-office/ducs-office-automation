@@ -36,7 +36,7 @@ class UpdateProgrammeRevisionRequest extends FormRequest
             ->toArray();
 
         return [
-            'revised_at' => ['sometimes', 'required', 'date', Rule::notIn($revision_dates)],
+            'revised_at' => ['sometimes', 'required', 'date', 'before_or_equal:today', Rule::notIn($revision_dates)],
             'semester_courses' => [
                 'sometimes', 'required', 'array',
                 'size:' . $programme->duration * 2,

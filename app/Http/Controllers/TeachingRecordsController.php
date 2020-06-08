@@ -64,6 +64,8 @@ class TeachingRecordsController extends Controller
 
     public function start(Request $request)
     {
+        $this->authorize('start', TeachingRecord::class);
+
         $request->validate([
             'start_date' => 'required|date',
             'end_date' => 'required|date|after:' . $request->start_date,
@@ -86,9 +88,12 @@ class TeachingRecordsController extends Controller
 
     public function extend(Request $request)
     {
+        $this->authorize('extend', TeachingRecord::class);
+
         $request->validate([
             'extend_to' => 'required|date|after_or_equal:' . TeachingRecord::getEndDate(),
         ]);
+
         TeachingRecord::extendDeadline(
             Carbon::parse($request->extend_to)
         );

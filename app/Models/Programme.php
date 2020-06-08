@@ -33,12 +33,18 @@ class Programme extends Model
         return $this->belongsTo(ProgrammeRevision::class);
     }
 
-    public function scopeWithLatestRevision($query)
+    public function scopeWithLatestRevisionId($query)
     {
         return $query->addSelect([
             'latest_revision_id' => ProgrammeRevision::select('id')
                 ->whereColumn('programme_id', 'programmes.id')
                 ->orderBy('revised_at', 'desc')->limit(1),
-        ])->with(['latestRevision']);
+        ]);
+    }
+
+    public function scopeWithLatestRevision($query)
+    {
+        return $query->withLatestRevisionId()
+            ->with(['latestRevision']);
     }
 }

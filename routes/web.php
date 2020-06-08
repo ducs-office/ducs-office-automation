@@ -99,11 +99,17 @@ Route::get('/users/@{user}', 'UserProfileController@show')->name('profiles.show'
 Route::patch('/users/@{user}', 'UserProfileController@update')->name('profiles.update');
 Route::get('/users/@{user}/avatar', 'UserProfileController@avatar')->name('profiles.avatar');
 
+// ----------- Teaching Records ------------------
 Route::get('/teaching-records', 'TeachingRecordsController@index')->name('teaching-records.index');
-Route::post('/teaching-details/send', 'TeachingRecordsController@store')->name('teaching-details.send');
+Route::post('/teaching-records/submit', 'TeachingRecordsController@store')->name('teaching-records.submit');
 Route::get('/teaching-records/export', 'TeachingRecordsController@export')->name('teaching-records.export');
 Route::post('/teaching-records/start', 'TeachingRecordsController@start')->name('teaching-records.start');
 Route::patch('/teaching-records/extend', 'TeachingRecordsController@extend')->name('teaching-records.extend');
+
+//------------------- Teaching Details for currently logged in teacher only -------------
+Route::get('/teaching-details', 'TeachingDetailsController@index')->name('teaching-details.index');
+Route::post('/teaching-details', 'TeachingDetailsController@store')->name('teaching-details.store');
+Route::delete('/teaching-details/{teachingDetail}', 'TeachingDetailsController@destroy')->name('teaching-details.destroy');
 
 //===================Scholar Examiner==============
 Route::post('scholars/{scholar}/examiner/apply', 'ScholarExaminerController@apply')
