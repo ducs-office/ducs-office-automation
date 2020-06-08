@@ -6,6 +6,7 @@ use App\Models\Handover;
 use App\Models\IncomingLetter;
 use App\Types\Priority;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -25,20 +26,20 @@ class ViewIncomingLettersTest extends TestCase
     }
 
     /** @test */
-    public function user_can_view_incoming_letters()
+    public function user_can_view_paginated_incoming_letters()
     {
         $this->signIn();
-        create(IncomingLetter::class, 2);
+        create(IncomingLetter::class, 3);
 
         $viewIncomingLetters = $this->withoutExceptionHandling()
                     ->get(route('staff.incoming_letters.index'))
                     ->assertSuccessful()
                     ->assertViewIs('staff.incoming_letters.index')
-                    ->assertViewHas('incomingLetters')
-                    ->viewData('incomingLetters');
+                    ->assertViewHas('letters')
+                    ->viewData('letters');
 
-        $this->assertInstanceOf(Collection::class, $viewIncomingLetters);
-        $this->assertCount(2, $viewIncomingLetters);
+        $this->assertInstanceOf(LengthAwarePaginator::class, $viewIncomingLetters);
+        $this->assertCount(3, $viewIncomingLetters);
     }
 
     /** @test */
@@ -51,8 +52,8 @@ class ViewIncomingLettersTest extends TestCase
                     ->get(route('staff.incoming_letters.index'))
                     ->assertSuccessful()
                     ->assertViewIs('staff.incoming_letters.index')
-                    ->assertViewHas('incomingLetters')
-                    ->viewData('incomingLetters');
+                    ->assertViewHas('letters')
+                    ->viewData('letters');
 
         $letters = $letters->sortByDesc('date');
         $sorted_letter_ids = $letters->pluck('id')->toArray();
@@ -117,6 +118,6 @@ class ViewIncomingLettersTest extends TestCase
                         ->assertViewHas('priorities')
                         ->viewData('priorities');
 
-        $this->assertEquals(Priority::values(), $priorities);
+        $this->assertEquals(Priority::values(), array_values($priorities));
     }
 }

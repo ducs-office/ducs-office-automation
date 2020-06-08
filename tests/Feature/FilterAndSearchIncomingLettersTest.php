@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\IncomingLetter;
 use App\Models\User;
 use App\Types\Priority;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Carbon;
@@ -32,10 +33,10 @@ class FilterAndSearchIncomingLettersTest extends TestCase
             ]))
             ->assertSuccessful()
             ->assertViewIs('staff.incoming_letters.index')
-            ->assertViewHas('incomingLetters')
-            ->viewdata('incomingLetters');
+            ->assertViewHas('letters')
+            ->viewdata('letters');
 
-        $this->assertInstanceOf(Collection::class, $viewIncomingLetters);
+        $this->assertInstanceOf(LengthAwarePaginator::class, $viewIncomingLetters);
         $this->assertCount(2, $viewIncomingLetters, 'Only 2 letters were expected but :actual letters were returned');
 
         $lettersAfterBeforeFilter = $viewIncomingLetters->filter(function ($letter) use ($beforeFilter) {
@@ -62,10 +63,10 @@ class FilterAndSearchIncomingLettersTest extends TestCase
             ]))
             ->assertSuccessful()
             ->assertViewIs('staff.incoming_letters.index')
-            ->assertViewHas('incomingLetters')
-            ->viewData('incomingLetters');
+            ->assertViewHas('letters')
+            ->viewData('letters');
 
-        $this->assertInstanceOf(Collection::class, $viewIncomingLetters);
+        $this->assertInstanceOf(LengthAwarePaginator::class, $viewIncomingLetters);
         $this->assertCount(1, $viewIncomingLetters, 'Only 1 letter was expected but :actual letters were returned');
 
         $lettersBeforeAfterFilter = $viewIncomingLetters->filter(function ($letter) use ($afterFilter) {
@@ -97,10 +98,10 @@ class FilterAndSearchIncomingLettersTest extends TestCase
             ]))
             ->assertSuccessful()
             ->assertViewIs('staff.incoming_letters.index')
-            ->assertViewHas('incomingLetters')
-            ->viewData('incomingLetters');
+            ->assertViewHas('letters')
+            ->viewData('letters');
 
-        $this->assertInstanceOf(Collection::class, $viewIncomingLetters);
+        $this->assertInstanceOf(LengthAwarePaginator::class, $viewIncomingLetters);
         $this->assertCount(2, $viewIncomingLetters, 'Only 2 letters were expected but :actual letters were returned');
 
         $lettersOutOfFilterRange = $viewIncomingLetters->filter(function ($letter) use ($afterFilter, $beforeFilter) {
@@ -124,8 +125,8 @@ class FilterAndSearchIncomingLettersTest extends TestCase
             ]))
             ->assertSuccessful()
             ->assertViewIs('staff.incoming_letters.index')
-            ->assertViewHas('incomingLetters')
-            ->viewData('incomingLetters');
+            ->assertViewHas('letters')
+            ->viewData('letters');
 
         $this->assertCount(1, $viewIncomingLetters);
     }
@@ -143,8 +144,8 @@ class FilterAndSearchIncomingLettersTest extends TestCase
             ]))
             ->assertSuccessful()
             ->assertViewIs('staff.incoming_letters.index')
-            ->assertViewHas('incomingLetters')
-            ->viewData('incomingLetters');
+            ->assertViewHas('letters')
+            ->viewData('letters');
 
         $this->assertCount(1, $viewIncomingLetters);
     }
@@ -166,8 +167,8 @@ class FilterAndSearchIncomingLettersTest extends TestCase
             ]))
             ->assertSuccessful()
             ->assertViewIs('staff.incoming_letters.index')
-            ->assertViewHas('incomingLetters')
-            ->viewData('incomingLetters');
+            ->assertViewHas('letters')
+            ->viewData('letters');
 
         $this->assertCount(1, $viewIncomingLetters);
     }
@@ -187,8 +188,8 @@ class FilterAndSearchIncomingLettersTest extends TestCase
             ]))
             ->assertSuccessful()
             ->assertViewIs('staff.incoming_letters.index')
-            ->AssertViewHas('incomingLetters')
-            ->viewData('incomingLetters');
+            ->AssertViewHas('letters')
+            ->viewData('letters');
 
         $this->assertCount(2, $viewIncomingLetters);
         $this->assertTrue($viewIncomingLetters->pluck('id')->contains($prioritisedLetters[0]->id));
@@ -211,8 +212,8 @@ class FilterAndSearchIncomingLettersTest extends TestCase
             ]))
             ->assertSuccessful()
             ->assertViewIs('staff.incoming_letters.index')
-            ->assertViewHas('incomingLetters')
-            ->viewData('incomingLetters');
+            ->assertViewHas('letters')
+            ->viewData('letters');
 
         $this->assertCount(2, $viewIncomingLetters);
         $this->assertTrue($viewIncomingLetters->pluck('id')->contains($recipientIs1[0]->id));
@@ -234,8 +235,8 @@ class FilterAndSearchIncomingLettersTest extends TestCase
             ]))
             ->assertSuccessful()
             ->assertViewIs('staff.incoming_letters.index')
-            ->assertViewHas('incomingLetters')
-            ->viewData('incomingLetters');
+            ->assertViewHas('letters')
+            ->viewData('letters');
 
         $this->assertCount(2, $viewIncomingLetters);
         $this->assertTrue($viewIncomingLetters->pluck('id')->contains($sentBy[0]->id));
@@ -255,8 +256,8 @@ class FilterAndSearchIncomingLettersTest extends TestCase
             ->get(route('staff.incoming_letters.index', ['search' => 'def']))
             ->assertSuccessful()
             ->assertViewIs('staff.incoming_letters.index')
-            ->assertViewHas('incomingLetters')
-            ->viewData('incomingLetters');
+            ->assertViewHas('letters')
+            ->viewData('letters');
 
         $this->assertCount(2, $viewIncomingLetters);
         $this->assertTrue($viewIncomingLetters->pluck('id')->contains($sender1->id));
