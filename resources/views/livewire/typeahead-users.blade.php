@@ -10,24 +10,28 @@
 })" x-init="init()" class="relative w-full">
     <button type="button" x-ref="button" x-on:click="onButtonClick()" class="text-left form-select w-full">
         <div x-show="isEmpty()"><span class="opacity-50">{{ $placeholder }}</span></div>
-        <div x-show="! isEmpty()" class="flex flex-wrap">
-            <template x-for="(selectedChoice, index) in selectedChoices" x-bind:key="index">
-                @if(!$multiple)
-                    <div class="flex space-x-2">
+        <template x-if="! isEmpty()">
+            <div class="flex flex-wrap -m-1">
+                <template x-for="(selectedChoice, index) in selectedChoices" x-bind:key="index">
+                    @if(!$multiple)
+                        <div class="flex space-x-2 m-1">
+                            <img x-bind:src="selectedChoice.avatar_url" x-bind:alt="selectedChoice.name"
+                                class="w-6 h-6 rounded-full overflow-hidden">
+                            <span x-text="selectedChoice.name"></span>
+                        </div>
+                    @else
+                    <div class="inline-flex items-center px-2 py-1 space-x-2 bg-gray-200 text-sm rounded-full m-1">
                         <img x-bind:src="selectedChoice.avatar_url" x-bind:alt="selectedChoice.name"
-                            class="w-6 h-6 rounded-full overflow-hidden">
+                            class="w-5 h-5 flex-none rounded-full ">
                         <span x-text="selectedChoice.name"></span>
+                        <button x-on:click.stop.prevent="deselect(index)" tabindex="-1">
+                            <x-feather-icon name="x" class="h-current"></x-feather-icon>
+                        </button>
                     </div>
-                @else
-                <div class="inline-flex px-2 py-1 leading-0 space-x-1 bg-gray-200 text-sm rounded-lg m-1">
-                    <span x-text="selectedChoice.name"></span>
-                    <button x-on:click.stop.prevent="deselect(index)" tabindex="-1">
-                        <x-feather-icon name="x" class="h-current"></x-feather-icon>
-                    </button>
-                </div>
-                @endif
-            </template>
-        </div>
+                    @endif
+                </template>
+            </div>
+        </template>
     </button>
     @if(! $multiple)
     <template x-if="! isEmpty()">

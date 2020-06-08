@@ -33,53 +33,48 @@
                     <p class="mt-1 text-red-600">{{ $errors->first('received_id') }}</p>
                 @endif
             </div>
-            <div class="mb-2">
-                <label for="sender" class="w-full form-label mb-1">
-                    Sender <span class="text-red-600">*</span>
-                </label>
-                <input id="sender"
-                type="text" name="sender"
-                value="{{ old('sender') }}"
-                class="w-full form-input{{ $errors->has('sender') ? ' border-red-600' : ''}}"
-                placeholder="Sender (Received from)"
-                required>
-                @if($errors->has('sender'))
-                    <p class="mt-1 text-red-600">{{ $errors->first('sender') }}</p>
-                @endif
-            </div>
-            <div class="flex mb-2">
-                <div class="flex-1 mr-1">
+            <div class="flex mb-2 space-x-2">
+                <div class="flex-1">
+                    <label for="sender" class="w-full form-label mb-1">
+                        Sender <span class="text-red-600">*</span>
+                    </label>
+                    <input id="sender"
+                    type="text" name="sender"
+                    value="{{ old('sender') }}"
+                    class="w-full form-input{{ $errors->has('sender') ? ' border-red-600' : ''}}"
+                    placeholder="Sender (Received from)"
+                    required>
+                    @if($errors->has('sender'))
+                        <p class="mt-1 text-red-600">{{ $errors->first('sender') }}</p>
+                    @endif
+                </div>
+                <div class="flex-1">
                     <label for="receiver" class="w-full form-label mb-1">
                         Recipient <span class="text-red-600">*</span>
                     </label>
-                    <vue-typeahead
+                    <livewire:typeahead-users
                         name="recipient_id"
-                        source="/api/users"
-                        find-source="/api/users/{value}"
-                        limit="5"
+                        limit="15"
                         value="{{ old('recipient_id') }}"
-                        :has-errors="{{ $errors->has('recipient_id') ? 'true' : 'false'}}"
-                        placeholder="Receiver (Received by)">
-                    </vue-typeahead>
+                        placeholder="Receiver (Received by)"
+                        search-placeholder="search receiver from users..." />
                     @if($errors->has('recipient_id'))
                         <p class="mt-1 text-red-600">{{ $errors->first('recipient_id') }}</p>
                     @endif
                 </div>
-                <div class="flex-1 ml-1">
-                    <label for="handovers[]" class="w-full form-label mb-1">Handovered To</label>
-                    <v-multi-typeahead
-                        class="{{ $errors->has('handovers') ? 'border-red-600' : ''}}"
-                        name="handovers[]"
-                        source="/api/users"
-                        find-source="/api/users/{value}"
-                        limit="5"
-                        value="{{ old('handover_id') }}"
-                        placeholder="Handovered To">
-                    </v-multi-typeahead>
-                    @if($errors->has('handovers'))
-                        <p class="mt-1 text-red-600">{{ $errors->first('handovers') }}</p>
-                    @endif
-                </div>
+            </div>
+            <div class="mb-2">
+                <label for="handovers[]" class="w-full form-label mb-1">Handovered To</label>
+                <livewire:typeahead-users
+                    name="handovers[]"
+                    limit="15"
+                    :multiple="true"
+                    :value="old('handovers', [])"
+                    placeholder="Handovered To"
+                    search-placeholder="Search from users..." />
+                @if($errors->has('handovers'))
+                    <p class="mt-1 text-red-600">{{ $errors->first('handovers') }}</p>
+                @endif
             </div>
             <div class="mb-2">
                 <label for="subject" class="w-full form-label mb-1">
@@ -127,15 +122,9 @@
                 <label for="files" class="w-full form-label mb-1">
                     Upload Letter <span class="text-red-600">*</span>
                 </label>
-                <v-file-input id="files" name="attachments[]" accept="application/pdf, image/*" class="w-full block form-input overflow-hidden"
-                    placeholder="Choose multiple Image/PDF files" multiple required>
-                    <template v-slot="{ label }">
-                        <div class="w-full inline-flex items-center">
-                            <x-feather-icon name="upload" class="h-4 mr-2 text-gray-700 flex-shrink-0"></x-feather-icon>
-                            <span v-text="label" class="truncate"></span>
-                        </div>
-                    </template>
-                </v-file-input>
+                <x-input.file id="files" name="attachments[]" accept="application/pdf, image/*" class="w-full form-input overflow-hidden"
+                    placeholder="Choose multiple Image/PDF files" :multiple="true">
+                </x-input.file>
                 @if($errors->has('file'))
                     <p class="mt-1 text-red-600">{{ $errors->first('file') }}</p>
                 @endif

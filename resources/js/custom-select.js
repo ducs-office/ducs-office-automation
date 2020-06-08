@@ -41,7 +41,7 @@ const addSingleSelectFeature = () => ({
 
 export default config => ({
     getSelectedChoices() {
-        if (this.value == null ) return [];
+        if (this.value == null) return [];
         return (this.multiple ? this.value : [this.value])
             .map(val => this.choices.find(choice => val == choice[this.valueKey]))
             .filter(option => option != null)
