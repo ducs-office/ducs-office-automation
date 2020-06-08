@@ -77,7 +77,7 @@ module.exports = {
                 "64": "16rem",
                 "1/2": "50%",
                 "1/3": "33.333333%",
-                "2/3": "66.666666%",
+                "2/3": "66.666666%"
             },
             height: {
                 current: "1em"
@@ -109,7 +109,8 @@ module.exports = {
         borderWidth: ["responsive", "hover", "first", "last"],
         borderColor: ["responsive", "hover", "first", "last"],
         borderRadius: ["responsive", "hover", "first", "last"],
-        display: ["responsive", "focus", "hover", "group-hover"]
+        display: ["responsive", "focus", "hover", "group-hover"],
+        scale: ["focus", "hover", "group-hover"],
     },
     plugins: [require("@tailwindcss/custom-forms")]
 };

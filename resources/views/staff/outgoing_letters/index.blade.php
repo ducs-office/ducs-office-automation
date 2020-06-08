@@ -10,12 +10,12 @@
             @endcan
             @include('staff.partials.letter-filters', [
                 'filters' => [
-                    [ 'field' => 'date', 'label' => 'Before Date', 'type' => 'date', 'operator' => 'greater_than' ],
-                    [ 'field' => 'date', 'label' => 'After Date', 'type' => 'date', 'operator' => 'less_than' ],
-                    [ 'field' => 'type', 'label' => 'Type', 'type' => 'select', 'operator' => 'equals', 'options' => $types->toArray() ],
-                    [ 'field' => 'recipient', 'label' => 'Recipient', 'type' => 'select', 'operator' => 'equals', 'options' => $recipients->toArray() ],
-                    [ 'field' => 'sender_id', 'label' => 'Sender', 'type' => 'select', 'operator' => 'equals', 'options' => $senders->toArray() ],
-                    [ 'field' => 'creator', 'label' => 'Creator', 'type' => 'select', 'operator' => 'equals', 'options' => $creators->toArray() ],
+                    [ 'name' => 'before_date', 'label' => 'Before Date', 'type' => 'date' ],
+                    [ 'name' => 'after_date', 'label' => 'After Date', 'type' => 'date' ],
+                    [ 'name' => 'type', 'label' => 'Type', 'type' => 'select', 'options' => $types->toArray() ],
+                    [ 'name' => 'recipient', 'label' => 'Recipient', 'type' => 'select', 'options' => $recipients->toArray() ],
+                    [ 'name' => 'sender_id', 'label' => 'Sender', 'type' => 'select', 'options' => $senders->toArray() ],
+                    [ 'name' => 'creator', 'label' => 'Creator', 'type' => 'select', 'options' => $creators->toArray() ],
                 ]
             ])
         </div>
@@ -36,7 +36,9 @@
                 </div>
             @endforelse
         </div>
-        {{ $letters->links()  }}
+        <div class="my-6">
+            {{ $letters->links()  }}
+        </div>
     </div>
     <form id="remove-attachment" method="POST" onsubmit="return confirm('Do you really want to delete attachment?');">
         @csrf_token @method('DELETE')
