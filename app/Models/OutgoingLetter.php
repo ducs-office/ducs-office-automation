@@ -21,8 +21,6 @@ class OutgoingLetter extends Model
 {
     use Filterable;
 
-    protected $perPage = 20;
-
     protected $fillable = [
         'date', 'type', 'subject', 'recipient', 'description', 'amount',
         'sender_id', 'creator_id',

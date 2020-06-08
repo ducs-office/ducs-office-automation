@@ -43,11 +43,13 @@
             </label>
             @if($filter['type'] === 'select')
             <select name="filters[{{ $filter['name'] }}]"
-                class="w-full form-input is-sm">
-                <option value="">All</option>
+                class="w-full form-select is-sm">
+                <option value="" @if(request('filters.' . $filter['name'], '') == '') selected @endif>All</option>
                 @foreach ($filter['options'] as $value => $option)
-                    <option {{ request('filters.' . $filter['name'], '') }}
-                    value="{{ $value }}">{{ $option }}</option>
+                    <option value="{{ $value }}"
+                        @if(request('filters.' . $filter['name'], '') == $value) selected @endif>
+                        {{ $option }}
+                    </option>
                 @endforeach
             </select>
             @else

@@ -23,15 +23,15 @@ class IncomingLettersController extends Controller
             ->filter()
             ->with(['remarks.user', 'handovers'])
             ->orderBy('date', 'DESC')
-            ->get();
+            ->paginate();
 
         return view('staff.incoming_letters.index', [
-            'incomingLetters' => $letters,
+            'letters' => $letters,
             'recipients' => User::select(['id', 'first_name', 'last_name'])
                     ->whereIn('id', IncomingLetter::selectRaw('DISTINCT(recipient_id)'))
                     ->get()->pluck('name', 'id'),
             'senders' => IncomingLetter::selectRaw('DISTINCT(sender)')->get()->pluck('sender', 'sender'),
-            'priorities' => Priority::values(),
+            'priorities' => array_combine(Priority::values(), Priority::values()),
         ]);
     }
 

@@ -39,7 +39,7 @@
         </div>
         <div class="flex-1 flex flex-col h-full overflow-y-auto">
             @include('staff.partials.header')
-            <main class="flex-1 h-full p-4 space-y-4">
+            <main class="flex-1 h-full p-4 md:p-8 space-y-4">
                 @yield('body')
             </main>
         </div>
