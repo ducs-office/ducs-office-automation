@@ -7,7 +7,7 @@
             New
         </a>
         @endcan
-        @include('staff.partials.letter-filters', [
+        @include('_partials.filters', [
             'filters' => [
                 [ 'name' => 'before_date', 'label' => 'Before Date', 'type' => 'date' ],
                 [ 'name' => 'after_date', 'label' => 'After Date', 'type' => 'date' ],
@@ -23,9 +23,7 @@
     </p>
     <div class="space-y-5">
         @forelse($letters as $letter)
-            @include('staff.outgoing_letters.partials.letter', [
-                'letter' => $letter
-            ])
+            @include('_partials.outgoing-letter')
         @empty
             <div class="py-8 flex flex-col items-center justify-center text-gray-500">
                 <x-feather-icon name="frown" class="h-16"></x-feather-icon>

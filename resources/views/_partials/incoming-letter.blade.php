@@ -67,7 +67,7 @@
     </div>
     @can('viewAny', App\Models\Remark::class)
     <div>
-        @include('staff.outgoing_letters.remarks.index')
+        @include('_partials.letter-remarks')
     </div>
     @endcan
 </div>

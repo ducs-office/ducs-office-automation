@@ -31,7 +31,7 @@
                 <x-feather-icon name="times" class="h-current"></x-feather-icon>
             </button>
         </div>
-        <div class="relative flex-1">
+        <div class="relative flex-1 mb-2">
             <input id="filter-search" type="text" name="search" class="w-full form-input pl-8" value="{{ request('search', '') }}"
                 placeholder="Search letters by subject or description...">
             <x-feather-icon name="search" class="w-5 text-gray-600 absolute left-0 ml-2 transform -translate-y-1/2" style="top: 50%;"></x-feather-icon>

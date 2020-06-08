@@ -88,12 +88,12 @@
         </x-slot>
         @can('viewAny', App\Models\Remark::class)
         <x-tab-content tab="remarks">
-            @include('staff.outgoing_letters.remarks.index')
+            @include('_partials.letter-remarks')
         </x-tab-content>
         @endcan
         @can('viewAny', App\Models\LetterReminder::class)
         <x-tab-content tab="reminders">
-            @include('staff.outgoing_letters.reminders.index')
+            @include('_partials.letter-reminders')
         </x-tab-content>
         @endcan
     </x-tabbed-pane>
