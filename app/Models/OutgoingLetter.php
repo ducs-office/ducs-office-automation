@@ -90,4 +90,9 @@ class OutgoingLetter extends Model
     {
         return $this->hasMany(LetterReminder::class, 'letter_id')->orderBy('created_at', 'DESC');
     }
+
+    public function remarkStoreUrl()
+    {
+        return route('staff.outgoing_letters.remarks.store', $this);
+    }
 }

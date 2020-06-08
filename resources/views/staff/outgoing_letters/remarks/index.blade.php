@@ -1,10 +1,10 @@
 <div class="justify-between overflow-y-auto">
     @if(isset($loop) && $loop->first)
-    <livewire:edit-remark-modal />
+        <livewire:edit-remark-modal />
     @endif
     <div class="bg-gray-100 border-b px-6 py-2">
         @can('create', App\Models\Remark::class)
-        <form action="{{ route('staff.outgoing_letters.remarks.store', $letter) }}" method="POST">
+        <form action="{{ $letter->remarkStoreUrl() }}" method="POST">
             @csrf_token
             <div class="flex items-start space-x-2">
                 <img src="{{ Auth::user()->avatar_url }}"

@@ -87,4 +87,9 @@ class IncomingLetter extends Model
     {
         return $this->morphMany(Remark::class, 'remarkable')->orderBy('updated_at', 'DESC');
     }
+
+    public function remarkStoreUrl()
+    {
+        return route('staff.incoming_letters.remarks.store', $this);
+    }
 }
