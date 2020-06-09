@@ -21,11 +21,13 @@ class Flash extends Component
      *
      * @return void
      */
-    public function __construct($messages = [])
+    public function __construct($flashErrors = false, $messages = [])
     {
-        foreach(session()->get('errors', new ViewErrorBag)->all() as $error) {
-            flash()->error($error);
-        };
+        if ($flashErrors) {
+            foreach (session()->get('errors', new ViewErrorBag)->all() as $error) {
+                flash()->error($error);
+            }
+        }
 
         $this->messages = session()
             ->get('flash_notification', collect())

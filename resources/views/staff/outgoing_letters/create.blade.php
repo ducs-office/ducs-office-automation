@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('layouts.master', ['flashErrors' => false])
 @section('body')
 <div class="page-card p-6 mx-auto">
     <h2 class="text-xl font-bold mb-8">New Outgoing Letter</h2>
