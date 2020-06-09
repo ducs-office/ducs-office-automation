@@ -24,7 +24,7 @@ class EditPhdCourseModal extends Component
         $this->course = new PhdCourse();
 
         if (! $this->getErrorBag()->isEmpty()) {
-            $this->show(old(('course_id')));
+            $this->show(old('course_id'));
         }
     }
 

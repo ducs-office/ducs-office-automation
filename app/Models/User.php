@@ -174,6 +174,11 @@ class User extends Authenticatable
     }
 
     // Helpers
+    public function isExternal()
+    {
+        return $this->category->equals(UserCategory::EXTERNAL);
+    }
+
     public function isCollegeTeacher()
     {
         return $this->category->equals(UserCategory::COLLEGE_TEACHER);

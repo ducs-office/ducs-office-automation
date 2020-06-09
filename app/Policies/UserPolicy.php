@@ -66,7 +66,7 @@ class UserPolicy
      */
     public function updateProfile(User $user, User $userModel)
     {
-        return $user->can('users:edit') && $user->id === $userModel->id;
+        return (int) $user->id === (int) $userModel->id;
     }
 
     /**

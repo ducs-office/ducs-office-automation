@@ -21,6 +21,30 @@ class EditUserProfileTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
+    public function user_profile_can_be_edited()
+    {
+        $user = factory(User::class)->states('external')->create();
+        $this->signIn($user);
+
+        $update = [
+            'phone' => '9876543210',
+            'address' => 'new address, New Delhi',
+            'affiliation' => 'IIT Delhi',
+        ];
+
+        $this->withoutExceptionHandling()
+            ->patch(route('profiles.update', $user), $update)
+            ->assertRedirect()
+            ->assertSessionHasFlash('success', 'Profile Updated Successfully!');
+
+        $user->refresh();
+
+        $this->assertEquals($update['phone'], $user->phone);
+        $this->assertEquals($update['address'], $user->address);
+        $this->assertEquals($update['affiliation'], $user->affiliation);
+    }
+
+    /** @test */
     public function college_teacher_can_edit_profile_details()
     {
         $college = create(College::class);

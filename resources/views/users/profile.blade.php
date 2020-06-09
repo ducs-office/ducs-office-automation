@@ -1,14 +1,22 @@
 @extends('layouts.master')
+@push('modals')
+<x-modal name="edit-user-basic-info-modal" class="p-6 w-1/2"
+    :open="$errors->update->hasAny(['phone', 'address'])">
+    <h2 class="text-lg font-bold mb-3">{{ $user->name }}</h2>
+    <h3 class="mb-6 font-bold">Basic Information</h3>
+    @include('_partials.forms.edit-user-basic-info')
+</x-modal>
+<x-modal name="edit-user-work-modal" class="p-6 w-1/2"
+    :open="$errors->update->hasAny(['status', 'designation', 'affiliation', 'college_id'])">
+    <h2 class="text-lg font-bold mb-3">{{ $user->name }}</h2>
+    <h3 class="mb-6 font-bold">Work Details</h3>
+    @include('_partials.forms.edit-user-work')
+</x-modal>
+@endpush
 @section('body')
 <div class="m-4 grid gap-8 grid-cols-2 items-start">
     <div class="col-span-2 page-card p-6 overflow-visible">
         <div class="-mt-6 -mx-6 bg-magenta-800 h-48 rounded-t-md flex justify-end items-end p-4">
-            @can('updateProfile', $user)
-            <a href="#" class="btn inline-flex">
-                <x-feather-icon name="edit" class="h-current mr-2"></x-feather-icon>
-                Edit
-            </a>
-            @endif
         </div>
         <div class="-mt-24 space-y-4 text-center mb-8">
             <img src="{{ $user->avatar_url }}"
@@ -39,9 +47,17 @@
             </x-slot>
 
             <x-tab-content tab="info" class="space-y-3 w-full max-w-2xl mx-auto">
-                <h3 class="px-3 text-lg font-bold">
-                    Basic Information
-                </h3>
+                <div class="flex items-center">
+                    <h3 class="px-3 text-lg font-bold">
+                        Basic Information
+                    </h3>
+                    @can('updateProfile', $user)
+                    <x-modal.trigger modal="edit-user-basic-info-modal"  title="Edit"
+                        class="p-1 ml-auto text-gray-700 font-bold hover:text-blue-600 transition duration-300 transform hover:scale-110">
+                        <x-feather-icon name="edit" class="h-current mr-2"> Edit </x-feather-icon>
+                    </x-modal.trigger>
+                    @endcan
+                </div>
 
                 <div class="mt-4 flex-1">
                     <ul class="border rounded-lg overflow-hidden mb-4 divide-y">
@@ -64,9 +80,17 @@
             </x-tab-content>
 
             <x-tab-content tab="teaching" class="space-y-3 w-full max-w-2xl mx-auto">
-                <h3 class="px-3 text-lg font-bold">
-                    Work Details
-                </h3>
+                <div class="flex items-center">
+                    <h3 class="px-3 text-lg font-bold">
+                        Work Details
+                    </h3>
+                    @can('updateProfile', $user)
+                    <x-modal.trigger modal="edit-user-work-modal"  title="Edit"
+                        class="p-1 ml-auto text-gray-700 font-bold hover:text-blue-600 transition duration-300 transform hover:scale-110">
+                        <x-feather-icon name="edit" class="h-current mr-2"> Edit </x-feather-icon>
+                    </x-modal.trigger>
+                    @endcan
+                </div>
                 <div class="mt-4 flex-1">
                     <ul class="border rounded-lg overflow-hidden mb-4 divide-y">
                         @if($user->isCollegeTeacher() || $user->isFacultyTeacher())
@@ -79,10 +103,17 @@
                             <p class="whitespace-no-wrap font-bold w-48">Designation</p>
                             <p class="flex-1 text-gray-800">{{ $user->designation ?? '-' }}</p>
                         </li>
+                        @if ($user->isExternal())
+                        <li class="px-4 py-3 flex space-x-4">
+                            <p class="whitespace-no-wrap font-bold w-48">Affiliation</p>
+                            <p class="flex-1 text-gray-800">{{ $user->affiliation ?? '-' }}</p>
+                        </li>
+                        @else
                         <li class="px-4 py-3 flex space-x-4">
                             <p class="whitespace-no-wrap font-bold w-48">College/Department</p>
                             <p class="flex-1 text-gray-800">{{ optional($user->college)->name ?? '-' }}</p>
                         </li>
+                        @endif
                     </ul>
                 </div>
             </x-tab-content>
