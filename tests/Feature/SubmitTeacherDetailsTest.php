@@ -44,7 +44,7 @@ class SubmitTeacherDetailsTest extends TestCase
         $this->signIn($teacher, null);
 
         $this->withoutExceptionHandling()
-            ->post(route('teaching-details.send'))
+            ->post(route('teaching-records.submit'))
             ->assertRedirect();
 
         $this->assertCount(1, $records = TeachingRecord::all());
@@ -76,7 +76,7 @@ class SubmitTeacherDetailsTest extends TestCase
         $this->signIn($teacher, null);
 
         $this->withExceptionHandling()
-            ->post(route('teaching-details.send'))
+            ->post(route('teaching-records.submit'))
             ->assertRedirect()
             ->assertSessionHasFlash('danger', 'Your profile is not completed. You cannot perform this action.');
 
@@ -98,7 +98,7 @@ class SubmitTeacherDetailsTest extends TestCase
         $this->signIn($teacher, null);
 
         $this->withExceptionHandling()
-            ->post(route('teaching-details.send'))
+            ->post(route('teaching-records.submit'))
             ->assertRedirect()
             ->assertSessionHasFlash('danger', 'Your profile is not completed. You cannot perform this action.');
 
@@ -120,7 +120,7 @@ class SubmitTeacherDetailsTest extends TestCase
         $this->signIn($teacher, null);
 
         $this->withExceptionHandling()
-            ->post(route('teaching-details.send'))
+            ->post(route('teaching-records.submit'))
             ->assertRedirect()
             ->assertSessionHasFlash('danger', 'Your profile is not completed. You cannot perform this action.');
 
@@ -140,7 +140,7 @@ class SubmitTeacherDetailsTest extends TestCase
         $this->signIn($teacher, null);
 
         $this->withExceptionHandling()
-            ->post(route('teaching-details.send'))
+            ->post(route('teaching-records.submit'))
             ->assertRedirect()
             ->assertSessionHasFlash('danger', 'Your profile is not completed. You cannot perform this action.');
 
@@ -161,7 +161,7 @@ class SubmitTeacherDetailsTest extends TestCase
         $this->signIn($teacher, null);
 
         $this->withExceptionHandling()
-            ->post(route('teaching-details.send'))
+            ->post(route('teaching-records.submit'))
             ->assertForbidden();
 
         $this->assertEquals(0, TeachingRecord::count());
@@ -183,7 +183,7 @@ class SubmitTeacherDetailsTest extends TestCase
         $this->signIn($teacher, null);
 
         $this->withExceptionHandling()
-            ->post(route('teaching-details.send'))
+            ->post(route('teaching-records.submit'))
             ->assertForbidden();
 
         $this->assertEquals(0, TeachingRecord::count());
@@ -207,14 +207,14 @@ class SubmitTeacherDetailsTest extends TestCase
 
         $this->signIn($teacherPrefersAck, null);
         $this->withExceptionHandling()
-            ->post(route('teaching-details.send'), ['notify' => true])
+            ->post(route('teaching-records.submit'), ['notify' => true])
             ->assertRedirect();
         $this->assertEquals(1, TeachingRecord::count());
         Notification::assertSentTo($teacherPrefersAck, TeachingRecordsSaved::class);
 
         $this->signIn($teacherDoesntPreferAck, null);
         $this->withExceptionHandling()
-            ->post(route('teaching-details.send'))
+            ->post(route('teaching-records.submit'))
             ->assertRedirect();
         $this->assertEquals(2, TeachingRecord::count());
         Notification::assertNotSentTo($teacherDoesntPreferAck, TeachingRecordsSaved::class);
