@@ -17,7 +17,7 @@
             <x-feather-icon name="search" class="absolute left-0 ml-2 absolute-y-center text-gray-600 h-5"></x-feather-icon>
         </form>
         @include('_partials.notifications')
-        @include('staff.partials.users_menu')
+        @include('_partials.layouts.user-menu')
     @else
         <a class="bg-white text-gray-900 px-3 py-1 rounded font-bold" href="{{ route('login') }}">Login</a>
     @endauth

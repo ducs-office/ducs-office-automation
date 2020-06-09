@@ -1,4 +1,4 @@
-@extends('layouts.scholars')
+@extends('layouts.master')
 @section('body')
     <div class="container mx-auto p-4">
         <form class="page-card p-6 overflow-visible space-y-6" action="{{ route('scholars.profile.update') }}"

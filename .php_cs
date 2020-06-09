@@ -1,7 +1,7 @@
 <?php
 
 $finder = PhpCsFixer\Finder::create()
-    ->exclude(['storage', 'tests', 'server.php', 'public/index.php'])
+    ->exclude(['storage', 'tests', 'server.php', 'public/index.php', 'bootstrap/cache'])
     ->in(__DIR__);
 
 return PhpCsFixer\Config::create()
@@ -98,6 +98,6 @@ return PhpCsFixer\Config::create()
         'not_operator_with_successor_space' => true,
         'whitespace_after_comma_in_array' => true,
     ])
-    ->setIndent("    ")
+    ->setIndent('    ')
     ->setLineEnding("\n")
     ->setFinder($finder);

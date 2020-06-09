@@ -1,7 +1,5 @@
-// require('./bootstrap');
 import 'alpinejs';
 import feather from 'feather-icons/dist/icons.json';
-
 import customSelect from './custom-select';
 
 window.$modals = {

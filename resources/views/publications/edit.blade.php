@@ -1,4 +1,4 @@
-@extends('layouts.research')
+@extends('layouts.master')
 @section('body')
     <div class="page-card max-w-xl mx-auto my-4">
         <div class="page-header flex items-baseline">

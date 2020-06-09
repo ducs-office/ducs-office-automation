@@ -2,7 +2,7 @@
     <div class="container px-8 mx-auto flex items-center">
         <h4 class="text-xl font-semibold">{{ $pageTitle ?? '' }}</h4>
         @auth
-        @include('scholars.partials.users_menu')
+        @include('_partials.layouts.scholar-menu')
         @endauth
         @guest
         <a class="bg-white text-gray-900 px-3 py-1 rounded font-bold" href="{{ route('login') }}">Login</a>

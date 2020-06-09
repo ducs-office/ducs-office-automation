@@ -1,4 +1,4 @@
-@extends('layouts.scholars', ['pageTitle' => 'Dashboard'])
+@extends('layouts.master', ['pageTitle' => 'Dashboard'])
 @section('body')
 <div class="grid grid-cols-10 gap-4">
     <div class="page-card p-6 col-span-10">

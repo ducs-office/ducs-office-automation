@@ -1,4 +1,4 @@
-@extends('layouts.scholars', ['pageTitle' => 'Profile'])
+@extends('layouts.master', ['pageTitle' => 'Profile'])
 @section('body')
     <div class="container mx-auto p-4 space-y-8">
         @include('_partials.research.scholar-profile.basic-info')

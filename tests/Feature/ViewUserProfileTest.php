@@ -9,12 +9,11 @@ use App\Types\TeacherStatus;
 use App\Types\UserCategory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use NunoMaduro\LaravelMojito\InteractsWithViews;
 use Tests\TestCase;
 
 class ViewUserProfileTest extends TestCase
 {
-    use RefreshDatabase, WithFaker, InteractsWithViews;
+    use RefreshDatabase, WithFaker;
 
     /** @test */
     public function users_can_view_their_own_profiles()

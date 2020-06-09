@@ -18,12 +18,9 @@
     <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
         <div class="leading-5 text-gray-900">
             {{ $cosupervisor->designation ?? 'Unknown' }}
-            @if($cosupervisor->isSupervisor()) / Supervisor
-            @elseif($cosupervisor->isCosupervisor()) / Cosupervisor
-            @endif
         </div>
         <div class="max-w-24 truncate leading-5 text-gray-600"
-            title="{{ $cosupervisor->affiliation }}">{{ Str::limit($cosupervisor->affiliation, 25) }}</div>
+            title="{{ $cosupervisor->affiliation }}">{{ Str::limit($cosupervisor->affiliation, 50) }}</div>
     </td>
     <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200 leading-5 font-medium">
         <div class="flex justify-end items-center space-x-1">
@@ -31,7 +28,7 @@
                 onsubmit="return confirm('Do you really want to remove \'{{ $cosupervisor->name }}\' as cosupervisor?');">
                 @csrf_token @method('delete')
                 <button type="submit" title="Remove as Cosupervisor" class="p-1 text-gray-700 font-bold hover:text-red-700 transition duration-300 transform hover:scale-110">
-                    <x-feather-icon class="h-5" name="x">Trash</x-feather-icon>
+                    <x-feather-icon class="h-5" name="trash-2">Trash</x-feather-icon>
                 </button>
             </form>
         </div>

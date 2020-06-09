@@ -1,4 +1,4 @@
-@extends('layouts.research')
+@extends('layouts.master')
 @section('body')
     <div class="container mx-auto p-4 space-y-8">
         <div class="page-card p-6 overflow-visible space-y-6">
