@@ -93,7 +93,7 @@ return [
             'teaching records' => ['view', 'start', 'extend'],
             'scholars' => ['view', 'create', 'edit', 'delete'],
             'leaves' => ['respond'],
-            'phd course work' => ['mark completed'],
+            'phd course work' => ['mark completed', 'view marksheet'],
             'scholar progress reports' => ['add', 'view', 'delete'],
             'scholar documents' => ['add', 'view', 'delete'],
             'phd seminar' => ['add schedule', 'finalize'],
@@ -122,7 +122,7 @@ return [
             'DRC Member' => [
                 'scholars' => ['view', 'create', 'edit', 'delete'],
                 'leaves' => ['respond'],
-                'phd course work' => ['mark completed'],
+                'phd course work' => ['mark completed', 'view marksheet'],
                 'scholar progress reports' => ['add', 'view'],
                 'scholar documents' => ['add', 'view', 'delete'],
                 'phd seminar' => ['add schedule', 'finalize'],

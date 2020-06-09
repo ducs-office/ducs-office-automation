@@ -32,7 +32,7 @@ class ScholarViewsCourseWorkMarksheetTest extends TestCase
         ]);
 
         $this->withoutExceptionHandling()
-            ->get(route('scholars.courseworks.marksheet', $course))
+            ->get(route('scholars.courseworks.marksheet', [$scholar, $course]))
             ->assertSuccessful();
     }
 
@@ -55,7 +55,7 @@ class ScholarViewsCourseWorkMarksheetTest extends TestCase
         ]);
 
         $this->withExceptionHandling()
-            ->get(route('scholars.courseworks.marksheet', $course))
+            ->get(route('scholars.courseworks.marksheet', [$otherScholar, $course]))
             ->assertForbidden();
     }
 }

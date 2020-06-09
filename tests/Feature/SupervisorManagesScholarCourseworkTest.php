@@ -28,15 +28,15 @@ class SupervisorManagesScholarCourseworkTest extends TestCase
 
         $this->signIn($supervisor);
 
-        $courses = create(PhdCourse::class, 2, ['type' => PrePhdCourseType::ELECTIVE]);
+        $course = create(PhdCourse::class, 1, ['type' => PrePhdCourseType::ELECTIVE]);
 
         $this->withoutExceptionHandling()
-            ->post(route('research.scholars.courseworks.store', $scholar), [
-                'course_ids' => $courses->pluck('id')->toArray(),
+            ->post(route('scholars.courseworks.store', $scholar), [
+                'course_id' => $course->id,
             ])->assertRedirect();
 
-        $this->assertCount(2, $scholar->fresh()->courseworks);
-        $this->assertEquals($courses->pluck('id'), $scholar->fresh()->courseworks->pluck('id'));
+        $this->assertCount(1, $scholar->fresh()->courseworks);
+        $this->assertEquals($course->id, $scholar->fresh()->courseworks->first()->id);
     }
 
     /** @test */
@@ -48,19 +48,19 @@ class SupervisorManagesScholarCourseworkTest extends TestCase
 
         $this->signIn($supervisor);
 
-        $courses = create(PhdCourse::class, 2, ['type' => PrePhdCourseType::ELECTIVE]);
+        $course = create(PhdCourse::class, 1, ['type' => PrePhdCourseType::ELECTIVE]);
 
         $this->withoutExceptionHandling()
-            ->post(route('research.scholars.courseworks.store', $scholar), [
-                'course_ids' => $courses->pluck('id')->toArray(),
+            ->post(route('scholars.courseworks.store', $scholar), [
+                'course_id' => $course->id,
             ])->assertRedirect();
 
-        $this->assertCount(2, $scholar->fresh()->courseworks);
-        $this->assertEquals($courses->pluck('id'), $scholar->fresh()->courseworks->pluck('id'));
+        $this->assertCount(1, $scholar->fresh()->courseworks);
+        $this->assertEquals($course->id, $scholar->fresh()->courseworks->first()->id);
     }
 
     /** @test */
-    public function supervisors_can_add_elective_courses_to_only_the_scholars_whom_they_supervise()
+    public function supervisors_can_add_elective_courses_to_only_those_scholars_whom_they_supervise()
     {
         $profNeelima = factory(User::class)->states('supervisor')->create(['name' => 'Prof. Neelima Gupta']);
         $profPoonam = factory(User::class)->states('supervisor')->create(['name' => 'Prof. Poonam Bedi']);
@@ -71,15 +71,72 @@ class SupervisorManagesScholarCourseworkTest extends TestCase
         $pushkar = create(Scholar::class);
         $pushkar->supervisors()->attach($profPoonam);
 
-        $electiveCourses = create(PhdCourse::class, 2, ['type' => PrePhdCourseType::ELECTIVE]);
+        $electiveCourse = create(PhdCourse::class, 1, ['type' => PrePhdCourseType::ELECTIVE]);
 
         $this->signIn($profPoonam);
 
         $this->withExceptionHandling()
-            ->post(route('research.scholars.courseworks.store', $rajni), [
-                'course_ids' => $electiveCourses->pluck('id')->toArray(),
+            ->post(route('scholars.courseworks.store', $rajni), [
+                'course_id' => $electiveCourse->id,
             ])->assertForbidden();
 
         $this->assertCount(0, $rajni->fresh()->courseworks);
+    }
+
+    /** @test */
+    public function supervisors_can_view_marksheets_of_only_those_scholars_whom_they_supervise()
+    {
+        Storage::fake();
+
+        $profNeelima = factory(User::class)->states('supervisor')->create(['name' => 'Prof. Neelima Gupta']);
+
+        $rajni = create(Scholar::class);
+        $rajni->supervisors()->attach($profNeelima);
+
+        $this->signIn($profNeelima);
+
+        $course = create(PhdCourse::class);
+
+        $marksheetPath = UploadedFile::fake()->create('fakefile.pdf', 20, 'application/pdf')->store('scholar_marksheets');
+
+        $rajni->courseworks()->attach($course, [
+            'marksheet_path' => $marksheetPath,
+            'completed_on' => now()->format('Y-m-d'),
+        ]);
+
+        $courseCompleted = $rajni->courseworks[0];
+
+        $this->withExceptionHandling()
+            ->get(route('scholars.courseworks.marksheet', [$rajni, $courseCompleted->pivot]))
+            ->assertSuccessful();
+    }
+
+    /** @test */
+    public function supervisors_can_not_view_marksheets_of_scholars_whom_they_do_not_supervise()
+    {
+        Storage::fake();
+
+        $profNeelima = factory(User::class)->states('supervisor')->create(['name' => 'Prof. Neelima Gupta']);
+        $profPoonam = factory(User::class)->states('supervisor')->create(['name' => 'Prof. Poonam Bedi']);
+
+        $rajni = create(Scholar::class);
+        $rajni->supervisors()->attach($profNeelima);
+
+        $this->signIn($profPoonam);
+
+        $course = create(PhdCourse::class);
+
+        $marksheetPath = UploadedFile::fake()->create('fakefile.pdf', 20, 'application/pdf')->store('scholar_marksheets');
+
+        $rajni->courseworks()->attach($course, [
+            'marksheet_path' => $marksheetPath,
+            'completed_on' => now()->format('Y-m-d'),
+        ]);
+
+        $courseCompleted = $rajni->courseworks[0];
+
+        $this->withExceptionHandling()
+            ->get(route('scholars.courseworks.marksheet', [$rajni, $courseCompleted->pivot]))
+            ->assertForbidden();
     }
 }

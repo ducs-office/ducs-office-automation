@@ -135,6 +135,25 @@ Route::patch('scholars/{scholar}/examiner/{examiner}/approve', 'ScholarExaminerC
     ->middleware('auth:web')
     ->name('scholars.examiner.approve');
 
+//================Scholar Courseworks=================
+Route::post(
+    '/scholars/{scholar}/coursework',
+    'ScholarCourseworkController@store'
+)->name('scholars.courseworks.store')
+->middleware('auth:web');
+
+Route::patch(
+    '/scholars/{scholar}/coursework/{courseId}',
+    'ScholarCourseworkController@complete'
+)->name('scholars.courseworks.complete')
+->middleware('auth:web');
+
+Route::get(
+    '/scholars/{scholar}/courseworks/{course}/',
+    'ScholarCourseworkController@show'
+)->name('scholars.courseworks.marksheet')
+->middleware('auth:web,scholars');
+
 Route::prefix('/publications')
 ->middleware('auth:web,scholars')
 ->namespace('Publications')
@@ -180,21 +199,6 @@ Route::prefix('/research')
     ->namespace('Research')
     ->as('research.')
     ->group(static function () {
-        Route::post(
-            '/scholars/{scholar}/coursework',
-            'ScholarCourseworkController@store'
-        )->name('scholars.courseworks.store');
-
-        Route::patch(
-            '/scholars/{scholar}/coursework/{courseId}',
-            'ScholarCourseworkController@complete'
-        )->name('scholars.courseworks.complete');
-
-        Route::get(
-            '/scholars/{scholar}/courseworks/{course}/marksheet',
-            'ScholarCourseworkController@viewMarksheet'
-        )->name('scholars.courseworks.marksheet');
-
         Route::patch(
             '/scholars/{scholar}/leaves/{leave}/recommend',
             'ScholarLeavesController@recommend'
@@ -259,11 +263,6 @@ Route::prefix('/scholars')
             '/leaves/{leave}/response-letter',
             'LeavesController@viewResponseLetter'
         )->name('leaves.response_letter');
-
-        Route::get(
-            '/courseworks/{course}/marksheet',
-            'CourseworkController@viewMarksheet'
-        )->name('courseworks.marksheet');
 
         Route::patch(
             'scholars/{scholar}/proposed-title/update',

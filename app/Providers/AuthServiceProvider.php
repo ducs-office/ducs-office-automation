@@ -50,8 +50,6 @@ class AuthServiceProvider extends ServiceProvider
 
         $this->registerPolicies();
 
-        Gate::define('scholars.coursework.store', ScholarProfilePolicy::class . '@addCoursework');
-        Gate::define('scholars.coursework.complete', ScholarProfilePolicy::class . '@markCourseworkCompleted');
         Gate::define('scholars.advisory_committee.manage', ScholarProfilePolicy::class . '@manageAdvisoryCommittee');
     }
 }

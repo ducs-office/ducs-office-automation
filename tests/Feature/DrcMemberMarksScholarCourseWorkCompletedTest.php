@@ -27,14 +27,16 @@ class DrcMemberMarksScholarCourseWorkCompletedTest extends TestCase
 
         $course = create(PhdCourse::class);
 
+        $supervisor = factory(User::class)->states('supervisor')->create();
         $scholar = create(Scholar::class);
+        $scholar->supervisors()->attach($supervisor);
 
         $scholar->courseworks()->attach($course->id);
 
         $marksheet = UploadedFile::fake()->create('fakefile.pdf', 20, 'application/pdf');
 
         $this->withoutExceptionHandling()
-            ->patch(route('research.scholars.courseworks.complete', [$scholar, $course->id]), [
+            ->patch(route('scholars.courseworks.complete', [$scholar, $course->id]), [
                 'marksheet' => $marksheet,
                 'completed_on' => $completedOn = now()->format('Y-m-d'),
             ])->assertRedirect();
@@ -56,14 +58,16 @@ class DrcMemberMarksScholarCourseWorkCompletedTest extends TestCase
 
         $course = create(PhdCourse::class);
 
+        $supervisor = factory(User::class)->states('supervisor')->create();
         $scholar = create(Scholar::class);
+        $scholar->supervisors()->attach($supervisor);
 
         $scholar->courseworks()->attach($course->id);
 
         $marksheet = UploadedFile::fake()->create('fakefile.pdf', 20, 'application/pdf');
 
         $this->withExceptionHandling()
-            ->patch(route('research.scholars.courseworks.complete', [$scholar, $course->id]), [
+            ->patch(route('scholars.courseworks.complete', [$scholar, $course->id]), [
                 'marksheet' => $marksheet,
                 'completed_on' => $completedOn = now()->format('Y-m-d'),
             ])->assertForbidden();
@@ -85,13 +89,15 @@ class DrcMemberMarksScholarCourseWorkCompletedTest extends TestCase
 
         $course = create(PhdCourse::class);
 
+        $supervisor = factory(User::class)->states('supervisor')->create();
         $scholar = create(Scholar::class);
+        $scholar->supervisors()->attach($supervisor);
 
         $scholar->courseworks()->attach($course->id);
 
         try {
             $this->withoutExceptionHandling()
-                ->patch(route('research.scholars.courseworks.complete', [$scholar, $course->id]), [
+                ->patch(route('scholars.courseworks.complete', [$scholar, $course->id]), [
                     'completed_on' => now()->format('Y-m-d'),
                 ]);
 
@@ -116,7 +122,9 @@ class DrcMemberMarksScholarCourseWorkCompletedTest extends TestCase
 
         $course = create(PhdCourse::class);
 
+        $supervisor = factory(User::class)->states('supervisor')->create();
         $scholar = create(Scholar::class);
+        $scholar->supervisors()->attach($supervisor);
 
         $scholar->courseworks()->attach($course->id);
 
@@ -124,7 +132,7 @@ class DrcMemberMarksScholarCourseWorkCompletedTest extends TestCase
 
         try {
             $this->withoutExceptionHandling()
-                ->patch(route('research.scholars.courseworks.complete', [$scholar, $course->id]), [
+                ->patch(route('scholars.courseworks.complete', [$scholar, $course->id]), [
                     'marksheet' => $marksheet,
                 ]);
 
@@ -139,14 +147,17 @@ class DrcMemberMarksScholarCourseWorkCompletedTest extends TestCase
     }
 
     /** @test */
-    public function user_can_view_scholar_course_work_marksheets_only_if_they_have_permission_to_view_scholar()
+    public function user_can_view_scholar_course_work_marksheets_only_if_they_have_permission_to_do_so()
     {
         Storage::fake();
 
         $this->signIn($user = create(User::class));
-        $user->givePermissionTo('scholars:view');
+        $user->givePermissionTo('phd course work:view marksheet');
 
+        $supervisor = factory(User::class)->states('supervisor')->create();
         $scholar = create(Scholar::class);
+        $scholar->supervisors()->attach($supervisor);
+
         $course = create(PhdCourse::class);
         $marksheetPath = UploadedFile::fake()->create('fakefile.pdf', 20, 'application/pdf')
             ->store('scholar_marksheets');
@@ -159,7 +170,7 @@ class DrcMemberMarksScholarCourseWorkCompletedTest extends TestCase
         $courseCompleted = $scholar->courseworks()->first();
 
         $this->withoutExceptionHandling()
-            ->get(route('research.scholars.courseworks.marksheet', [$scholar, $courseCompleted->pivot]))
+            ->get(route('scholars.courseworks.marksheet', [$scholar, $courseCompleted->pivot]))
             ->assertSuccessful();
     }
 
@@ -170,11 +181,13 @@ class DrcMemberMarksScholarCourseWorkCompletedTest extends TestCase
 
         $this->signIn($user = create(User::class));
 
-        $user->roles->every->revokePermissionTo('scholars:view');
+        $user->roles->every->revokePermissionTo('phd course work:view marksheet');
 
         $course = create(PhdCourse::class);
 
+        $supervisor = factory(User::class)->states('supervisor')->create();
         $scholar = create(Scholar::class);
+        $scholar->supervisors()->attach($supervisor);
 
         $marksheetPath = UploadedFile::fake()->create('fakefile.pdf', 20, 'application/pdf')->store('scholar_marksheets');
 
@@ -186,7 +199,7 @@ class DrcMemberMarksScholarCourseWorkCompletedTest extends TestCase
         $courseCompleted = $scholar->courseworks[0];
 
         $this->withExceptionHandling()
-            ->get(route('research.scholars.courseworks.marksheet', [$scholar, $courseCompleted->pivot]))
+            ->get(route('scholars.courseworks.marksheet', [$scholar, $courseCompleted->pivot]))
             ->assertForbidden();
     }
 }

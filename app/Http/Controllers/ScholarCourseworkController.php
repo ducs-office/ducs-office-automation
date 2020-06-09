@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Research;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
+use App\Http\Requests\MarkCourseworkCompletedRequest;
+use App\Http\Requests\StoreCourseWorkRequest;
 use App\Models\PhdCourse;
 use App\Models\Pivot\ScholarCoursework;
 use App\Models\Scholar;
@@ -15,28 +16,24 @@ class ScholarCourseworkController extends Controller
 {
     public function store(Request $request, Scholar $scholar)
     {
-        $this->authorize('scholars.coursework.store', $scholar);
+        $this->authorize('create', [ScholarCoursework::class, $scholar]);
 
         $request->validate([
-            'course_ids' => ['required', 'array', 'max:3'],
-            'course_ids.*' => ['required', 'numeric', 'exists:phd_courses,id'],
+            'course_id' => ['required', 'numeric', 'exists:phd_courses,id'],
         ]);
 
-        $scholar->courseworks()->syncWithoutDetaching($request->course_ids);
+        $scholar->courseworks()->syncWithoutDetaching($request->course_id);
 
         flash('Coursework added to scholar profile!')->success();
 
         return redirect()->back();
     }
 
-    public function complete(Scholar $scholar, $courseId, Request $request)
+    public function complete(Scholar $scholar, $courseId, MarkCourseworkCompletedRequest $request)
     {
-        $this->authorize('phd course work:mark completed');
+        $this->authorize('markCompleted', ScholarCoursework::class);
 
-        $request->validate([
-            'marksheet' => ['required', 'file', 'mimetypes:application/pdf,image/*', 'max:200'],
-            'completed_on' => ['required', 'date', 'before_or_equal:today'],
-        ]);
+        $request->validated();
 
         $scholar->courseworks()
             ->updateExistingPivot($courseId, [
@@ -49,9 +46,9 @@ class ScholarCourseworkController extends Controller
         return redirect()->back();
     }
 
-    public function viewMarksheet(Scholar $scholar, ScholarCoursework $course)
+    public function show(Scholar $scholar, ScholarCoursework $course)
     {
-        $this->authorize('view', $scholar);
+        $this->authorize('view', [$course, $scholar]);
 
         abort_unless($course->marksheet_path != null, 404, 'File Not Found!');
 
