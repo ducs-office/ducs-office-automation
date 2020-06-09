@@ -1,41 +1,43 @@
 @extends('layouts.master')
 @section('body')
-<div class="page-card max-w-xl my-4 mx-auto">
-    <h2 class="page-header px-6">New Outgoing Letter</h2>
-    <form action="{{ route('staff.outgoing_letters.store') }}" method="POST" class="px-6" enctype="multipart/form-data">
+<div class="page-card p-6 mx-auto">
+    <h2 class="text-xl font-bold mb-8">New Outgoing Letter</h2>
+    <form action="{{ route('staff.outgoing_letters.store') }}" method="POST" class="space-y-4" enctype="multipart/form-data">
         @csrf_token
-        <div class="mb-2">
-            <label for="date" class="w-full form-label mb-1">
-                Sent Date <span class="text-red-600">*</span>
-            </label>
-            <input type="date"
-                name="date"
-                value="{{ old('date') }}"
-                class="w-full form-input{{ $errors->has('date') ? ' border-red-600' : '' }}"
-                autofocus
-                required>
-            @if($errors->has('date'))
-                <p class="mt-1 text-red-600">{{ $errors->first('date') }}</p>
-            @endif
-        </div>
-        <div class="mb-2">
-            <label for="type" class="w-full form-label mb-1">
-                Letter Type <span class="text-red-600">*</span>
-            </label>
-            <select name="type"
-                class="w-full form-select{{ $errors->has('type') ? ' border-red-600' : '' }}"
-                onchange="value === '{{ App\Types\OutgoingLetterType::GENERAL }}' ? amount.disabled = true : amount.disabled = false;"
-                required>
-                @foreach ($types as $type)
-                <option value="{{ $type }}"
-                    {{ old('type', App\Types\OutgoingLetterType::GENERAL) === $type ? ' selected' : '' }}>
-                    {{ $type }}
-                </option>
-                @endforeach
-            </select>
-            @if($errors->has('type'))
-                <p class="mt-1 text-red-600">{{ $errors->first('type') }}</p>
-            @endif
+        <div class="flex space-x-2">
+            <div class="flex-1">
+                <label for="date" class="w-full form-label mb-1">
+                    Sent Date <span class="text-red-600">*</span>
+                </label>
+                <input type="date"
+                    name="date"
+                    value="{{ old('date') }}"
+                    class="w-full form-input{{ $errors->has('date') ? ' border-red-600' : '' }}"
+                    autofocus
+                    required>
+                @if($errors->has('date'))
+                    <p class="mt-1 text-red-600">{{ $errors->first('date') }}</p>
+                @endif
+            </div>
+            <div class="flex-1">
+                <label for="type" class="w-full form-label mb-1">
+                    Letter Type <span class="text-red-600">*</span>
+                </label>
+                <select name="type"
+                    class="w-full form-select{{ $errors->has('type') ? ' border-red-600' : '' }}"
+                    onchange="value === '{{ App\Types\OutgoingLetterType::GENERAL }}' ? amount.disabled = true : amount.disabled = false;"
+                    required>
+                    @foreach ($types as $type)
+                    <option value="{{ $type }}"
+                        {{ old('type', App\Types\OutgoingLetterType::GENERAL) === $type ? ' selected' : '' }}>
+                        {{ $type }}
+                    </option>
+                    @endforeach
+                </select>
+                @if($errors->has('type'))
+                    <p class="mt-1 text-red-600">{{ $errors->first('type') }}</p>
+                @endif
+            </div>
         </div>
         <div class="flex -mx-2 mb-2">
             <div class="flex-1 mx-2">

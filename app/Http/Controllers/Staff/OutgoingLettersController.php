@@ -68,6 +68,8 @@ class OutgoingLettersController extends Controller
             }, $request->file('attachments'))
         );
 
+        flash()->success('Outgoing Letter Created!');
+
         return redirect(route('staff.outgoing_letters.index'));
     }
 
@@ -91,6 +93,8 @@ class OutgoingLettersController extends Controller
             );
         }
 
+        flash()->success('Outgoing Letter Updated!');
+
         return redirect(route('staff.outgoing_letters.index'));
     }
 
@@ -102,7 +106,9 @@ class OutgoingLettersController extends Controller
 
         $letter->delete();
 
-        return redirect(route('staff.outgoing_letters.index'));
+        flash()->success('Letter was Deleted!');
+
+        return redirect()->back();
     }
 
     public function storeRemark(OutgoingLetter $letter)
@@ -115,6 +121,8 @@ class OutgoingLettersController extends Controller
 
         $letter->remarks()->create($data + ['user_id' => Auth::id()]);
 
-        return back();
+        flash()->success('Your remark was added on the letter.');
+
+        return redirect()->back();
     }
 }
