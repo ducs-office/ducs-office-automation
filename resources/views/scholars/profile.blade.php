@@ -1,4 +1,25 @@
 @extends('layouts.master', ['pageTitle' => 'Profile'])
+@push('modals')
+    <x-modal name="edit-scholar-basic-info-modal" class="p-6 w-1/2"
+        :open="$errors->update->hasAny(['phone', 'address', 'gender'])">
+        <h2 class="text-lg font-bold mb-8">Edit Basic Info - {{ $scholar->name }}</h2>
+            @include('_partials.forms.edit-scholar-basic-info' ,[
+                'genders' => App\Types\Gender::values(),
+            ])
+    </x-modal>
+    <x-modal name="edit-scholar-admission-details-modal" class="p-6 w-1/2"
+        :open="$errors->update->hasAny([
+            'category', 'admission_mode', 'funding',
+            'enrolment_id', 'registration_date', 'research_area',
+        ])">
+        <h2 class="text-lg font-bold mb-8">Edit Admission Details - {{ $scholar->name }}</h2>
+            @include('_partials.forms.edit-scholar-admission-details', [
+                'categories' => App\Types\ReservationCategory::values(),
+                'admissionModes' => App\Types\AdmissionMode::values(),
+                'fundings' => App\Types\FundingType::values(),
+            ])
+    </x-modal>
+@endpush
 @section('body')
     <div class="container mx-auto p-4 space-y-8">
         @include('_partials.research.scholar-profile.basic-info')

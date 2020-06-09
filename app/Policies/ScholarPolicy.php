@@ -42,4 +42,10 @@ class ScholarPolicy
     {
         return $user->can('scholars:delete');
     }
+
+    public function updateProfile($user, Scholar $scholar)
+    {
+        return get_class($user) === Scholar::class
+            && $user->id === $scholar->id;
+    }
 }

@@ -34,7 +34,7 @@ class UpdateScholarProfileTest extends TestCase
         $institute = create(ScholarEducationInstitute::class);
 
         $updateDetails = [
-            'phone' => '12345678',
+            'phone' => '9876543210',
             'address' => 'new address, new delhi',
             'category' => ReservationCategory::SC,
             'admission_mode' => AdmissionMode::UGC_NET,

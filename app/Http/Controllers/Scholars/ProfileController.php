@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Scholars;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Scholar\UpdateProfileRequest;
 use App\Models\Cosupervisor;
+use App\Models\PhdCourse;
 use App\Models\Scholar;
 use App\Models\ScholarEducationDegree;
 use App\Models\ScholarEducationInstitute;
@@ -34,9 +35,6 @@ class ProfileController extends Controller
 
         return view('scholars.profile', [
             'scholar' => $scholar,
-            'admissionModes' => AdmissionMode::values(),
-            'genders' => Gender::values(),
-            'categories' => ReservationCategory::values(),
             'eventTypes' => PresentationEventType::values(),
             'documentTypes' => ScholarDocumentType::values(),
         ]);
@@ -44,6 +42,8 @@ class ProfileController extends Controller
 
     public function update(Scholar $scholar, UpdateProfileRequest $request)
     {
+        $this->authorize('updateProfile', [Scholar::class, $scholar]);
+
         $data = $request->validated();
 
         $data['education_details'] = collect($request->education_details)

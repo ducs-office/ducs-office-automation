@@ -1,11 +1,5 @@
 <div class="page-card p-6 overflow-visible">
     <div class="-mt-6 -mx-6 bg-magenta-800 h-48 rounded-t-md flex justify-end items-end p-4">
-        @if((int)auth('scholars')->id() === (int)$scholar->id)
-        <a href="#" class="btn inline-flex">
-            <x-feather-icon name="edit" class="h-current mr-2"></x-feather-icon>
-            Edit
-        </a>
-        @endif
     </div>
     <div class="-mt-24 space-y-4 text-center mb-8">
         <img src="{{ $scholar->avatar_url }}"
@@ -26,13 +20,23 @@
         </x-slot>
 
         <x-tab-content tab="info" class="flex space-x-6">
-            <div class="w-64 pr-4 relative -ml-8 my-6">
-                <h3 class="relative pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
-                    Basic Information
-                </h3>
-                <svg class="absolute left-0 w-2 text-magenta-900" viewBox="0 0 10 10">
-                    <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
-                </svg>
+            <div>
+                <div class="w-64 pr-4 relative -ml-8 my-6">
+                    <h3 class="relative pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
+                        Basic Information
+                    </h3>
+                    <svg class="absolute left-0 w-2 text-magenta-900" viewBox="0 0 10 10">
+                        <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
+                    </svg>
+                </div>
+                <div class="mt-4">
+                    @can('updateProfile', [App\Models\Scholar::class, $scholar])
+                    <x-modal.trigger modal="edit-scholar-basic-info-modal"
+                        class="p-1 text-gray-700 font-bold hover:text-blue-600 transition duration-300 transform hover:scale-110">
+                        <x-feather-icon class="h-5" name="edit-3">Edit</x-feather-icon>
+                    </x-modal.trigger>
+                    @endcan
+                </div>
             </div>
             <div class="mt-4 flex-1">
                 <ul class="border rounded-lg overflow-hidden mb-4 divide-y">
@@ -59,13 +63,23 @@
         </x-tab-content>
 
         <x-tab-content tab="admission" class="flex space-x-6">
-            <div class="w-64 pr-4 relative -ml-8 my-6">
-                <h3 class="relative pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
-                    Admission Details
-                </h3>
-                <svg class="absolute left-0 w-2 text-magenta-900" viewBox="0 0 10 10">
-                    <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
-                </svg>
+            <div>
+                <div class="w-64 pr-4 relative -ml-8 my-6">
+                    <h3 class="relative pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
+                        Admission Details
+                    </h3>
+                    <svg class="absolute left-0 w-2 text-magenta-900" viewBox="0 0 10 10">
+                        <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
+                    </svg>
+                </div>
+                <div class="mt-4">
+                    @can('updateProfile', [App\Models\Scholar::class, $scholar])
+                    <x-modal.trigger modal="edit-scholar-admission-details-modal"
+                        class="p-1 text-gray-700 font-bold hover:text-blue-600 transition duration-300 transform hover:scale-110">
+                        <x-feather-icon class="h-5" name="edit-3">Edit</x-feather-icon>
+                    </x-modal.trigger>
+                    @endcan
+                </div>
             </div>
             <div class="mt-4 flex-1">
                 <ul class="border rounded-lg overflow-hidden mb-4 divide-y">
@@ -110,13 +124,15 @@
         </x-tab-content>
 
         <x-tab-content tab="education" class="flex space-x-6">
-            <div class="w-64 pr-4 relative -ml-8 my-6">
-                <h3 class="relative pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
-                    Education Details
-                </h3>
-                <svg class="absolute left-0 w-2 text-magenta-900" viewBox="0 0 10 10">
-                    <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
-                </svg>
+            <div>
+                <div class="w-64 pr-4 relative -ml-8 my-6">
+                    <h3 class="relative pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
+                        Education Details
+                    </h3>
+                    <svg class="absolute left-0 w-2 text-magenta-900" viewBox="0 0 10 10">
+                        <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
+                    </svg>
+                </div>
             </div>
             <div class="flex-1 mt-4">
                 <ul class="border rounded-lg overflow-hidden mb-4 divide-y">
