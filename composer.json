@@ -41,10 +41,10 @@
         "hooks": {
             "pre-commit": [
                 "echo committing as $(git config user.name)",
-                "vendor/bin/php-cs-fixer fix ."
+                "vendor/bin/php-cs-fixer fix"
             ],
             "pre-push": [
-                "vendor/bin/php-cs-fixer fix --dry-run .",
+                "vendor/bin/php-cs-fixer fix --dry-run",
                 "vendor/bin/phpunit"
             ]
         }

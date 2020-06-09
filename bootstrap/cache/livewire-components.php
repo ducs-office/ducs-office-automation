@@ -11,6 +11,7 @@
     'programme-revision-form' => 'App\\Http\\Livewire\\ProgrammeRevisionForm',
     'replace-cosupervisor-modal' => 'App\\Http\\Livewire\\ReplaceCosupervisorModal',
     'replace-supervisor-modal' => 'App\\Http\\Livewire\\ReplaceSupervisorModal',
+    'typeahead-colleges' => 'App\\Http\\Livewire\\TypeaheadColleges',
     'typeahead-courses' => 'App\\Http\\Livewire\\TypeaheadCourses',
     'typeahead-programmes-latest-revision' => 'App\\Http\\Livewire\\TypeaheadProgrammesLatestRevision',
     'typeahead-users' => 'App\\Http\\Livewire\\TypeaheadUsers',
