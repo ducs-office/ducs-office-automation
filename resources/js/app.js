@@ -1,6 +1,6 @@
 // require('./bootstrap');
 import 'alpinejs';
-import feather from 'feather-icons';
+import feather from 'feather-icons/dist/icons.json';
 
 import customSelect from './custom-select';
 
@@ -61,9 +61,8 @@ window.tabbedPane = (initial = '') => ({
 });
 
 window.featherIcon = function(name = 'x') {
-    return feather.icons.hasOwnProperty(name)
-        ? feather.icons[name].contents
-        : feather.icons["x"].contents;
+    return feather.hasOwnProperty(name)
+        ? feather[name] : feather["x"];
 }
 
 window.addRemoveElement = (count = 1, max = Infinity, newItem = () => '') => ({
