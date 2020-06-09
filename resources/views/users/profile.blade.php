@@ -88,11 +88,12 @@
             </x-tab-content>
         </x-tabbed-pane>
     </div>
-
-    <div class="col-span-2">
-        @include('_partials.user-profile.current-teaching-detail', [
-            'currentTeachingDetails' => $user->teachingDetails
-        ])
-    </div>
+    @canany(['viewAny', 'create'], App\Models\TeachingDetail::class)
+        <div class="col-span-2">
+            @include('_partials.user-profile.current-teaching-detail', [
+                'currentTeachingDetails' => $user->teachingDetails
+            ])
+        </div>
+    @endcanany
 </div>
 @endsection
