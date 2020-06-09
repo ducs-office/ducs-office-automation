@@ -8,9 +8,7 @@
             <span>Teaching History</span>
         </h4>
     </div>
-    @forelse ($oldTeachingRecords->groupBy(function($record) {
-        return $record->valid_from->format('M, Y');
-    }) as $date => $records)
+    @forelse ($oldTeachingRecords as $date => $records)
         <x-timeline-item icon="circle" color="text-gray-400">
             <h4 class="font-bold mb-3">{{ $date }}</h4>
             <ul class="border rounded divide-y">
