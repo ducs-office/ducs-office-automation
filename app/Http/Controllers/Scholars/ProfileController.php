@@ -16,6 +16,7 @@ use App\Types\EducationInfo;
 use App\Types\FundingType;
 use App\Types\Gender;
 use App\Types\PresentationEventType;
+use App\Types\ProgressReportRecommendation;
 use App\Types\ReservationCategory;
 use App\Types\ScholarDocumentType;
 use Illuminate\Http\Request;
@@ -42,6 +43,7 @@ class ProfileController extends Controller
             'courses' => $courses,
             'eventTypes' => PresentationEventType::values(),
             'documentTypes' => ScholarDocumentType::values(),
+            'recommendations' => ProgressReportRecommendation::values(),
         ]);
     }
 

@@ -17,6 +17,7 @@ class ScholarExaminerPolicy
         return get_class($user) === User::class
             && ($user->isSupervisor())
             && (($user->scholars->contains($scholar->id)))
+            && $scholar->examiner === null
             && $scholar->titleApproval !== null
             && $scholar->titleApproval->status == RequestStatus::APPROVED;
     }

@@ -59,7 +59,7 @@ class ScholarTitleApprovalController extends Controller
         $this->authorize('approve', [$titleApproval, $scholar]);
 
         $request->validate([
-            'recommended_title' => ['required', 'string'],
+            'recommended_title' => ['required', 'string', 'min: 5'],
         ]);
 
         $titleApproval->update([
