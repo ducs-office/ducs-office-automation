@@ -6,8 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{{ config('app.name') }}</title>
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-    @livewireStyles
-    @routes
+    @stack('styles')
 </head>
 <body class="font-sans leading-tight bg-magenta-800">
     <div class="min-h-screen px-4 space-y-8">
@@ -25,8 +24,6 @@
         </main>
         @include('flash::message')
     </div>
-    @livewireScripts
-    <script src="{{ asset('js/app.js') }}"></script>
     @stack('scripts')
 </body>
 </html>
