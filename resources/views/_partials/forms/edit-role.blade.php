@@ -16,18 +16,10 @@
             <tr class="py-1">
                 <th class="px-2 text-left">{{ $group }}:</th>
                 <td class="px-2">
-                    @foreach ($gPermissions as $permission)
-                    <label for="permission-{{ $permission->id }}"
-                        class="px-2 py-1 border rounded inline-flex items-center mr-3">
-                        <input id="permission-{{ $permission->id }}" type="checkbox" name="permissions[]"
-                            class="form-checkbox mr-1"
-                            @if($role->permissions->contains($permission->id))
-                            checked
-                            @endif
-                            value="{{ $permission->id }}">
-                        <span>{{ explode(':', $permission->name, 2)[1] }}</span>
-                    </label>
-                    @endforeach
+                    <x-grouped-permission-input name="permissions[]"
+                        :old="old('permissions', $role->permissions->map->id->toArray())"
+                        :permissions="$gPermissions">
+                    </x-grouped-permission-input>
                 </td>
             </tr>
             @endforeach
