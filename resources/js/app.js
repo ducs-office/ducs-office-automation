@@ -1,6 +1,8 @@
 import 'alpinejs';
 import feather from 'feather-icons/dist/icons.json';
-import customSelect from './custom-select';
+import CustomSelect from './custom-select';
+
+window.CustomSelect = CustomSelect;
 
 window.$modals = {
     open: (name, livewire = null) => {

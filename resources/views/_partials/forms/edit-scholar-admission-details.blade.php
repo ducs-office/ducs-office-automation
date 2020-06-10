@@ -39,7 +39,7 @@
             Date of Registration
         </label>
         <input id="registration_date" type="date" name="registration_date" class="w-full form-input @error('registration_date', 'update') border-red-500 hover:border-red-700 @enderror"
-            value="{{ old('registration_date', $scholar->registration_date->format('Y-m-d')) }}">
+            value="{{ old('registration_date', optional($scholar->registration_date)->format('Y-m-d')) }}">
         @error('registration_date', 'update')
             <p class="text-red-500">{{ $message }}</p>
         @enderror
@@ -79,7 +79,7 @@
     <div class="space-y-1">
         <label for="research_area"
             class="w-full form-label mb-1 @error('research_area', 'update') text-red-500 @enderror">
-            Area of Research 
+            Area of Research
         </label>
         <textarea id="research_area" name="research_area" class="w-full form-input @error('research_area', 'update') border-red-500 hover:border-red-700 @enderror">
             {{ old('research_area', $scholar->research_area) }}

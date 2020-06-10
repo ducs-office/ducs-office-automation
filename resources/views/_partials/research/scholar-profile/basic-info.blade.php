@@ -10,12 +10,13 @@
             <h3 class="text-xl text-gray-700">Scholar / {{ $scholar->research_area }}</h3>
         </div>
     </div>
-    <x-tabbed-pane current-tab="info">
+    <x-tabbed-pane :current-tab="request()->query('tab', 'info')">
         <x-slot name="tabs">
             <div class="flex items-center justify-center space-x-3 border-b -mx-6 px-6">
                 <x-tab name="info">Basic Info</x-tab>
                 <x-tab name="admission">Admission Details</x-tab>
                 <x-tab name="education">Education Details</x-tab>
+                <x-tab name="committee">Research Committee</x-tab>
             </div>
         </x-slot>
 
@@ -153,7 +154,9 @@
                 </ul>
             </div>
         </x-tab-content>
+
+        <x-tab-content tab="committee" class="flex space-x-6">
+            @include('_partials.research.scholar-profile.research-committee')
+        </x-tab-content>
     </x-tabbed-pane>
-
-
 </div>
