@@ -21,6 +21,17 @@ Route::post('/forgot-password', 'Auth\ForgotPasswordController@sendResetLinkEmai
 Route::get('/password/reset/{token?}', 'Auth\ResetPasswordController@showResetForm')->middleware(['guest', 'guest:scholars'])->name('password.reset');
 Route::post('/password/reset', 'Auth\ResetPasswordController@reset')->middleware(['guest', 'guest:scholars'])->name('password.update');
 
+//============ scholar advisory meetings =================
+Route::post(
+    '/scholars/{scholar}/advisory-meetings',
+    'ScholarAdvisoryMeetingsController@store'
+)->name('scholars.advisory_meetings.store')->middleware('auth:web');
+
+Route::get(
+    '/scholars/{scholar}/advisory-meetings/{meeting}',
+    'ScholarAdvisoryMeetingsController@show'
+)->name('scholars.advisory_meetings.show')->middleware('auth:web,scholars');
+
 //============ scholar documents =====================
 Route::get(
     'scholars/{scholar}/document/{document}',
@@ -204,16 +215,6 @@ Route::prefix('/research')
             'ScholarLeavesController@viewApplication'
         )->name('scholars.leaves.application');
 
-        Route::post(
-            '/scholars/{scholar}/advisory-meetings',
-            'ScholarAdvisoryMeetingsController@store'
-        )->name('scholars.advisory_meetings.store');
-
-        Route::get(
-            '/advisory-meetings/{meeting}/minutes-of-meeting',
-            'ScholarAdvisoryMeetingsController@minutesOfMeeting'
-        )->name('scholars.advisory_meetings.minutes_of_meeting');
-
         Route::get(
             '/publications',
             'ShowPublications'
@@ -264,13 +265,8 @@ Route::prefix('/scholars')
             'CourseworkController@viewMarksheet'
         )->name('courseworks.marksheet');
 
-        Route::get(
-            '/advisory-meetings/{meeting}/minutes-of-meeting',
-            'AdvisoryMeetingsController@minutesOfMeeting'
-        )->name('advisory_meetings.minutes_of_meeting');
-
         Route::patch(
-            'scholars/{scholar}/propposed-title/update',
+            'scholars/{scholar}/proposed-title/update',
             'ProposedTitleController@update',
         )->name('proposed_title.update');
     });

@@ -22,13 +22,6 @@ class ScholarProfilePolicy
         return get_class($user) === User::class && $user->can('phd course work:mark completed');
     }
 
-    public function addAdvisoryMeeting($user, Scholar $scholar)
-    {
-        return get_class($user) === User::class &&
-            $user->isSupervisor() &&
-            (int) $user->id === (int) $scholar->currentSupervisor->id;
-    }
-
     public function manageAdvisoryCommittee($user, Scholar $scholar)
     {
         return get_class($user) === User::class &&

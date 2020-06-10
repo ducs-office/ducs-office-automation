@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\AdvisoryMeeting;
 use App\Models\Scholar;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
@@ -21,6 +22,10 @@ class ScholarViewsMinutesOfMeetingTest extends TestCase
 
         $this->signInScholar($scholar = create(Scholar::class));
 
+        $scholar->supervisors()->attach(
+            factory(User::class)->states('supervisor')->create()
+        );
+
         $minutesOfMeetingPath = UploadedFile::fake()->create('fakefile.pdf', 20, 'application/pdf')->store('advisory_meetings');
 
         $meeting = create(AdvisoryMeeting::class, 1, [
@@ -30,7 +35,7 @@ class ScholarViewsMinutesOfMeetingTest extends TestCase
         ]);
 
         $this->withoutExceptionHandling()
-           ->get(route('scholars.advisory_meetings.minutes_of_meeting', $meeting))
+           ->get(route('scholars.advisory_meetings.show', [$scholar, $meeting]))
            ->assertSuccessful();
     }
 
@@ -41,9 +46,17 @@ class ScholarViewsMinutesOfMeetingTest extends TestCase
 
         $this->signInScholar($scholar = create(Scholar::class));
 
+        $scholar->supervisors()->attach(
+            factory(User::class)->states('supervisor')->create()
+        );
+
         $minutesOfMeetingPath = UploadedFile::fake()->create('fakefile.pdf', 20, 'application/pdf')->store('advisory_meetings');
 
         $otherScholar = create(Scholar::class);
+
+        $otherScholar->supervisors()->attach(
+            factory(User::class)->states('supervisor')->create()
+        );
 
         $meeting = $otherScholar->advisoryMeetings()->create([
             'date' => now()->format('Y-m-d'),
@@ -51,7 +64,7 @@ class ScholarViewsMinutesOfMeetingTest extends TestCase
         ]);
 
         $this->withExceptionHandling()
-           ->get(route('scholars.advisory_meetings.minutes_of_meeting', $meeting))
+           ->get(route('scholars.advisory_meetings.show', [$otherScholar, $meeting]))
            ->assertForbidden();
     }
 }

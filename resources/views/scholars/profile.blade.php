@@ -26,7 +26,7 @@
         @include('_partials.research.scholar-profile.supervisors-card')
         @include('_partials.research.scholar-profile.cosupervisors-card')
         {{-- @include('_partials.research.scholar-profile.advisory-committee') --}}
-        @include('_partials.research.scholar-profile.pre-phd-courseworks')
+        {{-- @include('_partials.research.scholar-profile.pre-phd-courseworks') --}}
         @include('_partials.research.scholar-profile.publications')
         @include('_partials.research.scholar-profile.presentations')
         @include('_partials.research.scholar-profile.leaves')

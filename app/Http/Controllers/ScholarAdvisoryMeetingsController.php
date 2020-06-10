@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Research;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\AdvisoryMeeting;
@@ -15,6 +15,8 @@ class ScholarAdvisoryMeetingsController extends Controller
 {
     public function store(Request $request, Scholar $scholar)
     {
+        $this->authorize('create', [AdvisoryMeeting::class, $scholar]);
+
         $data = $request->validate([
             'date' => 'required|date',
             'minutes_of_meeting' => ['required', 'file', 'mimes:pdf,doc,docx', 'max:200'],
@@ -40,13 +42,9 @@ class ScholarAdvisoryMeetingsController extends Controller
         return redirect()->back();
     }
 
-    public function minutesOfMeeting(AdvisoryMeeting $meeting)
+    public function show(Scholar $scholar, AdvisoryMeeting $meeting)
     {
-        abort_unless(
-            Storage::exists($meeting->minutes_of_meeting_path),
-            404,
-            'File Not Found!'
-        );
+        $this->authorize('view', [$meeting, $scholar]);
 
         return response()->file(Storage::path($meeting->minutes_of_meeting_path));
     }
