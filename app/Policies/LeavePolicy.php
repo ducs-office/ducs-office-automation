@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\Leave;
 use App\Models\Scholar;
+use App\Models\User;
 use App\Types\LeaveStatus;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -19,9 +20,14 @@ class LeavePolicy
      *
      * @return mixed
      */
-    public function view($user, Leave $leave)
+    public function view($user, Leave $leave, Scholar $scholar)
     {
-        return get_class($user) === Scholar::class && $leave->scholar_id == $user->id;
+        return (int) $leave->scholar_id === (int) $scholar->id
+            && ((get_class($user) === Scholar::class
+            && (int) $user->id === (int) $scholar->id)
+            || (get_class($user) === User::class
+            && ((int) $user->id === (int) $scholar->currentSupervisor->id)
+            || $user->can('leaves:respond')));
     }
 
     /**
@@ -46,12 +52,12 @@ class LeavePolicy
      *
      * @return mixed
      */
-    public function recommend($user, Leave $leave)
+    public function recommend($user, Leave $leave, Scholar $scholar)
     {
-        return $leave->status === LeaveStatus::APPLIED
-            && method_exists($user, 'isSupervisor')
-            && $user->isSupervisor()
-            && $supervisor->scholars->contains($leave->scholar_id);
+        return $leave->status == LeaveStatus::APPLIED
+            && (int) $leave->scholar->id === (int) $scholar->id
+            && get_class($user) === User::class
+            && (int) $user->id === (int) $scholar->currentSupervisor->id;
     }
 
     /**
@@ -64,7 +70,8 @@ class LeavePolicy
      */
     public function respond($user, Leave $leave)
     {
-        return $user->can('leaves:respond')
+        return get_class($user) === User::class
+            && $user->can('leaves:respond')
             && in_array($leave->status, [LeaveStatus::APPLIED, LeaveStatus::RECOMMENDED]);
     }
 
@@ -76,9 +83,10 @@ class LeavePolicy
      *
       * @return mixed
      */
-    public function extend(Scholar $scholar, Leave $leave)
+    public function extend($user, Leave $leave, Scholar $scholar)
     {
-        return (int) $scholar->id === (int) $leave->scholar_id
+        return get_class($user) === Scholar::class
+            && (int) $scholar->id === (int) $leave->scholar_id
             && $leave->isApproved()
             && $leave->extensions->every->isApproved();
     }

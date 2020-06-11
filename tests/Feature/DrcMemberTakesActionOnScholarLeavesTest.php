@@ -40,7 +40,7 @@ class DrcMemberTakesActionOnScholarLeavesTest extends TestCase
         $leave = create(Leave::class, 1, ['status' => LeaveStatus::APPLIED]);
 
         $this->withoutExceptionHandling()
-            ->patch(route('research.scholars.leaves.respond', [$leave->scholar_id, $leave]), [
+            ->patch(route('scholars.leaves.respond', [$leave->scholar_id, $leave]), [
                 'response' => LeaveStatus::APPROVED,
                 'response_letter' => $this->responseLetter,
             ])
@@ -61,7 +61,7 @@ class DrcMemberTakesActionOnScholarLeavesTest extends TestCase
         $leave = create(Leave::class, 1, ['status' => LeaveStatus::APPLIED]);
 
         $this->withExceptionHandling()
-            ->patch(route('research.scholars.leaves.respond', [$leave->scholar_id, $leave]))
+            ->patch(route('scholars.leaves.respond', [$leave->scholar_id, $leave]))
             ->assertForbidden();
 
         $this->assertFalse($leave->fresh()->isApproved());
@@ -77,7 +77,7 @@ class DrcMemberTakesActionOnScholarLeavesTest extends TestCase
         $leave = create(Leave::class, 1, ['status' => LeaveStatus::APPLIED]);
 
         $this->withoutExceptionHandling()
-            ->patch(route('research.scholars.leaves.respond', [$leave->scholar_id, $leave]), [
+            ->patch(route('scholars.leaves.respond', [$leave->scholar_id, $leave]), [
                 'response' => LeaveStatus::REJECTED,
                 'response_letter' => $this->responseLetter,
             ])
@@ -98,7 +98,7 @@ class DrcMemberTakesActionOnScholarLeavesTest extends TestCase
         $leave = create(Leave::class, 1, ['status' => LeaveStatus::APPLIED]);
 
         $this->withExceptionHandling()
-            ->patch(route('research.scholars.leaves.respond', [$leave->scholar_id, $leave]))
+            ->patch(route('scholars.leaves.respond', [$leave->scholar_id, $leave]))
             ->assertForbidden();
 
         $this->assertNotEquals(LeaveStatus::REJECTED, $leave->fresh()->status);
@@ -117,7 +117,7 @@ class DrcMemberTakesActionOnScholarLeavesTest extends TestCase
 
         try {
             $this->withoutExceptionHandling()
-                ->patch(route('research.scholars.leaves.respond', [$leave->scholar_id, $leave]), [
+                ->patch(route('scholars.leaves.respond', [$leave->scholar_id, $leave]), [
                     'response' => LeaveStatus::APPROVED,
                 ]);
 
@@ -140,7 +140,7 @@ class DrcMemberTakesActionOnScholarLeavesTest extends TestCase
 
         try {
             $this->withoutExceptionHandling()
-                ->patch(route('research.scholars.leaves.respond', [$leave->scholar_id, $leave]), [
+                ->patch(route('scholars.leaves.respond', [$leave->scholar_id, $leave]), [
                     'response_letter' => $this->responseLetter,
                 ]);
 
@@ -151,15 +151,16 @@ class DrcMemberTakesActionOnScholarLeavesTest extends TestCase
     }
 
     /** @test */
-    public function user_can_view_scholar_leave_application_only_if_they_have_permission_to_view_scholar()
+    public function user_can_view_scholar_leave_application_only_if_they_have_permission_to_respond_to_leave()
     {
         Storage::fake();
 
         $this->signIn($user = create(User::class));
 
-        $user->givePermissionTo('scholars:view');
+        $user->givePermissionTo('leaves:respond');
 
         $scholar = create(Scholar::class);
+        $scholar->supervisors()->attach(factory(User::class)->states('supervisor')->create());
 
         $applicationPath = UploadedFile::fake()->create('fakefile.pdf', 20, 'application/pdf')->store('scholar_leaves');
 
@@ -169,20 +170,21 @@ class DrcMemberTakesActionOnScholarLeavesTest extends TestCase
         ]);
 
         $this->withoutExceptionHandling()
-            ->get(route('research.scholars.leaves.application', [$scholar, $leave]))
+            ->get(route('scholars.leaves.application', [$scholar, $leave]))
             ->assertSuccessful();
     }
 
     /** @test */
-    public function user_can_not_view_scholar_leave_application_if_they_do_not_have_permission_to_view_scholar()
+    public function user_can_not_view_scholar_leave_application_if_they_do_not_have_permission_to_respond_to_leaves()
     {
         Storage::fake();
 
         $this->signIn($user = create(User::class));
 
-        $user->roles->every->revokePermissionTo('scholars:view');
+        $user->roles->every->revokePermissionTo('leaves:respond');
 
         $scholar = create(Scholar::class);
+        $scholar->supervisors()->attach(factory(User::class)->states('supervisor')->create());
 
         $applicationPath = UploadedFile::fake()->create('fakefile.pdf', 20, 'application/pdf')->store('scholar_leaves');
 
@@ -192,57 +194,7 @@ class DrcMemberTakesActionOnScholarLeavesTest extends TestCase
         ]);
 
         $this->withExceptionHandling()
-            ->get(route('research.scholars.leaves.application', [$scholar, $leave]))
-            ->assertForbidden();
-    }
-
-    /** @test */
-    public function user_can_view_scholar_course_work_marksheets_only_if_they_have_permission_to_view_scholar()
-    {
-        Storage::fake();
-
-        $this->signIn($user = create(User::class));
-
-        $user->givePermissionTo('scholars:view');
-
-        $scholar = create(Scholar::class);
-
-        $applicationPath = UploadedFile::fake()->create('fakefile.pdf', 20, 'application/pdf')->store('scholar_leaves');
-        $reponseLetterPath = UploadedFile::fake()->create('fakefile.pdf', 20, 'application/pdf')->store('scholar_leaves/response_letters');
-
-        $leave = create(Leave::class, 1, [
-            'scholar_id' => $scholar->id,
-            'application_path' => $applicationPath,
-            'response_letter_path' => $reponseLetterPath,
-        ]);
-
-        $this->withoutExceptionHandling()
-            ->get(route('research.scholars.leaves.response_letter', [$scholar, $leave]))
-            ->assertSuccessful();
-    }
-
-    /** @test */
-    public function user_can_not_view_scholar_course_work_marksheets_only_if_they_have_permission_to_view_scholar()
-    {
-        Storage::fake();
-
-        $this->signIn($user = create(User::class));
-
-        $user->roles->every->revokePermissionTo('scholars:view');
-
-        $scholar = create(Scholar::class);
-
-        $applicationPath = UploadedFile::fake()->create('fakefile.pdf', 20, 'application/pdf')->store('scholar_leaves');
-        $reponseLetterPath = UploadedFile::fake()->create('fakefile.pdf', 20, 'application/pdf')->store('scholar_leaves/response_letters');
-
-        $leave = create(Leave::class, 1, [
-            'scholar_id' => $scholar->id,
-            'application_path' => $applicationPath,
-            'response_letter_path' => $reponseLetterPath,
-        ]);
-
-        $this->withExceptionHandling()
-            ->get(route('research.scholars.leaves.response_letter', [$scholar, $leave]))
+            ->get(route('scholars.leaves.application', [$scholar, $leave]))
             ->assertForbidden();
     }
 }

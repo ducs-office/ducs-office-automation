@@ -21,6 +21,33 @@ Route::post('/forgot-password', 'Auth\ForgotPasswordController@sendResetLinkEmai
 Route::get('/password/reset/{token?}', 'Auth\ResetPasswordController@showResetForm')->middleware(['guest', 'guest:scholars'])->name('password.reset');
 Route::post('/password/reset', 'Auth\ResetPasswordController@reset')->middleware(['guest', 'guest:scholars'])->name('password.update');
 
+//============ scholar leaves ====================
+
+Route::get(
+    '/scholars/{scholar}/leaves/{leave}/response-letter',
+    'ScholarLeavesController@viewResponseLetter'
+)->name('scholars.leaves.response_letter')->middleware('auth:web,scholars');
+
+Route::get(
+    '/scholars/{scholar}/leaves/{leave}/application',
+    'ScholarLeavesController@viewApplication'
+)->name('scholars.leaves.application')->middleware('auth:web,scholars');
+
+Route::post(
+    '/scholars/{scholar}/leaves',
+    'ScholarLeavesController@store'
+)->name('scholars.leaves.store')->middleware('auth:scholars');
+
+Route::patch(
+    '/scholars/{scholar}/leaves/{leave}/recommend',
+    'ScholarLeavesController@recommend'
+)->name('scholars.leaves.recommend')->middleware('auth:web');
+
+Route::patch(
+    '/scholars/{scholar}/leaves/{leave}/respond',
+    'ScholarLeavesController@respond'
+)->name('scholars.leaves.respond')->middleware('auth:web');
+
 //============ scholar advisory meetings =================
 Route::post(
     '/scholars/{scholar}/advisory-meetings',
@@ -199,26 +226,6 @@ Route::prefix('/research')
     ->namespace('Research')
     ->as('research.')
     ->group(static function () {
-        Route::patch(
-            '/scholars/{scholar}/leaves/{leave}/recommend',
-            'ScholarLeavesController@recommend'
-        )->name('scholars.leaves.recommend');
-
-        Route::patch(
-            '/scholars/{scholar}/leaves/{leave}/respond',
-            'ScholarLeavesController@respond'
-        )->name('scholars.leaves.respond');
-
-        Route::get(
-            '/scholars/{scholar}/leaves/{leave}/response-letter',
-            'ScholarLeavesController@viewResponseLetter'
-        )->name('scholars.leaves.response_letter');
-
-        Route::get(
-            '/scholars/{scholar}/leaves/{leave}/application',
-            'ScholarLeavesController@viewApplication'
-        )->name('scholars.leaves.application');
-
         Route::get(
             '/publications',
             'ShowPublications'
@@ -251,18 +258,6 @@ Route::prefix('/scholars')
         Route::get('/presentation/{presentation}/edit', 'PresentationController@edit')->name('presentation.edit');
         Route::patch('/presentation/{presentation}', 'PresentationController@update')->name('presentation.update');
         Route::delete('/presentation/{presentation}', 'PresentationController@destroy')->name('presentation.destroy');
-
-        Route::post('/leaves', 'LeavesController@store')->name('leaves.store');
-
-        Route::get(
-            '/leaves/{leave}/application',
-            'LeavesController@viewApplication'
-        )->name('leaves.application');
-
-        Route::get(
-            '/leaves/{leave}/response-letter',
-            'LeavesController@viewResponseLetter'
-        )->name('leaves.response_letter');
 
         Route::patch(
             'scholars/{scholar}/proposed-title/update',

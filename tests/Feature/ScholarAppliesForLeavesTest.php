@@ -61,7 +61,7 @@ class ScholarAppliesForLeavesTest extends TestCase
         ]);
 
         $this->withoutExceptionHandling()
-            ->get(route('scholars.leaves.application', $leave))
+            ->get(route('scholars.leaves.application', [$scholar, $leave]))
             ->assertSuccessful();
     }
 
@@ -82,7 +82,7 @@ class ScholarAppliesForLeavesTest extends TestCase
         ]);
 
         $this->withExceptionHandling()
-            ->get(route('scholars.leaves.application', $leave))
+            ->get(route('scholars.leaves.application', [$scholar, $leave]))
             ->assertForbidden();
     }
 
@@ -103,7 +103,7 @@ class ScholarAppliesForLeavesTest extends TestCase
         ]);
 
         $this->withoutExceptionHandling()
-            ->get(route('scholars.leaves.response_letter', $leave))
+            ->get(route('scholars.leaves.response_letter', [$scholar, $leave]))
             ->assertSuccessful();
     }
 
@@ -126,7 +126,7 @@ class ScholarAppliesForLeavesTest extends TestCase
         ]);
 
         $this->withExceptionHandling()
-            ->get(route('scholars.leaves.response_letter', $leave))
+            ->get(route('scholars.leaves.response_letter', [$scholar, $leave]))
             ->assertForbidden();
     }
 }

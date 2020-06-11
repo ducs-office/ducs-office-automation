@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Research;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Leave;
@@ -14,9 +14,37 @@ use Illuminate\Validation\Rule;
 
 class ScholarLeavesController extends Controller
 {
+    public function store(Request $request, Scholar $scholar)
+    {
+        $this->authorize('create', [Leave::class, $scholar]);
+
+        $rules = [
+            'from' => ['required', 'date'],
+            'to' => ['required', 'date', 'after:from'],
+            'reason' => ['required', 'string'],
+            'application' => ['required', 'file', 'mimetypes:application/pdf,image/*', 'max:200'],
+            'extended_leave_id' => ['sometimes', 'nullable', 'exists:leaves,id'],
+        ];
+
+        if ($request->reason === 'Other') {
+            $rules['reason_text'] = ['required', 'bail', 'string', 'min:5'];
+        }
+        $request->validate($rules);
+
+        $scholar->leaves()->create([
+            'from' => $request->from,
+            'to' => $request->to,
+            'reason' => $request->reason === 'Other' ? $request->reason_text : $request->reason,
+            'application_path' => $request->file('application')->store('scholar_leaves'),
+            'extended_leave_id' => $request->extended_leave_id,
+        ]);
+
+        return redirect()->back();
+    }
+
     public function recommend(Request $request, Scholar $scholar, Leave $leave)
     {
-        $this->authorize('recommend', $leave);
+        $this->authorize('recommend', [$leave, $scholar]);
 
         $leave->update([
             'status' => LeaveStatus::RECOMMENDED,
@@ -48,7 +76,7 @@ class ScholarLeavesController extends Controller
 
     public function viewApplication(Scholar $scholar, Leave $leave)
     {
-        $this->authorize('view', $scholar);
+        $this->authorize('view', [$leave, $scholar]);
 
         return Response::download(
             Storage::path($leave->application_path),
@@ -60,7 +88,7 @@ class ScholarLeavesController extends Controller
 
     public function viewResponseLetter(Scholar $scholar, Leave $leave)
     {
-        $this->authorize('view', $scholar);
+        $this->authorize('view', [$leave, $scholar]);
 
         return Response::download(
             Storage::path($leave->response_letter_path),

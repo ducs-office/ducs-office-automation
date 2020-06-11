@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use App\Models\Leave;
-use App\Models\LeaveStatus;
 use App\Models\Scholar;
 use App\Models\Teacher;
 use App\Models\User;
@@ -28,7 +27,7 @@ class SupervisorManagesScholarLeaves extends TestCase
         $this->signIn($supervisor);
 
         $this->withoutExceptionHandling()
-            ->patch(route('research.scholars.leaves.recommend', [$scholar, $leave]))
+            ->patch(route('scholars.leaves.recommend', [$scholar, $leave]))
             ->assertRedirect()
             ->assertSessionHasNoErrors();
 
@@ -49,7 +48,7 @@ class SupervisorManagesScholarLeaves extends TestCase
         $this->signIn($anotherSupervisor);
 
         $this->withExceptionHandling()
-            ->patch(route('research.scholars.leaves.recommend', [$scholar, $leave]))
+            ->patch(route('scholars.leaves.recommend', [$scholar, $leave]))
             ->assertForbidden();
 
         $this->assertFalse($leave->fresh()->isRecommended());
