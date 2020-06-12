@@ -25,9 +25,9 @@ class EditScholarPresentationTest extends TestCase
         $presentation = create(Presentation::class, 1, ['publication_id' => $publication->id, 'scholar_id' => $scholar->id]);
 
         $this->withoutExceptionHandling()
-            ->get(route('scholars.presentation.edit', $presentation))
+            ->get(route('scholars.presentation.edit', [$scholar, $presentation]))
             ->assertSuccessful()
-            ->assertViewIs('scholars.presentations.edit')
-            ->assertViewHasAll(['presentation', 'publications', 'eventTypes']);
+            ->assertViewIs('presentations.edit')
+            ->assertViewHasAll(['presentation', 'eventTypes']);
     }
 }

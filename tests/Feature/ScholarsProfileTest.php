@@ -26,7 +26,7 @@ class ScholarsProfileTest extends TestCase
             ->get(route('scholars.profile.show', $scholar))
             ->assertSuccessful()
             ->assertViewHasAll([
-                'scholar', 'eventTypes',
+                'scholar',
             ])
             ->assertSee($scholar->email);
     }

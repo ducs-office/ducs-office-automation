@@ -323,7 +323,7 @@ Route::patch(
 Route::delete(
     '/scholars/@{scholar}/presentation/{presentation}',
     'PresentationController@destroy'
-)->name('presentation.destroy')
+)->name('scholars.presentation.destroy')
 ->middleware('auth:web,scholars');
 
 Route::prefix('/scholars')

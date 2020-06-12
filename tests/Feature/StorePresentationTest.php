@@ -35,7 +35,7 @@ class StorePresentationTest extends TestCase
         ];
 
         $this->withoutExceptionHandling()
-            ->post(route('scholars.presentation.store'), $presentation)
+            ->post(route('scholars.presentation.store', $scholar), $presentation)
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'Presentation created successfully!');
 
@@ -71,7 +71,7 @@ class StorePresentationTest extends TestCase
 
         try {
             $this->withoutExceptionHandling()
-            ->post(route('scholars.presentation.store'), $presentation);
+            ->post(route('scholars.presentation.store', $scholar), $presentation);
         } catch (ValidationException $e) {
             $this->assertArrayHasKey('scopus_indexed', $e->errors());
         }

@@ -45,7 +45,7 @@ class TitleApprovalController extends Controller
     {
         $this->authorize('view', [$titleApproval, $scholar]);
 
-        return view('research.scholars.title-approval-form', [
+        return view('title-approval.form', [
             'scholar' => $scholar,
         ]);
     }
