@@ -1,3 +1,4 @@
+@extends('layouts.master', ['pageTitle' => 'Pre PhD Seminar', 'scholar' => $scholar])
 @push('modals')    
 <x-modal name="edit-proposed-title-modal" class="p-6" :open="$errors->default->hasAny(['proposed_title'])">
     <h2 class="text-lg font-bold mb-6">Update Proposed Title</h2>
@@ -40,20 +41,12 @@
     </div>
 </x-modal>
 @endpush
-
+@section('body')
 <div class="page-card p-6 overflow-visible flex space-x-6">
     <div>
-        <div class="w-64 pr-4 relative z-10 -ml-8 my-2">
-            <h3 class="relative pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
-                Pre PhD Seminar
-            </h3>
-            <svg class="absolute left-0 w-2 text-magenta-900" viewBox="0 0 10 10">
-                <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
-            </svg>
-        </div>
         <div clas="mt-3 text-right">
         @can('create', [\App\Models\PrePhdSeminar::class, $scholar])
-            <a href="{{ route('scholars.pre_phd_seminar.request', $scholar) }}" class="btn btn-magenta">
+            <a href="{{ route('scholars.pre-phd-seminar.request', $scholar) }}" class="btn btn-magenta">
                 Request
             </a>
         @elsecan('request', [\App\Models\PrePhdSeminar::class, $scholar])
@@ -93,8 +86,8 @@
             @endif
             @can('view', [$scholar->prePhdSeminar, $scholar])
             <div class="ml-4">
-                <a href="{{ route('scholars.pre_phd_seminar.show', [$scholar, $scholar->prePhdSeminar]) }}"
-                    target="_blank" class="inline-flex items-center underline px-3 py-1 bg-magenta-100 text-magenta-800 rounded font-bold">
+                <a href="{{ route('scholars.pre-phd-seminar.show', [$scholar, $scholar->prePhdSeminar]) }}"
+                    class="inline-flex items-center underline px-3 py-1 bg-magenta-100 text-magenta-800 rounded font-bold">
                     <x-feather-icon name="link" class="h-4 mr-2"> Pre-Phd Seminar Form </x-feather-icon>
                     Pre-PhD Seminar Form
                 </a>
@@ -109,7 +102,7 @@
                 <div class="ml-2">
                     <button type="submit" form="patch-form"
                         class="px-4 py-2 mr-2 bg-green-500 hover:bg-green-600 text-white text-sm rounded font-bold"
-                        formaction="{{ route('scholars.pre_phd_seminar.forward', [$scholar, $scholar->prePhdSeminar]) }}">
+                        formaction="{{ route('scholars.pre-phd-seminar.forward', [$scholar, $scholar->prePhdSeminar]) }}">
                         Forward
                     </button>
                 </div>
@@ -138,3 +131,4 @@
 <form id="patch-form" method="POST" class="w-0">
     @csrf_token @method("PATCH")
 </form>
+@endsection

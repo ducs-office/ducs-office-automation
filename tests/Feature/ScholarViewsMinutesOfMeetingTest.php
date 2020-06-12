@@ -35,7 +35,7 @@ class ScholarViewsMinutesOfMeetingTest extends TestCase
         ]);
 
         $this->withoutExceptionHandling()
-           ->get(route('scholars.advisory_meetings.show', [$scholar, $meeting]))
+           ->get(route('scholars.advisory-meetings.show', [$scholar, $meeting]))
            ->assertSuccessful();
     }
 
@@ -64,7 +64,7 @@ class ScholarViewsMinutesOfMeetingTest extends TestCase
         ]);
 
         $this->withExceptionHandling()
-           ->get(route('scholars.advisory_meetings.show', [$otherScholar, $meeting]))
+           ->get(route('scholars.advisory-meetings.show', [$otherScholar, $meeting]))
            ->assertForbidden();
     }
 }

@@ -1,4 +1,4 @@
-<form action="{{ route('scholars.advisory_meetings.store', $scholar) }}" method="POST"
+<form action="{{ route('scholars.advisory-meetings.store', $scholar) }}" method="POST"
     class="px-6" enctype="multipart/form-data">
     @csrf_token
     <div class="flex space-x-2">

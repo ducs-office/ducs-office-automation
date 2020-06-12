@@ -1,4 +1,4 @@
-<form action="{{ route('scholars.pre_phd_seminar.finalize', ['scholar' => $scholar, 'prePhdSeminar' => $scholar->prePhdSeminar])}}" method="post">
+<form action="{{ route('scholars.pre-phd-seminar.finalize', ['scholar' => $scholar, 'prePhdSeminar' => $scholar->prePhdSeminar])}}" method="post">
     @csrf_token
     @method("PATCH")
     <div class="flex items-center mb-2">

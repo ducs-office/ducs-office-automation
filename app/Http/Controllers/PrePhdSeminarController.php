@@ -10,13 +10,20 @@ use App\Types\ScholarAppealTypes;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
-class ScholarPrePhdSeminarController extends Controller
+class PrePhdSeminarController extends Controller
 {
+    public function index(Scholar $scholar)
+    {
+        return view('pre-phd-seminar.index', [
+            'scholar' => $scholar,
+        ]);
+    }
+
     public function request(Scholar $scholar)
     {
         $this->authorize('create', [PrePhdSeminar::class, $scholar]);
 
-        return view('research.scholars.pre_phd_form', [
+        return view('pre-phd-seminar.form', [
             'scholar' => $scholar,
         ]);
     }
@@ -25,7 +32,7 @@ class ScholarPrePhdSeminarController extends Controller
     {
         $this->authorize('view', [$prePhdSeminar, $scholar]);
 
-        return view('research.scholars.pre_phd_form', [
+        return view('pre-phd-seminar.form', [
             'scholar' => $scholar,
         ]);
     }

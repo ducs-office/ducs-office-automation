@@ -7,8 +7,15 @@ use App\Models\ScholarExaminer;
 use App\Types\RequestStatus;
 use Illuminate\Http\Request;
 
-class ScholarExaminerController extends Controller
+class ExaminerController extends Controller
 {
+    public function index(Scholar $scholar)
+    {
+        return view('examiner', [
+            'scholar' => $scholar,
+        ]);
+    }
+
     public function apply(Request $request, Scholar $scholar)
     {
         $this->authorize('create', [ScholarExaminer::class, $scholar]);

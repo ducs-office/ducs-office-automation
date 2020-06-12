@@ -61,8 +61,8 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
         $this->addScholarPublications($scholar);
 
         $this->withoutExceptionHandling()
-            ->get(route('scholars.pre_phd_seminar.request', $scholar))
-            ->assertViewIs('research.scholars.pre_phd_form');
+            ->get(route('scholars.pre-phd-seminar.request', $scholar))
+            ->assertViewIs('pre-phd-seminar.form');
     }
 
     /** @test */
@@ -88,11 +88,11 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
         $this->addScholarPublications($scholar);
 
         $this->withExceptionHandling()
-            ->get(route('scholars.pre_phd_seminar.request', $scholar))
+            ->get(route('scholars.pre-phd-seminar.request', $scholar))
             ->assertForbidden();
 
         $this->withExceptionHandling()
-            ->post(route('scholars.pre_phd_seminar.apply', $scholar))
+            ->post(route('scholars.pre-phd-seminar.apply', $scholar))
             ->assertForbidden();
     }
 
@@ -117,21 +117,21 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
         $this->addScholarPublications($scholar);
 
         $this->withExceptionHandling()
-            ->get(route('scholars.pre_phd_seminar.request', $scholar))
+            ->get(route('scholars.pre-phd-seminar.request', $scholar))
             ->assertForbidden();
 
         $this->withExceptionHandling()
-            ->post(route('scholars.pre_phd_seminar.apply', $scholar))
+            ->post(route('scholars.pre-phd-seminar.apply', $scholar))
             ->assertForbidden();
 
         $this->signInScholar(create(User::class));
 
         $this->withExceptionHandling()
-        ->get(route('scholars.pre_phd_seminar.request', $scholar))
+        ->get(route('scholars.pre-phd-seminar.request', $scholar))
         ->assertForbidden();
 
         $this->withExceptionHandling()
-        ->post(route('scholars.pre_phd_seminar.apply', $scholar))
+        ->post(route('scholars.pre-phd-seminar.apply', $scholar))
         ->assertForbidden();
     }
 
@@ -145,11 +145,11 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
         $this->assertFalse($scholar->canApplyForPrePhdSeminar());
 
         $this->withExceptionHandling()
-            ->get(route('scholars.pre_phd_seminar.request', $scholar))
+            ->get(route('scholars.pre-phd-seminar.request', $scholar))
             ->assertForbidden();
 
         $this->withExceptionHandling()
-            ->post(route('scholars.pre_phd_seminar.apply', $scholar))
+            ->post(route('scholars.pre-phd-seminar.apply', $scholar))
             ->assertForbidden();
     }
 
@@ -159,11 +159,11 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
         $this->signIn($user = create(User::class));
 
         $this->withExceptionHandling()
-            ->get(route('scholars.pre_phd_seminar.request', $user))
+            ->get(route('scholars.pre-phd-seminar.request', $user))
             ->assertRedirect(route('login-form'));
 
         $this->withExceptionHandling()
-            ->post(route('scholars.pre_phd_seminar.apply', $user))
+            ->post(route('scholars.pre-phd-seminar.apply', $user))
             ->assertRedirect(route('login-form'));
     }
 
@@ -181,8 +181,8 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
         ]);
 
         $this->withoutExceptionHandling()
-            ->get(route('scholars.pre_phd_seminar.show', [$scholar, $appeal]))
-            ->assertViewIs('research.scholars.pre_phd_form');
+            ->get(route('scholars.pre-phd-seminar.show', [$scholar, $appeal]))
+            ->assertViewIs('pre-phd-seminar.form');
     }
 
     /** @test */
@@ -203,13 +203,13 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
         ]);
 
         $this->withoutExceptionHandling()
-            ->get(route('scholars.pre_phd_seminar.show', [$scholar, $appeal]))
-            ->assertViewIs('research.scholars.pre_phd_form');
+            ->get(route('scholars.pre-phd-seminar.show', [$scholar, $appeal]))
+            ->assertViewIs('pre-phd-seminar.form');
 
         $user->roles->first()->revokePermissionTo('phd seminar:finalize');
 
         $this->withExceptionHandling()
-            ->get(route('scholars.pre_phd_seminar.show', [$scholar, $appeal]))
+            ->get(route('scholars.pre-phd-seminar.show', [$scholar, $appeal]))
             ->assertForbidden();
     }
 
@@ -231,13 +231,13 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
         ]);
 
         $this->withoutExceptionHandling()
-             ->get(route('scholars.pre_phd_seminar.show', [$scholar, $appeal]))
-             ->assertViewIs('research.scholars.pre_phd_form');
+             ->get(route('scholars.pre-phd-seminar.show', [$scholar, $appeal]))
+             ->assertViewIs('pre-phd-seminar.form');
 
         $user->roles->first()->revokePermissionTo('phd seminar:add schedule');
 
         $this->withExceptionHandling()
-             ->get(route('scholars.pre_phd_seminar.show', [$scholar, $appeal]))
+             ->get(route('scholars.pre-phd-seminar.show', [$scholar, $appeal]))
              ->assertForbidden();
     }
 
@@ -256,8 +256,8 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
         ]);
 
         $this->withoutExceptionHandling()
-            ->get(route('scholars.pre_phd_seminar.show', [$scholar, $appeal]))
-            ->assertViewIs('research.scholars.pre_phd_form');
+            ->get(route('scholars.pre-phd-seminar.show', [$scholar, $appeal]))
+            ->assertViewIs('pre-phd-seminar.form');
     }
 
     /** @test */
@@ -274,7 +274,7 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
         ]);
 
         $this->withExceptionHandling()
-            ->get(route('scholars.pre_phd_seminar.show', [$scholar, $appeal]))
+            ->get(route('scholars.pre-phd-seminar.show', [$scholar, $appeal]))
             ->assertForbidden();
     }
 
@@ -289,7 +289,7 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
         $prePhdSeminar = create(PrePhdSeminar::class);
 
         $this->withExceptionHandling()
-            ->get(route('scholars.pre_phd_seminar.show', [$scholar, $prePhdSeminar]))
+            ->get(route('scholars.pre-phd-seminar.show', [$scholar, $prePhdSeminar]))
             ->assertForbidden();
 
         $appeal = create(PrePhdSeminar::class, 1, [
@@ -298,8 +298,8 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
         ]);
 
         $this->withoutExceptionHandling()
-            ->get(route('scholars.pre_phd_seminar.show', [$scholar, $appeal]))
-            ->assertViewIs('research.scholars.pre_phd_form');
+            ->get(route('scholars.pre-phd-seminar.show', [$scholar, $appeal]))
+            ->assertViewIs('pre-phd-seminar.form');
     }
 
     /** @test */
@@ -317,15 +317,15 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
         $prePhdSeminar = create(PrePhdSeminar::class);
 
         $this->withExceptionHandling()
-            ->get(route('scholars.pre_phd_seminar.show', [$scholar, $prePhdSeminar]))
+            ->get(route('scholars.pre-phd-seminar.show', [$scholar, $prePhdSeminar]))
             ->assertForbidden();
 
         $this->withExceptionHandling()
-            ->get(route('scholars.pre_phd_seminar.show', [$prePhdSeminar->scholar, $prePhdSeminar]))
+            ->get(route('scholars.pre-phd-seminar.show', [$prePhdSeminar->scholar, $prePhdSeminar]))
             ->assertForbidden();
 
         $this->withExceptionHandling()
-            ->get(route('scholars.pre_phd_seminar.show', [$prePhdSeminar->scholar, $scholarAppeal]))
+            ->get(route('scholars.pre-phd-seminar.show', [$prePhdSeminar->scholar, $scholarAppeal]))
             ->assertForbidden();
     }
 
@@ -346,7 +346,7 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
         $this->assertNull($scholar->prePhdSeminar);
 
         $this->withoutExceptionHandling()
-            ->post(route('scholars.pre_phd_seminar.apply', $scholar))
+            ->post(route('scholars.pre-phd-seminar.apply', $scholar))
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'Request for Pre-PhD Seminar applied successfully!');
 
@@ -372,7 +372,7 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
         ]);
 
         $this->withoutExceptionHandling()
-            ->patch(route('scholars.pre_phd_seminar.forward', [$scholar, $appeal]))
+            ->patch(route('scholars.pre-phd-seminar.forward', [$scholar, $appeal]))
             ->assertRedirect()
             ->assertSessionHasFlash('success', "Scholar's appeal forwarded successfully!");
 
@@ -395,7 +395,7 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
         ]);
 
         $this->withExceptionHandling()
-            ->patch(route('scholars.pre_phd_seminar.forward', [$scholar, $appeal]))
+            ->patch(route('scholars.pre-phd-seminar.forward', [$scholar, $appeal]))
             ->assertForbidden();
 
         $this->assertEquals(RequestStatus::APPLIED, $appeal->status);
@@ -405,7 +405,7 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
         $appeal->update(['scholar_id' => create(Scholar::class)->id]);
 
         $this->withExceptionHandling()
-            ->patch(route('scholars.pre_phd_seminar.forward', [$scholar, $appeal]))
+            ->patch(route('scholars.pre-phd-seminar.forward', [$scholar, $appeal]))
             ->assertForbidden();
 
         $this->assertEquals(RequestStatus::APPLIED, $appeal->status);
@@ -426,7 +426,7 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
         ]);
 
         $this->withExceptionHandling()
-            ->patch(route('scholars.pre_phd_seminar.forward', [$scholar, $appeal]))
+            ->patch(route('scholars.pre-phd-seminar.forward', [$scholar, $appeal]))
             ->assertForbidden();
 
         $appeal->refresh();
@@ -436,7 +436,7 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
         $appeal->update(['status' => RequestStatus::APPROVED]);
 
         $this->withExceptionHandling()
-            ->patch(route('scholars.pre_phd_seminar.forward', [$scholar, $appeal]))
+            ->patch(route('scholars.pre-phd-seminar.forward', [$scholar, $appeal]))
             ->assertForbidden();
 
         $appeal->refresh();
@@ -460,7 +460,7 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
         ]);
 
         $this->withExceptionHandling()
-            ->patch(route('scholars.pre_phd_seminar.forward', [$scholar, $appeal]))
+            ->patch(route('scholars.pre-phd-seminar.forward', [$scholar, $appeal]))
             ->assertRedirect(route('login-form'));
 
         $this->assertEquals(RequestStatus::APPLIED, $appeal->status);
@@ -483,7 +483,7 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
         ]);
 
         $this->withExceptionHandling()
-            ->patch(route('scholars.pre_phd_seminar.schedule', [$scholar, $appeal]), [
+            ->patch(route('scholars.pre-phd-seminar.schedule', [$scholar, $appeal]), [
                 'scheduled_on' => now()->addMonth(),
             ])
             ->assertForbidden();
@@ -498,7 +498,7 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
             'status' => RequestStatus::RECOMMENDED,
         ]);
         $this->withoutExceptionHandling()
-            ->patch(route('scholars.pre_phd_seminar.schedule', [$scholar, $appeal]), [
+            ->patch(route('scholars.pre-phd-seminar.schedule', [$scholar, $appeal]), [
                 'scheduled_on' => $schedule = now()->addMonth(),
             ])
             ->assertRedirect()
@@ -523,7 +523,7 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
         ]);
 
         $this->withExceptionHandling()
-            ->patch(route('scholars.pre_phd_seminar.schedule', [$scholar, $appeal]), [
+            ->patch(route('scholars.pre-phd-seminar.schedule', [$scholar, $appeal]), [
                 'scheduled_on' => $newSchedule = now()->addMonth(),
             ])
             ->assertForbidden();
@@ -546,7 +546,7 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
         ]);
 
         $this->withExceptionHandling()
-            ->patch(route('scholars.pre_phd_seminar.schedule', [$scholar, $appeal]), [
+            ->patch(route('scholars.pre-phd-seminar.schedule', [$scholar, $appeal]), [
                 'scheduled_on' => $newSchedule = now()->addMonth(),
             ])
             ->assertForbidden();
@@ -556,7 +556,7 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
         $appeal->update(['status' => RequestStatus::APPROVED]);
 
         $this->withExceptionHandling()
-            ->patch(route('scholars.pre_phd_seminar.schedule', [$scholar, $appeal]), [
+            ->patch(route('scholars.pre-phd-seminar.schedule', [$scholar, $appeal]), [
                 'scheduled_on' => $newSchedule = now()->addMonth(),
             ])
             ->assertForbidden();
@@ -581,7 +581,7 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
         ]);
 
         $this->withExceptionHandling()
-             ->patch(route('scholars.pre_phd_seminar.schedule', [$scholar, $appeal]), [
+             ->patch(route('scholars.pre-phd-seminar.schedule', [$scholar, $appeal]), [
                  'scheduled_on' => now()->addMonth(),
              ])
              ->assertRedirect(route('login-form'));
@@ -605,7 +605,7 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
         ]);
 
         $this->withExceptionHandling()
-            ->patch(route('scholars.pre_phd_seminar.finalize', [$scholar, $appeal]), [
+            ->patch(route('scholars.pre-phd-seminar.finalize', [$scholar, $appeal]), [
                 'finalized_title' => $title = Str::random(30),
             ])
             ->assertForbidden();
@@ -615,7 +615,7 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
         $user->roles->first()->givePermissionTo('phd seminar:finalize');
 
         $this->withoutExceptionHandling()
-            ->patch(route('scholars.pre_phd_seminar.finalize', [$scholar, $appeal]), [
+            ->patch(route('scholars.pre-phd-seminar.finalize', [$scholar, $appeal]), [
                 'finalized_title' => $title = Str::random(30),
             ]);
 
@@ -641,7 +641,7 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
         ]);
 
         $this->withExceptionHandling()
-            ->patch(route('scholars.pre_phd_seminar.finalize', [$scholar, $appeal]), [
+            ->patch(route('scholars.pre-phd-seminar.finalize', [$scholar, $appeal]), [
                 'finalized_title' => $title = Str::random(30),
             ])
             ->assertForbidden();
@@ -651,7 +651,7 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
         $appeal->update(['status' => RequestStatus::APPROVED]);
 
         $this->withExceptionHandling()
-            ->patch(route('scholars.pre_phd_seminar.finalize', [$scholar, $appeal]), [
+            ->patch(route('scholars.pre-phd-seminar.finalize', [$scholar, $appeal]), [
                 'finalized_title' => $title = Str::random(30),
             ])
             ->assertForbidden();
@@ -675,7 +675,7 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
         ]);
 
         $this->withExceptionHandling()
-            ->patch(route('scholars.pre_phd_seminar.finalize', [$scholar, $appeal]), [
+            ->patch(route('scholars.pre-phd-seminar.finalize', [$scholar, $appeal]), [
                 'finalized_title' => $title = Str::random(30),
             ])
             ->assertForbidden();
@@ -700,7 +700,7 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
         ]);
 
         $this->withExceptionHandling()
-            ->patch(route('scholars.pre_phd_seminar.finalize', [$scholar, $appeal]), [
+            ->patch(route('scholars.pre-phd-seminar.finalize', [$scholar, $appeal]), [
                 'finalized_title' => Str::random(30),
             ])
             ->assertRedirect(route('login-form'));

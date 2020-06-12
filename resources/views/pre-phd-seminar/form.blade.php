@@ -35,7 +35,7 @@
                         <p class="ml-1 p-1"> Name of Research Scholar: </p>
                         <p class="ml-1 p-1 font-semibold"> {{ $scholar->name }} </p>
                     </div>
-                    <div class="flex flex-wrap">
+                    <div class="flex flex-wrap w-1/2">
                         <p class="ml-1 p-1"> Enrolment Number: </p>
                         <p class="ml-1 p-1 font-semibold"> {{ $scholar->enrolment_id ?? '-' }} </p>
                     </div>
@@ -159,13 +159,13 @@
             <div>
                 <p class="font-bold text-lg"> Are you sure you want to apply for Pre-Phd Seminar ? </p>
                 <div class="flex justify-center">
-                    <form action="{{ route('scholars.pre_phd_seminar.apply', $scholar) }}" method="POST">
+                    <form action="{{ route('scholars.pre-phd-seminar.apply', $scholar) }}" method="POST">
                         @csrf_token
                         <button class="btn btn-magenta is-sm m-2" >
                             Apply
                         </button>
                     </form>
-                    <a href="{{ route('scholars.profile.show', $scholar) }}" class="btn btn-magenta is-sm m-2">
+                    <a href="{{ route('scholars.pre-phd-seminar.index', $scholar) }}" class="btn btn-magenta is-sm m-2">
                         Cancel
                     </a>
                 </div>

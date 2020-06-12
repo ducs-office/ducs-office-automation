@@ -1,4 +1,4 @@
-@extends('layouts.master', ['pageTitle' => 'Profile'])
+@extends('layouts.master', ['pageTitle' => 'Profile', 'scholar' => $scholar])
 @section('body')
 <div class="page-card p-6 overflow-visible">
     <div class="-mt-6 -mx-6 bg-magenta-800 h-48 rounded-t-md flex justify-end items-end p-4">
@@ -23,28 +23,23 @@
         </x-slot>
 
         <x-tab-content tab="info" class="flex space-x-6">
-            @include('_partials.research.scholar-profile.basic-info')
+            @include('_partials.scholar-profile.basic-info')
         </x-tab-content>
 
         <x-tab-content tab="admission" class="flex space-x-6">
-            @include('_partials.research.scholar-profile.admission-details')
+            @include('_partials.scholar-profile.admission-details')
         </x-tab-content>
 
         <x-tab-content tab="education" class="flex space-x-6">
-            @include('_partials.research.scholar-profile.education-details')
+            @include('_partials.scholar-profile.education-details')
         </x-tab-content>
 
         <x-tab-content tab="committee" class="flex space-x-6">
-            @include('_partials.research.scholar-profile.research-committee')
+            @include('_partials.scholar-profile.research-committee')
         </x-tab-content>
-
     </x-tabbed-pane>
-</div>
-
     <div class="container mx-auto p-4 space-y-8">
-        {{-- @include('_partials.research.scholar-profile.supervisors-card')
-        @include('_partials.research.scholar-profile.cosupervisors-card')
-        @include('_partials.research.scholar-profile.advisory-committee') --}}
         @include('_partials.research.scholar-profile.publications')
-        @include('_partials.research.scholar-profile.examiner')
+    </div>
+</div>
 @endsection

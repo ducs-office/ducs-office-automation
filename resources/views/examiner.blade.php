@@ -1,22 +1,24 @@
-<div class="page-card p-6 overflow-visible flex space-x-6">
-    <div class="w-64 pr-4 relative -ml-8 my-6">
-        <h3 class="relative pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
+@extends('layouts.master', ['pageTitle' => 'Examiner Status', 'scholar' => $scholar])
+@section('body')
+<div class="page-card p-6 overflow-visible flex space-x-6 items-center">
+    @can('create', [\App\Models\ScholarExaminer::class, $scholar])
+    <div class="text-right">
+        {{-- <h3 class="relative pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
             Examiner
         </h3>
         <svg class="absolute left-0 w-2 text-magenta-900" viewBox="0 0 10 10">
             <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
-        </svg>
-        @can('create', [\App\Models\ScholarExaminer::class, $scholar])
-        <div class="mt-3 text-right">
-            <form action="{{ route('scholars.examiner.apply', $scholar) }}" method="POST">
-              @csrf_token
-                <button type="submt" class="btn btn-magenta is-sm">
-                    Request
-                </button>
-            </form>
-        </div>
-        @endcan
+        </svg> --}}
+        {{-- <div class="mt-3 text-right"> --}}
+        <form action="{{ route('scholars.examiner.apply', $scholar) }}" method="POST">
+            @csrf_token
+            <button type="submt" class="btn btn-magenta is-sm">
+                Request
+            </button>
+        </form>
     </div>
+    @endcan
+    {{-- </div> --}}
     <div class="flex-1 my-4 ">
         <div class="flex items-center px-4 py-3 border rounded-lg">
             @if ($scholar->examiner === null)
@@ -75,3 +77,4 @@
         </div>
     </div>
 </div>               
+@endsection

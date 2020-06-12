@@ -56,17 +56,17 @@ Route::patch(
 Route::get(
     '/scholars/@{scholar}/advisory-meetings',
     'AdvisoryMeetingsController@index'
-)->name('scholars.advisory_meetings.index')->middleware('auth:web,scholars');
+)->name('scholars.advisory-meetings.index')->middleware('auth:web,scholars');
 
 Route::post(
     '/scholars/@{scholar}/advisory-meetings',
     'AdvisoryMeetingsController@store'
-)->name('scholars.advisory_meetings.store')->middleware('auth:web');
+)->name('scholars.advisory-meetings.store')->middleware('auth:web');
 
 Route::get(
     '/scholars/@{scholar}/advisory-meetings/{meeting}',
     'AdvisoryMeetingsController@show'
-)->name('scholars.advisory_meetings.show')->middleware('auth:web,scholars');
+)->name('scholars.advisory-meetings.show')->middleware('auth:web,scholars');
 
 //============ scholar documents =====================
 Route::get(
@@ -91,34 +91,39 @@ Route::delete(
 
 //=========== scholar pre-phd seminar =============
 Route::get(
-    '/scholars/{scholar}/pre-phd-seminar/request',
-    'ScholarPrePhdSeminarController@request'
-)->name('scholars.pre_phd_seminar.request')->middleware('auth:scholars');
-
-Route::post(
-    '/scholars/{scholar}/pre-phd-seminar/apply',
-    'ScholarPrePhdSeminarController@apply'
-)->name('scholars.pre_phd_seminar.apply')->middleware('auth:scholars');
+    '/scholars/@{scholar}/pre-phd-seminar',
+    'PrePhdSeminarController@index'
+)->name('scholars.pre-phd-seminar.index')->middleware('auth:web,scholars');
 
 Route::get(
-    '/scholars/{scholar}/pre-phd-seminar/{prePhdSeminar}/show',
-    'ScholarPrePhdSeminarController@show'
-)->name('scholars.pre_phd_seminar.show')->middleware('auth:web,scholars');
+    '/scholars/@{scholar}/pre-phd-seminar/request',
+    'PrePhdSeminarController@request'
+)->name('scholars.pre-phd-seminar.request')->middleware('auth:scholars');
+
+Route::post(
+    '/scholars/@{scholar}/pre-phd-seminar/apply',
+    'PrePhdSeminarController@apply'
+)->name('scholars.pre-phd-seminar.apply')->middleware('auth:scholars');
+
+Route::get(
+    '/scholars/@{scholar}/pre-phd-seminar/{prePhdSeminar}/show',
+    'PrePhdSeminarController@show'
+)->name('scholars.pre-phd-seminar.show')->middleware('auth:web,scholars');
 
 Route::patch(
-    '/scholars/{scholar}/appeals/{prePhdSeminar}/forward',
-    'ScholarPrePhdSeminarController@forward'
-)->name('scholars.pre_phd_seminar.forward')->middleware('auth:web');
+    '/scholars/@{scholar}/appeals/{prePhdSeminar}/forward',
+    'PrePhdSeminarController@forward'
+)->name('scholars.pre-phd-seminar.forward')->middleware('auth:web');
 
 Route::patch(
-    '/scholars/{scholar}/appeals/{prePhdSeminar}/schedule',
-    'ScholarPrePhdSeminarController@schedule'
-)->name('scholars.pre_phd_seminar.schedule')->middleware('auth:web');
+    '/scholars/@{scholar}/appeals/{prePhdSeminar}/schedule',
+    'PrePhdSeminarController@schedule'
+)->name('scholars.pre-phd-seminar.schedule')->middleware('auth:web');
 
 Route::patch(
-    '/scholars/{scholar}/appeals/{prePhdSeminar}/finalize',
-    'ScholarPrePhdSeminarController@finalize'
-)->name('scholars.pre_phd_seminar.finalize')->middleware('auth:web');
+    '/scholars/@{scholar}/appeals/{prePhdSeminar}/finalize',
+    'PrePhdSeminarController@finalize'
+)->name('scholars.pre-phd-seminar.finalize')->middleware('auth:web');
 
 //================Scholar Title Approval =======================
 
@@ -170,15 +175,19 @@ Route::post('/teaching-details', 'TeachingDetailsController@store')->name('teach
 Route::delete('/teaching-details/{teachingDetail}', 'TeachingDetailsController@destroy')->name('teaching-details.destroy');
 
 //===================Scholar Examiner==============
-Route::post('scholars/{scholar}/examiner/apply', 'ScholarExaminerController@apply')
+Route::get('scholars/@{scholar}/examiner', 'ExaminerController@index')
+    ->middleware('auth:web,scholars')
+    ->name('scholars.examiner.index');
+
+Route::post('scholars/@{scholar}/examiner/apply', 'ExaminerController@apply')
     ->middleware('auth:web')
     ->name('scholars.examiner.apply');
 
-Route::patch('scholars/{scholar}/examiner/{examiner}/recommend', 'ScholarExaminerController@recommend')
+Route::patch('scholars/@{scholar}/examiner/{examiner}/recommend', 'ExaminerController@recommend')
     ->middleware('auth:web')
     ->name('scholars.examiner.recommend');
 
-Route::patch('scholars/{scholar}/examiner/{examiner}/approve', 'ScholarExaminerController@approve')
+Route::patch('scholars/@{scholar}/examiner/{examiner}/approve', 'ExaminerController@approve')
     ->middleware('auth:web')
     ->name('scholars.examiner.approve');
 

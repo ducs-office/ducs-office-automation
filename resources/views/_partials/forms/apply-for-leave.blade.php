@@ -56,10 +56,13 @@
             <option value="Other">Other</option>
         </select>
         <input type="text" name="reason_text" 
-        class="w-full form-input mt-2 hidden @error('reason') border-red-500 hover:border-red-700 @enderror" 
+        class="w-full form-input mt-2 hidden @error('reason_text') border-red-500 hover:border-red-700 @enderror" 
         placeholder="Please specify..."
-        value="{{ old('reason', '') }}">
+        value="{{ old('reason_text', '') }}">
         @error('reason')
+        <p class="text-red-500"> {{ $message }} </p>
+        @enderror
+        @error('reason_text')
         <p class="text-red-500"> {{ $message }} </p>
         @enderror
     </div>

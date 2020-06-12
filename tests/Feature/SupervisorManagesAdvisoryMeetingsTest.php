@@ -28,7 +28,7 @@ class SupervisorManagesAdvisoryMeetingsTest extends TestCase
         $scholar->supervisors()->attach($user);
 
         $this->withoutExceptionHandling()
-            ->post(route('scholars.advisory_meetings.store', $scholar), [
+            ->post(route('scholars.advisory-meetings.store', $scholar), [
                 'date' => now()->subDays(2)->format('Y-m-d'),
                 'minutes_of_meeting' => UploadedFile::fake()
                     ->create('minutes_of_meeting.pdf', 15),
@@ -48,7 +48,7 @@ class SupervisorManagesAdvisoryMeetingsTest extends TestCase
         $scholar->supervisors()->attach(factory(User::class)->states('supervisor')->create());
 
         $this->withExceptionHandling()
-            ->post(route('scholars.advisory_meetings.store', $scholar), [
+            ->post(route('scholars.advisory-meetings.store', $scholar), [
                 'date' => now()->subDays(2)->format('Y-m-d'),
                 'minutes_of_meeting' => UploadedFile::fake()
                     ->create('minutes_of_meeting.pdf', 15),
@@ -68,7 +68,7 @@ class SupervisorManagesAdvisoryMeetingsTest extends TestCase
         $this->signInScholar($scholar);
 
         $this->withExceptionHandling()
-            ->post(route('scholars.advisory_meetings.store', $scholar), [
+            ->post(route('scholars.advisory-meetings.store', $scholar), [
                 'date' => now()->subDays(2)->format('Y-m-d'),
                 'minutes_of_meeting' => UploadedFile::fake()
                     ->create('minutes_of_meeting.pdf', 15),
@@ -95,7 +95,7 @@ class SupervisorManagesAdvisoryMeetingsTest extends TestCase
         $this->signIn($scholar->currentSupervisor);
 
         $this->withoutExceptionHandling()
-            ->get(route('scholars.advisory_meetings.show', [$scholar, $meeting]))
+            ->get(route('scholars.advisory-meetings.show', [$scholar, $meeting]))
             ->assertSuccessful();
     }
 
@@ -117,7 +117,7 @@ class SupervisorManagesAdvisoryMeetingsTest extends TestCase
         $this->signIn(factory(User::class)->states('supervisor')->create());
 
         $this->withExceptionHandling()
-            ->get(route('scholars.advisory_meetings.show', [$scholar, $meeting]))
+            ->get(route('scholars.advisory-meetings.show', [$scholar, $meeting]))
             ->assertForbidden();
     }
 }

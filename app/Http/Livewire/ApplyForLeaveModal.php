@@ -16,7 +16,7 @@ class ApplyForLeaveModal extends Component
 
     public function mount($modalName = null, $errorBag = null, $scholar)
     {
-        if ($errorBag != null && $errorBag->hasAny(['to', 'from', 'reason', 'application'])) {
+        if ($errorBag != null && $errorBag->hasAny(['to', 'from', 'reason', 'reason_text', 'application'])) {
             $this->setErrorBag($errorBag);
         }
 
