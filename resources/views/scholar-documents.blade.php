@@ -1,5 +1,5 @@
 {{--Other Documents--}}
-@extends('layouts.master', ['pageTitle' => 'Documents', 'scholar' => $scholar])
+@extends('layouts.scholar-profile', ['pageTitle' => 'Documents', 'scholar' => $scholar])
 @push('modals')
 <x-modal name="add-documents-modal" class="p-6 min-w-1/2" :open="! $errors->default->isEmpty()">
     <h3 class="text-lg font-bold mb-4">Add Documents</h3>

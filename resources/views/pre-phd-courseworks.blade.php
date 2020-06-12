@@ -1,4 +1,4 @@
-@extends('layouts.master', ['pageTitle' => 'Pre-PhD Courseworks', 'scholar' => $scholar])
+@extends('layouts.scholar-profile', ['pageTitle' => 'Pre-PhD Courseworks', 'scholar' => $scholar])
 @push('modals')
     <x-modal name="add-scholar-coursework-modal" class="p-6 w-1/2" 
         :open="!$errors->default->isEmpty()">

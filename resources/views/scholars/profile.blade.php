@@ -1,4 +1,4 @@
-@extends('layouts.master', ['pageTitle' => 'Profile', 'scholar' => $scholar])
+@extends('layouts.scholar-profile', ['pageTitle' => 'Profile', 'scholar' => $scholar])
 @section('body')
 <div class="page-card p-6 overflow-visible">
     <div class="-mt-6 -mx-6 bg-magenta-800 h-48 rounded-t-md flex justify-end items-end p-4">

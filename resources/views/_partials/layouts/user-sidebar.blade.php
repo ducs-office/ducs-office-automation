@@ -113,5 +113,11 @@
             </a>
         </li>
         @endcan
+        <li class="mb-1 last:mb-0">
+            <a href="{{ route('profiles.show', auth()->user()) }}" class="flex items-center py-2 px-4 hover:bg-magenta-700 rounded">
+                <x-feather-icon name="user" class="h-4 mr-2">Profile</x-feather-icon>
+                Profile
+            </a>
+        </li>
     </ul>
 </nav>

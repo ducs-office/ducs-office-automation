@@ -1,4 +1,4 @@
-@extends('layouts.master', ['pageTitle' => 'Title Approval', 'scholar' => $scholar])
+@extends('layouts.scholar-profile', ['pageTitle' => 'Title Approval', 'scholar' => $scholar])
 @push('modals')
 @can('request',[ \App\Models\TitleApproval::class, $scholar])
     <x-modal name="title-approval-requirements-modal" class="p-6">

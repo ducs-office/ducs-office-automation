@@ -1,4 +1,4 @@
-@extends('layouts.master', ['pageTitle' => 'Pre PhD Seminar', 'scholar' => $scholar])
+@extends('layouts.scholar-profile', ['pageTitle' => 'Pre PhD Seminar', 'scholar' => $scholar])
 @push('modals')    
 <x-modal name="edit-proposed-title-modal" class="p-6" :open="$errors->default->hasAny(['proposed_title'])">
     <h2 class="text-lg font-bold mb-6">Update Proposed Title</h2>

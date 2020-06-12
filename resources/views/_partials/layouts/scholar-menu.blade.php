@@ -1,4 +1,5 @@
 <div class="ml-auto mr-3 relative">
+    @auth('scholars')
     <button class="relative z-20 flex items-center btn" x-on:click="userDropdown = !userDropdown">
         <img src=" {{ auth()->user()->avatar_url }}"
             alt="{{ Auth::user()->name }}" width="32" height="32" class="w-6 h-6 rounded-full mr-2">
@@ -56,7 +57,14 @@
             </div>
         </form>
     </x-modal>
+    <form id="logout-form" class="h-0 w-0 pointer-events-none">
+        @csrf_token
+    </form>
+    @elseauth('web')
+    <div class="relative z-20 flex items-center btn">
+        <img src=" {{ $scholar->avatar_url }}"
+            alt="{{ $scholar->name }}" width="32" height="32" class="w-6 h-6 rounded-full mr-2">
+        <h2 class="font-bold truncate max-w-32">{{ $scholar->first_name }}</h2>
+    </div>
+    @endauth
 </div>
-<form id="logout-form" class="h-0 w-0 pointer-events-none">
-    @csrf_token
-</form>

@@ -1,4 +1,4 @@
-@extends('layouts.master', ['pageTitle' => 'Progress Reports', 'scholar' => $scholar])
+@extends('layouts.scholar-profile', ['pageTitle' => 'Progress Reports', 'scholar' => $scholar])
 @push('modals')
 @can('create', \App\Models\ProgressReport::class)
     <x-modal name="add-scholar-progress-reports-modal" class="p-6 w-1/2" 

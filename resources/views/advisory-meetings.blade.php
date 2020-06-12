@@ -1,5 +1,5 @@
 {{-- Meetings --}}
-@extends('layouts.master', ['pageTitle' => 'Advisory Meetings', 'scholar' => $scholar])
+@extends('layouts.scholar-profile', ['pageTitle' => 'Advisory Meetings', 'scholar' => $scholar])
 @push('modals')
 <x-modal name="add-advisory-meetings-modal" class="p-6 min-w-1/2" :open="! $errors->default->isEmpty()">
     <h3 class="text-lg font-bold mb-4">Add Advisory Meetings</h3>

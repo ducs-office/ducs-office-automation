@@ -1,4 +1,4 @@
-@extends('layouts.master', ['pageTitle' => 'Update Presentation', 'scholar' => $scholar])
+@extends('layouts.scholar-profile', ['pageTitle' => 'Update Presentation', 'scholar' => $scholar])
 @section('body')
     <div class="page-card max-w-xl mx-auto my-4">
         <div class="page-header flex items-baseline">

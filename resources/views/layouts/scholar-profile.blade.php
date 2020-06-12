@@ -34,10 +34,10 @@
             x-transition:leave="transition-transform ease-out duration-300"
             x-transition:leave-start="transform translate-x-0"
             x-transition:leave-end="transform -translate-x-full">
-            @include('_partials.layouts.user-sidebar')
+            @include('_partials.layouts.scholar-sidebar')
         </div>
         <div class="flex-1 flex flex-col h-full overflow-y-auto">
-            @include('_partials.layouts.user-header')
+            @include('_partials.layouts.scholar-header')
             <main class="flex-1 h-full p-4 md:p-8 space-y-4">
                 @yield('body')
             </main>

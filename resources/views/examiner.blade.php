@@ -1,4 +1,4 @@
-@extends('layouts.master', ['pageTitle' => 'Examiner Status', 'scholar' => $scholar])
+@extends('layouts.scholar-profile', ['pageTitle' => 'Examiner Status', 'scholar' => $scholar])
 @section('body')
 <div class="page-card p-6 overflow-visible flex space-x-6 items-center">
     @can('create', [\App\Models\ScholarExaminer::class, $scholar])

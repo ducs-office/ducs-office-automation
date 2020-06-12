@@ -1,4 +1,4 @@
-@extends('layouts.master', ['pageTitle' => 'Leaves', 'scholar' => $scholar])
+@extends('layouts.scholar-profile', ['pageTitle' => 'Leaves', 'scholar' => $scholar])
 @push('modals')
 <livewire:apply-for-leave-modal :error-bag="$errors->default" :scholar="$scholar"/>
 <livewire:respond-to-leave-modal :error-bag="$errors->default" :scholar="$scholar"/>
