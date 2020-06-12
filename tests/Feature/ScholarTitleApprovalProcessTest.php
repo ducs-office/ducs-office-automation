@@ -59,7 +59,7 @@ class ScholarTitleApprovalProcessTest extends TestCase
 
         $this->withoutExceptionHandling()
             ->get(route('scholars.title-approval.request', $scholar))
-            ->assertViewIs('title-approval.form');
+            ->assertViewIs('title-approval.show');
     }
 
     /** @test */
@@ -155,7 +155,7 @@ class ScholarTitleApprovalProcessTest extends TestCase
 
         $this->withoutExceptionHandling()
             ->get(route('scholars.title-approval.show', [$scholar, $appeal]))
-            ->assertViewIs('title-approval.form');
+            ->assertViewIs('title-approval.show');
     }
 
     /** @test */
@@ -179,7 +179,7 @@ class ScholarTitleApprovalProcessTest extends TestCase
 
         $this->withoutExceptionHandling()
             ->get(route('scholars.title-approval.show', [$scholar, $appeal]))
-            ->assertViewIs('title-approval.form');
+            ->assertViewIs('title-approval.show');
 
         $user->roles->first()->revokePermissionTo('title approval:approve');
 
@@ -206,7 +206,7 @@ class ScholarTitleApprovalProcessTest extends TestCase
 
         $this->withoutExceptionHandling()
             ->get(route('scholars.title-approval.show', [$scholar, $appeal]))
-            ->assertViewIs('title-approval.form');
+            ->assertViewIs('title-approval.show');
     }
 
     /** @test */
@@ -251,7 +251,7 @@ class ScholarTitleApprovalProcessTest extends TestCase
 
         $this->withoutExceptionHandling()
             ->get(route('scholars.title-approval.show', [$scholar, $appeal]))
-            ->assertViewIs('title-approval.form');
+            ->assertViewIs('title-approval.show');
     }
 
     /** @test */

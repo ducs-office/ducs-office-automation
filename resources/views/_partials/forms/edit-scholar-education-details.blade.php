@@ -18,13 +18,12 @@
             'year' => '',
         ]"/>
 
-    @if($errors->update->hasAny('education_details.*', 'education_details'))
-        @foreach (collect($errors->update->messages())->flatten(2) as $message)
-            <p class="text-red-600 text-sm">
-                {{ $message }}
-            </p>
-        @endforeach
-    @endif
+    @error('education_details', 'update')
+        <p class="text-red-500"> {{ $message }} </p>
+    @enderror
+    @error('education_details.*', 'update')
+        <p class="text-red-500"> {{ $message }} </p>
+    @enderror
     <div>
         <button type="submit" class="btn btn-magenta">Update</button>
     </div>

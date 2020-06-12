@@ -62,7 +62,7 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
 
         $this->withoutExceptionHandling()
             ->get(route('scholars.pre-phd-seminar.request', $scholar))
-            ->assertViewIs('pre-phd-seminar.form');
+            ->assertViewIs('pre-phd-seminar.show');
     }
 
     /** @test */
@@ -182,7 +182,7 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
 
         $this->withoutExceptionHandling()
             ->get(route('scholars.pre-phd-seminar.show', [$scholar, $appeal]))
-            ->assertViewIs('pre-phd-seminar.form');
+            ->assertViewIs('pre-phd-seminar.show');
     }
 
     /** @test */
@@ -204,7 +204,7 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
 
         $this->withoutExceptionHandling()
             ->get(route('scholars.pre-phd-seminar.show', [$scholar, $appeal]))
-            ->assertViewIs('pre-phd-seminar.form');
+            ->assertViewIs('pre-phd-seminar.show');
 
         $user->roles->first()->revokePermissionTo('phd seminar:finalize');
 
@@ -232,7 +232,7 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
 
         $this->withoutExceptionHandling()
              ->get(route('scholars.pre-phd-seminar.show', [$scholar, $appeal]))
-             ->assertViewIs('pre-phd-seminar.form');
+             ->assertViewIs('pre-phd-seminar.show');
 
         $user->roles->first()->revokePermissionTo('phd seminar:add schedule');
 
@@ -257,7 +257,7 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
 
         $this->withoutExceptionHandling()
             ->get(route('scholars.pre-phd-seminar.show', [$scholar, $appeal]))
-            ->assertViewIs('pre-phd-seminar.form');
+            ->assertViewIs('pre-phd-seminar.show');
     }
 
     /** @test */
@@ -299,7 +299,7 @@ class ScholarPrePhDSeminarProcessTest extends TestCase
 
         $this->withoutExceptionHandling()
             ->get(route('scholars.pre-phd-seminar.show', [$scholar, $appeal]))
-            ->assertViewIs('pre-phd-seminar.form');
+            ->assertViewIs('pre-phd-seminar.show');
     }
 
     /** @test */

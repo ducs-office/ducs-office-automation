@@ -4,22 +4,27 @@ $currentCosupervisor = $scholar->currentCosupervisor;
 $currentAdvisors = $scholar->currentAdvisors;
 @endphp
 @push('modals')
-<x-modal name="update-advisors-modal" class="p-6 w-1/2 mx-auto">
-    @include('_partials.forms.update-advisors')
-</x-modal>
-<x-modal name="replace-advisors-modal">
-    <p>Replace Advisors</p>
-</x-modal>
+@can('manageAdvisoryCommittee', $scholar)
+    <x-modal name="update-advisors-modal" class="p-6 w-1/2 mx-auto"
+        :open="$errors->update->hasAny(['advisors', 'advisors.*'])">
+        @include('_partials.forms.manage-advisors', [
+            'headerMessage' => 'Update Advisors',
+            'routeName' => 'scholars.advisors.update',
+        ])
+    </x-modal>
+    <x-modal name="replace-advisors-modal" class="p-6 w-1/2 mx-auto" 
+        :open="$errors->update->hasAny(['advisors', 'advisors.*'])">
+        @include('_partials.forms.manage-advisors', [
+            'headerMessage' => 'Replace Advisors',
+            'routeName' => 'scholars.advisors.replace'
+        ])
+    </x-modal>
+@endcan
 @endpush
-<div>
-    <div class="w-64 pr-4 relative -ml-8 my-6">
-        <h3 class="relative pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
-            Research Committee
-        </h3>
-        <svg class="absolute left-0 w-2 text-magenta-900" viewBox="0 0 10 10">
-            <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
-        </svg>
-    </div>
+<div class="flex items-center">
+    <h3 class="px-3 text-lg font-bold">
+        Research Committee
+    </h3>
 </div>
 <div class="flex-1 mt-4 space-y-4">
     <div>
@@ -79,23 +84,25 @@ $currentAdvisors = $scholar->currentAdvisors;
     <div>
         <div class="px-2 text-sm font-bold flex justify-between mb-1">
             <h4 class="text-gray-800 uppercase tracking-wider">Advisors</h4>
-            @if($currentAdvisors->count() > 0)
             <div class="inline-flex items-center space-x-4">
-                <x-modal.trigger modal="update-advisors-modal" class="inline-flex items-center space-x-1 link">
-                    <x-feather-icon name="edit-3" class="h-current"></x-feather-icon>
-                    <span>Change</span>
-                </x-modal.trigger>
-                <x-modal.trigger modal="replace-advisors-modal" class="inline-flex items-center space-x-1 link">
-                    <x-feather-icon name="refresh-cw" class="h-current"></x-feather-icon>
-                    <span>Replace</span>
-                </x-modal.trigger>
+                @can('manageAdvisoryCommittee', $scholar)
+                    <x-modal.trigger modal="update-advisors-modal" class="inline-flex items-center space-x-1 link">
+                        <x-feather-icon name="edit-3" class="h-current"></x-feather-icon>
+                        <span>Change</span>
+                    </x-modal.trigger>
+                    <x-modal.trigger modal="replace-advisors-modal" class="inline-flex items-center space-x-1 link">
+                        <x-feather-icon name="refresh-cw" class="h-current"></x-feather-icon>
+                        <span>Replace</span>
+                    </x-modal.trigger>
+                @endcan
+                @if($currentAdvisors->count() > 0)
                 <button class="inline-flex items-center space-x-1 link">
                     <x-feather-icon name="clock" class="h-current"></x-feather-icon>
                     <span>See History</span>
                 </button>
                 <h6 class="text-gray-600">Since {{ $currentAdvisors->min('pivot.started_on')->format('M d, Y') }}</h6>
+                @endif
             </div>
-            @endif
         </div>
         <ul class="border rounded-lg overflow-hidden divide-y mb-4">
             @forelse ($scholar->currentAdvisors as $member)

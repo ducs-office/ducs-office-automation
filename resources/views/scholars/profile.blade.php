@@ -22,22 +22,23 @@
             </div>
         </x-slot>
 
-        <x-tab-content tab="info" class="flex space-x-6">
+        <x-tab-content tab="info" class="mt-5 w-full max-w-2xl mx-auto">
             @include('_partials.scholar-profile.basic-info')
         </x-tab-content>
 
-        <x-tab-content tab="admission" class="flex space-x-6">
+        <x-tab-content tab="admission" class="mt-5 w-full max-w-2xl mx-auto">
             @include('_partials.scholar-profile.admission-details')
         </x-tab-content>
 
-        <x-tab-content tab="education" class="flex space-x-6">
+        <x-tab-content tab="education" class="mt-5 w-full max-w-2xl mx-auto">
             @include('_partials.scholar-profile.education-details')
         </x-tab-content>
 
-        <x-tab-content tab="committee" class="flex space-x-6">
+        <x-tab-content tab="committee" class="mt-5 w-full max-w-2xl mx-auto">
             @include('_partials.scholar-profile.research-committee')
         </x-tab-content>
     </x-tabbed-pane>
+
     <div class="container mx-auto p-4 space-y-8">
         @include('_partials.research.scholar-profile.publications')
     </div>

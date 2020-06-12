@@ -23,7 +23,7 @@ class TitleApprovalController extends Controller
     {
         $this->authorize('create', [TitleApproval::class, $scholar]);
 
-        return view('title-approval.form', [
+        return view('title-approval.show', [
             'scholar' => $scholar,
         ]);
     }
@@ -45,7 +45,7 @@ class TitleApprovalController extends Controller
     {
         $this->authorize('view', [$titleApproval, $scholar]);
 
-        return view('title-approval.form', [
+        return view('title-approval.show', [
             'scholar' => $scholar,
         ]);
     }

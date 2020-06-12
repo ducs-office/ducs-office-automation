@@ -9,16 +9,11 @@
         ])
     </x-modal>
 @endpush
-<div>
-    <div class="w-64 pr-4 relative -ml-8 my-6">
-        <h3 class="relative pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
-            Education Details
-        </h3>
-        <svg class="absolute left-0 w-2 text-magenta-900" viewBox="0 0 10 10">
-            <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
-        </svg>
-    </div>
-    <div class="mt-4">
+<div class="flex items-center">
+    <h3 class="px-3 text-lg font-bold">
+        Education Details
+    </h3>
+    <div class="ml-auto">
         @can('updateProfile', [App\Models\Scholar::class, $scholar])
         <x-modal.trigger modal="edit-scholar-education-details-modal"
             class="p-1 text-gray-700 font-bold hover:text-blue-600 transition duration-300 transform hover:scale-110">

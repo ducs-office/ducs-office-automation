@@ -23,7 +23,7 @@ class PrePhdSeminarController extends Controller
     {
         $this->authorize('create', [PrePhdSeminar::class, $scholar]);
 
-        return view('pre-phd-seminar.form', [
+        return view('pre-phd-seminar.show', [
             'scholar' => $scholar,
         ]);
     }
@@ -32,7 +32,7 @@ class PrePhdSeminarController extends Controller
     {
         $this->authorize('view', [$prePhdSeminar, $scholar]);
 
-        return view('pre-phd-seminar.form', [
+        return view('pre-phd-seminar.show', [
             'scholar' => $scholar,
         ]);
     }
