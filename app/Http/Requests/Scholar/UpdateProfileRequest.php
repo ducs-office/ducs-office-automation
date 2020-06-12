@@ -2,7 +2,11 @@
 
 namespace App\Http\Requests\Scholar;
 
+use App\Models\ScholarEducationDegree;
+use App\Models\ScholarEducationInstitute;
+use App\Models\ScholarEducationSubject;
 use App\Types\AdmissionMode;
+use App\Types\EducationInfo;
 use App\Types\FundingType;
 use App\Types\Gender;
 use App\Types\ReservationCategory;
@@ -26,7 +30,7 @@ class UpdateProfileRequest extends FormRequest
                 'sometimes', Rule::requiredIf($scholar->gender != null),
                 Rule::in(Gender::values()),
             ],
-            'phone' => ['sometimes', Rule::requiredIf($scholar->phone != null), 'size:10', 'string'],
+            'phone' => ['sometimes', Rule::requiredIf($scholar->phone != null), 'digits:10', 'string'],
             'address' => ['sometimes', Rule::requiredIf($scholar->address != null), 'string'],
             'category' => [
                 'sometimes', Rule::requiredIf($scholar->category != null),
@@ -46,11 +50,22 @@ class UpdateProfileRequest extends FormRequest
             'enrolment_id' => ['sometimes', Rule::requiredIf($scholar->enrolment_id != null), 'string', 'max:30'],
             'education_details' => ['required', 'array', 'max: 4', 'min:1'],
             'education_details.*' => ['required', 'array', 'size:4'],
-            'education_details.*.degree' => ['required', 'string', 'max:190'],
-            'education_details.*.subject' => ['required', 'string', 'max:190'],
-            'education_details.*.institute' => ['required', 'string', 'max:190'],
-            'education_details.*.year' => ['required', 'string'],
+            'education_details.*.degree' => ['required', 'string', 'max:190', 'min:2'],
+            'education_details.*.subject' => ['required', 'string', 'max:190', 'min:3'],
+            'education_details.*.institute' => ['required', 'string', 'max:190', 'min:2'],
+            'education_details.*.year' => ['required', 'string', 'digits:4'],
         ];
+    }
+
+    public function getEducationDetails()
+    {
+        return collect($this->education_details)
+            ->map(function ($education) {
+                ScholarEducationSubject::firstOrCreate(['name' => $education['subject']]);
+                ScholarEducationDegree::firstOrCreate(['name' => $education['degree']]);
+                ScholarEducationInstitute::firstOrCreate(['name' => $education['institute']]);
+                return new EducationInfo($education);
+            })->toArray();
     }
 
     protected function failedValidation(Validator $validator)

@@ -7,26 +7,30 @@ use Livewire\Component;
 class AddRemove extends Component
 {
     public $view;
-    public $viewDataName;
+    public $itemsName;
     public $items;
+    public $newItem;
+    public $data;
 
-    public function mount($view, $viewDataName = 'data', $items = [])
+    public function mount($view, $itemsName = 'items', $items = [], $newItem = null, $data = [])
     {
         $this->view = $view;
-        $this->viewDataName = $viewDataName;
+        $this->itemsName = $itemsName;
         $this->items = $items;
+        $this->newItem = $newItem;
+        $this->data = $data;
     }
 
     public function render()
     {
-        return view($this->view, [
-            $this->viewDataName => $this->items,
-        ]);
+        return view($this->view, array_merge($this->data, [
+            $this->itemsName => $this->items,
+        ]));
     }
 
-    public function add($item = null)
+    public function add()
     {
-        $this->items[] = $item;
+        $this->items[] = $this->newItem;
     }
 
     public function remove($index)

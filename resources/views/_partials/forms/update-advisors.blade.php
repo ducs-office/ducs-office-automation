@@ -3,7 +3,7 @@
     <livewire:add-remove
         view="livewire.advisors-list"
         :items="$scholar->currentAdvisors->map->id->all()"
-        view-data-name="advisors" />
+        items-name="advisors" />
     <div>
         <button type="submit" class="btn btn-magenta">Update</button>
     </div>

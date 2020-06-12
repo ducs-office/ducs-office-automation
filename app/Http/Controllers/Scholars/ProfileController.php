@@ -44,6 +44,9 @@ class ProfileController extends Controller
             'eventTypes' => PresentationEventType::values(),
             'documentTypes' => ScholarDocumentType::values(),
             'recommendations' => ProgressReportRecommendation::values(),
+            'degrees' => ScholarEducationDegree::all(),
+            'institutes' => ScholarEducationInstitute::all(),
+            'subjects' => ScholarEducationSubject::all(),
         ]);
     }
 
@@ -53,13 +56,9 @@ class ProfileController extends Controller
 
         $data = $request->validated();
 
-        $data['education_details'] = collect($request->education_details)
-            ->map(function ($education) {
-                ScholarEducationSubject::firstOrCreate(['name' => $education['subject']]);
-                ScholarEducationDegree::firstOrCreate(['name' => $education['degree']]);
-                ScholarEducationInstitute::firstOrCreate(['name' => $education['institute']]);
-                return new EducationInfo($education);
-            })->toArray();
+        if ($request->has('education_details')) {
+            $data['education_details'] = $request->getEducationDetails();
+        }
 
         if ($request->hasFile('avatar')) {
             $data['avatar_path'] = $request->file('avatar')->store('/avatars/scholars');
