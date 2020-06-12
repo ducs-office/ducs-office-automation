@@ -4,8 +4,10 @@ namespace App\Http\Requests;
 
 use App\Models\User;
 use App\Types\UserCategory;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 class ChangeScholarAdvisorsRequest extends FormRequest
 {
@@ -65,5 +67,14 @@ class ChangeScholarAdvisorsRequest extends FormRequest
             // 'advisors.*.phone' => ['nullable', 'string'],
             // 'advisors.*.address' => ['nullable', 'string'],
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        $response = redirect()->back()
+            ->withInput($this->input())
+            ->withErrors($validator->errors()->messages(), 'update');
+
+        throw new ValidationException($validator, $response);
     }
 }

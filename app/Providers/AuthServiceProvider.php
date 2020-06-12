@@ -49,7 +49,5 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         $this->registerPolicies();
-
-        Gate::define('scholars.advisory_committee.manage', ScholarProfilePolicy::class . '@manageAdvisoryCommittee');
     }
 }

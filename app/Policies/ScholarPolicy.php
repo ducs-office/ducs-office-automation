@@ -43,9 +43,32 @@ class ScholarPolicy
         return $user->can('scholars:delete');
     }
 
+    /**
+     * Determine whether the user can update scholar profile.
+     *
+     * @param $user
+     * @param Scholar $scholar
+     *
+     * @return mixed
+     */
     public function updateProfile($user, Scholar $scholar)
     {
         return get_class($user) === Scholar::class
             && $user->id === $scholar->id;
+    }
+
+    /**
+     * Determine whether the user can manage(update/replace) a scholar's advisory committee
+     *
+     * @param $user
+     * @param Scholar $scholar
+     *
+     * @return mixed
+     */
+    public function manageAdvisoryCommittee($user, Scholar $scholar)
+    {
+        return get_class($user) === User::class &&
+            $user->isSupervisor() &&
+            (int) $user->id === (int) $scholar->currentSupervisor->id;
     }
 }

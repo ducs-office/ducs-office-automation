@@ -48,7 +48,10 @@ class UpdateProfileRequest extends FormRequest
             'research_area' => ['sometimes', Rule::requiredIf($scholar->research_area != null)],
             'registration_date' => ['sometimes', Rule::requiredIf($scholar->registration_date != null), 'before:today'],
             'enrolment_id' => ['sometimes', Rule::requiredIf($scholar->enrolment_id != null), 'string', 'max:30'],
-            'education_details' => ['required', 'array', 'max: 4', 'min:1'],
+            'education_details' => [
+                Rule::requiredIf($scholar->education_details != null),
+                'sometimes', 'array', 'max: 4', 'min:1',
+            ],
             'education_details.*' => ['required', 'array', 'size:4'],
             'education_details.*.degree' => ['required', 'string', 'max:190', 'min:2'],
             'education_details.*.subject' => ['required', 'string', 'max:190', 'min:3'],

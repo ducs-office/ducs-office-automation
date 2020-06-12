@@ -1,11 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Scholars;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ChangeScholarAdvisorsRequest;
 use App\Http\Requests\Scholar\UpdateProfileRequest;
 use App\Models\Cosupervisor;
 use App\Models\PhdCourse;
+use App\Models\Pivot\ScholarAdvisor;
 use App\Models\Scholar;
 use App\Models\ScholarEducationDegree;
 use App\Models\ScholarEducationInstitute;
@@ -25,7 +27,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 
-class ProfileController extends Controller
+class ScholarProfileController extends Controller
 {
     public function show(Scholar $scholar, Request $request)
     {
@@ -36,6 +38,10 @@ class ProfileController extends Controller
 
         return view('scholars.profile', [
             'scholar' => $scholar,
+            'genders' => Gender::values(),
+            'categories' => ReservationCategory::values(),
+            'admissionModes' => AdmissionMode::values(),
+            'fundings' => FundingType::values(),
             'degrees' => ScholarEducationDegree::all(),
             'institutes' => ScholarEducationInstitute::all(),
             'subjects' => ScholarEducationSubject::all(),
@@ -44,7 +50,7 @@ class ProfileController extends Controller
 
     public function update(Scholar $scholar, UpdateProfileRequest $request)
     {
-        $this->authorize('updateProfile', [Scholar::class, $scholar]);
+        $this->authorize('updateProfile', $scholar);
 
         $data = $request->validated();
 
@@ -76,5 +82,46 @@ class ProfileController extends Controller
         return Response::make($gravatar_contents, 200, [
             'Content-Type' => 'image/jpg',
         ]);
+    }
+
+    public function updateAdvisors(ChangeScholarAdvisorsRequest $request, Scholar $scholar)
+    {
+        $this->authorize('manageAdvisoryCommittee', $scholar);
+
+        $startedDate = $scholar->currentAdvisors->min('pivot.started_on') ?? $scholar->created_at;
+
+        $scholar->advisors()->detach($scholar->currentAdvisors);
+        $scholar->advisors()->attach($request->advisors, [
+            'started_on' => $startedDate,
+        ]);
+
+        flash('Advisors Updated SuccessFully!')->success();
+
+        return back();
+    }
+
+    public function replaceAdvisors(ChangeScholarAdvisorsRequest $request, Scholar $scholar)
+    {
+        $this->authorize('manageAdvisoryCommittee', $scholar);
+
+        if ($scholar->currentAdvisors->count() == 0) {
+            flash('There must be advisors already assigned to be replaced.')->warning();
+            return redirect()->back();
+        }
+
+        $newAdvisors = collect($request->advisors)
+                ->mapWithKeys(function ($advisor) {
+                    return [$advisor => ['started_on' => today()]];
+                });
+
+        foreach ($scholar->currentAdvisors as $currentAdvisor) {
+            $currentAdvisor->pivot->update(['ended_on' => today()]);
+        }
+
+        $scholar->advisors()->attach($newAdvisors->toArray());
+
+        flash('Advisors Updated SuccessFully!')->success();
+
+        return back();
     }
 }

@@ -38,7 +38,7 @@ class SupervisorManagesScholarAdvisoryCommiteeTest extends TestCase
         $this->signIn($supervisor);
 
         $this->withoutExceptionHandling()
-            ->patch(route('research.scholars.advisors.update', $scholar), [
+            ->patch(route('scholars.advisors.update', $scholar), [
                 'advisors' => [$facultyCosupervisor->id],
             ])->assertRedirect()
             ->assertSessionHasFlash('success', 'Advisors Updated SuccessFully!');
@@ -72,7 +72,7 @@ class SupervisorManagesScholarAdvisoryCommiteeTest extends TestCase
         $this->signIn($supervisor);
 
         $this->withoutExceptionHandling()
-            ->patch(route('research.scholars.advisors.update', $scholar), [
+            ->patch(route('scholars.advisors.update', $scholar), [
                 'advisors' => [$facultyCosupervisor->id],
             ])->assertRedirect()
             ->assertSessionHasFlash('success', 'Advisors Updated SuccessFully!');
@@ -105,7 +105,7 @@ class SupervisorManagesScholarAdvisoryCommiteeTest extends TestCase
         // Try adding current Supervisor and cosupervisor as advisors.
         try {
             $this->withoutExceptionHandling()
-                ->patch(route('research.scholars.advisors.update', $scholar), [
+                ->patch(route('scholars.advisors.update', $scholar), [
                     'advisors' => [
                         $supervisor->id,
                         $cosupervisor->id,
@@ -124,7 +124,7 @@ class SupervisorManagesScholarAdvisoryCommiteeTest extends TestCase
         // Try adding current same person as two different advisors.
         try {
             $this->withoutExceptionHandling()
-                ->patch(route('research.scholars.advisors.update', $scholar), [
+                ->patch(route('scholars.advisors.update', $scholar), [
                     'advisors' => [
                         $existingExternals[0]->id,
                         $existingExternals[0]->id,
@@ -163,7 +163,7 @@ class SupervisorManagesScholarAdvisoryCommiteeTest extends TestCase
     //     $this->signIn($supervisor);
 
     //     $this->withoutExceptionHandling()
-    //         ->patch(route('research.scholars.advisors.update', $scholar), [
+    //         ->patch(route('scholars.advisors.update', $scholar), [
     //             'advisors' => [
     //                 $external = make(ExternalAuthority::class)->attributesToArray(),
     //             ],
@@ -206,7 +206,7 @@ class SupervisorManagesScholarAdvisoryCommiteeTest extends TestCase
         $this->signIn($supervisor);
 
         $this->withoutExceptionHandling()
-            ->patch(route('research.scholars.advisors.replace', $scholar), [
+            ->patch(route('scholars.advisors.replace', $scholar), [
                 'advisors' => [$facultyCosupervisor->id],
             ])->assertRedirect()
             ->assertSessionHasFlash('success', 'Advisors Updated SuccessFully!');
@@ -246,7 +246,7 @@ class SupervisorManagesScholarAdvisoryCommiteeTest extends TestCase
     //     $this->signIn($supervisor);
 
     //     $this->withoutExceptionHandling()
-    //         ->patch(route('research.scholars.advisors.replace', $scholar), [
+    //         ->patch(route('scholars.advisors.replace', $scholar), [
     //             'advisors' => [
     //                 $external = make(ExternalAuthority::class)->attributesToArray(),
     //             ],
@@ -287,7 +287,7 @@ class SupervisorManagesScholarAdvisoryCommiteeTest extends TestCase
         // Try adding current Supervisor and cosupervisor as advisors.
         try {
             $this->withoutExceptionHandling()
-                ->patch(route('research.scholars.advisors.replace', $scholar), [
+                ->patch(route('scholars.advisors.replace', $scholar), [
                     'advisors' => [
                         $supervisor->id,
                         $cosupervisor->id,
@@ -306,7 +306,7 @@ class SupervisorManagesScholarAdvisoryCommiteeTest extends TestCase
         // Try adding current same person as two different advisors.
         try {
             $this->withoutExceptionHandling()
-                ->patch(route('research.scholars.advisors.replace', $scholar), [
+                ->patch(route('scholars.advisors.replace', $scholar), [
                     'advisors' => [
                         $existingExternals[0]->id,
                         $existingExternals[0]->id,
@@ -336,7 +336,7 @@ class SupervisorManagesScholarAdvisoryCommiteeTest extends TestCase
         $this->signIn($supervisor);
 
         $this->withoutExceptionHandling()
-            ->patch(route('research.scholars.advisors.replace', $scholar), [
+            ->patch(route('scholars.advisors.replace', $scholar), [
                 'advisors' => [$facultyCosupervisor->id],
             ])
             ->assertRedirect()

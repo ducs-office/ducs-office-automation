@@ -260,9 +260,21 @@ Route::delete(
 )->name('scholars.progress-reports.destroy')
 ->middleware('auth:web');
 
-Route::get('/scholars/@{scholar}', 'Scholars\ProfileController@show')->name('scholars.profile.show')->middleware('auth:web,scholars');
-Route::patch('/scholars/@{scholar}', 'Scholars\ProfileController@update')->name('scholars.profile.update')->middleware('auth:web,scholars');
-Route::get('/scholars/@{scholar}/avatar', 'Scholars\ProfileController@avatar')->name('scholars.profile.avatar')->middleware('auth:web,scholars');
+//===========Scholar-Profile==================
+Route::get('/scholars/@{scholar}', 'ScholarProfileController@show')->name('scholars.profile.show')->middleware('auth:web,scholars');
+Route::patch('/scholars/@{scholar}', 'ScholarProfileController@update')->name('scholars.profile.update')->middleware('auth:web,scholars');
+Route::get('/scholars/@{scholar}/avatar', 'ScholarProfileController@avatar')->name('scholars.profile.avatar')->middleware('auth:web,scholars');
+Route::patch(
+    '/scholars/@{scholar}/advisors',
+    'ScholarProfileController@updateAdvisors'
+)->name('scholars.advisors.update')
+->middleware('auth:web');
+
+Route::patch(
+    '/scholars/@{scholar}/advisors/replace',
+    'ScholarProfileController@replaceAdvisors'
+)->name('scholars.advisors.replace')
+->middleware('auth:web');
 
 Route::prefix('/research')
     ->middleware(['auth:web'])
@@ -273,20 +285,6 @@ Route::prefix('/research')
             '/publications',
             'ShowPublications'
         )->name('publications.index');
-
-        Route::patch(
-            '/scholars/{scholar}/advisors',
-            'ScholarController@updateAdvisors'
-        )->name('scholars.advisors.update');
-        Route::patch(
-            '/scholars/{scholar}/advisors',
-            'ScholarController@updateAdvisors'
-        )->name('scholars.advisors.update');
-
-        Route::patch(
-            '/scholars/{scholar}/advisors/replace',
-            'ScholarController@replaceAdvisors'
-        )->name('scholars.advisors.replace');
     });
 
 // =========Scholar Presentation===============
