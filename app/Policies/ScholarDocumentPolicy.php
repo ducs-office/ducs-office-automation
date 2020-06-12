@@ -11,6 +11,11 @@ class ScholarDocumentPolicy
 {
     use HandlesAuthorization;
 
+    public function viewAny()
+    {
+        return true;
+    }
+
     /**
      * Determine whether the user can view the model.
      *

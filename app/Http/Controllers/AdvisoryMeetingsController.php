@@ -11,8 +11,17 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
-class ScholarAdvisoryMeetingsController extends Controller
+class AdvisoryMeetingsController extends Controller
 {
+    public function index(Scholar $scholar)
+    {
+        $this->authorize('viewAny', [AdvisoryMeeting::class]);
+
+        return view('advisory-meetings', [
+            'scholar' => $scholar->load('advisoryMeetings'),
+        ]);
+    }
+
     public function store(Request $request, Scholar $scholar)
     {
         $this->authorize('create', [AdvisoryMeeting::class, $scholar]);

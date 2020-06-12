@@ -12,8 +12,17 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
-class ScholarLeavesController extends Controller
+class LeavesController extends Controller
 {
+    public function index(Scholar $scholar)
+    {
+        $this->authorize('viewAny', [Leave::class]);
+
+        return view('leaves', [
+            'scholar' => $scholar->load('leaves.extensions'),
+        ]);
+    }
+
     public function store(Request $request, Scholar $scholar)
     {
         $this->authorize('create', [Leave::class, $scholar]);

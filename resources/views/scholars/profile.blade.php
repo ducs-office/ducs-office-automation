@@ -49,11 +49,7 @@
         @include('_partials.research.scholar-profile.pre-phd-courseworks')
         @include('_partials.research.scholar-profile.publications')
         @include('_partials.research.scholar-profile.presentations')
-        @include('_partials.research.scholar-profile.leaves')
-        @include('_partials.research.scholar-profile.advisory-meetings')
         @include('_partials.research.scholar-profile.progress-reports')
-        @include('_partials.research.scholar-profile.documents')
-        @include('_partials.research.scholar-profile.pre-phd-seminar')
         @include('_partials.research.scholar-profile.title-approval')
         @include('_partials.research.scholar-profile.examiner')
 @endsection

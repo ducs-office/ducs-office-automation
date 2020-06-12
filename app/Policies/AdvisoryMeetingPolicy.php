@@ -16,9 +16,9 @@ class AdvisoryMeetingPolicy
      *
      * @return mixed
      */
-    public function viewAny(User $user)
+    public function viewAny()
     {
-        //for index
+        return true;
     }
 
     /**

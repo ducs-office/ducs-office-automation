@@ -22,56 +22,70 @@ Route::get('/password/reset/{token?}', 'Auth\ResetPasswordController@showResetFo
 Route::post('/password/reset', 'Auth\ResetPasswordController@reset')->middleware(['guest', 'guest:scholars'])->name('password.update');
 
 //============ scholar leaves ====================
+Route::get(
+    '/scholars/@{scholar}/leaves',
+    'LeavesController@index'
+)->name('scholars.leaves.index')->middleware('auth:web,scholars');
 
 Route::get(
-    '/scholars/{scholar}/leaves/{leave}/response-letter',
-    'ScholarLeavesController@viewResponseLetter'
+    '/scholars/@{scholar}/leaves/{leave}/response-letter',
+    'LeavesController@viewResponseLetter'
 )->name('scholars.leaves.response_letter')->middleware('auth:web,scholars');
 
 Route::get(
-    '/scholars/{scholar}/leaves/{leave}/application',
-    'ScholarLeavesController@viewApplication'
+    '/scholars/@{scholar}/leaves/{leave}/application',
+    'LeavesController@viewApplication'
 )->name('scholars.leaves.application')->middleware('auth:web,scholars');
 
 Route::post(
-    '/scholars/{scholar}/leaves',
-    'ScholarLeavesController@store'
+    '/scholars/@{scholar}/leaves',
+    'LeavesController@store'
 )->name('scholars.leaves.store')->middleware('auth:scholars');
 
 Route::patch(
-    '/scholars/{scholar}/leaves/{leave}/recommend',
-    'ScholarLeavesController@recommend'
+    '/scholars/@{scholar}/leaves/{leave}/recommend',
+    'LeavesController@recommend'
 )->name('scholars.leaves.recommend')->middleware('auth:web');
 
 Route::patch(
-    '/scholars/{scholar}/leaves/{leave}/respond',
-    'ScholarLeavesController@respond'
+    '/scholars/@{scholar}/leaves/{leave}/respond',
+    'LeavesController@respond'
 )->name('scholars.leaves.respond')->middleware('auth:web');
 
 //============ scholar advisory meetings =================
+Route::get(
+    '/scholars/@{scholar}/advisory-meetings',
+    'AdvisoryMeetingsController@index'
+)->name('scholars.advisory_meetings.index')->middleware('auth:web,scholars');
+
 Route::post(
-    '/scholars/{scholar}/advisory-meetings',
-    'ScholarAdvisoryMeetingsController@store'
+    '/scholars/@{scholar}/advisory-meetings',
+    'AdvisoryMeetingsController@store'
 )->name('scholars.advisory_meetings.store')->middleware('auth:web');
 
 Route::get(
-    '/scholars/{scholar}/advisory-meetings/{meeting}',
-    'ScholarAdvisoryMeetingsController@show'
+    '/scholars/@{scholar}/advisory-meetings/{meeting}',
+    'AdvisoryMeetingsController@show'
 )->name('scholars.advisory_meetings.show')->middleware('auth:web,scholars');
 
 //============ scholar documents =====================
 Route::get(
-    'scholars/{scholar}/document/{document}',
+    'scholars/@{scholar}/documents',
+    'ScholarDocumentsController@index'
+)->name('scholars.documents.index')->middleware('auth:web,scholars');
+
+Route::get(
+    'scholars/@{scholar}/document/{document}',
     'ScholarDocumentsController@show'
 )->name('scholars.documents.show')->middleware('auth:web,scholars');
 
 Route::post(
-    '/scholars/{scholar}/document',
+    '/scholars/@{scholar}/document',
     'ScholarDocumentsController@store'
 )->name('scholars.documents.store')->middleware('auth:web,scholars');
 
 Route::delete(
-    '/scholars/{scholar}/document/{document}',
+    '/scholars/@{scholar}/document/{document}',
     'ScholarDocumentsController@destroy'
 )->name('scholars.documents.destroy')->middleware('auth:web,scholars');
 

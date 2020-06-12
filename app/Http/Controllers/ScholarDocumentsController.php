@@ -18,6 +18,14 @@ class ScholarDocumentsController extends Controller
         $this->authorizeResource(ScholarDocument::class, 'document');
     }
 
+    public function index(Scholar $scholar)
+    {
+        return view('scholar-documents', [
+            'scholar' => $scholar->load('documents'),
+            'documentTypes' => ScholarDocumentType::values(),
+        ]);
+    }
+
     public function show(Scholar $scholar, ScholarDocument $document)
     {
         abort_if($scholar->id !== $document->scholar->id, 404);

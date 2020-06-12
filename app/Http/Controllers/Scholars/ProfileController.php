@@ -42,7 +42,6 @@ class ProfileController extends Controller
             'scholar' => $scholar,
             'courses' => $courses,
             'eventTypes' => PresentationEventType::values(),
-            'documentTypes' => ScholarDocumentType::values(),
             'recommendations' => ProgressReportRecommendation::values(),
             'degrees' => ScholarEducationDegree::all(),
             'institutes' => ScholarEducationInstitute::all(),
