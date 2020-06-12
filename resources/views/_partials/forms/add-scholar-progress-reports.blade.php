@@ -1,4 +1,4 @@
-<form action="{{ route('scholars.progress_reports.store', $scholar) }}" method="POST"
+<form action="{{ route('scholars.progress-reports.store', $scholar) }}" method="POST"
     class="space-y-3" enctype="multipart/form-data"
     x-data="{recommendation: '{{old('recommendation', '')}}' }">
     @csrf_token

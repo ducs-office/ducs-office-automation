@@ -13,15 +13,22 @@ class PresentationPolicy
 
     public function viewAny($user)
     {
-        return (Auth::guard('scholars')->check() || (
-            method_exists($user, 'isSupervisor') &&
-            $user->isSupervisor()
-        ));
+        return true;
     }
 
-    public function create(Scholar $scholar)
+    public function view($user, Presentation $presentation)
     {
-        return true;
+        return (get_class($user) === Scholar::class
+            && (int) $presentation->publication->author_id === $user->id)
+            || (
+                method_exists($user, 'isSupervisor') &&
+                $user->isSupervisor()
+            );
+    }
+
+    public function create($user)
+    {
+        return get_class($user) === Scholar::class;
     }
 
     public function update(Scholar $scholar, Presentation $presentation)

@@ -34,7 +34,7 @@ class StoreScholarProgressReportTest extends TestCase
         $this->assertCount(0, $scholar->progressReports);
 
         $this->withoutExceptionHandling()
-            ->post(route('scholars.progress_reports.store', $scholar), [
+            ->post(route('scholars.progress-reports.store', $scholar), [
                 'progress_report' => $progressReport,
                 'recommendation' => $recommendation = Arr::random(array_values(ProgressReportRecommendation::values())),
                 'date' => $date = '2019-09-12',
@@ -70,7 +70,7 @@ class StoreScholarProgressReportTest extends TestCase
         $this->assertCount(0, $scholar->progressReports);
 
         $this->withExceptionHandling()
-            ->post(route('scholars.progress_reports.store', $scholar), [
+            ->post(route('scholars.progress-reports.store', $scholar), [
                 'progress_report' => $progressReport,
                 'recommendation' => $recommendation = Arr::random(array_values(ProgressReportRecommendation::values())),
                 'date' => $date = '2019-09-12',
@@ -96,7 +96,7 @@ class StoreScholarProgressReportTest extends TestCase
 
         try {
             $this->withoutExceptionHandling()
-                ->post(route('scholars.progress_reports.store', $scholar), [
+                ->post(route('scholars.progress-reports.store', $scholar), [
                     'progress_report' => $progressReport,
                     'recommendation' => $recommendation = 'Progress Report Description',
                     'date' => $date = '2019-09-12',
@@ -108,7 +108,7 @@ class StoreScholarProgressReportTest extends TestCase
         $this->assertCount(0, $scholar->fresh()->progressReports);
 
         $this->withoutExceptionHandling()
-            ->post(route('scholars.progress_reports.store', $scholar), [
+            ->post(route('scholars.progress-reports.store', $scholar), [
                 'progress_report' => $progressReport,
                 'recommendation' => $recommendation = ProgressReportRecommendation::CONTINUE,
                 'date' => $date = '2019-09-12',

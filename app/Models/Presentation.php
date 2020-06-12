@@ -20,4 +20,9 @@ class Presentation extends Model
     {
         return $this->belongsTo(Publication::class);
     }
+
+    public function scholar()
+    {
+        return $this->belongsTo(Scholar::class);
+    }
 }

@@ -58,7 +58,7 @@ class ScholarTitleApprovalProcessTest extends TestCase
         $this->addPrePhdRequest($scholar);
 
         $this->withoutExceptionHandling()
-            ->get(route('scholars.title_approval.request', $scholar))
+            ->get(route('scholars.title-approval.request', $scholar))
             ->assertViewIs('research.scholars.title-approval-form');
     }
 
@@ -79,11 +79,11 @@ class ScholarTitleApprovalProcessTest extends TestCase
         $this->addPrePhdRequest($scholar);
 
         $this->withExceptionHandling()
-            ->get(route('scholars.title_approval.request', $scholar))
+            ->get(route('scholars.title-approval.request', $scholar))
             ->assertForbidden();
 
         $this->withExceptionHandling()
-            ->post(route('scholars.title_approval.apply', $scholar))
+            ->post(route('scholars.title-approval.apply', $scholar))
             ->assertForbidden();
     }
 
@@ -102,21 +102,21 @@ class ScholarTitleApprovalProcessTest extends TestCase
         $this->addScholarDocuments($scholar);
 
         $this->withExceptionHandling()
-            ->get(route('scholars.title_approval.request', $scholar))
+            ->get(route('scholars.title-approval.request', $scholar))
             ->assertForbidden();
 
         $this->withExceptionHandling()
-            ->post(route('scholars.title_approval.apply', $scholar))
+            ->post(route('scholars.title-approval.apply', $scholar))
             ->assertForbidden();
 
         $this->signInScholar(create(User::class));
 
         $this->withExceptionHandling()
-            ->get(route('scholars.title_approval.request', $scholar))
+            ->get(route('scholars.title-approval.request', $scholar))
             ->assertForbidden();
 
         $this->withExceptionHandling()
-            ->post(route('scholars.title_approval.apply', $scholar))
+            ->post(route('scholars.title-approval.apply', $scholar))
             ->assertForbidden();
     }
 
@@ -130,11 +130,11 @@ class ScholarTitleApprovalProcessTest extends TestCase
         $this->assertFalse($scholar->canApplyForTitleApproval());
 
         $this->withExceptionHandling()
-            ->get(route('scholars.title_approval.request', $scholar))
+            ->get(route('scholars.title-approval.request', $scholar))
             ->assertForbidden();
 
         $this->withExceptionHandling()
-            ->post(route('scholars.title_approval.apply', $scholar))
+            ->post(route('scholars.title-approval.apply', $scholar))
             ->assertForbidden();
     }
 
@@ -154,7 +154,7 @@ class ScholarTitleApprovalProcessTest extends TestCase
         ]);
 
         $this->withoutExceptionHandling()
-            ->get(route('scholars.title_approval.show', [$scholar, $appeal]))
+            ->get(route('scholars.title-approval.show', [$scholar, $appeal]))
             ->assertViewIs('research.scholars.title-approval-form');
     }
 
@@ -178,13 +178,13 @@ class ScholarTitleApprovalProcessTest extends TestCase
         ]);
 
         $this->withoutExceptionHandling()
-            ->get(route('scholars.title_approval.show', [$scholar, $appeal]))
+            ->get(route('scholars.title-approval.show', [$scholar, $appeal]))
             ->assertViewIs('research.scholars.title-approval-form');
 
         $user->roles->first()->revokePermissionTo('title approval:approve');
 
         $this->withExceptionHandling()
-            ->get(route('scholars.title_approval.show', [$scholar, $appeal]))
+            ->get(route('scholars.title-approval.show', [$scholar, $appeal]))
             ->assertForbidden();
     }
 
@@ -205,7 +205,7 @@ class ScholarTitleApprovalProcessTest extends TestCase
         ]);
 
         $this->withoutExceptionHandling()
-            ->get(route('scholars.title_approval.show', [$scholar, $appeal]))
+            ->get(route('scholars.title-approval.show', [$scholar, $appeal]))
             ->assertViewIs('research.scholars.title-approval-form');
     }
 
@@ -224,7 +224,7 @@ class ScholarTitleApprovalProcessTest extends TestCase
         ]);
 
         $this->withExceptionHandling()
-            ->get(route('scholars.title_approval.show', [$scholar, $appeal]))
+            ->get(route('scholars.title-approval.show', [$scholar, $appeal]))
             ->assertForbidden();
     }
 
@@ -241,7 +241,7 @@ class ScholarTitleApprovalProcessTest extends TestCase
         $titleApproval = create(TitleApproval::class);
 
         $this->withExceptionHandling()
-            ->get(route('scholars.title_approval.show', [$scholar, $titleApproval]))
+            ->get(route('scholars.title-approval.show', [$scholar, $titleApproval]))
             ->assertForbidden();
 
         $appeal = create(TitleApproval::class, 1, [
@@ -250,7 +250,7 @@ class ScholarTitleApprovalProcessTest extends TestCase
         ]);
 
         $this->withoutExceptionHandling()
-            ->get(route('scholars.title_approval.show', [$scholar, $appeal]))
+            ->get(route('scholars.title-approval.show', [$scholar, $appeal]))
             ->assertViewIs('research.scholars.title-approval-form');
     }
 
@@ -270,15 +270,15 @@ class ScholarTitleApprovalProcessTest extends TestCase
         $appeal = create(TitleApproval::class);
 
         $this->withExceptionHandling()
-            ->get(route('scholars.title_approval.show', [$scholar, $appeal]))
+            ->get(route('scholars.title-approval.show', [$scholar, $appeal]))
             ->assertForbidden();
 
         $this->withExceptionHandling()
-            ->get(route('scholars.title_approval.show', [$appeal->scholar, $appeal]))
+            ->get(route('scholars.title-approval.show', [$appeal->scholar, $appeal]))
             ->assertForbidden();
 
         $this->withExceptionHandling()
-            ->get(route('scholars.title_approval.show', [$appeal->scholar, $scholarAppeal]))
+            ->get(route('scholars.title-approval.show', [$appeal->scholar, $scholarAppeal]))
             ->assertForbidden();
     }
 
@@ -293,7 +293,7 @@ class ScholarTitleApprovalProcessTest extends TestCase
         $this->assertNull($scholar->titleApproval);
 
         $this->withoutExceptionHandling()
-            ->post(route('scholars.title_approval.apply', $scholar))
+            ->post(route('scholars.title-approval.apply', $scholar))
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'Request for Title Approval applied successfully!');
 
@@ -319,7 +319,7 @@ class ScholarTitleApprovalProcessTest extends TestCase
         ]);
 
         $this->withoutExceptionHandling()
-            ->patch(route('scholars.title_approval.recommend', [$scholar, $appeal]))
+            ->patch(route('scholars.title-approval.recommend', [$scholar, $appeal]))
             ->assertRedirect()
             ->assertSessionHasFlash('success', "Scholar's appeal recommended successfully!");
 
@@ -342,7 +342,7 @@ class ScholarTitleApprovalProcessTest extends TestCase
         ]);
 
         $this->withExceptionHandling()
-            ->patch(route('scholars.title_approval.recommend', [$scholar, $appeal]))
+            ->patch(route('scholars.title-approval.recommend', [$scholar, $appeal]))
             ->assertForbidden();
 
         $this->assertEquals(RequestStatus::APPLIED, $appeal->status);
@@ -352,7 +352,7 @@ class ScholarTitleApprovalProcessTest extends TestCase
         $appeal->update(['scholar_id' => create(Scholar::class)->id]);
 
         $this->withExceptionHandling()
-            ->patch(route('scholars.title_approval.recommend', [$scholar, $appeal]))
+            ->patch(route('scholars.title-approval.recommend', [$scholar, $appeal]))
             ->assertForbidden();
 
         $this->assertEquals(RequestStatus::APPLIED, $appeal->status);
@@ -374,7 +374,7 @@ class ScholarTitleApprovalProcessTest extends TestCase
         ]);
 
         $this->withExceptionHandling()
-            ->patch(route('scholars.title_approval.recommend', [$scholar, $appeal]))
+            ->patch(route('scholars.title-approval.recommend', [$scholar, $appeal]))
             ->assertRedirect(route('login-form'));
 
         $this->assertEquals(RequestStatus::APPLIED, $appeal->status);
@@ -395,7 +395,7 @@ class ScholarTitleApprovalProcessTest extends TestCase
         ]);
 
         $this->withExceptionHandling()
-            ->patch(route('scholars.title_approval.recommend', [$scholar, $appeal]))
+            ->patch(route('scholars.title-approval.recommend', [$scholar, $appeal]))
             ->assertForbidden();
 
         $appeal->refresh();
@@ -405,7 +405,7 @@ class ScholarTitleApprovalProcessTest extends TestCase
         $appeal->update(['status' => RequestStatus::APPROVED]);
 
         $this->withExceptionHandling()
-            ->patch(route('scholars.title_approval.recommend', [$scholar, $appeal]))
+            ->patch(route('scholars.title-approval.recommend', [$scholar, $appeal]))
             ->assertForbidden();
 
         $appeal->refresh();
@@ -428,13 +428,13 @@ class ScholarTitleApprovalProcessTest extends TestCase
         ]);
 
         $this->withExceptionHandling()
-            ->patch(route('scholars.title_approval.approve', [$scholar, $appeal]))
+            ->patch(route('scholars.title-approval.approve', [$scholar, $appeal]))
             ->assertForbidden();
 
         $user->roles->first()->givePermissionTo('title approval:approve');
 
         $this->withoutExceptionHandling()
-            ->patch(route('scholars.title_approval.approve', [$scholar, $appeal]), [
+            ->patch(route('scholars.title-approval.approve', [$scholar, $appeal]), [
                 'recommended_title' => $title = Str::random('30'),
             ])
             ->assertRedirect()
@@ -461,7 +461,7 @@ class ScholarTitleApprovalProcessTest extends TestCase
         ]);
 
         $this->withExceptionHandling()
-            ->patch(route('scholars.title_approval.approve', [$scholar, $appeal]), [
+            ->patch(route('scholars.title-approval.approve', [$scholar, $appeal]), [
                 'recommended_title' => $title = Str::random('30'),
             ])
             ->assertForbidden();
@@ -471,7 +471,7 @@ class ScholarTitleApprovalProcessTest extends TestCase
         $appeal->update(['status' => RequestStatus::APPROVED]);
 
         $this->withExceptionHandling()
-            ->patch(route('scholars.title_approval.approve', [$scholar, $appeal]), [
+            ->patch(route('scholars.title-approval.approve', [$scholar, $appeal]), [
                 'recommended_title' => $title = Str::random('30'),
             ])
             ->assertForbidden();
@@ -495,7 +495,7 @@ class ScholarTitleApprovalProcessTest extends TestCase
         ]);
 
         $this->withExceptionHandling()
-            ->patch(route('scholars.title_approval.approve', [$scholar, $appeal]))
+            ->patch(route('scholars.title-approval.approve', [$scholar, $appeal]))
             ->assertRedirect(route('login-form'));
 
         $this->assertEquals(RequestStatus::RECOMMENDED, $appeal->status);

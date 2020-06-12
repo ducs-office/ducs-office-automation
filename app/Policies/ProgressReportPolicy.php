@@ -20,9 +20,7 @@ class ProgressReportPolicy
      */
     public function viewAny($user)
     {
-        return get_class($user) === Scholar::class ||
-               (method_exists($user, 'isSupervisor') && $user->isSupervisor()) ||
-               (get_class($user) === User::class && $user->can('scholar progress reports:view'));
+        return true;
     }
 
     /**

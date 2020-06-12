@@ -26,7 +26,7 @@ class ViewScholarProgressReportTest extends TestCase
         ]);
 
         $this->withoutExceptionHandling()
-            ->get(route('scholars.progress_reports.show', [
+            ->get(route('scholars.progress-reports.show', [
                 'scholar' => $scholar,
                 'report' => $progressReport,
             ]))
@@ -45,7 +45,7 @@ class ViewScholarProgressReportTest extends TestCase
         ]);
 
         $this->withExceptionHandling()
-            ->get(route('scholars.progress_reports.show', [
+            ->get(route('scholars.progress-reports.show', [
                 'scholar' => $scholar,
                 'report' => $progressReport,
             ]))
@@ -66,7 +66,7 @@ class ViewScholarProgressReportTest extends TestCase
         $this->signIn($user = create(User::class), $role->name);
 
         $this->withoutExceptionHandling()
-            ->get(route('scholars.progress_reports.show', [
+            ->get(route('scholars.progress-reports.show', [
                 'scholar' => $scholar,
                 'report' => $progressReport,
             ]))
@@ -89,7 +89,7 @@ class ViewScholarProgressReportTest extends TestCase
         ]);
 
         $this->withExceptionHandling()
-            ->get(route('scholars.progress_reports.show', [
+            ->get(route('scholars.progress-reports.show', [
                 'scholar' => $scholar,
                 'report' => $progressReport,
             ]))

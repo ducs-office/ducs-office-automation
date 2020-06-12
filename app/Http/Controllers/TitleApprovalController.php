@@ -10,13 +10,20 @@ use App\Types\ScholarAppealStatus;
 use App\Types\ScholarAppealTypes;
 use Illuminate\Http\Request;
 
-class ScholarTitleApprovalController extends Controller
+class TitleApprovalController extends Controller
 {
+    public function index(Scholar $scholar)
+    {
+        return view('title-approval.index', [
+            'scholar' => $scholar->load('titleApproval'),
+        ]);
+    }
+
     public function request(Request $request, Scholar $scholar)
     {
         $this->authorize('create', [TitleApproval::class, $scholar]);
 
-        return view('research.scholars.title-approval-form', [
+        return view('title-approval.form', [
             'scholar' => $scholar,
         ]);
     }

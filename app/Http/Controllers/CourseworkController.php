@@ -12,8 +12,16 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
-class ScholarCourseworkController extends Controller
+class CourseworkController extends Controller
 {
+    public function index(Scholar $scholar)
+    {
+        return view('pre-phd-courseworks', [
+            'courses' => PhdCourse::whereNotIn('id', $scholar->courseworks()->allRelatedIds())->get(),
+            'scholar' => $scholar->load('courseworks'),
+        ]);
+    }
+
     public function store(Request $request, Scholar $scholar)
     {
         $this->authorize('create', [ScholarCoursework::class, $scholar]);

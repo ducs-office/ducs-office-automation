@@ -12,6 +12,11 @@ class TitleApprovalPolicy
 {
     use HandlesAuthorization;
 
+    public function viewAny($user)
+    {
+        return true;
+    }
+
     public function request($user)
     {
         return get_class($user) === Scholar::class

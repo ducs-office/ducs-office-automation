@@ -123,29 +123,35 @@ Route::patch(
 //================Scholar Title Approval =======================
 
 Route::get(
-    '/scholars/{scholar}/title-approval/request',
-    'ScholarTitleApprovalController@request'
-)->name('scholars.title_approval.request')->middleware('auth:scholars');
-
-Route::post(
-    '/scholars/{scholar}/title-approval/apply',
-    'ScholarTitleApprovalController@apply'
-)->name('scholars.title_approval.apply')->middleware('auth:scholars');
+    '/scholars/@{scholar}/title-approval',
+    'TitleApprovalController@index'
+)->name('scholars.title-approval.index')
+->middleware('auth:web,scholars');
 
 Route::get(
-    '/scholars/{scholar}/title-approval/{titleApproval}/show',
-    'ScholarTitleApprovalController@show'
-)->name('scholars.title_approval.show')->middleware('auth:web,scholars');
+    '/scholars/@{scholar}/title-approval/request',
+    'TitleApprovalController@request'
+)->name('scholars.title-approval.request')->middleware('auth:scholars');
+
+Route::post(
+    '/scholars/@{scholar}/title-approval/apply',
+    'TitleApprovalController@apply'
+)->name('scholars.title-approval.apply')->middleware('auth:scholars');
+
+Route::get(
+    '/scholars/@{scholar}/title-approval/{titleApproval}/show',
+    'TitleApprovalController@show'
+)->name('scholars.title-approval.show')->middleware('auth:web,scholars');
 
 Route::patch(
-    '/scholars/{scholar}/title-approval/{titleApproval}/recommend',
-    'ScholarTitleApprovalController@recommend'
-)->name('scholars.title_approval.recommend')->middleware('auth:web');
+    '/scholars/@{scholar}/title-approval/{titleApproval}/recommend',
+    'TitleApprovalController@recommend'
+)->name('scholars.title-approval.recommend')->middleware('auth:web');
 
 Route::patch(
-    '/scholars/{scholar}/title-approval/{titleApproval}/approve',
-    'ScholarTitleApprovalController@approve'
-)->name('scholars.title_approval.approve')->middleware('auth:web');
+    '/scholars/@{scholar}/title-approval/{titleApproval}/approve',
+    'TitleApprovalController@approve'
+)->name('scholars.title-approval.approve')->middleware('auth:web');
 
 Route::get('/users/@{user}', 'UserProfileController@show')->name('profiles.show');
 Route::patch('/users/@{user}', 'UserProfileController@update')->name('profiles.update');
@@ -177,21 +183,27 @@ Route::patch('scholars/{scholar}/examiner/{examiner}/approve', 'ScholarExaminerC
     ->name('scholars.examiner.approve');
 
 //================Scholar Courseworks=================
+Route::get(
+    '/scholars/@{scholar}/courseworks',
+    'CourseworkController@index'
+)->name('scholars.courseworks.index')
+->middleware('auth:web,scholars');
+
 Route::post(
-    '/scholars/{scholar}/coursework',
-    'ScholarCourseworkController@store'
+    '/scholars/@{scholar}/coursework',
+    'CourseworkController@store'
 )->name('scholars.courseworks.store')
 ->middleware('auth:web');
 
 Route::patch(
-    '/scholars/{scholar}/coursework/{courseId}',
-    'ScholarCourseworkController@complete'
+    '/scholars/@{scholar}/coursework/{courseId}',
+    'CourseworkController@complete'
 )->name('scholars.courseworks.complete')
 ->middleware('auth:web');
 
 Route::get(
-    '/scholars/{scholar}/courseworks/{course}/',
-    'ScholarCourseworkController@show'
+    '/scholars/@{scholar}/courseworks/{course}/',
+    'CourseworkController@show'
 )->name('scholars.courseworks.marksheet')
 ->middleware('auth:web,scholars');
 
@@ -213,22 +225,30 @@ Route::prefix('/publications')
     Route::delete('/{publication}/co-authors/{coAuthor}', 'CoAuthorController@destroy')->name('co_authors.destroy');
 });
 
+// ================Scholar Progress Reports==========
+
+Route::get(
+    '/scholars/@{scholar}/progress-reports',
+    'ProgressReportController@index'
+)->name('scholars.progress-reports.index')
+->middleware('auth:web,scholars');
+
 Route::post(
     '/scholars/@{scholar}/progress-report',
-    'ScholarProgressReportController@store'
-)->name('scholars.progress_reports.store')
+    'ProgressReportController@store'
+)->name('scholars.progress-reports.store')
 ->middleware('auth:web');
 
 Route::get(
     'scholars/@{scholar}/progress-report/{report}',
-    'ScholarProgressReportController@show'
-)->name('scholars.progress_reports.show')
+    'ProgressReportController@show'
+)->name('scholars.progress-reports.show')
 ->middleware(['auth:web,scholars']);
 
 Route::delete(
     'scholars/@{scholar}/progress-report/{report}',
-    'ScholarProgressReportController@destroy'
-)->name('scholars.progress_reports.destroy')
+    'ProgressReportController@destroy'
+)->name('scholars.progress-reports.destroy')
 ->middleware('auth:web');
 
 Route::get('/scholars/@{scholar}', 'Scholars\ProfileController@show')->name('scholars.profile.show')->middleware('auth:web,scholars');
@@ -260,18 +280,49 @@ Route::prefix('/research')
         )->name('scholars.advisors.replace');
     });
 
+// =========Scholar Presentation===============
+Route::get(
+    '/scholars/@{scholar}/presentations',
+    'PresentationController@index'
+)->name('scholars.presentations.index')
+->middleware('auth:scholars,web');
+
+Route::get(
+    '/scholars/@{scholar}/presentation',
+    'PresentationController@create'
+)->name('scholars.presentation.create')
+->middleware('auth:scholars');
+
+Route::post(
+    '/scholars/@{scholar}/presentation',
+    'PresentationController@store'
+)->name('scholars.presentation.store')
+->middleware('auth:scholars');
+
+Route::get(
+    '/scholars/@{scholar}/presentation/{presentation}/edit',
+    'PresentationController@edit'
+)->name('scholars.presentation.edit')
+->middleware('auth:scholars');
+
+Route::patch(
+    '/scholars/@{scholar}/presentation/{presentation}',
+    'PresentationController@update'
+)->name('scholars.presentation.update')
+->middleware('auth:scholars');
+
+Route::delete(
+    '/scholars/@{scholar}/presentation/{presentation}',
+    'PresentationController@destroy'
+)->name('presentation.destroy')
+->middleware('auth:web,scholars');
+
 Route::prefix('/scholars')
     ->middleware('auth:scholars')
     ->namespace('Scholars')
     ->as('scholars.')
     ->group(static function () {
         Route::get('/', 'DashboardController@index')->name('dashboard');
-
-        Route::get('/presentation', 'PresentationController@create')->name('presentation.create');
-        Route::post('/presentation', 'PresentationController@store')->name('presentation.store');
-        Route::get('/presentation/{presentation}/edit', 'PresentationController@edit')->name('presentation.edit');
-        Route::patch('/presentation/{presentation}', 'PresentationController@update')->name('presentation.update');
-        Route::delete('/presentation/{presentation}', 'PresentationController@destroy')->name('presentation.destroy');
 
         Route::patch(
             'scholars/{scholar}/proposed-title/update',

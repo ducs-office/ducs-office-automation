@@ -13,11 +13,19 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response as Response;
 use Illuminate\Support\Facades\Storage;
 
-class ScholarProgressReportController extends Controller
+class ProgressReportController extends Controller
 {
     public function __construct()
     {
         return $this->authorizeResource(ProgressReport::class, 'report');
+    }
+
+    public function index(Scholar $scholar)
+    {
+        return view('progress-report', [
+            'scholar' => $scholar->load('progressReports'),
+            'recommendations' => ProgressReportRecommendation::values(),
+        ]);
     }
 
     public function store(Request $request, Scholar $scholar)

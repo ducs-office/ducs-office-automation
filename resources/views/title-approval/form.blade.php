@@ -150,7 +150,7 @@
         <div>
             <p class="font-bold text-lg"> Are you sure you want to apply for Title Approval ? </p>
             <div class="flex justify-center">
-                <form action="{{ route('scholars.title_approval.apply', $scholar) }}" method="POST">
+                <form action="{{ route('scholars.title-approval.apply', $scholar) }}" method="POST">
                     @csrf_token
                     <button class="btn btn-magenta is-sm m-2" >
                         Apply

@@ -13,7 +13,8 @@
             </a>
         </li>
         <li>
-            <a href="#" class="flex items-center py-2 px-4 text-white-70 rounded transform transition-transform duration-150 hover:-translate-y-1 focus:-translate-y-1 hover:text-white focus:text-white hover:bg-magenta-700 focus:bg-magenta-700 hover:shadow focus:shadow focus:outline-none">
+            <a href="{{ route('scholars.courseworks.index', $scholar) }}"
+                class="flex items-center py-2 px-4 text-white-70 rounded transform transition-transform duration-150 hover:-translate-y-1 focus:-translate-y-1 hover:text-white focus:text-white hover:bg-magenta-700 focus:bg-magenta-700 hover:shadow focus:shadow focus:outline-none">
                 <x-feather-icon name="book" class="h-5 mr-4" stroke-width="2">Coursework</x-feather-icon>
                 Pre-PhD Courseworks
             </a>
@@ -25,31 +26,36 @@
             </a>
         </li>
         <li>
-            <a href="#" class="flex items-center py-2 px-4 text-white-70 rounded transform transition-transform duration-150 hover:-translate-y-1 focus:-translate-y-1 hover:text-white focus:text-white hover:bg-magenta-700 focus:bg-magenta-700 hover:shadow focus:shadow focus:outline-none">
+            <a href="{{ route('scholars.presentations.index', $scholar) }}"
+                class="flex items-center py-2 px-4 text-white-70 rounded transform transition-transform duration-150 hover:-translate-y-1 focus:-translate-y-1 hover:text-white focus:text-white hover:bg-magenta-700 focus:bg-magenta-700 hover:shadow focus:shadow focus:outline-none">
                 <x-feather-icon name="monitor" class="h-5 mr-4" stroke-width="2">Presentation</x-feather-icon>
                 Presentations
             </a>
         </li>
         <li>
-            <a href="{{ route('scholars.leaves.index', $scholar) }}" class="flex items-center py-2 px-4 text-white-70 rounded transform transition-transform duration-150 hover:-translate-y-1 focus:-translate-y-1 hover:text-white focus:text-white hover:bg-magenta-700 focus:bg-magenta-700 hover:shadow focus:shadow focus:outline-none">
+            <a href="{{ route('scholars.leaves.index', $scholar) }}" 
+                class="flex items-center py-2 px-4 text-white-70 rounded transform transition-transform duration-150 hover:-translate-y-1 focus:-translate-y-1 hover:text-white focus:text-white hover:bg-magenta-700 focus:bg-magenta-700 hover:shadow focus:shadow focus:outline-none">
                 <x-feather-icon name="umbrella" class="h-5 mr-4" stroke-width="2">Leaves</x-feather-icon>
                 Leaves
             </a>
         </li>
         <li>
-            <a href="{{ route('scholars.advisory_meetings.index', $scholar) }}" class="flex items-center py-2 px-4 text-white-70 rounded transform transition-transform duration-150 hover:-translate-y-1 focus:-translate-y-1 hover:text-white focus:text-white hover:bg-magenta-700 focus:bg-magenta-700 hover:shadow focus:shadow focus:outline-none">
+            <a href="{{ route('scholars.advisory_meetings.index', $scholar) }}" 
+                class="flex items-center py-2 px-4 text-white-70 rounded transform transition-transform duration-150 hover:-translate-y-1 focus:-translate-y-1 hover:text-white focus:text-white hover:bg-magenta-700 focus:bg-magenta-700 hover:shadow focus:shadow focus:outline-none">
                 <x-feather-icon name="briefcase" class="h-5 mr-4" stroke-width="2"></x-feather-icon>
                 Advisory Meetings
             </a>
         </li>
         <li>
-            <a href="#" class="flex items-center py-2 px-4 text-white-70 rounded transform transition-transform duration-150 hover:-translate-y-1 focus:-translate-y-1 hover:text-white focus:text-white hover:bg-magenta-700 focus:bg-magenta-700 hover:shadow focus:shadow focus:outline-none">
+            <a href="{{ route('scholars.progress-reports.index', $scholar) }}" 
+                class="flex items-center py-2 px-4 text-white-70 rounded transform transition-transform duration-150 hover:-translate-y-1 focus:-translate-y-1 hover:text-white focus:text-white hover:bg-magenta-700 focus:bg-magenta-700 hover:shadow focus:shadow focus:outline-none">
                 <x-feather-icon name="trending-up" class="h-5 mr-4" stroke-width="2"></x-feather-icon>
                 Progress Reports
             </a>
         </li>
         <li>
-            <a href="{{ route('scholars.documents.index', $scholar) }}" class="flex items-center py-2 px-4 text-white-70 rounded transform transition-transform duration-150 hover:-translate-y-1 focus:-translate-y-1 hover:text-white focus:text-white hover:bg-magenta-700 focus:bg-magenta-700 hover:shadow focus:shadow focus:outline-none">
+            <a href="{{ route('scholars.documents.index', $scholar) }}" 
+                class="flex items-center py-2 px-4 text-white-70 rounded transform transition-transform duration-150 hover:-translate-y-1 focus:-translate-y-1 hover:text-white focus:text-white hover:bg-magenta-700 focus:bg-magenta-700 hover:shadow focus:shadow focus:outline-none">
                 <x-feather-icon name="paperclip" class="h-5 mr-4" stroke-width="2"></x-feather-icon>
                 Documents
             </a>
@@ -58,6 +64,12 @@
             <a href="#" class="flex items-center py-2 px-4 text-white-70 rounded transform transition-transform duration-150 hover:-translate-y-1 focus:-translate-y-1 hover:text-white focus:text-white hover:bg-magenta-700 focus:bg-magenta-700 hover:shadow focus:shadow focus:outline-none">
                 <x-feather-icon name="flag" class="h-5 mr-4" stroke-width="2"></x-feather-icon>
                 Examiner Status
+            </a>
+        </li>
+        <li>
+            <a href="{{ route('scholars.title-approval.index', $scholar) }}" class="flex items-center py-2 px-4 text-white-70 rounded transform transition-transform duration-150 hover:-translate-y-1 focus:-translate-y-1 hover:text-white focus:text-white hover:bg-magenta-700 focus:bg-magenta-700 hover:shadow focus:shadow focus:outline-none">
+                <x-feather-icon name="check-circle" class="h-5 mr-4" stroke-width="2"></x-feather-icon>
+                Title Approval
             </a>
         </li>
         <li>

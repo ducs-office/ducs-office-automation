@@ -34,15 +34,8 @@ class ProfileController extends Controller
             'presentations.publication',
         ]);
 
-        $courses = PhdCourse::all()->filter(function ($value) use ($scholar) {
-            return ! $scholar->courseworks->map->pivot->map->phd_course_id->contains($value->id);
-        });
-
         return view('scholars.profile', [
             'scholar' => $scholar,
-            'courses' => $courses,
-            'eventTypes' => PresentationEventType::values(),
-            'recommendations' => ProgressReportRecommendation::values(),
             'degrees' => ScholarEducationDegree::all(),
             'institutes' => ScholarEducationInstitute::all(),
             'subjects' => ScholarEducationSubject::all(),

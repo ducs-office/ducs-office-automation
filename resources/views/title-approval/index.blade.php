@@ -1,3 +1,4 @@
+@extends('layouts.master', ['pageTitle' => 'Title Approval', 'scholar' => $scholar])
 @push('modals')
 @can('request',[ \App\Models\TitleApproval::class, $scholar])
     <x-modal name="title-approval-requirements-modal" class="p-6">
@@ -31,7 +32,7 @@
     </x-modal>
 @endcan
 @endpush
-
+@section('body')
 <div class="page-card p-6 flex overflow-visible space-x-6">
     <div>
         <div class="w-64 pr-4 relative -ml-8 my-2">
@@ -43,7 +44,7 @@
             </svg>
         </div> 
         @can('create',[ \App\Models\TitleApproval::class, $scholar]) 
-        <a href="{{ route('scholars.title_approval.request', $scholar) }}" class="btn btn-magenta is-sm -ml-4 my-2">
+        <a href="{{ route('scholars.title-approval.request', $scholar) }}" class="btn btn-magenta is-sm -ml-4 my-2">
            Request
         </a>
         @elsecan('request',[ \App\Models\TitleApproval::class, $scholar])
@@ -56,7 +57,7 @@
     @if($scholar->titleApproval)
     <div class="flex-1 border rounded-lg m-2 flex items-center">
         @can('view', [$scholar->titleApproval, $scholar])
-        <a href="{{ route('scholars.title_approval.show', [$scholar, $scholar->titleApproval]) }}" target="_blank" class="inline-flex items-center underline px-3 py-1 bg-magenta-100 text-magenta-800 rounded font-bold mx-2">
+        <a href="{{ route('scholars.title-approval.show', [$scholar, $scholar->titleApproval]) }}" target="_blank" class="inline-flex items-center underline px-3 py-1 bg-magenta-100 text-magenta-800 rounded font-bold mx-2">
             <x-feather-icon name="link" class="h-4 mr-2"> Title Approval Form </x-feather-icon>
             Title Approval Form
         </a>
@@ -73,7 +74,7 @@
             {{ $scholar->titleApproval->status }}
         </p>
         @can('recommend', [$scholar->titleApproval, $scholar])
-        <form action="{{ route('scholars.title_approval.recommend', [$scholar, $scholar->titleApproval]) }}" method="POST">
+        <form action="{{ route('scholars.title-approval.recommend', [$scholar, $scholar->titleApproval]) }}" method="POST">
             @method('PATCH') @csrf_token
             <button type="submit" class="px-4 py-2 mr-2 bg-green-500 hover:bg-green-600 text-white text-sm rounded font-bold"> 
                 Recommend
@@ -89,3 +90,4 @@
     </div>
     @endif
 </div>
+@endsection

@@ -27,7 +27,7 @@ class DeleteScholarProgressReportTest extends TestCase
         $this->signIn(create(User::class), $role->name);
 
         $this->withoutExceptionHandling()
-            ->delete(route('scholars.progress_reports.destroy', [
+            ->delete(route('scholars.progress-reports.destroy', [
                 'scholar' => $progressRreport->scholar,
                 'report' => $progressRreport,
             ]))
@@ -52,7 +52,7 @@ class DeleteScholarProgressReportTest extends TestCase
         $this->signIn(create(User::class), $role->name);
 
         $this->withExceptionHandling()
-            ->delete(route('scholars.progress_reports.destroy', [
+            ->delete(route('scholars.progress-reports.destroy', [
                 'scholar' => $progressRreport->scholar,
                 'report' => $progressRreport,
             ]));

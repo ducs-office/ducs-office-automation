@@ -1,4 +1,4 @@
-<form action="{{ route('scholars.title_approval.approve', [$scholar, $scholar->titleApproval]) }}" method="POST"
+<form action="{{ route('scholars.title-approval.approve', [$scholar, $scholar->titleApproval]) }}" method="POST"
     class="space-y-3" enctype="multipart/form-data">
     @csrf_token @method('PATCH')
     <label for="recommended_title" class="mb-1 w-full form-label
