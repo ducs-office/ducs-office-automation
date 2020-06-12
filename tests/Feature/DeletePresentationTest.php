@@ -28,7 +28,7 @@ class DeletePresentationTest extends TestCase
         $this->assertCount(1, $publication->fresh()->presentations);
 
         $this->withoutExceptionHandling()
-            ->delete(route('scholars.presentation.destroy', [$scholar, $presentation]))
+            ->delete(route('scholars.presentations.destroy', [$scholar, $presentation]))
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'Presentation deleted successfully');
 

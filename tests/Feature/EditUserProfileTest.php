@@ -57,7 +57,7 @@ class EditUserProfileTest extends TestCase
             $revision->courses()->attach($course, ['semester' => 1]);
         }
 
-        $this->signIn($teacher = create(User::class, [
+        $this->signIn($teacher = create(User::class, 1, [
             'category' => UserCategory::COLLEGE_TEACHER,
         ]));
 

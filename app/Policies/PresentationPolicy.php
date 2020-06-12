@@ -31,13 +31,15 @@ class PresentationPolicy
         return get_class($user) === Scholar::class;
     }
 
-    public function update(Scholar $scholar, Presentation $presentation)
+    public function update($user, Presentation $presentation)
     {
-        return (int) $presentation->scholar_id === (int) $scholar->id;
+        return get_class($user) === Scholar::class
+            && (int) $presentation->scholar_id === (int) $user->id;
     }
 
-    public function delete(Scholar $scholar, Presentation $presentation)
+    public function delete($user, Presentation $presentation)
     {
-        return (int) $presentation->scholar_id === (int) $scholar->id;
+        return get_class($user) === Scholar::class
+            && (int) $presentation->scholar_id === (int) $user->id;
     }
 }

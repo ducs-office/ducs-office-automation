@@ -10,7 +10,7 @@
         </svg>
         @can('create', App\Models\Presentation::class)
         <div class="mt-3 text-right">
-            <a class="btn btn-magenta" href="{{ route('scholars.presentation.create', ['scholar' => $scholar]) }}">
+            <a class="btn btn-magenta" href="{{ route('scholars.presentations.create', ['scholar' => $scholar]) }}">
                 New
             </a>
         </div>

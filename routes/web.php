@@ -299,31 +299,31 @@ Route::get(
 Route::get(
     '/scholars/@{scholar}/presentation',
     'PresentationController@create'
-)->name('scholars.presentation.create')
+)->name('scholars.presentations.create')
 ->middleware('auth:scholars');
 
 Route::post(
     '/scholars/@{scholar}/presentation',
     'PresentationController@store'
-)->name('scholars.presentation.store')
+)->name('scholars.presentations.store')
 ->middleware('auth:scholars');
 
 Route::get(
     '/scholars/@{scholar}/presentation/{presentation}/edit',
     'PresentationController@edit'
-)->name('scholars.presentation.edit')
+)->name('scholars.presentations.edit')
 ->middleware('auth:scholars');
 
 Route::patch(
     '/scholars/@{scholar}/presentation/{presentation}',
     'PresentationController@update'
-)->name('scholars.presentation.update')
+)->name('scholars.presentations.update')
 ->middleware('auth:scholars');
 
 Route::delete(
     '/scholars/@{scholar}/presentation/{presentation}',
     'PresentationController@destroy'
-)->name('scholars.presentation.destroy')
+)->name('scholars.presentations.destroy')
 ->middleware('auth:web,scholars');
 
 Route::prefix('/scholars')

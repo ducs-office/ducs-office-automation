@@ -38,13 +38,25 @@
             </div>
         </div>
     </div>
-    @can('update', $presentation)
-    <div class="ml-auto mr-3">
-        <a href="{{ route('scholars.presentation.edit', ['scholar' => $scholar, 'presentation' => $presentation]) }}"
-            class="p-1 text-gray-700 font-bold hover:text-blue-600 transition duration-300 transform hover:scale-110">
-            <x-feather-icon class="h-5" name="edit-3">Edit</x-feather-icon>
-        </a>
+    <div class="flex ml-auto items-center space-x-1 mr-3">
+        @can('update', $presentation)
+        <div class="mr-3">
+            <a href="{{ route('scholars.presentations.edit', ['scholar' => $scholar, 'presentation' => $presentation]) }}"
+                class="p-1 text-gray-700 font-bold hover:text-blue-600 transition duration-300 transform hover:scale-110">
+                <x-feather-icon class="h-5" name="edit-3">Edit</x-feather-icon>
+            </a>
+        </div>
+        @endcan
+        @can('delete', $presentation)
+        <form action="{{ route('scholars.presentations.destroy', ['scholar' => $scholar, 'presentation' => $presentation]) }}" method="POST"
+            onsubmit="return confirm('Do you really want to delete this presentation?');">
+            @csrf_token
+            @method('DELETE')
+            <button type="submit" class="p-1 text-gray-700 font-bold hover:text-red-600 transition duration-300 transform hover:scale-110">
+                <x-feather-icon name="trash-2" class="h-5">Delete</x-feather-icon>
+            </button>
+        </form>
+        @endcan
     </div>
-@endcan
 </li>
 @endcan
