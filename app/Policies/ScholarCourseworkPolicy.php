@@ -14,18 +14,17 @@ class ScholarCourseworkPolicy
     /**
      * Determine whether the user can view any models.
      *
-     * @param  \App\Models\User  $user
+     * @param  $user
      *
      * @return mixed
      */
-    public function viewAny(User $user)
+    public function viewAny($user)
     {
         if (get_class($user) === Scholar::class) {
             return true;
         }
 
-        if (get_class($user) === User::class &&
-            (int) $user->isSupervisor() || $user->isCosupervisor()) {
+        if (get_class($user) === User::class && (int) $user->isSupervisor()) {
             return true;
         }
 
@@ -33,6 +32,8 @@ class ScholarCourseworkPolicy
             $user->can('phd course work:view marksheet')) {
             return true;
         }
+
+        return false;
     }
 
     /**
@@ -60,6 +61,8 @@ class ScholarCourseworkPolicy
             $user->can('phd course work:view marksheet')) {
             return true;
         }
+
+        return false;
     }
 
     /**

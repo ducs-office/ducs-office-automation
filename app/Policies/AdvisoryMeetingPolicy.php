@@ -16,9 +16,10 @@ class AdvisoryMeetingPolicy
      *
      * @return mixed
      */
-    public function viewAny()
+    public function viewAny($user)
     {
-        return true;
+        return get_class($user) === Scholar::class ||
+            (get_class($user) === User::class && $user->isSupervisor());
     }
 
     /**

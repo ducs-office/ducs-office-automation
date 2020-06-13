@@ -11,6 +11,8 @@ class ExaminerController extends Controller
 {
     public function index(Scholar $scholar)
     {
+        $this->authorize('viewAny', [ScholarExaminer::class, $scholar]);
+
         return view('examiner', [
             'scholar' => $scholar,
         ]);

@@ -11,9 +11,15 @@ class ScholarDocumentPolicy
 {
     use HandlesAuthorization;
 
-    public function viewAny()
+    public function viewAny($user)
     {
-        return true;
+        if (get_class($user) === Scholar::class) {
+            return true;
+        } elseif ($user->can('scholar documents:view') || $user->isSupervisor()) {
+            return true;
+        }
+
+        return false;
     }
 
     /**

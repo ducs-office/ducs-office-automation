@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\Presentation;
 use App\Models\Scholar;
+use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Support\Facades\Auth;
 
@@ -13,17 +14,21 @@ class PresentationPolicy
 
     public function viewAny($user)
     {
-        return true;
+        return (get_class($user) === Scholar::class ||
+            (get_class($user) === User::class && $user->isSupervisor()));
     }
 
     public function view($user, Presentation $presentation)
     {
-        return (get_class($user) === Scholar::class
-            && (int) $presentation->publication->author_id === $user->id)
-            || (
-                method_exists($user, 'isSupervisor') &&
-                $user->isSupervisor()
-            );
+        if (get_class($user) === Scholar::class && (int) $presentation->scholar_id === (int) $user->id) {
+            return true;
+        }
+
+        if (get_class($user) === User::class && $user->isSupervisor() && $user->scholars->contain($presentation->scholar_id)) {
+            return true;
+        }
+
+        return false;
     }
 
     public function create($user)

@@ -12,9 +12,11 @@ class LeavePolicy
 {
     use HandlesAuthorization;
 
-    public function viewAny()
+    public function viewAny($user)
     {
-        return true;
+        return get_class($user) === Scholar::class
+            || (get_class($user) === User::class && $user->isSupervisor())
+            || get_class($user) === User::class && $user->can('leaves:respond');
     }
 
     /**
@@ -27,12 +29,21 @@ class LeavePolicy
      */
     public function view($user, Leave $leave, Scholar $scholar)
     {
-        return (int) $leave->scholar_id === (int) $scholar->id
-            && ((get_class($user) === Scholar::class
-            && (int) $user->id === (int) $scholar->id)
-            || (get_class($user) === User::class
-            && ((int) $user->id === (int) $scholar->currentSupervisor->id)
-            || $user->can('leaves:respond')));
+        if ((int) $leave->scholar_id === (int) $scholar->id
+            && get_class($user) === Scholar::class
+            && (int) $user->id === (int) $scholar->id) {
+            return true;
+        }
+
+        if (get_class($user) === User::class && (int) $user->id === (int) $scholar->currentSupervisor->id) {
+            return true;
+        }
+
+        if (get_class($user) === User::class && $user->can('leaves:respond')) {
+            return true;
+        }
+
+        return false;
     }
 
     /**

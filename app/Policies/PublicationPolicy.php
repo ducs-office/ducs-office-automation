@@ -15,7 +15,7 @@ class PublicationPolicy
     /**
      * Determine whether the user can view any publications.
      *
-     * @param  \App\User  $user
+     * @param  $user
      *
      * @return mixed
      */
@@ -34,15 +34,20 @@ class PublicationPolicy
      */
     public function view($user, Publication $publication)
     {
-        if (get_class($user) === Scholar::class && $user->id === (int) $publication->author_id) {
+        if (get_class($user) === Scholar::class && (int) $user->id === (int) $publication->author_id) {
             return true;
         }
 
         if (get_class($user) === User::class && $user->isSupervisor()) {
-            if ($user->scholars->contains($publication->author_id) && $publication->author_type === Scholar::class) {
+            if ($publication->author_type === User::class && (int) $publication->author_id === (int) $user->id) {
+                return true;
+            }
+            if ($publication->author_type === Scholar::class && $user->scholars->contains($publication->author_id)) {
                 return true;
             }
         }
+
+        return false;
     }
 
     /**

@@ -12,6 +12,14 @@ class ScholarExaminerPolicy
 {
     use HandlesAuthorization;
 
+    public function viewAny($user)
+    {
+        return get_class($user) === Scholar::class
+            || $user->isSupervisor()
+            || $user->can('scholar examiner:recommend')
+            || $user->can('scholar examiner:approve');
+    }
+
     public function create($user, Scholar $scholar)
     {
         return get_class($user) === User::class

@@ -14,7 +14,12 @@ class TitleApprovalPolicy
 
     public function viewAny($user)
     {
-        return true;
+        if (get_class($user) === Scholar::class
+        || $user->isSupervisor()
+        || $user->can('title approval:approve')) {
+            return true;
+        }
+        return false;
     }
 
     public function request($user)

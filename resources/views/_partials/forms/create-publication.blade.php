@@ -40,7 +40,11 @@
         x-show="!is_published">
             Upload the acceptance letter for the publication<span class="text-red-600">*</span>
         </label>
-        <input type="file" name="document" id="document">
+        <x-input.file name="document" id="document"
+            class="w-full form-input inline-flex items-center"
+            accept="application/pdf, image/*"
+            placeholder="Upload Document"
+            required/>
     </div>
     @endauth
     <x-add-remove-element class="mb-4" count="1" :max="10" :new-object="['name' => '']">

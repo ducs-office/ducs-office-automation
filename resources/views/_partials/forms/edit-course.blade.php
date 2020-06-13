@@ -50,13 +50,12 @@
             class="w-full form-label @error('attachments') text-red-500 @enderror">
             Upload Syllabus
         </label>
-        <input type="file" id="course_attachments" name="attachments[]"
-            class="w-full form-input  inline-flex items-center @error('attachments') border-red-500 hover:border-red-700 @enderror"
+        <x-input.file id="course_attachments" name="attachments[]"
+            class="w-full form-input  inline-flex items-center {{ $errors->has('attachments') ? 'border-red-500 hover:border-red-700' : '' }}"
             tabindex="0"
             accept="application/pdf, image/*"
             placeholder="select multiple files"
-            multiple>
-        </input>
+            multiple/>
         @error('attachments')
             <p class="red-text-500">{{ $message }}</p>
         @enderror

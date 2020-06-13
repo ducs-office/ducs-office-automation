@@ -14,6 +14,8 @@ class TitleApprovalController extends Controller
 {
     public function index(Scholar $scholar)
     {
+        $this->authorize('viewAny', [TitleApproval::class, $scholar]);
+
         return view('title-approval.index', [
             'scholar' => $scholar->load('titleApproval'),
         ]);

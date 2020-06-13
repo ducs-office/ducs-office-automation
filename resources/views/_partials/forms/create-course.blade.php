@@ -50,7 +50,7 @@
         @enderror
     </div>
     <div class="flex items-center space-x-2 mb-2">
-        <div class="space-y-1">
+        <div class="w-1/2 space-y-1">
             <label for="course_revision_date" 
                 class="w-full form-label @error('date') text-red-500 @enderror">
                 Syllabus Revision Date <span class="text-red-600">*</span>
@@ -63,19 +63,18 @@
                 <p class="red-text-500">{{ $message }}</p>
             @enderror
         </div>
-        <div class="space-y-1">
+        <div class="w-1/2 space-y-1"> 
             <label for="course_attachments" 
                 class="w-full form-label @error('attachments') text-red-500 @enderror">
                 Upload Syllabus <span class="text-red-600">*</span>
             </label>
-            <input type="file" id="course_attachments" name="attachments[]"
-                class="w-full form-input  inline-flex items-center @error('attachments') border-red-500 hover:border-red-700 @enderror"
+            <x-input.file id="course_attachments" name="attachments[]"
+                class="w-full form-input  inline-flex items-center {{ $errors->has('attachments') ? 'border-red-500 hover:border-red-700' : '' }}"
                 tabindex="0"
                 accept="application/pdf, image/*"
                 placeholder="select multiple files"
                 multiple 
-                required>
-            </input>
+                required/>
             @error('attachments')
                 <p class="red-text-500">{{ $message }}</p>
             @enderror

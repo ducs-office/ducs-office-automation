@@ -69,25 +69,24 @@
                             enctype="multipart/form-data">
                             @csrf_token
                             <div class="flex items-end mb-2">
-                                <div class="flex-1 mr-1">
+                                <div class="flex-1 flex-1 mr-1 space-y-1">
                                     <label for="revision_date" class="w-full form-label mb-1">
                                         Revision Date <span class="text-red-600">*</span>
                                     </label>
                                     <input type="date" name="revised_at" id="revision_date" class="w-full form-input">
                                 </div>
-                                <div class="space-y-1">
+                                <div class="flex-1 space-y-1">
                                     <label for="course_attachments" 
                                         class="w-full form-label">
                                         Upload Syllabus <span class="text-red-600">*</span>
                                     </label>
-                                    <input type="file" id="course_attachments" name="attachments[]"
+                                    <x-input.file id="course_attachments" name="attachments[]"
                                         class="w-full form-input  inline-flex items-center"
                                         tabindex="0"
                                         accept="application/pdf, image/*"
                                         placeholder="select multiple files"
                                         multiple 
-                                        required>
-                                    </input>
+                                        required/>
                                 </div>
                                 <div class="ml-1 flex-shrink-0">
                                     <button type="submit" class="btn btn-magenta px-6">Add</button>

@@ -14,6 +14,8 @@ class PrePhdSeminarController extends Controller
 {
     public function index(Scholar $scholar)
     {
+        $this->authorize('viewAny', [PrePhdSeminar::class, $scholar]);
+
         return view('pre-phd-seminar.index', [
             'scholar' => $scholar,
         ]);

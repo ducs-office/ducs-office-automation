@@ -15,6 +15,17 @@ class PrePhdSeminarPolicy
 {
     use HandlesAuthorization;
 
+    public function viewAny($user)
+    {
+        if (get_class($user) === Scholar::class
+        || $user->isSupervisor()
+        || $user->can('phd seminar:finalize')
+        || $user->can('phd seminar:add schedule')) {
+            return true;
+        }
+        return false;
+    }
+
     public function request($user)
     {
         return get_class($user) === Scholar::class
