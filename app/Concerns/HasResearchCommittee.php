@@ -18,7 +18,8 @@ trait HasResearchCommittee
             'supervisor_id'
         )
             ->withPivot(['started_on', 'ended_on'])
-            ->using(ScholarSupervisor::class);
+            ->using(ScholarSupervisor::class)
+            ->orderBy('pivot_started_on', 'DESC');
     }
 
     public function getCurrentSupervisorAttribute()
@@ -30,7 +31,8 @@ trait HasResearchCommittee
     {
         return $this->belongsToMany(User::class, 'cosupervisor_scholar')
             ->withPivot(['started_on', 'ended_on'])
-            ->using(ScholarCosupervisor::class);
+            ->using(ScholarCosupervisor::class)
+            ->orderBy('pivot_started_on', 'DESC');
     }
 
     public function getCurrentCosupervisorAttribute()
@@ -43,7 +45,7 @@ trait HasResearchCommittee
         return $this->belongsToMany(User::class, 'advisor_scholar')
             ->withPivot(['started_on', 'ended_on'])
             ->using(ScholarAdvisor::class)
-            ->orderBy('started_on', 'desc');
+            ->orderBy('pivot_started_on', 'DESC');
     }
 
     public function currentAdvisors()

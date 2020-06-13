@@ -36,6 +36,10 @@ class ScholarProfileController extends Controller
             'presentations.publication',
         ]);
 
+        $advisors = $scholar->advisors->groupBy(function ($advisor) {
+            return $advisor->pivot->started_on->format('M d, Y');
+        });
+
         return view('scholars.profile', [
             'scholar' => $scholar,
             'genders' => Gender::values(),
@@ -45,6 +49,9 @@ class ScholarProfileController extends Controller
             'degrees' => ScholarEducationDegree::all(),
             'institutes' => ScholarEducationInstitute::all(),
             'subjects' => ScholarEducationSubject::all(),
+            'supervisors' => $scholar->supervisors,
+            'cosupervisors' => $scholar->cosupervisors,
+            'advisors' => $advisors,
         ]);
     }
 
@@ -109,14 +116,14 @@ class ScholarProfileController extends Controller
             return redirect()->back();
         }
 
+        foreach ($scholar->currentAdvisors as $currentAdvisor) {
+            $currentAdvisor->pivot->update(['ended_on' => today()]);
+        }
+
         $newAdvisors = collect($request->advisors)
                 ->mapWithKeys(function ($advisor) {
                     return [$advisor => ['started_on' => today()]];
                 });
-
-        foreach ($scholar->currentAdvisors as $currentAdvisor) {
-            $currentAdvisor->pivot->update(['ended_on' => today()]);
-        }
 
         $scholar->advisors()->attach($newAdvisors->toArray());
 
