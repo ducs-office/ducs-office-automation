@@ -82,6 +82,13 @@ class UserPolicy
             && (int) $userModel->id !== (int) $user->id;
     }
 
+    /**
+     * Determine whether the user can replace scholars' mentors (supervisor & cosupervisor)
+     *
+     * @param  \App\Models\User  $user
+     *
+     * @return mixed
+     */
     public function replaceScholarMentors(User $user)
     {
         return $user->can('scholar mentors:replace');

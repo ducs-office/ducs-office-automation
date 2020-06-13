@@ -44,6 +44,17 @@
                     @endforeach
                 </select>
             </div>
+            <div class="w-48">
+                <label for="type-filter" class="w-full form-label mb-1">Filter By Type</label>
+                <select id="type-filter" name="filters[type]" x-on:input="
+                    return $el.submit();" class="w-full form-select">
+                    <option @if(request('filters.type', '' ) == '') selected @endif value="">All</option>
+                    <option @if(request('filters.type', '' ) == "is_supervisor") selected @endif value="is_supervisor">
+                        Supervisor</option>
+                    <option @if(request('filters.type', '' ) == "is_cosupervisor") selected @endif value="is_cosupervisor">
+                        Cosupervisor</option>
+                </select>
+            </div>
         </form>
     </div>
     <table class="min-w-full">

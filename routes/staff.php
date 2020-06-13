@@ -88,7 +88,9 @@ Route::delete('/scholars/{scholar}', 'ScholarController@destroy')->name('scholar
 Route::patch('/scholars/{scholar}/replace-cosupervisor', 'ScholarController@replaceCosupervisor')->name('scholars.cosupervisor.replace');
 Route::patch('/scholars/{scholar}/replace-supervisor', 'ScholarController@replaceSupervisor')->name('scholars.supervisor.replace');
 
+//======== not showing cosupervisors seperately on the app ===================================
 Route::get('/cosupervisors', 'CosupervisorController@index')->name('cosupervisors.index');
 Route::post('/cosupervisors', 'CosupervisorController@store')->name('cosupervisors.store');
 Route::patch('/cosupervisors/{cosupervisor}', 'CosupervisorController@update')->name('cosupervisors.update');
 Route::delete('/cosupervisors/{cosupervisor}', 'CosupervisorController@destroy')->name('cosupervisors.destroy');
+//================================================================================================

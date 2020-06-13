@@ -8,6 +8,7 @@ use App\Concerns\ActsAsSupervisor;
 use App\Concerns\Filterable;
 use App\Concerns\HasPublications;
 use App\Filters\User\ByCategory;
+use App\Filters\User\ByType;
 use App\Filters\User\SearchByName;
 use App\Types\Designation;
 use App\Types\TeacherStatus;
@@ -68,6 +69,7 @@ class User extends Authenticatable
     protected $filters = [
         ByCategory::class,
         SearchByName::class,
+        ByType::class,
     ];
 
     protected static function boot()
