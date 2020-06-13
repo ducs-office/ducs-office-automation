@@ -6,6 +6,7 @@ use App\Models\Cosupervisor;
 use App\Models\ExternalAuthority;
 use App\Models\Scholar;
 use App\Models\User;
+use App\Types\UserCategory;
 use Carbon\Carbon;
 use CreateCosupervisorsTable;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -18,6 +19,44 @@ class ReplaceScholarMentorTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected $user;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->user = create(User::class, 1, [
+            'category' => UserCategory::OFFICE_STAFF,
+        ]);
+
+        $this->user->givePermissionTo('scholar mentors:replace');
+        $this->signIn($this->user, 'randomRole');
+    }
+
+    /** @test */
+    public function user_can_replace_scholar_mentors_only_if_they_have_permission_to_do_so()
+    {
+        ($scholar = create(Scholar::class))->supervisors()->attach(
+            $supervisor = factory(User::class)->states('supervisor')->create()
+        );
+
+        $this->user->revokePermissionTo('scholar mentors:replace');
+
+        $newSupervisor = factory(User::class)->states('supervisor')->create();
+
+        $this->withExceptionHandling()
+            ->patch(route('staff.scholars.supervisor.replace', $scholar), [
+                'supervisor_id' => $newSupervisor->id,
+            ])->assertForbidden();
+
+        $newCosupervisor = factory(User::class)->states('cosupervisor')->create();
+
+        $this->withExceptionHandling()
+            ->patch(route('staff.scholars.cosupervisor.replace', $scholar), [
+                'cosupervisor_id' => $newCosupervisor->id,
+            ])->assertForbidden();
+    }
+
     /** @test */
     public function scholars_co_supervisor_is_replaced_while_keeping_the_history()
     {
@@ -29,7 +68,6 @@ class ReplaceScholarMentorTest extends TestCase
         $scholar->cosupervisors()->attach($cosupervisor);
 
         $exisitngCosupervisor = factory(User::class)->states('cosupervisor')->create();
-        $this->signIn();
 
         $this->withoutExceptionHandling()
             ->patch(route('staff.scholars.cosupervisor.replace', $scholar), [
@@ -63,8 +101,6 @@ class ReplaceScholarMentorTest extends TestCase
 
         $externalCosupervisor = factory(User::class)->states(['cosupervisor', 'external'])->create();
 
-        $this->signIn();
-
         $this->withoutExceptionHandling()
             ->patch(route('staff.scholars.cosupervisor.replace', $scholar), [
                 'cosupervisor_id' => $externalCosupervisor->id,
@@ -95,8 +131,6 @@ class ReplaceScholarMentorTest extends TestCase
         $cosupervisor = factory(User::class)->states('cosupervisor')->create();
         $scholar->cosupervisors()->attach($cosupervisor);
         $anotherSupervisor = factory(User::class)->states('supervisor')->create();
-
-        $this->signIn();
 
         $this->withoutExceptionHandling()
             ->patch(route('staff.scholars.cosupervisor.replace', $scholar), [
@@ -131,8 +165,6 @@ class ReplaceScholarMentorTest extends TestCase
         //     create(Cosupervisor::class)
         // );
 
-        $this->signIn();
-
         $this->withoutExceptionHandling()
             ->patch(route('staff.scholars.cosupervisor.replace', $scholar), [
                 'cosupervisor_id' => $exisitngCosupervisor->id,
@@ -154,7 +186,6 @@ class ReplaceScholarMentorTest extends TestCase
     /** @test */
     public function cosupervisor_of_scholar_cannot_be_replaced_if_cosupervisor_is_same_as_previous_cosupervisor_or_current_supervisor()
     {
-        $this->signIn();
         $supervisor = factory(User::class)->states('supervisor')->create();
         $cosupervisor = factory(User::class)->states('cosupervisor')->create();
         $scholar = create(Scholar::class);
@@ -194,8 +225,6 @@ class ReplaceScholarMentorTest extends TestCase
         );
         $exisitngSupervisor = factory(User::class)->states('supervisor')->create();
 
-        $this->signIn();
-
         $this->withoutExceptionHandling()
             ->patch(route('staff.scholars.supervisor.replace', $scholar), [
                 'supervisor_id' => $exisitngSupervisor->id,
@@ -223,8 +252,6 @@ class ReplaceScholarMentorTest extends TestCase
         ($scholar = create(Scholar::class))->supervisors()->attach(
             $supervisor = factory(User::class)->states('supervisor')->create()
         );
-
-        $this->signIn();
 
         try {
             $this->withoutExceptionHandling()

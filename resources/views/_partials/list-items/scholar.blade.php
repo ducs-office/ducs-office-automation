@@ -30,12 +30,14 @@
                     alt="{{ $scholar->currentSupervisor->name }}'s Avatar" />
                 <div>
                     <h6>{{ $scholar->currentSupervisor->name }}</h6>
+                    @can('replaceScholarMentors', User::class)
                     <x-modal.trigger class="inline-flex items-center space-x-1 link"
                         modal="replace-supervisor-modal"
                         :livewire="['payload' => $scholar->id]">
                         <x-feather-icon name="refresh-cw" class="h-current"></x-feather-icon>
                         <span>Replace</span>
                     </x-modal.trigger>
+                    @endcan
                 </div>
             </div>
         @endif
@@ -51,11 +53,13 @@
                 @else
                     <h6 class="text-gray-600 font-bold">None</h6>
                 @endif
+                @can('replaceScholarMentors', User::class)
                 <x-modal.trigger class="inline-flex items-center space-x-1 link" modal="replace-cosupervisor-modal"
                     :livewire="['payload' => $scholar->id]">
                     <x-feather-icon name="refresh-cw" class="h-current"></x-feather-icon>
                     <span>Replace</span>
                 </x-modal.trigger>
+                @endcan
             </div>
         </div>
     </td>

@@ -99,6 +99,7 @@ return [
             'phd seminar' => ['add schedule', 'finalize'],
             'title approval' => ['approve'],
             'scholar examiner' => ['recommend', 'approve'],
+            'scholar mentors' => ['replace'],
         ],
 
         'roles' => [
@@ -118,6 +119,7 @@ return [
                 'phd seminar' => ['add schedule', 'finalize'],
                 'title approval' => ['approve'],
                 'scholar examiner' => ['recommend', 'approve'],
+                'scholar mentors' => ['replace'],
             ],
             'DRC Member' => [
                 'scholars' => ['view', 'create', 'edit', 'delete'],

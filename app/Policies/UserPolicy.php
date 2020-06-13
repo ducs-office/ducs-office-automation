@@ -81,4 +81,9 @@ class UserPolicy
         return $user->can('users:delete')
             && (int) $userModel->id !== (int) $user->id;
     }
+
+    public function replaceScholarMentors(User $user)
+    {
+        return $user->can('scholar mentors:replace');
+    }
 }

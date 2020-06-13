@@ -118,6 +118,8 @@ class ScholarController extends Controller
 
     public function replaceCosupervisor(Request $request, Scholar $scholar)
     {
+        $this->authorize('replaceScholarMentors', User::class);
+
         $conflicts = [
             $scholar->currentSupervisor->id,
             optional($scholar->currentCosupervisor)->id,
@@ -139,7 +141,7 @@ class ScholarController extends Controller
         }
 
         if ($request->cosupervisor_id) {
-            $scholar->cosupervisors()->attach($request->cosupervisor_id);
+            $scholar->cosupervisors()->attach($request->cosupervisor_id, ['started_on' => today()]);
         }
 
         flash('Co-Supervisor replaced successfully!')->success();
@@ -149,6 +151,8 @@ class ScholarController extends Controller
 
     public function replaceSupervisor(Scholar $scholar, Request $request)
     {
+        $this->authorize('replaceScholarMentors', User::class);
+
         $request->validate([
             'supervisor_id' => [
                 'required', Rule::exists('users', 'id')
@@ -160,7 +164,7 @@ class ScholarController extends Controller
         $scholar->currentSupervisor->pivot
             ->update(['ended_on' => today()]);
 
-        $scholar->supervisors()->attach($request->supervisor_id);
+        $scholar->supervisors()->attach($request->supervisor_id, ['started_on' => today()]);
 
         flash('Supervisor replaced successfully!')->success();
 

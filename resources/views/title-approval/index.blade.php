@@ -35,14 +35,6 @@
 @section('body')
 <div class="page-card p-6 flex overflow-visible space-x-6">
     <div>
-        <div class="w-64 pr-4 relative -ml-8 my-2">
-            <h3 class="relative pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
-                Title Approval
-            </h3>
-            <svg class="absolute left-0 w-2 text-magenta-900" viewBox="0 0 10 10">
-                <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
-            </svg>
-        </div> 
         @can('create',[ \App\Models\TitleApproval::class, $scholar]) 
         <a href="{{ route('scholars.title-approval.request', $scholar) }}" class="btn btn-magenta is-sm -ml-4 my-2">
            Request

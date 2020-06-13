@@ -8,15 +8,6 @@
 @endpush
 @section('body')
 <div class="page-card p-6 overflow-visible">
-    {{-- <div class="w-64 pr-4 relative z-10 -ml-8 my-2">
-        <h3 class="relative pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
-            Documents
-        </h3>
-        <svg class="absolute left-0 w-2 text-magenta-900" viewBox="0 0 10 10">
-            <path fill="currentColor" d="M0 0 L10 0 L10 10 L0 0"></path>
-        </svg>
-    </div> --}}
-    {{-- <div class="flex-1"> --}}
     <ul class="border rounded-lg overflow-hidden mb-4 divide-y">
         @forelse ($scholar->documents as $document)
         @include('_partials.list-items.scholar-document')

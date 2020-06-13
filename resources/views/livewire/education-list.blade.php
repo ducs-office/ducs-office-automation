@@ -19,7 +19,7 @@
                         Year
                     </th>
                 </tr>
-                <tbody>
+                <tbody x-data="{count: {{ count($educationItems) }} }">
                     @foreach ($educationItems as $index => $educationItem)   
                         <tr>
                             <td class="px-6 py-4 ">
@@ -75,7 +75,7 @@
                                     x-model="'{{$educationItem['year'] ?? ''}}'" 
                                     class="w-full form-input">
                             </td>
-                            <td class="px-6 py-4 ">
+                            <td class="px-6 py-4" x-show="count > 1">
                                 <button type="button" class="p-2 group" wire:click="remove({{ $index }})">
                                     <x-feather-icon name="x" class="h-6 transform transition duration-150 group-hover:scale-110"></x-feather-icon>
                                 </button>
