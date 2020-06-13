@@ -22,7 +22,7 @@
             </a>
         </li>
         <li>
-            <a href="#" class="flex items-center py-2 px-4 text-white-70 rounded transform transition-transform duration-150 hover:-translate-y-1 focus:-translate-y-1 hover:text-white focus:text-white hover:bg-magenta-700 focus:bg-magenta-700 hover:shadow focus:shadow focus:outline-none">
+            <a href="{{ route('scholars.publications.index', $scholar) }}" class="flex items-center py-2 px-4 text-white-70 rounded transform transition-transform duration-150 hover:-translate-y-1 focus:-translate-y-1 hover:text-white focus:text-white hover:bg-magenta-700 focus:bg-magenta-700 hover:shadow focus:shadow focus:outline-none">
                 <x-feather-icon name="file" class="h-5 mr-4" stroke-width="2">Publications</x-feather-icon>
                 Publications
             </a>

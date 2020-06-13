@@ -24,7 +24,7 @@ class ViewPublicationTest extends TestCase
         ]);
 
         $this->withoutExceptionHandling()
-            ->get(route('publications.show', $publication))
+            ->get(route('scholars.publications.show', [$scholar, $publication]))
             ->assertSuccessful();
     }
 
@@ -41,40 +41,7 @@ class ViewPublicationTest extends TestCase
         ]);
 
         $this->withExceptionHandling()
-            ->get(route('publications.show', $publication))
-            ->assertForbidden();
-    }
-
-    /** @test */
-    public function supervisor_can_view_their_publication_document()
-    {
-        $user = factory(User::class)->states('supervisor')->create();
-        $this->signIn($user);
-
-        $publication = create(Publication::class, 1, [
-            'author_type' => User::class,
-            'author_id' => $user->id,
-        ]);
-
-        $this->withoutExceptionHandling()
-            ->get(route('publications.show', $publication))
-            ->assertSuccessful();
-    }
-
-    /** @test */
-    public function supervisor_can_not_view_other_supervisors_publication_document()
-    {
-        $this->signIn($user = factory(User::class)->states('supervisor')->create());
-
-        $otherUser = factory(User::class)->states('supervisor')->create();
-
-        $publication = create(Publication::class, 1, [
-            'author_type' => User::class,
-            'author_id' => $otherUser->id,
-        ]);
-
-        $this->withExceptionHandling()
-            ->get(route('publications.show', $publication))
+            ->get(route('scholars.publications.show', [$otherScholar, $publication]))
             ->assertForbidden();
     }
 
@@ -93,7 +60,7 @@ class ViewPublicationTest extends TestCase
         ]);
 
         $this->withoutExceptionHandling()
-            ->get(route('publications.show', $publication))
+            ->get(route('scholars.publications.show', [$scholar, $publication]))
             ->assertSuccessful();
     }
 
@@ -111,7 +78,7 @@ class ViewPublicationTest extends TestCase
         ]);
 
         $this->withExceptionHandling()
-            ->get(route('publications.show', $publication))
+            ->get(route('scholars.publications.show', [$scholar, $publication]))
             ->assertForbidden();
     }
 }

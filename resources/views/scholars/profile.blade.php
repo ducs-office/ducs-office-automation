@@ -38,9 +38,5 @@
             @include('_partials.scholar-profile.research-committee')
         </x-tab-content>
     </x-tabbed-pane>
-
-    <div class="container mx-auto p-4 space-y-8">
-        @include('_partials.research.scholar-profile.publications')
-    </div>
 </div>
 @endsection

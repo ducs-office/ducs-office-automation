@@ -39,9 +39,6 @@ class PublicationPolicy
         }
 
         if (get_class($user) === User::class && $user->isSupervisor()) {
-            if ($user->id === (int) $publication->author_id && $publication->author_type === User::class) {
-                return true;
-            }
             if ($user->scholars->contains($publication->author_id) && $publication->author_type === Scholar::class) {
                 return true;
             }
@@ -55,10 +52,10 @@ class PublicationPolicy
      *
      * @return mixed
      */
-    public function create($user)
+    public function create($AuthUser, $user)
     {
-        return get_class($user) === Scholar::class ||
-            (get_class($user) === User::class && $user->isSupervisor());
+        return get_class($AuthUser) === get_class($user)
+            && (int) $AuthUser->id === (int) $user->id;
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Publication;
 
+use App\Models\Scholar;
 use App\Types\CitationIndex;
 use App\Types\PublicationType;
 use Carbon\Carbon;
@@ -36,8 +37,6 @@ class StorePublicationRequest extends FormRequest
         $rules = [
             'type' => ['required', Rule::in(PublicationType::values())],
             'paper_title' => ['required', 'string', 'max:400'],
-            'document' => ['required', 'file', 'mimetypes:application/pdf,image/*', 'max:200'],
-
             'is_published' => ['required', 'boolean'],
 
             'co_authors' => ['nullable', 'array', 'max:10'],
@@ -61,6 +60,10 @@ class StorePublicationRequest extends FormRequest
             'publisher' => ['exclude_if:is_published,false', 'required_if:type,' . PublicationType::JOURNAL, 'nullable', 'string', 'max:100'],
             'number' => ['exclude_if:is_published,false', 'nullable', 'numeric'],
         ];
+
+        if (get_class($this->user()) === Scholar::class) {
+            $rules['document'] = ['required', 'file', 'mimetypes:application/pdf,image/*', 'max:200'];
+        }
 
         return $rules;
     }

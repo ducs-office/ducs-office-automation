@@ -50,7 +50,7 @@ class UpdatePublicationTest extends TestCase
         ]);
 
         $this->withoutExceptionHandling()
-            ->patch(route('publications.update', $journal), [
+            ->patch(route('scholars.publications.update', [$scholar, $journal]), [
                 'is_published' => true,
                 'type' => PublicationType::JOURNAL,
                 'number' => $number = 123,
@@ -105,7 +105,7 @@ class UpdatePublicationTest extends TestCase
         ]);
 
         $this->withoutExceptionHandling()
-            ->patch(route('publications.update', $journal), [
+            ->patch(route('users.publications.update', [$supervisor, $journal]), [
                 'is_published' => true,
                 'type' => PublicationType::JOURNAL,
                 'number' => $number = 987,
@@ -117,21 +117,14 @@ class UpdatePublicationTest extends TestCase
                     ['name' => 'John Doe', 'noc' => $this->noc1],
                     ['name' => 'Sally Burgman', 'noc' => $this->noc2],
                 ],
-                'document' => $document = $this->document,
                 'paper_link' => $link = 'http://somerandom.journal',
             ])
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'Publication updated successfully!');
 
         $freshJournal = $supervisor->journals->first()->fresh();
-
         $this->assertEquals($number, $freshJournal->number);
         $this->assertEquals($link, $freshJournal->paper_link);
-
-        $this->assertEquals(
-            $document->hashName('publications'),
-            $freshJournal->document_path
-        );
 
         $this->assertCount(2, $freshJournal->coAuthors);
         $this->assertEquals(
@@ -157,7 +150,7 @@ class UpdatePublicationTest extends TestCase
         ]);
 
         $this->withoutExceptionHandling()
-            ->patch(route('publications.update', $conference), [
+            ->patch(route('scholars.publications.update', [$scholar, $conference]), [
                 'is_published' => true,
                 'type' => PublicationType::CONFERENCE,
                 'city' => $city = 'Agra',
@@ -212,7 +205,7 @@ class UpdatePublicationTest extends TestCase
         ]);
 
         $this->withoutExceptionHandling()
-            ->patch(route('publications.update', $conference), [
+            ->patch(route('users.publications.update', [$supervisor, $conference]), [
                 'is_published' => true,
                 'type' => PublicationType::CONFERENCE,
                 'city' => $city = 'Agra',
@@ -224,7 +217,6 @@ class UpdatePublicationTest extends TestCase
                     ['name' => 'John Doe', 'noc' => $this->noc1],
                     ['name' => 'Sally Burgman', 'noc' => $this->noc2],
                 ],
-                'document' => $document = $this->document,
                 'paper_link' => $link = 'http://somerandom.journal',
             ])
             ->assertRedirect()
@@ -234,11 +226,6 @@ class UpdatePublicationTest extends TestCase
 
         $this->assertEquals($city, $freshConference->city);
         $this->assertEquals($link, $freshConference->paper_link);
-
-        $this->assertEquals(
-            $document->hashName('publications'),
-            $freshConference->document_path
-        );
 
         $this->assertCount(2, $freshConference->coAuthors);
         $this->assertEquals(
@@ -263,7 +250,7 @@ class UpdatePublicationTest extends TestCase
         ]);
 
         $this->withoutExceptionHandling()
-            ->patch(route('publications.update', $publication), [
+            ->patch(route('scholars.publications.update', [$scholar, $publication]), [
                 'type' => $publication->type,
                 'date' => [
                     'month' => 'January',
@@ -275,39 +262,6 @@ class UpdatePublicationTest extends TestCase
             ->assertSessionHasFlash('success', 'Publication updated successfully!');
 
         $freshpublication = $scholar->publications()->first();
-
-        Storage::assertMissing($publication->document_path);
-        $this->assertEquals(
-            $document->hashName('publications/'),
-            $freshpublication->document_path
-        );
-    }
-
-    /** @test */
-    public function exisitng_document_is_deleted_if_a_new_one_is_uploaded_on_updating_a_supervisor_publication()
-    {
-        $supervisor = factory(User::class)->states('supervisor')->create();
-
-        $this->signInScholar($supervisor);
-
-        $publication = create(Publication::class, 1, [
-            'author_type' => User::class,
-            'author_id' => $supervisor->id,
-        ]);
-
-        $this->withoutExceptionHandling()
-            ->patch(route('publications.update', $publication), [
-                'type' => $publication->type,
-                'date' => [
-                    'month' => 'January',
-                    'year' => 2020,
-                ],
-                'document' => $document = $this->document,
-            ])
-            ->assertRedirect()
-            ->assertSessionHasFlash('success', 'Publication updated successfully!');
-
-        $freshpublication = $supervisor->publications()->first();
 
         Storage::assertMissing($publication->document_path);
         $this->assertEquals(
@@ -331,7 +285,7 @@ class UpdatePublicationTest extends TestCase
 
         try {
             $this->withoutExceptionHandling()
-                ->patch(route('publications.update', $conference), [
+                ->patch(route('users.publications.update', [$supervisor, $conference]), [
                     'is_published' => true,
                     'type' => PublicationType::CONFERENCE,
                     'date' => [
@@ -367,7 +321,7 @@ class UpdatePublicationTest extends TestCase
 
         try {
             $this->withoutExceptionHandling()
-                ->patch(route('publications.update', $journal), [
+                ->patch(route('users.publications.update', [$supervisor, $journal]), [
                     'is_published' => true,
                     'type' => PublicationType::JOURNAL,
                     'date' => [
@@ -400,7 +354,7 @@ class UpdatePublicationTest extends TestCase
 
         try {
             $this->withoutExceptionHandling()
-                ->patch(route('publications.update', $journal), [
+                ->patch(route('users.publications.update', [$supervisor, $journal]), [
                     'is_published' => true,
                     'type' => PublicationType::JOURNAL,
                     'date' => [
@@ -431,7 +385,7 @@ class UpdatePublicationTest extends TestCase
         ]);
 
         $this->withoutExceptionHandling()
-            ->patch(route('publications.update', $journal), [
+            ->patch(route('users.publications.update', [$supervisor, $journal]), [
                 'type' => PublicationType::JOURNAL,
                 'date' => [
                     'month' => 'January',

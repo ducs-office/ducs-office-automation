@@ -29,9 +29,9 @@ class EditPublicationTest extends TestCase
         ]);
 
         $this->withoutExceptionHandling()
-            ->get(route('publications.edit', $publication))
+            ->get(route('scholars.publications.edit', [$scholar, $publication]))
             ->assertSuccessful()
-            ->assertViewIs('publications.edit')
+            ->assertViewIs('scholar-publications.edit')
             ->assertViewHasAll(['publication', 'citationIndexes', 'months']);
     }
 
@@ -51,9 +51,9 @@ class EditPublicationTest extends TestCase
         ]);
 
         $this->withoutExceptionHandling()
-            ->get(route('publications.edit', $publication))
+            ->get(route('users.publications.edit', [$supervisor, $publication]))
             ->assertSuccessful()
-            ->assertViewIs('publications.edit')
+            ->assertViewIs('user-publications.edit')
             ->assertViewHasAll(['publication', 'citationIndexes', 'months']);
     }
 
@@ -71,9 +71,9 @@ class EditPublicationTest extends TestCase
         ]);
 
         $this->withoutExceptionHandling()
-            ->get(route('publications.edit', $conference))
+            ->get(route('scholars.publications.edit', [$scholar, $conference]))
             ->assertSuccessful()
-            ->assertViewIs('publications.edit')
+            ->assertViewIs('scholar-publications.edit')
             ->assertViewHasAll(['publication', 'citationIndexes', 'months']);
     }
 
@@ -93,9 +93,9 @@ class EditPublicationTest extends TestCase
         ]);
 
         $this->withoutExceptionHandling()
-            ->get(route('publications.edit', $conference))
+            ->get(route('users.publications.edit', [$supervisor, $conference]))
             ->assertSuccessful()
-            ->assertViewIs('publications.edit')
+            ->assertViewIs('user-publications.edit')
             ->assertViewHasAll(['publication', 'citationIndexes', 'months']);
     }
 }

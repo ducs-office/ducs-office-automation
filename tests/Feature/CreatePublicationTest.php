@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Scholar;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -14,12 +15,12 @@ class CreatePublicationTest extends TestCase
     /** @test */
     public function journal_publication_of_scholar_can_be_created()
     {
-        $this->signInScholar();
+        $this->signInScholar($scholar = create(Scholar::class));
 
         $this->withoutExceptionHandling()
-        ->get(route('publications.create'))
+        ->get(route('scholars.publications.create', $scholar))
         ->assertSuccessful()
-        ->assertViewIs('publications.create')
+        ->assertViewIs('scholar-publications.create')
         ->assertViewHas('citationIndexes');
     }
 
@@ -31,21 +32,21 @@ class CreatePublicationTest extends TestCase
         $this->signIn($supervisor);
 
         $this->withoutExceptionHandling()
-            ->get(route('publications.create'))
+            ->get(route('users.publications.create', $supervisor))
             ->assertSuccessful()
-            ->assertViewIs('publications.create')
+            ->assertViewIs('user-publications.create')
             ->assertViewHas('citationIndexes');
     }
 
     /** @test */
     public function conference_publication_of_scholar_can_be_created()
     {
-        $this->signInScholar();
+        $this->signInScholar($scholar = create(Scholar::class));
 
         $this->withoutExceptionHandling()
-        ->get(route('publications.create'))
+        ->get(route('scholars.publications.create', $scholar))
         ->assertSuccessful()
-        ->assertViewIs('publications.create')
+        ->assertViewIs('scholar-publications.create')
         ->assertViewHas('citationIndexes');
     }
 
@@ -57,9 +58,9 @@ class CreatePublicationTest extends TestCase
         $this->signIn($supervisor);
 
         $this->withoutExceptionHandling()
-        ->get(route('publications.create'))
+        ->get(route('users.publications.create', $supervisor))
         ->assertSuccessful()
-        ->assertViewIs('publications.create')
+        ->assertViewIs('user-publications.create')
         ->assertViewHas('citationIndexes');
     }
 }

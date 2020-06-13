@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Publications;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Publication\StorePublicationRequest;
@@ -17,31 +17,39 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 use Tests\Feature\StorePublicationTest;
 
-class PublicationController extends Controller
+class ScholarPublicationController extends Controller
 {
-    public function __construct()
+    public function index(Scholar $scholar)
     {
-        return $this->authorizeResource(Publication::class, 'publication');
+        $this->authorize('viewAny', [Publication::class, $scholar]);
+
+        return view('scholar-publications.index', [
+            'scholar' => $scholar,
+        ]);
     }
 
-    public function create()
+    public function create(Scholar $scholar)
     {
-        return view('publications.create', [
+        $this->authorize('create', [Publication::class, $scholar]);
+
+        return view('scholar-publications.create', [
             'citationIndexes' => CitationIndex::values(),
             'months' => array_map(function ($m) {
                 return Carbon::createFromFormat('m', $m)->format('F');
             }, range(1, 12)),
             'currentYear' => now()->format('Y'),
             'types' => PublicationType::values(),
+            'scholar' => $scholar,
         ]);
     }
 
-    public function store(StorePublicationRequest $request)
+    public function store(StorePublicationRequest $request, Scholar $scholar)
     {
-        $user = $request->user();
+        $this->authorize('create', [Publication::class, $scholar]);
+
         $validData = $request->validated();
 
-        $publication = $user->publications()->create(
+        $publication = $scholar->publications()->create(
             $validData +
             ['document_path' => $request->storeDocument()],
         );
@@ -50,23 +58,28 @@ class PublicationController extends Controller
 
         flash('Publication added successfully')->success();
 
-        return redirect()->back();
+        return redirect(route('scholars.publications.index', $scholar));
     }
 
-    public function edit(Publication $publication)
+    public function edit(Scholar $scholar, Publication $publication)
     {
-        return view('publications.edit', [
+        $this->authorize('update', $publication);
+
+        return view('scholar-publications.edit', [
             'publication' => $publication,
             'citationIndexes' => CitationIndex::values(),
             'months' => array_map(function ($m) {
                 return Carbon::createFromFormat('m', $m)->format('F');
             }, range(1, 12)),
             'currentYear' => now()->format('Y'),
+            'scholar' => $scholar,
         ]);
     }
 
-    public function update(UpdatePublicationRequest $request, Publication $publication)
+    public function update(UpdatePublicationRequest $request, Scholar $scholar, Publication $publication)
     {
+        $this->authorize('update', $publication);
+
         $validData = $request->validated();
 
         $publication->update(array_merge(
@@ -78,11 +91,13 @@ class PublicationController extends Controller
 
         flash('Publication updated successfully!')->success();
 
-        return redirect()->back();
+        return redirect(route('scholars.publications.index', $scholar));
     }
 
-    public function destroy(Publication $publication)
+    public function destroy(Scholar $scholar, Publication $publication)
     {
+        $this->authorize('delete', $publication);
+
         $publication->delete();
 
         flash('Publication deleted successfully!')->success();
@@ -90,8 +105,10 @@ class PublicationController extends Controller
         return back();
     }
 
-    public function show(Publication $publication)
+    public function show(Scholar $scholar, Publication $publication)
     {
+        $this->authorize('view', $publication);
+
         return Response::file(Storage::path($publication->document_path));
     }
 }

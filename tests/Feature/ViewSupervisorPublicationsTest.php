@@ -19,7 +19,7 @@ class ViewSupervisorPublicationsTest extends TestCase
         $this->signIn($supervisor);
 
         $response = $this->withoutExceptionHandling()
-                ->get(route('research.publications.index'))
-                ->assertViewHas('supervisor');
+                ->get(route('users.publications.index', $supervisor))
+                ->assertViewHas('user');
     }
 }

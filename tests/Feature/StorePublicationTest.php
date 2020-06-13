@@ -76,19 +76,37 @@ class StorePublicationTest extends TestCase
     }
 
     /** @test */
-    public function only_paper_title_and_type_and_document_are_required_if_the_publication_is_not_yet_published()
+    public function only_paper_title_and_type_and_document_are_required_by_the_scholar_if_the_publication_is_not_yet_published()
     {
         $this->signInScholar($scholar = create(Scholar::class));
 
         $journal = $this->fillPublication();
 
         $this->withoutExceptionHandling()
-            ->post(route('publications.store'), $journal)
+            ->post(route('scholars.publications.store', ['scholar' => $scholar]), $journal)
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'Publication added successfully');
 
         $this->assertCount(1, Publication::all());
         $this->assertCount(1, $scholar->publications);
+    }
+
+    /** @test */
+    public function only_paper_title_and_type_and_document_are_required_by_a_supervisor_if_the_publication_is_not_yet_published()
+    {
+        $user = factory(User::class)->states('supervisor')->create();
+
+        $this->signIn($user);
+
+        $journal = $this->fillPublication();
+
+        $this->withoutExceptionHandling()
+            ->post(route('users.publications.store', ['user' => $user]), $journal)
+            ->assertRedirect()
+            ->assertSessionHasFlash('success', 'Publication added successfully');
+
+        $this->assertCount(1, Publication::all());
+        $this->assertCount(1, $user->publications);
     }
 
     /** @test */
@@ -103,7 +121,7 @@ class StorePublicationTest extends TestCase
 
         try {
             $this->withoutExceptionHandling()
-            ->post(route('publications.store'), $journal)
+            ->post(route('scholars.publications.store', ['scholar' => $scholar]), $journal)
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'Publication added successfully');
         } catch (ValidationException $e) {
@@ -125,7 +143,7 @@ class StorePublicationTest extends TestCase
     }
 
     /** @test */
-    public function publication_with_scholars_cosupervisor_as_co_author_can_be_stored()
+    public function scholars_publication_with_scholars_cosupervisor_as_co_author_can_be_stored()
     {
         $this->signInScholar($scholar = create(Scholar::class));
 
@@ -141,7 +159,7 @@ class StorePublicationTest extends TestCase
         $scholar->cosupervisors()->attach([$cosupervisor->id]);
 
         $this->withoutExceptionHandling()
-            ->post(route('publications.store'), $journal)
+            ->post(route('scholars.publications.store', ['scholar' => $scholar]), $journal)
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'Publication added successfully');
 
@@ -161,7 +179,7 @@ class StorePublicationTest extends TestCase
     }
 
     /** @test */
-    public function publication_with_others_as_co_author_can_be_stored()
+    public function scholars_publication_with_others_as_co_author_can_be_stored()
     {
         $this->signInScholar($scholar = create(Scholar::class));
 
@@ -174,7 +192,7 @@ class StorePublicationTest extends TestCase
         ]);
 
         $this->withoutExceptionHandling()
-            ->post(route('publications.store'), $journal)
+            ->post(route('scholars.publications.store', ['scholar' => $scholar]), $journal)
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'Publication added successfully');
 
@@ -199,7 +217,7 @@ class StorePublicationTest extends TestCase
     }
 
     /** @test */
-    public function publication_with_others_as_co_author_can_be_stored_without_noc()
+    public function scholars_publication_with_others_as_co_author_can_be_stored_without_noc()
     {
         $this->signInScholar($scholar = create(Scholar::class));
 
@@ -212,7 +230,7 @@ class StorePublicationTest extends TestCase
         ]);
 
         $this->withoutExceptionHandling()
-            ->post(route('publications.store'), $journal)
+            ->post(route('scholars.publications.store', ['scholar' => $scholar]), $journal)
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'Publication added successfully');
 
@@ -241,10 +259,11 @@ class StorePublicationTest extends TestCase
         $journal = $this->fillPublication([
             'type' => PublicationType::JOURNAL,
             'is_published' => true,
+            'document' => '',
         ]);
 
         $this->withoutExceptionHandling()
-            ->post(route('publications.store'), $journal)
+            ->post(route('users.publications.store', ['user' => $supervisor]), $journal)
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'Publication added successfully');
 
@@ -253,11 +272,6 @@ class StorePublicationTest extends TestCase
 
         $this->assertEquals($journal['paper_title'], $storedJournal->paper_title);
         $this->assertEquals($journal['paper_link'], $storedJournal->paper_link);
-
-        $this->assertEquals(
-            $journal['document']->hashName('publications'),
-            $storedJournal->document_path
-        );
     }
 
     /** @test */
@@ -271,7 +285,7 @@ class StorePublicationTest extends TestCase
         ]);
 
         $this->withoutExceptionHandling()
-            ->post(route('publications.store'), $conference)
+            ->post(route('scholars.publications.store', ['scholar' => $scholar]), $conference)
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'Publication added successfully');
 
@@ -297,10 +311,11 @@ class StorePublicationTest extends TestCase
         $conference = $this->fillPublication([
             'type' => PublicationType::CONFERENCE,
             'is_published' => true,
+            'document' => '',
         ]);
 
         $this->withoutExceptionHandling()
-            ->post(route('publications.store'), $conference)
+            ->post(route('users.publications.store', ['user' => $supervisor]), $conference)
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'Publication added successfully');
 
@@ -309,11 +324,6 @@ class StorePublicationTest extends TestCase
 
         $this->assertEquals($conference['paper_title'], $storedConference->paper_title);
         $this->assertEquals($conference['paper_link'], $storedConference->paper_link);
-
-        $this->assertEquals(
-            $conference['document']->hashName('publications'),
-            $storedConference->document_path
-        );
     }
 
     /** @test */
@@ -332,7 +342,7 @@ class StorePublicationTest extends TestCase
 
         try {
             $this->withoutExceptionHandling()
-                ->post(route('publications.store'), $conference);
+                ->post(route('users.publications.store', ['user' => $supervisor]), $conference);
 
             $this->fail('city and country can not be null in case of a conference');
         } catch (ValidationException $e) {
@@ -357,7 +367,7 @@ class StorePublicationTest extends TestCase
 
         try {
             $this->withoutExceptionHandling()
-                ->post(route('publications.store'), $journal);
+                ->post(route('users.publications.store', ['user' => $supervisor]), $journal);
 
             $this->fail('publication be null in case of a journal');
         } catch (ValidationException $e) {
@@ -385,7 +395,7 @@ class StorePublicationTest extends TestCase
 
         try {
             $this->withoutExceptionHandling()
-                ->post(route('publications.store'), $publication);
+                ->post(route('users.publications.store', $supervisor), $publication);
 
             $this->fail('date_month and date_year can not be null.');
         } catch (ValidationException $e) {
@@ -411,7 +421,7 @@ class StorePublicationTest extends TestCase
         ]);
 
         $this->withoutExceptionHandling()
-            ->post(route('publications.store'), $publication);
+            ->post(route('scholars.publications.store', $scholar), $publication);
 
         $this->assertEquals(1, $scholar->publications->count());
 

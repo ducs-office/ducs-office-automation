@@ -19,7 +19,7 @@ class CreatePublicationsTable extends Migration
             $table->enum('type', PublicationType::values());
             $table->text('paper_title');
             $table->morphs('author');
-            $table->string('document_path');
+            $table->string('document_path')->nullable();
             $table->boolean('is_published')->default(false);
             $table->text('name')->nullable();
             $table->date('date')->nullable();

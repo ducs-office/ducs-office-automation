@@ -216,18 +216,92 @@ Route::get(
 )->name('scholars.courseworks.marksheet')
 ->middleware('auth:web,scholars');
 
+//========= User Publications=================
+Route::get(
+    '@{user}/publications',
+    'UserPublicationController@index'
+)->name('users.publications.index')
+->middleware('auth:web');
+
+Route::get(
+    '@{user}/publications/create',
+    'UserPublicationController@create'
+)->name('users.publications.create')
+->middleware('auth:web');
+
+Route::post(
+    '@{user}/publications/',
+    'UserPublicationController@store'
+)->name('users.publications.store')
+->middleware('auth:web');
+
+Route::get(
+    '@{user}/publications/{publication}/edit',
+    'UserPublicationController@edit'
+)->name('users.publications.edit')
+->middleware('auth:web');
+
+Route::patch(
+    '@{user}/publications/{publication}',
+    'UserPublicationController@update'
+)->name('users.publications.update')
+->middleware('auth:web');
+
+Route::delete(
+    '@{user}/publications/{publication}',
+    'UserPublicationController@destroy'
+)->name('users.publications.destroy')
+->middleware('auth:web');
+
+//=========== Scholar Publications ==================
+
+Route::get(
+    'scholars/@{scholar}/publications',
+    'ScholarPublicationController@index'
+)->name('scholars.publications.index')
+->middleware('auth:web,scholars');
+
+Route::get(
+    'scholars/@{scholar}/publications/create',
+    'ScholarPublicationController@create'
+)->name('scholars.publications.create')
+->middleware('auth:scholars');
+
+Route::get(
+    'scholars/@{scholar}/publications/{publication}',
+    'ScholarPublicationController@show'
+)->name('scholars.publications.show')
+->middleware('auth:web,scholars');
+
+Route::post(
+    'scholars/@{scholar}/publications/',
+    'ScholarPublicationController@store'
+)->name('scholars.publications.store')
+->middleware('auth:scholars');
+
+Route::get(
+    'scholars/@{scholar}/publications/{publication}/edit',
+    'ScholarPublicationController@edit'
+)->name('scholars.publications.edit')
+->middleware('auth:scholars');
+
+Route::patch(
+    'scholars/@{scholar}/publications/{publication}',
+    'ScholarPublicationController@update'
+)->name('scholars.publications.update')
+->middleware('auth:scholars');
+
+Route::delete(
+    'scholars/@{scholar}/publications/{publication}',
+    'ScholarPublicationController@destroy'
+)->name('scholars.publications.destroy')
+->middleware('auth:scholars');
+
 Route::prefix('/publications')
 ->middleware('auth:web,scholars')
 ->namespace('Publications')
 ->as('publications.')
 ->group(static function () {
-    Route::get('/', 'PublicationController@create')->name('create');
-    Route::get('/{publication}', 'PublicationController@show')->name('show');
-    Route::post('/', 'PublicationController@store')->name('store');
-    Route::get('/{publication}/edit', 'PublicationController@edit')->name('edit');
-    Route::patch('/{publication}', 'PublicationController@update')->name('update');
-    Route::delete('/{publication}', 'PublicationController@destroy')->name('destroy');
-
     Route::get('{publication}/co-authors/{coAuthor}', 'CoAuthorController@show')->name('co_authors.show');
     Route::post('/{publication}/co-authors', 'CoAuthorController@store')->name('co_authors.store');
     Route::patch('/{publication}/co-authors/{coAuthor}', 'CoAuthorController@update')->name('co_authors.update');

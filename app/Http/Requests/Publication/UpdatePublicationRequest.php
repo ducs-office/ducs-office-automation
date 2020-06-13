@@ -32,7 +32,6 @@ class UpdatePublicationRequest extends FormRequest
         $rules = [
             'type' => ['required', Rule::in(PublicationType::values())],
             'paper_title' => ['sometimes', 'required', 'string', 'max:400'],
-            'document' => ['sometimes', 'required'],
 
             'is_published' => ['required', 'boolean'],
             'co_authors' => ['nullable', 'array', 'max:10', 'min:1'],
@@ -55,6 +54,10 @@ class UpdatePublicationRequest extends FormRequest
             'publisher' => ['sometimes', 'exclude_if:is_published,false', 'exclude_if:type,' . PublicationType::CONFERENCE, 'string', 'max:100'],
             'number' => ['exclude_if:is_published,false', 'nullable', 'numeric'],
         ];
+
+        if (get_class($this->user()) === Scholar::class) {
+            $rules['document'] = ['sometimes', 'required', 'file', 'mimetypes:application/pdf,image/*', 'max:200'];
+        }
 
         return $rules;
     }
