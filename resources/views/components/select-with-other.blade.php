@@ -2,38 +2,23 @@
     'class',
     'name',
     'inputName',
-    'otherValue' => '',
+    'otherValue' => 'other',
     'inputClass',
     'placeholder' => 'Please Specify',
     'value',
 ])
-<div x-data="initialise( {{ json_encode($otherValue) }} )"  class="{{ $class }}">
+<div x-data="{
+        value: {{ json_encode($value) }},
+        otherValue: {{ json_encode($otherValue) }},
+    }"
+    class="{{ $class }}">
     <select name="{{ $name }}" class="{{ $selectClass }}"
-        x-on:change="$form.showInputIfOtherSelected($event)"
-        x-model="{{ $value }}">
+        x-model="value">
         {{ $slot }}
-        <option value=""> Other </option>
+        <option value="{{ $otherValue }}">Other</option>
     </select>
-    <template x-if="$form.showInput">
-        <input type="text" name="{{ $inputName }}" 
-            class="{{ $inputClass }}">
+    <template x-if="value == otherValue">
+        <input type="text" name="{{ $inputName }}"
+            class="{{ $inputClass }}" placeholder="{{ $placeholder }}">
     </template>
 </div>
-@push('scripts')
-<script>
-    function initialise(otherValue) {
-        return {
-            $form: {
-                otherValue: otherValue,
-                showInput: false,
-                showInputIfOtherSelected(e) {
-                    if (e.target.value == this.otherValue)
-                        this.showInput = true;
-                    else
-                        this.showInput = false;
-                }
-            }
-        }
-    }
-</script>
-@endpush

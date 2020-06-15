@@ -18,18 +18,19 @@
                     <th class="px-6 py-3 border-b border-gray-500 bg-gray-100 text-left text-sm leading-4 text-gray-700 uppercase">
                         Year
                     </th>
+                    <th class="px-6 py-3 border-b border-gray-500 bg-gray-100 text-left text-sm leading-4 text-gray-700 uppercase"></th>
                 </tr>
                 <tbody x-data="{count: {{ count($educationItems) }} }">
-                    @foreach ($educationItems as $index => $educationItem)   
+                    @foreach ($educationItems as $index => $educationItem)
                         <tr>
-                            <td class="px-6 py-4 ">
+                            <td class="px-6 py-4">
                                 <x-select-with-other
                                     class="w-64"
                                     select-class="w-full form-select"
                                     input-class="w-full form-input"
                                     name="education_details[{{$index}}][institute]"
                                     input-name="education_details[{{$index}}][institute]"
-                                    value="'{{ $educationItem['institute']}}'"
+                                    value="{{ $educationItem['institute']}}"
                                     >
 
                                     @foreach($data['institutes'] as $institute)
@@ -45,7 +46,7 @@
                                     input-class="w-full form-input"
                                     name="education_details[{{$index}}][degree]"
                                     input-name="education_details[{{$index}}][degree]"
-                                    value="'{{ $educationItem['degree']}}'"
+                                    value="{{ $educationItem['degree']}}"
                                     >
                                     @foreach($data['degrees'] as $degree)
                                     <option value="{{ $degree['name'] }}">{{ $degree['name'] }}</option>
@@ -60,7 +61,7 @@
                                     input-class="w-full form-input"
                                     name="education_details[{{$index}}][subject]"
                                     input-name="education_details[{{$index}}][subject]"
-                                    value="'{{$educationItem['subject']}}'"
+                                    value="{{ $educationItem['subject'] }}"
                                     >
 
                                     @foreach($data['subjects'] as $subject)
@@ -70,9 +71,9 @@
                                 </x-select-with-other>
                             </td>
                             <td class="px-6 py-4 ">
-                                <input type="text" 
-                                    name="education_details[{{$index}}][year]" 
-                                    x-model="'{{$educationItem['year'] ?? ''}}'" 
+                                <input type="text"
+                                    name="education_details[{{$index}}][year]"
+                                    x-model="'{{$educationItem['year'] ?? ''}}'"
                                     class="w-full form-input">
                             </td>
                             <td class="px-6 py-4" x-show="count > 1">
