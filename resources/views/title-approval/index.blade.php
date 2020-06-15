@@ -46,8 +46,8 @@
         </x-modal.trigger>
         @endcan
     </div>
-    @if($scholar->titleApproval)
     <div class="flex-1 border rounded-lg m-2 flex items-center">
+    @if($scholar->titleApproval)
         @can('view', [$scholar->titleApproval, $scholar])
         <a href="{{ route('scholars.title-approval.show', [$scholar, $scholar->titleApproval]) }}" target="_blank" class="inline-flex items-center underline px-3 py-1 bg-magenta-100 text-magenta-800 rounded font-bold mx-2">
             <x-feather-icon name="link" class="h-4 mr-2"> Title Approval Form </x-feather-icon>
@@ -79,7 +79,9 @@
             Approve
         </x-modal.trigger>
         @endcan
-    </div>
+    @else
+        <p class="mx-auto py-2 text-center text-gray-700 font-bold">Not Applied</p>
     @endif
+    </div>
 </div>
 @endsection
