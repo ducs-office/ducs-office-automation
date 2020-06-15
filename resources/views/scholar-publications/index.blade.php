@@ -1,5 +1,4 @@
-{{-- Publications --}}
-@extends('layouts.scholar-profile', ['scholar' => $scholar])
+@extends('layouts.scholar-profile', ['pageTitle' => 'Publications','scholar' => $scholar])
 @section('body')    
 <div class="page-card p-6 overflow-visible space-y-6">
     <div class="flex items-baseline">   

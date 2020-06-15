@@ -143,51 +143,13 @@ class StorePublicationTest extends TestCase
     }
 
     /** @test */
-    public function scholars_publication_with_scholars_cosupervisor_as_co_author_can_be_stored()
+    public function scholars_publication_with_co_author_can_be_stored()
     {
         $this->signInScholar($scholar = create(Scholar::class));
 
         $journal = $this->fillPublication([
-            'co_authors' => [
-                'is_supervisor' => '',
-                'others' => [],
-                'is_cosupervisor' => true,
-            ],
-        ]);
-
-        $cosupervisor = factory(User::class)->states('cosupervisor')->create();
-        $scholar->cosupervisors()->attach([$cosupervisor->id]);
-
-        $this->withoutExceptionHandling()
-            ->post(route('scholars.publications.store', ['scholar' => $scholar]), $journal)
-            ->assertRedirect()
-            ->assertSessionHasFlash('success', 'Publication added successfully');
-
-        $this->assertCount(1, Publication::all());
-        $this->assertCount(1, $scholar->publications);
-
-        $storedPublication = $scholar->publications->first();
-
-        $this->assertCount(1, $storedPublication->coAuthors);
-
-        $this->assertEquals(
-            $scholar->currentCosupervisor->id,
-            $storedPublication->coAuthors->first()->id
-        );
-
-        $this->assertEquals(2, $storedPublication->coAuthors->first()->type);
-    }
-
-    /** @test */
-    public function scholars_publication_with_others_as_co_author_can_be_stored()
-    {
-        $this->signInScholar($scholar = create(Scholar::class));
-
-        $journal = $this->fillPublication([
-            'co_authors' => [
-                'others' => $others = [
-                    ['name' => 'John Doe', 'noc' => $this->noc1],
-                ],
+            'co_authors' => $coAuthors = [
+                ['name' => 'John Doe', 'noc' => $this->noc1],
             ],
         ]);
 
@@ -204,16 +166,14 @@ class StorePublicationTest extends TestCase
         $this->assertCount(1, $storedPublication->coAuthors);
 
         $this->assertEquals(
-            $others[0]['name'],
+            $coAuthors[0]['name'],
             $storedPublication->coAuthors->first()->name
         );
 
         $this->assertEquals(
-            $others[0]['noc']->hashName('publications/co_authors_noc'),
+            $coAuthors[0]['noc']->hashName('publications/co_authors_noc'),
             $storedPublication->coAuthors->first()->noc_path
         );
-
-        $this->assertEquals(0, $storedPublication->coAuthors->first()->type);
     }
 
     /** @test */
@@ -222,10 +182,8 @@ class StorePublicationTest extends TestCase
         $this->signInScholar($scholar = create(Scholar::class));
 
         $journal = $this->fillPublication([
-            'co_authors' => [
-                'others' => $others = [
-                    ['name' => 'John Doe', 'noc' => ''],
-                ],
+            'co_authors' => $coAuthors = [
+                ['name' => 'John Doe', 'noc' => ''],
             ],
         ]);
 
@@ -242,11 +200,9 @@ class StorePublicationTest extends TestCase
         $this->assertCount(1, $storedPublication->coAuthors);
 
         $this->assertEquals(
-            $others[0]['name'],
+            $coAuthors[0]['name'],
             $storedPublication->coAuthors->first()->name
         );
-
-        $this->assertEquals(0, $storedPublication->coAuthors->first()->type);
     }
 
     /** @test */
@@ -403,31 +359,5 @@ class StorePublicationTest extends TestCase
         }
 
         $this->assertCount(0, $supervisor->fresh()->journals);
-    }
-
-    /** @test */
-    public function coauthor_of_scholar_publication_can_be_supervisor()
-    {
-        $supervisor = factory(User::class)->states('supervisor')->create();
-
-        $this->signInScholar($scholar = create(Scholar::class));
-
-        $scholar->supervisors()->attach($supervisor->id);
-
-        $publication = $this->fillPublication([
-            'co_authors' => [
-                'is_supervisor' => true,
-            ],
-        ]);
-
-        $this->withoutExceptionHandling()
-            ->post(route('scholars.publications.store', $scholar), $publication);
-
-        $this->assertEquals(1, $scholar->publications->count());
-
-        $storedPublicationCoAuthor = $scholar->publications->first()->coAuthors->first();
-
-        $this->assertEquals($scholar->currentSupervisor->id, $storedPublicationCoAuthor->user_id);
-        $this->assertEquals(1, $storedPublicationCoAuthor->type);
     }
 }

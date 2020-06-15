@@ -21,27 +21,6 @@
             class="form-input w-full {{ $errors->has('paper_title') ? ' border-red-600' : ''}}"
             placeholder="Title of the publication">
     </div>
-    <div class="mb-4">
-        <label for="co_authors[]" class="form-label block mb-1">
-            Co-Authors
-        </label>
-        @foreach($publication->coAuthors as $coAuthor)
-        <div class="flex items-start mb-2">
-            <input type="text" value="{{$coAuthor->name}}" disabled class="form-input mr-2 text-gray-500 bg-transparent">
-            @can('view', $coAuthor)
-            <a href="{{ route('publications.co_authors.show', [$coAuthor, $publication]) }}" target="__blank"
-            class="form-input overflow-hidden flex flex-1 text-gray-500 items-baseline">
-                <x-feather-icon name="paperclip" class="h-4 mr-2" stroke-width="2">NOC</x-feather-icon>
-                <span>NOC</span>
-            </a>
-            @endcan
-            @can('delete', [$coAuthor, $publication])
-            <button type="submit" form="remove-noc" formaction="{{ route('publications.co_authors.destroy', [$publication, $coAuthor]) }}"
-            class="btn is-md ml-2 text-red-600">x</button>
-            @endcan
-        </div>
-        @endforeach
-    </div>
     @if(!$publication->isPublished())
         <div class="flex mb-4 items-center">
             <input type="checkbox" name="is_published" id="is_published"

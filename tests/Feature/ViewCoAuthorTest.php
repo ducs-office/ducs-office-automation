@@ -30,7 +30,7 @@ class ViewCoAuthorTest extends TestCase
         $this->assertEquals(1, CoAuthor::count());
 
         $this->withoutExceptionHandling()
-            ->get(route('publications.co_authors.show', [$publication, $coAuthor]))
+            ->get(route('publications.co-authors.show', [$publication, $coAuthor]))
             ->assertSuccessful();
     }
 }

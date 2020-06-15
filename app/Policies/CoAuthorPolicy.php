@@ -31,13 +31,6 @@ class CoAuthorPolicy
             && $publication->coAuthors->contains($coAuthor);
     }
 
-    public function update($user, CoAuthor $coAuthor, Publication $publication)
-    {
-        return get_class($user) === $publication->author_type
-            && $user->id === (int) $publication->author_id
-            && $publication->coAuthors->contains($coAuthor);
-    }
-
     public function create($user, Publication $publication)
     {
         return get_class($user) === $publication->author_type

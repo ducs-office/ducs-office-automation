@@ -16,13 +16,9 @@ class CreateCoAuthorsTable extends Migration
         Schema::create('co_authors', function (Blueprint $table) {
             $table->id();
             $table->foreignId('publication_id')->constrained('publications')->onDelete('cascade');
-            $table->unsignedBigInteger('user_id')->nullable();
-            $table->tinyInteger('type')->nullable();
             $table->string('name')->nullable();
             $table->string('noc_path')->nullable();
             $table->timestamps();
-
-            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 

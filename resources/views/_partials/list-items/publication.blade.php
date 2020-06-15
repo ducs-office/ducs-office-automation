@@ -1,21 +1,8 @@
+@push('modals')
+<livewire:co-authors-modal :error-bag="$errors->default"/>
+@endpush
 <li class="border-b last:border-b-0 py-3">
     <div class="flex mt-2">
-        <ul class="flex">
-            @forelse($publication->coAuthors as $coAuthor)
-            <li class="flex items-baseline">
-                <div class="inline-flex items-center p-2 rounded border hover:bg-gray-300 mx-2">
-                    @can('view', $coAuthor)
-                    <a href="{{ route('publications.co_authors.show', [$publication, $coAuthor]) }}" target="__blank" class="inline-flex items-center mr-1">
-                        <x-feather-icon name="paperclip" class="h-4 mr-2" stroke-width="2">NOC</x-feather-icon>
-                        <span>{{ $coAuthor->name }}</span>
-                    </a>
-                    @endcan
-                </div>
-            </li>
-            @empty
-                <p class="ml-2 p-2">No Co-authors associated with this publication.</p>
-            @endforelse
-        </ul>
         <div class="ml-auto p-2 flex">
             @can('update', $publication)
             <a href="{{ $editRoute }}"
@@ -37,7 +24,7 @@
     </div>
     <div class="flex p-3 items-baseline">
         <p class="ml-2">
-            {{auth()->user()->name . ',' . implode(',', $publication->coAuthors->map->name->toArray())}}
+            {{auth()->user()->name}}
             <span class="italic"> {{ $publication->paper_title }} </span>
             
             @if($publication->isPublished())
@@ -54,6 +41,10 @@
             @endif
         </p>
         <div class="ml-auto flex">
+            <x-modal.trigger :livewire="['payload' => $publication->id]" modal="co-authors-modal" title="Add"
+                class="link">
+                Co-Authors
+            </x-modal.trigger>
             @can('view', $publication)
             <div class="inline-flex items-center p-2 rounded border hover:bg-gray-300 mx-2">
                 <a href="{{ route('scholars.publications.show', [$scholar, $publication]) }}" target="__blank" class="inline-flex items-center mr-1">

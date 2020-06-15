@@ -47,21 +47,11 @@
             required/>
     </div>
     @endauth
-    <x-add-remove-element class="mb-4" count="1" :max="10" :new-object="['name' => '']">
-        <label class="form-label block mb-1">
-            Co-Author(s)
-        </label>
-        <template x-for="(item, index) in items" x-bind:key="index">
-            <div class="flex items-center space-x-2">
-                <input type="text" x-model="item.name" :name="`co_authors[others][${index}][name]`" class="form-input mr-2" placeholder="Co-Author's name">
-                <input type="file" :name="`co_authors[others][${index}][noc]`" class="form-input">
-                <button type="button" class="p-1" x-on:click="remove(index)">
-                    <x-feather-icon name="x" class="h-current">remove</x-feather-icon>
-                </button>
-            </div>
-        </template>
-        <button type="button" class="link" x-on:click.prevent="add()">add more...</button>
-    </x-add-remove-element>
+    <livewire:add-remove
+        view="livewire.co-authors-list"
+        items-name="coAuthors"
+        :new-item="['name' => '', 'noc' => '']"
+     />
     <div x-show="is_published">
         <div class="mb-4">
             <label for="name" class="form-label block mb-1"

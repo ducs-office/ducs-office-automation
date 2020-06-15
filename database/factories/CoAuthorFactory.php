@@ -24,26 +24,3 @@ $factory->define(CoAuthor::class, function (Faker $faker) {
         },
     ];
 });
-
-$factory->state(CoAuthor::class, 'others', [
-    'user_id' => null,
-    'type' => 0,
-]);
-
-$factory->state(CoAuthor::class, 'is_supervisor', [
-    'user_id' => static function () {
-        return factory(User::class);
-    },
-    'name' => '',
-    'type' => 1,
-    'noc_path' => '',
-]);
-
-$factory->state(CoAuthor::class, 'is_cosupervisor', [
-    'user_id' => static function () {
-        return factory(User::class);
-    },
-    'name' => '',
-    'type' => 2,
-    'noc_path' => '',
-]);

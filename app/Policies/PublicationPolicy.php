@@ -39,9 +39,6 @@ class PublicationPolicy
         }
 
         if (get_class($user) === User::class && $user->isSupervisor()) {
-            if ($publication->author_type === User::class && (int) $publication->author_id === (int) $user->id) {
-                return true;
-            }
             if ($publication->author_type === Scholar::class && $user->scholars->contains($publication->author_id)) {
                 return true;
             }

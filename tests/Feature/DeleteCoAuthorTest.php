@@ -31,7 +31,7 @@ class DeleteCoAuthorTest extends TestCase
         $this->assertEquals(1, CoAuthor::count());
 
         $this->withoutExceptionHandling()
-            ->delete(route('publications.co_authors.destroy', [
+            ->delete(route('publications.co-authors.destroy', [
                 'publication' => $publication->id,
                 'coAuthor' => $coAuthor,
             ]));

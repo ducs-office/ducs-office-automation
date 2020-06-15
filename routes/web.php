@@ -297,15 +297,30 @@ Route::delete(
 )->name('scholars.publications.destroy')
 ->middleware('auth:scholars');
 
+//================= Publication Co-Authors===================
+Route::get(
+    'publications/{publication}/co-authors/{coAuthor}',
+    'CoAuthorController@show'
+)->name('publications.co-authors.show')
+->middleware('auth:web,scholars');
+
+Route::post(
+    'publications/{publication}/co-authors',
+    'CoAuthorController@store'
+)->name('publications.co-authors.store')
+->middleware('auth:web,scholars');
+
+Route::delete(
+    'publications/{publication}/co-authors/{coAuthor}',
+    'CoAuthorController@destroy'
+)->name('publications.co-authors.destroy')
+->middleware('auth:web,scholars');
+
 Route::prefix('/publications')
 ->middleware('auth:web,scholars')
 ->namespace('Publications')
 ->as('publications.')
 ->group(static function () {
-    Route::get('{publication}/co-authors/{coAuthor}', 'CoAuthorController@show')->name('co_authors.show');
-    Route::post('/{publication}/co-authors', 'CoAuthorController@store')->name('co_authors.store');
-    Route::patch('/{publication}/co-authors/{coAuthor}', 'CoAuthorController@update')->name('co_authors.update');
-    Route::delete('/{publication}/co-authors/{coAuthor}', 'CoAuthorController@destroy')->name('co_authors.destroy');
 });
 
 // ================Scholar Progress Reports==========
@@ -349,17 +364,6 @@ Route::patch(
     'ScholarProfileController@replaceAdvisors'
 )->name('scholars.advisors.replace')
 ->middleware('auth:web');
-
-Route::prefix('/research')
-    ->middleware(['auth:web'])
-    ->namespace('Research')
-    ->as('research.')
-    ->group(static function () {
-        Route::get(
-            '/publications',
-            'ShowPublications'
-        )->name('publications.index');
-    });
 
 // =========Scholar Presentation===============
 Route::get(

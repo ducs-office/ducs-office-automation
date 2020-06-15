@@ -7,6 +7,8 @@ use App\Models\Publication;
 use App\Models\Scholar;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
 
@@ -15,8 +17,10 @@ class CreateCoAuthorTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function co_author_of_publication_can_be_created_atomically()
+    public function co_author_of_publication_can_be_created()
     {
+        Storage::fake();
+
         $this->signInScholar($scholar = create(Scholar::class));
 
         $publication = create(Publication::class, 1, [
@@ -27,14 +31,12 @@ class CreateCoAuthorTest extends TestCase
         $this->assertCount(0, $publication->coAuthors);
 
         $coAuthor = [
-            'is_supervisor' => null,
-            'is_cosupervisor' => null,
             'name' => 'John',
-            'noc' => null,
+            'noc' => $noc = UploadedFile::fake()->create('noc.pdf', 20),
         ];
 
         $this->withoutExceptionHandling()
-            ->post(route('publications.co_authors.store', [$publication]), $coAuthor)
+            ->post(route('publications.co-authors.store', [$publication]), $coAuthor)
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'Co-Author added successfully!');
 
@@ -43,7 +45,7 @@ class CreateCoAuthorTest extends TestCase
         $publication->refresh();
 
         $this->assertCount(1, $publication->coAuthors);
-        $this->assertEquals(0, $publication->coAuthors->first()->type);
         $this->assertEquals($coAuthor['name'], $publication->coAuthors->first()->name);
+        $this->assertEquals($noc->hashName('publications/co_authors_noc'), $publication->coAuthors->first()->noc_path);
     }
 }

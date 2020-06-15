@@ -64,27 +64,3 @@ window.featherIcon = function(name = 'x') {
     return feather.hasOwnProperty(name)
         ? feather[name] : feather["x"];
 }
-
-window.addRemoveElement = (count = 1, max = Infinity, newItem = () => '') => ({
-    items: new Array(count).fill(0).map(() => newItem()),
-    add() {
-        if (this.items.length == max) {
-            return;
-        }
-        this.items.push(newItem());
-    },
-    remove(index) {
-        if (index < 0 || index >= this.items.length) {
-            return;
-        }
-
-        if (this.items.length == 0) {
-            return;
-        }
-
-        this.items.splice(index, 1);
-    },
-    initialise(items = []) {
-        this.items.push(...items);
-    }
-});

@@ -9,9 +9,7 @@ class CoAuthor extends Model
 {
     protected $fillable = [
         'name',
-        'type',
         'noc_path',
-        'user_id',
         'publication_id',
     ];
 
@@ -32,10 +30,5 @@ class CoAuthor extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
-    }
-
-    public function getNameAttribute($name)
-    {
-        return ($this->user_id) ? $this->user->name : $name;
     }
 }
