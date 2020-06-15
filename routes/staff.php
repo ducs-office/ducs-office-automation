@@ -72,7 +72,9 @@ Route::patch('/users/{user}', 'UserController@update')->name('users.update');
 Route::delete('/users/{user}', 'UserController@destroy')->name('users.destroy');
 
 Route::get('/roles', 'RoleController@index')->name('roles.index');
+Route::get('/roles/create', 'RoleController@create')->name('roles.create');
 Route::post('/roles', 'RoleController@store')->name('roles.store');
+Route::get('/roles/{role}', 'RoleController@show')->name('roles.show');
 Route::patch('/roles/{role}', 'RoleController@update')->name('roles.update');
 Route::delete('/roles/{role}', 'RoleController@destroy')->name('roles.destroy');
 

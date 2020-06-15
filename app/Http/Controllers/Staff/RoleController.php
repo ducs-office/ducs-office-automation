@@ -18,7 +18,25 @@ class RoleController extends Controller
     public function index()
     {
         return view('staff.roles.index', [
-            'roles' => Role::all(),
+            'roles' => Role::all()->map(function ($role) {
+                $role->setRelation(
+                    'permissions',
+                    $role->permissions->groupBy(function ($permission) {
+                        return ucwords(explode(':', $permission->name, 2)[0]);
+                    })->map(function ($permissions, $group) {
+                        return '[' . $group . ':' . $permissions->map(function ($permission) {
+                            return ucwords(explode(':', $permission->name, 2)[1]);
+                        })->implode(',') . ']';
+                    })
+                );
+                return $role;
+            }),
+        ]);
+    }
+
+    public function create()
+    {
+        return view('staff.roles.create', [
             'permissions' => Permission::all()
                 ->groupBy(static function ($permission) {
                     return ucwords(explode(':', $permission->name, 2)[0]);
@@ -40,7 +58,18 @@ class RoleController extends Controller
 
         flash('Role created successfully!')->success();
 
-        return redirect()->back();
+        return redirect()->route('staff.roles.index');
+    }
+
+    public function show(Role $role)
+    {
+        return view('staff.roles.show', [
+            'role' => $role,
+            'permissions' => Permission::all()
+                ->groupBy(static function ($permission) {
+                    return ucwords(explode(':', $permission->name, 2)[0]);
+                }),
+        ]);
     }
 
     public function update(Request $request, Role $role)
