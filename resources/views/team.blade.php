@@ -41,7 +41,7 @@
                 </div>
                 <div class="flex justify-between">
                     <div class="rounded-full w-56 h-56 border-4 border-magenta-800 my-2 bg-cover bg-center" 
-                        style="background-image: url('https://s.gravatar.com/avatar/1a5fe449d7d786f5d9954b3afe5a4343?s=80');">
+                        style="background-image: url('https://s.gravatar.com/avatar/1a5fe449d7d786f5d9954b3afe5a4343?s=512');">
                         <a class="rounded-full w-8 h-8 bg-magenta-800 flex justify-center items-center ml-auto mr-8" 
                             target="__blank" href="https://twitter.com/gautam_swati26" >
                             <x-feather-icon class="h-8 p-2 fill-current text-white font-bold" name="twitter"> 
@@ -65,7 +65,7 @@
                         </p>
                     </div>
                     <div class="rounded-full w-56 h-56 border-4 border-magenta-800 my-2 bg-cover bg-center" 
-                        style="background-image: url('https://s.gravatar.com/avatar/62abe2d898363acf2d7a6c37670157d5?s=80');">
+                        style="background-image: url('https://s.gravatar.com/avatar/62abe2d898363acf2d7a6c37670157d5?s=512');">
                         <a class="rounded-full w-8 h-8 bg-magenta-800 flex justify-center items-center ml-auto mr-8" 
                             target="__blank" href="https://twitter.com/tanya__singhal" >
                             <x-feather-icon class="h-8 p-2 fill-current text-white font-bold" name="twitter"> 

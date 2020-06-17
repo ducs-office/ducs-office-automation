@@ -21,14 +21,14 @@
             </a>
         </li>
         @endcan
-        @can('viewAny', App\Models\Scholar::class)
+        {{-- @can('viewAny', App\Models\Scholar::class)
         <li class="mb-1 last:mb-0">
             <a href="{{ route('staff.scholars.index') }}" class="flex items-center py-2 px-4 text-white-70 rounded transform transition-transform duration-150 hover:scale-105 focus:scale-105 hover:-translate-y-1 focus:-translate-y-1 hover:text-white focus:text-white hover:bg-magenta-700 focus:bg-magenta-700 hover:shadow focus:shadow focus:outline-none">
                 <x-feather-icon name="users" class="h-4 mr-2">Scholar</x-feather-icon>
                 My Scholars
             </a>
         </li>
-        @endcan
+        @endcan --}}
         @can('viewAny', App\Models\Publication::class)
         <li class="mb-1 last:mb-0">
             <a href="{{ route('users.publications.index', auth()->user()) }}" class="flex items-center py-2 px-4 text-white-70 rounded transform transition-transform duration-150 hover:scale-105 focus:scale-105 hover:-translate-y-1 focus:-translate-y-1 hover:text-white focus:text-white hover:bg-magenta-700 focus:bg-magenta-700 hover:shadow focus:shadow focus:outline-none">
