@@ -6,7 +6,4 @@
             <h4 class="text-white text-sm mt-1"> University of Delhi </h4>
         </a>
     </div>
-    <div class="ml-auto">
-        <h3 class="font-bold text-white"> Team </h3>
-    </div>
 </header>
