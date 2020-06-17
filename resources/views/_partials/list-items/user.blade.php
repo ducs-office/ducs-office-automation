@@ -7,13 +7,18 @@
                     alt="{{ $user->name }}'s Avatar" />
             </div>
             <div class="ml-4">
-                <div class="leading-5 font-bold text-gray-900"><a class="hover:underline" href="{{ route('profiles.show', $user) }}">{{ $user->name }}</a></div>
+                <div class="leading-5 font-bold text-gray-900">
+                    <a class="hover:underline" href="{{ route('profiles.show', $user) }}">{{ $user->name }}</a>
+                </div>
                 <div class="leading-5 text-gray-600">{{ $user->email }}</div>
             </div>
         </div>
     </td>
     <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200 leading-5 text-gray-600">
-        {{ $user->category }}
+        <div class="mb-1">{{ $user->category }}</div>
+        @if($user->is_admin)
+        <span class="leading-none px-3 py-1 text-xs rounded-full bg-gray-300 text-gray-800 font-bold">Super User</span>
+        @endif
     </td>
     <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
         <div class="leading-5 text-gray-900">

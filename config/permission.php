@@ -103,25 +103,7 @@ return [
         ],
 
         'roles' => [
-            'admin' => [
-                'outgoing letters' => ['view', 'create', 'edit', 'delete'],
-                'incoming letters' => ['view', 'create', 'edit', 'delete'],
-                'remarks' => ['view', 'create', 'edit', 'delete'],
-                'letter reminders' => ['view', 'create', 'edit', 'delete'],
-                'colleges' => ['view', 'create', 'edit', 'delete'],
-                'programmes' => ['view', 'create', 'edit', 'delete'],
-                'courses' => ['view', 'create', 'edit', 'delete'],
-                'roles' => ['view', 'create', 'edit', 'delete'],
-                'users' => ['view', 'create', 'edit', 'delete'],
-                'teaching records' => ['view', 'start', 'extend'],
-                'scholars' => ['view', 'create', 'edit', 'delete'],
-                'scholar documents' => ['add', 'view', 'delete'],
-                'phd seminar' => ['add schedule', 'finalize'],
-                'title approval' => ['approve'],
-                'scholar examiner' => ['recommend', 'approve'],
-                'scholar mentors' => ['replace'],
-            ],
-            'DRC Member' => [
+            'DRC Secretary' => [
                 'scholars' => ['view', 'create', 'edit', 'delete'],
                 'leaves' => ['respond'],
                 'phd course work' => ['mark completed', 'view marksheet'],

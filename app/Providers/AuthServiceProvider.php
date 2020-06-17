@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Scholar;
+use App\Models\User;
 use App\Policies\RolePolicy;
 use App\Policies\ScholarProfilePolicy;
 use Illuminate\Auth\Notifications\ResetPassword;
@@ -31,6 +32,12 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Gate::before(function ($user) {
+            if (get_class($user) === User::class && $user->is_admin === true) {
+                return true;
+            }
+        });
+
         Gate::guessPolicyNamesUsing(function ($class) {
             return $this->policiesNamespace . '\\' . class_basename($class) . 'Policy';
         });

@@ -3,22 +3,12 @@
 use App\Models\College;
 use App\Models\Course;
 use App\Models\CourseRevision;
-use App\Models\Handover;
 use App\Models\IncomingLetter;
-use App\Models\LetterReminder;
 use App\Models\OutgoingLetter;
 use App\Models\Programme;
 use App\Models\ProgrammeRevision;
-use App\Models\Publication;
-use App\Models\Remark;
-use App\Models\Scholar;
-use App\Models\ScholarEducationDegree;
-use App\Models\ScholarEducationInstitute;
-use App\Models\ScholarEducationSubject;
-use App\Models\ScholarProfile;
 use App\Models\User;
 use App\Types\CourseType;
-use App\Types\Designation;
 use App\Types\ProgrammeType;
 use App\Types\UserCategory;
 use Illuminate\Database\Seeder;
@@ -40,8 +30,8 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('password'),
             'category' => UserCategory::OFFICE_STAFF,
         ]);
-
-        $admin->assignRole(Role::firstOrCreate(['name' => 'admin']));
+        $admin->is_admin = true;
+        $admin->save();
 
         $outgoing = factory(OutgoingLetter::class, 5)->create(['creator_id' => $admin->id]);
 
