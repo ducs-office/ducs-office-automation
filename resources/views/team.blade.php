@@ -160,7 +160,7 @@
                 </div>
             </div> --}}
         </main>
-        @include('_partials.layouts.footer')
+        @include('_partials.layouts.footer', ['css' => 'bg-magenta-800 text-white'])
     </div>
 </body>
 </html>

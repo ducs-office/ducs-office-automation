@@ -4,7 +4,7 @@
         <h1 class="text-lg font-bold">Department of <br> Computer Science</h1>
     </a>
 </div>
-<nav class="flex-1 px-4 py-6 space-y-6">
+<nav class="flex-1 px-4 py-4 space-y-6">
     <ul class="font-bold text-white-90 space-y-1">
         <li>
             <a href="{{ route('staff.dashboard') }}" class="flex items-center py-2 px-4 text-white-70 rounded transform transition-transform duration-150 hover:scale-105 focus:scale-105 hover:-translate-y-1 focus:-translate-y-1 hover:text-white focus:text-white hover:bg-magenta-700 focus:bg-magenta-700 hover:shadow focus:shadow focus:outline-none">

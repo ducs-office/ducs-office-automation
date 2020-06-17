@@ -9,7 +9,7 @@
     @stack('styles')
 </head>
 <body class="font-sans leading-tight bg-magenta-800">
-    <div class="min-h-screen px-4 space-y-8">
+    <div class="flex flex-col min-h-screen px-4 space-y-8">
         <header class="max-w-lg mx-auto">
             <a href="/" class="flex items-center py-8 px-4">
                 <img src="{{ asset('images/university-logo.png') }}" alt="University of Delhi - Logo" class="w-16 sm:w-20 flex-shrink-0 mr-3">
@@ -19,10 +19,10 @@
                 </div>
             </a>
         </header>
-        <main>
+        <main class="flex-1 h-full">
             @yield('body')
         </main>
-        @include('_partials.layouts.footer')
+        @include('_partials.layouts.footer', ['css' => 'bg-magenta-800 text-white'])
         @include('flash::message')
     </div>
     @stack('scripts')

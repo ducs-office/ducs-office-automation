@@ -41,7 +41,7 @@
             <main class="flex-1 h-full p-4 md:p-8 space-y-4">
                 @yield('body')
             </main>
-            @include('_partials.layouts.footer')
+            @include('_partials.layouts.footer', ['css' => 'bg-gray-200 text-gray-800'])
         </div>
         @stack('modals')
         @include('flash::message')
