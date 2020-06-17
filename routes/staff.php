@@ -2,9 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', static function () {
-    return view('staff.dashboard');
-})->name('dashboard');
+Route::get('/', 'DashboardController')->name('dashboard');
 
 Route::post('/account/change_password', 'AccountController@change_password')->name('account.change_password');
 
