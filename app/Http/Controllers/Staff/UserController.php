@@ -44,7 +44,9 @@ class UserController extends Controller
 
         flash('User created successfully!')->success();
 
-        event(new UserCreated($user));
+        if ($user->category != UserCategory::EXTERNAL) {
+            event(new UserCreated($user));
+        }
 
         return redirect()->back();
     }

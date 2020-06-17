@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::view('/team', 'team')->name('team');
+
 Route::get('/', 'Auth\LoginController@showLoginForm')->middleware(['guest', 'guest:scholars'])->name('login-form');
 Route::post('/login', 'Auth\LoginController@login')->middleware(['guest', 'guest:scholars'])->name('login');
 Route::post('/logout', 'Auth\LoginController@logout')->middleware('auth:web,scholars')->name('logout');

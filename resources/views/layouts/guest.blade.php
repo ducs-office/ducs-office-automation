@@ -22,6 +22,7 @@
         <main>
             @yield('body')
         </main>
+        @include('_partials.layouts.footer')
         @include('flash::message')
     </div>
     @stack('scripts')
