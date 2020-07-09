@@ -107,7 +107,11 @@ export default config => ({
         this.highlighted = index;
     },
     scrollToHighlighted() {
-        if(this.highlighted < 0 || this.highlighted >= this.choices.length) return;
+        if (
+            this.highlighted < 0
+            || this.highlighted >= this.choices.length 
+            || this.$refs[this.choicesRef].children.length <= 0
+        ) return;
 
         this.$refs[this.choicesRef]
             .children[this.highlighted]
