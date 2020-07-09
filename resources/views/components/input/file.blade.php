@@ -10,7 +10,7 @@
         {{ $attributes }} x-on:input="filenames = Array.from($event.target.files).map(f => f.name);">
     <div class="flex flex-wrap items-center">
         <x-feather-icon :name="$icon" class="h-current mr-2"></x-feather-icon>
-        <span class="opacity-50" x-show="filenames.length == 0">{{ $placeholder }}</span>
+        <span class="opacity-50" x-show="filenames.length == 0">{{ $placeholder }} (max: 200 kB)</span>
         <template x-for="name in filenames">
             <span x-text="name" class="mx-1 underline truncate"></span>
         </template>

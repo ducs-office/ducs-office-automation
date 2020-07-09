@@ -114,14 +114,6 @@
     <div class="space-y-2">
         <h6 class="px-4 text-sm uppercase tracking-wider font-bold text-white-50">Access Control</h6>
         <ul class="font-bold text-white-90 space-y-1">
-            @can('viewAny', App\Models\User::class)
-            <li>
-                <a href="{{ route('staff.users.index') }}" class="flex items-center py-2 px-4 text-white-70 rounded transform transition-transform duration-150 hover:scale-105 focus:scale-105 hover:-translate-y-1 focus:-translate-y-1 hover:text-white focus:text-white hover:bg-magenta-700 focus:bg-magenta-700 hover:shadow focus:shadow focus:outline-none">
-                    <x-feather-icon name="user" class="h-4 mr-2">User</x-feather-icon>
-                    Users
-                </a>
-            </li>
-            @endcan
             @can('viewAny', Spatie\Permission\Models\Role::class)
             <li>
                 <a href="{{ route('staff.roles.index') }}" class="flex items-center py-2 px-4 text-white-70 rounded transform transition-transform duration-150 hover:scale-105 focus:scale-105 hover:-translate-y-1 focus:-translate-y-1 hover:text-white focus:text-white hover:bg-magenta-700 focus:bg-magenta-700 hover:shadow focus:shadow focus:outline-none">
@@ -130,12 +122,14 @@
                 </a>
             </li>
             @endcan
+            @can('viewAny', App\Models\User::class)
             <li>
-                <a href="{{ route('staff.cosupervisors.index') }}" class="flex items-center py-2 px-4 text-white-70 rounded transform transition-transform duration-150 hover:scale-105 focus:scale-105 hover:-translate-y-1 focus:-translate-y-1 hover:text-white focus:text-white hover:bg-magenta-700 focus:bg-magenta-700 hover:shadow focus:shadow focus:outline-none">
-                    <x-feather-icon name="users" class="h-4 mr-2">Co-supervisors</x-feather-icon>
-                    Co-Supervisors
+                <a href="{{ route('staff.users.index') }}" class="flex items-center py-2 px-4 text-white-70 rounded transform transition-transform duration-150 hover:scale-105 focus:scale-105 hover:-translate-y-1 focus:-translate-y-1 hover:text-white focus:text-white hover:bg-magenta-700 focus:bg-magenta-700 hover:shadow focus:shadow focus:outline-none">
+                    <x-feather-icon name="user" class="h-4 mr-2">User</x-feather-icon>
+                    Users
                 </a>
             </li>
+            @endcan
             @can('viewAny', App\Models\Scholar::class)
             <li>
                 <a href="{{ route('staff.scholars.index') }}" class="flex items-center py-2 px-4 text-white-70 rounded transform transition-transform duration-150 hover:scale-105 focus:scale-105 hover:-translate-y-1 focus:-translate-y-1 hover:text-white focus:text-white hover:bg-magenta-700 focus:bg-magenta-700 hover:shadow focus:shadow focus:outline-none">

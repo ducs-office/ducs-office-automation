@@ -8,8 +8,8 @@
     'value',
 ])
 <div x-data="{
-        value: {{ json_encode($value) }},
         otherValue: {{ json_encode($otherValue) }},
+        value: {{ $value === '' ? json_encode($otherValue) : json_encode($value) }},
     }"
     class="{{ $class }}">
     <select name="{{ $name }}" class="{{ $selectClass }}"

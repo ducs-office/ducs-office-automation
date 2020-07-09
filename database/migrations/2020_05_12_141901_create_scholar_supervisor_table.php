@@ -16,7 +16,7 @@ class CreateScholarSupervisorTable extends Migration
         Schema::create('scholar_supervisor', function (Blueprint $table) {
             $table->id();
             $table->foreignId('scholar_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('supervisor_id')->constrained('users');
+            $table->foreignId('supervisor_id')->constrained('users')->cascadeOnDelete();
             $table->date('started_on')->default(today());
             $table->date('ended_on')->nullable();
         });

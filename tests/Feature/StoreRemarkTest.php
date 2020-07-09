@@ -37,7 +37,7 @@ class StoreRemarkTest extends TestCase
     public function user_cannot_store_remark_if_they_donot_have_permission()
     {
         $role = Role::firstOrCreate(['name' => 'Not a Remarker']);
-        $role->revokePermissionTo('remarks:create');
+        $role->revokePermissionTo('letter remarks:create');
         $this->signIn(create(User::class), $role->name);
 
         $letter = create(OutgoingLetter::class);

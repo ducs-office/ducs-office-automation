@@ -15,17 +15,17 @@ class TeachingRecordPolicy
 
     public function viewAny(User $user)
     {
-        return $user->can('teaching records:view');
+        return $user->can('UG teaching records:view');
     }
 
     public function start(User $user)
     {
-        return $user->can('teaching records:start');
+        return $user->can('UG teaching records:start');
     }
 
     public function extend(User $user)
     {
-        return $user->can('teaching records:extend');
+        return $user->can('UG teaching records:extend');
     }
 
     public function create(User $user)

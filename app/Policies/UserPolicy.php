@@ -83,14 +83,14 @@ class UserPolicy
     }
 
     /**
-     * Determine whether the user can replace scholars' mentors (supervisor & cosupervisor)
+     * Determine whether the user can replace scholars' supervisor & cosupervisor
      *
      * @param  \App\Models\User  $user
      *
      * @return mixed
      */
-    public function replaceScholarMentors(User $user)
+    public function replaceScholarSupervisorAndCosupervisor(User $user)
     {
-        return $user->can('scholar mentors:replace');
+        return $user->can('scholar supervisor and cosupervisor:replace');
     }
 }

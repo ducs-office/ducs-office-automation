@@ -11,7 +11,7 @@ class RemarkPolicy
     use HandlesAuthorization;
 
     /**
-     * Determine whether the user can view any remarks.
+     * Determine whether the user can view any letter remarks.
      *
      * @param  \App\Models\User  $user
      *
@@ -19,7 +19,7 @@ class RemarkPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->can('remarks:view');
+        return $user->can('letter remarks:view');
     }
 
     /**
@@ -32,11 +32,11 @@ class RemarkPolicy
      */
     public function view(User $user, Remark $remark)
     {
-        return $user->can('remarks:view');
+        return $user->can('letter remarks:view');
     }
 
     /**
-     * Determine whether the user can create remarks.
+     * Determine whether the user can create letter remarks.
      *
      * @param  \App\Models\User  $user
      *
@@ -44,7 +44,7 @@ class RemarkPolicy
      */
     public function create(User $user)
     {
-        return $user->can('remarks:create');
+        return $user->can('letter remarks:create');
     }
 
     /**
@@ -57,7 +57,7 @@ class RemarkPolicy
      */
     public function update(User $user, Remark $remark)
     {
-        return $user->can('remarks:edit')
+        return $user->can('letter remarks:edit')
             && (int) $remark->user_id === (int) $user->id;
     }
 
@@ -71,7 +71,7 @@ class RemarkPolicy
      */
     public function delete(User $user, Remark $remark)
     {
-        return $user->can('remarks:delete')
+        return $user->can('letter remarks:delete')
             && (int) $remark->user_id === (int) $user->id;
     }
 }

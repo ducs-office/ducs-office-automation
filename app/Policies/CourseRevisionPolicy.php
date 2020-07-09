@@ -16,6 +16,11 @@ class CourseRevisionPolicy
         return $user->can('view', Course::class);
     }
 
+    public function create($user)
+    {
+        return $user->can('update', Course::class);
+    }
+
     public function update($user)
     {
         return $user->can('update', Course::class);

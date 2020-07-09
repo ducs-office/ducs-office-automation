@@ -107,10 +107,10 @@
             <x-input.file id="pdf" name="attachments[]" accept="application/pdf, image/*"
                 :multiple="true"
                 class="w-full form-input overflow-hidden"
-                placeholder="Upload maximum 2 PDF or Scanned Image file(s)" />
-            @if($errors->has('attachments'))
-                <p class="mt-1 text-red-600">{{ $errors->first('attachments') }}</p>
-            @endif
+                placeholder="Upload maximum 2 PDF or Scanned Image file(s)" required />
+            @error('attachments.*')
+                <p class="mt-1 text-red-600">{{ $message }}</p>
+            @enderror
         </fieldset>
         <div class="mt-6">
             <button type="submit" class="w-full btn btn-magenta">Create</button>

@@ -29,7 +29,7 @@ class ReplaceScholarMentorTest extends TestCase
             'category' => UserCategory::OFFICE_STAFF,
         ]);
 
-        $this->user->givePermissionTo('scholar mentors:replace');
+        $this->user->givePermissionTo('scholar supervisor and cosupervisor:replace');
         $this->signIn($this->user, 'randomRole');
     }
 
@@ -40,7 +40,7 @@ class ReplaceScholarMentorTest extends TestCase
             $supervisor = factory(User::class)->states('supervisor')->create()
         );
 
-        $this->user->revokePermissionTo('scholar mentors:replace');
+        $this->user->revokePermissionTo('scholar supervisor and cosupervisor:replace');
 
         $newSupervisor = factory(User::class)->states('supervisor')->create();
 

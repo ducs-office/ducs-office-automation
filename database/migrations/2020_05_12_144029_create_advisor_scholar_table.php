@@ -16,7 +16,7 @@ class CreateAdvisorScholarTable extends Migration
         Schema::create('advisor_scholar', function (Blueprint $table) {
             $table->id();
             $table->foreignId('scholar_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('user_id')->constrained();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->date('started_on')->default(today());
             $table->date('ended_on')->nullable();
         });

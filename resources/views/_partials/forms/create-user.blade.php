@@ -3,7 +3,7 @@
     x-data="userForm({{ json_encode(old()) }})">
     @csrf_token
     <div class="flex mb-2 space-x-2">
-        <div class="space-y-1">
+        <div class="space-y-1 flex-1">
             <label for="first_name"
                 class="w-full form-label @error('first_name') text-red-500 @enderror">
                 First Name <span class="text-red-500">*</span>
@@ -16,7 +16,7 @@
                 <p class="text-red-500">{{ $message }}</p>
             @enderror
         </div>
-        <div class="space-y-1">
+        <div class="space-y-1 flex-1">
             <label for="last_name"
                 class="w-full form-label @error('last_name') text-red-500 @enderror">
                 Last Name <span class="text-red-500">*</span>

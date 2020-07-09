@@ -46,7 +46,7 @@ class NewProgrammeForm extends Component
         return array_reduce(
             $this->semester_courses,
             function ($flatArray, $nestedArray) {
-                return [...$flatArray, ...$nestedArray];
+                return array_merge($flatArray, $nestedArray);
             },
             []
         );

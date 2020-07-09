@@ -1,6 +1,6 @@
 @extends('layouts.scholar-profile', ['pageTitle' => 'Presentations', 'scholar' => $scholar])
 @section('body')
-<di class="page-card p-6 flex overflow-visible space-x-6">
+<div class="page-card p-6 flex overflow-visible space-x-6">
     @can('create', App\Models\Presentation::class)
     <div class="mt-3 text-right">
         <a class="btn btn-magenta" href="{{ route('scholars.presentations.create', ['scholar' => $scholar]) }}">

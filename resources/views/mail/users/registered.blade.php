@@ -11,7 +11,7 @@ You have been registered with us. Please reset your password using the link belo
     ])
 ]) Reset Password & Login @endcomponent
 
-The given link will expire in {{ config('auth.passwords.' . config('auth.defaults.password') . '.expire') }} minutes.
+The given link will expire in {{ config('auth.passwords.' . config('auth.defaults.passwords') . '.expire') }} minutes.
 You can request a new reset password link [here]({{ route('password.forgot', ['email' => $user->email]) }})
 
 

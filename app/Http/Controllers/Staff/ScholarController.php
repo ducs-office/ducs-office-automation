@@ -118,7 +118,7 @@ class ScholarController extends Controller
 
     public function replaceCosupervisor(Request $request, Scholar $scholar)
     {
-        $this->authorize('replaceScholarMentors', User::class);
+        $this->authorize('replaceScholarSupervisorAndCosupervisor', User::class);
 
         $conflicts = [
             $scholar->currentSupervisor->id,
@@ -151,7 +151,7 @@ class ScholarController extends Controller
 
     public function replaceSupervisor(Scholar $scholar, Request $request)
     {
-        $this->authorize('replaceScholarMentors', User::class);
+        $this->authorize('replaceScholarSupervisorAndCosupervisor', User::class);
 
         $request->validate([
             'supervisor_id' => [

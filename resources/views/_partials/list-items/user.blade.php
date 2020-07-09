@@ -46,6 +46,7 @@
             </x-modal.trigger>
             @endcan
             @can('delete', $user)
+            @if(!$user->is_admin)
             <form action="{{ route('staff.users.destroy', $user) }}" method="POST"
                 onsubmit="return confirm('Do you really want to delete user \'{{ $user->name }}\'?');">
                 @csrf_token @method('delete')
@@ -53,6 +54,7 @@
                     <x-feather-icon class="h-5" name="trash-2">Trash</x-feather-icon>
                 </button>
             </form>
+            @endif
             @endcan
         </div>
     </td>

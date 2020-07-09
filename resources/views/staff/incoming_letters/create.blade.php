@@ -123,9 +123,9 @@
                     Upload Letter <span class="text-red-600">*</span>
                 </label>
                 <x-input.file id="files" name="attachments[]" accept="application/pdf, image/*" class="w-full form-input overflow-hidden"
-                    placeholder="Choose multiple Image/PDF files" :multiple="true">
+                    placeholder="Choose multiple Image/PDF files" :multiple="true" required>
                 </x-input.file>
-                @if($errors->has('file'))
+                @if($errors->has('file.*'))
                     <p class="mt-1 text-red-600">{{ $errors->first('file') }}</p>
                 @endif
             </div>

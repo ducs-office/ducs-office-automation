@@ -1,6 +1,6 @@
 @extends('layouts.master')
 @push('modals')
-    <x-modal name="create-course-modal" class="p-6 min-w-1/2" :open="! $errors->default->isEmpty()">
+    <x-modal name="create-course-modal" class="p-6 min-w-1/2" :open="! $errors->create->isEmpty()">
         <h2 class="mb-8 font-bold text-lg">Create New Course</h2>
         @include('_partials.forms.create-course')
     </x-modal>
@@ -62,6 +62,7 @@
                         </div>
                     </div>
                     @endif
+                    @can('create', App\Models\CourseRevision::class)
                     <details class="bg-gray-100 rounded border overflow-hidden mb-1">
                         <summary class="p-2 bg-gray-200 cursor-pointer outline-none">
                             <span class="mr-2">Add New Revision</span>
@@ -78,7 +79,7 @@
                                     <input type="date" name="revised_at" id="revision_date" class="w-full form-input">
                                 </div>
                                 <div class="flex-1 space-y-1">
-                                    <label for="course_attachments" 
+                                    <label for="course_attachments"
                                         class="w-full form-label">
                                         Upload Syllabus <span class="text-red-600">*</span>
                                     </label>
@@ -87,7 +88,7 @@
                                         tabindex="0"
                                         accept="application/pdf, image/*"
                                         placeholder="select multiple files"
-                                        multiple 
+                                        multiple
                                         required/>
                                 </div>
                                 <div class="ml-1 flex-shrink-0">
@@ -96,6 +97,7 @@
                             </div>
                         </form>
                     </details>
+                    @endcan
                     <details class="bg-gray-100 rounded border overflow-hidden">
                         <summary class="p-2 bg-gray-200 cursor-pointer outline-none">
                             <span class="mr-2">Older Revisions</span>

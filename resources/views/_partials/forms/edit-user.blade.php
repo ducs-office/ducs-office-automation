@@ -123,21 +123,23 @@
         @enderror
     </div>
     @if(! $user->isSupervisor())
-    <p class="text-gray-600">
-        <b>Note:</b>
-        You cannot later change a supervisor to become co-supervisor,
-        or stop a user from being a supervisor or co-supervisor.
-        A co-supervisor however can be changed to become a supervisor.
-    </p>
-    <div class="mb-2 flex items-center" x-show="$form.canBeSupervisor()">
-        <input type="checkbox" name="is_supervisor" id="edit-is-supervisor" class="form-checkbox mr-2"
-            x-model="$form.isSupervisor">
-        <label for="edit-is-supervisor" class="w-full form-label @error('is_supervisor') text-red-500 @enderror">
-            Make Supervisor?
-        </label>
-        @error('is_supervisor')
-        <p class="text-red-500">{{ $message }}</p>
-        @enderror
+    <div x-show="$form.canBeSupervisor()">
+        <p class="text-gray-600 mb-1">
+            <b>Note:</b>
+            You cannot later change a supervisor to become co-supervisor,
+            or stop a user from being a supervisor or co-supervisor.
+            A co-supervisor however can be changed to become a supervisor.
+        </p>
+        <div class="flex items-center mb-2">
+            <input type="checkbox" name="is_supervisor" id="edit-is-supervisor" class="form-checkbox mr-2"
+                x-model="$form.isSupervisor">
+            <label for="edit-is-supervisor" class="w-full form-label @error('is_supervisor') text-red-500 @enderror">
+                Make Supervisor?
+            </label>
+            @error('is_supervisor')
+            <p class="text-red-500">{{ $message }}</p>
+            @enderror
+        </div>
     </div>
     @if(! $user->isCosupervisor())
     <div class="mb-2 flex items-center" x-show="$form.canBeCosupervisor()">
