@@ -38,7 +38,7 @@
         </div>
         <div class="flex-1 flex flex-col h-full overflow-y-auto">
             @include('_partials.layouts.scholar-header')
-            <main class="flex-1 h-full p-4 md:p-8 space-y-4">
+            <main class="flex-1 p-4 md:p-8 space-y-4">
                 @yield('body')
             </main>
             @include('_partials.layouts.footer', ['css' => 'bg-gray-200 text-gray-800'])

@@ -19,7 +19,7 @@
                 </div>
             </a>
         </header>
-        <main class="flex-1 h-full">
+        <main class="flex-1">
             @yield('body')
         </main>
         @include('_partials.layouts.footer', ['css' => 'bg-magenta-800 text-white'])
