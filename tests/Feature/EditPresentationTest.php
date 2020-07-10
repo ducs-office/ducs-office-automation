@@ -10,7 +10,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Tests\TestCase;
 
-class EditScholarPresentationTest extends TestCase
+class EditPresentationTest extends TestCase
 {
     use RefreshDatabase;
 
