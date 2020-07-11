@@ -6,7 +6,6 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Title Approval</title>
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-    @routes
     <style>
         html,body {
             font-size: 14px;
