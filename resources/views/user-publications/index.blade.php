@@ -1,4 +1,7 @@
 @extends('layouts.master', ['pageTitle' => 'Publications'])
+@push('modals')
+<livewire:co-authors-modal :error-bag="$errors->createCoAuthor" />
+@endpush
 @section('body')
     <div class="container mx-auto p-4 space-y-8">
         <div class="page-card p-6 overflow-visible space-y-6">

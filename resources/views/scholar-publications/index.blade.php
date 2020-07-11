@@ -1,4 +1,7 @@
 @extends('layouts.scholar-profile', ['pageTitle' => 'Publications','scholar' => $scholar])
+@push('modals')
+<livewire:co-authors-modal :error-bag="$errors->createCoAuthor" />
+@endpush
 @section('body')
 <div class="page-card p-6 overflow-visible space-y-6">
     <div class="flex items-baseline">

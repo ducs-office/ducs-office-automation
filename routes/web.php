@@ -231,6 +231,12 @@ Route::get(
 )->name('users.publications.create')
     ->middleware('auth:web');
 
+Route::get(
+    '@{user}/publications/{publication}',
+    'UserPublicationController@show'
+)->name('users.publications.show')
+    ->middleware('auth:web');
+
 Route::post(
     '@{user}/publications/',
     'UserPublicationController@store'

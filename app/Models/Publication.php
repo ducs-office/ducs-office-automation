@@ -80,4 +80,23 @@ class Publication extends Model
     {
         return $this->is_published === true;
     }
+
+    public function isJournal()
+    {
+        return $this->type === PublicationType::JOURNAL;
+    }
+
+    public function isConference()
+    {
+        return $this->type === PublicationType::CONFERENCE;
+    }
+
+    public function getUrl()
+    {
+        if ($this->author_type === Scholar::class) {
+            return route('scholars.publications.show', [$this->author, $this]);
+        }
+
+        return route('users.publications.show', [$this->author, $this]);
+    }
 }

@@ -100,4 +100,13 @@ class UserPublicationController extends Controller
 
         return back();
     }
+
+    public function show(User $user, Publication $publication)
+    {
+        $this->authorize('view', $publication);
+
+        abort_unless(Storage::exists($publication->document_path), 404, 'File Does not exist!');
+
+        return Response::file(Storage::path($publication->document_path));
+    }
 }
