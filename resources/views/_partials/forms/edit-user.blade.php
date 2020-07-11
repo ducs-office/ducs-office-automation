@@ -104,7 +104,7 @@
     <div class="space-y-1" x-show="! $form.isExternal()">
         <fieldset class="mb-2 border rounded px-4 py-2 @error('roles') border-red-500 hover:border-red-700 @enderror">
             <legend for="edit-roles" class="form-label px-2 @error('roles') text-red-500 @enderror">
-                Roles <span class="h-current text-red-500 text-lg">*</span>
+                Roles <span class="h-current text-red-500 text-lg" x-show="! $form.isCollegeTeacher()">*</span>
             </legend>
             <div class="grid grid-cols-3 gap-2">
                 @foreach ($roles as $role)

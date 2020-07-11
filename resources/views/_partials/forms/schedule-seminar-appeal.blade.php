@@ -7,9 +7,10 @@
             <span class="text-red-600">*</span>
         </label>
         <div>
-            <input type="datetime-local" name="scheduled_on" 
+            <input type="datetime-local" name="scheduled_on"
                 class="form-input ml-2 @error('scheduled_on') border-red-500 hover:border-red-700" @enderror
                 value="{{ old('scheduled_on', $scholar->prePhdSeminar->scheduled_on) }}"
+                placeholder="mm/dd/yy HH:MM:SS"
                 required>
             @error('scheduled_on')
                 <p class="text-red-500"> {{ $message }} </p>

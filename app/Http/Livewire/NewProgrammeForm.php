@@ -84,7 +84,7 @@ class NewProgrammeForm extends Component
     protected function initializeSemesterCoursesArray($clear = false)
     {
         foreach (range(1, $this->duration * 2) as $semester) {
-            if ($clear || !array_key_exists($semester, $this->semester_courses)) {
+            if ($clear || ! array_key_exists($semester, $this->semester_courses)) {
                 $this->semester_courses["{$semester}"] = [];
             }
         }

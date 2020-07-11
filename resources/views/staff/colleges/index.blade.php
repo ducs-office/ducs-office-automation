@@ -33,7 +33,9 @@
                     <p class="mb-1">
                         <x-feather-icon name="phone" class="inline-block h-current mr-4"></x-feather-icon>
                         @forelse ($college->principal_phones as $phone)
-                            <a href="tel:+91{{ $phone }}" class="text-magenta-700 underline mr-2">+91 {{ $phone }}</a>
+                            @if ($phone)
+                                <a href="tel:+91{{ $phone }}" class="text-magenta-700 underline mr-2">+91 {{ $phone }}</a>
+                            @endif
                         @empty
                             NA
                         @endforelse

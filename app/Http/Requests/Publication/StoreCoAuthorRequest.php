@@ -33,7 +33,6 @@ class StoreCoAuthorRequest extends FormRequest
 
     protected function failedValidation(Validator $validator)
     {
-
         $response = redirect()->back()
             ->withInput($this->input() + ['publication_id' => $this->route('publication')->id])
             ->withErrors($validator->errors()->messages(), 'createCoAuthor');

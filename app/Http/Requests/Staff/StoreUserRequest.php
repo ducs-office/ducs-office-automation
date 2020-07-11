@@ -41,7 +41,7 @@ class StoreUserRequest extends FormRequest
             'last_name' => ['required', 'string', 'max:190'],
             'email' => ['required', 'string', 'min:3', 'max:190', 'email', 'unique:users'],
             'roles' => [ // not assigning any role to external, even if sent in the request
-                'required_unless:category,' . UserCategory::EXTERNAL,
+                'required_unless:category,' . UserCategory::EXTERNAL . ',' . UserCategory::COLLEGE_TEACHER,
                 'exclude_if:category,' . UserCategory::EXTERNAL,
                 'array', 'min:1',
             ],

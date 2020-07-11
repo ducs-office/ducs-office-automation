@@ -58,7 +58,7 @@ class UserProfileUpdateRequest extends FormRequest
 
     public function uploadAvatar()
     {
-        if (!$this->hasFile('avatar')) {
+        if (! $this->hasFile('avatar')) {
             return null;
         }
 
