@@ -24,11 +24,14 @@
                 class="cursor-pointer flex items-center justify-center w-48 h-48 mx-auto object-cover border-4 border-white bg-white rounded-full shadow-md overflow-hidden">
                 <img x-bind:src="src" x-bind:alt="alt">
                 </x-input.image>
-                <div class="mt-2"> 
+                <div class="mt-2">
                     <button type="submit" class="btn btn-magenta w-20 inline-flex justify-center py-1 mx-1">Save</button>
                     <button class="btn btn-magenta w-20 inline-flex justify-center py-1  mx-1" x-on:click.prevent="editMode = 'false'">Cancel</button>
                 </div>
             </form>
+            @error('avatar', 'update')
+                <p class="text-red-500">{{ $message }}</p>
+            @enderror
             <div>
                 <h2 class="text-3xl">{{ $scholar->name }}</h2>
                 <h3 class="text-xl text-gray-700">Scholar / {{ $scholar->research_area }}</h3>
@@ -43,19 +46,19 @@
                     <x-tab name="committee">Research Committee</x-tab>
                 </div>
             </x-slot>
-    
+
             <x-tab-content tab="info" class="mt-5 w-full max-w-2xl mx-auto">
                 @include('_partials.scholar-profile.basic-info')
             </x-tab-content>
-    
+
             <x-tab-content tab="admission" class="mt-5 w-full max-w-2xl mx-auto">
                 @include('_partials.scholar-profile.admission-details')
             </x-tab-content>
-    
+
             <x-tab-content tab="education" class="mt-5 w-full max-w-2xl mx-auto">
                 @include('_partials.scholar-profile.education-details')
             </x-tab-content>
-    
+
             <x-tab-content tab="committee" class="mt-5 w-full max-w-2xl mx-auto">
                 @include('_partials.scholar-profile.research-committee')
             </x-tab-content>

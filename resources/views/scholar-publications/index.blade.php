@@ -1,7 +1,7 @@
 @extends('layouts.scholar-profile', ['pageTitle' => 'Publications','scholar' => $scholar])
-@section('body')    
+@section('body')
 <div class="page-card p-6 overflow-visible space-y-6">
-    <div class="flex items-baseline">   
+    <div class="flex items-baseline">
         <h1 class="text-2xl font-bold mr-4">
             Publications
         </h1>
@@ -14,7 +14,6 @@
         </div>
         @endcan
     </div>
-
     <div class="mt-4">
         <div class="w-64 pr-4 relative -ml-8 my-2">
             <h3 class="relative pl-8 pr-4 py-2 font-bold bg-magenta-700 text-white shadow">
@@ -28,7 +27,7 @@
             @forelse ($scholar->journals as $publication)
             @include('_partials.list-items.publication', [
                 'editRoute' => route('scholars.publications.edit', [$scholar, $publication]),
-                'deleteRoute' => route('scholars.publications.destroy', [$scholar, $publication]) 
+                'deleteRoute' => route('scholars.publications.destroy', [$scholar, $publication])
             ])
             @empty
             <p class="px-4 py-3 text-center text-gray-700 font-bold">Nothing to show here!</p>
@@ -49,7 +48,7 @@
             @forelse ($scholar->conferences as $publication)
             @include('_partials.list-items.publication', [
                 'editRoute' => route('scholars.publications.edit', [$scholar, $publication]),
-                'deleteRoute' => route('scholars.publications.destroy', [$scholar, $publication]) 
+                'deleteRoute' => route('scholars.publications.destroy', [$scholar, $publication])
             ])
             @empty
             <p class="px-4 py-3 text-center text-gray-700 font-bold">Nothing to show here!</p>

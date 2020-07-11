@@ -69,7 +69,7 @@
                         class="w-full form-label @error('duration') text-red-500 @enderror">
                         Duration (in years) <span class="text-red-500">*</span>
                     </label>
-                    <input id="programme-duration" type="number" name="duration"
+                    <input id="programme-duration" type="number" name="duration" min="1" max="5"
                         class="w-full form-input @error('duration') border-red-500 hover:border-red-700 @enderror"
                         wire:model="duration"
                         required>

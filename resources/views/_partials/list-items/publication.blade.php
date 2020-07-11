@@ -1,5 +1,5 @@
 @push('modals')
-<livewire:co-authors-modal :error-bag="$errors->default"/>
+<livewire:co-authors-modal :error-bag="$errors->createCoAuthor" />
 @endpush
 <li class="border-b last:border-b-0 py-3">
     <div class="flex mt-2">
@@ -26,7 +26,7 @@
         <p class="ml-2">
             {{auth()->user()->name}}
             <span class="italic"> {{ $publication->paper_title }} </span>
-            
+
             @if($publication->isPublished())
             {{ $publication->date->format('F Y') }}.
                 {{ $publication->name }},

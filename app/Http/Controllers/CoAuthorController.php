@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Publication\StoreCoAuthorRequest;
 use App\Models\CoAuthor;
 use App\Models\Publication;
 use Illuminate\Http\Request;
@@ -18,18 +19,15 @@ class CoAuthorController extends Controller
         return Response::file(Storage::path($coAuthor->noc_path));
     }
 
-    public function store(Request $request, Publication $publication)
+    public function store(StoreCoAuthorRequest $request, Publication $publication)
     {
         $this->authorize('create', [CoAuthor::class, $publication]);
 
-        $validData = $request->validate([
-            'name' => ['required', 'string'],
-            'noc' => ['nullable', 'file', 'max:200', 'mimeTypes:application/pdf, image/*'],
-        ]);
+        $validData = $request->validated();
 
         $publication->coAuthors()->create([
             'name' => $validData['name'],
-            'noc_path' => $validData['noc']
+            'noc_path' => (array_key_exists('noc', $validData) && $validData['noc'])
                 ? $validData['noc']->store('/publications/co_authors_noc')
                 : '',
         ]);

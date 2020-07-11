@@ -23,7 +23,7 @@ class CoAuthorsModal extends Component
         $this->modalName = $modalName ?? Str::kebab(class_basename($this));
         $this->publication = new Publication();
 
-        if (! $this->getErrorBag()->isEmpty()) {
+        if (!$this->getErrorBag()->isEmpty()) {
             $this->show(old('publication_id'));
         }
     }

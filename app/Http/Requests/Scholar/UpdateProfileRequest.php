@@ -44,9 +44,9 @@ class UpdateProfileRequest extends FormRequest
                 'sometimes', Rule::requiredIf($scholar->funding != null),
                 Rule::in(FundingType::values()),
             ],
-            'avatar' => ['nullable', 'image'],
+            'avatar' => ['nullable', 'file', 'image', 'max:200'],
             'research_area' => ['sometimes', Rule::requiredIf($scholar->research_area != null)],
-            'registration_date' => ['sometimes', Rule::requiredIf($scholar->registration_date != null), 'before:today'],
+            'registration_date' => ['sometimes', Rule::requiredIf($scholar->registration_date != null), 'before_or_equal:today'],
             'enrolment_id' => ['sometimes', Rule::requiredIf($scholar->enrolment_id != null), 'string', 'max:30'],
             'education_details' => [
                 Rule::requiredIf($scholar->education_details != null),

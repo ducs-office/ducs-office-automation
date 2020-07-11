@@ -70,7 +70,7 @@ class StorePublicationRequest extends FormRequest
         $coAuthors = array_map(static function ($coAuthor) {
             return [
                 'name' => $coAuthor['name'],
-                'noc_path' => ($coAuthor['noc'])
+                'noc_path' => (array_key_exists('noc', $coAuthor) && $coAuthor['noc'])
                     ? $coAuthor['noc']->store('/publications/co_authors_noc')
                     : '',
             ];

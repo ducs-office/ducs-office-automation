@@ -35,7 +35,7 @@ class UserProfileUpdateRequest extends FormRequest
                 'string',
                 Rule::requiredIf($user->designation != null),
             ],
-            'avatar' => ['nullable', 'file', 'image'],
+            'avatar' => ['nullable', 'file', 'image', 'max:200'],
         ];
 
         if ($user->isExternal()) {
@@ -58,7 +58,7 @@ class UserProfileUpdateRequest extends FormRequest
 
     public function uploadAvatar()
     {
-        if (! $this->hasFile('avatar')) {
+        if (!$this->hasFile('avatar')) {
             return null;
         }
 
