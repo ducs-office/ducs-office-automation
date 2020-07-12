@@ -1,7 +1,7 @@
-<ul class="space-y-6 flex flex-wrap items-baseline">
+<ul class="grid grid-cols-2 gap-6">
     @forelse($publication->coAuthors as $coAuthor)
-    <li class="flex items-baseline w-1/2">
-        <div class="ml-4 flex flex-1 px-4 py-3 bg-gray-200 rounded-lg">
+    <li class="flex space-x-2 items-center px-3 py-1 border rounded">
+        <div class="flex flex-1 items-center">
             <h3 class="text-md text-gray-800">{{ $coAuthor->name }}</h3>
             @if($coAuthor->noc_path)
                 <div class="ml-auto">
@@ -9,8 +9,11 @@
                     <a href="{{ route('publications.co-authors.show', [
                         'publication' => $publication, 
                         'coAuthor' => $coAuthor
-                    ]) }}" target="__blank" class="inline-flex items-center mr-1">
-                        <x-feather-icon name="paperclip" class="h-4 mr-2 link" stroke-width="2">NOC</x-feather-icon>
+                    ]) }}" 
+                    target="__blank" 
+                    class="inline-flex space-x-1 items-center font-bold px-3 py-1 hover:bg-gray-100 rounded">
+                        <x-feather-icon name="paperclip" class="h-4 w-4" stroke-width="2">NOC</x-feather-icon>
+                        <span>NOC</span>
                     </a>
                     @endcan
                 </div>
@@ -33,6 +36,6 @@
         </div>
     </li>
     @empty
-    <li class="py-4 px-6 text-gray-600 font-bold"> Nothing to see here. </li>
+    <li class="col-span-2 py-4 px-6 text-gray-600 font-bold"> Nothing to see here. </li>
     @endforelse
 </ul>

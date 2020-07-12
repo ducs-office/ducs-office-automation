@@ -5,7 +5,7 @@
             <button type="button" class="link" wire:click="add()">add more...</button>
         </div>
     </div>
-    @foreach($coAuthors as $index => $coAuthor)
+    @forelse($coAuthors as $index => $coAuthor)
     <div class="flex space-x-2">
         <input type="text" x-model="'{{$coAuthor['name']}}'" 
             name="co_authors[{{$index}}][name]" 
@@ -20,5 +20,9 @@
             <x-feather-icon name="x" class="h-6 transform transition duration-150 group-hover:scale-110"></x-feather-icon>
         </button>
     </div>
-    @endforeach
+    @empty
+    <div class="flex space-x-2 rounded border p-2">
+        <p class="text-gray-600">Add multiple Co-authors by clicking on 'add more'.</p>
+    </div>
+    @endforelse
 </div>
