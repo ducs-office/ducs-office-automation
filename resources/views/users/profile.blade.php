@@ -21,8 +21,12 @@
             @csrf_token @method('PATCH')
                 <x-input.image id="avatar" name="avatar"
                 imageSrc="{{ $user->avatar_url }}"
-                class="cursor-pointer flex items-center justify-center w-48 h-48 mx-auto object-cover border-4 border-white bg-white rounded-full shadow-md overflow-hidden">
-                <img x-bind:src="src" x-bind:alt="alt">
+                class="group relative cursor-pointer flex items-center justify-center w-48 h-48 mx-auto object-cover border-4 border-white bg-white rounded-full shadow-md overflow-hidden">
+                <div class="absolute group-hover:opacity-0 pointer-events-none inset-0 text-white bg-black-40 flex flex-col items-center justify-center z-10">
+                    <x-feather-icon name="camera" class="h-4 w-4"></x-feather-icon>
+                    <span>Click to Upload</span>
+                </div>
+                <img x-bind:src="src" x-bind:alt="alt" class="w-full h-full object-cover">
                 </x-input.image>
                 <p class="mt-2 text-xs text-gray-600"><b>Note:</b> Only PNG, JPG, JPEG files are accepted.</p>
                 <div class="mt-2">
