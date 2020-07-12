@@ -122,7 +122,7 @@
                 <label for="files" class="w-full form-label mb-1">
                     Upload Letter <span class="text-red-600">*</span>
                 </label>
-                <x-input.file id="files" name="attachments[]" accept="application/pdf, image/*" class="w-full form-input overflow-hidden"
+                <x-input.file id="files" name="attachments[]" accept="application/pdf,image/*" class="w-full form-input overflow-hidden"
                     placeholder="Choose multiple Image/PDF files" :multiple="true" required>
                 </x-input.file>
                 @if($errors->has('file.*'))

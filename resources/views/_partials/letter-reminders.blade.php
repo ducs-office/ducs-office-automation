@@ -6,10 +6,11 @@
         <div class="flex items-start space-x-2">
             <div class="flex-1">
                 <x-input.file id="pdf" :multiple="true"
-                    name="attachments[]" accept="application/pdf, image/*"
+                    name="attachments[]" accept="application/pdf,image/*"
                     class="w-full form-input overflow-hidden"
                     placeholder="Upload maximum 2 PDF or Scanned Image file(s)">
                 </x-input.file>
+                <p class="text-xs my-1"><b>Type:</b> PDF/</p>
                 @if($errors->has('attachments'))
                 <p class="mt-1 text-red-600">{{ $errors->first('attachments') }}</p>
                 @endif
@@ -40,7 +41,7 @@
         </div>
         <div class="ml-auto px-2 flex items-baseline">
             @can('update', $reminder)
-            <x-modal.trigger modal="edit-reminder-modal" :livewire="['payload' => $reminder->id]" class="p-1 text-gray-500 hover:bg-gray-200 text-blue-600 rounded mr-3" title="Edit">
+            <x-modal.trigger modal="edit-reminder-modal" :livewire="['payload' => $reminder->id]" class="p-1 text-gray-500 hover:bg-gray-200 hover:text-blue-600 rounded mr-3" title="Edit">
                 <x-feather-icon name="edit-3" stroke-width="2.5" class="h-current">Edit</x-feather-icon>
             </x-modal.trigger>
             @endcan

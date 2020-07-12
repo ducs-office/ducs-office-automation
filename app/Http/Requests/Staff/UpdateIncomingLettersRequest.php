@@ -37,7 +37,7 @@ class UpdateIncomingLettersRequest extends FormRequest
             'subject' => ['sometimes', 'required', 'string', 'min:5', 'max:100'],
             'description' => ['nullable', 'string', 'max:400'],
             'attachments' => ['required', 'array', 'max:2'],
-            'attachments.*' => ['file', 'max:200', 'mimes:jpeg,jpg,png,pdf'],
+            'attachments.*' => ['file', 'max:200', 'mimetypes:application/pdf,image/*'],
         ];
 
         if ($this->route('letter')->attachments()->count() < 1) {

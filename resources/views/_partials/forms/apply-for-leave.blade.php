@@ -40,8 +40,8 @@
         </div>
     </div>
     <div class="mb-2">
-        <label for="reason" class="w-full form-label mb-1">
-            Reason <span class="text-red-600 font-bold @error('reason') text-red-500 @enderror">*</span>
+        <label for="reason" class="w-full form-label @error('reason') text-red-500 @enderror mb-1">
+            Reason <span class="text-red-600 font-bold">*</span>
         </label>
         <select id="leave_reasons" name="reason" class="w-full form-select @error('reason') border-red-500 hover:border-red-700 @enderror" onchange="
             if(reason.value === 'Other') {
@@ -73,7 +73,7 @@
         </label>
         <x-input.file name="application" id="application"
         class="w-full form-input inline-flex items-center {{ $errors->has('application') ? 'border-red-500 hover:border-red-700' : '' }}"
-        accept="application/pdf, image/*"
+        accept="application/pdf,image/*"
         placeholder="Upload Application"
         required/>
         @error('application')

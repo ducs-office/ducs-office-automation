@@ -35,7 +35,7 @@ class StoreOutgoingLetterRequest extends FormRequest
             'description' => ['nullable', 'string', 'max:400'],
             'amount' => ['nullable', 'numeric'],
             'attachments' => ['required', 'array', 'min:1', 'max:2'],
-            'attachments.*' => ['file', 'max:200', 'mimes:jpeg,jpg,png,pdf'],
+            'attachments.*' => ['file', 'max:200', 'mimetypes:application/pdf,image/*'],
         ];
     }
 }

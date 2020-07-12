@@ -104,7 +104,7 @@
             <label class="form-label mb-1">
                 <span>Attachments (Min: 1) <span class="text-red-600">*</span></span>
             </label>
-            <x-input.file id="pdf" name="attachments[]" accept="application/pdf, image/*"
+            <x-input.file id="pdf" name="attachments[]" accept="application/pdf,image/*"
                 :multiple="true"
                 class="w-full form-input overflow-hidden"
                 placeholder="Upload maximum 2 PDF or Scanned Image file(s)" required />

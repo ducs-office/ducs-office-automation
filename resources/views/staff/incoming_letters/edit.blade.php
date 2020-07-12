@@ -148,7 +148,7 @@
                         Upload Attachments <span class="text-red-600">*</span>
                     </label>
                 @endif
-                <x-input.file id="files" name="attachments[]" accept="application/pdf, image/*"
+                <x-input.file id="files" name="attachments[]" accept="application/pdf,image/*"
                     class="w-full form-input overflow-hidden"
                     placeholder="Choose multiple Image/PDF files"
                     :multiple="true">

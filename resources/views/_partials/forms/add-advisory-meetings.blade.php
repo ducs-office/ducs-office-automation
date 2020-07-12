@@ -19,7 +19,7 @@
             </label>
             <x-input.file name="minutes_of_meeting" id="minutes_of_meeting"
                 class="w-full form-input inline-flex items-center {{ $errors->has('minutes_of_meeting') ? 'border-red-500 hover:border-red-700' : '' }}"
-                accept="document/*"
+                accept="application/pdf,image/*"
                 placeholder="Upload Minutes Of Meetings"
                 required/>
             @error('minutes_of_meeting')

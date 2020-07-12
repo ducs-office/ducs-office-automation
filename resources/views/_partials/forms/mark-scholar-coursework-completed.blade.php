@@ -23,7 +23,7 @@
         </label>
         <x-input.file name="marksheet" id="marksheet"
             class="w-full form-input inline-flex items-center {{ $errors->has('marksheet') ? 'border-red-500 hover:border-red-700' : '' }}"
-            accept="application/pdf, image/*"
+            accept="application/pdf,image/*"
             placeholder="Upload Marksheet"
             required/>
         @error('marksheet')

@@ -27,7 +27,7 @@ class StoreCoAuthorRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string'],
-            'noc' => ['nullable', 'file', 'max:200', 'mimeTypes:application/pdf, image/*'],
+            'noc' => ['nullable', 'file', 'max:200', 'mimetypes:application/pdf,image/*'],
         ];
     }
 

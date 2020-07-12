@@ -1,6 +1,6 @@
 @props([
     'id' => '',
-    'accept' => 'image/*',
+    'accept' => 'image/png,image/jpg,image/jpeg',
     'name' => '',
     'imageSrc' => 'https://plachehold.it/250',
 ])

@@ -24,6 +24,7 @@
                 class="cursor-pointer flex items-center justify-center w-48 h-48 mx-auto object-cover border-4 border-white bg-white rounded-full shadow-md overflow-hidden">
                 <img x-bind:src="src" x-bind:alt="alt">
                 </x-input.image>
+                <p class="mt-2 text-xs text-gray-600"><b>Note:</b> Only PNG, JPG, JPEG files are accepted.</p>
                 <div class="mt-2">
                     <button type="submit" class="btn btn-magenta w-20 inline-flex justify-center py-1 mx-1">Save</button>
                     <button class="btn btn-magenta w-20 inline-flex justify-center py-1  mx-1" x-on:click.prevent="editMode = 'false'">Cancel</button>

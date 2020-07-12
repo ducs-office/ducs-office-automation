@@ -36,7 +36,7 @@ class UpdatePublicationRequest extends FormRequest
             'is_published' => ['required', 'boolean'],
             'co_authors' => ['nullable', 'array', 'max:10', 'min:1'],
             'co_authors.*.name' => ['required', 'string'],
-            'co_authors.*.noc' => ['required', 'file', 'max:200', 'mimeTypes:application/pdf, image/*'],
+            'co_authors.*.noc' => ['required', 'file', 'max:200', 'mimetypes:application/pdf,image/*'],
 
             'name' => ['sometimes', 'exclude_if:is_published,false', 'string', 'max:100'],
             'date' => ['sometimes', 'exclude_if:is_published,false', 'date', 'before_or_equal:today'],

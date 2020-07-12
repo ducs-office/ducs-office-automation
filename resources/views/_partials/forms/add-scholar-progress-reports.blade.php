@@ -35,7 +35,7 @@
             Upload Progress Report <span class="text-red-600">*</span>
         </label>
         <x-input.file name="progress_report" id="progress_report" class="w-full form-input inline-flex items-center {{ $errors->has('progress-report') ? 'border-red-500 hover:border-red-700' : '' }}"
-            accept="application/pdf, image/*"
+            accept="application/pdf,image/*"
             placeholder="Upload Document"
             required/>
         @error('progress_report')

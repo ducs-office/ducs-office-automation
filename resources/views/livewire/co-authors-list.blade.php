@@ -13,7 +13,7 @@
             placeholder="Co-Author's name">
         <x-input.file name="co_authors[{{$index}}][noc]" id="noc"
             class="w-full form-input inline-flex items-center"
-            accept="application/pdf, image/*"
+            accept="application/pdf,image/*"
             placeholder="Upload NOC"
             />
         <button type="button" class="p-2 group" wire:click="remove({{ $index }})">

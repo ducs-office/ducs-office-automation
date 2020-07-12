@@ -23,7 +23,7 @@ method="POST" enctype="multipart/form-data">
             </label>
             <x-input.file name="response_letter" id="response_letter"
             class="w-full form-input inline-flex items-center {{ $errors->has('response_letter') ? 'border-red-500 hover:border-red-700' : '' }}"
-            accept="application/pdf, image/*"
+            accept="application/pdf,image/*"
             placeholder="Upload Application"
             required/>
             @error('response_letter')

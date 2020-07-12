@@ -34,7 +34,7 @@ class StoreCourseRequest extends FormRequest
             'type' => ['required', Rule::in(CourseType::values())],
             'date' => ['required', 'date', 'before_or_equal:now'],
             'attachments' => ['required', 'array', 'max:5'],
-            'attachments.*' => ['file', 'max:200', 'mimes:jpeg,jpg,png,pdf'],
+            'attachments.*' => ['file', 'max:200', 'mimetypes:applciation/pdf,image/*'],
         ];
     }
 

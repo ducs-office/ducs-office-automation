@@ -41,7 +41,7 @@ class StorePublicationRequest extends FormRequest
 
             'co_authors' => ['nullable', 'array', 'max:10'],
             'co_authors.*.name' => ['required', 'string'],
-            'co_authors.*.noc' => ['nullable', 'file', 'max:200', 'mimeTypes:application/pdf, image/*'],
+            'co_authors.*.noc' => ['nullable', 'file', 'max:200', 'mimetypes:application/pdf,image/*'],
 
             'name' => ['exclude_if:is_published,false', 'required', 'string', 'max:400'],
             'date' => ['exclude_if:is_published,false', 'required', 'date', 'before_or_equal:today'],

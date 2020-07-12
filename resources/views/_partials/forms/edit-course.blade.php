@@ -53,7 +53,7 @@
         <x-input.file id="course_attachments" name="attachments[]"
             class="w-full form-input  inline-flex items-center {{ $errors->has('attachments') ? 'border-red-500 hover:border-red-700' : '' }}"
             tabindex="0"
-            accept="application/pdf, image/*"
+            accept="application/pdf,image/*"
             placeholder="select multiple files"
             multiple/>
         @error('attachments')

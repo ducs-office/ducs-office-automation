@@ -20,7 +20,7 @@
             </label>
             <x-input.file name="document" id="document"
             class="w-full form-input inline-flex items-center {{ $errors->has('document') ? 'border-red-500 hover:border-red-700' : '' }}"
-            accept="application/pdf, image/*"
+            accept="application/pdf,image/*"
             placeholder="Upload Document"
             required/>
         @error('document')

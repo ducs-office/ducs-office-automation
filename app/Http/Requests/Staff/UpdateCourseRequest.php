@@ -35,7 +35,7 @@ class UpdateCourseRequest extends FormRequest
             'name' => ['sometimes', 'required', 'min:3', 'max:190'],
             'type' => ['sometimes', 'required', Rule::in(CourseType::values())],
             'attachments' => ['nullable', 'array', 'max:5'],
-            'attachments.*' => ['file', 'mimes:jpeg,jpg,png,pdf', 'max:200'],
+            'attachments.*' => ['file', 'mimetypes:application/pdf,image/*', 'max:200'],
         ];
     }
 

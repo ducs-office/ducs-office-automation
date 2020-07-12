@@ -42,7 +42,7 @@ class ScholarDocumentsController extends Controller
         );
 
         $request->validate([
-            'document' => ['required', 'file', 'mimetypes:application/pdf, image/*', 'max:200'],
+            'document' => ['required', 'file', 'mimetypes:application/pdf,image/*', 'max:200'],
             'description' => ['nullable', 'string', 'min:5', 'max:250'],
             'date' => ['required', 'date', 'before_or_equal:today'],
             'type' => [

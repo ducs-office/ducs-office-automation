@@ -70,7 +70,7 @@ class LeavesController extends Controller
 
         $request->validate([
             'response' => ['required', Rule::in([LeaveStatus::APPROVED, LeaveStatus::REJECTED])],
-            'response_letter' => ['required', 'file', 'mimetypes:application/pdf,image/*', 'max:200'],
+            'response_letter' => ['required', 'file', 'mimetypes:application/pdf,images/*', 'max:200'],
         ]);
 
         $leave->update([

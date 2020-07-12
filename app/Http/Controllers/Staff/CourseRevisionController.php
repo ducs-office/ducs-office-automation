@@ -23,7 +23,7 @@ class CourseRevisionController extends Controller
         $request->validate([
             'revised_at' => ['required', 'date', 'before_or_equal:now'],
             'attachments' => ['required', 'array', 'max:5'],
-            'attachments.*' => ['required', 'file', 'mimes:jpeg,jpg,png,pdf', 'max:200'],
+            'attachments.*' => ['required', 'file', 'mimetypes:application/pdf,image/*', 'max:200'],
         ]);
 
         DB::beginTransaction();

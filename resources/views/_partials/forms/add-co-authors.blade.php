@@ -9,7 +9,7 @@
         <div class="space-x-1 ml-2 w-1/2">
             <x-input.file name="noc" id="{{ $publication->id }}-noc"
                 class="w-full form-input inline-flex items-center "
-                accept="application/pdf, image/*"
+                accept="application/pdf,image/*"
                 placeholder="Upload NOC"/>
         </div>
         <button type="submit" class="btn btn-magenta ml-2">Add</button>

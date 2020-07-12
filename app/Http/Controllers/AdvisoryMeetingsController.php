@@ -28,7 +28,7 @@ class AdvisoryMeetingsController extends Controller
 
         $data = $request->validate([
             'date' => 'required|date|before_or_equal:today',
-            'minutes_of_meeting' => ['required', 'file', 'mimes:pdf,doc,docx', 'max:200'],
+            'minutes_of_meeting' => ['required', 'file', 'mimetypes:appliction/pdf,image/*', 'max:200'],
         ]);
 
         $filename = strtotime($request->date)
