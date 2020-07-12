@@ -1,6 +1,11 @@
 <form action="{{ $route }}" method="post"
     class="px-6" enctype="multipart/form-data"
-    x-data="{ publication_type: '{{old('type',App\Types\PublicationType::JOURNAL)}}', is_published: '{{array_key_exists('is_published', old())}}'}">
+    x-data="{
+        publication_type: '{{old('type',App\Types\PublicationType::JOURNAL)}}',
+        is_published: '{{array_key_exists('is_published', old())}}',
+        'month': '{{ old('date.month', now()->format('F')) }}',
+        'year': '{{ old('date.year', now()->format('Y'))}}'
+    }">
     @csrf_token
     <div class="mb-4">
         <label for="type" class="form-label block mb-1">
@@ -30,7 +35,7 @@
             Is the paper published?
         </label>
     </div>
-    @auth('scholars')    
+    @auth('scholars')
     <div class="mb-4">
         <label for="document" class="form-label block mb-1"
         x-show="is_published">
@@ -80,18 +85,18 @@
                     Date <span class="text-red-600">*</span>
                 </label>
                 <div class="flex">
-                    <select name="date[month]" id="date_month" class="form-select flex-1">
+                    <select name="date[month]" id="date_month" class="form-select flex-1"
+                        x-model="month">
                         @foreach($months as $month)
-                        <option value="{{ $month }}"
-                        :selected="'{{ $month === old('date.month', now()->format('F')) }}'">
+                        <option value="{{ $month }}">
                             {{ $month }}
                         </option>;
                         @endforeach
                     </select>
-                    <select name="date[year]" id="date_year" class="form-select flex-1 ml-4">
+                    <select name="date[year]" id="date_year" class="form-select flex-1 ml-4"
+                        x-model="year" >
                         @foreach(range($currentYear-10, $currentYear) as $year)
-                        <option value="{{ $year}}"
-                        :selected="'{{ $year== old('date.year', now()->format('Y'))}}'">
+                        <option value="{{ $year}}">
                             {{$year}}
                         </option>
                         @endforeach

@@ -3,7 +3,13 @@
 </form>
 <form action="{{ $route }}"
     method="post" class="px-6"
-    enctype="multipart/form-data" x-data="{ publication_type: '{{$publication->type}}', is_published: '{{array_key_exists('is_published', old()) ? true : $publication->isPublished()}}' }">
+    enctype="multipart/form-data"
+    x-data="{
+        publication_type: '{{$publication->type}}',
+        is_published: '{{array_key_exists('is_published', old()) ? true : $publication->isPublished()}}',
+        'month': '{{ old('date.month', optional($publication->date)->format('F') ?? now()->format('F')) }}',
+        'year': '{{ old('date.year', optional($publication->date)->format('Y') ?? now()->format('Y')) }}'
+    }">
     @csrf_token
     @method('PATCH')
     <div class="mb-4">
@@ -29,10 +35,12 @@
                 Is the paper published?
             </label>
         </div>
+    @else
+        <input type="hidden" name="is_published">
     @endif
     <template x-if="is_published">
         <div>
-            @auth('scholars')     
+            @auth('scholars')
             @if(!$publication->isPublished())
                 <div class="mb-4">
                     <label for="document" class="form-label block">
@@ -71,18 +79,18 @@
                         Date <span class="text-red-600">*</span>
                     </label>
                     <div class="flex">
-                        <select name="date[month]" id="date_month" class="form-select flex-1">
+                        <select name="date[month]" id="date_month" class="form-select flex-1"
+                            x-model="month" >
                             @foreach($months as $month)
-                            <option value="{{ $month }}"
-                                :selected="'{{ $month === old('date.month', optional($publication->date)->format('F') ?? now()->format('F'))}}'">
+                            <option value="{{ $month }}">
                                 {{ $month }}
                             </option>
                             @endforeach
                         </select>
-                        <select name="date[year]" id="date_year" class="form-select flex-1 ml-4">
+                        <select name="date[year]" id="date_year" class="form-select flex-1 ml-4"
+                            x-model="year" >
                             @foreach(range($currentYear-10, $currentYear) as $year)
-                            <option value="{{$year}}"
-                                :selected="'{{ $year== old('date.year', optional($publication->date)->format('Y') ?? now()->format('Y'))}}'">
+                            <option value="{{$year}}">
                                 {{$year}}
                             </option>
                             @endforeach

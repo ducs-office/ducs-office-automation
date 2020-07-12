@@ -6,6 +6,7 @@ use App\Models\Publication;
 use App\Models\Scholar;
 use App\Models\Teacher;
 use App\Models\User;
+use App\Types\CitationIndex;
 use App\Types\PublicationType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -64,6 +65,7 @@ class UpdatePublicationTest extends TestCase
                 ],
                 'document' => $document = $this->document,
                 'paper_link' => $link = 'http://somerandom.journal',
+                'indexed_in' => [CitationIndex::SCIE],
             ])
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'Publication updated successfully!');
@@ -118,6 +120,7 @@ class UpdatePublicationTest extends TestCase
                     ['name' => 'Sally Burgman', 'noc' => $this->noc2],
                 ],
                 'paper_link' => $link = 'http://somerandom.journal',
+                'indexed_in' => [CitationIndex::SCIE],
             ])
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'Publication updated successfully!');
@@ -164,6 +167,7 @@ class UpdatePublicationTest extends TestCase
                 ],
                 'document' => $document = $this->document,
                 'paper_link' => $link = 'http://somerandom.journal',
+                'indexed_in' => [CitationIndex::SCIE],
             ])
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'Publication updated successfully!');
@@ -218,6 +222,7 @@ class UpdatePublicationTest extends TestCase
                     ['name' => 'Sally Burgman', 'noc' => $this->noc2],
                 ],
                 'paper_link' => $link = 'http://somerandom.journal',
+                'indexed_in' => [CitationIndex::SCIE],
             ])
             ->assertRedirect()
             ->assertSessionHasFlash('success', 'Publication updated successfully!');

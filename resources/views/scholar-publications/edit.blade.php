@@ -10,5 +10,5 @@
         @include('_partials.forms.edit-publication', [
             'route' => route('scholars.publications.update', [$scholar, $publication])
         ])
-    </div>s
+    </div>
 @endsection

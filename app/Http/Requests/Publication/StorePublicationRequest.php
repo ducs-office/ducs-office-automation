@@ -46,7 +46,7 @@ class StorePublicationRequest extends FormRequest
             'name' => ['exclude_if:is_published,false', 'required', 'string', 'max:400'],
             'date' => ['exclude_if:is_published,false', 'required', 'date', 'before_or_equal:today'],
             'volume' => ['exclude_if:is_published,false', 'nullable', 'integer'],
-            'indexed_in' => ['exclude_if:is_published,false', 'required', 'array'],
+            'indexed_in' => ['exclude_if:is_published,false', 'required', 'array', 'min:1'],
             'indexed_in.*' => [Rule::in(CitationIndex::values())],
             'page_numbers' => ['exclude_if:is_published,false', 'required', 'array', 'size:2'],
             'page_numbers.0' => ['exclude_if:is_published,false', 'required', 'integer'],

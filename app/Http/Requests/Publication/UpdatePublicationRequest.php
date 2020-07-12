@@ -29,6 +29,7 @@ class UpdatePublicationRequest extends FormRequest
 
     public function rules()
     {
+        // dd($this->all());
         $rules = [
             'type' => ['required', Rule::in(PublicationType::values())],
             'paper_title' => ['sometimes', 'required', 'string', 'max:400'],
@@ -38,16 +39,15 @@ class UpdatePublicationRequest extends FormRequest
             'co_authors.*.name' => ['required', 'string'],
             'co_authors.*.noc' => ['required', 'file', 'max:200', 'mimetypes:application/pdf,image/*'],
 
-            'name' => ['sometimes', 'exclude_if:is_published,false', 'string', 'max:100'],
-            'date' => ['sometimes', 'exclude_if:is_published,false', 'date', 'before_or_equal:today'],
+            'name' => ['sometimes', 'required', 'exclude_if:is_published,false', 'string', 'max:100'],
+            'date' => ['sometimes', 'required', 'exclude_if:is_published,false', 'date', 'before_or_equal:today'],
             'volume' => ['exclude_if:is_published,false', 'nullable', 'integer'],
-            'publisher' => ['sometimes', 'exclude_if:is_published,false', 'string', 'max:100'],
-            'page_numbers' => ['sometimes', 'exclude_if:is_published,false', 'array', 'size:2'],
-            'page_numbers.0' => ['sometimes', 'exclude_if:is_published,false', 'integer'],
-            'page_numbers.1' => ['sometimes', 'exclude_if:is_published,false', 'integer', 'gte:page_numbers.0'],
+            'page_numbers' => ['sometimes', 'required', 'exclude_if:is_published,false', 'array', 'size:2'],
+            'page_numbers.0' => ['sometimes', 'required', 'exclude_if:is_published,false', 'integer'],
+            'page_numbers.1' => ['sometimes', 'required', 'exclude_if:is_published,false', 'integer', 'gte:page_numbers.0'],
             'number' => ['exclude_if:is_published,false', 'nullable', 'numeric'],
-            'indexed_in' => ['sometimes', 'exclude_if:is_published,false', 'array'],
-            'indexed_in.*' => ['sometimes', 'exclude_if:is_published,false', Rule::in(CitationIndex::values())],
+            'indexed_in' => ['exclude_if:is_published,false', 'array', 'required', 'array', 'min:1'],
+            'indexed_in.*' => ['required', 'exclude_if:is_published,false', Rule::in(CitationIndex::values())],
             'paper_link' => ['exclude_if:is_published,false', 'nullable', 'url'],
             'city' => ['sometimes', 'exclude_if:is_published,false', 'exclude_if:type,' . PublicationType::JOURNAL, 'string'],
             'country' => ['sometimes', 'exclude_if:is_published,false', 'exclude_if:type,' . PublicationType::JOURNAL, 'string'],

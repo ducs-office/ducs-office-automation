@@ -73,7 +73,7 @@
                             <td class="px-6 py-4 ">
                                 <input type="text"
                                     name="education_details[{{$index}}][year]"
-                                    x-model="'{{$educationItem['year'] ?? ''}}'"
+                                    value="{{$educationItem['year']}}"
                                     class="w-full form-input">
                             </td>
                             <td class="px-6 py-4" x-show="count > 1">
