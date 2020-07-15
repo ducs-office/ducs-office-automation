@@ -30,8 +30,7 @@
 
         <div>
             <label for="password" class="w-full form-label mb-1">{{ __('Password') }}</label>
-            <input id="password" type="password" class="w-full form-input"
-                name="password" required autocomplete="new-password">
+            <x-input.password id="password" class="w-full form-input" name="password" required></x-input.password>
             @error('password')
             <span class="text-red-600" role="alert">
                 <strong>{{ $message }}</strong>
@@ -41,9 +40,7 @@
 
         <div>
             <label for="password-confirm" class="w-full form-label mb-1">{{ __('Confirm Password') }}</label>
-
-            <input id="password-confirm" type="password" class="w-full form-input" name="password_confirmation" required
-                autocomplete="new-password">
+            <x-input type="password" id="password-confirm" class="w-full form-input" name="password_confirmation" required>
         </div>
         <div class="mt-6">
             <button type="submit" class="w-full btn btn-magenta py-2">Reset Password</button>

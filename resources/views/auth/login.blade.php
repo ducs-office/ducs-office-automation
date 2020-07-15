@@ -25,7 +25,7 @@
             </div>
             <div>
                 <label class="w-full form-label mb-1" for="password">Password</label>
-                <input type="password" name="password" class="w-full form-input" placeholder="Enter your password here..." required>
+                <x-input.password name="password" class="w-full form-input" placeholder="Enter your password here..." required></x-input.password>
             </div>
             <div>
                 <label for="remember" class="flex items-center">

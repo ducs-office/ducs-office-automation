@@ -47,16 +47,15 @@
         @csrf_token
         <div class="mb-3">
             <label for="current_password" class="w-full form-label mb-1">Current Password</label>
-            <input type="password" name="password" id="current_password" class="w-full form-input">
+            <x-input.password name="password" id="current_password" class="w-full form-input"></x-input.password>
         </div>
         <div class="mb-3">
             <label for="new_password" class="w-full form-label mb-1">New Password</label>
-            <input type="password" name="new_password" id="new_password" class="w-full form-input">
+            <x-input.password name="new_password" id="new_password" class="w-full form-input"></x-input.password>
         </div>
         <div class="mb-3">
             <label for="new_password_confirmation" class="w-full form-label mb-1">Confirm New Password</label>
-            <input type="password" name="new_password_confirmation" id="new_password_confirmation"
-                class="w-full form-input">
+            <input type="password" name="new_password_confirmation" id="new_password_confirmation" class="w-full form-input">
         </div>
         <div class="text-center">
             <button type="submit" class="btn btn-magenta">Change Password</button>
