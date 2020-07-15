@@ -2,7 +2,7 @@
     @auth
         <button id="sidebar-toggle" role="button" aria-controls="sidebar" class="p-3 text-gray-700 mr-3 btn flex-shrink-0" x-on:click="sidebar = !sidebar">
             <template x-if="sidebar">
-                <x-feather-icon name="arrow-left" class="h-current" stroke-width="3">
+                <x-feather-icon name="chevrons-left" class="h-current" stroke-width="3">
                     Hide Sidebar
                 </x-feather-icon>
             </template>

@@ -40,7 +40,7 @@
 
         <div>
             <label for="password-confirm" class="w-full form-label mb-1">{{ __('Confirm Password') }}</label>
-            <x-input type="password" id="password-confirm" class="w-full form-input" name="password_confirmation" required>
+            <input type="password" id="password-confirm" class="w-full form-input" name="password_confirmation" required>
         </div>
         <div class="mt-6">
             <button type="submit" class="w-full btn btn-magenta py-2">Reset Password</button>

@@ -80,13 +80,13 @@
             </div>
         </div>
         <fieldset class="border rounded p-6 flex-1">
-            <legend class="px-2 form-label text-base">Semester-wise Courses</legend>
+            <legend class="px-2 form-label text-base">Semester-wise Courses <span class="text-red-500">*</span> </legend>
             <p class="text-gray-700">Select multiple courses to each semester. Atleast one course must be added to each semester</p>
             @foreach (range(1, $duration * 2) as $index => $semester)
                 <div class="mt-3 space-y-1">
                     <label for="semester-{{$semester}}-courses"
                     class="w-full form-label"
-                    >Courses for Semester {{ $semester }}</label>
+                    >Courses for Semester {{ $semester }} <span class="text-red-500">*</span></label>
                     <x-select id="semester-{{$semester}}-courses"
                         name="semester_courses[{{ $semester }}][]"
                         :class="$errors->has('semester_courses.' . $semester) ? 'border-red-500 hover:border-red-500' : ''"
