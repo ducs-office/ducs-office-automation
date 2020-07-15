@@ -1,9 +1,12 @@
 <div class="ml-auto mr-3 relative">
-    <button class="relative z-20 flex items-center btn" x-on:click="userDropdown = !userDropdown">
+    <button class="relative z-20 flex items-center btn pl-2 pr-6 py-1" x-on:click="userDropdown = !userDropdown">
         <img src="{{ Auth::user()->avatar_url }}"
             alt="{{ Auth::user()->name }}" width="32" height="32"
             class="w-6 h-6 rounded-full mr-2">
-        <h2 class="font-bold truncate max-w-32">{{ Auth::user()->first_name }}</h2>
+        <div class="leading-none text-left">
+            <h2 class="font-bold truncate max-w-32">{{ auth()->user()->first_name }}</h2>
+            <h3 class="text-xs text-black-50">{{ auth()->user()->category ?? 'Unknown' }}</h3>
+        </div>
     </button>
     <ul x-show="userDropdown" x-on:click.away="userDropdown = false"
         class="absolute mt-4 right-0 z-50 min-w-48 max-w-xs p-4 bg-white rounded shadow-lg space-y-2"
