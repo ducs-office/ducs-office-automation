@@ -99,4 +99,42 @@ class Publication extends Model
 
         return route('users.publications.show', [$this->author, $this]);
     }
+
+    public function __toString()
+    {
+        $authorName = $this->author->name;
+        $allAuthorNames = $this->coAuthors->pluck('name')->prepend($authorName)->implode(', ');
+        $publicationString = "{$allAuthorNames}. ";
+        if (! $this->isPublished()) {
+            $publicationString = '[Un-published] ' . $publicationString;
+        }
+
+        if ($this->date) {
+            $monthYear = $this->date->format('F Y');
+            $publicationString .= "{$monthYear}. ";
+        }
+
+        $paperTitle = $this->paper_link
+            ? "<a class=\"link\" href=\"{$this->paper_link}\">\"{$this->paper_title}\"</a>"
+            : "\"{$this->paper_title}\"";
+
+        $publicationString .= "{$paperTitle}. ";
+
+        if ($this->isPublished()) {
+            $journalOrConferenceName = implode(' ', [$this->publisher, $this->name]);
+            if ($this->volume) {
+                $journalOrConferenceName .= $this->type === PublicationType::JOURNAL
+                    ? ", Volume {$this->volume}"
+                    : ", Edition {$this->volume}";
+            }
+            if ($this->number) {
+                $journalOrConferenceName .= ", Number {$this->number}";
+            }
+            $journalOrConferenceName .= ', pages: ' . implode('-', $this->page_numbers);
+
+            $publicationString .= "In {$journalOrConferenceName}";
+        }
+
+        return strip_tags($publicationString, '<a>');
+    }
 }

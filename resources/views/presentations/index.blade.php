@@ -1,6 +1,6 @@
 @extends('layouts.scholar-profile', ['pageTitle' => 'Presentations', 'scholar' => $scholar])
 @section('body')
-<div class="page-card p-6 flex overflow-visible space-x-6">
+<div class="page-card p-6 space-y-4">
     @can('create', App\Models\Presentation::class)
     <div class="mt-3 text-right">
         <a class="btn btn-magenta" href="{{ route('scholars.presentations.create', ['scholar' => $scholar]) }}">
@@ -13,9 +13,8 @@
             @forelse ($scholar->presentations as $presentation)
                 @include('_partials.list-items.presentation')
             @empty
-                <p class="text-gray-600 flex justify-center font-bold py-3 items-center">No presentations to show!</p>
+                <li><p class="text-gray-600 flex justify-center font-bold py-3 items-center">No presentations to show!</p></li>
             @endforelse
-
         </ul>
     </div>
 </div>
