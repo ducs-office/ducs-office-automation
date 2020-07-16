@@ -6,16 +6,18 @@
         </div>
     </div>
     @forelse($coAuthors as $index => $coAuthor)
-    <div class="flex space-x-2">
-        <input type="text" value="{{$coAuthor['name']}}"
-            name="co_authors[{{$index}}][name]"
-            class="form-input mr-2"
+    <div class="flex space-x-2 py-1">
+        <input type="text" value="{{ $coAuthor['name'] }}"
+            name="co_authors[{{ $index }}][name]"
+            class="form-input flex-1"
             placeholder="Co-Author's name">
-        <x-input.file name="co_authors[{{$index}}][noc]" id="noc"
-            class="w-full form-input inline-flex items-center"
+        @auth('scholars')
+        <x-input.file name="co_authors[{{ $index }}][noc]" id="noc"
+            class="flex-1 form-input inline-flex items-center"
             accept="application/pdf,image/*"
             placeholder="Upload NOC"
             />
+        @endauth
         <button type="button" class="p-2 group" wire:click="remove({{ $index }})">
             <x-feather-icon name="x" class="h-6 transform transition duration-150 group-hover:scale-110"></x-feather-icon>
         </button>
