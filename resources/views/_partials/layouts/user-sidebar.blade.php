@@ -45,6 +45,16 @@
         </li>
     </ul>
 
+    @if(
+        Auth::user()->can('viewAny', \App\Models\OutgoingLetter::class) ||
+        Auth::user()->can('viewAny', App\Models\IncomingLetter::class) ||
+        Auth::user()->can('viewAny', App\Models\Programme::class) ||
+        Auth::user()->can('viewAny', App\Models\Course::class) ||
+        Auth::user()->can('viewAny', App\Models\College::class) ||
+        Auth::user()->can('viewAny', App\Models\TeachingRecord::class) ||
+        Auth::user()->can('start', App\Models\TeachingRecord::class) ||
+        Auth::user()->can('extend', App\Models\TeachingRecord::class)
+    )
     <div class="space-y-2">
         <h6 class="px-4 text-sm uppercase tracking-wider font-bold text-white-50">Resource Management</h6>
         <ul class="font-bold text-white-90 space-y-1">
@@ -110,7 +120,13 @@
             @endcanany
         </ul>
     </div>
+    @endif
 
+    @if(
+        Auth::user()->can('viewAny', Spatie\Permission\Models\Role::class) ||
+        Auth::user()->can('viewAny', App\Models\User::class) ||
+        Auth::user()->can('viewAny', App\Models\Scholar::class)
+    )
     <div class="space-y-2">
         <h6 class="px-4 text-sm uppercase tracking-wider font-bold text-white-50">Access Control</h6>
         <ul class="font-bold text-white-90 space-y-1">
@@ -140,4 +156,5 @@
             @endcan
         </ul>
     </div>
+    @endif
 </nav>
