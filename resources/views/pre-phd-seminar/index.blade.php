@@ -1,5 +1,5 @@
 @extends('layouts.scholar-profile', ['pageTitle' => 'Pre PhD Seminar', 'scholar' => $scholar])
-@push('modals')    
+@push('modals')
 <x-modal name="edit-proposed-title-modal" class="p-6" :open="$errors->default->hasAny(['proposed_title'])">
     <h2 class="text-lg font-bold mb-6">Update Proposed Title</h2>
     @include('_partials.forms.edit-proposed-title')
@@ -28,7 +28,7 @@
             <li class="font-bold m-2 {{$scholar->journals->count() ? 'text-green-700': 'text-gray-700'}}">
                 At least 1 Journal Publication
             </li>
-            <li class="font-bold m-2 text-gray-700">
+            <li class="font-bold m-2 text-green-700">
                 Extension Letter from BRS (if any)
             </li>
             <li class="font-bold m-2 {{ $scholar->proposed_title ? 'text-green-700' : 'text-gray-700 '}}">
@@ -96,7 +96,7 @@
             <div class="flex ml-auto items-baseline">
                 <p class="px-3 mr-2 py-1 text-center flex items-center font-lg font-bold border border-4 border-solid rounded-full
                     {{ $scholar->prePhdSeminar->status->getContextCSS() }}">
-                    {{ $scholar->prePhdSeminar->status }}
+                    {{ ($scholar->prePhdSeminar->status == App\Types\RequestStatus::RECOMMENDED) ? "forwarded" : $scholar->prePhdSeminar->status }}
                 </p>
                 @can('forward', [$scholar->prePhdSeminar, $scholar])
                 <div class="ml-2">

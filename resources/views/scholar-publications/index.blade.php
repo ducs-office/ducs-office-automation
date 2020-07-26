@@ -8,19 +8,19 @@
         <h1 class="text-2xl font-bold mr-4">
             Publications
         </h1>
-        @can('create', [App\Model\Publication::class, $scholar])
         <div class="justify-end items-center flex-1 w-full flex space-x-4">
-            <button class="btn p-1" 
-                x-bind:class="{'btn-magenta' : compact}"  
-                x-on:click="compact = !compact">
-                <x-feather-icon name="list" class="h-5 w-5"></x-feather-icon>
-            </button>
-            <a href="{{ route('scholars.publications.create', $scholar) }}"
-                class="btn btn-magenta py1">
-                    New
-            </a>
-        </div>
+            <button class="btn p-1"
+            x-bind:class="{'btn-magenta' : compact}"
+            x-on:click="compact = !compact">
+            <x-feather-icon name="list" class="h-5 w-5"></x-feather-icon>
+        </button>
+        @can('create', [App\Model\Publication::class, $scholar])
+        <a href="{{ route('scholars.publications.create', $scholar) }}"
+            class="btn btn-magenta py1">
+                New
+        </a>
         @endcan
+        </div>
     </div>
     <template x-if="compact">
         <div class="mt-4">

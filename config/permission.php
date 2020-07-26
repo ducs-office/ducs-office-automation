@@ -92,6 +92,7 @@ return [
             'users' => ['view', 'create', 'edit', 'delete'],
             'UG teaching records' => ['view', 'start', 'extend'],
             'scholars' => ['view', 'create', 'edit', 'delete'],
+            'scholar supervisor and cosupervisor' => ['replace'],
             'leaves' => ['respond'],
             'phd course work' => ['mark completed', 'view marksheet'],
             'scholar progress reports' => ['add', 'view', 'delete'],
@@ -99,7 +100,6 @@ return [
             'phd seminar' => ['add schedule', 'finalize'],
             'title approval' => ['approve'],
             'scholar examiner' => ['recommend', 'approve'],
-            'scholar supervisor and cosupervisor' => ['replace'],
         ],
 
         'roles' => [
