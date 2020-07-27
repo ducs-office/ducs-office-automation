@@ -35,7 +35,7 @@ class MarkCourseworkCompletedRequest extends FormRequest
     {
         $response = redirect()->back()
             ->withInput($this->input() + ['course_id' => $this->route('courseId')])
-            ->withErrors($validator->errors()->messages(), 'update');
+            ->withErrors($validator->errors()->messages(), 'updateCoursework');
 
         throw new ValidationException($validator, $response);
     }

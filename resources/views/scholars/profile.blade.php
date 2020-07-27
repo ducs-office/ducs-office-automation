@@ -70,6 +70,11 @@
         </x-tabbed-pane>
     </div>
     <div class="col-span-2 overflow-hidden">
+        @include('_partials.scholar-profile.pre-phd-courseworks', [
+            'scholar' => $scholar
+        ])
+    </div>
+    <div class="col-span-2 overflow-hidden">
         @include('_partials.scholar-profile.advisory-meetings', [
             'scholar' => $scholar
         ])

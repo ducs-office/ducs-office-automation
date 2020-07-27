@@ -16,13 +16,12 @@
         @enderror
     </div>
     <div class="space-y-1">
-        <label for="marksheet" class="form-label w-full
-            @error('marksheet') text-red-500 @enderror">
-            Upload Marksheet
+        <label for="marksheet" class="form-label w-full @error('marksheet') text-red-500 @enderror">
+            Upload Marksheet sads
             <span class="text-red-600 font-bold">*</span>
         </label>
         <x-input.file name="marksheet" id="marksheet"
-            class="w-full form-input inline-flex items-center {{ $errors->has('marksheet') ? 'border-red-500 hover:border-red-700' : '' }}"
+            class="w-full form-input inline-flex items-center @error('marksheet') 'border-red-500 hover:border-red-700' @enderror"
             accept="application/pdf,image/*"
             placeholder="Upload Marksheet"
             required/>

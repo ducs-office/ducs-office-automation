@@ -26,7 +26,7 @@ class CourseworkController extends Controller
     {
         $this->authorize('create', [ScholarCoursework::class, $scholar]);
 
-        $request->validate([
+        $request->validateWithBag('addCoursework', [
             'course_id' => ['required', 'numeric', 'exists:phd_courses,id'],
         ]);
 
