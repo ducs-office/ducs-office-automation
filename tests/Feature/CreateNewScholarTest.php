@@ -263,11 +263,14 @@ class CreateNewScholarTest extends TestCase
 
         $cosupervisor = factory(User::class)->states('cosupervisor')->create();
 
-        $this->withExceptionHandling()
-            ->post(route('staff.scholars.store'), $this->getScholarFormDetails([
-                'supervisor_id' => null,
-            ]))
-            ->assertSessionHasErrors('supervisor_id');
+        try {
+            $this->withoutExceptionHandling()
+                ->post(route('staff.scholars.store'), $this->getScholarFormDetails([
+                    'supervisor_id' => null,
+                ]));
+        }catch(ValidationException $e) {
+            $this->assertArrayHasKey('supervisor_id', $e->errors());
+        }
 
         $this->assertEquals(0, Scholar::count());
     }

@@ -3,8 +3,10 @@
 namespace App\Http\Requests\Staff;
 
 use App\Models\User;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 class StoreScholarRequest extends FormRequest
 {
@@ -42,5 +44,14 @@ class StoreScholarRequest extends FormRequest
                     }),
             ],
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        $response = redirect()->back()
+            ->withInput($this->input())
+            ->withErrors($validator->errors()->messages(), 'create');
+
+        throw new ValidationException($validator, $response);
     }
 }

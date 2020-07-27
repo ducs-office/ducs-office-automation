@@ -1,6 +1,6 @@
 @extends('layouts.master')
 @push('modals')
-<x-modal name="create-scholar-modal" class="min-w-1/3 p-6" :open="! $errors->default->isEmpty()">
+<x-modal name="create-scholar-modal" class="min-w-1/3 p-6" :open="! $errors->create->isEmpty()">
     <h2 class="text-lg font-bold mb-8">Create Scholar</h2>
     @include('_partials.forms.create-scholar')
 </x-modal>
