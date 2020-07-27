@@ -2,17 +2,17 @@
     @csrf_token
     @method("PATCH")
     <div class="flex items-center mb-2">
-        <label for="scheduled_on" class="form-label @error('scheduled_on') text-red-500 @enderror">
+        <label for="scheduled_on" class="form-label @error('scheduled_on', 'scheduleSeminar') text-red-500 @enderror">
             Schedule
             <span class="text-red-600">*</span>
         </label>
         <div>
             <input type="datetime-local" name="scheduled_on"
-                class="form-input ml-2 @error('scheduled_on') border-red-500 hover:border-red-700" @enderror
+                class="form-input ml-2 @error('scheduled_on', 'scheduleSeminar') border-red-500 hover:border-red-700" @enderror
                 value="{{ old('scheduled_on', $scholar->prePhdSeminar->scheduled_on) }}"
                 placeholder="mm/dd/yy HH:MM:SS"
                 required>
-            @error('scheduled_on')
+            @error('scheduled_on', 'scheduleSeminar')
                 <p class="text-red-500"> {{ $message }} </p>
             @enderror
         </div>

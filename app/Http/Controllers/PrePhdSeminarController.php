@@ -69,7 +69,7 @@ class PrePhdSeminarController extends Controller
     {
         $this->authorize('addSchedule', [$prePhdSeminar, $scholar]);
 
-        $validSchedule = $request->validate([
+        $validSchedule = $request->validateWithBag('scheduleSeminar', [
             'scheduled_on' => ['required', 'date', 'after:today'],
         ]);
 
@@ -84,7 +84,7 @@ class PrePhdSeminarController extends Controller
     {
         $this->authorize('finalize', [$prePhdSeminar, $scholar]);
 
-        $validData = $request->validate([
+        $validData = $request->validateWithBag('finalizeSeminar', [
             'finalized_title' => ['required', 'string'],
         ]);
 
