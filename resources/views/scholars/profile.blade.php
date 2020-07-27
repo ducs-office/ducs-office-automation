@@ -37,6 +37,9 @@
             @error('avatar', 'update')
                 <p class="text-red-500">{{ $message }}</p>
             @enderror
+            @if ($scholar->avatar_path === null)
+                <p class="text-red-500">Please upload your profile picture.</p>
+            @endif
             <div>
                 <h2 class="text-3xl">{{ $scholar->name }}</h2>
                 <h3 class="text-xl text-gray-700">Scholar / {{ $scholar->research_area }}</h3>
@@ -48,7 +51,7 @@
                     <x-tab name="info">Basic Info</x-tab>
                     <x-tab name="admission">Admission Details</x-tab>
                     <x-tab name="education">Education Details</x-tab>
-                    <x-tab name="committee">Research Committee</x-tab>
+                    <x-tab name="committee">Advisory Committee</x-tab>
                 </div>
             </x-slot>
 

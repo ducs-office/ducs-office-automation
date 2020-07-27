@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Models\Programme;
 use App\Models\User;
+use App\Types\ProgrammeType;
 use Livewire\Component;
 
 class TypeaheadProgrammesLatestRevision extends Component
@@ -16,6 +17,7 @@ class TypeaheadProgrammesLatestRevision extends Component
     public $value;
     public $placeholder;
     public $searchPlaceholder;
+    public $type;
 
     public $query = '';
 
@@ -27,7 +29,8 @@ class TypeaheadProgrammesLatestRevision extends Component
         $value = null,
         $multiple = false,
         $placeholder = '',
-        $searchPlaceholder = ''
+        $searchPlaceholder = '',
+        $type = ''
     ) {
         $this->open = $open;
         $this->input_id = $id;
@@ -37,6 +40,7 @@ class TypeaheadProgrammesLatestRevision extends Component
         $this->value = $value;
         $this->placeholder = $placeholder;
         $this->searchPlaceholder = $searchPlaceholder;
+        $this->type = $type;
     }
 
     public function render()
@@ -48,12 +52,18 @@ class TypeaheadProgrammesLatestRevision extends Component
 
     protected function getProgrammes()
     {
-        return Programme::query()
+        $programmes = Programme::query()
             ->select(['id', 'code', 'name'])
-            ->withLatestRevisionId()
-            ->where('code', 'like', $this->query . '%')
-            ->orWhere('name', 'like', '%' . $this->query . '%')
-            ->get();
+            ->withLatestRevisionId();
+
+        if ($this->type != null && in_array($this->type, ProgrammeType::values())) {
+            $programmes->where('type', $this->type);
+        }
+
+        return $programmes->where(function ($query) {
+            $query->where('code', 'like', $this->query . '%')
+                ->orWhere('name', 'like', '%' . $this->query . '%');
+        })->get();
     }
 
     public function updatedQuery()

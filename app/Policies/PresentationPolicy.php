@@ -24,7 +24,7 @@ class PresentationPolicy
             return true;
         }
 
-        if (get_class($user) === User::class && $user->isSupervisor() && $user->scholars->contain($presentation->scholar_id)) {
+        if (get_class($user) === User::class && $user->isSupervisor() && $user->scholars->contains($presentation->scholar_id)) {
             return true;
         }
 

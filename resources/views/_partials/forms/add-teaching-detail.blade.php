@@ -10,6 +10,7 @@
         :value="old('programme_revision_id')"
         placeholder="Select a Programme..."
         search-placeholder="Search Programme..."
+        type="{{App\Types\ProgrammeType::UNDER_GRADUATE}}"
     />
     @error('programme_revision_id')
         <p class="text-red-500">{{ $message }}</p>

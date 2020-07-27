@@ -19,7 +19,7 @@
             @endif
             @if(optional($scholar->examiner)->applied_on)
                 <div class="text-center">
-                    <h3 class="font-bold">Applid On </h3>
+                    <h3 class="font-bold">Applied On </h3>
                     <h3 class="text-gray-800 mt-1"> {{$scholar->examiner->applied_on->format('d F, Y')}}</h3>
                 </div>
             @endif
@@ -48,19 +48,19 @@
                 @endif
                 <div class="flex ml-2">
                     @can('recommend', [$scholar->examiner, $scholar])
-                    <form action="{{ route('scholars.examiner.recommend', [$scholar, $scholar->examiner]) }}" method="POST" 
+                    <form action="{{ route('scholars.examiner.recommend', [$scholar, $scholar->examiner]) }}" method="POST"
                         class="px-4 py-2 mr-1 bg-blue-500 hover:bg-blue-600 text-white rounded font-bold">
                         @method('PATCH') @csrf_token
-                        <button type="submit"> 
+                        <button type="submit">
                             Recommend
                         </button>
                     </form>
                     @endcan
-                    @can('approve', [$scholar->examiner, $scholar])    
-                    <form action="{{ route('scholars.examiner.approve', [$scholar, $scholar->examiner]) }}" method="POST" 
+                    @can('approve', [$scholar->examiner, $scholar])
+                    <form action="{{ route('scholars.examiner.approve', [$scholar, $scholar->examiner]) }}" method="POST"
                         class="px-4 py-2 mr-1 bg-green-500 hover:bg-green-600 text-white rounded font-bold">
                         @method('PATCH') @csrf_token
-                        <button type="submit"> 
+                        <button type="submit">
                             Approve
                         </button>
                     </form>
@@ -69,5 +69,5 @@
             </div>
         </div>
     </div>
-</div>               
+</div>
 @endsection

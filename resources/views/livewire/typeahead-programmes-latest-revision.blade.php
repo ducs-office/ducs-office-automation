@@ -2,7 +2,7 @@
     open: {{ json_encode($open) }},
     multiple: {{ json_encode($multiple) }},
     value: {{ json_encode($value) }},
-    valueKey: 'id',
+    valueKey: 'latest_revision_id',
     choices: {{ json_encode($programmes) }},
     disabledChoices: [],
     choicesRef: 'listbox',

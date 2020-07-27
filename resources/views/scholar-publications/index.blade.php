@@ -5,9 +5,6 @@
 @section('body')
 <div class="page-card p-6 overflow-visible space-y-6" x-data="{compact: false}">
     <div class="flex items-baseline">
-        <h1 class="text-2xl font-bold mr-4">
-            Publications
-        </h1>
         <div class="justify-end items-center flex-1 w-full flex space-x-4">
             <button class="btn p-1"
             x-bind:class="{'btn-magenta' : compact}"
