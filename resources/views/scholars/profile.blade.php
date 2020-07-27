@@ -69,12 +69,23 @@
             </x-tab-content>
         </x-tabbed-pane>
     </div>
-    <div class="col-span-2 overflow-hidden">
+    <div class="col-span-2">
         @include('_partials.scholar-profile.pre-phd-courseworks', [
             'scholar' => $scholar
         ])
     </div>
-    <div class="col-span-2 overflow-hidden">
+    <div class="col-span-2">
+        @include('_partials.scholar-profile.publications', [
+            'scholar' => $scholar
+        ])
+    </div>
+    <div class="col-span-2">
+        @include('_partials.scholar-profile.presentations', [
+            'scholar' => $scholar
+        ])
+    </div>
+
+    <div class="col-span-2">
         @include('_partials.scholar-profile.advisory-meetings', [
             'scholar' => $scholar
         ])
