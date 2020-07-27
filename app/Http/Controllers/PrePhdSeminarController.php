@@ -49,7 +49,7 @@ class PrePhdSeminarController extends Controller
 
         flash('Request for Pre-PhD Seminar applied successfully!')->success();
 
-        return redirect(route('scholars.pre-phd-seminar.index', $scholar));
+        return redirect()->back();
     }
 
     public function forward(Request $request, Scholar $scholar, PrePhdSeminar $prePhdSeminar)
@@ -77,7 +77,7 @@ class PrePhdSeminarController extends Controller
 
         flash('Pre PhD seminar schedule added successfully!')->success();
 
-        return redirect(route('scholars.pre-phd-seminar.index', $scholar));
+        return redirect()->back();
     }
 
     public function finalize(Request $request, Scholar $scholar, PrePhdSeminar $prePhdSeminar)
@@ -92,6 +92,6 @@ class PrePhdSeminarController extends Controller
 
         flash("Scholar's appeal finalized successfully!")->success();
 
-        return redirect(route('scholars.pre-phd-seminar.index', $scholar));
+        return redirect()->back();
     }
 }
