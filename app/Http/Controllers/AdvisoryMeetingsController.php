@@ -26,7 +26,7 @@ class AdvisoryMeetingsController extends Controller
     {
         $this->authorize('create', [AdvisoryMeeting::class, $scholar]);
 
-        $data = $request->validate([
+        $data = $request->validateWithBag('advisoryMeeting', [
             'date' => 'required|date|before_or_equal:today',
             'minutes_of_meeting' => ['required', 'file', 'mimetypes:application/pdf,image/*', 'max:200'],
         ]);

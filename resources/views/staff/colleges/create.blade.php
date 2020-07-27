@@ -36,11 +36,6 @@
                 :value="old('programmes', [])"
                 placeholder="Select multiple Programmes..."
                 search-placeholder="Search Programmes..."/>
-            {{-- <select name="programmes[]" id="programme" class="w-full form-multiselect" multiple required>
-                @foreach ($programmes as $programme)
-                <option value="{{ $programme->id }}">{{ $programme->code }} - {{ ucwords($programme->name) }}</option>
-                @endforeach
-            </select> --}}
         </div>
         <div class="relative z-10 -ml-8 my-4">
             <h5 class="relative z-20 pl-8 pr-4 py-2 inline-block font-bold bg-magenta-700 text-white shadow">Principal Information</h5>

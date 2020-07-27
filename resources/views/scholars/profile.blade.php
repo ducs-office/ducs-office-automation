@@ -69,5 +69,10 @@
             </x-tab-content>
         </x-tabbed-pane>
     </div>
+    <div class="col-span-2 overflow-hidden">
+        @include('_partials.scholar-profile.advisory-meetings', [
+            'scholar' => $scholar
+        ])
+    </div>
 </div>
 @endsection
