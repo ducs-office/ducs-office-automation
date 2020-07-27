@@ -32,7 +32,7 @@ class ProgressReportController extends Controller
     {
         $recommendations = implode(',', ProgressReportRecommendation::values());
 
-        $request->validate([
+        $request->validateWithBag('progressReport', [
             'progress_report' => ['required', 'file', 'mimetypes:application/pdf,image/*', 'max:200'],
             'recommendation' => ['required', 'in:' . $recommendations],
             'date' => ['required', 'date', 'before_or_equal:today'],

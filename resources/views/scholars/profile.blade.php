@@ -86,7 +86,19 @@
     </div>
 
     <div class="col-span-2">
+        @include('_partials.scholar-profile.leaves', [
+            'scholar' => $scholar
+        ])
+    </div>
+
+    <div class="col-span-2">
         @include('_partials.scholar-profile.advisory-meetings', [
+            'scholar' => $scholar
+        ])
+    </div>
+
+    <div class="col-span-2">
+        @include('_partials.scholar-profile.progress-report', [
             'scholar' => $scholar
         ])
     </div>

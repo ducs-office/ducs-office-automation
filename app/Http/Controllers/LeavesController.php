@@ -38,7 +38,8 @@ class LeavesController extends Controller
         if ($request->reason === 'Other') {
             $rules['reason_text'] = ['required', 'bail', 'string', 'min:5'];
         }
-        $request->validate($rules);
+
+        $request->validateWithBag('applyLeave', $rules);
 
         $scholar->leaves()->create([
             'from' => $request->from,
@@ -68,7 +69,7 @@ class LeavesController extends Controller
     {
         $this->authorize('respond', $leave);
 
-        $request->validate([
+        $request->validateWithBag('respondLeave', [
             'response' => ['required', Rule::in([LeaveStatus::APPROVED, LeaveStatus::REJECTED])],
             'response_letter' => ['required', 'file', 'mimetypes:application/pdf,images/*', 'max:200'],
         ]);

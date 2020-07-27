@@ -11,7 +11,7 @@
             <h2 class="text-lg font-bold">Advisory Committee Meetings</h2>
         </div>
         @can('create', [App\Models\AdvisoryMeeting::class,$scholar])
-            <x-modal.trigger class="ml-auto inline-flex items-center space-x-1 btn btn-magenta is-sm"
+            <x-modal.trigger class="ml-auto inline-flex items-center space-x-1 btn btn-magenta py-1 px-2"
                 modal="add-advisory-meetings-modal">
                 <x-feather-icon name="plus" class="w-4 h-4"></x-feather-icon>
                 <span>Add Meetings</span>

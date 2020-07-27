@@ -43,6 +43,7 @@ class ScholarProfileController extends Controller
         return view('scholars.profile', [
             'scholar' => $scholar,
             'courses' => PhdCourse::whereNotIn('id', $scholar->courseworks()->allRelatedIds())->get(),
+            'recommendations' => ProgressReportRecommendation::values(),
             'genders' => Gender::values(),
             'categories' => ReservationCategory::values(),
             'admissionModes' => AdmissionMode::values(),
