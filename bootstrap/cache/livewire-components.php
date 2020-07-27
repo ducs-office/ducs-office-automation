@@ -18,6 +18,7 @@
   'typeahead-advisors' => 'App\\Http\\Livewire\\TypeaheadAdvisors',
   'typeahead-colleges' => 'App\\Http\\Livewire\\TypeaheadColleges',
   'typeahead-courses' => 'App\\Http\\Livewire\\TypeaheadCourses',
+  'typeahead-programmes' => 'App\\Http\\Livewire\\TypeaheadProgrammes',
   'typeahead-programmes-latest-revision' => 'App\\Http\\Livewire\\TypeaheadProgrammesLatestRevision',
   'typeahead-users' => 'App\\Http\\Livewire\\TypeaheadUsers',
 );
