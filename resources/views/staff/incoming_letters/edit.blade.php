@@ -71,14 +71,14 @@
                 </div>
             </div>
             <div class="mb-2">
-                <label for="handovers-update" class="w-full form-label mb-1">Handovered To</label>
+                <label for="handovers-update" class="w-full form-label mb-1">Handed Over To</label>
                 <livewire:typeahead-users
                     id="handovers-update"
                     name="handovers[]"
                     limit="15"
                     :multiple="true"
                     :value="old('handovers', $letter->handovers->pluck('id')->all())"
-                    placeholder="Handovered To"
+                    placeholder="Handed Over To"
                     search-placeholder="Search from users..."/>
                 @if($errors->has('handovers'))
                     <p class="mt-1 text-red-600">{{ $errors->first('handovers') }}</p>

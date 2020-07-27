@@ -27,7 +27,6 @@ class AddColumnsToScholarTable extends Migration
             $table->enum('funding', FundingType::values())->nullable();
             $table->text('research_area', 501)->nullable();
             $table->string('enrolment_id', 30)->nullable();
-            $table->date('registration_date')->nullable();
             $table->json('education_details')->nullable();
             $table->string('proposed_title')->nullable();
         });

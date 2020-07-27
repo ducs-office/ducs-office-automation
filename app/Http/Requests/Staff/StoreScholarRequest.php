@@ -3,8 +3,10 @@
 namespace App\Http\Requests\Staff;
 
 use App\Models\User;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 class StoreScholarRequest extends FormRequest
 {
@@ -29,6 +31,7 @@ class StoreScholarRequest extends FormRequest
             'first_name' => 'required|string',
             'last_name' => 'required|string',
             'email' => 'required|unique:scholars',
+            'registration_date' => ['required', 'before_or_equal:today'],
             'term_duration' => 'required| integer| gt: 0',
             'supervisor_id' => ['required', Rule::exists(User::class, 'id')->where('is_supervisor', true)],
             'cosupervisor_id' => [
@@ -41,5 +44,14 @@ class StoreScholarRequest extends FormRequest
                     }),
             ],
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        $response = redirect()->back()
+            ->withInput($this->input())
+            ->withErrors($validator->errors()->messages(), 'create');
+
+        throw new ValidationException($validator, $response);
     }
 }

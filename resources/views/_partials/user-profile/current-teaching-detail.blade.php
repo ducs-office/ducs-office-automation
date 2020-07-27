@@ -39,7 +39,8 @@
     </ul>
     <div class="px-4 py-3">
         @can('create', App\Models\TeachingRecord::class)
-        <form action="{{ route('teaching-records.submit') }}" method="POST" class="flex items-center space-x-4">
+        <form action="{{ route('teaching-records.submit') }}" method="POST" class="flex items-center space-x-4"
+            onsubmit="return confirm('Are you sure you want to submit your teaching details?');">
             @csrf_token
             <button type="submit" class="btn btn-magenta"> Submit Details </button>
             <p class="font-bold text-gray-600">Please remove the courses you are not teaching currently, before

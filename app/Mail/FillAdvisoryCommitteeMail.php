@@ -35,7 +35,7 @@ class FillAdvisoryCommitteeMail extends Mailable implements ShouldQueue
      */
     public function build()
     {
-        return $this->view('mail.supervisors.fill_advisory_committee', [
+        return $this->markdown('mail.supervisors.fill_advisory_committee', [
             'supervisor' => $this->supervisor,
             'scholarName' => $this->scholarName,
             'deadline' => $this->deadline,

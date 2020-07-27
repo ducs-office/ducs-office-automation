@@ -23,10 +23,6 @@
 <div class="mt-4 flex-1">
     <ul class="border rounded-lg overflow-hidden mb-4 divide-y">
         <li class="px-4 py-3 flex space-x-4">
-            <p class="whitespace-no-wrap font-bold w-48">Gender</p>
-            <p class="flex-1 text-gray-800">{{ $scholar->gender }}</p>
-        </li>
-        <li class="px-4 py-3 flex space-x-4">
             <h4 class="whitespace-no-wrap font-bold w-48">Email</h4>
             <p class="flex-1 text-gray-800"> {{ $scholar->email }}</p>
         </li>
@@ -39,6 +35,10 @@
             <p class="flex-1 text-gray-800">
                 {{ $scholar->address ?? 'Not Known'}}
             </p>
+        </li>
+        <li class="px-4 py-3 flex space-x-4">
+            <p class="whitespace-no-wrap font-bold w-48">Gender</p>
+            <p class="flex-1 text-gray-800">{{ $scholar->gender }}</p>
         </li>
     </ul>
 </div>

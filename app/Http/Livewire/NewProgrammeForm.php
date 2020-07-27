@@ -25,17 +25,6 @@ class NewProgrammeForm extends Component
         ]);
     }
 
-    public function updatedDuration()
-    {
-        $this->duration = $this->duration == '' ? 1 : min(5, (max(1, $this->duration)));
-
-        $semCourses = collect(range(1, $this->duration * 2))->mapWithKeys(function ($sem) {
-            return [$sem => []];
-        })->toArray();
-
-        $this->semester_courses = old('semester_courses', $semCourses);
-    }
-
     public function render()
     {
         return view('livewire.new-programme-form', [
@@ -90,8 +79,10 @@ class NewProgrammeForm extends Component
         }
     }
 
-    public function updateDuration()
+    public function updatedDuration()
     {
+        $this->duration = $this->duration == '' ? 1 : min(5, (max(1, $this->duration)));
+
         $this->initializeSemesterCoursesArray();
     }
 

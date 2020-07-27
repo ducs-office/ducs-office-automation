@@ -1,11 +1,11 @@
 @extends('layouts.master')
 @push('modals')
-<x-modal name="create-scholar-modal" class="min-w-1/3 p-6">
+<x-modal name="create-scholar-modal" class="min-w-1/3 p-6" :open="! $errors->create->isEmpty()">
     <h2 class="text-lg font-bold mb-8">Create Scholar</h2>
     @include('_partials.forms.create-scholar')
 </x-modal>
 @can('update', App\Models\Scholar::class)
-    <livewire:edit-scholar-modal :supervisors="$supervisors" :cosupervisors="$cosupervisors"/>
+    <livewire:edit-scholar-modal :error-bag="$errors->update" :supervisors="$supervisors" :cosupervisors="$cosupervisors"/>
 @endcan
 <livewire:replace-supervisor-modal :supervisors="$supervisors"/>
 <livewire:replace-cosupervisor-modal :cosupervisors="$cosupervisors" />

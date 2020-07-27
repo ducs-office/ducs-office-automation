@@ -1,6 +1,6 @@
 <div class="flex items-center">
     <h3 class="px-3 text-lg font-bold">
-        Research Committee
+        Advisory Committee
     </h3>
 </div>
 <div class="flex-1 mt-4 space-y-4">

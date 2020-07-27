@@ -30,6 +30,7 @@ class CreateNewScholarTest extends TestCase
             'last_name' => 'Sonkar',
             'email' => 'pushkar@cs.du.ac.in',
             'term_duration' => 5,
+            'registration_date' => now()->subMonth(1)->format('Y-m-d'),
             'supervisor_id' => function () {
                 return factory(User::class)->states('supervisor')->create()->id;
             },
@@ -173,6 +174,26 @@ class CreateNewScholarTest extends TestCase
     }
 
     /** @test */
+    public function request_validates_registration_date_is_required()
+    {
+        $this->signIn();
+
+        $scholar = $this->getScholarFormDetails([
+            'registration_date' => '',
+        ]);
+
+        try {
+            $this->withoutExceptionHandling()
+                ->post(route('staff.scholars.store'), $scholar);
+            $this->fail('Validation exception was expected');
+        } catch (ValidationException $e) {
+            $this->assertArrayHasKey('registration_date', $e->errors());
+        }
+
+        $this->assertEquals(0, Scholar::count());
+    }
+
+    /** @test */
     public function request_validates_email_is_unique()
     {
         $this->signIn();
@@ -242,11 +263,14 @@ class CreateNewScholarTest extends TestCase
 
         $cosupervisor = factory(User::class)->states('cosupervisor')->create();
 
-        $this->withExceptionHandling()
-            ->post(route('staff.scholars.store'), $this->getScholarFormDetails([
-                'supervisor_id' => null,
-            ]))
-            ->assertSessionHasErrors('supervisor_id');
+        try {
+            $this->withoutExceptionHandling()
+                ->post(route('staff.scholars.store'), $this->getScholarFormDetails([
+                    'supervisor_id' => null,
+                ]));
+        }catch(ValidationException $e) {
+            $this->assertArrayHasKey('supervisor_id', $e->errors());
+        }
 
         $this->assertEquals(0, Scholar::count());
     }

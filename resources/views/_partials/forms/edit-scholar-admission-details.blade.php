@@ -34,17 +34,6 @@
         @enderror
     </div>
     <div class="space-y-1">
-        <label for="registration_date"
-            class="w-full form-label mb-1 @error('registration_date', 'update') text-red-500 @enderror">
-            Date of Registration
-        </label>
-        <input id="registration_date" type="date" name="registration_date" class="w-full form-input @error('registration_date', 'update') border-red-500 hover:border-red-700 @enderror"
-            value="{{ old('registration_date', optional($scholar->registration_date)->format('Y-m-d')) }}">
-        @error('registration_date', 'update')
-            <p class="text-red-500">{{ $message }}</p>
-        @enderror
-    </div>
-    <div class="space-y-1">
         <label for="admission_mode"
             class="w-full form-label mb-1 @error('admission_mode', 'update') text-red-500 @enderror">
             Admission Mode
