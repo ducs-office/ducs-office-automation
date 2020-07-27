@@ -16,7 +16,7 @@ class ProposedTitleController extends Controller
             401
         );
 
-        $request->validate('proposedTitle', ['proposed_title' => ['required', 'string']]);
+        $request->validateWithBag('proposedTitle', ['proposed_title' => ['required', 'string']]);
 
         $scholar->update([
             'proposed_title' => $request->proposed_title,

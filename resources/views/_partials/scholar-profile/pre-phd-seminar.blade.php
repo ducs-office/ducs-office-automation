@@ -61,9 +61,9 @@
         @endcan
     </div>
     @if (optional($scholar->prePhdSeminar)->isCompleted())
-    <div class="flex items-baseline justify-end w-full">
+    <div class="flex items-center space-x-2 mb-3">
         <h3 class="font-bold">Finalized Title: </h3>
-        <h3 class="text-gray-800 mx-2"> {{$scholar->prePhdSeminar->finalized_title}}</h3>
+        <h3 class="text-gray-800"> {{$scholar->prePhdSeminar->finalized_title}}</h3>
     </div>
     @else
         <div class="flex items-center space-x-2 mb-3">
@@ -78,7 +78,7 @@
         </div>
     @endif
     @if($scholar->prePhdSeminar)
-    <div class="w-full border rounded-lg mb-4 m-2 flex items-center">
+    <div class="w-full px-4 border rounded-lg mb-4 flex items-center">
         @if ($scholar->prePhdSeminar)
         @if ($scholar->prePhdSeminar->scheduled_on)
         <p class="font-bold mr-2 p-2 my-2">
@@ -99,7 +99,7 @@
         </div>
         @endcan
         <div class="flex ml-auto items-baseline">
-            <p class="px-3 mr-2 py-1 text-center flex items-center font-lg font-bold border border-4 border-solid rounded-full
+            <p class="px-3 mr-2 py-1 text-center flex items-center font-lg font-bold border border-solid rounded-full
                 {{ $scholar->prePhdSeminar->status->getContextCSS() }}">
                 {{ ($scholar->prePhdSeminar->status == App\Types\RequestStatus::RECOMMENDED) ? "forwarded" : $scholar->prePhdSeminar->status }}
             </p>

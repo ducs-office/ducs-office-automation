@@ -67,7 +67,7 @@ class TitleApprovalController extends Controller
     {
         $this->authorize('approve', [$titleApproval, $scholar]);
 
-        $request->validate([
+        $request->validateWithBag('approveTitle', [
             'recommended_title' => ['required', 'string', 'min: 5'],
         ]);
 

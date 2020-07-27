@@ -114,5 +114,17 @@
             'scholar' => $scholar
         ])
     </div>
+
+    <div class="col-span-2">
+        @include('_partials.scholar-profile.title-approval', [
+            'scholar' => $scholar
+        ])
+    </div>
+
+    <div class="col-span-2">
+        @include('_partials.scholar-profile.examiner', [
+            'scholar' => $scholar
+        ])
+    </div>
 </div>
 @endsection

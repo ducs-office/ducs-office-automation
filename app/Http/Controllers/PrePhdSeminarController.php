@@ -62,7 +62,7 @@ class PrePhdSeminarController extends Controller
 
         flash("Scholar's appeal forwarded successfully!")->success();
 
-        return redirect(route('scholars.pre-phd-seminar.index', $scholar));
+        return redirect()->back();
     }
 
     public function schedule(Request $request, Scholar $scholar, PrePhdSeminar $prePhdSeminar)
