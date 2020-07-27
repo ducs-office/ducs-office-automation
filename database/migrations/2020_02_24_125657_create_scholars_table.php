@@ -20,6 +20,7 @@ class CreateScholarsTable extends Migration
             $table->string('email')->unique();
             $table->string('avatar_path')->nullable();
             $table->unsignedTinyInteger('term_duration');
+            $table->date('registration_date');
             $table->string('password', 60);
             $table->rememberToken();
 

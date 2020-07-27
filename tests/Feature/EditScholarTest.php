@@ -176,11 +176,14 @@ class EditScholarTest extends TestCase
         $cosupervisor = factory(User::class)->states('cosupervisor')->create();
         $scholar->cosupervisors()->attach($cosupervisor);
 
-        $this->withExceptionHandling()
-            ->patch(route('staff.scholars.update', $scholar), [
-                'cosupervisor_id' => $supervisor->id,
-            ])
-            ->assertSessionHasErrors('cosupervisor_id');
+        try {
+            $this->withoutExceptionHandling()
+                ->patch(route('staff.scholars.update', $scholar), [
+                    'cosupervisor_id' => $supervisor->id,
+                ]);
+        } catch (ValidationException $e) {
+            $this->assertArrayHasKey('cosupervisor_id', $e->errors());
+        }
 
         $updatedScholar = $scholar->fresh();
         $this->assertEquals($cosupervisor->id, $updatedScholar->currentCosupervisor->id);

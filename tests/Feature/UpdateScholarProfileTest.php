@@ -40,7 +40,6 @@ class UpdateScholarProfileTest extends TestCase
             'admission_mode' => AdmissionMode::UGC_NET,
             'funding' => FundingType::NON_NET,
             'avatar' => $avatar = UploadedFile::fake()->image('picture.jpg'),
-            'registration_date' => now()->subMonth(1)->format('Y-m-d'),
             'research_area' => 'Artificial Intelligence',
             'education_details' => [
                 [
@@ -66,7 +65,6 @@ class UpdateScholarProfileTest extends TestCase
         $this->assertEquals($updateDetails['category'], $freshScholar->category);
         $this->assertEquals($updateDetails['admission_mode'], $freshScholar->admission_mode);
         $this->assertEquals($updateDetails['funding'], $freshScholar->funding);
-        $this->assertEquals($updateDetails['registration_date'], $freshScholar->registration_date->format('Y-m-d'));
         $this->assertEquals($updateDetails['research_area'], $freshScholar->research_area);
         $this->assertEquals($updateDetails['enrolment_id'], $freshScholar->enrolment_id);
         $this->assertEquals($updateDetails['education_details'][0]['year'], $freshScholar->education_details[0]->year);

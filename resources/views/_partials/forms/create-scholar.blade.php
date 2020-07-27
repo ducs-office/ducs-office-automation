@@ -45,18 +45,33 @@
            <p class="text-red-500">{{ $message }}</p>
         @enderror
     </div>
-    <div class="space-y-1">
-        <label for="scholar-term-duration"
-            class="w-full form-label @error('term_duration') text-red-500 @enderror">
-            Term Duration (in years) <span class="text-red-500">*</span>
-        </label>
-        <input id="scholar-term-duration" type="number" name="term_duration" min="1" max="7"
-            class="w-full form-input @error('term_duration') border-red-500 hover:border-red-700 @enderror"
-            value="{{ old('term_duration') }}"
-            required>
-        @error('term_duration')
-           <p class="text-red-500">{{ $message }}</p>
-        @enderror
+    <div class="flex space-x-2">
+        <div class="flex-1 space-y-1">
+            <label for="scholar-registration_date"
+                class="w-full form-label @error('registration_date') text-red-500 @enderror">
+                Date of Registration <span class="text-red-500">*</span>
+            </label>
+            <input id="scholar-registration_date" type="date" name="registration_date"
+                class="w-full form-input @error('registration_date') border-red-500 hover:border-red-700 @enderror"
+                value="{{ old('registration_date') }}"
+                required>
+            @error('registration_date')
+                <p class="text-red-500">{{ $message }}</p>
+            @enderror
+        </div>
+        <div class="flex-1 space-y-1">
+            <label for="scholar-term-duration"
+                class="w-full form-label @error('term_duration') text-red-500 @enderror">
+                Term Duration (in years) <span class="text-red-500">*</span>
+            </label>
+            <input id="scholar-term-duration" type="number" name="term_duration" min="1" max="7"
+                class="w-full form-input @error('term_duration') border-red-500 hover:border-red-700 @enderror"
+                value="{{ old('term_duration') }}"
+                required>
+            @error('term_duration')
+               <p class="text-red-500">{{ $message }}</p>
+            @enderror
+        </div>
     </div>
     <div class="flex space-x-2">
         <div class="flex-1 space-y-1">

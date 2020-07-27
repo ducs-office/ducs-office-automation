@@ -14,13 +14,20 @@
             </div>
         </div>
     </td>
-    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200 leading-5 text-gray-600"
+    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200 leading-5 text-gray-600 space-y-1"
         title="{{ $scholar->research_area }}">
         @if($scholar->research_area)
             {{ Str::limit($scholar->research_area, 30) }}
         @else
             <em>not set</em>
         @endif
+        <div class="text-sm text-black">
+            @if($scholar->registration_date)
+                {{ $scholar->registration_date->format('d M Y') }}
+            @else
+                <em>not set</em>
+            @endif
+        </div>
     </td>
     <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200 space-y-1">
         @if($scholar->currentSupervisor)

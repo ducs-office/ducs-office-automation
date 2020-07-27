@@ -29,6 +29,7 @@ class StoreScholarRequest extends FormRequest
             'first_name' => 'required|string',
             'last_name' => 'required|string',
             'email' => 'required|unique:scholars',
+            'registration_date' => ['required', 'before_or_equal:today'],
             'term_duration' => 'required| integer| gt: 0',
             'supervisor_id' => ['required', Rule::exists(User::class, 'id')->where('is_supervisor', true)],
             'cosupervisor_id' => [
