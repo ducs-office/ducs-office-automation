@@ -20,7 +20,7 @@ class PhdCourseController extends Controller
     public function index(Request $request)
     {
         return view('staff.phd_courses.index', [
-            'courses' => PhdCourse::paginate(15),
+            'courses' => PhdCourse::orderBy('created_at', 'DESC')->paginate(15),
             'courseTypes' => PrePhdCourseType::values(),
         ]);
     }

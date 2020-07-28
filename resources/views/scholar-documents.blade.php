@@ -1,4 +1,4 @@
-{{--Other Documents--}}
+{{-- Documents--}}
 @extends('layouts.scholar-profile', ['pageTitle' => 'Documents', 'scholar' => $scholar])
 
 @section('body')

@@ -16,6 +16,9 @@
                     <x-feather-icon name="edit-3" class="h-current -mt-8"> Edit </x-feather-icon>
                 </button>
             </div>
+            @if ($scholar->avatar_path === null)
+                <p x-show="editMode == 'false'" class="text-red-500">Please upload your profile picture.</p>
+            @endif
             @endcan
             <form action="{{ route('scholars.profile.update', $scholar) }}" method="POST" x-show="editMode == 'true'" enctype="multipart/form-data">
             @csrf_token @method('PATCH')
@@ -37,9 +40,6 @@
             @error('avatar', 'update')
                 <p class="text-red-500">{{ $message }}</p>
             @enderror
-            @if ($scholar->avatar_path === null)
-                <p class="text-red-500">Please upload your profile picture.</p>
-            @endif
             <div>
                 <h2 class="text-3xl">{{ $scholar->name }}</h2>
                 <h3 class="text-xl text-gray-700">Scholar / {{ $scholar->research_area }}</h3>
@@ -72,62 +72,75 @@
             </x-tab-content>
         </x-tabbed-pane>
     </div>
-    <div class="col-span-2">
-        @include('_partials.scholar-profile.pre-phd-courseworks', [
-            'scholar' => $scholar
-        ])
-    </div>
-    <div class="col-span-2">
-        @include('_partials.scholar-profile.publications', [
-            'scholar' => $scholar
-        ])
-    </div>
-    <div class="col-span-2">
-        @include('_partials.scholar-profile.presentations', [
-            'scholar' => $scholar
-        ])
-    </div>
-
-    <div class="col-span-2">
-        @include('_partials.scholar-profile.leaves', [
-            'scholar' => $scholar
-        ])
-    </div>
-
-    <div class="col-span-2">
-        @include('_partials.scholar-profile.advisory-meetings', [
-            'scholar' => $scholar
-        ])
-    </div>
-
-    <div class="col-span-2">
-        @include('_partials.scholar-profile.progress-report', [
-            'scholar' => $scholar
-        ])
-    </div>
-
-    <div class="col-span-2">
-        @include('_partials.scholar-profile.documents', [
-            'scholar' => $scholar
-        ])
-    </div>
-
-    <div class="col-span-2">
-        @include('_partials.scholar-profile.pre-phd-seminar', [
-            'scholar' => $scholar
-        ])
-    </div>
-
-    <div class="col-span-2">
-        @include('_partials.scholar-profile.title-approval', [
-            'scholar' => $scholar
-        ])
-    </div>
-
-    <div class="col-span-2">
-        @include('_partials.scholar-profile.examiner', [
-            'scholar' => $scholar
-        ])
-    </div>
+    @can('viewAny', App\Models\Pivot\ScholarCoursework::class)
+        <div class="col-span-2">
+            @include('_partials.scholar-profile.pre-phd-courseworks', [
+                'scholar' => $scholar
+            ])
+        </div>
+    @endcan
+    @can('viewAny', App\Models\Publication::class)
+        <div class="col-span-2">
+            @include('_partials.scholar-profile.publications', [
+                'scholar' => $scholar
+            ])
+        </div>
+    @endcan
+    @can('viewAny', App\Models\Presentation::class)
+        <div class="col-span-2">
+            @include('_partials.scholar-profile.presentations', [
+                'scholar' => $scholar
+            ])
+        </div>
+    @endcan
+    @can('viewAny', App\Models\Leave::class)
+        <div class="col-span-2">
+            @include('_partials.scholar-profile.leaves', [
+                'scholar' => $scholar
+            ])
+        </div>
+    @endcan
+    @can('viewAny', App\Models\AdvisoryMeeting::class)
+        <div class="col-span-2">
+            @include('_partials.scholar-profile.advisory-meetings', [
+                'scholar' => $scholar
+            ])
+        </div>
+    @endcan
+    @can('viewAny', ProgressReport::class)
+        <div class="col-span-2">
+            @include('_partials.scholar-profile.progress-report', [
+                'scholar' => $scholar
+            ])
+        </div>
+    @endcan
+    @can('viewAny', ScholarDocument::class)
+        <div class="col-span-2">
+            @include('_partials.scholar-profile.documents', [
+                'scholar' => $scholar
+            ])
+        </div>
+    @endcan
+    @can('viewAny', PrePhdSeminar::class)
+        <div class="col-span-2">
+            @include('_partials.scholar-profile.pre-phd-seminar', [
+                'scholar' => $scholar
+            ])
+        </div>
+    @endcan
+    @can('viewAny', TitleApproval::class)
+        <div class="col-span-2">
+            @include('_partials.scholar-profile.title-approval', [
+                'scholar' => $scholar
+            ])
+        </div>
+    @endcan
+    @can('viewAny', ScholarExaminer::class)
+        <div class="col-span-2">
+            @include('_partials.scholar-profile.examiner', [
+                'scholar' => $scholar
+            ])
+        </div>
+    @endcan
 </div>
 @endsection
