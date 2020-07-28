@@ -58,7 +58,7 @@ class ScholarPublicationController extends Controller
 
         flash('Publication added successfully')->success();
 
-        return redirect()->back();
+        return redirect(route('scholars.publications.index', $scholar));
     }
 
     public function edit(Scholar $scholar, Publication $publication)
@@ -91,7 +91,7 @@ class ScholarPublicationController extends Controller
 
         flash('Publication updated successfully!')->success();
 
-        return redirect()->back();
+        return redirect(route('scholars.publications.index', $scholar));
     }
 
     public function destroy(Scholar $scholar, Publication $publication)

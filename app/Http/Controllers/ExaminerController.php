@@ -28,7 +28,7 @@ class ExaminerController extends Controller
 
         flash('Applied for Scholar\'s Examiner Successfully!')->success();
 
-        return redirect()->back();
+        return redirect(route('scholars.examiner.index', $scholar));
     }
 
     public function recommend(Request $request, Scholar $scholar, ScholarExaminer $examiner)
@@ -42,7 +42,7 @@ class ExaminerController extends Controller
 
         flash('Examiner request recommended successfully!')->success();
 
-        return redirect()->back();
+        return redirect(route('scholars.examiner.index', $scholar));
     }
 
     public function approve(Request $request, Scholar $scholar, ScholarExaminer $examiner)
@@ -56,6 +56,6 @@ class ExaminerController extends Controller
 
         flash('Examiner request approved successfully!')->success();
 
-        return redirect()->back();
+        return redirect(route('scholars.examiner.index', $scholar));
     }
 }

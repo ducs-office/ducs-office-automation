@@ -40,7 +40,7 @@ class TitleApprovalController extends Controller
 
         flash('Request for Title Approval applied successfully!')->success();
 
-        return redirect()->back();
+        return redirect(route('scholars.title-approval.index', $scholar));
     }
 
     public function show(Request $request, Scholar $scholar, TitleApproval $titleApproval)
@@ -60,7 +60,7 @@ class TitleApprovalController extends Controller
 
         flash("Scholar's appeal recommended successfully!")->success();
 
-        return redirect()->back();
+        return redirect(route('scholars.title-approval.index', $scholar));
     }
 
     public function approve(Request $request, Scholar $scholar, TitleApproval $titleApproval)
@@ -78,6 +78,6 @@ class TitleApprovalController extends Controller
 
         flash("Scholar's appeal approved successfully!")->success();
 
-        return redirect()->back();
+        return redirect(route('scholars.title-approval.index', $scholar));
     }
 }
