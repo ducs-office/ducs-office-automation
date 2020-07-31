@@ -11,6 +11,7 @@
                     <a class="hover:underline" href="{{ route('scholars.profile.show', $scholar) }}">{{ $scholar->name }}</a>
                 </div>
                 <div class="leading-5 text-gray-600">{{ $scholar->email }}</div>
+                <div class="leading-none text-gray-800">{{ $scholar->registration_date->format('d M Y') }}</div>
             </div>
         </div>
     </td>
@@ -21,13 +22,6 @@
         @else
             <em>not set</em>
         @endif
-        <div class="text-sm text-black">
-            @if($scholar->registration_date)
-                {{ $scholar->registration_date->format('d M Y') }}
-            @else
-                <em>not set</em>
-            @endif
-        </div>
     </td>
     <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200 space-y-1">
         @if($scholar->currentSupervisor)
