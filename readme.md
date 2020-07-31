@@ -32,7 +32,7 @@ sudo apt install nodejs composer
 You can simply clone the project using `git` as:
 
 ```bash
-git clone https://github.com/gautamswati/ducs-office-automation
+git clone https://github.com/ducs-office/ducs-office-automation
 ```
 
 ### Install project dependencies
