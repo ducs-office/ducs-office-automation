@@ -161,9 +161,9 @@ Route::patch(
 )->name('scholars.title-approval.approve')->middleware('auth:web');
 
 Route::middleware('user_profile')->group(function () {
-	Route::get('/users/@{user}', 'UserProfileController@show')->name('profiles.show');
-	Route::patch('/users/@{user}', 'UserProfileController@update')->name('profiles.update');
-	Route::get('/users/@{user}/avatar', 'UserProfileController@avatar')->name('profiles.avatar');
+    Route::get('/users/@{user}', 'UserProfileController@show')->name('profiles.show');
+    Route::patch('/users/@{user}', 'UserProfileController@update')->name('profiles.update');
+    Route::get('/users/@{user}/avatar', 'UserProfileController@avatar')->name('profiles.avatar');
 });
 
 // ----------- Teaching Records ------------------
@@ -362,9 +362,9 @@ Route::delete(
 //===========Scholar-Profile==================
 // 'scholar' middleware is unknown
 Route::middleware(['scholar_profile'])->group(function () {
-	Route::get('/scholars/@{scholar}', 'ScholarProfileController@show')->name('scholars.profile.show')->middleware('auth:web,scholars');
-	Route::patch('/scholars/@{scholar}', 'ScholarProfileController@update')->name('scholars.profile.update')->middleware('auth:web,scholars');
-	Route::get('/scholars/@{scholar}/avatar', 'ScholarProfileController@avatar')->name('scholars.profile.avatar')->middleware('auth:web,scholars');
+    Route::get('/scholars/@{scholar}', 'ScholarProfileController@show')->name('scholars.profile.show')->middleware('auth:web,scholars');
+    Route::patch('/scholars/@{scholar}', 'ScholarProfileController@update')->name('scholars.profile.update')->middleware('auth:web,scholars');
+    Route::get('/scholars/@{scholar}/avatar', 'ScholarProfileController@avatar')->name('scholars.profile.avatar')->middleware('auth:web,scholars');
 });
 Route::patch(
     '/scholars/@{scholar}/advisors',
