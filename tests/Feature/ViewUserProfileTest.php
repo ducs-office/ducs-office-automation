@@ -28,20 +28,15 @@ class ViewUserProfileTest extends TestCase
     }
 
     /** @test */
-    public function users_can_also_view_others_profiles()
+	public function users_cannot_view_others_profiles()
     {
         $otherUser = create(User::class);
 
         $this->signIn(create(User::class));
 
-        $viewUser = $this->withoutExceptionHandling()
+        $viewUser = $this->withExceptionHandling()
             ->get(route('profiles.show', $otherUser))
-            ->assertSuccessful()
-            ->assertViewHas('user')
-            ->assertSee($otherUser->name)
-            ->viewData('user');
-
-        $this->assertTrue($viewUser->is($otherUser));
+            ->assertForbidden();
     }
 
     /** @test */

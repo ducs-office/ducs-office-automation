@@ -160,9 +160,11 @@ Route::patch(
     'TitleApprovalController@approve'
 )->name('scholars.title-approval.approve')->middleware('auth:web');
 
-Route::get('/users/@{user}', 'UserProfileController@show')->name('profiles.show');
-Route::patch('/users/@{user}', 'UserProfileController@update')->name('profiles.update');
-Route::get('/users/@{user}/avatar', 'UserProfileController@avatar')->name('profiles.avatar');
+Route::middleware('user_profile')->group(function () {
+    Route::get('/users/@{user}', 'UserProfileController@show')->name('profiles.show');
+    Route::patch('/users/@{user}', 'UserProfileController@update')->name('profiles.update');
+    Route::get('/users/@{user}/avatar', 'UserProfileController@avatar')->name('profiles.avatar');
+});
 
 // ----------- Teaching Records ------------------
 Route::get('/teaching-records', 'TeachingRecordsController@index')->name('teaching-records.index');
@@ -358,9 +360,12 @@ Route::delete(
     ->middleware('auth:web');
 
 //===========Scholar-Profile==================
-Route::get('/scholars/@{scholar}', 'ScholarProfileController@show')->name('scholars.profile.show')->middleware('auth:web,scholars');
-Route::patch('/scholars/@{scholar}', 'ScholarProfileController@update')->name('scholars.profile.update')->middleware('auth:web,scholars');
-Route::get('/scholars/@{scholar}/avatar', 'ScholarProfileController@avatar')->name('scholars.profile.avatar')->middleware('auth:web,scholars');
+// 'scholar' middleware is unknown
+Route::middleware(['scholar_profile'])->group(function () {
+    Route::get('/scholars/@{scholar}', 'ScholarProfileController@show')->name('scholars.profile.show')->middleware('auth:web,scholars');
+    Route::patch('/scholars/@{scholar}', 'ScholarProfileController@update')->name('scholars.profile.update')->middleware('auth:web,scholars');
+    Route::get('/scholars/@{scholar}/avatar', 'ScholarProfileController@avatar')->name('scholars.profile.avatar')->middleware('auth:web,scholars');
+});
 Route::patch(
     '/scholars/@{scholar}/advisors',
     'ScholarProfileController@updateAdvisors'
