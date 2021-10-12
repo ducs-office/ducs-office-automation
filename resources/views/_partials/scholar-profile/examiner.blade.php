@@ -45,24 +45,27 @@
 
             @endif
             <div class="flex ml-2">
-                @can('recommend', [$scholar->examiner, $scholar])
-                <form action="{{ route('scholars.examiner.recommend', [$scholar, $scholar->examiner]) }}" method="POST"
-                    class="px-4 py-2 mr-1 bg-blue-500 hover:bg-blue-600 text-white rounded font-bold">
-                    @method('PATCH') @csrf_token
-                    <button type="submit">
-                        Recommend
-                    </button>
-                </form>
-                @endcan
-                @can('approve', [$scholar->examiner, $scholar])
-                <form action="{{ route('scholars.examiner.approve', [$scholar, $scholar->examiner]) }}" method="POST"
-                    class="px-4 py-2 mr-1 bg-green-500 hover:bg-green-600 text-white rounded font-bold">
-                    @method('PATCH') @csrf_token
-                    <button type="submit">
-                        Approve
-                    </button>
-                </form>
-                @endcan
+				@if($scholar->examiner)
+					@can('recommend', [$scholar->examiner, $scholar])
+					<form action="{{ route('scholars.examiner.recommend', [$scholar, $scholar->examiner]) }}" method="POST"
+						class="px-4 py-2 mr-1 bg-blue-500 hover:bg-blue-600 text-white rounded font-bold">
+						@method('PATCH') @csrf_token
+						<button type="submit">
+							Recommend
+						</button>
+					</form>
+					@endcan
+					
+					@can('approve', [$scholar->examiner, $scholar])
+					<form action="{{ route('scholars.examiner.approve', [$scholar, $scholar->examiner]) }}" method="POST"
+						class="px-4 py-2 mr-1 bg-green-500 hover:bg-green-600 text-white rounded font-bold">
+						@method('PATCH') @csrf_token
+						<button type="submit">
+							Approve
+						</button>
+					</form>
+					@endcan
+				@endif
             </div>
         </div>
     </div>
