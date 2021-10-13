@@ -45,6 +45,7 @@
 
             @endif
             <div class="flex ml-2">
+            @if($scholar->examiner)
                 @can('recommend', [$scholar->examiner, $scholar])
                 <form action="{{ route('scholars.examiner.recommend', [$scholar, $scholar->examiner]) }}" method="POST"
                     class="px-4 py-2 mr-1 bg-blue-500 hover:bg-blue-600 text-white rounded font-bold">
@@ -63,6 +64,7 @@
                     </button>
                 </form>
                 @endcan
+                @endif
             </div>
         </div>
     </div>
