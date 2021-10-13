@@ -18,6 +18,7 @@ Route::view('/team', 'team')->name('team');
 Route::get('/', 'Auth\LoginController@showLoginForm')->middleware(['guest', 'guest:scholars'])->name('login-form');
 Route::post('/login', 'Auth\LoginController@login')->middleware(['guest', 'guest:scholars'])->name('login');
 Route::post('/logout', 'Auth\LoginController@logout')->middleware('auth:web,scholars')->name('logout');
+Route::get('/reload-captcha', 'Auth\LoginController@reloadCaptcha')->middleware(['guest', 'guest:scholars'])->name('reloadCaptcha');
 Route::get('/forgot-password', 'Auth\ForgotPasswordController@showLinkRequestForm')->middleware(['guest', 'guest:scholars'])->name('password.forgot');
 Route::post('/forgot-password', 'Auth\ForgotPasswordController@sendResetLinkEmail')->middleware(['guest', 'guest:scholars'])->name('password.send');
 Route::get('/password/reset/{token?}', 'Auth\ResetPasswordController@showResetForm')->middleware(['guest', 'guest:scholars'])->name('password.reset');

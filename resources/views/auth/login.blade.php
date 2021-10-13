@@ -1,3 +1,6 @@
+<!--<link rel="stylesheet" type="text/css"
+        href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-alpha1/css/bootstrap.min.css">-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 @extends('layouts.guest')
 @section('body')
     <form action="{{ route('login', request()->has('scholar') ? ['scholar'] : []) }}" method="POST"
@@ -27,6 +30,24 @@
                 <label class="w-full form-label mb-1" for="password">Password</label>
                 <x-input.password name="password" class="w-full form-input" placeholder="Enter your password here..." required></x-input.password>
             </div>
+
+            <div>
+                <div class="captcha  flex justify-between items-center mb-2">
+                    
+                    <div class="w-2.5/6  py-2 ">
+                        <span >{!! captcha_img() !!}</span>
+                    </div>
+                    <div class="w-0.5/6  text-xl text-left ">
+                       <button type="button" id="reload" class="reload form-input px-3 py-2 " > &#x21bb;</button>    
+                    </div>
+                    <div class="w-2.5/6">
+                        <input type="text" id="captcha" name="captcha"  class="w-full form-input " placeholder="Enter Captcha"  autocomplete="off">
+                    </div>
+                </div>
+            </div>
+           <!--<div>
+                <input type="text" id="captcha" name="captcha"  class="w-full form-input mb-3" placeholder="Enter Captcha"  autocomplete="off">
+            </div>-->
             <div>
                 <label for="remember" class="flex items-center">
                     <input type="checkbox" name="remember" id="remember" class="form-checkbox"
@@ -46,4 +67,17 @@
             @endif
         </div>
     </form>
+
+    <script type="text/javascript">
+    $('#reload').click(function () {
+        $.ajax({
+            type: 'GET',
+            url: 'reload-captcha',
+            success: function (data) {
+                $(".captcha span").html(data.captcha);
+            }
+        });
+    });
+
+</script>
 @endsection

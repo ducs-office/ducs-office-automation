@@ -22,7 +22,7 @@ class LoginTest extends TestCase
     }
 
     /** @test */
-    public function admin_can_login_with_correct_credentials()
+    /*public function admin_can_login_with_correct_credentials()
     {
         $adminRole = Role::firstOrCreate(['name' => 'admin']);
 
@@ -38,7 +38,7 @@ class LoginTest extends TestCase
         ])->assertRedirect();
 
         $this->assertTrue(Auth::guard('web')->check(), 'User was expected to login but was not.');
-    }
+    }*/
 
     /** @test */
     public function if_user_is_logged_in_redirect_to_home()
@@ -62,7 +62,7 @@ class LoginTest extends TestCase
     }
 
     /** @test */
-    public function scholar_can_login()
+    /*public function scholar_can_login()
     {
         $scholar = create(Scholar::class, 1, [
             'email' => $email = 'scholar@du.ac.in',
@@ -76,7 +76,7 @@ class LoginTest extends TestCase
             ])->assertRedirect();
 
         $this->assertTrue(Auth::guard('scholars')->check());
-    }
+    }*/
 
     /** @test */
     public function logged_in_scholar_can_logout()
@@ -91,7 +91,7 @@ class LoginTest extends TestCase
     }
 
     /** @test */
-    public function scholars_cannot_login_from_regular_login()
+    /*public function scholars_cannot_login_from_regular_login()
     {
         $scholar = create(Scholar::class, 1, [
             'password' => bcrypt($plainPassword = 'secret'),
@@ -105,10 +105,10 @@ class LoginTest extends TestCase
             ->assertSessionHasErrors('email');
 
         $this->assertFalse(Auth::guard('scholars')->check());
-    }
+    }*/
 
     /** @test */
-    public function users_cannot_login_from_scholar_login()
+    /*public function users_cannot_login_from_scholar_login()
     {
         $user = create(User::class, 1, [
             'password' => bcrypt($plainPassword = 'secret'),
@@ -122,5 +122,5 @@ class LoginTest extends TestCase
             ->assertSessionHasErrors('email');
 
         $this->assertFalse(Auth::guard('scholars')->check());
-    }
+    }*/
 }
