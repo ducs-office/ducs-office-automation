@@ -23,6 +23,7 @@
         </div>
     </x-modal>
 @endcan
+@if($scholar->titleApproval)
 @can('approve', [$scholar->titleApproval, $scholar])
     <x-modal name="approve-scholar-title-modal" class="p-6 w-1/2"
         :open="!$errors->approveTitle->isEmpty()">
@@ -30,6 +31,7 @@
         @include('_partials.forms.approve-scholar-title')
     </x-modal>
 @endcan
+@endif
 @endpush
 <div class="page-card p-6">
     <div class="-mx-6 -mt-6 px-6 py-3 border-b mb-6 flex items-center">
