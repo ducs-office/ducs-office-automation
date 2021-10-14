@@ -7,14 +7,24 @@ jobs:
     strategy:
       matrix: 
         platform: [ubuntu-18.04]
+        php-versions: ['7.4']
 
     runs-on: ${{ matrix.platform }}
     
     steps:
-    - uses: actions/checkout@v1
-      with:
-        php-version: '7.4'
+    - name: Checkout repo
+      uses: actions/checkout@v1
     
+    - name: Install PHP
+      uses: shivammathur/setup-php@master
+      with:
+        php-version: ${{ matrix.php-versions }}
+    
+    - name: Verify PHP and composer Installation
+      run: |
+        php -v
+        composer -V
+   
     - name: Copy ENV Laravel Configuration for CI
       run: php -r "file_exists('.env') || copy('.env.ci', '.env');"
     
