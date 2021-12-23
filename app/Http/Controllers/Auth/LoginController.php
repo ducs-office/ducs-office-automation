@@ -31,15 +31,14 @@ class LoginController extends Controller
         $request->validate([
             $this->username() => 'required|string',
             'password' => 'required|string',
-            'captcha' => 'required|captcha'
+            'captcha' => 'required|captcha',
         ]);
     }
 
     public function reloadCaptcha()
     {
-        return response()->json(['captcha'=> captcha_img()]);
+        return response()->json(['captcha' => captcha_img()]);
     }
-
 
     protected function loggedOut()
     {
