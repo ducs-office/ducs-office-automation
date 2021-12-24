@@ -34,7 +34,11 @@
             x-transition:leave="transition-transform ease-out duration-300"
             x-transition:leave-start="transform translate-x-0"
             x-transition:leave-end="transform -translate-x-full">
-            @include('_partials.layouts.scholar-sidebar')
+            @if($scholar->name == Auth::user()->name)    
+                @include('_partials.layouts.scholar-sidebar')
+            @else
+                @include('_partials.layouts.user-sidebar')
+            @endif
         </div>
         <div class="flex-1 flex flex-col h-full overflow-y-auto">
             @include('_partials.layouts.scholar-header')
